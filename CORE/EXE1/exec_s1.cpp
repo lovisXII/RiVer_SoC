@@ -1,4 +1,4 @@
-#include "exec.h"
+#include "exec_s1.h"
 
 void alu::operation() {
     sc_uint<32> res_interne;

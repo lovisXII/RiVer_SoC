@@ -1,4 +1,4 @@
-#include "wbk.h"
+#include "wbk_s1.h"
 
 void wbk_s1::wbk_method() {
     WADR_SW_S1.write(DEST_RM_S1);

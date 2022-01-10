@@ -1,10 +1,10 @@
 #include "IFETCH/ifetch.h"
 #include "DEC/dec.h"
-#include "EXE1/exec.h"
-#include "MEM1/mem.h"
-#include "WBK1/wbk.h"
+#include "EXE1/exec_s1.h"
+#include "MEM1/mem_s1.h"
+#include "WBK1/wbk_s1.h"
 
-// #include "EXE2/exec.h"
+#include "EXE2/exec_s2.h"
 // #include "MEM2/mem.h"
 // #include "WBK2/wbk.h"
 
