@@ -17,14 +17,19 @@ int sc_main(int argc, char* argv[])
     {
         int command = rand() % 3 ;
         int operand1, operand2 ;
-        operand1 = rand() % 1000 ;
-        operand2 = rand() % 1000 ;
+        operand1 = rand() % 4294967295 ;
+        operand2 = rand() % 4294967295 ;
         int result ;
+        int cout_sig;
         int carry = rand()%1 ;
         switch (command)
         {
         case 0 :
             result = operand1 + operand2 + carry ;
+            if(result > 4294967295)
+            {
+                cout_sig = 1 ;
+            }
             break;
         case 1 :
             result = operand1 & operand2 ;
@@ -41,6 +46,10 @@ int sc_main(int argc, char* argv[])
         cmd = command ;
         cin = carry ;
         sc_start(1,SC_NS);
+        if(sc_uint<32>(result) == res & cout_sig == cout)
+        {
+            std::cout << "lala les schtrompfs" << i << std::endl ;
+        }
     
     }
     printf("ok ta mere\n") ;
