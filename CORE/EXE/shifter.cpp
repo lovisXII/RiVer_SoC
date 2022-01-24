@@ -5,15 +5,6 @@ void shifter::shifter_sll() {
     sc_uint<32> din = DIN.read();
     sc_uint<5> shift_val = SHIFT_VAL.read();
     sc_uint<32> sll_dout;
-    sll_dout = din << (shift_val - 1);
-    SLL_DOUT.write(sll_dout);
-}
-
-void shifter::shifter_sr() {
-    sc_uint<32> din = DIN.read();
-    sc_uint<5> shift_val = SHIFT_VAL.read();
-    sc_uint<32> sll_dout;
-    sc_uint<32> shiftin;
     switch(shift_val)
     {
         case 0:  sll_dout.range(31,0) =din.range(31,0); break;
@@ -48,5 +39,64 @@ void shifter::shifter_sr() {
         case 29: sll_dout.range(31,29)=din.range( 2,0); sll_dout.range(28,0)= 0; break;
         case 30: sll_dout.range(31,30)=din.range( 1,0); sll_dout.range(29,0)= 0; break;
         case 31: sll_dout.range(31,31)=din.range( 0,0); sll_dout.range(30,0)= 0; break;
+    }
+    SLL_DOUT.write(sll_dout);
+}
+
+void shifter::shifter_sr() {
+    sc_uint<32> din = DIN.read();
+    sc_uint<5> shift_val = SHIFT_VAL.read();
+    sc_uint<32> sr_dout;
+    sc_uint<32> shiftin;
+    if (SRA.read() & din[31]) {
+        shiftin = 0xFFFFFFFF;
+    }
+    else {
+        shiftin = 0x0;
+    }
+    switch(shift_val)
+    {
+case 0:  sr_dout.range(31,0) =din.range(31,0); break;
+			case 1:  sr_dout.range(31,31)=shiftin.range(31,31); sr_dout.range(30,0)=din.range(31, 1); break;
+			case 2:  sr_dout.range(31,30)=shiftin.range(31,30); sr_dout.range(29,0)=din.range(31, 2); break;
+			case 3:  sr_dout.range(31,29)=shiftin.range(31,29); sr_dout.range(28,0)=din.range(31, 3); break;
+			case 4:  sr_dout.range(31,28)=shiftin.range(31,28); sr_dout.range(27,0)=din.range(31, 4); break;
+			case 5:  sr_dout.range(31,27)=shiftin.range(31,27); sr_dout.range(26,0)=din.range(31, 5); break;
+			case 6:  sr_dout.range(31,26)=shiftin.range(31,26); sr_dout.range(25,0)=din.range(31, 6); break;
+			case 7:  sr_dout.range(31,25)=shiftin.range(31,25); sr_dout.range(24,0)=din.range(31, 7); break;
+			case 8:  sr_dout.range(31,24)=shiftin.range(31,24); sr_dout.range(23,0)=din.range(31, 8); break;
+			case 9:  sr_dout.range(31,23)=shiftin.range(31,23); sr_dout.range(22,0)=din.range(31, 9); break;
+			case 10: sr_dout.range(31,22)=shiftin.range(31,22); sr_dout.range(21,0)=din.range(31,10); break;
+			case 11: sr_dout.range(31,21)=shiftin.range(31,21); sr_dout.range(20,0)=din.range(31,11); break;
+			case 12: sr_dout.range(31,20)=shiftin.range(31,20); sr_dout.range(19,0)=din.range(31,12); break;
+			case 13: sr_dout.range(31,19)=shiftin.range(31,19); sr_dout.range(18,0)=din.range(31,13); break;
+			case 14: sr_dout.range(31,18)=shiftin.range(31,18); sr_dout.range(17,0)=din.range(31,14); break;
+			case 15: sr_dout.range(31,17)=shiftin.range(31,17); sr_dout.range(16,0)=din.range(31,15); break;
+			case 16: sr_dout.range(31,16)=shiftin.range(31,16); sr_dout.range(15,0)=din.range(31,16); break;
+			case 17: sr_dout.range(31,15)=shiftin.range(31,15); sr_dout.range(14,0)=din.range(31,17); break;
+			case 18: sr_dout.range(31,14)=shiftin.range(31,14); sr_dout.range(13,0)=din.range(31,18); break;
+			case 19: sr_dout.range(31,13)=shiftin.range(31,13); sr_dout.range(12,0)=din.range(31,19); break;
+			case 20: sr_dout.range(31,12)=shiftin.range(31,12); sr_dout.range(11,0)=din.range(31,20); break;
+			case 21: sr_dout.range(31,11)=shiftin.range(31,11); sr_dout.range(10,0)=din.range(31,21); break;
+			case 22: sr_dout.range(31,10)=shiftin.range(31,10); sr_dout.range( 9,0)=din.range(31,22); break;
+			case 23: sr_dout.range(31, 9)=shiftin.range(31, 9); sr_dout.range( 8,0)=din.range(31,23); break;
+			case 24: sr_dout.range(31, 8)=shiftin.range(31, 8); sr_dout.range( 7,0)=din.range(31,24); break;
+			case 25: sr_dout.range(31, 7)=shiftin.range(31, 7); sr_dout.range( 6,0)=din.range(31,25); break;
+			case 26: sr_dout.range(31, 6)=shiftin.range(31, 6); sr_dout.range( 5,0)=din.range(31,26); break;
+			case 27: sr_dout.range(31, 5)=shiftin.range(31, 5); sr_dout.range( 4,0)=din.range(31,27); break;
+			case 28: sr_dout.range(31, 4)=shiftin.range(31, 4); sr_dout.range( 3,0)=din.range(31,28); break;
+			case 29: sr_dout.range(31, 3)=shiftin.range(31, 3); sr_dout.range( 2,0)=din.range(31,29); break;
+			case 30: sr_dout.range(31, 2)=shiftin.range(31, 2); sr_dout.range( 1,0)=din.range(31,30); break;
+			case 31: sr_dout.range(31, 1)=shiftin.range(31, 1); sr_dout.range( 0,0)=din.range(31,31); break;
+    }
+    SR_DOUT.write(sr_dout);
+}
+
+void shifter::shifter_agregate() {
+    if (SLL.read()) {
+        DOUT.write(SLL_DOUT.read());
+    }
+    else {
+        DOUT.write(SR_DOUT.read());
     }
 }
