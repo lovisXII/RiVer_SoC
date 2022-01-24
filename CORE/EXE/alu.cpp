@@ -23,6 +23,7 @@ void alu::operation()
         {
             res_interne = op1.read() ^ op2.read() ;
             cout.write(cin.read()) ;
+            cout << "test" << endl ;
         }
         res.write(res_interne.range(32,0)) ;
     }
