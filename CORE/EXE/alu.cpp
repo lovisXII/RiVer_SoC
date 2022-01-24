@@ -7,7 +7,7 @@ void alu::operation()
         if( cmd.read()[0] == 0 & cmd.read()[0] == 0 )
         {
             res_interne = op1.read() + op2.read() + cin ;
-            cout.write(res_interne[33]) ;
+            cout.write(res_interne[32]) ;
         }
         else if(cmd.read()[0] == 0 & cmd.read()[0] == 1 )
         {

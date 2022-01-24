@@ -17,6 +17,5 @@ shifter_tb: shifter.o shifter_tb.o
 %.o: %.cpp
 	$(CC) -c $^ $(C_ARGS)
 
-
 clean: 
 	rm -f *.o main
