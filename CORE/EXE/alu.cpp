@@ -4,22 +4,22 @@
 void alu::operation()
     {
         sc_uint<32> res_interne ;
-        if( cmd.read() == 0 )
+        if( CMD.read() == 0 )
         {
-            res_interne = op1.read() + op2.read() + cin ;
+            res_interne = OP1.read() + OP2.read() + CIN ;
         }
-        else if(cmd.read() == 1 )
+        else if(CMD.read() == 1 )
         {
-            res_interne = op1.read() & op2.read() ;
+            res_interne = OP1.read() & OP2.read() ;
         }
-        else if(cmd.read() == 2 )
+        else if(CMD.read() == 2 )
         {
-            res_interne = op1.read() | op2.read() ;
+            res_interne = OP1.read() | OP2.read() ;
         }
-        else if(cmd.read() == 3 )
+        else if(CMD.read() == 3 )
         {
-            res_interne = op1.read() ^ op2.read() ;
+            res_interne = OP1.read() ^ OP2.read() ;
 
         }
-        res.write(res_interne) ;
+        RES.write(res_interne) ;
     }

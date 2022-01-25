@@ -23,11 +23,11 @@ int sc_main(int argc, char* argv[])
     sc_signal< sc_uint<2> > cmd ;
     sc_signal< bool > cin ;
     alu unit_alu("alu") ;
-    unit_alu.op1(op1) ;
-    unit_alu.op2(op2) ;
-    unit_alu.cmd(cmd) ;
-    unit_alu.cin(cin) ;
-    unit_alu.res(res) ;
+    unit_alu.OP1(op1) ;
+    unit_alu.OP2(op2) ;
+    unit_alu.CMD(cmd) ;
+    unit_alu.CIN(cin) ;
+    unit_alu.RES(res) ;
     sc_start(1, SC_NS) ;
     for(int i = 0 ; i < 1000 ; i++)
     {
