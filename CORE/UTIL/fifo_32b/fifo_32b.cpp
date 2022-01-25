@@ -40,7 +40,7 @@ void fifo_32b::function()
             {
                 FULL.write(1) ;
                 EMPTY.write(0) ;
-                // do nothing
+                DOUT.write(data_inside) ;
             }
             else if(push && pop )
             {
@@ -75,6 +75,8 @@ void fifo_32b::function()
                 EMPTY.write(0) ;
 
                 data_inside.write(DIN.read()) ;
+                DOUT.write(DIN.read()) ;
+                
                 fifo_v.write(1) ;
                 cout << "push = 1 et pop = 0" << endl ;
             }
@@ -82,8 +84,11 @@ void fifo_32b::function()
             {
                 FULL.write(1) ;
                 EMPTY.write(0) ;
-                // we don't pop cause data is not valid
+                
+                
                 data_inside.write(DIN.read()) ; // we just push
+                DOUT.write(DIN.read()) ;
+
                 cout << "push = 1 et pop = 1" << endl ;
                 fifo_v.write(1) ; // became valid
             }
