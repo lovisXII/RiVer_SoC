@@ -18,4 +18,4 @@ shifter_tb: shifter.o shifter_tb.o
 	$(CC) -c $^ $(C_ARGS)
 
 clean: 
-	rm -f *.o main
+	rm -f *.o main alu_tb shifter_tb
