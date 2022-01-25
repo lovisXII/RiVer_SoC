@@ -3,27 +3,23 @@
 
 void alu::operation()
     {
-        sc_uint<33> res_interne ;
-        if( cmd.read()[0] == 0 & cmd.read()[0] == 0 )
+        sc_uint<32> res_interne ;
+        if( CMD.read() == 0 )
         {
-            res_interne = op1.read() + op2.read() + cin ;
-            cout.write(res_interne[32]) ;
+            res_interne = OP1.read() + OP2.read() + CIN ;
         }
-        else if(cmd.read()[0] == 0 & cmd.read()[0] == 1 )
+        else if(CMD.read() == 1 )
         {
-            res_interne = op1.read() & op2.read() ;
-            cout.write(cin.read()) ;
+            res_interne = OP1.read() & OP2.read() ;
         }
-        else if(cmd.read()[0] == 1 & cmd.read()[0] == 0 )
+        else if(CMD.read() == 2 )
         {
-            res_interne = op1.read() | op2.read() ;
-            cout.write(cin.read()) ;
+            res_interne = OP1.read() | OP2.read() ;
         }
-        else if(cmd.read()[0] == 1 & cmd.read()[0] == 1 )
+        else if(CMD.read() == 3 )
         {
-            res_interne = op1.read() ^ op2.read() ;
-            cout.write(cin.read()) ;
+            res_interne = OP1.read() ^ OP2.read() ;
 
         }
-        res.write(res_interne.range(32,0)) ;
+        RES.write(res_interne) ;
     }

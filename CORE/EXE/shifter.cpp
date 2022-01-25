@@ -1,5 +1,24 @@
 #include "shifter.h"
 
+void shifter::decode_cmd() {
+    switch (CMD.read()) {
+        case 0:
+            SLL.write(1);
+            SRL.write(0);
+            SRA.write(0);
+            break;
+        case 1:
+            SLL.write(0);
+            SRL.write(1);
+            SRA.write(0);
+            break;
+        default:
+            SLL.write(0);
+            SRL.write(0);
+            SRA.write(1);
+            break;
+    }
+}
 
 void shifter::shifter_sll() {
     sc_uint<32> din = DIN.read();
