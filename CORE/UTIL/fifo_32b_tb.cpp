@@ -29,11 +29,10 @@ int sc_main(int argc, char* argv[])
 
     
 
-    reset_n.write(true) ;
-    sc_start(1,SC_NS) ;
-    reset_n.write(false) ;
-
-    for(int i =0 ; i < 100 ; i++)
+    reset_n.write(true) ; // reset 
+    sc_start(1,SC_NS) ; // wait for 1 cycle
+    reset_n.write(false) ; // end of reset
+    for(int i =0 ; i < 15 ; i++)
     {
         bool rand1 ;
         bool rand2 ;
@@ -50,15 +49,15 @@ int sc_main(int argc, char* argv[])
         din.write( rand()) ;
         push.write(rand1) ;
         pop.write( rand2)  ;
+        sc_start(1,SC_NS) ;
         cout << "---------------------"<<endl ;
         cout << "din : " << din.read() << endl ;   
-        cout << "push : " << push.read() << endl ;   
-        cout << "pop : " << pop.read() << endl ;   
+        cout << "push : " << push.read()<<" "<<rand1 << endl ;   
+        cout << "pop : " << pop.read()<<" "<<rand2 << endl ;   
         cout << "full : " << full.read() << endl ;
         cout << "empty : " << empty.read() << endl ;
         cout << "dout : " << dout.read() << endl ;
         cout << "fifo_v : "<< fifo_32b0.fifo_v.read() << endl ;
-        sc_start(1,SC_NS) ;
 
     }
     return 0 ;
