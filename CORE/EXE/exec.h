@@ -70,6 +70,6 @@ SC_MODULE(exec)
         sensitive << ALU_OUT << SHIFTER_OUT << SELECT_SHIFT;
         SC_METHOD(fifo_concat);
         sensitive << MEM_DATA << DEST << MEM_SIZE << MEM_LOAD << MEM_SIGN_EXTEND << MEM_STORE << WB << FFIN_EXE_RES;
-    }
+        }
 };
 

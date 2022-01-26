@@ -28,15 +28,17 @@ int sc_main(int argc, char* argv[])
     //declare signals 
     sc_signal< sc_uint<32> >  shifter_din, shifter_dout ;
     sc_signal< sc_uint<5> >  shifter_shift_val ;
-    sc_signal< bool > shifter_sll, shifter_srl, shifter_sra ;
+    sc_signal< sc_uint<2> > shifter_shift_cmd ;
+    //sc_signal< bool > shifter_sll, shifter_srl, shifter_sra ;
     
     //link shifter with signals
     unit_shifter.DIN(shifter_din);
     unit_shifter.DOUT(shifter_dout);
+    unit_shifter.CMD(shifter_shift_cmd) ;
     unit_shifter.SHIFT_VAL(shifter_shift_val);
-    unit_shifter.SLL(shifter_sll);
-    unit_shifter.SRL(shifter_srl);
-    unit_shifter.SRA(shifter_sra);
+    //unit_shifter.SLL(shifter_sll);
+    //unit_shifter.SRL(shifter_srl);
+    //unit_shifter.SRA(shifter_sra);
 
     //run one tick of simulation
     sc_start(1, SC_NS);
@@ -47,9 +49,10 @@ int sc_main(int argc, char* argv[])
         int sv = rand() % 16;
         int din = rand();
         int dout;
-        bool sll = false;
-        bool srl = false;
-        bool sra = false;
+        // bool sll = false;
+        // bool srl = false;
+        // bool sra = false;
+        int cmd = rand() % 2 ;
         switch (rand() % 3) {
             case 0: 
                 sll = true; 

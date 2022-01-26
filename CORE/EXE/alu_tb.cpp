@@ -59,7 +59,7 @@ int sc_main(int argc, char* argv[])
         sc_start(1,SC_NS);
         if(sc_uint<32>(result) == res)
         {
-            std::cout << "lala les schtrompfs" << i << std::endl ;
+            std::cout << "test passed" << " "<< i << std::endl ;
         }
         else {
             std::cout << "oh non gargamel" << i << std::endl ;
