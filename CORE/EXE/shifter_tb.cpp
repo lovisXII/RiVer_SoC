@@ -46,8 +46,7 @@ int sc_main(int argc, char* argv[])
         int sv = rand() % 16;
         int din = rand();
         int dout;
-        int cmd = rand() % 2 ;
-        
+        int cmd = rand() % 3 ;
         switch (cmd) {
             case 0: 
                 //compute the result in C

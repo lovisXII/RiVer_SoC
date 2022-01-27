@@ -1,6 +1,6 @@
 #pragma once
 #include <systemc.h>
-
+//might not work, but compile, so good placeholder (and maybe work, who knows)
 
 template <int T>
 SC_MODULE(fifo_generic)
@@ -44,7 +44,7 @@ void fifo_generic<T>::reg_maj() {
     while (1) {
         bool pop = POP.read();
         bool push = PUSH.read();
-        sc_uint<T> din = DIN.read();
+        sc_bv<T> din = DIN.read();
         if ((pop && push) || (push && !pop && !fifo_v.read())) {
             DOUT.write(din);
             fifo_v.write(true);
@@ -52,6 +52,7 @@ void fifo_generic<T>::reg_maj() {
         else if (pop) {
             fifo_v.write(false);
         }
+        wait();
     }
 }
 

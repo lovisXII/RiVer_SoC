@@ -4,14 +4,14 @@
 
 
 void exec::preprocess_op() {
-    sc_uint<32> op2 = OP2.read();
-    if (NEG_OP2.read()) {
-        ALU_IN_OP2.write(~op2);
+    sc_uint<32> op1 = OP1.read();
+    if (NEG_OP1.read()) {
+        ALU_IN_OP1.write(~op1);
     }
     else {
-        ALU_IN_OP2.write(op2);
+        ALU_IN_OP1.write(op1);
     }
-    SHIFT_VAL.write(op2.range(0, 4));
+    SHIFT_VAL.write(op1.range(4, 0));
 }
 
 void exec::select_exec_res() {
@@ -47,4 +47,16 @@ void exec::fifo_unconcat() {
     FFOUT_MEM_LOAD.write((bool) ff_dout[71]);
     FFOUT_MEM_STORE.write((bool) ff_dout[72]);
     FFOUT_MEM_SIGN_EXTEND.write((bool) ff_dout[73]);
+}
+
+void exec::manage_fifo() {
+    bool blocked = EXE2MEM_FULL.read() | DEC2EXE_EMPTY.read();
+    if (blocked) {
+        EXE2MEM_PUSH.write(false);
+        DEC2EXE_POP.write(false);
+    }
+    else {
+        EXE2MEM_PUSH.write(true);
+        DEC2EXE_POP.write(true);
+    }
 }
