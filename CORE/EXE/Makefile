@@ -6,7 +6,7 @@ LIBS=-lsystemc -lm
 C_ARGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 
 
-all: alu_tb shifter_tb
+all: alu_tb shifter_tb exec_tb
 
 exec_tb: alu.o shifter.o exec.o exec_tb.o
 	$(CC) $^ -o $@ $(C_ARGS)
