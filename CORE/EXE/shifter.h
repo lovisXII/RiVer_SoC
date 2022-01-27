@@ -11,7 +11,11 @@ SC_MODULE(shifter)
     sc_in< sc_uint<32> >  DIN ; //input
     sc_in< sc_uint<5> >  SHIFT_VAL ; //shift value
     sc_in< sc_uint<2> > CMD ; //command
+
     sc_out< sc_uint<32> > DOUT ; //output
+
+    //Internal signals :
+    
     sc_signal< bool > SLL, SRL, SRA ; //command, only one must be true
     sc_signal< sc_uint<32> > SLL_DOUT, SR_DOUT; //temporary output for each component
     
