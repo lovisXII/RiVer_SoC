@@ -52,10 +52,10 @@ SC_MODULE(exec)
     shifter     shifter_inst;
     fifo_74b    fifo_inst;
     
-    void preprocess_op();
-    void select_exec_res();
-    void fifo_concat();
-    void fifo_unconcat();
+    void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
+    void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT
+    void fifo_concat();     // setup result  in fifo exe2mem
+    void fifo_unconcat();   // 
     void manage_fifo();
 
     SC_CTOR(exec) :
