@@ -15,9 +15,9 @@
 void next_cycle (sc_signal<bool> &signal_clk)
 {
   signal_clk = false;
-  sc_cycle (1);
+  next_cycle (signal_clk);   //sc_cycle(1)
   signal_clk = true;
-  sc_cycle (1);
+  next_cycle (signal_clk);   //sc_cycle(1)
 }
 
 int sc_main(int ac, char *av[])
@@ -51,7 +51,7 @@ int sc_main(int ac, char *av[])
   sc_signal<sc_uint<32> >        DAT;
   sc_signal<bool>                 W_N;          // data access pending
 
-  mipsr3000 *mips1=new mipsr3000("mips1");
+/*mipsr3000* mips1 = new mipsr3000("mips1");
 
   mips1->CK(CK);
   mips1->RESET_N(RESET_N);
@@ -99,25 +99,25 @@ int sc_main(int ac, char *av[])
   mips_dec1->W_N(W_N);
 
   rom *romr1=new rom("romr1");
-  romr1->initData("romr.ini");
+  romr1->initData("inifiles/romr.ini");
   romr1->print();
   romr1->ADR(I_A_11_2);
   romr1->DAT(DAT_ROMR);
 
   rom *romu1=new rom("romu1");
-  romu1->initData("romu.ini");
+  romu1->initData("inifiles/romu.ini");
   romu1->print();
   romu1->ADR(I_A_11_2);
   romu1->DAT(DAT_ROMU);
 
   rom *romx1=new rom("romx1");
-  romx1->initData("romx.ini");
+  romx1->initData("inifiles/romx.ini");
   romx1->print();
   romx1->ADR(I_A_11_2);
   romx1->DAT(DAT_ROMX);
 
   ram *ramu1=new ram("ramu1");
-  ramu1->initData("ramu.ini");
+  ramu1->initData("inifiles/ramu.ini");
   ramu1->print();
   ramu1->ADR(D_A_11_2);
   ramu1->DAT(DAT);
@@ -202,6 +202,7 @@ int sc_main(int ac, char *av[])
   for (int i=0;i<30;i++)
     next_cycle(CK);
 
-  sc_close_vcd_trace_file(tf);
-  return 0;	/* this is necessary */
+    sc_close_vcd_trace_file(tf);*/
+  return 0; /* this is necessary */
+  
 }

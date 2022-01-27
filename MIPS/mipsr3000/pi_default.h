@@ -1,7 +1,8 @@
 #ifndef _PI_DEFAULT
 #define _PI_DEFAULT
-//#include "systemc.h"
+
 #include <systemc.h>
+
 #include "pi_constants.h"
 
 SC_MODULE(pi_default)
@@ -47,74 +48,36 @@ SC_MODULE(pi_default)
 		sensitive << PI_IREQ;
 	}
 
-	void processPI_GNT()
-	{
-		sc_uint<6> pi_gnt=0x0;
+	void processPI_GNT();
 
-		pi_gnt[0]=PI_GNT0.read();
-		pi_gnt[1]=PI_GNT1.read();
-		pi_gnt[2]=PI_GNT2.read();
-		pi_gnt[3]=PI_GNT3.read();
-		pi_gnt[4]=PI_GNT4.read();
-		pi_gnt[5]=PI_GNT5.read();
-		PI_GNT.write(pi_gnt);
-	}
+  // ### ------------------------------------------------------ ###
+  // #   internal clock                                           #
+  // ### ------------------------------------------------------ ###
 
-        // ### ------------------------------------------------------ ###
-        // #   internal clock                                           #
-        // ### ------------------------------------------------------ ###
+	void processCK_SX();
 
-	void processCK_SX()
-	{
-		CK_SX.write(CK);
-	}
+  // ### ------------------------------------------------------ ###
+  // #   bus request                                              #
+  // ### ------------------------------------------------------ ###
 
-        // ### ------------------------------------------------------ ###
-        // #   bus request                                              #
-        // ### ------------------------------------------------------ ###
+	void processPI_IREQ();
 
-	void processPI_IREQ()
-	{
-		PI_IREQ.write(0x0);
-	}
+  // ### ------------------------------------------------------ ###
+  // #   Pi output lines' enable :                                #
+  // #     enable output lines if the circuit is the default      #
+  // #     master                                                 #
+  // ### ------------------------------------------------------ ###
 
-        // ### ------------------------------------------------------ ###
-        // #   Pi output lines' enable :                                #
-        // #     enable output lines if the circuit is the default      #
-        // #     master                                                 #
-        // ### ------------------------------------------------------ ###
+	void processDEFLTEN_SX();
 
-	void processDEFLTEN_SX()
-	{
-		DEFLTEN_SX.write((PI_GNT.read()==0x0)?0:1);
-	}
+  // ### ------------------------------------------------------ ###
+  // #   assign output:                                           #
+  // #     - Pi-bus's interface                                   #
+  // ### ------------------------------------------------------ ###
 
-        // ### ------------------------------------------------------ ###
-        // #   assign output:                                           #
-        // #     - Pi-bus's interface                                   #
-        // ### ------------------------------------------------------ ###
+	void processPI_LINES();
 
-	void processPI_LINES()
-	{
-		if (DEFLTEN_SX.read()==1)
-		{
-			PI_A.write(0x0);
-			PI_READ.write(p_red_red);
-			PI_LOCK.write(0);
-			PI_OPC.write(p_opc_nop);
-		}
-	}
-
-	void processPI_IREQS()
-	{
-		sc_uint<6> pi_ireq=PI_IREQ.read();
-		PI_IREQ0.write(pi_ireq[0]);
-		PI_IREQ1.write(pi_ireq[1]);
-		PI_IREQ2.write(pi_ireq[2]);
-		PI_IREQ3.write(pi_ireq[3]);
-		PI_IREQ4.write(pi_ireq[4]);
-		PI_IREQ5.write(pi_ireq[5]);
-	}
+	void processPI_IREQS();
 
 };
 #endif
