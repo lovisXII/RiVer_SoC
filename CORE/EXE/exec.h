@@ -19,7 +19,6 @@ SC_MODULE(exec)
     sc_in< sc_uint<4> >     DEST;
     sc_in< sc_uint<2> >     CMD ;
     sc_in< sc_uint<2> >     MEM_SIZE ;
-    sc_in< bool >           NEG_OP2, WB, MEM_LOAD, MEM_STORE, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
     sc_in< bool >           NEG_OP1, WB, MEM_LOAD, MEM_STORE, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
     sc_in< bool >           EXE2MEM_POP, DEC2EXE_EMPTY;
     sc_in_clk               CLK;

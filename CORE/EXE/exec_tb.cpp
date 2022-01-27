@@ -30,7 +30,7 @@ int sc_main(int argc, char* argv[])
 
     exec unit_exec("exec") ;
 
-    sc_trace_file* file = sc_create_vcd_trace_file("trace");
+    //sc_trace_file* file = sc_create_vcd_trace_file("trace");
     
 
     //declare signals 
@@ -82,38 +82,9 @@ int sc_main(int argc, char* argv[])
     unit_exec.CLK(clk);
     unit_exec.RESET(reset);
 
-    
-    unit_exec.OP1(op1);
-    unit_exec.OP2(op2);
-    unit_exec.MEM_DATA(mem_data);
-    unit_exec.DEST(dest);
-    unit_exec.CMD(cmd);
-    unit_exec.MEM_SIZE(mem_size);
-    unit_exec.NEG_OP1(neg_op1);
-    unit_exec.WB(wb);
-    unit_exec.MEM_LOAD(mem_load);
-    unit_exec.MEM_STORE(mem_store);
-    unit_exec.MEM_SIGN_EXTEND(mem_sign_extend);
-    unit_exec.SELECT_SHIFT(select_shift); //taille fifo entrée : 110
-    unit_exec.EXE2MEM_POP(exe2mem_pop);
-    unit_exec.DEC2EXE_EMPTY(dec2exe_empty);
-
-    unit_exec.FFOUT_EXE_RES(ffout_exe_res);
-    unit_exec.FFOUT_MEM_DATA(ffout_mem_data);
-    unit_exec.FFOUT_DEST(ffout_dest);
-    unit_exec.FFOUT_MEM_SIZE(ffout_mem_size);
-    unit_exec.FFOUT_WB(ffout_wb);
-    unit_exec.FFOUT_MEM_LOAD(ffout_mem_load);
-    unit_exec.FFOUT_MEM_STORE(ffout_mem_store);
-    unit_exec.FFOUT_MEM_SIGN_EXTEND(ffout_mem_sign_extend); //taille fifo sortie : 74
-    unit_exec.EXE2MEM_EMPTY(exe2mem_empty);
-    unit_exec.DEC2EXE_POP(dec2exe_pop);
-
-    unit_exec.CLK(clk);
-    unit_exec.RESET(reset);
-
     reset.write(true);
     sc_start(1, SC_NS);
+    sc_start(1, SC_PS);
     reset.write(false);
     sc_start(2, SC_NS);
     int i;
@@ -141,7 +112,7 @@ int sc_main(int argc, char* argv[])
         wb = wb_; 
         mem_load = mem_load_; 
         mem_sign_extend = mem_sign_extend_;
-        mem_store = mem_store_;wait();
+        mem_store = mem_store_;
         exe2mem_pop = exe2mem_pop_;
         dec2exe_empty = dec2exe_empty_;
         sc_start(0, SC_NS);
@@ -197,7 +168,7 @@ int sc_main(int argc, char* argv[])
         }
         should_be_full = !dec2exe_empty_;
     }
-    cout << i << " tests successfully ran on FIFO" << endl;
+    //cout << i << " tests successfully ran on FIFO" << endl;
 
     
     return 0 ;
