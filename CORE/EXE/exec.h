@@ -5,24 +5,31 @@
 #include "alu.h"
 #include "shifter.h"
 #include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo_72b/fifo_72b.h"
 
 typedef fifo_generic<74> fifo_74b;
 
 SC_MODULE(exec)
 {
-    sc_in< sc_uint<32> >  OP1 ;
-    sc_in< sc_uint<32> >  OP2 ;
-    sc_in< sc_uint<32> >  MEM_DATA;
-    sc_in< sc_uint<4> >   DEST;
-    sc_in< sc_uint<2> >   CMD ;
-    sc_in< sc_uint<2> >   MEM_SIZE ;
-    sc_in< bool >   NEG_OP2, WB, MEM_LOAD, MEM_STORE, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
+    // Input/Output of EXE : 
+
+    sc_in< sc_uint<32> >    OP1 ;
+    sc_in< sc_uint<32> >    OP2 ;
+    sc_in< sc_uint<32> >    MEM_DATA;
+    sc_in< sc_uint<4> >     DEST;
+    sc_in< sc_uint<2> >     CMD ;
+    sc_in< sc_uint<2> >     MEM_SIZE ;
+    sc_in< bool >           NEG_OP2, WB, MEM_LOAD, MEM_STORE, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
+    sc_in_clk               CLK;
+    sc_in< bool >           RESET;
 
     sc_out< sc_uint<32> >  FFOUT_EXE_RES ;
     sc_out< sc_uint<32> >  FFOUT_MEM_DATA;
     sc_out< sc_uint<4> >   FFOUT_DEST;
     sc_out< sc_uint<2> >   FFOUT_MEM_SIZE ;
-    sc_out< bool >   FFOUT_WB, FFOUT_MEM_LOAD, FFOUT_MEM_STORE, FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 74
+    sc_out< bool >         FFOUT_WB, FFOUT_MEM_LOAD, FFOUT_MEM_STORE, FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 74
+
+    //Internals signals :
 
     sc_signal< sc_uint<32> >  FFIN_EXE_RES ;
 
@@ -34,12 +41,11 @@ SC_MODULE(exec)
     sc_signal< sc_uint<32> > SHIFTER_OUT;
     sc_signal< sc_uint<5> > SHIFT_VAL;    
 
-    sc_in_clk CLK;
-    sc_in< bool > RESET;
+    //Instance used :
 
-    alu alu_inst;
-    shifter shifter_inst;
-    fifo_74b fifo_inst;
+    alu         alu_inst;
+    shifter     shifter_inst;
+    fifo_74b    fifo_inst;
     
     void entry();
     void preprocess_op();
@@ -52,11 +58,15 @@ SC_MODULE(exec)
         shifter_inst("shifter"),
         fifo_inst("exe2mem")
     {
+        //ALU port map :
+
         alu_inst.OP1(OP1);
         alu_inst.OP2(ALU_IN_OP2);
         alu_inst.CMD(CMD);
         alu_inst.CIN(NEG_OP2);
         alu_inst.RES(ALU_OUT);
+
+        //Shifter port map :
 
         shifter_inst.DIN(OP1);
         shifter_inst.SHIFT_VAL(SHIFT_VAL);
