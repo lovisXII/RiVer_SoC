@@ -1,0 +1,20 @@
+		.org	0x00400000
+          
+initfp:	       	j	initfp1
+		nop
+                nop
+                nop
+                nop
+	        nop
+                nop
+                nop
+                nop
+	        nop
+                nop
+                nop
+                nop
+                nop
+                nop
+                nop
+initfp1:        j       initfp
+		.end
