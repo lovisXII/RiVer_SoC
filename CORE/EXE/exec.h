@@ -5,9 +5,9 @@
 #include "alu.h"
 #include "shifter.h"
 #include "../UTIL/fifo_generic/fifo_generic.h"
-#include "../UTIL/fifo_72b/fifo_72b.h"
+#include "../UTIL/fifo_74b/fifo_74b.h"
 
-typedef fifo_generic<74> fifo_74b;
+//typedef fifo_generic<74> fifo_74b;
 
 SC_MODULE(exec)
 {
@@ -24,19 +24,22 @@ SC_MODULE(exec)
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
 
+    //Fifo exe2mem interface :
+
     sc_out< sc_uint<32> >  FFOUT_EXE_RES ;
     sc_out< sc_uint<32> >  FFOUT_MEM_DATA;
     sc_out< sc_uint<4> >   FFOUT_DEST;
     sc_out< sc_uint<2> >   FFOUT_MEM_SIZE ;
 
-    //Internals signals :
-
     sc_out< bool >   FFOUT_WB, FFOUT_MEM_LOAD, FFOUT_MEM_STORE, FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 74
     sc_out< bool >   EXE2MEM_EMPTY, DEC2EXE_POP;
     
+
+    //Internals signals :
+    
     sc_signal< sc_uint<32> >  FFIN_EXE_RES ;
 
-    sc_signal< sc_bv<74> >    FF_DIN;
+    sc_signal< sc_bv<74> >    FF_DIN; // concatenation of exe_res, mem_data...etc
     sc_signal< sc_bv<74> >    FF_DOUT;
 
     sc_signal< sc_uint<32> > ALU_IN_OP1;
@@ -54,8 +57,8 @@ SC_MODULE(exec)
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT
     void fifo_concat();     // setup result  in fifo exe2mem
-    void fifo_unconcat();   // 
-    void manage_fifo();
+    void fifo_unconcat();   // unconcatenet result from the fifo
+    void manage_fifo(); // allow the push/pop of fifo exe2mem
 
     SC_CTOR(exec) :
         alu_inst("alu"), 

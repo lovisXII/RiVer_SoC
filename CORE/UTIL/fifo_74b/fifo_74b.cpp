@@ -1,6 +1,6 @@
-#include "fifo_32b.h"
+#include "fifo_74b.h"
 
-void fifo_32b::function()
+void fifo_74b::function()
 {
     fifo_v.write(false) ;
     data_inside.write(0) ;
@@ -18,9 +18,6 @@ void fifo_32b::function()
         bool pop = POP.read() ;
         if( fifo_v ) // if the data in the fifo is valide
         {
-            cout << "case fifo_v = 1" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
             
             if(!push && !pop)
             {
@@ -40,7 +37,7 @@ void fifo_32b::function()
             {
                 FULL.write(1) ;
                 EMPTY.write(0) ;
-                // do nothing
+                DOUT.write(data_inside) ;
             }
             else if(push && pop )
             {
@@ -53,10 +50,6 @@ void fifo_32b::function()
         }
         else // case where data inside the fifo is not valid
         {
-            cout << "case fifo_v = 0" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
-
             if(!push && !pop )
             {
                 FULL.write(0) ;
@@ -75,16 +68,18 @@ void fifo_32b::function()
                 EMPTY.write(0) ;
 
                 data_inside.write(DIN.read()) ;
+                DOUT.write(DIN.read()) ;
+                
                 fifo_v.write(1) ;
-                cout << "push = 1 et pop = 0" << endl ;
             }
             else if(push && pop)
             {
                 FULL.write(1) ;
                 EMPTY.write(0) ;
-                // we don't pop cause data is not valid
+                
+                
                 data_inside.write(DIN.read()) ; // we just push
-                cout << "push = 1 et pop = 1" << endl ;
+                DOUT.write(DIN.read()) ;
                 fifo_v.write(1) ; // became valid
             }
         }

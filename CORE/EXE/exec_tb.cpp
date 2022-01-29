@@ -4,7 +4,7 @@
 #include "shifter.h"
 #include <cstdlib>
 #include <string>
-#define NB_TEST 1000
+#define NB_TEST 10
 using namespace std;
 
 //a function to print the bits of any value
@@ -52,7 +52,9 @@ int sc_main(int argc, char* argv[])
 
     sc_signal< bool > reset;
     sc_clock clk("clk",1,SC_NS);    
-    //link shifter with signals
+    
+    //Port Map :
+    
     unit_exec.OP1(op1);
     unit_exec.OP2(op2);
     unit_exec.MEM_DATA(mem_data);
@@ -87,11 +89,15 @@ int sc_main(int argc, char* argv[])
     sc_start(1, SC_PS);
     reset.write(false);
     sc_start(2, SC_NS);
+    cout << "reset is done " << endl ;
     int i;
     bool should_be_full = false;
+
     //test fifo
+    
     for (i = 0; i < NB_TEST; i++) {
         cout << "." << flush;
+        
         int op1_ = rand();
         int mem_data_ = rand();
         int dest_ = rand() % 16;
@@ -115,16 +121,27 @@ int sc_main(int argc, char* argv[])
         mem_store = mem_store_;
         exe2mem_pop = exe2mem_pop_;
         dec2exe_empty = dec2exe_empty_;
+
         sc_start(0, SC_NS);
         sc_start(0, SC_NS);
         sc_start(0, SC_NS);
         sc_start(0, SC_NS);
+        cout << "------------------------------------------"<<endl ;
+        cout << "EXE2MEM_PUSH : " ;
         print_bits((bool)unit_exec.EXE2MEM_PUSH.read());
+        cout << "EXE2MEM_FULL : " ;        
         print_bits((bool)unit_exec.EXE2MEM_FULL.read());
+        cout << "DEC2EXE_EMPTY : " ;
         print_bits((bool)unit_exec.DEC2EXE_EMPTY.read());
+        cout << "FF_DIN : " ;
         print_bits((int) (sc_uint<32>) (sc_bv_base) unit_exec.FF_DIN.read().range(31, 0));
+        cout << "FF_DOUT : " ;
         sc_start(1, SC_NS);
         print_bits((int) (sc_uint<32>) (sc_bv_base) unit_exec.FF_DOUT.read().range(31, 0));
+
+        
+        cerr << "avant if" << endl ;
+        
         if (i > 0) {
             should_be_full = should_be_full && !exe2mem_pop_;
             if (!should_be_full) {
@@ -138,6 +155,7 @@ int sc_main(int argc, char* argv[])
                     ffout_mem_sign_extend.read() != mem_sign_extend_ ||
                     ffout_mem_store.read() != mem_store_
                 ) {
+                    cout << "1ere position : ce que l'on a \n2eme position : ce que l'on devrait avoir" << endl ;
                     cout << "error : mismatch in fifo" << endl;
                     cout << "ffout_exe_res" << endl;
                     print_bits((int) ffout_exe_res.read());
