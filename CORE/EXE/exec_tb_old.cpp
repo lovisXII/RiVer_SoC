@@ -32,7 +32,7 @@ int sc_main(int argc, char* argv[])
 
     //sc_trace_file* file = sc_create_vcd_trace_file("trace");
     
-
+    
     //declare signals 
     sc_signal< sc_uint<32> >  op1;
     sc_signal< sc_uint<32> >  op2;

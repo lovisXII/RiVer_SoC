@@ -24,5 +24,5 @@ shifter_tb: shifter.o shifter_tb.o
 	make -C ../UTIL/fifo_74b/
 
 clean: 
-	rm -f *.o main alu_tb shifter_tb exec_tb
+	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd
 	cd ../UTIL/fifo_74b/ && make clean

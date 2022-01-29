@@ -23,7 +23,7 @@ void exec::select_exec_res() {
     else {
         FFIN_EXE_RES.write(ALU_OUT);
     }
-
+    
 }
 void exec::fifo_concat() {
     sc_bv<74> ff_din;
@@ -36,6 +36,7 @@ void exec::fifo_concat() {
     ff_din[72] = MEM_STORE.read();
     ff_din[73] = MEM_SIGN_EXTEND.read();
     FF_DIN.write(ff_din);
+    
 }
 void exec::fifo_unconcat() {
     sc_bv<74> ff_dout = FF_DOUT.read();

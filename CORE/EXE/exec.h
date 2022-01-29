@@ -23,7 +23,7 @@ SC_MODULE(exec)
     sc_in< bool >           EXE2MEM_POP, DEC2EXE_EMPTY;
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
-
+    
     //Fifo exe2mem interface :
 
     sc_out< sc_uint<32> >  FFOUT_EXE_RES ;
