@@ -15,9 +15,9 @@
 void next_cycle (sc_signal<bool> &signal_clk)
 {
   signal_clk = false;
-  next_cycle (signal_clk);   //sc_cycle(1)
+  sc_start(1, SC_NS);   //sc_cycle(1)
   signal_clk = true;
-  next_cycle (signal_clk);   //sc_cycle(1)
+  sc_start(1, SC_NS);   //sc_cycle(1)
 }
 
 int sc_main(int ac, char *av[])
@@ -44,6 +44,9 @@ int sc_main(int ac, char *av[])
   sc_signal<sc_uint<32> >        DAT_ROMU;
   sc_signal<sc_uint<32> >        DAT_ROMR;
   sc_signal<sc_uint<32> >        DAT_ROMX;
+  sc_signal<sc_uint<32> >        DAT_RAMS;
+  sc_signal<sc_uint<32> >        DAT_RAMU;
+    
   sc_signal<sc_uint<10> >        I_A_11_2;
   sc_signal<sc_uint<10> >        D_A_11_2;
   sc_signal<sc_uint<4> >        E_RAMU;
@@ -116,24 +119,37 @@ mipsr3000* mips1 = new mipsr3000("mips1");
   romx1->ADR(I_A_11_2);
   romx1->DAT(DAT_ROMX);
 
+  ram *ramu1=new ram("ramu1");
+  ramu1->initData("inifiles/ramu.ini");
+  ramu1->print();
+  ramu1->ADR(D_A_11_2);
+  ramu1->DAT(DAT_RAMU);
+  ramu1->E(E_RAMU);
+  ramu1->W_N(W_N);
+
+  ram *rams1=new ram("rams1");
+  rams1->ADR(D_A_11_2);
+  rams1->DAT(DAT_RAMS);
+  rams1->E(E_RAMS);
+  rams1->W_N(W_N);
 
   sc_trace_file *tf;
 
   tf=sc_create_vcd_trace_file("tf");
   sc_trace(tf,CK,"CLK");
-//sc_trace(tf,mips1->RESET_RX,"RESET_RX");
+  sc_trace(tf,mips1->RESET_RX,"RESET_RX");
   sc_trace(tf,mips1->IR_RI,"IR_RI");     
-//sc_trace(tf,mips1->I_TYPE_SD,"I_TYPE_SD");
-//sc_trace(tf,mips1->I_TYPE_RD,"I_TYPE_RD");
+  sc_trace(tf,mips1->I_TYPE_SD,"I_TYPE_SD");
+  sc_trace(tf,mips1->I_TYPE_RD,"I_TYPE_RD");
   sc_trace(tf,mips1->NEXTPC_RD,"NEXTPC_RD");   
-//sc_trace(tf,mips1->I,"I");
-//sc_trace(tf,mips1->decode1->I_BRNCH_SD,"I_BRNCH_SD");
-//sc_trace(tf,mips1->decode1->JMPADR_SD,"JMPADR_SD");
-//sc_trace(tf,mips1->decode1->NEXTPC_SD,"NEXTPC_SD");
-
-//sc_trace(tf,mips1->decode1->RD_SD,"RD_SD");
-//sc_trace(tf,mips1->decode1->RS_SD,"RS_SD");
-//sc_trace(tf,mips1->decode1->RT_SD,"RT_SD");
+  sc_trace(tf,mips1->I,"I");
+  sc_trace(tf,mips1->decode1->I_BRNCH_SD,"I_BRNCH_SD");
+  sc_trace(tf,mips1->decode1->JMPADR_SD,"JMPADR_SD");
+  sc_trace(tf,mips1->decode1->NEXTPC_SD,"NEXTPC_SD");
+  
+  sc_trace(tf,mips1->decode1->RD_SD,"RD_SD");
+  sc_trace(tf,mips1->decode1->RS_SD,"RS_SD");
+  sc_trace(tf,mips1->decode1->RT_SD,"RT_SD");
 
   sc_trace(tf,mips1->regfile1->registerFile[1],"R1");
   sc_trace(tf,mips1->regfile1->registerFile[12],"R12");
@@ -144,43 +160,43 @@ mipsr3000* mips1 = new mipsr3000("mips1");
   sc_trace(tf,mips1->regfile1->registerFile[26],"R26");
   sc_trace(tf,mips1->regfile1->registerFile[30],"R30");
   
-//sc_trace(tf,mips1->regfile1->WRC,"WRC");
-//sc_trace(tf,mips1->ff_decode1->RD_RD,"RD");
-//sc_trace(tf,mips1->alu1->XOPER_SE,"XOPER_SE");
-//sc_trace(tf,mips1->alu1->YOPER_SE,"YOPER_SE");
-//sc_trace(tf,mips1->alu1->RLOGIC_SE,"RLOGIC_SE");
-//sc_trace(tf,mips1->IOPER_SD,"IOPER_SD");
-//sc_trace(tf,mips1->IOPER_RD,"IOPER_RD");
-//sc_trace(tf,mips1->RES_RE,"RES_RE");
-//sc_trace(tf,mips1->forwardunit1->HZD_SDE_SD,"HZD_SDE_SD");
-//sc_trace(tf,mips_dec1->SEL_ROMR,"SEL_ROMR");
-//sc_trace(tf,mips_dec1->SEL_ROMU,"SEL_ROMU");
-//sc_trace(tf,mips_dec1->SEL_ROMX,"SEL_ROMX");
+  sc_trace(tf,mips1->regfile1->WRC,"WRC");
+  sc_trace(tf,mips1->ff_decode1->RD_RD,"RD");
+  sc_trace(tf,mips1->alu1->XOPER_SE,"XOPER_SE");
+  sc_trace(tf,mips1->alu1->YOPER_SE,"YOPER_SE");
+  sc_trace(tf,mips1->alu1->RLOGIC_SE,"RLOGIC_SE");
+  sc_trace(tf,mips1->IOPER_SD,"IOPER_SD");
+  sc_trace(tf,mips1->IOPER_RD,"IOPER_RD");
+  sc_trace(tf,mips1->RES_RE,"RES_RE");
+  sc_trace(tf,mips1->forwardunit1->HZD_SDE_SD,"HZD_SDE_SD");
+  sc_trace(tf,mips_dec1->SEL_ROMR,"SEL_ROMR");
+  sc_trace(tf,mips_dec1->SEL_ROMU,"SEL_ROMU");
+  sc_trace(tf,mips_dec1->SEL_ROMX,"SEL_ROMX");
 
   sc_trace(tf,mips1->forwardunit1->HAZARDS_SD,"HAZARDS_SD");
   sc_trace(tf,mips1->forwardunit1->HAZARDS_SE,"HAZARDS_SE");
   
-//sc_trace(tf,mips1->TOPER_RD,"TOPER_RD");
-//sc_trace(tf,mips1->Y_SE,"Y_SE");
-//sc_trace(tf,mips1->WDATA_RE,"WDATA_RE");
-//sc_trace(tf,mips1->memory1->I_WRITE_SM,"I_WRITE_SM");
+  sc_trace(tf,mips1->TOPER_RD,"TOPER_RD");
+  sc_trace(tf,mips1->Y_SE,"Y_SE");
+  sc_trace(tf,mips1->WDATA_RE,"WDATA_RE");
+  sc_trace(tf,mips1->memory1->I_WRITE_SM,"I_WRITE_SM");
 
-//sc_trace(tf,mips_dec1->D_A,"D_A");
-//sc_trace(tf,mips_dec1->D_IN,"D_IN");
-//sc_trace(tf,mips_dec1->D_OUT,"D_OUT");
-//sc_trace(tf,mips_dec1->W_N,"W_N");
-//sc_trace(tf,mips_dec1->BYTE_SEL,"BYTE_SEL");
-//sc_trace(tf,mips_dec1->BYTE,"BYTE");
-//sc_trace(tf,mips_dec1->E_RAMU,"E_RAMU");
-//sc_trace(tf,mips_dec1->D_ATYPE,"D_ATYPE");
+  sc_trace(tf,mips_dec1->D_A,"D_A");
+  sc_trace(tf,mips_dec1->D_IN,"D_IN");
+  sc_trace(tf,mips_dec1->D_OUT,"D_OUT");
+  sc_trace(tf,mips_dec1->W_N,"W_N");
+  sc_trace(tf,mips_dec1->BYTE_SEL,"BYTE_SEL");
+  sc_trace(tf,mips_dec1->BYTE,"BYTE");
+  sc_trace(tf,mips_dec1->E_RAMU,"E_RAMU");
+  sc_trace(tf,mips_dec1->D_ATYPE,"D_ATYPE");
 
   sc_start(SC_ZERO_TIME);
   RESET_N = false;
   IT_N = 0x3F;
-//I_BERR_N = true;
+  I_BERR_N = true;
   I_FRZ = false;
-//I = 0x00000021;
-//D_BERR_N = true;
+  I = 0x00000021;
+  D_BERR_N = true;
   D_FRZ = false;
 
   next_cycle (CK);
@@ -193,5 +209,4 @@ mipsr3000* mips1 = new mipsr3000("mips1");
 
     sc_close_vcd_trace_file(tf);
   return 0; /* this is necessary */
-  
 }
