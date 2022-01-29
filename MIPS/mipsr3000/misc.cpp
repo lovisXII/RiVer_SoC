@@ -1,5 +1,27 @@
 #include "misc.h"
 
+void misc::processCK_SX()
+{
+  CK_SX.write(CK.read());
+}
+
+void misc::processIT_XX()
+{
+  IT_XX.write(!IT_N.read());
+}
+
+void misc::processCAUSE_XX()
+{
+  sc_uint<32> cause_rx=CAUSE_RX.read();
+  sc_uint<32> cause_xx=0x0;
+
+  cause_xx[31]=BDSLOT_RD.read();
+  cause_xx.range(29,28)=COPERR_XM.read();
+  cause_xx.range(15,10)=IT_XX.read();
+  cause_xx.range(9,8)=SWINT_XM.read();
+  cause_xx.range(5,2)=EXCCODE_XM.read();
+  CAUSE_XX.write(cause_xx);
+}
 
 void misc::processCAUSE_SX()
 {

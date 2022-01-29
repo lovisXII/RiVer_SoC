@@ -393,9 +393,9 @@ SC_MODULE(i_cache)
 		SC_METHOD(processPI_IREQ);
 		sensitive << P_STAT_RX;
 		SC_METHOD(processPI_LINES);
-		sensitive << CK_SX << ADRCNT_RX << PILINEN_SX << DEFLTEN_SX << P_STAT_RX << MOREADR_SX << ANSFULL_SX;
+		sensitive << CK.pos() << ADRCNT_RX << PILINEN_SX << DEFLTEN_SX << P_STAT_RX << MOREADR_SX << ANSFULL_SX;
 		SC_METHOD(processCLOCK);
-		sensitive_pos << CK_SX;
+		sensitive << CK.pos();
 		SC_METHOD(processI_BERR_N);
 		SC_METHOD(processACSCNT_SX);
 		sensitive << ACSCNT_RX << P_STAT_RX << DATARDY_SX << ANSFULL_SX;

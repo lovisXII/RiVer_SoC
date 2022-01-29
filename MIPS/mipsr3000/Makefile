@@ -10,9 +10,11 @@ DECOD=decode.o mux_decode.o ff_decode.o decode_rom.o
 EXEC=execute.o mux_execute.o ff_execute.o
 MEM=memory.o mux_memory.o ff_memory.o
 WBK=writeback.o mux_writeback.o ff_writeback.o
-MISC=misc.o mux_misc.o ff_misc.h
+MISC=misc.o mux_misc.o ff_misc.o
 CACHE=i_cache.cpp rom.cpp ram.cpp
-OTHER=alu.o regfile.o forwardunit.o pipeunit.h pi_default.cpp pi_control.cpp mips_dec.cpp
+OTHER=alu.o regfile.o forwardunit.o pipeunit.o pi_default.cpp pi_control.cpp mips_dec.cpp
+
+all: mips
 
 mips:  main.cpp $(IFETCH) $(DECOD) $(EXEC) $(MEM) $(WBK) $(MISC) $(CACHE) $(OTHER)
 	$(CC) $^ -o $@ $(C_ARGS)

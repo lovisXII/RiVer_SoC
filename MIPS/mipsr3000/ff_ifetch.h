@@ -26,7 +26,7 @@
 
 SC_MODULE(ff_ifetch)
 {
-  sc_in<bool> CK_SX;
+  sc_in_clk CK_SX;
 
   sc_in<sc_uint<32> > MUX_IR_SI;
   sc_out<sc_uint<32> > IR_RI;
@@ -57,7 +57,7 @@ SC_MODULE(ff_ifetch)
     SR_RI("SR_RI")
       {
 		SC_METHOD(processClock);
-		sensitive_pos << CK_SX;
+		sensitive << CK_SX;
       }
 
   void processClock();

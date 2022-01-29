@@ -144,11 +144,11 @@ SC_MODULE(pi_control)
     sensitive << C_STAT_RX << GLBRQST_SX << DFLMSTR_SX << DATARDY_SX 
               << GLBRQST_SX << GRANT_SX << DFLTRQS_SX;
     SC_METHOD(processC_STAT_RX);
-    sensitive_pos << CK_SX;
+    sensitive << CK.pos();
     SC_METHOD(processPRIOR_RX);
-    sensitive_pos << CK_SX;
+    sensitive << CK.pos();
     SC_METHOD(processRESET_RX);
-    sensitive_pos << CK_SX;
+    sensitive << CK.pos();
     SC_METHOD(processGNTS);
     sensitive << PI_GNT;
     SC_METHOD(processSELS);

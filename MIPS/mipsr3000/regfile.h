@@ -28,7 +28,7 @@ SC_MODULE(regfile)
 	sc_in<sc_uint<5> > RRB;
 	sc_in<sc_uint<5> > WRC;
 	sc_in<sc_uint<32> > WDATA;
-	sc_in<bool> CK_SX;
+	sc_in_clk CK_SX;
 	sc_out<sc_uint<32> > DA;
 	sc_out<sc_uint<32> > DB;
 
@@ -39,7 +39,7 @@ SC_MODULE(regfile)
 		SC_METHOD(mReadRegs);
 		sensitive << RRA << RRB ;
 		SC_METHOD(mWriteReg);
-		sensitive_pos(CK_SX) ;
+		sensitive << CK_SX.pos() ;
 	}
 
 	void mReadRegs();

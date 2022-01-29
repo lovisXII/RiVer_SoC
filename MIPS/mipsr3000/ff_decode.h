@@ -116,7 +116,7 @@ SC_MODULE(ff_decode)
     IOPER_RD("IOPER_RD")
       {
         SC_METHOD(processClock);
-        sensitive_pos << CK_SX;
+        sensitive << CK_SX.pos();
       }
   
   void processClock();

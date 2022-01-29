@@ -447,7 +447,7 @@ SC_MODULE(d_cache)
     sensitive << ACSADR_RX << PILINEN_SX << CK_SX << DEFLTEN_SX << ACSTYP_RX << P_STAT_RX << MOREADR_SX << ACSMOD_RX
               << ANSFULL_SX << PIOPC_SX;
     SC_METHOD(processCLOCK);
-    sensitive_pos << CK_SX;
+    sensitive << CK_SX.pos();
     SC_METHOD(processD_BERR_N);
   }
 

@@ -35,7 +35,7 @@ SC_MODULE(ff_writeback)
   SC_CTOR(ff_writeback)
   {
     SC_METHOD(processClock);
-    sensitive_pos << CK_SX;
+    sensitive << CK_SX.pos();
   }
 
   void processClock();

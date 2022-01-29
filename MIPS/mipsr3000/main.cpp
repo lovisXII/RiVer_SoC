@@ -51,7 +51,7 @@ int sc_main(int ac, char *av[])
   sc_signal<sc_uint<32> >        DAT;
   sc_signal<bool>                 W_N;          // data access pending
 
-/*mipsr3000* mips1 = new mipsr3000("mips1");
+mipsr3000* mips1 = new mipsr3000("mips1");
 
   mips1->CK(CK);
   mips1->RESET_N(RESET_N);
@@ -116,29 +116,16 @@ int sc_main(int ac, char *av[])
   romx1->ADR(I_A_11_2);
   romx1->DAT(DAT_ROMX);
 
-  ram *ramu1=new ram("ramu1");
-  ramu1->initData("inifiles/ramu.ini");
-  ramu1->print();
-  ramu1->ADR(D_A_11_2);
-  ramu1->DAT(DAT);
-  ramu1->E(E_RAMU);
-  ramu1->W_N(W_N);
-
-  ram *rams1=new ram("rams1");
-  rams1->ADR(D_A_11_2);
-  rams1->DAT(DAT);
-  rams1->E(E_RAMS);
-  rams1->W_N(W_N);
 
   sc_trace_file *tf;
 
   tf=sc_create_vcd_trace_file("tf");
   sc_trace(tf,CK,"CLK");
 //sc_trace(tf,mips1->RESET_RX,"RESET_RX");
-  sc_trace(tf,mips1->IR_RI,"IR_RI");
+  sc_trace(tf,mips1->IR_RI,"IR_RI");     
 //sc_trace(tf,mips1->I_TYPE_SD,"I_TYPE_SD");
 //sc_trace(tf,mips1->I_TYPE_RD,"I_TYPE_RD");
-  sc_trace(tf,mips1->NEXTPC_RD,"NEXTPC_RD");
+  sc_trace(tf,mips1->NEXTPC_RD,"NEXTPC_RD");   
 //sc_trace(tf,mips1->I,"I");
 //sc_trace(tf,mips1->decode1->I_BRNCH_SD,"I_BRNCH_SD");
 //sc_trace(tf,mips1->decode1->JMPADR_SD,"JMPADR_SD");
@@ -156,6 +143,7 @@ int sc_main(int ac, char *av[])
   sc_trace(tf,mips1->regfile1->registerFile[16],"R16");
   sc_trace(tf,mips1->regfile1->registerFile[26],"R26");
   sc_trace(tf,mips1->regfile1->registerFile[30],"R30");
+  
 //sc_trace(tf,mips1->regfile1->WRC,"WRC");
 //sc_trace(tf,mips1->ff_decode1->RD_RD,"RD");
 //sc_trace(tf,mips1->alu1->XOPER_SE,"XOPER_SE");
@@ -171,6 +159,7 @@ int sc_main(int ac, char *av[])
 
   sc_trace(tf,mips1->forwardunit1->HAZARDS_SD,"HAZARDS_SD");
   sc_trace(tf,mips1->forwardunit1->HAZARDS_SE,"HAZARDS_SE");
+  
 //sc_trace(tf,mips1->TOPER_RD,"TOPER_RD");
 //sc_trace(tf,mips1->Y_SE,"Y_SE");
 //sc_trace(tf,mips1->WDATA_RE,"WDATA_RE");
@@ -185,7 +174,7 @@ int sc_main(int ac, char *av[])
 //sc_trace(tf,mips_dec1->E_RAMU,"E_RAMU");
 //sc_trace(tf,mips_dec1->D_ATYPE,"D_ATYPE");
 
-  sc_initialize ();
+  sc_start(SC_ZERO_TIME);
   RESET_N = false;
   IT_N = 0x3F;
 //I_BERR_N = true;
@@ -202,7 +191,7 @@ int sc_main(int ac, char *av[])
   for (int i=0;i<30;i++)
     next_cycle(CK);
 
-    sc_close_vcd_trace_file(tf);*/
+    sc_close_vcd_trace_file(tf);
   return 0; /* this is necessary */
   
 }

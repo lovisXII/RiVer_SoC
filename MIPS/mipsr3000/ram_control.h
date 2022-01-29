@@ -44,17 +44,18 @@ SC_MODULE(ram_control)
     SC_METHOD(processRAM_W_N);
     sensitive << READ_RX;
     SC_METHOD(processRAM_E);
-    sensitive << BYTE_SX << SELECT_RX << CK_SX;
+    sensitive << BYTE_SX << SELECT_RX << CK.pos();
     SC_METHOD(processRAM_D);
     sensitive << READ_RX << CK_SX << MODE_SX << PI_D;
     SC_METHOD(processPI_ACK);
     sensitive << SELECT_RX;
     SC_METHOD(processPI_D);
     sensitive << SELECT_RX << READ_RX << RAM_D;
+    
     SC_METHOD(processTRANSFER);
-    sensitive_pos << CK_SX;
+    sensitive << CK.pos();
     SC_METHOD(processRESET);
-    sensitive_pos << CK_SX;
+    sensitive << CK.pos();
   }
 
 // ### ------------------------------------------------------ ###
