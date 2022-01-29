@@ -46,7 +46,6 @@ void exec::fifo_unconcat() {
     FFOUT_WB.write((bool) ff_dout[70]);
     FFOUT_MEM_LOAD.write((bool) ff_dout[71]);
     FFOUT_MEM_STORE.write((bool) ff_dout[72]);
-    FFOUT_MEM_SIGN_EXTEND.write((bool) ff_dout[73]);
 }
 
 void exec::manage_fifo() {

@@ -4,7 +4,7 @@
 #include "shifter.h"
 #include <cstdlib>
 #include <string>
-#define NB_TEST 10
+#define NB_TEST 1000
 using namespace std;
 
 //a function to print the bits of any value
@@ -97,11 +97,12 @@ int sc_main(int argc, char* argv[])
     bool should_be_full = false;
     
     //test fifo
-    
+    bool test_passed = true ;
     for (i = 0; i < NB_TEST; i++) {
-        cout << "." << flush;
-        
         int op1_ = rand();
+        int op2_ = rand() ;
+        int cmd_ = rand() %4 ;
+        int select_shift_ = rand() % 2 ;
         int mem_data_ = rand();
         int dest_ = rand() % 16;
         int mem_size_ = rand() % 4;
@@ -112,9 +113,9 @@ int sc_main(int argc, char* argv[])
         bool exe2mem_pop_ = rand() % 2;
         bool dec2exe_empty_ = rand() % 2;
         op1 = op1_;
-        op2 = 0;
-        select_shift = 0;
-        cmd = 0;
+        op2 = op2_;
+        select_shift = select_shift_;
+        cmd = cmd_;
         mem_data = mem_data_;
         dest = dest_;
         mem_size = mem_size_; 
@@ -125,82 +126,66 @@ int sc_main(int argc, char* argv[])
         exe2mem_pop = exe2mem_pop_;
         dec2exe_empty = dec2exe_empty_;
 
-        sc_start(0, SC_NS);
-        sc_start(0, SC_NS);
-        sc_start(0, SC_NS);
-        sc_start(0, SC_NS);
-
-        cout << "------------------------------------------" << endl ;
-        cout << "Interface avec decode : " << endl ;
-        cout << "dec2exe_empty "<< DEC2EXE_EMPTY.read() << endl ;
-        cout << "Calcul interne à EXE :" << endl ;
-        
-
-
-       /*  cout << "------------------------------------------"<<endl ;
-        cout << "op1 :" << unit_exec.OP1.read() << endl ;
-
-        cout << "EXE2MEM_PUSH : " ;
-        print_bits((bool)unit_exec.EXE2MEM_PUSH.read());
-        cout << "EXE2MEM_FULL : " ;        
-        print_bits((bool)unit_exec.EXE2MEM_FULL.read());
-        cout << "DEC2EXE_EMPTY : " ;
-        print_bits((bool)unit_exec.DEC2EXE_EMPTY.read());
-        cout << "FF_DIN : " ;
-        print_bits((int) (sc_uint<32>) (sc_bv_base) unit_exec.FF_DIN.read().range(31, 0));
-        cout << "FF_DOUT : " ;
         sc_start(1, SC_NS);
-        print_bits((int) (sc_uint<32>) (sc_bv_base) unit_exec.FF_DOUT.read().range(31, 0));
 
-        
-        cerr << "avant if" << endl ;
-        
-        if (i > 0) {
-            should_be_full = should_be_full && !exe2mem_pop_;
-            if (!should_be_full) {
-                if (
-                    ffout_exe_res.read() != op1_ ||
-                    ffout_mem_data.read() != mem_data_ ||
-                    ffout_dest.read() != dest_ ||
-                    ffout_mem_size.read() != mem_size_ ||
-                    ffout_wb.read() != wb_ ||
-                    ffout_mem_load.read() != mem_load_ ||
-                    ffout_mem_sign_extend.read() != mem_sign_extend_ ||
-                    ffout_mem_store.read() != mem_store_
-                ) {
-                    cout << "1ere position : ce que l'on a \n2eme position : ce que l'on devrait avoir" << endl ;
-                    cout << "error : mismatch in fifo" << endl;
-                    cout << "ffout_exe_res" << endl;
-                    print_bits((int) ffout_exe_res.read());
-                    print_bits(op1_);
-                    cout << "ffout_mem_data" << endl;
-                    print_bits((int) ffout_mem_data.read());
-                    print_bits(mem_data_);
-                    cout << "ffout_dest" << endl;
-                    print_bits((int) ffout_dest.read());
-                    print_bits(dest_);
-                    cout << "ffout_mem_size" << endl;
-                    print_bits((int) ffout_mem_size.read());
-                    print_bits(mem_size_);
-                    cout << "ffout_wb" << endl;
-                    print_bits((int) ffout_wb.read());
-                    print_bits(wb_);
-                    cout << "ffout_mem_load" << endl;
-                    print_bits((int) ffout_mem_load.read());
-                    print_bits(mem_load_);
-                    cout << "ffout_mem_sign_extend" << endl;
-                    print_bits((int) ffout_mem_sign_extend.read());
-                    print_bits(mem_sign_extend_);
-                    cout << "ffout_mem_store" << endl;
-                    print_bits((int) ffout_mem_store.read());
-                    print_bits(mem_store_);
-                }
+        if(cmd_ == 0 && select_shift_ == 0)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ + op2_)))
+            {
+                cerr << "error sur +" <<endl ;
+                test_passed = false ;
             }
         }
-        should_be_full = !dec2exe_empty_;
-    } */
-    //cout << i << " tests successfully ran on FIFO" << endl;
+        if(cmd_ == 1 && select_shift_ == 0)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ && op2_)))
+            {
+                cerr << "error sur &&" <<endl ;
+                test_passed = false ;
+            }
+        }
+        if(cmd_ == 2 && select_shift_ == 0)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ | op2_)))
+            {
+                cerr << "error sur |" <<endl ;
+                test_passed = false ;
+            }            
+        }
+        if(cmd_ == 3 && select_shift_ == 0)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ ^ op2_)))
+            {
+                cerr << "error sur ^" <<endl ;
+                test_passed = false ;
+            }
+        }
+        if(select_shift_ && unit_exec.shifter_inst.CMD.read() == 0)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())))
+            {
+                cerr << "error sur sll" <<endl ;
+                test_passed = false ;
+            }
+        }
+        if(select_shift_ && unit_exec.shifter_inst.CMD.read() == 1)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())))
+            {
+                cerr << "error sra" <<endl ;
+                test_passed = false ;
+            }
+        }
+        if(select_shift_ && unit_exec.shifter_inst.CMD.read() == 2)
+        {
+            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ >> unit_exec.SHIFT_VAL.read())))
+            {
+                cerr << "error srl" <<endl ;
+                test_passed = false ;
+            } 
+        }    
 
-    
+    }
+    if(test_passed) cout << "All test passed successfully !" << endl ;
     return 0 ;
 }

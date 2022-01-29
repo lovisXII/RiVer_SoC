@@ -10,7 +10,7 @@ void alu::operation()
         }
         else if(CMD.read() == 1 )
         {
-            res_interne = OP1.read() & OP2.read() ;
+            res_interne = OP1.read() && OP2.read() ;
         }
         else if(CMD.read() == 2 )
         {
