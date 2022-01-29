@@ -8,7 +8,10 @@ void fifo_74b::function()
     EMPTY.write(1) ;
 
     wait(3) ;
-
+    cerr << "###############################################" << endl ;
+    cerr << "end of fifo reset" << endl ;
+    cerr << "###############################################" << endl ;
+ 
     //when fifo_v is valide, it means that we want the data and we can pop it
     //when it's unvalaible it means we don't care about it and we can push
     
@@ -24,6 +27,7 @@ void fifo_74b::function()
                 //do nothing
                 FULL.write(1) ;
                 EMPTY.write(0) ;
+                DOUT.write(data_inside) ; // si on a une valeur dans la fifo la sortie est toujours la valeur interne
             }
             else if(!push  && pop ) // when data is valid and pop is able we sent data
             {
@@ -35,6 +39,7 @@ void fifo_74b::function()
             }
             else if(push  && !pop )
             {
+                //la nouvelle donnée ne peut pas etre push 
                 FULL.write(1) ;
                 EMPTY.write(0) ;
                 DOUT.write(data_inside) ;

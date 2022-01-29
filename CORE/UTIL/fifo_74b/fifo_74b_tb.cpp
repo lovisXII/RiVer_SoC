@@ -30,34 +30,40 @@ int sc_main(int argc, char* argv[])
     
 
     reset_n.write(true) ; // reset 
-    sc_start(1,SC_NS) ; // wait for 1 cycle
+    sc_start(3,SC_NS) ; // wait for 1 cycle
     reset_n.write(false) ; // end of reset
     for(int i =0 ; i < 15 ; i++)
     {
         bool rand1 ;
         bool rand2 ;
-        if(rand() % 2 == 1)
-        {
-            rand1 = true ;
-        } 
-        else
-        {
-            rand1 = false ;
-        }
+        int din_value = rand() ; 
+
+        if(rand() % 2 == 1) rand1 = true ; 
+        else rand1 = false ;
         if(rand() % 2 == 1) rand2 = true ;
         else rand2 =false ;
-        din.write( rand()) ;
+
+        din.write( din_value) ;
         push.write(rand1) ;
         pop.write( rand2)  ;
+        
         sc_start(1,SC_NS) ;
-        cout  << "---------------------"<<endl ;
-        cout  << "din : " << din.read() << endl ;   
-        cout  << "push : " << push.read()<<" "<<rand1 << endl ;   
-        cout  << "pop : " << pop.read()<<" "<<rand2 << endl ;   
-        cout  << "full : " << full.read() << endl ;
-        cout  << "empty : " << empty.read() << endl ;
-        cout  << "dout : " << dout.read() << endl ;
-        cout  << "fifo_v : "<< fifo_74b0.fifo_v.read() << endl ;
+        cerr   << "---------------------"<<endl ;
+        if(push.read() == 1 && empty.read() == 1)//si la fifo est vide et qu'on push
+        {
+            if(dout.read() != din.read())
+            {
+                cerr << "probleme transmission data" << endl ;
+
+            }
+        }
+        cerr   << "din : " << din.read() << endl ;   
+        cerr   << "push : " << push.read()<<" "<<rand1 << endl ;   
+        cerr   << "pop : " << pop.read()<<" "<<rand2 << endl ;   
+        cerr   << "full : " << full.read() << endl ;
+        cerr   << "empty : " << empty.read() << endl ;
+        cerr   << "dout : " << dout.read() << endl ;
+        cerr   << "fifo_v : "<< fifo_74b0.fifo_v.read() << endl ;
 
     }
     return 0 ;

@@ -84,6 +84,9 @@ int sc_main(int argc, char* argv[])
     unit_exec.CLK(clk);
     unit_exec.RESET(reset);
 
+    
+    //Reset Process :
+
     reset.write(true);
     sc_start(1, SC_NS);
     sc_start(1, SC_PS);
@@ -92,7 +95,7 @@ int sc_main(int argc, char* argv[])
     cout << "reset is done " << endl ;
     int i;
     bool should_be_full = false;
-
+    
     //test fifo
     
     for (i = 0; i < NB_TEST; i++) {
@@ -126,7 +129,17 @@ int sc_main(int argc, char* argv[])
         sc_start(0, SC_NS);
         sc_start(0, SC_NS);
         sc_start(0, SC_NS);
-        cout << "------------------------------------------"<<endl ;
+
+        cout << "------------------------------------------" << endl ;
+        cout << "Interface avec decode : " << endl ;
+        cout << "dec2exe_empty "<< DEC2EXE_EMPTY.read() << endl ;
+        cout << "Calcul interne à EXE :" << endl ;
+        
+
+
+       /*  cout << "------------------------------------------"<<endl ;
+        cout << "op1 :" << unit_exec.OP1.read() << endl ;
+
         cout << "EXE2MEM_PUSH : " ;
         print_bits((bool)unit_exec.EXE2MEM_PUSH.read());
         cout << "EXE2MEM_FULL : " ;        
@@ -185,7 +198,7 @@ int sc_main(int argc, char* argv[])
             }
         }
         should_be_full = !dec2exe_empty_;
-    }
+    } */
     //cout << i << " tests successfully ran on FIFO" << endl;
 
     
