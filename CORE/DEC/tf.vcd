@@ -1,5 +1,5 @@
 $date
-     Jan 31, 2022       00:25:17
+     Jan 31, 2022       00:35:15
 $end
 
 $version
@@ -11,6 +11,54 @@ $timescale
 $end
 
 $scope module SystemC $end
+$var wire    1  aaabh  RESET_N       $end
+$var wire    1  aaabi  CLK       $end
+$var wire    1  aaabj  READ_PC_VALID       $end
+$var wire    1  aaabk  INC_PC_VALID       $end
+$var wire   32  aaabl  READ_PC [31:0]  $end
+$var wire   32  aaabm  WADR1_DATA [31:0]  $end
+$var wire    6  aaabn  WADR1 [5:0]  $end
+$var wire   32  aaabo  RADR2_DATA [31:0]  $end
+$var wire   32  aaabp  RADR1_DATA [31:0]  $end
+$var wire    1  aaabq  RADR2_VALID       $end
+$var wire    1  aaabr  RADR1_VALID       $end
+$var wire    6  aaabs  RADR2 [5:0]  $end
+$var wire    6  aaabt  RADR1 [5:0]  $end
+$scope module reg_inst $end
+$var wire   32  aaaaa  REG0 [31:0]  $end
+$var wire   32  aaaab  REG1 [31:0]  $end
+$var wire   32  aaaac  REG2 [31:0]  $end
+$var wire   32  aaaad  REG3 [31:0]  $end
+$var wire   32  aaaae  REG4 [31:0]  $end
+$var wire   32  aaaaf  REG5 [31:0]  $end
+$var wire   32  aaaag  REG6 [31:0]  $end
+$var wire   32  aaaah  REG7 [31:0]  $end
+$var wire   32  aaaai  REG8 [31:0]  $end
+$var wire   32  aaaaj  REG9 [31:0]  $end
+$var wire   32  aaaak  REG10 [31:0]  $end
+$var wire   32  aaaal  REG11 [31:0]  $end
+$var wire   32  aaaam  REG12 [31:0]  $end
+$var wire   32  aaaan  REG13 [31:0]  $end
+$var wire   32  aaaao  REG14 [31:0]  $end
+$var wire   32  aaaap  REG15 [31:0]  $end
+$var wire   32  aaaaq  REG16 [31:0]  $end
+$var wire   32  aaaar  REG17 [31:0]  $end
+$var wire   32  aaaas  REG18 [31:0]  $end
+$var wire   32  aaaat  REG19 [31:0]  $end
+$var wire   32  aaaau  REG20 [31:0]  $end
+$var wire   32  aaaav  REG21 [31:0]  $end
+$var wire   32  aaaaw  REG22 [31:0]  $end
+$var wire   32  aaaax  REG23 [31:0]  $end
+$var wire   32  aaaay  REG24 [31:0]  $end
+$var wire   32  aaaaz  REG25 [31:0]  $end
+$var wire   32  aaaba  REG26 [31:0]  $end
+$var wire   32  aaabb  REG27 [31:0]  $end
+$var wire   32  aaabc  REG28 [31:0]  $end
+$var wire   32  aaabd  REG29 [31:0]  $end
+$var wire   32  aaabe  REG30 [31:0]  $end
+$var wire   32  aaabf  REG31 [31:0]  $end
+$var wire   32  aaabg  REG32 [31:0]  $end
+$upscope $end
 $upscope $end
 $enddefinitions  $end
 
@@ -19,5 +67,188 @@ All initial values are dumped below at time 0 sec = 0 timescale units.
 $end
 
 $dumpvars
+b0 aaaaa
+b0 aaaab
+b0 aaaac
+b0 aaaad
+b0 aaaae
+b0 aaaaf
+b0 aaaag
+b0 aaaah
+b0 aaaai
+b0 aaaaj
+b0 aaaak
+b0 aaaal
+b0 aaaam
+b0 aaaan
+b0 aaaao
+b0 aaaap
+b0 aaaaq
+b0 aaaar
+b0 aaaas
+b0 aaaat
+b0 aaaau
+b0 aaaav
+b0 aaaaw
+b0 aaaax
+b0 aaaay
+b0 aaaaz
+b0 aaaba
+b0 aaabb
+b0 aaabc
+b0 aaabd
+b0 aaabe
+b0 aaabf
+b0 aaabg
+1aaabh
+1aaabi
+0aaabj
+0aaabk
+b0 aaabl
+b0 aaabm
+b0 aaabn
+b0 aaabo
+b0 aaabp
+1aaabq
+1aaabr
+b0 aaabs
+b0 aaabt
 $end
 
+#500
+0aaabi
+
+#1000
+1aaabi
+
+#1500
+0aaabi
+
+#2000
+1aaabi
+
+#2500
+0aaabi
+
+#3000
+0aaabh
+1aaabi
+1aaabk
+b1100110001100110100100001110011 aaabm
+b10 aaabn
+b100 aaabs
+b1 aaabt
+
+#3500
+0aaabi
+
+#4000
+1aaabi
+b100011100011100001111100101001 aaabm
+b11 aaabs
+b11 aaabt
+
+#4500
+0aaabi
+
+#5000
+b1000001101101110001111011111011 aaaag
+b100 aaabg
+1aaabi
+b1000001101101110001111011111011 aaabm
+b110 aaabn
+b101 aaabs
+b10 aaabt
+
+#5500
+0aaabi
+
+#6000
+b10010001000000000100001010100 aaaab
+1aaabi
+0aaabk
+b10010001000000000100001010100 aaabm
+b1 aaabn
+b11 aaabs
+b0 aaabt
+
+#6500
+0aaabi
+
+#7000
+b1100110111011110100001110001101 aaaaf
+1aaabi
+b1100110111011110100001110001101 aaabm
+b101 aaabn
+b0 aaabs
+b11 aaabt
+
+#7500
+0aaabi
+
+#8000
+b1111111110111001100001000110011 aaaag
+b1000 aaabg
+1aaabi
+1aaabk
+b1111111110111001100001000110011 aaabm
+b110 aaabn
+b1100110111011110100001110001101 aaabo
+b1100110111011110100001110001101 aaabp
+b101 aaabs
+b101 aaabt
+
+#8500
+0aaabi
+
+#9000
+b100101111001000101110100110010 aaaad
+b1100 aaabg
+1aaabi
+b100101111001000101110100110010 aaabm
+b11 aaabn
+b0 aaabs
+
+#9500
+0aaabi
+
+#10000
+1aaabi
+0aaabk
+b100101011100010011000010100011 aaabm
+b0 aaabn
+b10010001000000000100001010100 aaabo
+b0 aaabp
+b1 aaabs
+b10 aaabt
+
+#10500
+0aaabi
+
+#11000
+b1110010000111011010001100010111 aaaaf
+1aaabi
+b1110010000111011010001100010111 aaabm
+b101 aaabn
+b0 aaabo
+b10010001000000000100001010100 aaabp
+b100 aaabs
+b1 aaabt
+
+#11500
+0aaabi
+
+#12000
+b1000111011011011110110101011 aaaac
+1aaabi
+b1000111011011011110110101011 aaabm
+b10 aaabn
+b1111111110111001100001000110011 aaabo
+b100101111001000101110100110010 aaabp
+b110 aaabs
+b11 aaabt
+
+#12500
+0aaabi
+
+#13000
