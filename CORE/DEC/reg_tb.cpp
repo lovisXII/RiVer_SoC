@@ -3,6 +3,8 @@
 
 int sc_main(int argc, char* argv[])
 {
+    sc_trace_file *tf;
+    tf=sc_create_vcd_trace_file("tf");
     // Reading Port :
 
     sc_signal < sc_uint<6> >        radr1 ;
@@ -64,6 +66,61 @@ int sc_main(int argc, char* argv[])
     reg_inst.CLK(clk) ;
     reg_inst.RESET_N(reset_n) ;
     
+
+    // vcd :
+
+
+
+   
+    sc_trace(tf,reg_inst.RADR1,"RADR1") ;
+    sc_trace(tf,reg_inst.RADR2,"RADR2") ;
+    sc_trace(tf,reg_inst.RADR1_VALID,"RADR1_VALID") ;
+    sc_trace(tf,reg_inst.RADR2_VALID,"RADR2_VALID") ;
+    sc_trace(tf,reg_inst.RADR1_DATA,"RADR1_DATA") ;
+    sc_trace(tf,reg_inst.RADR2_DATA,"RADR2_DATA") ;
+    sc_trace(tf,reg_inst.WADR1,"WADR1") ;
+    sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
+    sc_trace(tf,reg_inst.READ_PC,"READ_PC") ;
+    sc_trace(tf,reg_inst.INC_PC_VALID,"INC_PC_VALID") ;
+    sc_trace(tf,reg_inst.READ_PC_VALID,"READ_PC_VALID") ;
+    sc_trace(tf,reg_inst.CLK,"CLK") ;
+    
+    sc_trace(tf,reg_inst.RESET_N,"RESET_N") ;
+    sc_trace(tf,reg_inst.REG0,"reg_inst.REG0") ;
+    sc_trace(tf,reg_inst.REG1,"reg_inst.REG1") ;
+    sc_trace(tf,reg_inst.REG2,"reg_inst.REG2") ;
+    sc_trace(tf,reg_inst.REG3,"reg_inst.REG3") ;
+    sc_trace(tf,reg_inst.REG4,"reg_inst.REG4") ;
+    sc_trace(tf,reg_inst.REG5,"reg_inst.REG5") ;
+    sc_trace(tf,reg_inst.REG6,"reg_inst.REG6") ;
+    sc_trace(tf,reg_inst.REG7,"reg_inst.REG7") ;
+    sc_trace(tf,reg_inst.REG8,"reg_inst.REG8") ;
+    sc_trace(tf,reg_inst.REG9,"reg_inst.REG9") ;
+    sc_trace(tf,reg_inst.REG10,"reg_inst.REG10") ;
+    sc_trace(tf,reg_inst.REG11,"reg_inst.REG11") ;
+    sc_trace(tf,reg_inst.REG12,"reg_inst.REG12") ;
+    sc_trace(tf,reg_inst.REG13,"reg_inst.REG13") ;
+    sc_trace(tf,reg_inst.REG14,"reg_inst.REG14") ;
+    sc_trace(tf,reg_inst.REG15,"reg_inst.REG15") ;
+    sc_trace(tf,reg_inst.REG16,"reg_inst.REG16") ;
+    sc_trace(tf,reg_inst.REG17,"reg_inst.REG17") ;
+    sc_trace(tf,reg_inst.REG18,"reg_inst.REG18") ;
+    sc_trace(tf,reg_inst.REG19,"reg_inst.REG19") ;
+    sc_trace(tf,reg_inst.REG20,"reg_inst.REG20") ;
+    sc_trace(tf,reg_inst.REG21,"reg_inst.REG21") ;
+    sc_trace(tf,reg_inst.REG22,"reg_inst.REG22") ;
+    sc_trace(tf,reg_inst.REG23,"reg_inst.REG23") ;
+    sc_trace(tf,reg_inst.REG24,"reg_inst.REG24") ;
+    sc_trace(tf,reg_inst.REG25,"reg_inst.REG25") ;
+    sc_trace(tf,reg_inst.REG26,"reg_inst.REG26") ;
+    sc_trace(tf,reg_inst.REG27,"reg_inst.REG27") ;
+    sc_trace(tf,reg_inst.REG28,"reg_inst.REG28") ;
+    sc_trace(tf,reg_inst.REG29,"reg_inst.REG29") ;
+    sc_trace(tf,reg_inst.REG30,"reg_inst.REG30") ;
+    sc_trace(tf,reg_inst.REG31,"reg_inst.REG31") ;
+    sc_trace(tf,reg_inst.REG32,"reg_inst.REG32") ;
+
+
     reset_n.write(true) ; // reset 
     sc_start(3,SC_NS) ; // wait for 1 cycle
     reset_n.write(false) ; // end of reset
@@ -73,7 +130,7 @@ int sc_main(int argc, char* argv[])
         int radr1_ = rand() % 7;
         int radr2_ = rand() % 7;
         int wadr1_ = rand() % 7;
-        int ward1_valid_ = rand() % 2 ;
+        int ward1_valid_ = 1 ;
         int wadr1_data_ = rand() ;
         int inc_pc_valid_ = rand() % 2 ;
         
@@ -130,5 +187,6 @@ int sc_main(int argc, char* argv[])
         cout << "r32 : " << reg_inst.REG32.read() <<endl ;
 
     }
+    sc_close_vcd_trace_file(tf);
     return 0 ;
 }

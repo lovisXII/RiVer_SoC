@@ -14,4 +14,4 @@ reg_tb: reg.o reg_tb.o
 	$(CC) -c $^ $(C_ARGS)
 
 clean:
-	rm -f *.o reg_tb
+	rm -f *.o reg_tb *.vcd

@@ -2,6 +2,8 @@
 #include <systemc.h>
 
 
+
+
     bool REG0_VALID ;
     bool REG1_VALID ;
     bool REG2_VALID ;
@@ -390,9 +392,9 @@ void reg::reading_adresses()
 
 void reg::writing_adresse()
 {
-    RADR1_VALID.write(false) ;
-    RADR2_VALID.write(false) ;
-
+    RADR1_VALID.write(true) ;
+    RADR2_VALID.write(true) ;
+    
     REG0.write(0) ;
     REG1.write(0) ;
     REG2.write(0) ;
@@ -427,8 +429,43 @@ void reg::writing_adresse()
     REG31.write(0) ;
     REG32.write(0) ;
 
+
+    // REG0_VALID = true ;
+    // REG1_VALID = true ;
+    // REG2_VALID = true ;
+    // REG3_VALID = true ;
+    // REG4_VALID = true ;
+    // REG5_VALID = true ;
+    // REG6_VALID = true ;
+    // REG7_VALID = true ;
+    // REG8_VALID = true ;
+    // REG9_VALID = true ;
+    // REG10_VALID = true ;
+    // REG11_VALID = true ;
+    // REG12_VALID = true ;
+    // REG13_VALID = true ;
+    // REG14_VALID = true ;
+    // REG15_VALID = true ;
+    // REG16_VALID = true ;
+    // REG17_VALID = true ;
+    // REG18_VALID = true ;
+    // REG19_VALID = true ;
+    // REG20_VALID = true ;
+    // REG21_VALID = true ;
+    // REG22_VALID = true ;
+    // REG23_VALID = true ;
+    // REG24_VALID = true ;
+    // REG25_VALID = true ;
+    // REG26_VALID = true ;
+    // REG27_VALID = true ;
+    // REG28_VALID = true ;
+    // REG29_VALID = true ;
+    // REG30_VALID = true ;
+    // REG31_VALID = true ;
+    // REG32_VALID = true ;
+
     wait(3) ;
-    cerr << "end reset : " << endl ;
+    cerr <<"#############################"<< "end reset : " << endl ;
     while(1)
     {
         if(WADR1.read() == 0 && WADR1_VALID == 1)
@@ -464,6 +501,7 @@ void reg::writing_adresse()
         {
             REG6.write(WADR1_DATA.read()) ;
             REG6_VALID = 1 ;
+            cerr << "ecrit dans 6" << endl ;
         }
         if(WADR1.read() == 7 && WADR1_VALID == 1)
         {
