@@ -68,49 +68,13 @@ SC_MODULE(reg)
     sc_signal < sc_uint<32> > REG32 ;
 
 
-    sc_signal < bool > REG0_VALID ;
-    sc_signal < bool > REG1_VALID ;
-    sc_signal < bool > REG2_VALID ;
-    sc_signal < bool > REG3_VALID ;
-    sc_signal < bool > REG4_VALID ;
-    sc_signal < bool > REG5_VALID ;
-    sc_signal < bool > REG6_VALID ;
-    sc_signal < bool > REG7_VALID ;
-    sc_signal < bool > REG8_VALID ;
-    sc_signal < bool > REG9_VALID ;
-    sc_signal < bool > REG10_VALID ;
-    sc_signal < bool > REG11_VALID ;
-    sc_signal < bool > REG12_VALID ;
-    sc_signal < bool > REG13_VALID ;
-    sc_signal < bool > REG14_VALID ;
-    sc_signal < bool > REG15_VALID ;
-    sc_signal < bool > REG16_VALID ;
-    sc_signal < bool > REG17_VALID ;
-    sc_signal < bool > REG18_VALID ;
-    sc_signal < bool > REG19_VALID ;
-    sc_signal < bool > REG20_VALID ;
-    sc_signal < bool > REG21_VALID ;
-    sc_signal < bool > REG22_VALID ;
-    sc_signal < bool > REG23_VALID ;
-    sc_signal < bool > REG24_VALID ;
-    sc_signal < bool > REG25_VALID ;
-    sc_signal < bool > REG26_VALID ;
-    sc_signal < bool > REG27_VALID ;
-    sc_signal < bool > REG28_VALID ;
-    sc_signal < bool > REG29_VALID ;
-    sc_signal < bool > REG30_VALID ;
-    sc_signal < bool > REG31_VALID ;
-    sc_signal < bool > REG32_VALID ;
-
     void reading_adresses() ;
     void writing_adresse() ;
-    void pc_in() ;
 
     SC_CTOR(reg)
     {
         SC_CTHREAD  (reading_adresses,reg::CLK.pos()) ;
         SC_CTHREAD  (writing_adresse,reg::CLK.pos()) ;
-        SC_CTHREAD  (pc_in,reg::CLK.pos()) ;
         reset_signal_is(RESET_N,true) ;
         
     }
