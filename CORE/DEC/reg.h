@@ -1,3 +1,4 @@
+#pragma once
 #include <systemc.h>
 
 SC_MODULE(reg)
@@ -100,7 +101,7 @@ SC_MODULE(reg)
     sc_signal < bool > REG30_VALID ;
     sc_signal < bool > REG31_VALID ;
     sc_signal < bool > REG32_VALID ;
-    
+
     void reading_adresses() ;
     void writing_adresse() ;
     void pc_in() ;

@@ -1,4 +1,5 @@
 #include "reg.h"
+#include <systemc.h>
 
 void reg::reading_adresses()
 {
@@ -343,7 +344,7 @@ void reg::reading_adresses()
         }
         
         
-
+    READ_PC_VALID.write(REG32_VALID.read()) ;
 
     }
 
@@ -565,6 +566,9 @@ void reg::pc_in()
 
     while(1)
     {
-
+        if(INC_PC_VALID.read() == 1)
+        {
+            REG32.write(REG32.read() + 4) ;
+        }
     }
 }
