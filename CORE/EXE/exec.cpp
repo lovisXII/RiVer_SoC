@@ -5,13 +5,14 @@
 
 void exec::preprocess_op() {
     sc_uint<32> op1 = OP1.read();
+    sc_uint<32> op2 = OP2.read() ;
     if (NEG_OP1.read()) {
         ALU_IN_OP1.write(~op1);
     }
     else {
         ALU_IN_OP1.write(op1);
     }
-    SHIFT_VAL.write(op1.range(4, 0));
+    SHIFT_VAL.write(op2.range(4, 0));
 }
 
 void exec::select_exec_res() {

@@ -115,7 +115,7 @@ int sc_main(int argc, char* argv[])
 
     sc_trace(tf,unit_exec.CLK,"CLK");
     sc_trace(tf,unit_exec.RESET,"RESET");
-    
+    sc_trace(tf,unit_exec.shifter_inst.SHIFT_VAL,"shift_val") ;
     sc_trace(tf,unit_exec.FFIN_EXE_RES,"exe_res");
 //    sc_trace(tf,unit_exec.shifter_inst.CMD,"cmd shifter");
     sc_trace(tf,unit_exec.fifo_inst.DIN,"exe2mem_din");
@@ -208,18 +208,6 @@ int sc_main(int argc, char* argv[])
         }
         if(select_shift_ && unit_exec.CMD.read() == 1)
         {
-            
-            cout << "cmd = 1 & shift" << endl ;
-
-            cout << "Résultat :" << (sc_uint<32>) unit_exec.FFIN_EXE_RES.read() << endl ;
-            cout << "Résultat attendu "<< (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())) << endl ;
-
-            cout << "op1 :" << op1_ <<endl ;
-            cout << "unit_exec.SHIFT_VAL.read() :" << unit_exec.SHIFT_VAL.read() << endl ;
-
-            bool condition = unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())) ;
-            cout << "Condition if :" << condition << endl ;
-
             if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())))
             {
                 cerr << "error sra" <<endl ;
