@@ -51,7 +51,10 @@ vector<string> extract_file(char* file_name)
         exit(1) ;
     }
 }
-
+int convert_inst_to_binary (string s)
+{
+    if()
+}
 
 
 

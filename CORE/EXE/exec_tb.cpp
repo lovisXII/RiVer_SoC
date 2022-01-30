@@ -168,7 +168,7 @@ int sc_main(int argc, char* argv[])
 
         if(cmd_ == 0 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ + op2_)))
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ + op2_)))
             {
                 cerr << "error sur +" <<endl ;
                 test_passed = false ;
@@ -176,7 +176,7 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 1 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ && op2_)))
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ && op2_)))
             {
                 cerr << "error sur &&" <<endl ;
                 test_passed = false ;
@@ -184,7 +184,7 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 2 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ | op2_)))
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ | op2_)))
             {
                 cerr << "error sur |" <<endl ;
                 test_passed = false ;
@@ -192,7 +192,7 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 3 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ ^ op2_)))
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ ^ op2_)))
             {
                 cerr << "error sur ^" <<endl ;
                 test_passed = false ;
@@ -200,7 +200,7 @@ int sc_main(int argc, char* argv[])
         }
         if(select_shift_ && unit_exec.CMD.read() == 0)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())))
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())))
             {
                 cerr << "error sur sll" <<endl ;
                 test_passed = false ;
@@ -208,7 +208,19 @@ int sc_main(int argc, char* argv[])
         }
         if(select_shift_ && unit_exec.CMD.read() == 1)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())))
+            
+            cout << "cmd = 1 & shift" << endl ;
+
+            cout << "Résultat :" << (sc_uint<32>) unit_exec.FFIN_EXE_RES.read() << endl ;
+            cout << "Résultat attendu "<< (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())) << endl ;
+
+            cout << "op1 :" << op1_ <<endl ;
+            cout << "unit_exec.SHIFT_VAL.read() :" << unit_exec.SHIFT_VAL.read() << endl ;
+
+            bool condition = unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())) ;
+            cout << "Condition if :" << condition << endl ;
+
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())))
             {
                 cerr << "error sra" <<endl ;
                 test_passed = false ;
@@ -216,7 +228,8 @@ int sc_main(int argc, char* argv[])
         }
         if(select_shift_ && unit_exec.CMD.read() == 2)
         {
-            if(unit_exec.FFIN_EXE_RES != (sc_uint<32>) ((op1_ >> unit_exec.SHIFT_VAL.read())))
+
+            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ >> unit_exec.SHIFT_VAL.read())))
             {
                 cerr << "error srl" <<endl ;
                 test_passed = false ;

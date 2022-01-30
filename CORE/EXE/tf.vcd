@@ -1,5 +1,5 @@
 $date
-     Jan 29, 2022       20:54:39
+     Jan 30, 2022       15:22:41
 $end
 
 $version
@@ -11,7 +11,7 @@ $timescale
 $end
 
 $scope module SystemC $end
-$var wire   32  aaaaa  exe2mem_din [31:0]  $end
+$var wire   32  aaaaa  exe_res [31:0]  $end
 $var wire   74  aaaab  exe2mem_fout [73:0]  $end
 $var wire    1  aaaac  exe2mem_pop       $end
 $var wire    1  aaaad  exe2mem_push       $end
