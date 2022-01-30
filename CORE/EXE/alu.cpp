@@ -23,3 +23,5 @@ void alu::operation()
         }
         RES.write(res_interne) ;
     }
+
+    
