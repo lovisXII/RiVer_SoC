@@ -1,5 +1,9 @@
 $date
+<<<<<<< HEAD
      Jan 31, 2022       00:29:02
+=======
+     Jan 31, 2022       00:35:15
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 $end
 
 $version
@@ -134,6 +138,10 @@ $end
 0aaabh
 1aaabi
 1aaabk
+<<<<<<< HEAD
+=======
+b1100110001100110100100001110011 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b10 aaabn
 b100 aaabs
 b1 aaabt
@@ -143,6 +151,10 @@ b1 aaabt
 
 #4000
 1aaabi
+<<<<<<< HEAD
+=======
+b100011100011100001111100101001 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b11 aaabs
 b11 aaabt
 
@@ -150,8 +162,15 @@ b11 aaabt
 0aaabi
 
 #5000
+<<<<<<< HEAD
 b100 aaabg
 1aaabi
+=======
+b1000001101101110001111011111011 aaaag
+b100 aaabg
+1aaabi
+b1000001101101110001111011111011 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b110 aaabn
 b101 aaabs
 b10 aaabt
@@ -160,8 +179,15 @@ b10 aaabt
 0aaabi
 
 #6000
+<<<<<<< HEAD
 1aaabi
 0aaabk
+=======
+b10010001000000000100001010100 aaaab
+1aaabi
+0aaabk
+b10010001000000000100001010100 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b1 aaabn
 b11 aaabs
 b0 aaabt
@@ -170,7 +196,13 @@ b0 aaabt
 0aaabi
 
 #7000
+<<<<<<< HEAD
 1aaabi
+=======
+b1100110111011110100001110001101 aaaaf
+1aaabi
+b1100110111011110100001110001101 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b101 aaabn
 b0 aaabs
 b11 aaabt
@@ -179,10 +211,21 @@ b11 aaabt
 0aaabi
 
 #8000
+<<<<<<< HEAD
 b1000 aaabg
 1aaabi
 1aaabk
 b110 aaabn
+=======
+b1111111110111001100001000110011 aaaag
+b1000 aaabg
+1aaabi
+1aaabk
+b1111111110111001100001000110011 aaabm
+b110 aaabn
+b1100110111011110100001110001101 aaabo
+b1100110111011110100001110001101 aaabp
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b101 aaabs
 b101 aaabt
 
@@ -190,8 +233,15 @@ b101 aaabt
 0aaabi
 
 #9000
+<<<<<<< HEAD
 b1100 aaabg
 1aaabi
+=======
+b100101111001000101110100110010 aaaad
+b1100 aaabg
+1aaabi
+b100101111001000101110100110010 aaabm
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b11 aaabn
 b0 aaabs
 
@@ -201,7 +251,14 @@ b0 aaabs
 #10000
 1aaabi
 0aaabk
+<<<<<<< HEAD
 b0 aaabn
+=======
+b100101011100010011000010100011 aaabm
+b0 aaabn
+b10010001000000000100001010100 aaabo
+b0 aaabp
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b1 aaabs
 b10 aaabt
 
@@ -209,8 +266,17 @@ b10 aaabt
 0aaabi
 
 #11000
+<<<<<<< HEAD
 1aaabi
 b101 aaabn
+=======
+b1110010000111011010001100010111 aaaaf
+1aaabi
+b1110010000111011010001100010111 aaabm
+b101 aaabn
+b0 aaabo
+b10010001000000000100001010100 aaabp
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b100 aaabs
 b1 aaabt
 
@@ -218,8 +284,17 @@ b1 aaabt
 0aaabi
 
 #12000
+<<<<<<< HEAD
 1aaabi
 b10 aaabn
+=======
+b1000111011011011110110101011 aaaac
+1aaabi
+b1000111011011011110110101011 aaabm
+b10 aaabn
+b1111111110111001100001000110011 aaabo
+b100101111001000101110100110010 aaabp
+>>>>>>> 11f93ea1f9a377230e5e085c80733b10bb8c9c9b
 b110 aaabs
 b11 aaabt
 
