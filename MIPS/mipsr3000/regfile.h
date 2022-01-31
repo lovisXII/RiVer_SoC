@@ -37,9 +37,9 @@ SC_MODULE(regfile)
 	SC_CTOR(regfile)
 	{
 		SC_METHOD(mReadRegs);
-		sensitive << RRA << RRB ;
+		sensitive << RRA << RRB;
 		SC_METHOD(mWriteReg);
-		sensitive << CK_SX.pos() ;
+		sensitive << CK_SX.pos();
 	}
 
 	void mReadRegs();

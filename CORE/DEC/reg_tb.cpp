@@ -139,7 +139,7 @@ int sc_main(int argc, char* argv[])
         radr2.write(radr2_) ;
         wadr1.write((sc_uint<6>) wadr1_) ;
         wadr1_valid.write(ward1_valid_ );
-        wadr1_data.write((sc_uint<32>) (wadr1_data)) ;
+        wadr1_data.write((sc_uint<32>) (wadr1_data_)) ;
         inc_pc_valid.write(inc_pc_valid_) ;
         
         sc_start(1,SC_NS) ;

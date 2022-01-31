@@ -1,19 +1,19 @@
 ## Variable that points to SystemC installation path
 #SYSTEMC = /users/outil/systemc/systemc-1.0.2
 
-SYSTEMC = /users/outil/systemcams/systemc-2.3.1
+SYSTEMC = /usr/local/systemc-2.3.3/lib-linux64
 
-INCDIR = -I. -I.. -I$(SYSTEMC)/include
-LIBDIR = -L. -L.. -L$(SYSTEMC)/lib-$(TARGET_ARCH)
+INCDIR = -I/usr/local/systemc-2.3.3/include
+LIBDIR = -L/usr/local/systemc-2.3.3/lib-linux64
 
-LIBS   =  -lsystemc -lm $(EXTRA_LIBS)
+LIBS   =  -lsystemc -lm -Wl,-rpath=/usr/local/systemc-2.3.3/lib-linux64
 
 
 EXE    = $(MODULE).x
 
 .SUFFIXES: .cc .cpp .o .x
 
-$(EXE): $(OBJS) $(SYSTEMC)/lib-$(TARGET_ARCH)/libsystemc.a 
+$(EXE): $(OBJS) $(SYSTEMC)/libsystemc.a 
 	$(CC) $(CFLAGS) $(INCDIR) $(LIBDIR) -o $@ $(OBJS) $(LIBS) 2>&1 | c++filt
 
 .cpp.o:
