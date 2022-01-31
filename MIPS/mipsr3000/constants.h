@@ -39,12 +39,12 @@ const bool o_signd_o=1;
 const bool o_usign_o=0;
 
 const sc_uint<3> arith_o=0x4;
-const sc_uint<3> logic_o=0x5;
-const sc_uint<3> shift_o=0x6;
-const sc_uint<3> test_o=0x7;
-const sc_uint<3> toper_o=0x1;
-const sc_uint<3> soper_o=0x2;
-const sc_uint<3> noop_o=0x0;
+const sc_uint<3> logic_o=0x5; 
+const sc_uint<3> shift_o=0x6; 
+const sc_uint<3> test_o=0x7;  
+const sc_uint<3> toper_o=0x1;  
+const sc_uint<3> soper_o=0x2;  
+const sc_uint<3> noop_o=0x0;   
 
 const sc_uint<2> add_o=0x0;
 const sc_uint<2> sub_o=0x1;

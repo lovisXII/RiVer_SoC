@@ -205,10 +205,6 @@ void decode::processOFFSET_SD()
   OFFSET_SD.write(imdsex_sd.range(13,0) << 18 | ir_ri.range(15,0) << 2);
 }
 
-// ### ------------------------------------------------------ ###
-// #   conditional branches' condition				#
-// ### ------------------------------------------------------ ###
-
 void decode::processS_CMP_T_SD()
 {
   S_CMP_T_SD.write(SOPER_SD.read() ^ TOPER_SD.read());

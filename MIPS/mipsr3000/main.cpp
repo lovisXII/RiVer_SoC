@@ -54,7 +54,7 @@ int sc_main(int ac, char *av[])
   sc_signal<sc_uint<32> >        DAT;
   sc_signal<bool>                 W_N;          // data access pending
 
-mipsr3000* mips1 = new mipsr3000("mips1");
+  mipsr3000* mips1 = new mipsr3000("mips1");
 
   mips1->CK(CK);
   mips1->RESET_N(RESET_N);

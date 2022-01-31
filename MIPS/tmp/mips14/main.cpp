@@ -1,7 +1,7 @@
 //#include "systemc.h"
 #include <systemc.h>
 #include "mipsr3000/mipsr3000.h"
-#include "fifo/fifo.h"
+//#include "fifo/fifo.h"
 #include "ram_control.h"
 #include "pi_default.h"
 #include "pi_control.h"
