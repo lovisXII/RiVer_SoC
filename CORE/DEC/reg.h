@@ -20,11 +20,6 @@ SC_MODULE(reg)
     sc_in <bool>                WADR1_VALID ;
     sc_in < sc_uint<32> >       WADR1_DATA ;
 
-    // Invalidation de Rd :
-
-    sc_in < sc_uint<6> >        ADR_DEST ;
-    sc_in < bool >              INVAL_DEST ;
-
     //PC Gestion :
 
     sc_out < sc_uint<32> >      READ_PC ;

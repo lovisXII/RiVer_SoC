@@ -26,11 +26,6 @@ int sc_main(int argc, char* argv[])
     sc_signal <bool>                wadr1_valid ;
     sc_signal < sc_uint<32> >       wadr1_data ;
 
-    // Invalidation de Rd :
-
-    sc_signal < sc_uint<6> >        adr_dest ;
-    sc_signal < bool >              inval_dest ;
-
     //PC Gestion :
 
     sc_signal < sc_uint<32> >      read_pc ;
@@ -61,8 +56,6 @@ int sc_main(int argc, char* argv[])
     reg_inst.WADR1_VALID(wadr1_valid) ;
     reg_inst.WADR1_DATA(wadr1_data) ;
 
-    reg_inst.ADR_DEST(adr_dest) ;
-    reg_inst.INVAL_DEST(inval_dest) ;
     //PC Gestion :
 
     reg_inst.READ_PC(read_pc) ;
@@ -89,9 +82,6 @@ int sc_main(int argc, char* argv[])
     sc_trace(tf,reg_inst.WADR1,"WADR1") ;
     sc_trace(tf,reg_inst.WADR1_VALID,"WADR1_VALID") ;
     sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
-
-    sc_trace(tf,reg_inst.ADR_DEST,"adr_dest") ;
-    sc_trace(tf,reg_inst.INVAL_DEST,"INVAL_DEST") ;
 
     sc_trace(tf,reg_inst.READ_PC,"READ_PC") ;
     sc_trace(tf,reg_inst.INC_PC_VALID,"INC_PC_VALID") ;
@@ -124,11 +114,9 @@ int sc_main(int argc, char* argv[])
         int radr1_ = rand() % 33;
         int radr2_ = rand() % 33 ;
         int wadr1_ = rand() % 33;
-        int ward1_valid_ = 1 ;
+        int ward1_valid_ = rand() % 2 ;
         int wadr1_data_ = rand() ;
         int inc_pc_valid_ = rand() % 2 ;
-        int adr_dest_ = rand() % 7;
-        int inval_dest_ = rand() % 2;
 
         radr1.write(radr1_) ;
         radr2.write(radr2_) ;
@@ -136,8 +124,6 @@ int sc_main(int argc, char* argv[])
         wadr1_valid.write(ward1_valid_ );
         wadr1_data.write((sc_uint<32>) (wadr1_data_)) ;
         inc_pc_valid.write(inc_pc_valid_) ;
-        adr_dest.write(adr_dest_) ;
-        inval_dest.write(inval_dest_) ;
 
         sc_start(1,SC_NS) ;
         // cout << "--------------------------------" << endl ;
