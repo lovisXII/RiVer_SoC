@@ -4,7 +4,7 @@
 
 
 
-bool REG_VALID[33] ; //bit de validité des registres
+//bool REG_VALID[33] ; //bit de validité des registres
 
 void reg::reading_adresses()
 {
@@ -40,8 +40,10 @@ void reg::writing_adresse()
     {
         REG[i].write(0) ;
     }
+    cerr << "before REG_VALID SHIT" << endl ;
     for(int i = 0 ; i < 33 ; i++)
     {
+        cerr << i << endl ;
         REG_VALID[i] = true ;
     }
     wait(3) ;
@@ -60,7 +62,7 @@ void reg::writing_adresse()
             if(WADR1_VALID.read())
             {
             REG[WADR1.read()].write(WADR1_DATA) ;
-            REG_VALID[WADR1.read()] = 1 ; // on rend valide le port d'écriture
+            REG_VALID[WADR1.read()].write(1) ; // on rend valide le port d'écriture
             } 
         }
 
@@ -68,7 +70,7 @@ void reg::writing_adresse()
         
         if(INVAL_DEST.read())
         {
-         REG_VALID[ADR_DEST.read()] = 0 ; // Invalidation du port lié au registre destination 
+         REG_VALID[ADR_DEST.read()].write(0) ; // Invalidation du port lié au registre destination 
         }
 
         // Invalidation de la data lue par adr1 et adr2 

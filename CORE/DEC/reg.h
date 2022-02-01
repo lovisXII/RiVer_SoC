@@ -38,7 +38,7 @@ SC_MODULE(reg)
 
     //Registres :
 
-
+    sc_signal < bool >        REG_VALID[33] ; //bit de validité des registres
     sc_signal < sc_uint<32> > REG[33] ;
     
 

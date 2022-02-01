@@ -6,6 +6,7 @@ using namespace std ;
 
 int sc_main(int argc, char* argv[])
 {
+    cerr << "start of main" << endl ;
     sc_trace_file *tf;
     tf=sc_create_vcd_trace_file("tf");
     // Reading Port :
@@ -86,6 +87,7 @@ int sc_main(int argc, char* argv[])
     sc_trace(tf,reg_inst.RADR1_DATA,"RADR1_DATA") ;
     sc_trace(tf,reg_inst.RADR2_DATA,"RADR2_DATA") ;
     sc_trace(tf,reg_inst.WADR1,"WADR1") ;
+    sc_trace(tf,reg_inst.WADR1_VALID,"WADR1_VALID") ;
     sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
 
     sc_trace(tf,reg_inst.ADR_DEST,"adr_dest") ;
@@ -104,11 +106,19 @@ int sc_main(int argc, char* argv[])
         s = "reg_inst.REG" + to_string(i)    ;
         sc_trace(tf,reg_inst.REG[i],s) ;
     }
+    cerr << "starting tracing SC_VALID Signals" << endl ;
+    for(int i = 0 ; i < 33 ; i++)
+    {
+        string s ;
+        s="REG_VALID" + to_string(i) ;
+        sc_trace(tf,reg_inst.REG_VALID[i],s) ;
+    }
 
     reset_n.write(true) ; // reset 
     sc_start(3,SC_NS) ; // wait for 1 cycle
     reset_n.write(false) ; // end of reset
     cerr << "test :" << endl ;
+
     for(int i = 0 ; i < 1000 ; i++)
     {
         int radr1_ = rand() % 7;
@@ -145,7 +155,7 @@ int sc_main(int argc, char* argv[])
         {
             string s ;
             s = "r"+ to_string(i) ;
-           cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
+            //cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
         }       
 
     }
