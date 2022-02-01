@@ -157,33 +157,6 @@ int sc_main(int argc, char* argv[])
             s = "r"+ to_string(i) ;
             //cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
         }   
-
-
-        if(radr1_ == adr_dest_)
-        {
-            /* 
-            if read adress is the same than destination adress,
-            We need to check if the destination is well valid (meaning inval_dest = 0) and if the register read is valid 
-            meaning REG_VALID[] = 1.
-            If both are true then 
-            */
-           if(!inval_dest_ & reg_inst.REG_VALID[adr_dest_].read())
-            {
-                if(!reg_inst.RADR1_VALID.read())
-                {
-                    cerr << "Error, adress should be valid" << endl ; 
-                }
-            }
-            else if(!inval_dest_ & reg_inst.REG_VALID[adr_dest_].read())
-            {
-                if(!reg_inst.RADR2_VALID.read())
-                {
-                    cerr << "Error, adress should be valid" << endl ; 
-                }
-            }
-        }   
-        //else if(radr2_ == adr_dest_) 
-
     }
     sc_close_vcd_trace_file(tf);
     return 0 ;

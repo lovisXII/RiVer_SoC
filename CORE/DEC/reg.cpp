@@ -62,7 +62,7 @@ void reg::writing_adresse()
 
         // Invalidation du registre destination
         
-        if(!INVAL_DEST.read())
+        if(!INVAL_DEST.read() && ADR_DEST.read() != 0)
         {
          REG_VALID[ADR_DEST.read()].write(0) ; // Invalidation du port lié au registre destination 
         }
