@@ -8,7 +8,6 @@
 
 void reg::reading_adresses()
 {
-    cerr << "reading process :" << endl ;
     if(RADR1_VALID.read())
     {
      RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 1
@@ -40,17 +39,12 @@ void reg::writing_adresse()
     {
         REG[i].write(0) ;
     }
-    cerr << "before REG_VALID SHIT" << endl ;
     for(int i = 0 ; i < 33 ; i++)
     {
-        cerr << i << endl ;
         REG_VALID[i] = true ;
     }
     wait(3) ;
 
-    //Ending RESET 
-    cerr <<"#############################"<< "end reset : " << endl ;
-    
     while(1)
     {
         if(WADR1.read() == 0) // si on cherche à écrire dans le registre 0 on ne fait rien

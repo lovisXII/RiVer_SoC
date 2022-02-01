@@ -140,23 +140,49 @@ int sc_main(int argc, char* argv[])
         inval_dest.write(inval_dest_) ;
 
         sc_start(1,SC_NS) ;
-        cout << "--------------------------------" << endl ;
-        cout << "radr1_ : " << radr1_ << endl ;
-        cout << "radr2_ : " << radr2_ << endl ;
-        cout << "wadr1_ : " << wadr1_ << endl ;
-        cout << "ward1_valid_ : " << ward1_valid_ << endl ;
-        cout << "wadr1_data_ : " << wadr1_data_ << endl ;
-        cout << "inc_pc_valid_ : " << inc_pc_valid_ << endl ;
-        cout << "Data read 1 :" << radr1_data.read() << endl ;
-        cout << "Data read 2 : " << radr2_data.read() << endl ;
-        cout << "ADR_DEST :" << adr_dest_ << endl ;
-        cout << "inval_dest : " << inval_dest_ << endl ;  
+        // cout << "--------------------------------" << endl ;
+        // cout << "radr1_ : " << radr1_ << endl ;
+        // cout << "radr2_ : " << radr2_ << endl ;
+        // cout << "wadr1_ : " << wadr1_ << endl ;
+        // cout << "ward1_valid_ : " << ward1_valid_ << endl ;
+        // cout << "wadr1_data_ : " << wadr1_data_ << endl ;
+        // cout << "inc_pc_valid_ : " << inc_pc_valid_ << endl ;
+        // cout << "Data read 1 :" << radr1_data.read() << endl ;
+        // cout << "Data read 2 : " << radr2_data.read() << endl ;
+        // cout << "ADR_DEST :" << adr_dest_ << endl ;
+        // cout << "inval_dest : " << inval_dest_ << endl ;  
         for(int i = 0 ; i < 33 ; i++)
         {
             string s ;
             s = "r"+ to_string(i) ;
             //cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
-        }       
+        }   
+
+
+        if(radr1_ == adr_dest_)
+        {
+            /* 
+            if read adress is the same than destination adress,
+            We need to check if the destination is well valid (meaning inval_dest = 0) and if the register read is valid 
+            meaning REG_VALID[] = 1.
+            If both are true then 
+            */
+           if(!inval_dest_ & reg_inst.REG_VALID[adr_dest_].read())
+            {
+                if(!reg_inst.RADR1_VALID.read())
+                {
+                    cerr << "Error, adress should be valid" << endl ; 
+                }
+            }
+            else if(!inval_dest_ & reg_inst.REG_VALID[adr_dest_].read())
+            {
+                if(!reg_inst.RADR2_VALID.read())
+                {
+                    cerr << "Error, adress should be valid" << endl ; 
+                }
+            }
+        }   
+        //else if(radr2_ == adr_dest_) 
 
     }
     sc_close_vcd_trace_file(tf);
