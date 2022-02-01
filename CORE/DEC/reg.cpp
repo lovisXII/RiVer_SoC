@@ -69,14 +69,10 @@ void reg::writing_adresse()
 
         // Invalidation de la data lue par adr1 et adr2 
 
-        if(ADR_DEST.read() == RADR1.read())
-        {
-            RADR1_VALID.write(REG_VALID[ADR_DEST.read()]) ;
-        }
-        if(ADR_DEST.read() == RADR2.read())
-        {
-            RADR2_VALID.write(REG_VALID[ADR_DEST.read()]) ;
-        }
+        RADR1_VALID.write(REG_VALID[RADR1.read()]) ;
+   
+        RADR2_VALID.write(REG_VALID[RADR2.read()]) ;
+
         READ_PC_VALID.write(REG_VALID[32]) ; // la validité de PC est la validité du registre correspondant soit r32
 
         wait(1) ;

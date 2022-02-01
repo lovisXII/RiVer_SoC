@@ -121,9 +121,9 @@ int sc_main(int argc, char* argv[])
 
     for(int i = 0 ; i < 1000 ; i++)
     {
-        int radr1_ = rand() % 7;
-        int radr2_ = rand() % 7 ;
-        int wadr1_ = rand() % 7;
+        int radr1_ = rand() % 33;
+        int radr2_ = rand() % 33 ;
+        int wadr1_ = rand() % 33;
         int ward1_valid_ = 1 ;
         int wadr1_data_ = rand() ;
         int inc_pc_valid_ = rand() % 2 ;
