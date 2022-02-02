@@ -104,9 +104,9 @@ int sc_main(int argc, char* argv[])
         sc_trace(tf,reg_inst.REG_VALID[i],s) ;
     }
 
-    reset_n.write(true) ; // reset 
+    reset_n.write(false) ; // reset 
     sc_start(3,SC_NS) ; // wait for 1 cycle
-    reset_n.write(false) ; // end of reset
+    reset_n.write(true) ; // end of reset
     cerr << "test :" << endl ;
 
     for(int i = 0 ; i < 1000 ; i++)

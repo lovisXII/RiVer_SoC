@@ -18,6 +18,6 @@ SC_MODULE(fifo_74b)
     SC_CTOR(fifo_74b)
     {
         SC_CTHREAD(function,fifo_74b::CLK.pos()) ;
-        reset_signal_is(RESET_N, true) ;
+        reset_signal_is(RESET_N, false) ;
     }
 };
