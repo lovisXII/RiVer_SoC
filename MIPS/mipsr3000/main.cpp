@@ -162,9 +162,15 @@ int sc_main(int ac, char *av[])
   
   sc_trace(tf,mips1->regfile1->WRC,"WRC");
   sc_trace(tf,mips1->ff_decode1->RD_RD,"RD");
+
   sc_trace(tf,mips1->alu1->XOPER_SE,"XOPER_SE");
   sc_trace(tf,mips1->alu1->YOPER_SE,"YOPER_SE");
   sc_trace(tf,mips1->alu1->RLOGIC_SE,"RLOGIC_SE");
+
+  sc_trace(tf,mips1->alu1->XARITH_SE,"XARITH_SE");
+  sc_trace(tf,mips1->alu1->YARITH_SE,"YARITH_SE");
+  sc_trace(tf,mips1->alu1->CARITH_SE,"CARITH_SE");
+
   sc_trace(tf,mips1->IOPER_SD,"IOPER_SD");
   sc_trace(tf,mips1->IOPER_RD,"IOPER_RD");
   sc_trace(tf,mips1->RES_RE,"RES_RE");
