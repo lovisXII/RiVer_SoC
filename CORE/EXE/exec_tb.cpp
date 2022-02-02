@@ -125,10 +125,10 @@ int sc_main(int argc, char* argv[])
 
     //Reset Process :
 
-    reset.write(true);
+    reset.write(false);
     sc_start(1, SC_NS);
     sc_start(1, SC_PS);
-    reset.write(false);
+    reset.write(true);
     sc_start(2, SC_NS);
     cout << "reset is done " << endl ;
     int i;
