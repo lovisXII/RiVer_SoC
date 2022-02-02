@@ -27,27 +27,27 @@ void exec::select_exec_res() {
     
 }
 void exec::fifo_concat() {
-    sc_bv<74> ff_din;
+    sc_bv<78> ff_din;
     ff_din.range(31, 0) = FFIN_EXE_RES.read();
     ff_din.range(63, 32) = MEM_DATA.read();
     ff_din.range(67, 64) = DEST.read();
     ff_din.range(69, 68) = MEM_SIZE.read();
     ff_din[70] = WB.read();
-    ff_din[71] = MEM_LOAD.read();
-    ff_din[72] = MEM_STORE.read();
-    ff_din[73] = MEM_SIGN_EXTEND.read();
+    ff_din.range(71,73) = MEM_LOAD.read();
+    ff_din.range(74,76) = MEM_STORE.read();
+    ff_din[77] = MEM_SIGN_EXTEND.read();
     FF_DIN.write(ff_din);
     
 }
 void exec::fifo_unconcat() {
-    sc_bv<74> ff_dout = FF_DOUT.read();
+    sc_bv<78> ff_dout = FF_DOUT.read();
     FFOUT_EXE_RES.write((sc_bv_base) ff_dout.range(31, 0));
     FFOUT_MEM_DATA.write((sc_bv_base) ff_dout.range(63, 32));
     FFOUT_DEST.write((sc_bv_base) ff_dout.range(67, 64));
     FFOUT_MEM_SIZE.write((sc_bv_base) ff_dout.range(69, 68));
     FFOUT_WB.write((bool) ff_dout[70]);
-    FFOUT_MEM_LOAD.write((bool) ff_dout[71]);
-    FFOUT_MEM_STORE.write((bool) ff_dout[72]);
+    FFOUT_MEM_LOAD.write((sc_bv_base) ff_dout.range(71,73));
+    FFOUT_MEM_STORE.write((sc_bv_base) ff_dout.range(74,76));
 }
 
 void exec::manage_fifo() {
