@@ -5,16 +5,13 @@ LINKER_ARGS=-rpath=/usr/local/systemc-2.3.3/lib-linux64
 LIBS=-lsystemc -lm
 C_ARGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 
-all: dec_tb 
+all: reg_tb 
 
-dec_tb: dec.o dec_tb.o ../UTIL/fifo_32b/fifo_32b.o
+reg_tb: reg.o reg_tb.o
 	$(CC) $^ -o $@ $(C_ARGS)
 
 %.o: %.cpp	
 	$(CC) -c $^ $(C_ARGS)
 
-../UTIL/fifo_32b/fifo_32b.o: ../UTIL/fifo_32b/fifo_32b.cpp
-	make -C ../UTIL/fifo_32b/
-
 clean:
-	rm -f *.o dec_tb *.vcd && cd ../UTIL/fifo_32b/ && make clean
+	rm -f *.o reg_tb *.vcd
