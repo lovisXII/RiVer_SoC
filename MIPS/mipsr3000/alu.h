@@ -23,43 +23,45 @@
 #include <systemc.h>
 #include "constants.h"
 
+
+
 SC_MODULE(alu)
 {
 //IN  
   sc_in<sc_uint<32>>  XOPER_SE;    //operand X
   sc_in<sc_uint<32>> 	YOPER_SE;    //operand Y
 
-  sc_in<bool>		      I_SUB_SE;    //si 1 donc X - Y sinon X + Y
-  sc_in<sc_uint<3>>	  I_OPER_SE;   //type d'instruction (ti)
-  sc_in<bool>         I_RSGND_SE;  // ? 
-  sc_in<bool>         I_RIGHT_SE;  // ?
+  sc_in<bool>		      I_SUB_SE;    //substraction flag
+  sc_in<sc_uint<3>>	  I_OPER_SE;   //instruction type(it)
+  sc_in<bool>         I_RSGND_SE;  //signed instruction signal
+  sc_in<bool>         I_RIGHT_SE;  //instruction type right (ex: shift right)
   sc_in<sc_uint<2>>	  I_LOGIC_SE;  //command de ALU
 
-  sc_in<sc_uint<32>>	IOPER_RD;    //result si ti est "nop"
-  sc_in<sc_uint<32>>	Y_SE;        //result si ti est "toper"
-  sc_in<sc_uint<32>>	X_SE;        //result si ti est "soper"
-  sc_in<sc_uint<8>>	  OPCOD_RD;    //bit de test pour slt/i et sltu/i
+  sc_in<sc_uint<32>>	IOPER_RD;    //result if it is "nop"
+  sc_in<sc_uint<32>>	Y_SE;        //result if it is "toper"
+  sc_in<sc_uint<32>>	X_SE;        //result if it is "soper"
+  sc_in<sc_uint<8>>	  OPCOD_RD;    //check for slt/i et sltu/i
 
 //OUT
-  sc_out<sc_uint<32> >	RES_SE;      //Resultat
+  sc_out<sc_uint<32> >	RES_SE;      //Result
 
 //SIGNAL
-  sc_signal<sc_uint<32> >	XARITH_SE; //xoper pour operation arithmetique
-  sc_signal<sc_uint<32> >	YARITH_SE; //yoper pour operation arithmetique
-  sc_signal<sc_uint<32> >	RARITH_SE; 
-  sc_signal<sc_uint<33> >	CARITH_SE;
-  sc_signal<bool>			OVERFLW_SE;
-  sc_signal<bool>			S_LT_T_SE;
-  sc_signal<bool>			S_LTU_T_SE;
-  sc_signal<bool>			SETBIT_SE;
-  sc_signal<sc_uint<32> >	RTEST_SE;
-  sc_signal<sc_uint<32> >	RSHIFT_SE;
-  sc_signal<sc_uint<32> >	SHIFTIN_SE;
+  sc_signal<sc_uint<32> >	XARITH_SE;  //xoper for arithmetique operation 
+  sc_signal<sc_uint<32> >	YARITH_SE;  //yoper for arithmetique operation 
+  sc_signal<sc_uint<32> >	RARITH_SE;  //result arithmetique
+  sc_signal<sc_uint<33> >	CARITH_SE;  //carry for arithmetique operation
+  sc_signal<bool>		OVERFLW_SE;       //overlow flag
+  sc_signal<bool>		S_LT_T_SE;        //slt/i flag
+  sc_signal<bool>		S_LTU_T_SE;       //sltu/i flag
+  sc_signal<bool>		SETBIT_SE;        //result of slt check
+  sc_signal<sc_uint<32> >	RTEST_SE;   //result if it is "test"
+  sc_signal<sc_uint<32> >	RSHIFT_SE;  //result of shift
+  sc_signal<sc_uint<32> >	SHIFTIN_SE; //shift buffer
     
-  sc_signal<sc_uint<32> >	SHLEFT_SE;   //shift left
-  sc_signal<sc_uint<32> >	SHRIGHT_SE;  //shift right
+  sc_signal<sc_uint<32> >	SHLEFT_SE;  //shift left
+  sc_signal<sc_uint<32> >	SHRIGHT_SE; //shift right
     
-  sc_signal<sc_uint<32> >	RLOGIC_SE;
+  sc_signal<sc_uint<32> >	RLOGIC_SE;  //result of logical operation
 
   SC_CTOR(alu):
     XOPER_SE("XOPER_SE"),
@@ -123,7 +125,7 @@ SC_MODULE(alu)
       }
 
 // ### ------------------------------------------------------ ###
-// #   operands for arithmetic operations			#
+// #   operands for arithmetic operations		(X and Y)	#
 // ### ------------------------------------------------------ ###
 
   void processXARITH_SE();
@@ -131,7 +133,7 @@ SC_MODULE(alu)
   void processYARITH_SE();
 
 // ### ------------------------------------------------------ ###
-// #   arithmetic result					#
+// #   arithmetic result & carry					#
 // ### ------------------------------------------------------ ###
 
   void processRARITH_SE();
