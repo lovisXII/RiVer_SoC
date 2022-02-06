@@ -36,5 +36,6 @@ EXAMPLE:
 
 2.1 ALU
 
-cette alu non seulement fait les operation logique de base (ET, OU, NOR et XOR)
-et les addition et substraction, mais aussi il traite les shifts et l'operations slt/i, sltu/i.
+The ALU are made for make logique operations (AND, OR, NOR and XOR),
+arithmetique operations (addition and substraction), shift operations and slt compare operation.
+
