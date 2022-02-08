@@ -25,49 +25,49 @@
 
 SC_MODULE(decode)
 {
-	sc_in<sc_uint<32> > 	IR_RI;
-	sc_out<sc_uint<8> > 	OPCOD_SD;
-	sc_in<sc_uint<25> > 	I_TYPE_SD;
+	sc_in<sc_uint<32> > 	IR_RI;			// ?
+	sc_out<sc_uint<8> > 	OPCOD_SD;		// res opcod 
+	sc_in<sc_uint<25> > 	I_TYPE_SD;		// ?
 
-	sc_signal<sc_uint<8> > 	COP0_SD;
-	sc_signal<bool> 	I_ILLG_SD;
-	sc_signal<bool> 	I_JFMT_SD;
-	sc_signal<bool> 	I_IFMT_SD;
-	sc_signal<bool> 	I_RFMT_SD;
-
-	sc_out<bool> 		I_DUSE_SD;
-	sc_out<bool> 		I_READS_SD;
-	sc_out<bool> 		I_READT_SD;
-
-	sc_signal<bool> 	I_OSGND_SD;
-	sc_signal<bool> 	I_WRT31_SD;
-	sc_signal<bool> 	I_WRITE_SD;
-
-	sc_out<bool> 		I_BRNCH_SD;
-	sc_out<bool> 		SWAP_SD;
+	sc_signal<sc_uint<8> > 	COP0_SD;		
+	sc_signal<bool> 		I_ILLG_SD;
+	sc_signal<bool> 		I_JFMT_SD;
+	sc_signal<bool> 		I_IFMT_SD;
+	sc_signal<bool> 		I_RFMT_SD;
+	
+	sc_out<bool> 			I_DUSE_SD;
+	sc_out<bool> 			I_READS_SD;
+	sc_out<bool> 			I_READT_SD;
+	
+	sc_signal<bool> 		I_OSGND_SD;
+	sc_signal<bool> 		I_WRT31_SD;
+	sc_signal<bool> 		I_WRITE_SD;
+	
+	sc_out<bool> 			I_BRNCH_SD;
+	sc_out<bool> 			SWAP_SD;
 	sc_out<sc_uint<5> > 	COP0D_SD;
 	sc_out<sc_uint<5> > 	RS_SD;
 	sc_out<sc_uint<5> > 	RT_SD;
 	sc_out<sc_uint<5> > 	RD_SD;
 
 	sc_signal<sc_uint<32> > COP0OP_SD;
-	sc_signal<bool> 	IMDSGN_SD;
+	sc_signal<bool> 		IMDSGN_SD;
 	sc_signal<sc_uint<16> >	IMDSEX_SD;
 	sc_out<sc_uint<32> >	IOPER_SD;
 	sc_signal<sc_uint<32> >	OFFSET_SD;
 	sc_signal<sc_uint<5> >	S_CMP_T_SD;
-	sc_signal<bool>		S_EQ_T_SD;
-	sc_signal<bool>		S_LT_Z_SD;
-	sc_signal<bool>		S_LE_Z_SD;
+	sc_signal<bool>			S_EQ_T_SD;
+	sc_signal<bool>			S_LT_Z_SD;
+	sc_signal<bool>			S_LE_Z_SD;
 
-	sc_out<bool> 		SLEEP_SD;
-	sc_out<sc_uint<32> > 	NEXTPC_SD;
-	sc_out<bool> 		ILLGINS_XD;
-	sc_out<bool> 		C0UNUSE_XD;
+	sc_out<bool> 			SLEEP_SD;
+	sc_out<sc_uint<32>>		NEXTPC_SD;			// next PC output
+	sc_out<bool> 			ILLGINS_XD;
+	sc_out<bool> 			C0UNUSE_XD;
 
-	sc_signal<sc_uint<32> > JMPADR_SD;
-	sc_signal<sc_uint<32> > BRAADR_SD;
-	sc_signal<sc_uint<32> > SEQADR_SD;
+	sc_signal<sc_uint<32> > JMPADR_SD;		// jump @ 
+	sc_signal<sc_uint<32> > BRAADR_SD;		// branch @  
+	sc_signal<sc_uint<32> > SEQADR_SD;		// seq @ ?
 
 	sc_in<sc_uint<32> > 	BADVADR_RM;
 	sc_in<sc_uint<32> > 	NEXTSR_RX;
@@ -78,7 +78,7 @@ SC_MODULE(decode)
 	sc_in<sc_uint<32> > 	SOPER_SD;
 	sc_in<sc_uint<32> > 	TOPER_SD;
 	sc_in<sc_uint<32> > 	SR_RI;
-	sc_in<sc_uint<32> > 	NEXTPC_RD;
+	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next PC input
 
 	SC_CTOR(decode)/*:
 	IR_RI("IR_RI"),

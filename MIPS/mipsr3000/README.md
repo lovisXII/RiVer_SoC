@@ -33,9 +33,12 @@ EXAMPLE:
 // CLZ: count leading zero
 
 2. STAGE AND COMPONENTS DESCRIPTION
+In addition of all components files, "constants.h" contains all instructions encoding and special signals encoding.
 
 2.1 ALU
 
 The ALU are made for make logique operations (AND, OR, NOR and XOR),
 arithmetique operations (addition and substraction), shift operations and slt compare operation.
+
+
 

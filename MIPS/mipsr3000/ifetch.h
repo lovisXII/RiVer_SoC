@@ -25,14 +25,14 @@
 
 SC_MODULE(ifetch)
 {
-	sc_in<bool> 		I_BRNCH_SD;
-	sc_in<sc_uint<32> > 	NEXTSR_RX;
-	sc_in<sc_uint<8> > 	OPCOD_SD;
-	sc_in<sc_uint<8> > 	OPCOD_RD;
-	sc_in<sc_uint<8> > 	OPCOD_RE;
+	sc_in<bool> 		I_BRNCH_SD;		//branch instruction
+	sc_in<sc_uint<32>>	NEXTSR_RX;		//next status register
+	sc_in<sc_uint<8>> 	OPCOD_SD;		//opcode from decod signal?
+	sc_in<sc_uint<8>> 	OPCOD_RD;		//opcode from decod register?
+	sc_in<sc_uint<8>> 	OPCOD_RE;		//opcode from exec register?
 
-	sc_out<sc_uint<32> > 	SR_SI;
-	sc_out<bool>		BDSLOT_XI;
+	sc_out<sc_uint<32>>	SR_SI;			// Status register
+	sc_out<bool>		BDSLOT_XI;   	// Branch delayed slot XI?
 
 	SC_CTOR(ifetch):
 		I_BRNCH_SD("I_BRNCH_SD"),

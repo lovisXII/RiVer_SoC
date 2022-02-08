@@ -27,13 +27,13 @@ typedef struct
 {
 	sc_uint<4> instf; 	// Instruction format
 	sc_uint<4> sou;		// Source operand usage
-	bool suso;		// signed/unsigned source operands
+	bool suso;			// signed/unsigned source operands
 	sc_uint<3> ot;		// operation type
 	sc_uint<2> o;		// operation
-	bool sur;		// signed/unsigned result
-	bool od;		// overflow detection
+	bool sur;			// signed/unsigned result
+	bool od;			// overflow detection
 	sc_uint<3> wspr;	// which stage produces the result
-	bool toi;		// type of instruction (branch)
+	bool toi;			// type of instruction (branch)
 	sc_uint<5> toma;	// type of memory access
 } rom_out;
 

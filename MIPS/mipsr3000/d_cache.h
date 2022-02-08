@@ -5,71 +5,73 @@
 
 SC_MODULE(d_cache)
 {
-  sc_in<bool>					CK;// external clock
-  sc_in<bool>					RESET_N;// reset
+  sc_in<bool>					CK;           // external clock
+  sc_in<bool>					RESET_N;      // reset
 
-  sc_in<sc_uint<32> >			D_A;// address
-  sc_in<bool>					D_RQ;// data request
-  sc_in<bool>					D_LOCK;
-  sc_in<sc_uint<2> >				D_ATYPE;
-  sc_in<bool>					D_ACK;
-  sc_out<bool>				D_BERR_N;// bus error
-  sc_out<bool>				D_FRZ;// unable to answer
-  sc_out<sc_uint<32> >		D_OUT;
-  sc_in<sc_uint<32> >		D_IN;
+  sc_in<sc_uint<32> >		D_A;        // address
+  sc_in<bool>					  D_RQ;       // data request
+  sc_in<bool>					  D_LOCK;     // lock signal
+  sc_in<sc_uint<2> >		D_ATYPE;    // adresse type?
+  sc_in<bool>					  D_ACK;      // acknowledge signal 
 
-  sc_inout<sc_uint<32> >		PI_A;
-  sc_inout<sc_uint<4> >		PI_OPC;
-  sc_inout<bool>			PI_READ;
-  sc_inout<bool>			PI_LOCK;
-  sc_out<bool>			PI_IREQ;
-  sc_in<bool>			PI_GNT;
-  sc_in<sc_uint<3> >		PI_ACK;
-  sc_inout<sc_uint<32> >		PI_D;
-  sc_in<bool>			PI_TOUT;
+  sc_out<bool>				  D_BERR_N;   // bus error
+  sc_out<bool>				  D_FRZ;      // unable to answer
+
+  sc_out<sc_uint<32> >	D_OUT;      // DATA output
+  sc_in<sc_uint<32> >		D_IN;       // DATA input
+
+  sc_inout<sc_uint<32> >		PI_A;     // 
+  sc_inout<sc_uint<4> >		  PI_OPC;   //
+  sc_inout<bool>			      PI_READ;  //
+  sc_inout<bool>			      PI_LOCK;  //
+  sc_out<bool>			        PI_IREQ;  //
+  sc_in<bool>			          PI_GNT;   //
+  sc_in<sc_uint<3> >		    PI_ACK;   //
+  sc_inout<sc_uint<32> >		PI_D;     //
+  sc_in<bool>		          	PI_TOUT;  //
 
   sc_signal<bool>				CK_SX;// internal clk
 
-  sc_signal<sc_biguint<128> >	BLOC0_RX;// data bloc 0
-  sc_signal<sc_biguint<128> >	BLOC1_RX;// data bloc 1
-  sc_signal<sc_biguint<128> >	BLOC2_RX;// data bloc 2
-  sc_signal<sc_biguint<128> >	BLOC3_RX;// data bloc 3
-  sc_signal<sc_biguint<128> >	BLOC_SX;// selected bloc
+  sc_signal<sc_biguint<128> >	BLOC0_RX; // data bloc 0
+  sc_signal<sc_biguint<128> >	BLOC1_RX; // data bloc 1
+  sc_signal<sc_biguint<128> >	BLOC2_RX; // data bloc 2
+  sc_signal<sc_biguint<128> >	BLOC3_RX; // data bloc 3
+  sc_signal<sc_biguint<128> >	BLOC_SX;  // selected bloc
 
-  sc_signal<sc_uint<32> >		DATA_SX;// selected data
+  sc_signal<sc_uint<32> >		DATA_SX;    // selected data
 
-  sc_signal<sc_uint<26> >		TAG0_RX;// tag  bloc 0
-  sc_signal<sc_uint<26> >		TAG1_RX;// tag  bloc 1
-  sc_signal<sc_uint<26> >		TAG2_RX;// tag  bloc 2
-  sc_signal<sc_uint<26> >		TAG3_RX;// tag  bloc 3
-  sc_signal<sc_uint<26> >		TAG_SX;// tag
+  sc_signal<sc_uint<26> >		TAG0_RX;    // tag  bloc 0
+  sc_signal<sc_uint<26> >		TAG1_RX;    // tag  bloc 1
+  sc_signal<sc_uint<26> >		TAG2_RX;    // tag  bloc 2
+  sc_signal<sc_uint<26> >		TAG3_RX;    // tag  bloc 3
+  sc_signal<sc_uint<26> >		TAG_SX;     // tag
 
-  sc_signal<bool>				PRES0_RX;// present bloc 0
-  sc_signal<bool>				PRES1_RX;// present bloc 1
-  sc_signal<bool>				PRES2_RX;// present bloc 2
-  sc_signal<bool>				PRES3_RX;// present bloc 3
-  sc_signal<bool>				PRES_SX;// present
+  sc_signal<bool>				PRES0_RX;       // present bloc 0
+  sc_signal<bool>				PRES1_RX;       // present bloc 1
+  sc_signal<bool>				PRES2_RX;       // present bloc 2
+  sc_signal<bool>				PRES3_RX;       // present bloc 3
+  sc_signal<bool>				PRES_SX;        // present
 
-  sc_signal<sc_uint<26> >		ADRTAG_SX;// proc. adr's tag
-  sc_signal<sc_uint<2> >		BLCNBR_SX;// proc. bloc number
-  sc_signal<sc_uint<2> >		BLCOFS_SX;// proc. bloc offset
+  sc_signal<sc_uint<26> >		ADRTAG_SX;  // proc. adr's tag
+  sc_signal<sc_uint<2> >		BLCNBR_SX;  // proc. bloc number
+  sc_signal<sc_uint<2> >		BLCOFS_SX;  // proc. bloc offset
 
-  sc_signal<sc_uint<26> >		CMPTAGS_SX;// tags comparison
-  sc_signal<bool>				EQLTAGS_SX;// tags equal
+  sc_signal<sc_uint<26> >		CMPTAGS_SX; // tags comparison
+  sc_signal<bool>				EQLTAGS_SX;     // tags equal
 
-  sc_signal<sc_uint<2> >		WRTBNBR_SX;// replaced bloc #
-  sc_signal<sc_uint<26> >		WRTBTAG_SX;// replaced bloc tag
-  sc_signal<bool>				WRTBLOC_SX;// update repl. bloc
-  sc_signal<sc_biguint<128> >	BLOCDIN_SX;// value to wrt in blc
+  sc_signal<sc_uint<2> >		WRTBNBR_SX;   // replaced bloc #
+  sc_signal<sc_uint<26> >		WRTBTAG_SX;   // replaced bloc tag
+  sc_signal<bool>				WRTBLOC_SX;       // update repl. bloc
+  sc_signal<sc_biguint<128> >	BLOCDIN_SX; // value to wrt in blc
 
-  sc_signal<sc_uint<32> >		CMPUADR_SX;// comp. uncach. adr
-  sc_signal<bool>				EQLUADR_SX;// equal uncach. adr
+  sc_signal<sc_uint<32> >		CMPUADR_SX;   // comp. uncach. adr
+  sc_signal<bool>				EQLUADR_SX;       // equal uncach. adr
 
-  sc_signal<sc_uint<32> >		MSK0ADR_SX;// uncach. masked adr
+  sc_signal<sc_uint<32> >		MSK0ADR_SX;   // uncach. masked adr
 
-  sc_signal<bool>			 	UNCMISS_SX;// uncachable miss
-  sc_signal<bool>				DIRMISS_SX;// directory  miss
-  sc_signal<bool>				MISS_SX;// global     miss
+  sc_signal<bool>			 	UNCMISS_SX;       // uncachable miss
+  sc_signal<bool>				DIRMISS_SX;       // directory  miss
+  sc_signal<bool>				MISS_SX;          // global     miss
 
   sc_signal<bool>				RESET_RX;// reset register
   sc_signal<sc_uint<2> >		RSTCNT_SX;// reset counter

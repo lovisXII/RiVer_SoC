@@ -25,27 +25,27 @@
 
 SC_MODULE(mux_ifetch)
 {
-	sc_in<bool> BUBBLE_SI;
-	sc_in<bool> HOLD_SI;
-	sc_in<bool> KEEP_SI;
+	sc_in<bool> BUBBLE_SI;	// BUBBLE signal ifetch
+	sc_in<bool> HOLD_SI;	// HOLD signal ifetch
+	sc_in<bool> KEEP_SI;	// KEEP signal ifetch
 
-	sc_in<sc_uint<32> > IR_RI;
-	sc_in<sc_uint<32> > I;
-	sc_out<sc_uint<32> > MUX_IR_SI;
+	sc_in<sc_uint<32>> IR_RI;			// ????
+	sc_in<sc_uint<32>> I;				// I ???
+	sc_out<sc_uint<32>> MUX_IR_SI;		// res ?
+		
+	sc_out<bool> MUX_INSTRED_SI;		// ?
 
-	sc_out<bool> MUX_INSTRED_SI;
+	sc_in<bool> BDSLOT_XI;				// delayed slot XI?
+	sc_in<bool> BDSLOT_RI;				// delayed slot register ifetch
+	sc_out<bool> MUX_BDSLOT_SI;			// res delayed slot
 
-	sc_in<bool> BDSLOT_XI;
-	sc_in<bool> BDSLOT_RI;
-	sc_out<bool> MUX_BDSLOT_SI;
+	sc_in<sc_uint<32> > PC_RI;          // actual PC
+	sc_in<sc_uint<32> > NEXTPC_RD;		// next pc
+	sc_out<sc_uint<32> > MUX_PC_SI;		// res pc
 
-	sc_in<sc_uint<32> > PC_RI;
-	sc_in<sc_uint<32> > NEXTPC_RD;
-	sc_out<sc_uint<32> > MUX_PC_SI;
-
-	sc_in<sc_uint<32> > SR_RI;
-	sc_in<sc_uint<32> > SR_SI;
-	sc_out<sc_uint<32> > MUX_SR_SI;
+	sc_in<sc_uint<32> > SR_RI;			// status register register ifetch
+	sc_in<sc_uint<32> > SR_SI;			// status register signal ifetch
+	sc_out<sc_uint<32> > MUX_SR_SI;		// res status register
 
 	SC_CTOR(mux_ifetch):
 		BUBBLE_SI("BUBBLE_SI"),
