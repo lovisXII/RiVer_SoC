@@ -39,11 +39,7 @@ void reg::writing_adresse()
     }
     while(1)
     {
-        if(WADR1.read() == 0) // si on cherche à écrire dans le registre 0 on ne fait rien
-        {
-
-        }
-        else
+        if(WADR1.read() != 0) // si on cherche à écrire dans le registre 0 on ne fait rien
         {
             if(WADR1_VALID.read()) // if the register written is valid
             {
@@ -59,9 +55,9 @@ void reg::writing_adresse()
         So if the wadr1_valid is to 0 it means we dont plan to write back the register right now.
         More over we have to verify that this register is not r0, cause r0 is the constant 0 so it's can't be unvalid.
         */
-        if(!WADR1_VALID.read() && WADR1.read() != 0) 
+        if(INVAL_ENABLE.read() && INVAL_ADR.read() != 0) 
         {
-         REG_VALID[WADR1.read()].write(0) ; // Invalidation du port lié au registre destination 
+         REG_VALID[INVAL_ADR.read()].write(0) ; // Invalidation du port lié au registre destination 
         }
 
         // Invalidation de la data lue par adr1 et adr2 

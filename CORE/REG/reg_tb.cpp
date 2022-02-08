@@ -26,6 +26,11 @@ int sc_main(int argc, char* argv[])
     sc_signal <bool>                wadr1_valid ;
     sc_signal < sc_uint<32> >       wadr1_data ;
 
+    // Inval Port :
+
+    sc_signal < sc_uint<6> >        inval_adr ;
+    sc_signal <bool>                inval_enable ;
+
     //PC Gestion :
 
     sc_signal < sc_uint<32> >      read_pc ;
@@ -55,6 +60,8 @@ int sc_main(int argc, char* argv[])
     reg_inst.WADR1(wadr1) ;
     reg_inst.WADR1_VALID(wadr1_valid) ;
     reg_inst.WADR1_DATA(wadr1_data) ;
+    reg_inst.INVAL_ADR(inval_adr);
+    reg_inst.INVAL_ENABLE(inval_enable);
 
     //PC Gestion :
 
@@ -82,6 +89,8 @@ int sc_main(int argc, char* argv[])
     sc_trace(tf,reg_inst.WADR1,"WADR1") ;
     sc_trace(tf,reg_inst.WADR1_VALID,"WADR1_VALID") ;
     sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
+    sc_trace(tf,reg_inst.INVAL_ADR,"INVAL_ADR") ;
+    sc_trace(tf,reg_inst.INVAL_ENABLE,"INVAL_ENABLE") ;
 
     sc_trace(tf,reg_inst.READ_PC,"READ_PC") ;
     sc_trace(tf,reg_inst.INC_PC_VALID,"INC_PC_VALID") ;
@@ -111,7 +120,10 @@ int sc_main(int argc, char* argv[])
 
 
     int registers[33] = {0};
-
+    bool valid[33];
+    for (int i = 0; i < 33; i++) {
+        valid[i] = true;
+    }
     for(int i = 0 ; i < 1000 ; i++)
     {
         int radr1_ = rand() % 33;
@@ -120,6 +132,8 @@ int sc_main(int argc, char* argv[])
         int wadr1_valid_ = rand() % 2 ;
         int wadr1_data_ = rand() ;
         int inc_pc_valid_ = rand() % 2 ;
+        int inval_enable_ = rand() % 2 ;
+        int inval_adr_ = rand() % 33 ;
 
         radr1.write(radr1_) ;
         radr2.write(radr2_) ;
@@ -127,12 +141,20 @@ int sc_main(int argc, char* argv[])
         wadr1_valid.write(wadr1_valid_ );
         wadr1_data.write((sc_uint<32>) (wadr1_data_)) ;
         inc_pc_valid.write(inc_pc_valid_) ;
+        inval_adr.write(inval_adr_);
+        inval_enable.write(inval_enable_);
 
         sc_start(1,SC_NS) ;
 
         if (wadr1_valid_) {
             registers[wadr1_] = wadr1_data_;
             registers[0] = 0;
+            valid[wadr1_] = true;
+        }
+
+        if (inval_enable_) {
+            valid[inval_adr_] = false;
+            valid[0] = true;
         }
         if (registers[radr1_] != (int) radr1_data.read()) {
             cerr << "Error : register mismatch in register " << radr1_ << "from port 1, expected " << registers[radr1_] << " got " << (int) radr1_data.read() << endl;
@@ -144,6 +166,14 @@ int sc_main(int argc, char* argv[])
         }
         if (registers[32] != (int) read_pc.read()) {
             cerr << "Error : register mismatch in register pc, expected " << registers[32] << " got " << (int) read_pc.read() << endl;
+            exit(1);
+        }
+        if (valid[radr1_] != (int) radr1_valid.read()) {
+            cerr << "Error : register validity mismatch in register " << radr1_ << " from port 1, expected " << valid[radr1_] << " got " << (int) radr1_valid.read() << endl;
+            exit(1);
+        }
+        if (valid[radr2_] != (int) radr2_valid.read()) {
+            cerr << "Error : register validity mismatch in register " << radr2_ << " from port 2, expected " << valid[radr2_] << " got " << (int) radr2_valid.read() << endl;
             exit(1);
         }
         // cout << "--------------------------------" << endl ;
