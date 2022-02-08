@@ -8,32 +8,26 @@
 
 void reg::reading_adresses()
 {
-    if(RADR1_VALID.read())
-    {
-     RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 1
-    }
-    else
-    {
-        RADR1_DATA.write(0) ;
-    }
-    if(RADR2_VALID.read())
-    {
-        RADR2_DATA.write(REG[RADR2.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 2
-    } 
-    else
-    {
-        RADR2_DATA.write(0) ;
-    }
+    RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 1
+    RADR2_DATA.write(REG[RADR2.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 2
+    READ_PC.write(REG[32]);
         
+    /*
+    The register 1 or 2 validity is based on the destination register. So the validity of radr1 and radr2 is the valid bit from rd
+    */
+
+    RADR1_VALID.write(REG_VALID[RADR1.read()]) ;
+
+    RADR2_VALID.write(REG_VALID[RADR2.read()]) ;
+
+    READ_PC_VALID.write(REG_VALID[32]) ; // la validité de PC est la validité du registre correspondant soit r32
+
 
 }
 
 void reg::writing_adresse()
 {
     //Starting RESET :
-
-    RADR1_VALID.write(true) ; 
-    RADR2_VALID.write(true) ;
     
     for(int i = 0 ; i < 33 ; i++)
     {
@@ -43,8 +37,6 @@ void reg::writing_adresse()
     {
         REG_VALID[i] = true ;// Valid bits from every register are setup to true during reset
     }
-    wait(3) ;
-
     while(1)
     {
         if(WADR1.read() == 0) // si on cherche à écrire dans le registre 0 on ne fait rien
@@ -74,15 +66,6 @@ void reg::writing_adresse()
 
         // Invalidation de la data lue par adr1 et adr2 
 
-        /*
-        The register 1 or 2 validity is based on the destination register. So the validity of radr1 and radr2 is the valid bit from rd
-        */
-
-        RADR1_VALID.write(REG_VALID[RADR1.read()]) ;
-   
-        RADR2_VALID.write(REG_VALID[RADR2.read()]) ;
-
-        READ_PC_VALID.write(REG_VALID[32]) ; // la validité de PC est la validité du registre correspondant soit r32
 
         wait(1) ;
     }

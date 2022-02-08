@@ -107,25 +107,45 @@ int sc_main(int argc, char* argv[])
     reset_n.write(false) ; // reset 
     sc_start(3,SC_NS) ; // wait for 1 cycle
     reset_n.write(true) ; // end of reset
-    cerr << "test :" << endl ;
+    cerr << "end of reset" << endl ;
+
+
+    int registers[33] = {0};
 
     for(int i = 0 ; i < 1000 ; i++)
     {
         int radr1_ = rand() % 33;
         int radr2_ = rand() % 33 ;
         int wadr1_ = rand() % 33;
-        int ward1_valid_ = rand() % 2 ;
+        int wadr1_valid_ = rand() % 2 ;
         int wadr1_data_ = rand() ;
         int inc_pc_valid_ = rand() % 2 ;
 
         radr1.write(radr1_) ;
         radr2.write(radr2_) ;
         wadr1.write((sc_uint<6>) wadr1_) ;
-        wadr1_valid.write(ward1_valid_ );
+        wadr1_valid.write(wadr1_valid_ );
         wadr1_data.write((sc_uint<32>) (wadr1_data_)) ;
         inc_pc_valid.write(inc_pc_valid_) ;
 
         sc_start(1,SC_NS) ;
+
+        if (wadr1_valid_) {
+            registers[wadr1_] = wadr1_data_;
+            registers[0] = 0;
+        }
+        if (registers[radr1_] != (int) radr1_data.read()) {
+            cerr << "Error : register mismatch in register " << radr1_ << "from port 1, expected " << registers[radr1_] << " got " << (int) radr1_data.read() << endl;
+            exit(1);
+        }
+        if (registers[radr2_] != (int) radr2_data.read()) {
+            cerr << "Error : register mismatch in register " << radr2_ << " from port 2, expected " << registers[radr2_] << " got " << (int) radr2_data.read() << endl;
+            exit(1);
+        }
+        if (registers[32] != (int) read_pc.read()) {
+            cerr << "Error : register mismatch in register pc, expected " << registers[32] << " got " << (int) read_pc.read() << endl;
+            exit(1);
+        }
         // cout << "--------------------------------" << endl ;
         // cout << "radr1_ : " << radr1_ << endl ;
         // cout << "radr2_ : " << radr2_ << endl ;
@@ -137,13 +157,14 @@ int sc_main(int argc, char* argv[])
         // cout << "Data read 2 : " << radr2_data.read() << endl ;
         // cout << "ADR_DEST :" << adr_dest_ << endl ;
         // cout << "inval_dest : " << inval_dest_ << endl ;  
-        for(int i = 0 ; i < 33 ; i++)
-        {
-            string s ;
-            s = "r"+ to_string(i) ;
-            //cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
-        }   
+        // for(int i = 0 ; i < 33 ; i++)
+        // {
+        //     string s ;
+        //     s = "r"+ to_string(i) ;
+        //     cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
+        // }   
     }
+    cout << "All tests passed sucessfully" << endl;
     sc_close_vcd_trace_file(tf);
     return 0 ;
 }
