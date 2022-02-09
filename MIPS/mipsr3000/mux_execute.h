@@ -25,99 +25,99 @@
 
 SC_MODULE(mux_execute)
 {
-	sc_in<bool> BUBBLE_SE;
-	sc_in<bool> HOLD_SE;
-	sc_in<bool> KEEP_SE;
-	sc_in<bool> STALL_SM;
-	sc_in<bool> COPY_SM;
+	sc_in<bool> BUBBLE_SE;				// introduce bubble
+	sc_in<bool> HOLD_SE;				// hold instruction
+	sc_in<bool> KEEP_SE;				// keep the data
+	sc_in<bool> STALL_SM;				// sleep instruction stall
+	sc_in<bool> COPY_SM;				// duplicate instruction
 
-	sc_in<sc_uint<32> > IR_RD;
-	sc_in<sc_uint<32> > IR_RE;
-	sc_out<sc_uint<32> > MUX_IR_SE;
+	sc_in<sc_uint<32> > IR_RD;			// instruction register from decod
+	sc_in<sc_uint<32> > IR_RE;			// instruction register from exec
+	sc_out<sc_uint<32> > MUX_IR_SE;		// instruction register output
 
-	sc_in<sc_uint<25> > I_TYPE_RD;
-	sc_in<sc_uint<25> > I_TYPE_RE;
-	sc_out<sc_uint<25> > MUX_I_TYPE_SE;
+	sc_in<sc_uint<25> > I_TYPE_RD;		// instruction type from decod
+	sc_in<sc_uint<25> > I_TYPE_RE;		// instruction type from exec
+	sc_out<sc_uint<25> > MUX_I_TYPE_SE;	// instruction type output
 
-	sc_in<sc_uint<8> > OPCOD_RD;
-	sc_in<sc_uint<8> > OPCOD_RE;
-	sc_out<sc_uint<8> > MUX_OPCOD_SE;
+	sc_in<sc_uint<8> > OPCOD_RD;		// operation code from decod	
+	sc_in<sc_uint<8> > OPCOD_RE;		// operation code from exec
+	sc_out<sc_uint<8> > MUX_OPCOD_SE;	// operation code output
 
-	sc_in<bool> BDSLOT_RD;
-	sc_in<bool> BDSLOT_RE;
-	sc_out<bool> MUX_BDSLOT_SE;
+	sc_in<bool> BDSLOT_RD;				// delayed slot from decod
+	sc_in<bool> BDSLOT_RE;				// delayed slot from exec
+	sc_out<bool> MUX_BDSLOT_SE;			// delayed slot output
 
-	sc_in<sc_uint<5> > RD_RD;
-	sc_in<sc_uint<5> > RD_RE;
-	sc_out<sc_uint<5> > MUX_RD_SE;
+	sc_in<sc_uint<5> > RD_RD;			// register destination @ from decod
+	sc_in<sc_uint<5> > RD_RE;			// register destination @ from exec
+	sc_out<sc_uint<5> > MUX_RD_SE;		// register destination @ output
 
-	sc_in<sc_uint<5> > COP0D_RD;
-	sc_in<sc_uint<5> > COP0D_RE;
-	sc_out<sc_uint<5> > MUX_COP0D_SE;
+	sc_in<sc_uint<5> > COP0D_RD;		// coprocesseur 0 register destination from decod
+	sc_in<sc_uint<5> > COP0D_RE;		// coprocesseur 0 register destination from exec
+	sc_out<sc_uint<5> > MUX_COP0D_SE;	// coprocesseur 0 register destination output
 
-	sc_in<bool> OVF_RE;
-	sc_in<bool> OVF_XE;
-	sc_out<bool> MUX_OVF_SE;
+	sc_in<bool> OVF_RE;					// arithmetique overflow ?
+	sc_in<bool> OVF_XE;					// arithmetique overflow ?
+	sc_out<bool> MUX_OVF_SE;			// arithmetique overflow output
 
-	sc_in<bool> IAMALGN_RE;
-	sc_in<bool> IAMALGN_XE;
-	sc_out<bool> MUX_IAMALGN_SE;
+	sc_in<bool> IAMALGN_RE;				// instruction @ miss alignement
+	sc_in<bool> IAMALGN_XE;				// instruction @ miss alignement
+	sc_out<bool> MUX_IAMALGN_SE;		// instruction @ miss alignement output
 
-	sc_in<bool> IASVIOL_RE;
-	sc_in<bool> IASVIOL_XE;
-	sc_out<bool> MUX_IASVIOL_SE;
+	sc_in<bool> IASVIOL_RE;				// instruction @ segmentation violation
+	sc_in<bool> IASVIOL_XE;				// instruction @ segmentation violation
+	sc_out<bool> MUX_IASVIOL_SE;		// instruction @ segmentation violation output
 
-	sc_in<bool> IABUSER_RE;
-	sc_in<bool> IABUSER_XE;
-	sc_out<bool> MUX_IABUSER_SE;
+	sc_in<bool> IABUSER_RE;				// instruction @ bus error
+	sc_in<bool> IABUSER_XE;				// instruction @ bus error
+	sc_out<bool> MUX_IABUSER_SE;		// instruction @ bus error output
 
-	sc_in<bool> BREAK_RE;
-	sc_in<bool> BREAK_XE;
-	sc_out<bool> MUX_BREAK_SE;
+	sc_in<bool> BREAK_RE;				// sw exec (break)
+	sc_in<bool> BREAK_XE;				// sw exec (break)
+	sc_out<bool> MUX_BREAK_SE;			// sw exec (break) output
 
-	sc_in<bool> SYSCALL_RE;
-	sc_in<bool> SYSCALL_XE;
-	sc_out<bool> MUX_SYSCALL_SE;
+	sc_in<bool> SYSCALL_RE;				// sw exec (syscall)
+	sc_in<bool> SYSCALL_XE;				// sw exec (syscall)
+	sc_out<bool> MUX_SYSCALL_SE;		// sw exec (syscall) output
 
-	sc_in<bool> ILLGINS_RD;
-	sc_in<bool> ILLGINS_RE;
-	sc_out<bool> MUX_ILLGINS_SE;
+	sc_in<bool> ILLGINS_RD;				// unknown instruction signal from decod
+	sc_in<bool> ILLGINS_RE;				// unknown instruction signal from exec
+	sc_out<bool> MUX_ILLGINS_SE;		// unknown instruction signal output
 
-	sc_in<bool> C0UNUSE_RE;
-	sc_in<bool> C0UNUSE_RD;
-	sc_out<bool> MUX_C0UNUSE_SE;
+	sc_in<bool> C0UNUSE_RE;				// coprocesseur 0 unusable from exec	
+	sc_in<bool> C0UNUSE_RD;				// coprocesseur 0 unusable from decod
+	sc_out<bool> MUX_C0UNUSE_SE;		// coprocesseur 0 unusable output
 
-	sc_in<bool> SWAP_RE;
-	sc_in<bool> SWAP_RD;
-	sc_out<bool> MUX_SWAP_SE;
+	sc_in<bool> SWAP_RE;				// swap instruction from exec
+	sc_in<bool> SWAP_RD;				// swap instruction from decod
+	sc_out<bool> MUX_SWAP_SE;			// swap instruction output
 
-	sc_in<sc_uint<32> > PC_RD;
-	sc_in<sc_uint<32> > PC_RE;
-	sc_out<sc_uint<32> > MUX_PC_SE;
+	sc_in<sc_uint<32> > PC_RD;			// instruction @ from decod						
+	sc_in<sc_uint<32> > PC_RE;			// instruction @ from exec
+	sc_out<sc_uint<32> > MUX_PC_SE;		// instruction @ output
 
-	sc_in<sc_uint<32> > SR_RD;
-	sc_in<sc_uint<32> > SR_RE;
-	sc_out<sc_uint<32> > MUX_SR_SE;
+	sc_in<sc_uint<32> > SR_RD;			// status register from decod
+	sc_in<sc_uint<32> > SR_RE;			// status register from exec
+	sc_out<sc_uint<32> > MUX_SR_SE;		// status register output
 
-	sc_in<sc_uint<32> > NEXTPC_RD;
-	sc_in<sc_uint<32> > NEXTPC_RE;
-	sc_out<sc_uint<32> > MUX_NEXTPC_SE;
+	sc_in<sc_uint<32> > NEXTPC_RD;		// next instruction @ from decod
+	sc_in<sc_uint<32> > NEXTPC_RE;		// next instruction @ from exec
+	sc_out<sc_uint<32> > MUX_NEXTPC_SE;	// next instruction @ output
 
-	sc_in<sc_uint<32> > RES_SE;
-	sc_in<sc_uint<32> > RES_RE;
-	sc_out<sc_uint<32> > MUX_RES_SE;
+	sc_in<sc_uint<32> > RES_SE;			// result of alu ?
+	sc_in<sc_uint<32> > RES_RE;			// result of alu ?
+	sc_out<sc_uint<32> > MUX_RES_SE;	// result of alu output
 
-	sc_in<sc_uint<32> > Y_SE;
-	sc_in<sc_uint<32> > WDATA_RE;
-	sc_out<sc_uint<32> > MUX_WDATA_SE;
+	sc_in<sc_uint<32> > Y_SE;			// Y operand
+	sc_in<sc_uint<32> > WDATA_RE;		// data bus output register
+	sc_out<sc_uint<32> > MUX_WDATA_SE;	// data bus output
 
-	sc_in<bool> COPYCAP_SE;
-	sc_in<bool> COPYCAP_RE;
-	sc_out<bool> MUX_COPYCAP_SE;
+	sc_in<bool> COPYCAP_SE;				// copying capability ?
+	sc_in<bool> COPYCAP_RE;				// copying capability ?
+	sc_out<bool> MUX_COPYCAP_SE;		// copying capability output
 
-	sc_in<sc_uint<32> > REDOPC_RE;
-	sc_in<bool> WREDOPC_SE;
-	sc_out<sc_uint<32> > MUX_REDOPC_SE;
+	sc_in<sc_uint<32> > REDOPC_RE;		// old instruction @
+	sc_in<bool> WREDOPC_SE;				// redopc write enabled
+	sc_out<sc_uint<32> > MUX_REDOPC_SE;	// redopc output
 
 	SC_CTOR(mux_execute):
 	BUBBLE_SE("BUBBLE_SE"),
