@@ -29,9 +29,9 @@ SC_MODULE(mux_ifetch)
 	sc_in<bool> HOLD_SI;	// HOLD signal ifetch
 	sc_in<bool> KEEP_SI;	// KEEP signal ifetch
 
-	sc_in<sc_uint<32>> IR_RI;			// ????
+	sc_in<sc_uint<32>> IR_RI;			// instruction register
 	sc_in<sc_uint<32>> I;				// I ???
-	sc_out<sc_uint<32>> MUX_IR_SI;		// res ?
+	sc_out<sc_uint<32>> MUX_IR_SI;		// res instruction regsiter
 		
 	sc_out<bool> MUX_INSTRED_SI;		// ?
 
