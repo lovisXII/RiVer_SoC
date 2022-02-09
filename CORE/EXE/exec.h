@@ -4,10 +4,7 @@
 #include <string>
 #include "alu.h"
 #include "shifter.h"
-#include "../UTIL/fifo_generic/fifo_generic.h"
 #include "../UTIL/fifo_78b/fifo_78b.h"
-
-//typedef fifo_generic<74> fifo_78b;
 
 SC_MODULE(exec)
 {
