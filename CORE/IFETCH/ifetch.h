@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-
+#include "../UTIL/fifo_32b/fifo_32b.h"
 
 SC_MODULE(ifetch)
 {
@@ -19,12 +19,14 @@ SC_MODULE(ifetch)
     //dec2if interface :
     
     sc_in<bool> DEC2IF_EMPTY ; 
-    sc_in<bool> DEC2IF_POP ;
+    sc_out<bool> DEC2IF_POP ;
 
     //if2dec interface
     
     sc_in<bool> IF2DEC_FLUSH ; // allow to flush if2dec in case of a branch
-    sc_out<bool> IF2DEC_POP ;
+    sc_in<bool> IF2DEC_POP ;
+    sc_signal<bool> IF2DEC_PUSH ;
+    sc_signal<bool> IF2DEC_FULL ;
     sc_out<bool> IF2DEC_EMPTY ;
     
     sc_in<sc_uint<32>  > DEC_PC ; // PC coming to fetch an instruction
@@ -33,9 +35,37 @@ SC_MODULE(ifetch)
     //Global Interface :
 
     sc_in_clk CLK;
+    sc_in_clk RESET;
 
-    SC_CTOR(ifetch)
-    {
-        
+    // FIFO
+    fifo_32b    fifo_inst;
+
+    void fetch_method() {
+        IF_ADR.write(DEC_PC.read());
+        if (!IF2DEC_FLUSH.read()) {
+            bool stall = IC_STALL.read() || IF2DEC_FULL.read() || DEC2IF_EMPTY.read();
+            IF2DEC_PUSH.write(!stall);
+            DEC2IF_POP.write(!stall);
+        }
+        else {
+            IF2DEC_PUSH.write(false);
+            DEC2IF_POP.write(true);
+        }
     }
-}
+
+    SC_CTOR(ifetch) : 
+    fifo_inst("if2dec")
+    {
+        fifo_inst.DIN(IC_INST);
+        fifo_inst.DOUT(IF_IR);
+        fifo_inst.EMPTY(IF2DEC_EMPTY);
+        fifo_inst.FULL(IF2DEC_FULL);
+        fifo_inst.PUSH(IF2DEC_PUSH);
+        fifo_inst.POP(IF2DEC_POP);
+        fifo_inst.CLK(CLK);
+        fifo_inst.RESET_N(RESET);
+
+        SC_METHOD(fetch_method);
+        sensitive << DEC2IF_EMPTY << IF2DEC_FULL << DEC_PC;
+    }
+};
