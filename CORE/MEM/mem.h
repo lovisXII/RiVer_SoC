@@ -77,5 +77,14 @@ SC_MODULE(mem)
         fifo_inst.POP(MEM2WBK_POP);
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
+
+        SC_METHOD(mem2wbk_concat);
+        sensitive << DATA << EXE_DEST << EXE_MEM_SIZE << WB << EXE_MEM_SIGN_EXTEND;
+        SC_METHOD(mem2wbk_unconcat);
+        sensitive << MEM2WBK_FFOUT;
+        SC_METHOD(fifo_gestion);
+        sensitive << MEM_STALL << MEM2WBK_FULL << EXE2MEM_EMPTY;
+        SC_METHOD(mem_preprocess);
+        sensitive << EXE_WB << EXE_MEM_LOAD << MEM_RESULT << EXE_RES << EXE_MEM_DATA << EXE_MEM_STORE << EXE2MEM_EMPTY;
     }
 };

@@ -6,7 +6,7 @@ void mem::mem2wbk_concat() {
     ff_din.range(36, 32) = EXE_DEST.read();
     ff_din.range(38, 37) = EXE_MEM_SIZE.read();
     ff_din[39] = WB.read();
-    ff_din[40] = WBK_MEM_SIGN_EXTEND.read();
+    ff_din[40] = EXE_MEM_SIGN_EXTEND.read();
     MEM2WBK_FFIN.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
