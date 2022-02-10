@@ -5,7 +5,7 @@
 #include "alu.h"
 #include "shifter.h"
 #include "../UTIL/fifo_78b/fifo_78b.h"
-
+#include "../UTIL/debug_util.h"
 SC_MODULE(exec)
 {
     // Input/Output of EXE : 
@@ -58,7 +58,7 @@ SC_MODULE(exec)
     void fifo_concat();     // setup result  in fifo exe2mem
     void fifo_unconcat();   // unconcatenet result from the fifo
     void manage_fifo(); // allow the push/pop of fifo exe2mem
-
+    void trace(sc_trace_file* tf);
     SC_CTOR(exec) :
         alu_inst("alu"), 
         shifter_inst("shifter"),

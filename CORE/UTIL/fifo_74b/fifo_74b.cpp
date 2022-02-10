@@ -92,3 +92,16 @@ void fifo_74b::function()
         wait(1) ;
     } 
 }
+
+void fifo_74b::trace(sc_trace_file* tf) {
+        sc_trace(tf, CLK, GET_NAME(CLK));
+        sc_trace(tf, RESET_N, GET_NAME(RESET_N));
+        sc_trace(tf, DIN, GET_NAME(DIN));
+        sc_trace(tf, PUSH, GET_NAME(PUSH));
+        sc_trace(tf, POP, GET_NAME(POP));
+        sc_trace(tf, DIN, GET_NAME(FULL));
+        sc_trace(tf, DIN, GET_NAME(EMPTY));
+        sc_trace(tf, DIN, GET_NAME(DOUT));
+        sc_trace(tf, DIN, GET_NAME(fifo_v));
+        sc_trace(tf, DIN, GET_NAME(data_inside));
+}

@@ -2,7 +2,7 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo_41b/fifo_41b.h"
- 
+#include "../UTIL/debug_util.h"
 SC_MODULE(mem)
 {
     // Mcache Interface :
@@ -65,6 +65,8 @@ SC_MODULE(mem)
     void mem2wbk_unconcat();
     void fifo_gestion();
     void mem_preprocess();
+
+    void trace(sc_trace_file* tf);
 
     SC_CTOR(mem) : 
     fifo_inst("mem2wbk")

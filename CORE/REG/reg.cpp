@@ -67,3 +67,32 @@ void reg::writing_adresse()
     }
 }
 
+void reg::trace(sc_trace_file* tf) {
+        sc_trace(tf, RADR1, GET_NAME(RADR1));
+        sc_trace(tf, RADR2, GET_NAME(RADR2));
+        sc_trace(tf, RADR1_VALID, GET_NAME(RADR1_VALID));
+        sc_trace(tf, RADR2_VALID, GET_NAME(RADR2_VALID));
+        sc_trace(tf, RADR1_DATA, GET_NAME(RADR1_DATA)); 
+        sc_trace(tf, RADR2_DATA, GET_NAME(RADR2_DATA));
+        sc_trace(tf, WADR1, GET_NAME(WADR1));
+        sc_trace(tf, WADR1_VALID, GET_NAME(WADR1_VALID));
+        sc_trace(tf, WADR1_DATA, GET_NAME(WADR1_DATA));
+        sc_trace(tf, INVAL_ADR, GET_NAME(INVAL_ADR));
+        sc_trace(tf, INVAL_ENABLE, GET_NAME(INVAL_ENABLE));
+        sc_trace(tf, READ_PC, GET_NAME(READ_PC));
+        sc_trace(tf, INC_PC_VALID, GET_NAME(INC_PC_VALID));
+        sc_trace(tf, READ_PC_VALID, GET_NAME(READ_PC_VALID));
+        
+        for (int i = 0; i < 33; i++) {
+            std::string regname = "REG_";
+            regname += std::to_string(i);
+            sc_trace(tf, REG[i], signal_get_name(REG[i].name(), regname.c_str()));
+        }
+        for (int i = 0; i < 33; i++) {
+            std::string regname = "REG_VALID_";
+            regname += std::to_string(i);
+            sc_trace(tf, REG_VALID[i], signal_get_name(REG_VALID[i].name(), regname.c_str()));
+        }
+        sc_trace(tf, CLK, GET_NAME(CLK));
+        sc_trace(tf, RESET_N, GET_NAME(RESET_N));
+}

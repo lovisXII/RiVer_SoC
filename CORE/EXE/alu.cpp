@@ -24,4 +24,11 @@ void alu::operation()
         RES.write(res_interne) ;
     }
 
-    
+
+void alu::trace(sc_trace_file* tf) {
+        sc_trace(tf, OP1, GET_NAME(OP1));
+        sc_trace(tf, OP2, GET_NAME(OP2));
+        sc_trace(tf, CIN, GET_NAME(CIN));
+        sc_trace(tf, CMD, GET_NAME(CMD));
+        sc_trace(tf, RES, GET_NAME(RES));
+    }

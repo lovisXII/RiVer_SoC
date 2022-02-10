@@ -77,41 +77,41 @@ int sc_main(int argc, char* argv[])
 
     // vcd :
 
-
+    reg_inst.trace(tf);
 
    
-    sc_trace(tf,reg_inst.RADR1,"RADR1") ;
-    sc_trace(tf,reg_inst.RADR2,"RADR2") ;
-    sc_trace(tf,reg_inst.RADR1_VALID,"RADR1_VALID") ;
-    sc_trace(tf,reg_inst.RADR2_VALID,"RADR2_VALID") ;
-    sc_trace(tf,reg_inst.RADR1_DATA,"RADR1_DATA") ;
-    sc_trace(tf,reg_inst.RADR2_DATA,"RADR2_DATA") ;
-    sc_trace(tf,reg_inst.WADR1,"WADR1") ;
-    sc_trace(tf,reg_inst.WADR1_VALID,"WADR1_VALID") ;
-    sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
-    sc_trace(tf,reg_inst.INVAL_ADR,"INVAL_ADR") ;
-    sc_trace(tf,reg_inst.INVAL_ENABLE,"INVAL_ENABLE") ;
+    // sc_trace(tf,reg_inst.RADR1,"RADR1") ;
+    // sc_trace(tf,reg_inst.RADR2,"RADR2") ;
+    // sc_trace(tf,reg_inst.RADR1_VALID,"RADR1_VALID") ;
+    // sc_trace(tf,reg_inst.RADR2_VALID,"RADR2_VALID") ;
+    // sc_trace(tf,reg_inst.RADR1_DATA,"RADR1_DATA") ;
+    // sc_trace(tf,reg_inst.RADR2_DATA,"RADR2_DATA") ;
+    // sc_trace(tf,reg_inst.WADR1,"WADR1") ;
+    // sc_trace(tf,reg_inst.WADR1_VALID,"WADR1_VALID") ;
+    // sc_trace(tf,reg_inst.WADR1_DATA,"WADR1_DATA") ;
+    // sc_trace(tf,reg_inst.INVAL_ADR,"INVAL_ADR") ;
+    // sc_trace(tf,reg_inst.INVAL_ENABLE,"INVAL_ENABLE") ;
 
-    sc_trace(tf,reg_inst.READ_PC,"READ_PC") ;
-    sc_trace(tf,reg_inst.INC_PC_VALID,"INC_PC_VALID") ;
-    sc_trace(tf,reg_inst.READ_PC_VALID,"READ_PC_VALID") ;
-    sc_trace(tf,reg_inst.CLK,"CLK") ;
+    // sc_trace(tf,reg_inst.READ_PC,"READ_PC") ;
+    // sc_trace(tf,reg_inst.INC_PC_VALID,"INC_PC_VALID") ;
+    // sc_trace(tf,reg_inst.READ_PC_VALID,"READ_PC_VALID") ;
+    // sc_trace(tf,reg_inst.CLK,"CLK") ;
     
-    sc_trace(tf,reg_inst.RESET_N,"RESET_N") ;
+    // sc_trace(tf,reg_inst.RESET_N,"RESET_N") ;
 
-    for(int i = 0 ; i < 33 ; i++)
-    {
-        string s ;
-        s = "reg_inst.REG" + to_string(i)    ;
-        sc_trace(tf,reg_inst.REG[i],s) ;
-    }
-    cerr << "starting tracing SC_VALID Signals" << endl ;
-    for(int i = 0 ; i < 33 ; i++)
-    {
-        string s ;
-        s="REG_VALID" + to_string(i) ;
-        sc_trace(tf,reg_inst.REG_VALID[i],s) ;
-    }
+    // for(int i = 0 ; i < 33 ; i++)
+    // {
+    //     string s ;
+    //     s = "reg_inst.REG" + to_string(i)    ;
+    //     sc_trace(tf,reg_inst.REG[i],s) ;
+    // }
+    // cerr << "starting tracing SC_VALID Signals" << endl ;
+    // for(int i = 0 ; i < 33 ; i++)
+    // {
+    //     string s ;
+    //     s="REG_VALID" + to_string(i) ;
+    //     sc_trace(tf,reg_inst.REG_VALID[i],s) ;
+    // }
 
     reset_n.write(false) ; // reset 
     sc_start(3,SC_NS) ; // wait for 1 cycle

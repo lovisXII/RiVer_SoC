@@ -1,5 +1,5 @@
 #include <systemc.h>
-
+#include "../debug_util.h"
 SC_MODULE(fifo_74b)
 {
     sc_in< sc_bv<74> > DIN ;
@@ -14,7 +14,7 @@ SC_MODULE(fifo_74b)
     sc_signal< sc_bv<74> > data_inside ;
     
     void function() ;
-
+    void trace(sc_trace_file* tf);
     SC_CTOR(fifo_74b)
     {
         SC_CTHREAD(function,fifo_74b::CLK.pos()) ;

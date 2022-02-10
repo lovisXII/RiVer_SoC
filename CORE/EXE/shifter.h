@@ -3,7 +3,7 @@
 #include <systemc.h>
 #include <iostream>
 #include <string>
-
+#include "../UTIL/debug_util.h"
 
 
 SC_MODULE(shifter)
@@ -23,6 +23,7 @@ SC_MODULE(shifter)
     void shifter_sll() ; //component to shift left the input
     void shifter_sr() ; //component to shift right the input, arithmetic or logic
     void shifter_agregate() ; //component to choose which shift to use
+    void trace(sc_trace_file* tf);
 
     SC_CTOR(shifter)
     {

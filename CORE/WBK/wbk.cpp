@@ -33,3 +33,18 @@ void wbk::wbk_method() {
     REG_WB.write(MEM_WB && !MEM2WBK_EMPTY.read());
     MEM2WBK_POP.write(!MEM2WBK_EMPTY.read());
 }
+
+void wbk::trace(sc_trace_file* tf) {
+        sc_trace(tf, REG_DEST, GET_NAME(REG_DEST));
+        sc_trace(tf, REG_DATA, GET_NAME(REG_DATA));
+        sc_trace(tf, REG_WB, GET_NAME(REG_WB));
+        sc_trace(tf, MEM_DATA, GET_NAME(MEM_DATA));
+        sc_trace(tf, MEM_DEST, GET_NAME(MEM_DEST));
+        sc_trace(tf, MEM_SIZE, GET_NAME(MEM_SIZE));
+        sc_trace(tf, MEM_WB, GET_NAME(MEM_WB));
+        sc_trace(tf, MEM_SIGN_EXTEND, GET_NAME(MEM_SIGN_EXTEND));
+        sc_trace(tf, MEM2WBK_EMPTY, GET_NAME(MEM2WBK_EMPTY));
+        sc_trace(tf, MEM2WBK_POP, GET_NAME(MEM2WBK_POP));
+        sc_trace(tf, CLK, GET_NAME(CLK));
+        sc_trace(tf, RESET, GET_NAME(RESET));
+}

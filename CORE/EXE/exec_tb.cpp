@@ -87,43 +87,43 @@ int sc_main(int argc, char* argv[])
 
     unit_exec.CLK(clk);
     unit_exec.RESET(reset);
-
+    unit_exec.trace(tf);
     // vcd :
-    sc_trace(tf,unit_exec.OP1,"OP1");
-    sc_trace(tf,unit_exec.OP2,"OP2") ;
-    sc_trace(tf,unit_exec.MEM_DATA,"MEM_DATA");
-    sc_trace(tf,unit_exec.DEST,"DEST");
-    sc_trace(tf,unit_exec.CMD,"CMD");
-    sc_trace(tf,unit_exec.MEM_SIZE,"MEM_SIZE");
-    sc_trace(tf,unit_exec.NEG_OP1,"NEG_OP1");
-    sc_trace(tf,unit_exec.WB,"WB");
-    sc_trace(tf,unit_exec.MEM_LOAD,"MEM_LOAD");
-    sc_trace(tf,unit_exec.MEM_STORE,"MEM_STORE");
-    sc_trace(tf,unit_exec.MEM_SIGN_EXTEND,"MEM_SIGN_EXTEND");
-    sc_trace(tf,unit_exec.SELECT_SHIFT,"SELECT_SHIFT") ;//taille fifo entrée : 110
-    sc_trace(tf,unit_exec.EXE2MEM_POP,"EXE2MEM_POP");
-    sc_trace(tf,unit_exec.DEC2EXE_EMPTY,"DEC2EXE_EMPTY");
+//     sc_trace(tf,unit_exec.OP1,"OP1");
+//     sc_trace(tf,unit_exec.OP2,"OP2") ;
+//     sc_trace(tf,unit_exec.MEM_DATA,"MEM_DATA");
+//     sc_trace(tf,unit_exec.DEST,"DEST");
+//     sc_trace(tf,unit_exec.CMD,"CMD");
+//     sc_trace(tf,unit_exec.MEM_SIZE,"MEM_SIZE");
+//     sc_trace(tf,unit_exec.NEG_OP1,"NEG_OP1");
+//     sc_trace(tf,unit_exec.WB,"WB");
+//     sc_trace(tf,unit_exec.MEM_LOAD,"MEM_LOAD");
+//     sc_trace(tf,unit_exec.MEM_STORE,"MEM_STORE");
+//     sc_trace(tf,unit_exec.MEM_SIGN_EXTEND,"MEM_SIGN_EXTEND");
+//     sc_trace(tf,unit_exec.SELECT_SHIFT,"SELECT_SHIFT") ;//taille fifo entrée : 110
+//     sc_trace(tf,unit_exec.EXE2MEM_POP,"EXE2MEM_POP");
+//     sc_trace(tf,unit_exec.DEC2EXE_EMPTY,"DEC2EXE_EMPTY");
 
-    sc_trace(tf,unit_exec.FFOUT_EXE_RES,"FFOUT_EXE_RES");
-    sc_trace(tf,unit_exec.FFOUT_MEM_DATA,"FFOUT_MEM_DATA");
-    sc_trace(tf,unit_exec.FFOUT_DEST,"FFOUT_DEST");
-    sc_trace(tf,unit_exec.FFOUT_MEM_SIZE,"FFOUT_MEM_SIZE");
-    sc_trace(tf,unit_exec.FFOUT_WB,"FFOUT_WB");
-    sc_trace(tf,unit_exec.FFOUT_MEM_LOAD,"FFOUT_MEM_LOAD");
-    sc_trace(tf,unit_exec.FFOUT_MEM_STORE,"FFOUT_MEM_STORE");
-    sc_trace(tf,unit_exec.FFOUT_MEM_SIGN_EXTEND,"FFOUT_MEM_SIGN_EXTEND") ;//taille fifo sortie : 74
-    sc_trace(tf,unit_exec.EXE2MEM_EMPTY,"EXE2MEM_EMPTY");
-    sc_trace(tf,unit_exec.DEC2EXE_POP,"DEC2EXE_POP");
+//     sc_trace(tf,unit_exec.FFOUT_EXE_RES,"FFOUT_EXE_RES");
+//     sc_trace(tf,unit_exec.FFOUT_MEM_DATA,"FFOUT_MEM_DATA");
+//     sc_trace(tf,unit_exec.FFOUT_DEST,"FFOUT_DEST");
+//     sc_trace(tf,unit_exec.FFOUT_MEM_SIZE,"FFOUT_MEM_SIZE");
+//     sc_trace(tf,unit_exec.FFOUT_WB,"FFOUT_WB");
+//     sc_trace(tf,unit_exec.FFOUT_MEM_LOAD,"FFOUT_MEM_LOAD");
+//     sc_trace(tf,unit_exec.FFOUT_MEM_STORE,"FFOUT_MEM_STORE");
+//     sc_trace(tf,unit_exec.FFOUT_MEM_SIGN_EXTEND,"FFOUT_MEM_SIGN_EXTEND") ;//taille fifo sortie : 74
+//     sc_trace(tf,unit_exec.EXE2MEM_EMPTY,"EXE2MEM_EMPTY");
+//     sc_trace(tf,unit_exec.DEC2EXE_POP,"DEC2EXE_POP");
 
-    sc_trace(tf,unit_exec.CLK,"CLK");
-    sc_trace(tf,unit_exec.RESET,"RESET");
-    sc_trace(tf,unit_exec.shifter_inst.SHIFT_VAL,"shift_val") ;
-    sc_trace(tf,unit_exec.FFIN_EXE_RES,"exe_res");
-//    sc_trace(tf,unit_exec.shifter_inst.CMD,"cmd shifter");
-    sc_trace(tf,unit_exec.fifo_inst.DIN,"exe2mem_din");
-    sc_trace(tf,unit_exec.fifo_inst.DOUT,"exe2mem_fout");
-    sc_trace(tf,unit_exec.fifo_inst.PUSH,"exe2mem_push");
-    sc_trace(tf,unit_exec.fifo_inst.POP,"exe2mem_pop");
+//     sc_trace(tf,unit_exec.CLK,"CLK");
+//     sc_trace(tf,unit_exec.RESET,"RESET");
+//     sc_trace(tf,unit_exec.shifter_inst.SHIFT_VAL,"shift_val") ;
+//     sc_trace(tf,unit_exec.FFIN_EXE_RES,"exe_res");
+// //    sc_trace(tf,unit_exec.shifter_inst.CMD,"cmd shifter");
+//     sc_trace(tf,unit_exec.fifo_inst.DIN,"exe2mem_din");
+//     sc_trace(tf,unit_exec.fifo_inst.DOUT,"exe2mem_fout");
+//     sc_trace(tf,unit_exec.fifo_inst.PUSH,"exe2mem_push");
+//     sc_trace(tf,unit_exec.fifo_inst.POP,"exe2mem_pop");
 
     //Reset Process :
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
- 
+#include "../UTIL/debug_util.h"
 SC_MODULE(wbk)
 {
     // Reg Interface :
@@ -33,7 +33,7 @@ SC_MODULE(wbk)
     // FIFO
 
     void wbk_method();
-
+    void trace(sc_trace_file* tf);
     SC_CTOR(wbk)
     {
         SC_METHOD(wbk_method);

@@ -2,7 +2,7 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo_32b/fifo_32b.h"
-
+#include "../UTIL/debug_util.h"
 SC_MODULE(ifetch)
 {
     // Icache Interface :
@@ -41,7 +41,7 @@ SC_MODULE(ifetch)
     fifo_32b    fifo_inst;
 
     void fetch_method();
-
+    void trace(sc_trace_file* tf);
     SC_CTOR(ifetch) : 
     fifo_inst("if2dec")
     {

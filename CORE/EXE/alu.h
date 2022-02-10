@@ -1,6 +1,6 @@
 #pragma once
 #include <systemc.h>
-
+#include "../UTIL/debug_util.h"
 
 
 
@@ -12,6 +12,7 @@ SC_MODULE(alu)
     sc_out< sc_uint<32> > RES ;
         
     void operation() ;
+    void trace(sc_trace_file* tf);
 
     SC_CTOR(alu)
     {

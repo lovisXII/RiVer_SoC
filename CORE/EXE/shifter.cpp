@@ -121,3 +121,15 @@ void shifter::shifter_agregate() {
         DOUT.write(SR_DOUT.read());
     }
 }
+
+void shifter::trace(sc_trace_file* tf) {
+        sc_trace(tf, DIN, GET_NAME(DIN));
+        sc_trace(tf, SHIFT_VAL, GET_NAME(SHIFT_VAL));
+        sc_trace(tf, CMD, GET_NAME(CMD));
+        sc_trace(tf, DOUT, GET_NAME(DOUT));
+        sc_trace(tf, SRA, GET_NAME(SRA));
+        sc_trace(tf, SLL, GET_NAME(SLL));
+        sc_trace(tf, SRL, GET_NAME(SRL));
+        sc_trace(tf, SLL_DOUT, GET_NAME(SLL_DOUT));
+        sc_trace(tf, SR_DOUT, GET_NAME(SR_DOUT));
+}
