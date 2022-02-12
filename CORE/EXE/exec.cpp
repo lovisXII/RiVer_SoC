@@ -62,5 +62,46 @@ void exec::manage_fifo() {
     }
 }
 
+void exec::trace(sc_trace_file* tf) {
+        sc_trace(tf, OP1, GET_NAME(OP1));
+        sc_trace(tf, OP2, GET_NAME(OP2));
+        sc_trace(tf, MEM_DATA, GET_NAME(MEM_DATA));
+        sc_trace(tf, DEST, GET_NAME(DEST));
+        sc_trace(tf, CMD, GET_NAME(CMD));
+        sc_trace(tf, MEM_SIZE, GET_NAME(MEM_SIZE));
+        sc_trace(tf, SELECT_SHIFT, GET_NAME(SELECT_SHIFT));
+        sc_trace(tf, MEM_SIGN_EXTEND, GET_NAME(MEM_SIGN_EXTEND));
+        sc_trace(tf, WB, GET_NAME(WB));
+        sc_trace(tf, NEG_OP1, GET_NAME(NEG_OP1));
+        sc_trace(tf, MEM_LOAD, GET_NAME(MEM_LOAD));
+        sc_trace(tf, MEM_STORE, GET_NAME(MEM_STORE));
+        sc_trace(tf, EXE2MEM_POP, GET_NAME(EXE2MEM_POP));
+        sc_trace(tf, DEC2EXE_EMPTY, GET_NAME(DEC2EXE_EMPTY));
+        sc_trace(tf, CLK, GET_NAME(CLK));
+        sc_trace(tf, RESET, GET_NAME(RESET));
+        sc_trace(tf, FFOUT_EXE_RES, GET_NAME(FFOUT_EXE_RES));
+        sc_trace(tf, FFOUT_MEM_DATA, GET_NAME(FFOUT_MEM_DATA));
+        sc_trace(tf, FFOUT_DEST, GET_NAME(FFOUT_DEST));
+        sc_trace(tf, FFOUT_MEM_SIZE, GET_NAME(FFOUT_MEM_SIZE));
+        sc_trace(tf, FFOUT_WB, GET_NAME(FFOUT_WB));
+        sc_trace(tf, FFOUT_MEM_SIGN_EXTEND, GET_NAME(FFOUT_MEM_SIGN_EXTEND));
+        sc_trace(tf, FFOUT_MEM_LOAD, GET_NAME(FFOUT_MEM_LOAD));
+        sc_trace(tf, FFOUT_MEM_STORE, GET_NAME(FFOUT_MEM_STORE));
+        sc_trace(tf, EXE2MEM_EMPTY, GET_NAME(EXE2MEM_EMPTY));
+        sc_trace(tf, DEC2EXE_POP, GET_NAME(DEC2EXE_POP));
+        sc_trace(tf, FFIN_EXE_RES, GET_NAME(FFIN_EXE_RES));
+        sc_trace(tf, FF_DIN, GET_NAME(FF_DIN));
+        sc_trace(tf, FF_DOUT, GET_NAME(FF_DOUT));
+        sc_trace(tf, ALU_IN_OP1, GET_NAME(ALU_IN_OP1));
+        sc_trace(tf, ALU_OUT, GET_NAME(ALU_OUT));
+        sc_trace(tf, SHIFTER_OUT, GET_NAME(SHIFTER_OUT));
+        sc_trace(tf, SHIFT_VAL, GET_NAME(SHIFT_VAL));
+        sc_trace(tf, EXE2MEM_PUSH, GET_NAME(EXE2MEM_PUSH));
+        sc_trace(tf, EXE2MEM_FULL, GET_NAME(EXE2MEM_FULL));
+        alu_inst.trace(tf);
+        shifter_inst.trace(tf);
+        fifo_inst.trace(tf);
+}
+
 //0000010000101100010001100011011
 //00111101000110110101100010111010

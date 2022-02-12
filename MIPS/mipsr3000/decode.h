@@ -29,8 +29,8 @@ SC_MODULE(decode)
 	sc_out<sc_uint<8> > 	OPCOD_SD;		// res opcod 
 	sc_in<sc_uint<25> > 	I_TYPE_SD;		// ?
 
-	sc_signal<sc_uint<8> > 	COP0_SD;		
-	sc_signal<bool> 		I_ILLG_SD;
+	sc_signal<sc_uint<8> > 	COP0_SD;		// coprocesseur 0 signal
+	sc_signal<bool> 		I_ILLG_SD;		// 
 	sc_signal<bool> 		I_JFMT_SD;
 	sc_signal<bool> 		I_IFMT_SD;
 	sc_signal<bool> 		I_RFMT_SD;

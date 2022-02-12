@@ -1,6 +1,6 @@
-#include "fifo_32b.h"
-
-void fifo_32b::function()
+#include "fifo_41b.h"
+ 
+void fifo_41b::function()
 {
     fifo_v.write(false) ;
     data_inside.write(0) ;
@@ -98,7 +98,7 @@ void fifo_32b::function()
     } 
 }
 
-void fifo_32b::trace(sc_trace_file* tf) {
+void fifo_41b::trace(sc_trace_file* tf) {
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET_N, GET_NAME(RESET_N));
         sc_trace(tf, DIN, GET_NAME(DIN));

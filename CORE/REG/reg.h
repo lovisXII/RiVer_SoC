@@ -1,6 +1,6 @@
 #pragma once
 #include <systemc.h>
-
+#include "../UTIL/debug_util.h"
 SC_MODULE(reg)
 {
     // Reading Port :
@@ -44,6 +44,7 @@ SC_MODULE(reg)
 
     void reading_adresses() ;
     void writing_adresse() ;
+    void trace(sc_trace_file* tf);
 
     SC_CTOR(reg)
     {

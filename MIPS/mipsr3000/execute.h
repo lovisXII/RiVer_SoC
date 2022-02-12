@@ -25,49 +25,49 @@
 
 SC_MODULE(execute)
 {
-	sc_in<sc_uint<32> > 	SR_RI;
-	sc_in<sc_uint<25> > 	I_TYPE_RD;
-	sc_in<sc_uint<8> > 	OPCOD_RD;
-	sc_in<sc_uint<32> > 	IOPER_RD;
+	sc_in<sc_uint<32> > 	SR_RI;			// status register
+	sc_in<sc_uint<25> > 	I_TYPE_RD;		// instruction type
+	sc_in<sc_uint<8> > 		OPCOD_RD;		// operation code
+	sc_in<sc_uint<32> > 	IOPER_RD;		// effective immediat operator
 
-	sc_in<sc_uint<32> > 	NEXTSR_RX;
-	sc_in<sc_uint<32> > 	NEXTPC_RD;
-	sc_in<bool> 		SWAP_RD;
-	sc_in<bool> 		I_BERR_N;
-	
-	sc_out<bool> 		I_IFMT_SE;
-	sc_out<bool> 		I_EUSE_SE;
+	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts ?
+	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next inst. @
+	sc_in<bool> 			SWAP_RD;		// swap instruction ?
+	sc_in<bool> 			I_BERR_N;		// instruction buss error
 
-	sc_out<bool> 		I_READS_SE;
-	sc_out<bool> 		I_READT_SE;
+	sc_out<bool> 			I_IFMT_SE;		// I format	
+	sc_out<bool> 			I_EUSE_SE;		// Exec stage uses operands
 
-	sc_out<sc_uint<3> >	I_OPER_SE;
-	sc_out<sc_uint<2> >	I_LOGIC_SE;
-	sc_out<bool>		I_SUB_SE;
-	sc_out<bool>		I_RIGHT_SE;
-	sc_out<bool>		I_RSGND_SE;
-	sc_out<bool>		I_OVRF_SE;
-	sc_out<bool>		I_MPDC_SE;
-	sc_out<bool>		I_EPDC_SE;
-	sc_out<bool>		I_WRITE_SE;
+	sc_out<bool> 			I_READS_SE;		// instruction uses s operands
+	sc_out<bool> 			I_READT_SE;		// instruction uses t operands
 
-	sc_signal<bool>		I_BRNCH_SE;
+	sc_out<sc_uint<3> >		I_OPER_SE;		// alu operation
+	sc_out<sc_uint<2> >		I_LOGIC_SE;		// logic operation
+	sc_out<bool>			I_SUB_SE;		// substraction operation
+	sc_out<bool>			I_RIGHT_SE;		// shift right operation
+	sc_out<bool>			I_RSGND_SE;		// signed result
+	sc_out<bool>			I_OVRF_SE;		// overflow detected
+	sc_out<bool>			I_MPDC_SE;		// mem stage produce res
+	sc_out<bool>			I_EPDC_SE;		// exec stage produce res
+	sc_out<bool>			I_WRITE_SE;		// write into register
 
-	sc_in<sc_uint<32> >	X_SE;
-	sc_in<sc_uint<32> >	Y_SE;
-	sc_in<bool>		OVERFLW_SE;
+	sc_signal<bool>			I_BRNCH_SE;		// branch instruction
 
-	sc_out<sc_uint<32> >	XOPER_SE;
-	sc_out<sc_uint<32> >	YOPER_SE;
+	sc_in<sc_uint<32> >	X_SE;				// X operand
+	sc_in<sc_uint<32> >	Y_SE;				// Y operand
+	sc_in<bool>		OVERFLW_SE;				// overflow out of alu
 
-	sc_out<bool>		WREDOPC_SE;
-	sc_out<bool>		IABUSER_XE;
-	sc_out<bool>		BREAK_XE;
-	sc_out<bool>		SYSCALL_XE;
-	sc_out<bool>		OVF_XE;
-	sc_out<bool>		IAMALGN_XE;
-	sc_out<bool>		IASVIOL_XE;
-	sc_out<bool>		COPYCAP_SE;
+	sc_out<sc_uint<32> >	XOPER_SE;		// effective x operand
+	sc_out<sc_uint<32> >	YOPER_SE;		// effective x operand
+
+	sc_out<bool>		WREDOPC_SE;			// redopc write enable ?
+	sc_out<bool>		IABUSER_XE;			// instruction @ bus error
+	sc_out<bool>		BREAK_XE;			// break signal
+	sc_out<bool>		SYSCALL_XE;			// syscal signal
+	sc_out<bool>		OVF_XE;				// arithmetic overflow
+	sc_out<bool>		IAMALGN_XE;			// instruction @ miss alignement
+	sc_out<bool>		IASVIOL_XE;			// instruction @ segmentation violation
+	sc_out<bool>		COPYCAP_SE;			// copying capability (pass through SWAP_RD)
 	
 	SC_CTOR(execute):
 	SR_RI("SR_RI"),
@@ -163,6 +163,10 @@ SC_MODULE(execute)
 		sensitive << SWAP_RD;
 	}
 
+  // ### ------------------------------------------------------ ###
+  // #   instruction type identification		#
+  // ### ------------------------------------------------------ ###
+
 	void processI_EUSE_SE();
 
 	void processI_IFMT_SE();
@@ -190,6 +194,10 @@ SC_MODULE(execute)
 	void processI_WRITE_SE();
 
 	void processI_BRNCH_SE();
+
+  // ### ------------------------------------------------------ ###
+  // #   XOPER and YOPER output set		#
+  // ### ------------------------------------------------------ ###
 
 	void processXOPER_SE();
 

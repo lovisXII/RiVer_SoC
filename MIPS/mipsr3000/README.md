@@ -42,3 +42,9 @@ arithmetique operations (addition and substraction), shift operations and slt co
 
 
 
+DONE LIST: (# : done |  / : not done)
+ALU         #
+ifetch      /
+mux_ifetch  /
+ff_ifetch   #
+decode      /
