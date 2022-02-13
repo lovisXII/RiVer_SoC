@@ -70,6 +70,7 @@ SC_MODULE(decod)
     sc_signal < bool >          b_type_inst ; // B type format
     sc_signal < bool >          u_type_inst ; // U type format
     sc_signal < bool >          j_type_inst ; // J type format
+    sc_signal < bool >          jalr_type_inst ; //JALR has a specific opcode
 
     //R-type Instructions :
 
@@ -124,6 +125,7 @@ SC_MODULE(decod)
     void popFromIf() ; 
     void decoding_instruction_type() ;
     void decoding_instruction() ;
+    void affectation() ;
 
     SC_CTOR(decod) :
     dec2if("dec2if")    
@@ -145,6 +147,9 @@ SC_MODULE(decod)
         sensitive<<IF_IR ;
         SC_METHOD(decoding_instruction)
         sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst ;
+        SC_METHOD(affectation)
+        sensitive << IF_IR ;
         reset_signal_is(RESET_N,false) ;
+
     }
 };
