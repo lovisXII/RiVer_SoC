@@ -37,7 +37,7 @@ void decod::decoding_instruction_type()
         j_type_inst = 0 ;
         jalr_type_inst = 0 ;
     }
-    else if(if_ir.range(6,0) == 0010011)
+    else if(if_ir.range(6,0) == 0100011)
     {
         r_type_inst = 0  ;
         i_type_inst = 0 ;
@@ -364,7 +364,7 @@ void decod::affectation_calcul()
 
     //CMD : +
 
-    if(add_i & sub_i & addi_i & lw_i & lh_i & lhu_i & lb_i & lbu_i & sw_i & sh_i & sb_i & auipc_i)
+    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i)
     {
         DEC2EXE_CMD.write(0) ;
         SELECT_SHIFT.write(0) ;
@@ -376,43 +376,58 @@ void decod::affectation_calcul()
     }
 
     //CMD : &
-    if(and_i & and_i)
+    if(and_i | and_i)
     {
         DEC2EXE_CMD.write(1) ;
         SELECT_SHIFT.write(0) ;
 
     }
     //CMD : |
-    if(or_i & ori_i)
+    if(or_i | ori_i)
     {
         DEC2EXE_CMD.write(2) ;
         SELECT_SHIFT.write(0) ;
     }
     //CMD : ^
-    if(xor_i & xori_i)
+    if(xor_i | xori_i)
     {
         DEC2EXE_CMD.write(3) ;
         SELECT_SHIFT.write(0) ;
     }
     //SHIFT : SLL
-    if(sll_i & slli_i)
+    if(sll_i | slli_i)
     {
         DEC2EXE_CMD.write(0) ;
         SELECT_SHIFT.write(1) ;
 
     }
     //SHIFT : SRL
-    if(srl_i & srli_i)
+    if(srl_i | srli_i)
     {
         DEC2EXE_CMD.write(1) ;
         SELECT_SHIFT.write(1) ;
 
     }
     //SHIFT SRA
-    if(sra_i & srai_i)
+    if(sra_i | srai_i)
     {
         DEC2EXE_CMD.write(2) ;
         SELECT_SHIFT.write(1) ;
+
+    }
+
+    //Memory access :
+    //Load :
+
+    if(lw_i | lh_i | lhu_i | lb_i | lbu_i)
+    {
+        
+    }
+
+    //Store :
+    
+    if(sw_i | sb_i | sh_i)
+    {
 
     }
 } 

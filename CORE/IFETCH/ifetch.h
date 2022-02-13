@@ -57,4 +57,6 @@ SC_MODULE(ifetch)
         SC_METHOD(fetch_method);
         sensitive << DEC2IF_EMPTY << IF2DEC_FULL << DEC_PC;
     }
+
 };
+
