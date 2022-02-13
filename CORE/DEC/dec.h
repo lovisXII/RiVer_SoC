@@ -27,6 +27,8 @@ SC_MODULE(decod)
     sc_out  < sc_uint<4> >       DEC2EXE_CMD ; // value of the command sent to exe
     sc_out  < bool >             DEC2EXE_NEG_OP1 ; // say if we take the opposite of the op1 to do a substraction for example
     sc_out  < bool >             DEC2EXE_WB ; // say if we plan to wbk the value of rd or no
+    
+    sc_out  < sc_uint<32> >      MEM_DATA ;
     sc_out  < sc_uint<3> >       MEM_LOAD ; // say to mem if we do a load
     sc_out  < sc_uint<3> >       MEM_STORE ; // say to mem if we do a store
     sc_out  < bool >             MEM_SIGN_EXTEND ;
@@ -96,12 +98,20 @@ SC_MODULE(decod)
     sc_signal < bool > xori_i ;
 
     sc_signal < bool > jalr_i ;
-    
-    //S-type Instruction :
+
+    // I-type shift instructions :
 
     sc_signal < bool > slli_i ;
     sc_signal < bool > srli_i ;
     sc_signal < bool > srai_i ;
+
+   // I-type load instructions :
+
+   sc_signal < bool > lw_i ;
+   sc_signal < bool > lh_i ;
+   sc_signal < bool > lhu_i ;
+   sc_signal < bool > lb_i ;
+   sc_signal < bool > lbu_i ;
 
     //B-type Instruction :
 
@@ -121,11 +131,27 @@ SC_MODULE(decod)
 
     sc_signal < bool > jal_i ;
 
+    //S-type Instructions :
+
+    sc_signal < bool > sw_i ;
+    sc_signal < bool > sh_i ;
+    sc_signal < bool > sb_i ;
+
+    //Offset for branch :
+
+    sc_signal < sc_uint<32> > offset_branch ;
+
+    //PC gestion :
+
+    sc_signal <bool> inc_pc ;
+
     void pushingToIf() ;
     void popFromIf() ; 
     void decoding_instruction_type() ;
     void decoding_instruction() ;
-    void affectation() ;
+    void affectation_registres() ;
+    void affectation_calcul() ;
+    void pc_inc() ;
 
     SC_CTOR(decod) :
     dec2if("dec2if")    
@@ -147,7 +173,11 @@ SC_MODULE(decod)
         sensitive<<IF_IR ;
         SC_METHOD(decoding_instruction)
         sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst ;
-        SC_METHOD(affectation)
+        SC_METHOD(affectation_registres)
+        sensitive << IF_IR ;
+        SC_METHOD(affectation_calcul)
+        sensitive << IF_IR ;
+        SC_METHOD(pc_inc)
         sensitive << IF_IR ;
         reset_signal_is(RESET_N,false) ;
 
