@@ -1,6 +1,7 @@
 #include "dec.h"
 
 //PUSH AND POP MUST FREEZE IS DATA IS NOT VALID
+
 void decod::pushingToIf()
 {
     
@@ -15,16 +16,77 @@ void decod::decoding_instruction_type()
 {
     sc_uint<32> if_ir = IF_IR.read() ;
 
-    if(if_ir.range(6,0) == 0110011) r_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 0010011) i_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 0010011) s_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 1100011) b_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 0110111) u_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 1101111) j_type_inst = 1 ;
-    else if(if_ir.range(6,0) == 1100111) jalr_type_inst = 1 ;
-    //Carefull opcode for JALR INST ARE : 1100111
-    //Carefull opcode for s and i instruction are the same
-    
+    if(if_ir.range(6,0) == 0110011)
+    {
+        r_type_inst = 1  ;
+        i_type_inst = 0 ;
+        s_type_inst = 0 ;
+        b_type_inst = 0 ;
+        u_type_inst = 0 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 0 ;
+        
+    } 
+    else if(if_ir.range(6,0) == 0010011)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 1 ;
+        s_type_inst = 0 ;
+        b_type_inst = 0 ;
+        u_type_inst = 0 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 0 ;
+    }
+    else if(if_ir.range(6,0) == 0010011)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 0 ;
+        s_type_inst = 1 ;
+        b_type_inst = 0 ;
+        u_type_inst = 0 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 0 ;
+    }
+    else if(if_ir.range(6,0) == 1100011)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 0 ;
+        s_type_inst = 0 ;
+        b_type_inst = 1 ;
+        u_type_inst = 0 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 0 ;
+    }
+    else if(if_ir.range(6,0) == 0110111)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 0 ;
+        s_type_inst = 0 ;
+        b_type_inst = 0 ;
+        u_type_inst = 1 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 0 ;
+    }
+    else if(if_ir.range(6,0) == 1101111)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 0 ;
+        s_type_inst = 0 ;
+        b_type_inst = 0 ;
+        u_type_inst = 0 ;
+        j_type_inst = 1 ;
+        jalr_type_inst = 0 ;
+    }
+    else if(if_ir.range(6,0) == 1100111)
+    {
+        r_type_inst = 0  ;
+        i_type_inst = 0 ;
+        s_type_inst = 0 ;
+        b_type_inst = 0 ;
+        u_type_inst = 0 ;
+        j_type_inst = 0 ;
+        jalr_type_inst = 1 ;
+    } 
 
 }
 
