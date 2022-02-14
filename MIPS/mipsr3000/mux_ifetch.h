@@ -30,12 +30,12 @@ SC_MODULE(mux_ifetch)
 	sc_in<bool> KEEP_SI;	// KEEP signal ifetch
 
 	sc_in<sc_uint<32>> IR_RI;			// instruction register
-	sc_in<sc_uint<32>> I;				// I ???
+	sc_in<sc_uint<32>> I;				// instruction bus
 	sc_out<sc_uint<32>> MUX_IR_SI;		// res instruction regsiter
 		
-	sc_out<bool> MUX_INSTRED_SI;		// ?
+	sc_out<bool> MUX_INSTRED_SI;		// new instruction fetched
 
-	sc_in<bool> BDSLOT_XI;				// delayed slot XI?
+	sc_in<bool> BDSLOT_XI;				// delayed slot exception ifetch
 	sc_in<bool> BDSLOT_RI;				// delayed slot register ifetch
 	sc_out<bool> MUX_BDSLOT_SI;			// res delayed slot
 

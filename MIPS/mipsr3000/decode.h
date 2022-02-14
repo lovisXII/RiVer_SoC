@@ -25,62 +25,64 @@
 
 SC_MODULE(decode)
 {
-	sc_in<sc_uint<32> > 	IR_RI;			// ?
-	sc_out<sc_uint<8> > 	OPCOD_SD;		// res opcod 
-	sc_in<sc_uint<25> > 	I_TYPE_SD;		// ?
+	sc_in<sc_uint<32> > 	IR_RI;			// instruction register
+	sc_out<sc_uint<8> > 	OPCOD_SD;		// operation code
+	sc_in<sc_uint<25> > 	I_TYPE_SD;		// instruction type
 
 	sc_signal<sc_uint<8> > 	COP0_SD;		// coprocesseur 0 signal
-	sc_signal<bool> 		I_ILLG_SD;		// 
-	sc_signal<bool> 		I_JFMT_SD;
-	sc_signal<bool> 		I_IFMT_SD;
-	sc_signal<bool> 		I_RFMT_SD;
+	sc_signal<bool> 		I_ILLG_SD;		// illegal instruction signal
+	sc_signal<bool> 		I_JFMT_SD;		// instruction J format
+	sc_signal<bool> 		I_IFMT_SD;		// instruction I format
+	sc_signal<bool> 		I_RFMT_SD;		// instruction R format
 	
-	sc_out<bool> 			I_DUSE_SD;
-	sc_out<bool> 			I_READS_SD;
-	sc_out<bool> 			I_READT_SD;
+	sc_out<bool> 			I_DUSE_SD;		// uses operands signal
+	sc_out<bool> 			I_READS_SD;		// instruction uses S operands
+	sc_out<bool> 			I_READT_SD;		// instruction uses T operands
 	
-	sc_signal<bool> 		I_OSGND_SD;
-	sc_signal<bool> 		I_WRT31_SD;
-	sc_signal<bool> 		I_WRITE_SD;
+	sc_signal<bool> 		I_OSGND_SD;		// signed operation
+	sc_signal<bool> 		I_WRT31_SD;		// write into r31
+	sc_signal<bool> 		I_WRITE_SD;		// write into reg
 	
-	sc_out<bool> 			I_BRNCH_SD;
-	sc_out<bool> 			SWAP_SD;
-	sc_out<sc_uint<5> > 	COP0D_SD;
-	sc_out<sc_uint<5> > 	RS_SD;
-	sc_out<sc_uint<5> > 	RT_SD;
-	sc_out<sc_uint<5> > 	RD_SD;
+	sc_out<bool> 			I_BRNCH_SD;		// branch instruction
+// #
+	sc_out<bool> 			SWAP_SD;		//  <========= # deprecated #
+// #
+	sc_out<sc_uint<5> > 	COP0D_SD;		// coprocessor  destination register number
+	sc_out<sc_uint<5> > 	RS_SD;			// source register number
+	sc_out<sc_uint<5> > 	RT_SD;			// source register number
+	sc_out<sc_uint<5> > 	RD_SD;			// destination register number
 
-	sc_signal<sc_uint<32> > COP0OP_SD;
-	sc_signal<bool> 		IMDSGN_SD;
-	sc_signal<sc_uint<16> >	IMDSEX_SD;
-	sc_out<sc_uint<32> >	IOPER_SD;
-	sc_signal<sc_uint<32> >	OFFSET_SD;
-	sc_signal<sc_uint<5> >	S_CMP_T_SD;
-	sc_signal<bool>			S_EQ_T_SD;
-	sc_signal<bool>			S_LT_Z_SD;
-	sc_signal<bool>			S_LE_Z_SD;
+	sc_signal<sc_uint<32> > COP0OP_SD;		// coprocessesor 0 source operator
+	sc_signal<bool> 		IMDSGN_SD;		// ?
+	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
+	sc_out<sc_uint<32> >	IOPER_SD;		// effective immediate operator ?
+	sc_signal<sc_uint<32> >	OFFSET_SD;		// ?
+	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// ?
+	sc_signal<bool>			S_EQ_T_SD;		// ?
+	sc_signal<bool>			S_LT_Z_SD;		// ?
+	sc_signal<bool>			S_LE_Z_SD;		// ?
 
-	sc_out<bool> 			SLEEP_SD;
-	sc_out<sc_uint<32>>		NEXTPC_SD;			// next PC output
-	sc_out<bool> 			ILLGINS_XD;
-	sc_out<bool> 			C0UNUSE_XD;
+	sc_out<bool> 			SLEEP_SD;		// sleep instruction stall
+	sc_out<sc_uint<32>>		NEXTPC_SD;		// next PC output
+	sc_out<bool> 			ILLGINS_XD;		// unknown instruction
+	sc_out<bool> 			C0UNUSE_XD;		// comprocesor 0 unusable
 
 	sc_signal<sc_uint<32> > JMPADR_SD;		// jump @ 
 	sc_signal<sc_uint<32> > BRAADR_SD;		// branch @  
 	sc_signal<sc_uint<32> > SEQADR_SD;		// seq @ ?
 
-	sc_in<sc_uint<32> > 	BADVADR_RM;
-	sc_in<sc_uint<32> > 	NEXTSR_RX;
-	sc_in<sc_uint<32> > 	EPC_RX;
-	sc_in<sc_uint<32> > 	CAUSE_RX;
-	sc_in<sc_uint<32> > 	LO_RW;
-	sc_in<sc_uint<32> > 	HI_RW;
-	sc_in<sc_uint<32> > 	SOPER_SD;
-	sc_in<sc_uint<32> > 	TOPER_SD;
-	sc_in<sc_uint<32> > 	SR_RI;
+	sc_in<sc_uint<32> > 	BADVADR_RM;		// bad virtual @ register
+	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts register (sts)?
+	sc_in<sc_uint<32> > 	EPC_RX;			// ?
+	sc_in<sc_uint<32> > 	CAUSE_RX;		// cause register ?
+	sc_in<sc_uint<32> > 	LO_RW;			// low register
+	sc_in<sc_uint<32> > 	HI_RW;			// high register
+	sc_in<sc_uint<32> > 	SOPER_SD;		// effective s operator
+	sc_in<sc_uint<32> > 	TOPER_SD;		// effective t operator
+	sc_in<sc_uint<32> > 	SR_RI;			// status register
 	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next PC input
 
-	SC_CTOR(decode)/*:
+	SC_CTOR(decode):
 	IR_RI("IR_RI"),
 	OPCOD_SD("OPCOD_SD"),
 	I_TYPE_SD("I_TYPE_SD"),
@@ -135,7 +137,6 @@ SC_MODULE(decode)
 	TOPER_SD("TOPER_SD"),
 	SR_RI("SR_RI"),
 	NEXTPC_RD("NEXTPC_RD")
-	*/
 	{
 		SC_METHOD(processCOP0_SD);
 		sensitive << IR_RI;

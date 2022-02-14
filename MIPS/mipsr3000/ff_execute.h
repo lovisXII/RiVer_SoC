@@ -27,71 +27,73 @@ SC_MODULE(ff_execute)
 {
   sc_in<bool> CK_SX;
 
-  sc_in<sc_uint<32> > MUX_IR_SE;
-  sc_out<sc_uint<32> > IR_RE;
+  sc_in<sc_uint<32> > MUX_IR_SE;      // instruction register
+  sc_out<sc_uint<32> > IR_RE;         // res instruction register
 
-  sc_in<sc_uint<25> > MUX_I_TYPE_SE;
-  sc_out<sc_uint<25> > I_TYPE_RE;
+  sc_in<sc_uint<25> > MUX_I_TYPE_SE;  // instruction type
+  sc_out<sc_uint<25> > I_TYPE_RE;     // res instruction type
 
-  sc_in<sc_uint<8> > MUX_OPCOD_SE;
-  sc_out<sc_uint<8> > OPCOD_RE;
+  sc_in<sc_uint<8> > MUX_OPCOD_SE;    // operation code
+  sc_out<sc_uint<8> > OPCOD_RE;       // res operation code
 
-  sc_in<bool> MUX_BDSLOT_SE;
-  sc_out<bool> BDSLOT_RE;
+  sc_in<bool> MUX_BDSLOT_SE;          // branch delayed slot
+  sc_out<bool> BDSLOT_RE;             // res branch delayed slot
 
-  sc_in<sc_uint<5> > MUX_RD_SE;
-  sc_out<sc_uint<5> > RD_RE;
+  sc_in<sc_uint<5> > MUX_RD_SE;       // destination register number
+  sc_out<sc_uint<5> > RD_RE;          // res destination register number
 
-  sc_in<sc_uint<5> > MUX_COP0D_SE;
-  sc_out<sc_uint<5> > COP0D_RE;
+  sc_in<sc_uint<5> > MUX_COP0D_SE;    // coprocessor 0 destination register number
+  sc_out<sc_uint<5> > COP0D_RE;       // res coprocessor 0 destination register number
 
-  sc_in<bool> MUX_OVF_SE;
-  sc_out<bool> OVF_RE;
+  sc_in<bool> MUX_OVF_SE;             // arithmetique overflow
+  sc_out<bool> OVF_RE;                // res arithmetique overflow
 
-  sc_in<bool> MUX_IAMALGN_SE;
-  sc_out<bool> IAMALGN_RE;
+  sc_in<bool> MUX_IAMALGN_SE;         // instruction @ miss alignement
+  sc_out<bool> IAMALGN_RE;            // res instruction @ miss alignement
 
-  sc_in<bool> MUX_IASVIOL_SE;
-  sc_out<bool> IASVIOL_RE;
+  sc_in<bool> MUX_IASVIOL_SE;         // instruction @ segmentation violation
+  sc_out<bool> IASVIOL_RE;            // res instruction @ segmentation violation
 
-  sc_in<bool> MUX_IABUSER_SE;
-  sc_out<bool> IABUSER_RE;
+  sc_in<bool> MUX_IABUSER_SE;         // instruction @ bus error
+  sc_out<bool> IABUSER_RE;            // res instruction @ bus error
 
-  sc_in<bool> MUX_BREAK_SE;
-  sc_out<bool> BREAK_RE;
+  sc_in<bool> MUX_BREAK_SE;           // break exception
+  sc_out<bool> BREAK_RE;              // res break exception
 
-  sc_in<bool> MUX_SYSCALL_SE;
-  sc_out<bool> SYSCALL_RE;
+  sc_in<bool> MUX_SYSCALL_SE;         // syscall exception
+  sc_out<bool> SYSCALL_RE;            // res syscall exception
 
-  sc_in<bool> MUX_ILLGINS_SE;
-  sc_out<bool> ILLGINS_RE;
+  sc_in<bool> MUX_ILLGINS_SE;         // unknown instruction
+  sc_out<bool> ILLGINS_RE;            // res unknown instruction
 
-  sc_in<bool> MUX_C0UNUSE_SE;
-  sc_out<bool> C0UNUSE_RE;
+  sc_in<bool> MUX_C0UNUSE_SE;         // coprocessor 0 unusable
+  sc_out<bool> C0UNUSE_RE;            // res coprocessor 0 unusable
 
-  sc_in<bool> MUX_SWAP_SE;
+  // ############################# deprecated ##############
+  sc_in<bool> MUX_SWAP_SE;            
   sc_out<bool> SWAP_RE;
+  // ############################# deprecated ##############
 
-  sc_in<sc_uint<32> > MUX_PC_SE;
-  sc_out<sc_uint<32> > PC_RE;
+  sc_in<sc_uint<32> > MUX_PC_SE;      // instruction @
+  sc_out<sc_uint<32> > PC_RE;         // res instruction @
 
-  sc_in<sc_uint<32> > MUX_SR_SE;
-  sc_out<sc_uint<32> > SR_RE;
+  sc_in<sc_uint<32> > MUX_SR_SE;      // status register
+  sc_out<sc_uint<32> > SR_RE;         // res status register
 
-  sc_in<sc_uint<32> > MUX_NEXTPC_SE;
-  sc_out<sc_uint<32> > NEXTPC_RE;
+  sc_in<sc_uint<32> > MUX_NEXTPC_SE;  // next instruction @
+  sc_out<sc_uint<32> > NEXTPC_RE;     // res next instruction @
 
-  sc_in<sc_uint<32> > MUX_RES_SE;
-  sc_out<sc_uint<32> > RES_RE;
+  sc_in<sc_uint<32> > MUX_RES_SE;     // result out of alu
+  sc_out<sc_uint<32> > RES_RE;        // res of the result out of alu
 
-  sc_in<sc_uint<32> > MUX_WDATA_SE;
-  sc_out<sc_uint<32> > WDATA_RE;
+  sc_in<sc_uint<32> > MUX_WDATA_SE;   // data bus output register
+  sc_out<sc_uint<32> > WDATA_RE;      // res data bus output register
 
-  sc_in<bool> MUX_COPYCAP_SE;
-  sc_out<bool> COPYCAP_RE;
+  sc_in<bool> MUX_COPYCAP_SE;         // copying capability
+  sc_out<bool> COPYCAP_RE;            // res copying capability
 
-  sc_in<sc_uint<32> > MUX_REDOPC_SE;
-  sc_out<sc_uint<32> > REDOPC_RE;
+  sc_in<sc_uint<32> > MUX_REDOPC_SE;  // old instruction @
+  sc_out<sc_uint<32> > REDOPC_RE;     // res old instruction @
 
   SC_CTOR(ff_execute):
     MUX_IR_SE("MUX_IR_SE"),

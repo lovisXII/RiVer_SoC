@@ -133,14 +133,22 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<8> > OPCOD_RE;  		// operation code
 	sc_signal<sc_uint<8> > MUX_OPCOD_SM;  	// operation code
 	sc_signal<sc_uint<8> > OPCOD_RM;  		// operation code
+
+	//the use of swap signal are deprecated so need to be removed
 	sc_signal<bool> SWAP_SD;  				// swap instruction
 	sc_signal<bool> MUX_SWAP_SD;  			// swap instruction
 	sc_signal<bool> SWAP_RD;  				// swap instruction
 	sc_signal<bool> MUX_SWAP_SE;  			// swap instruction
 	sc_signal<bool> SWAP_RE;  				// swap instruction
+
+	//when instruction need more than 1 cycle for execute
+	//the result of the exec stage is gonna get in again
+	//on the next cycle
+	//ex.: division state machine
 	sc_signal<bool> COPYCAP_SE;  			// copying capability
 	sc_signal<bool> MUX_COPYCAP_SE;  		// copying capability
 	sc_signal<bool> COPYCAP_RE;  			// copying capability
+
 	sc_signal<bool> FSTSWAP_SM;  			// first swap access
 	sc_signal<sc_uint<5> > RS_SD;  			// source reg nbr
 	sc_signal<sc_uint<5> > RT_SD;  			// source reg nbr
@@ -170,8 +178,11 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > PC_RD;  		// instruction address
 	sc_signal<sc_uint<32> > MUX_PC_SE;  	// instruction address
 	sc_signal<sc_uint<32> > PC_RE;  		// instruction address
+
+	//redopc is the addresse to return when syscall
 	sc_signal<sc_uint<32> > MUX_REDOPC_SE;  // old inst. address
 	sc_signal<sc_uint<32> > REDOPC_RE;  	// old inst. address
+
 	sc_signal<bool> EXCRQ_XM;  				// exception request 
 	sc_signal<sc_uint<2> > COPERR_XM;  		// coprocessor's #
 	sc_signal<sc_uint<4> > EXCCODE_XM;  	// exception code
@@ -185,6 +196,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > NEXTSR_SM;  	// next ins sts (sw)
 	sc_signal<sc_uint<32> > NEXTSR_XX;  	// next ins sts (hw it)
 	sc_signal<sc_uint<32> > NEXTSR_RX;  	// next ins sts reg.
+
+	//coprocessor status register (data like mode user or system)
 	sc_signal<sc_uint<32> > SR_SI;  		// status register
 	sc_signal<sc_uint<32> > MUX_SR_SI; 		// status register
 	sc_signal<sc_uint<32> > SR_RI; 			// status register
@@ -192,6 +205,7 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > SR_RD;  		// status register
 	sc_signal<sc_uint<32> > MUX_SR_SE;  	// status register
 	sc_signal<sc_uint<32> > SR_RE;  		// status register
+
 	sc_signal<bool> WSR_SM;  				// nextsr's write en.
 	sc_signal<bool> WSR_XX;  				// nextsr's write en.
 	sc_signal<sc_uint<32> > S_SD;  			// s from reg. bank
@@ -215,9 +229,12 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > IOPER_SD;  		// eff. immediate oper.
 	sc_signal<sc_uint<32> > MUX_IOPER_SD;  	// eff. immediate oper.
 	sc_signal<sc_uint<32> > IOPER_RD;  		// eff. immediate oper.
+	
 	sc_signal<bool> SLEEP_SD;  				// sleep inst. stall
 	sc_signal<bool> HAZARDS_SD;  			// hazards
 	sc_signal<bool> HAZARDS_SE;  			// hazards
+
+	// IFETCH instruction controller signals
 	sc_signal<bool> KILL_SI;  				// kill the instruction
 	sc_signal<bool> STALL_SI; 	 			// freeze the inst.
 	sc_signal<bool> COPY_SI;  				// duplicate the inst.
@@ -227,6 +244,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SI;  				// shift new inst.
 	sc_signal<bool> KEEP_SI;  				// keep the data
 	sc_signal<bool> LOAD_SI;  				// load a new data
+
+	// DECOD instruction controller signals
 	sc_signal<bool> KILL_SD;  				// kill the instruction
 	sc_signal<bool> STALL_SD;  				// freeze the inst.
 	sc_signal<bool> COPY_SD;  				// duplicate the inst.
@@ -236,6 +255,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SD;  				// shift new inst.
 	sc_signal<bool> KEEP_SD;  				// keep the data
 	sc_signal<bool> LOAD_SD;  				// load a new data
+
+	// EXEC instruction controller signals
 	sc_signal<bool> KILL_SE;  				// kill the instruction
 	sc_signal<bool> STALL_SE;  				// freeze the inst.
 	sc_signal<bool> COPY_SE;  				// duplicate the inst.
@@ -245,6 +266,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SE;  				// shift new inst.
 	sc_signal<bool> KEEP_SE;  				// keep the data
 	sc_signal<bool> LOAD_SE;  				// load a new data
+
+	// MEMORY instruction controller signals
 	sc_signal<bool> KILL_SM;  				// kill the instruction
 	sc_signal<bool> STALL_SM; 	 			// freeze the inst.
 	sc_signal<bool> COPY_SM;  				// duplicate the inst.
@@ -254,6 +277,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SM;  				// shift new inst.
 	sc_signal<bool> KEEP_SM;  				// keep the data
 	sc_signal<bool> LOAD_SM;  				// load a new data
+
+	// WRITE BACK instruction controller signals
 	sc_signal<bool> KILL_SW;  				// kill the instruction
 	sc_signal<bool> STALL_SW;  				// freeze the inst.
 	sc_signal<bool> COPY_SW;  				// duplicate the inst.
@@ -263,6 +288,7 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SW;  				// shift new inst 
 	sc_signal<bool> LOAD_SW;  				// load a new data 
 	sc_signal<bool> KEEP_SW;  				// keep the data 
+
 	sc_signal<sc_uint<32> > WREG_SW;  		// integer reg wen
 	sc_signal<bool> WLO_SW;  				// low reg's write en
 	sc_signal<sc_uint<32> > MUX_LO_SW;  	// low register
@@ -345,9 +371,12 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SYSCALL_XE;  			// sw exc. (syscall)
 	sc_signal<bool> MUX_SYSCALL_SE;  		// sw exc. (syscall)
 	sc_signal<bool> SYSCALL_RE;  			// sw exc. (syscall)
+
+	//break is syscall like but is used for debug
 	sc_signal<bool> BREAK_XE;  				// sw exc. (break  )
 	sc_signal<bool> MUX_BREAK_SE;  			// sw exc. (break  )
 	sc_signal<bool> BREAK_RE;  				// sw exc. (break  )
+	
 	sc_signal<bool> LAMALGN_XM;  			// load  adr miss algn
 	sc_signal<bool> LASVIOL_XM;  			// load  adr segm viol
 	sc_signal<bool> SAMALGN_XM;  			// store adr miss algn

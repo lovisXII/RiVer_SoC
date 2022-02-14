@@ -55,8 +55,8 @@ SC_MODULE(mux_execute)
 	sc_in<sc_uint<5> > COP0D_RE;		// coprocesseur 0 register destination from exec
 	sc_out<sc_uint<5> > MUX_COP0D_SE;	// coprocesseur 0 register destination output
 
-	sc_in<bool> OVF_RE;					// arithmetique overflow ?
-	sc_in<bool> OVF_XE;					// arithmetique overflow ?
+	sc_in<bool> OVF_RE;					// arithmetique overflow
+	sc_in<bool> OVF_XE;					// arithmetique overflow exception
 	sc_out<bool> MUX_OVF_SE;			// arithmetique overflow output
 
 	sc_in<bool> IAMALGN_RE;				// instruction @ miss alignement
@@ -103,16 +103,16 @@ SC_MODULE(mux_execute)
 	sc_in<sc_uint<32> > NEXTPC_RE;		// next instruction @ from exec
 	sc_out<sc_uint<32> > MUX_NEXTPC_SE;	// next instruction @ output
 
-	sc_in<sc_uint<32> > RES_SE;			// result of alu ?
-	sc_in<sc_uint<32> > RES_RE;			// result of alu ?
+	sc_in<sc_uint<32> > RES_SE;			// result of alu
+	sc_in<sc_uint<32> > RES_RE;			// result of alu
 	sc_out<sc_uint<32> > MUX_RES_SE;	// result of alu output
 
 	sc_in<sc_uint<32> > Y_SE;			// Y operand
 	sc_in<sc_uint<32> > WDATA_RE;		// data bus output register
 	sc_out<sc_uint<32> > MUX_WDATA_SE;	// data bus output
 
-	sc_in<bool> COPYCAP_SE;				// copying capability ?
-	sc_in<bool> COPYCAP_RE;				// copying capability ?
+	sc_in<bool> COPYCAP_SE;				// copying capability
+	sc_in<bool> COPYCAP_RE;				// copying capability
 	sc_out<bool> MUX_COPYCAP_SE;		// copying capability output
 
 	sc_in<sc_uint<32> > REDOPC_RE;		// old instruction @

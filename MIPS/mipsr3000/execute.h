@@ -32,7 +32,11 @@ SC_MODULE(execute)
 
 	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts ?
 	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next inst. @
-	sc_in<bool> 			SWAP_RD;		// swap instruction ?
+
+	// ################################### deprecated ##########
+	sc_in<bool> 			SWAP_RD;		
+	// ################################### deprecated ##########
+
 	sc_in<bool> 			I_BERR_N;		// instruction buss error
 
 	sc_out<bool> 			I_IFMT_SE;		// I format	
@@ -60,14 +64,14 @@ SC_MODULE(execute)
 	sc_out<sc_uint<32> >	XOPER_SE;		// effective x operand
 	sc_out<sc_uint<32> >	YOPER_SE;		// effective x operand
 
-	sc_out<bool>		WREDOPC_SE;			// redopc write enable ?
+	sc_out<bool>		WREDOPC_SE;			// redopc write enable
 	sc_out<bool>		IABUSER_XE;			// instruction @ bus error
 	sc_out<bool>		BREAK_XE;			// break signal
 	sc_out<bool>		SYSCALL_XE;			// syscal signal
 	sc_out<bool>		OVF_XE;				// arithmetic overflow
 	sc_out<bool>		IAMALGN_XE;			// instruction @ miss alignement
 	sc_out<bool>		IASVIOL_XE;			// instruction @ segmentation violation
-	sc_out<bool>		COPYCAP_SE;			// copying capability (pass through SWAP_RD)
+	sc_out<bool>		COPYCAP_SE;			// copying capability
 	
 	SC_CTOR(execute):
 	SR_RI("SR_RI"),
