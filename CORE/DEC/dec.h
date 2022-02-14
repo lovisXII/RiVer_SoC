@@ -1,6 +1,6 @@
 #include <systemc.h>
 #include "../UTIL/fifo_32b/fifo_32b.h"
-
+#include "../UTIL/fifo_110b/fifo_110b.h"
 SC_MODULE(decod)
 {
     
@@ -28,10 +28,11 @@ SC_MODULE(decod)
     sc_out  < bool >             DEC2EXE_NEG_OP1 ; // say if we take the opposite of the op1 to do a substraction for example
     sc_out  < bool >             DEC2EXE_WB ; // say if we plan to wbk the value of rd or no
     
-    sc_out  < sc_uint<32> >      MEM_DATA ;
-    sc_out  < sc_uint<3> >       MEM_LOAD ; // say to mem if we do a load
-    sc_out  < sc_uint<3> >       MEM_STORE ; // say to mem if we do a store
-    sc_out  < bool >             MEM_SIGN_EXTEND ;
+    sc_out  < sc_uint<32> >      MEM_DATA ; // data sent to mem for storage
+    sc_out  < bool>              MEM_LOAD ; // say to mem if we do a load
+    sc_out  < bool >             MEM_STORE ; // say to mem if we do a store
+    sc_out  < bool >             MEM_SIGN_EXTEND ; 
+    sc_out  < sc_uint<2> >       MEM_SIZE ; // tells to mem if we do an acces in word, hw or byte
     sc_out  < bool >             SELECT_SHIFT ; //taille fifo entrée : 110
     
     // Interface with DEC2IF : 
@@ -48,6 +49,11 @@ SC_MODULE(decod)
     sc_in   < bool >              IF2DEC_EMPTY ;
     sc_in   < bool >              IF2DEC_FULL ;
 
+    //Interface with EXE2DEC
+
+    sc_out< sc_uint<110> >        DEC2EXE_OUT ;
+    sc_in< bool >                 DEC2EXE_EMPTY ;                    
+    sc_in< bool >                 DEC2EXE_POP ; 
     //General Interface :
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
@@ -56,13 +62,23 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo_32b dec2if ;
+    fifo_110b dec2exe ;
 
     // Signals :
+
+    //fifo dec2if :
 
     sc_signal < sc_uint<32> >   dec2if_pc_out ;
     sc_signal < bool >          dec2if_pop ;
     sc_signal < bool >          dec2if_empty ;
     sc_signal < bool >          dec2if_full ;
+
+    //fifo dec2exe :
+
+    sc_signal < sc_uint <110> > dec2exe_in ;
+    sc_signal < bool >          dec2exe_push ;
+    sc_signal < bool >          dec2exe_full ;
+    
 
     // Instruction format type :
 
@@ -172,13 +188,86 @@ SC_MODULE(decod)
         SC_METHOD(decoding_instruction_type)
         sensitive<<IF_IR ;
         SC_METHOD(decoding_instruction)
-        sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst ;
+        sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst ;
         SC_METHOD(affectation_registres)
-        sensitive << IF_IR ;
+        sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst
+                    << add_i
+    	 	 	 << slt_i
+    	 	 	 << sltu_i
+    	 	 	 << and_i
+    	 	 	 << or_i
+    	 	 	 << xor_i
+    	 	 	 << sll_i
+    	 	 	 << srl_i
+    	 	 	 << sub_i
+    	 	 	 << sra_i
+    	 	 	 << addi_i
+    	 	 	 << slti_i
+    	 	 	 << sltiu_i
+    	 	 	 << andi_i
+    	 	 	 << ori_i
+    	 	 	 << xori_i
+    	 	 	 << jalr_i
+    	 	 	 << slli_i
+    	 	 	 << srli_i
+    	 	 	 << srai_i
+                 << lw_i
+                 << lh_i
+                 << lhu_i
+                << lb_i
+                << lbu_i
+    	 	 	 << beq_i
+    	 	 	 << bne_i
+    	 	 	 << blt_i
+    	 	 	 << bge_i
+    	 	 	 << bltu_i
+    	 	 	 << bgeu_i
+    	 	 	 << lui_i
+    	 	 	 << auipc_i
+    	 	 	 << jal_i
+    	 	 	 << sw_i
+    	 	 	 << sh_i
+    	 	 	 << sb_i ; 
         SC_METHOD(affectation_calcul)
-        sensitive << IF_IR ;
+        sensitive << add_i
+    	 	 	 << slt_i
+    	 	 	 << sltu_i
+    	 	 	 << and_i
+    	 	 	 << or_i
+    	 	 	 << xor_i
+    	 	 	 << sll_i
+    	 	 	 << srl_i
+    	 	 	 << sub_i
+    	 	 	 << sra_i
+    	 	 	 << addi_i
+    	 	 	 << slti_i
+    	 	 	 << sltiu_i
+    	 	 	 << andi_i
+    	 	 	 << ori_i
+    	 	 	 << xori_i
+    	 	 	 << jalr_i
+    	 	 	 << slli_i
+    	 	 	 << srli_i
+    	 	 	 << srai_i
+                 << lw_i
+                 << lh_i
+                 << lhu_i
+                << lb_i
+                << lbu_i
+    	 	 	 << beq_i
+    	 	 	 << bne_i
+    	 	 	 << blt_i
+    	 	 	 << bge_i
+    	 	 	 << bltu_i
+    	 	 	 << bgeu_i
+    	 	 	 << lui_i
+    	 	 	 << auipc_i
+    	 	 	 << jal_i
+    	 	 	 << sw_i
+    	 	 	 << sh_i
+    	 	 	 << sb_i ;
         SC_METHOD(pc_inc)
-        sensitive << IF_IR ;
+        sensitive << IF_IR << b_type_inst << j_type_inst << jalr_type_inst ;
         reset_signal_is(RESET_N,false) ;
 
     }

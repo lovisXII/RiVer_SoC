@@ -3,6 +3,15 @@
 #include <iostream>
 #include "../UTIL/fifo_41b/fifo_41b.h"
 #include "../UTIL/debug_util.h"
+
+/*
+Assuming the following stuff :
+
+MEM_SIZE = 00 -> access in word 
+MEM_SIZE = 01 -> access in half word
+MEM_SIZE = 10  -> acces in byte
+
+*/
 SC_MODULE(mem)
 {
     // Mcache Interface :
