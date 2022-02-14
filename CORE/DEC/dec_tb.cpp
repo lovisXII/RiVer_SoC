@@ -4,9 +4,10 @@
 int sc_main(int argc, char* argv[])
 {
 
+    sc_trace_file *tf ;
+    tf=sc_create_vcd_trace_file("tf");
+    
     decod dec("decode") ;
-
-
 
     //Interface with REG :
 
@@ -33,28 +34,33 @@ int sc_main(int argc, char* argv[])
     sc_signal   < bool >             dec2exe_wb ; // say if we plan to wbk the value of rd or no
     
     sc_signal   < sc_uint<32> >      mem_data ; // data sent to mem for storage
-    sc_signal   < sc_uint<3> >       mem_load ; // say to mem if we do a load
-    sc_signal   < sc_uint<3> >       mem_store ; // say to mem if we do a store
+    sc_signal   < bool >             mem_load ; // say to mem if we do a load
+    sc_signal   < bool >             mem_store ; // say to mem if we do a store
     sc_signal   < bool >             mem_sign_extend ; 
     sc_signal   < sc_uint<2> >       mem_size ; // tells to mem if we do an acces in word, hw or byte
     sc_signal   < bool >             select_shift ; //taille fifo entrée : 110
     
     // Interface with DEC2IF : 
 
+    sc_signal    < bool >              dec2if_pop ;
     sc_signal    < bool >              dec2if_empty ;
-    sc_signal    < bool >              dec2if_full ;
-    sc_signal   < bool >              dec2if_push ;
-    sc_signal   < sc_uint<32> >       dec2if_pc ;
+    sc_signal   < sc_uint<32> >        dec2if_pc ;
+
+
+    sc_signal   < sc_uint<32> >        if_ir ;
+    sc_signal   < bool >               if2dec_empty ;
+    sc_signal   < bool >               if2dec_pop ;
+
 
     //Interface with IF2DEC :
 
-    sc_signal   < bool >              if2dec_pop ;
-    sc_signal    < sc_uint<32> >       if_ir ;
-    sc_signal    < bool >              if2dec_empty ;
-    sc_signal    < bool >              if2dec_full ;
+    sc_signal   < bool >              dec2exe_pop ;
+    sc_signal    < bool >             dec2exe_empty ;
+    sc_signal    < sc_bv<110> >       dec2exe_out ;
+
 
     //General Interface :
-    sc_clock                            clk ;
+    sc_clock                          clk ;
     sc_signal  <bool>                 reset_n ;
     
 
@@ -94,73 +100,74 @@ int sc_main(int argc, char* argv[])
     
     
 
+    dec.DEC2IF_POP(dec2if_pop) ;
     dec.DEC2IF_EMPTY(dec2if_empty) ;
-    dec.DEC2IF_FULL(dec2if_full) ;
-    dec.DEC2IF_PUSH(dec2if_push) ;
     dec.DEC2IF_PC(dec2if_pc) ;
 
-    
-
-    dec.IF2DEC_POP(if2dec_pop) ;
     dec.IF_IR(if_ir) ;
     dec.IF2DEC_EMPTY(if2dec_empty) ;
-    dec.IF2DEC_FULL(if2dec_full) ;
+    dec.IF2DEC_POP(if2dec_pop) ;
 
+    dec.DEC2EXE_POP(dec2exe_pop) ;
+    dec.DEC2EXE_EMPTY(dec2exe_empty) ;
+    dec.DEC2EXE_OUT(dec2exe_out) ;
     
     dec.CLK(clk) ;
     dec.RESET_N(reset_n) ;
-
+    dec.trace(tf) ;
 
     //Reset :
 
     reset_n.write(false) ;
     sc_start(1,SC_NS) ;
+    sc_start(1, SC_NS);
     reset_n.write(true) ;
+    sc_start(1,SC_NS) ;
 
     //End of reset 
-
-    // tests :
-
-    
+   
     //Bank registre simulation :
 
     int REG[33] ;
+    int REG_VALID[33] ;
 
     //Resting bank register :
     
     for(int i = 0 ; i < 33 ; i++)
     {
-        REG[i] = 0 ;
+        REG[i] = rand() ;
+        REG_VALID[i] = 1 ;
     }
 
-    if_ir.write(0b11111100000001100110111110010011) ; 
+    for(int i = 0 ; i <100 ; i++)
+    {
+    sc_start(1,SC_NS) ;
+    if_ir.write(0b00000000000100001000000110110011) ; 
     //0000000 00001 00001 000 00011 0110011
     //correspond at add r3 r1 r1
     //111111000000 01100 110 11111 0010011
     
-    radr1_data.write(REG[radr1.read()]) ;
-    radr2_data.write(REG[radr2.read()]) ;
 
-    read_pc.write(REG[33]) ; 
-    inc_pc.write(0) ;
-    read_pc_valid.write(1) ; 
-    dec2if_empty .write(1) ;
-    dec2if_full.write(0) ;
-    sc_start(1,SC_NS) ;
-    cout << "if_ir :" << dec.IF_IR.read() << endl ;
-    cout << dec.IF_IR.read().range(6,0) << endl ;
-    cout << "r_type_inst :" << dec.r_type_inst.read() << endl ;
-    cout << "dec2exe_op1 : " << dec.DEC2EXE_OP1.read() << endl ;
-    cout << "dec2exe_op2 : " << dec.DEC2EXE_OP2.read() << endl ;
-    
-    cout << "ori :" << dec.ori_i.read() << endl ;
-    cout << "xori :" << dec.xori_i.read() << endl ;
-    cout << "dec_exe_dest :" << dec.ADR_DEST.read() << endl ;
-    cout << "RADR1 : " << dec.RADR1.read() << endl ;
-    cout << "RADR2 : " << dec.RADR2.read() << endl ;
-    cout << "DEC2EXE_CMD : " << dec.DEC2EXE_CMD.read() << endl ;
-    cout << "DEC2EXE_NEG_OP1 : " << dec.DEC2EXE_NEG_OP1.read() << endl ;
-    cout << "SELECT_SHIFT : " << dec.SELECT_SHIFT.read() << endl ;
-    
+    /* Going to do a first manual test :
+    1) We sent the inst : add r3,r1,r1
+    2) r1 is designated as unvalaible
+    3) r1 is designated as valid
+    4) Let's see what happend !
+    */
+
+    radr1_data.write(REG[dec.RADR1.read()]) ;
+    radr2_data.write(REG[dec.RADR2.read()]) ;
+    radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+    radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+    read_pc.write(REG[33]) ;
+    read_pc_valid.write(1) ;
+    REG[33] = dec.dec2if_pc_in.read() ;
+    dec2if_pop.write(1) ;
+    if2dec_empty.write(1) ;
+    dec2exe_pop.write(1) ;
+    }
+
+
+    sc_close_vcd_trace_file(tf) ;
     return 0; 
 }

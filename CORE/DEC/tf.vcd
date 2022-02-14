@@ -1,0 +1,867 @@
+$date
+     Feb 14, 2022       18:01:05
+$end
+
+$version
+ SystemC 2.3.3-Accellera --- Feb  9 2022 00:40:45
+$end
+
+$timescale
+     1 ps
+$end
+
+$scope module SystemC $end
+$scope module decode $end
+$var wire   32  aaaaa  dec2if_pc_in [31:0]  $end
+$var wire    1  aaaab  dec2if_push       $end
+$var wire    1  aaaac  dec2if_empty       $end
+$var wire    1  aaaad  dec2if_full       $end
+$var wire   32  aaaae  dec2if_pc_out [31:0]  $end
+$var wire   110  aaaaf  dec2exe_in [109:0]  $end
+$var wire    1  aaaag  dec2exe_push       $end
+$var wire    1  aaaah  dec2exe_full       $end
+$var wire    1  aaaai  r_type_inst       $end
+$var wire    1  aaaaj  i_type_inst       $end
+$var wire    1  aaaak  s_type_inst       $end
+$var wire    1  aaaal  b_type_inst       $end
+$var wire    1  aaaam  u_type_inst       $end
+$var wire    1  aaaan  j_type_inst       $end
+$var wire    1  aaaao  jalr_type_inst       $end
+$var wire    1  aaaap  add_i       $end
+$var wire    1  aaaaq  slt_i       $end
+$var wire    1  aaaar  sltu_i       $end
+$var wire    1  aaaas  and_i       $end
+$var wire    1  aaaat  or_i       $end
+$var wire    1  aaaau  xor_i       $end
+$var wire    1  aaaav  sll_i       $end
+$var wire    1  aaaaw  srl_i       $end
+$var wire    1  aaaax  sub_i       $end
+$var wire    1  aaaay  sra_i       $end
+$var wire    1  aaaaz  addi_i       $end
+$var wire    1  aaaba  slti_i       $end
+$var wire    1  aaabb  sltiu_i       $end
+$var wire    1  aaabc  andi_i       $end
+$var wire    1  aaabd  ori_i       $end
+$var wire    1  aaabe  xori_i       $end
+$var wire    1  aaabf  jalr_i       $end
+$var wire    1  aaabg  slli_i       $end
+$var wire    1  aaabh  srli_i       $end
+$var wire    1  aaabi  srai_i       $end
+$var wire    1  aaabj  lw_i       $end
+$var wire    1  aaabk  lh_i       $end
+$var wire    1  aaabl  lhu_i       $end
+$var wire    1  aaabm  lb_i       $end
+$var wire    1  aaabn  lbu_i       $end
+$var wire    1  aaabo  beq_i       $end
+$var wire    1  aaabp  bne_i       $end
+$var wire    1  aaabq  blt_i       $end
+$var wire    1  aaabr  bge_i       $end
+$var wire    1  aaabs  bltu_i       $end
+$var wire    1  aaabt  bgeu_i       $end
+$var wire    1  aaabu  lui_i       $end
+$var wire    1  aaabv  auipc_i       $end
+$var wire    1  aaabw  jal_i       $end
+$var wire    1  aaabx  sw_i       $end
+$var wire    1  aaaby  sh_i       $end
+$var wire    1  aaabz  sb_i       $end
+$var wire   32  aaaca  offset_branch [31:0]  $end
+$var wire    1  aaacb  inc_pc       $end
+$var wire    6  aaacc  adr_dest [5:0]  $end
+$var wire   32  aaacd  dec2exe_op1 [31:0]  $end
+$var wire   32  aaace  dec2exe_op2 [31:0]  $end
+$var wire   32  aaacf  offset_branch_var [31:0]  $end
+$var wire    2  aaacg  mem_size [1:0]  $end
+$var wire    3  aaach  mem_load [2:0]  $end
+$var wire    3  aaaci  mem_store [2:0]  $end
+$var wire    2  aaacj  dec2exe_cmd [1:0]  $end
+$var wire    1  aaack  select_shift       $end
+$var wire    1  aaacl  dec2exe_neg_op1       $end
+$var wire    1  aaacm  dec2exe_wb       $end
+$var wire    1  aaacn  mem_sign_extend       $end
+$var wire    1  aaaco  RESET_N       $end
+$var wire    1  aaacp  CLK       $end
+$var wire   110  aaacq  DEC2EXE_OUT [109:0]  $end
+$var wire    1  aaacr  DEC2EXE_EMPTY       $end
+$var wire    1  aaacs  DEC2EXE_POP       $end
+$var wire    1  aaact  IF2DEC_POP       $end
+$var wire    1  aaacu  IF2DEC_EMPTY       $end
+$var wire   32  aaacv  IF_IR [31:0]  $end
+$var wire   32  aaacw  DEC2IF_PC [31:0]  $end
+$var wire    1  aaacx  DEC2IF_EMPTY       $end
+$var wire    1  aaacy  DEC2IF_POP       $end
+$var wire    1  aaacz  SELECT_SHIFT       $end
+$var wire    2  aaada  MEM_SIZE [1:0]  $end
+$var wire    1  aaadb  MEM_SIGN_EXTEND       $end
+$var wire    1  aaadc  MEM_STORE       $end
+$var wire    1  aaadd  MEM_LOAD       $end
+$var wire   32  aaade  MEM_DATA [31:0]  $end
+$var wire    1  aaadf  DEC2EXE_WB       $end
+$var wire    1  aaadg  DEC2EXE_NEG_OP1       $end
+$var wire    4  aaadh  DEC2EXE_CMD [3:0]  $end
+$var wire   32  aaadi  DEC2EXE_OP2 [31:0]  $end
+$var wire   32  aaadj  DEC2EXE_OP1 [31:0]  $end
+$var wire    1  aaadk  READ_PC_VALID       $end
+$var wire    1  aaadl  INC_PC       $end
+$var wire   32  aaadm  READ_PC [31:0]  $end
+$var wire    6  aaadn  ADR_DEST [5:0]  $end
+$var wire    6  aaado  RADR2 [5:0]  $end
+$var wire    6  aaadp  RADR1 [5:0]  $end
+$var wire    1  aaadq  RADR2_VALID       $end
+$var wire    1  aaadr  RADR1_VALID       $end
+$var wire   32  aaads  RADR2_DATA [31:0]  $end
+$var wire   32  aaadt  RADR1_DATA [31:0]  $end
+$upscope $end
+$upscope $end
+$enddefinitions  $end
+
+$comment
+All initial values are dumped below at time 0 sec = 0 timescale units.
+$end
+
+$dumpvars
+b0 aaaaa
+0aaaab
+0aaaac
+0aaaad
+b0 aaaae
+b0 aaaaf
+0aaaag
+0aaaah
+0aaaai
+0aaaaj
+0aaaak
+0aaaal
+0aaaam
+0aaaan
+0aaaao
+0aaaap
+0aaaaq
+0aaaar
+0aaaas
+0aaaat
+0aaaau
+0aaaav
+0aaaaw
+0aaaax
+0aaaay
+0aaaaz
+0aaaba
+0aaabb
+0aaabc
+0aaabd
+0aaabe
+0aaabf
+0aaabg
+0aaabh
+0aaabi
+0aaabj
+0aaabk
+0aaabl
+0aaabm
+0aaabn
+0aaabo
+0aaabp
+0aaabq
+0aaabr
+0aaabs
+0aaabt
+0aaabu
+0aaabv
+0aaabw
+0aaabx
+0aaaby
+0aaabz
+b0 aaaca
+0aaacb
+b0 aaacc
+b0 aaacd
+b0 aaace
+b0 aaacf
+b0 aaacg
+b0 aaach
+b0 aaaci
+b0 aaacj
+0aaack
+0aaacl
+0aaacm
+0aaacn
+0aaaco
+1aaacp
+b0 aaacq
+1aaacr
+0aaacs
+0aaact
+0aaacu
+b0 aaacv
+b0 aaacw
+1aaacx
+0aaacy
+0aaacz
+b0 aaada
+0aaadb
+0aaadc
+0aaadd
+b0 aaade
+0aaadf
+0aaadg
+b0 aaadh
+b0 aaadi
+b0 aaadj
+0aaadk
+0aaadl
+b0 aaadm
+b0 aaadn
+b0 aaado
+b0 aaadp
+0aaadq
+0aaadr
+b0 aaads
+b0 aaadt
+$end
+
+#500
+0aaacp
+
+#1000
+1aaacp
+
+#1500
+0aaacp
+
+#2000
+1aaaco
+1aaacp
+
+#2500
+0aaacp
+
+#3000
+1aaacp
+
+#3500
+0aaacp
+
+#4000
+b1101011100010110100010101100111011010111000101101000101011001110100000000000000000000000000000000000000000011 aaaaf
+1aaaag
+1aaaai
+1aaaap
+1aaacb
+b11 aaacc
+b1101011100010110100010101100111 aaacd
+b1101011100010110100010101100111 aaace
+1aaacm
+1aaacp
+1aaacs
+1aaacu
+b100001000000110110011 aaacv
+1aaacy
+1aaadk
+b1 aaado
+b1 aaadp
+1aaadq
+1aaadr
+b1101011100010110100010101100111 aaads
+b1101011100010110100010101100111 aaadt
+
+#4500
+0aaacp
+
+#5000
+1aaaah
+1aaacp
+b1101011100010110100010101100111011010111000101101000101011001110100000000000000000000000000000000000000000011 aaacq
+0aaacr
+1aaadf
+b1101011100010110100010101100111 aaadi
+b1101011100010110100010101100111 aaadj
+b11 aaadn
+b110010011110110010001111000110 aaads
+b110010011110110010001111000110 aaadt
+
+#5500
+0aaacp
+
+#6000
+1aaacp
+
+#6500
+0aaacp
+
+#7000
+1aaacp
+
+#7500
+0aaacp
+
+#8000
+1aaacp
+
+#8500
+0aaacp
+
+#9000
+1aaacp
+
+#9500
+0aaacp
+
+#10000
+1aaacp
+
+#10500
+0aaacp
+
+#11000
+1aaacp
+
+#11500
+0aaacp
+
+#12000
+1aaacp
+
+#12500
+0aaacp
+
+#13000
+1aaacp
+
+#13500
+0aaacp
+
+#14000
+1aaacp
+
+#14500
+0aaacp
+
+#15000
+1aaacp
+
+#15500
+0aaacp
+
+#16000
+1aaacp
+
+#16500
+0aaacp
+
+#17000
+1aaacp
+
+#17500
+0aaacp
+
+#18000
+1aaacp
+
+#18500
+0aaacp
+
+#19000
+1aaacp
+
+#19500
+0aaacp
+
+#20000
+1aaacp
+
+#20500
+0aaacp
+
+#21000
+1aaacp
+
+#21500
+0aaacp
+
+#22000
+1aaacp
+
+#22500
+0aaacp
+
+#23000
+1aaacp
+
+#23500
+0aaacp
+
+#24000
+1aaacp
+
+#24500
+0aaacp
+
+#25000
+1aaacp
+
+#25500
+0aaacp
+
+#26000
+1aaacp
+
+#26500
+0aaacp
+
+#27000
+1aaacp
+
+#27500
+0aaacp
+
+#28000
+1aaacp
+
+#28500
+0aaacp
+
+#29000
+1aaacp
+
+#29500
+0aaacp
+
+#30000
+1aaacp
+
+#30500
+0aaacp
+
+#31000
+1aaacp
+
+#31500
+0aaacp
+
+#32000
+1aaacp
+
+#32500
+0aaacp
+
+#33000
+1aaacp
+
+#33500
+0aaacp
+
+#34000
+1aaacp
+
+#34500
+0aaacp
+
+#35000
+1aaacp
+
+#35500
+0aaacp
+
+#36000
+1aaacp
+
+#36500
+0aaacp
+
+#37000
+1aaacp
+
+#37500
+0aaacp
+
+#38000
+1aaacp
+
+#38500
+0aaacp
+
+#39000
+1aaacp
+
+#39500
+0aaacp
+
+#40000
+1aaacp
+
+#40500
+0aaacp
+
+#41000
+1aaacp
+
+#41500
+0aaacp
+
+#42000
+1aaacp
+
+#42500
+0aaacp
+
+#43000
+1aaacp
+
+#43500
+0aaacp
+
+#44000
+1aaacp
+
+#44500
+0aaacp
+
+#45000
+1aaacp
+
+#45500
+0aaacp
+
+#46000
+1aaacp
+
+#46500
+0aaacp
+
+#47000
+1aaacp
+
+#47500
+0aaacp
+
+#48000
+1aaacp
+
+#48500
+0aaacp
+
+#49000
+1aaacp
+
+#49500
+0aaacp
+
+#50000
+1aaacp
+
+#50500
+0aaacp
+
+#51000
+1aaacp
+
+#51500
+0aaacp
+
+#52000
+1aaacp
+
+#52500
+0aaacp
+
+#53000
+1aaacp
+
+#53500
+0aaacp
+
+#54000
+1aaacp
+
+#54500
+0aaacp
+
+#55000
+1aaacp
+
+#55500
+0aaacp
+
+#56000
+1aaacp
+
+#56500
+0aaacp
+
+#57000
+1aaacp
+
+#57500
+0aaacp
+
+#58000
+1aaacp
+
+#58500
+0aaacp
+
+#59000
+1aaacp
+
+#59500
+0aaacp
+
+#60000
+1aaacp
+
+#60500
+0aaacp
+
+#61000
+1aaacp
+
+#61500
+0aaacp
+
+#62000
+1aaacp
+
+#62500
+0aaacp
+
+#63000
+1aaacp
+
+#63500
+0aaacp
+
+#64000
+1aaacp
+
+#64500
+0aaacp
+
+#65000
+1aaacp
+
+#65500
+0aaacp
+
+#66000
+1aaacp
+
+#66500
+0aaacp
+
+#67000
+1aaacp
+
+#67500
+0aaacp
+
+#68000
+1aaacp
+
+#68500
+0aaacp
+
+#69000
+1aaacp
+
+#69500
+0aaacp
+
+#70000
+1aaacp
+
+#70500
+0aaacp
+
+#71000
+1aaacp
+
+#71500
+0aaacp
+
+#72000
+1aaacp
+
+#72500
+0aaacp
+
+#73000
+1aaacp
+
+#73500
+0aaacp
+
+#74000
+1aaacp
+
+#74500
+0aaacp
+
+#75000
+1aaacp
+
+#75500
+0aaacp
+
+#76000
+1aaacp
+
+#76500
+0aaacp
+
+#77000
+1aaacp
+
+#77500
+0aaacp
+
+#78000
+1aaacp
+
+#78500
+0aaacp
+
+#79000
+1aaacp
+
+#79500
+0aaacp
+
+#80000
+1aaacp
+
+#80500
+0aaacp
+
+#81000
+1aaacp
+
+#81500
+0aaacp
+
+#82000
+1aaacp
+
+#82500
+0aaacp
+
+#83000
+1aaacp
+
+#83500
+0aaacp
+
+#84000
+1aaacp
+
+#84500
+0aaacp
+
+#85000
+1aaacp
+
+#85500
+0aaacp
+
+#86000
+1aaacp
+
+#86500
+0aaacp
+
+#87000
+1aaacp
+
+#87500
+0aaacp
+
+#88000
+1aaacp
+
+#88500
+0aaacp
+
+#89000
+1aaacp
+
+#89500
+0aaacp
+
+#90000
+1aaacp
+
+#90500
+0aaacp
+
+#91000
+1aaacp
+
+#91500
+0aaacp
+
+#92000
+1aaacp
+
+#92500
+0aaacp
+
+#93000
+1aaacp
+
+#93500
+0aaacp
+
+#94000
+1aaacp
+
+#94500
+0aaacp
+
+#95000
+1aaacp
+
+#95500
+0aaacp
+
+#96000
+1aaacp
+
+#96500
+0aaacp
+
+#97000
+1aaacp
+
+#97500
+0aaacp
+
+#98000
+1aaacp
+
+#98500
+0aaacp
+
+#99000
+1aaacp
+
+#99500
+0aaacp
+
+#100000
+1aaacp
+
+#100500
+0aaacp
+
+#101000
+1aaacp
+
+#101500
+0aaacp
+
+#102000
+1aaacp
+
+#102500
+0aaacp
+
+#103000

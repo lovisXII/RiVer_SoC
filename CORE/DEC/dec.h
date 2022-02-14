@@ -16,9 +16,9 @@ SC_MODULE(decod)
 
     sc_out  < sc_uint<6> >       ADR_DEST ; // rd
 
-    sc_in   < sc_uint<32> >      READ_PC ; // value of r32 which is pc
+    sc_in   < sc_uint<32> >      READ_PC ; // value of r32 which is pc coming from REG
     sc_out  < bool >             INC_PC ; // tells to reg if he does pc+4 or no
-    sc_in   < bool >             READ_PC_VALID ; // say if pc is valid or no
+    sc_in   < bool >             READ_PC_VALID ; // say if pc is valid or no, signal coming from REG
 
     //Interface with EXE :
 
@@ -37,23 +37,22 @@ SC_MODULE(decod)
     
     // Interface with DEC2IF : 
 
-    sc_in   < bool >              DEC2IF_EMPTY ;
-    sc_in   < bool >              DEC2IF_FULL ;
-    sc_out  < bool >              DEC2IF_PUSH ;
+    sc_in  < bool >               DEC2IF_POP ; // Ifecth say to decod if it wants a pop or no
+    sc_out   < bool >             DEC2IF_EMPTY ;
     sc_out  < sc_uint<32> >       DEC2IF_PC ;
 
     //Interface with IF2DEC :
 
-    sc_out  < bool >              IF2DEC_POP ;
     sc_in   < sc_uint<32> >       IF_IR ;
     sc_in   < bool >              IF2DEC_EMPTY ;
-    sc_in   < bool >              IF2DEC_FULL ;
+    sc_out  < bool >              IF2DEC_POP ; //Decod says to IFETCH if it wants a pop or no
 
-    //Interface with EXE2DEC
+    //Interface with DEC2EXE
 
-    sc_out< sc_uint<110> >        DEC2EXE_OUT ;
-    sc_in< bool >                 DEC2EXE_EMPTY ;                    
-    sc_in< bool >                 DEC2EXE_POP ; 
+    sc_in< bool >                 DEC2EXE_POP ;
+    sc_out< bool >                DEC2EXE_EMPTY ;                    
+    sc_out< sc_bv<110> >          DEC2EXE_OUT ;
+
     //General Interface :
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
@@ -67,18 +66,19 @@ SC_MODULE(decod)
     // Signals :
 
     //fifo dec2if :
-
-    sc_signal < sc_uint<32> >   dec2if_pc_out ;
-    sc_signal < bool >          dec2if_pop ;
+    
+    sc_signal < sc_uint<32> >   dec2if_pc_in ; // pc sent to fifo
+    sc_signal < bool >          dec2if_push ;
     sc_signal < bool >          dec2if_empty ;
     sc_signal < bool >          dec2if_full ;
+    sc_signal < sc_uint<32> >   dec2if_pc_out ;
 
     //fifo dec2exe :
 
-    sc_signal < sc_uint <110> > dec2exe_in ;
+    sc_signal < sc_bv <110> > dec2exe_in ;
     sc_signal < bool >          dec2exe_push ;
     sc_signal < bool >          dec2exe_full ;
-    
+
 
     // Instruction format type :
 
@@ -161,30 +161,82 @@ SC_MODULE(decod)
 
     sc_signal <bool> inc_pc ;
 
-    void pushingToIf() ;
-    void popFromIf() ; 
+
+    //Internal signals :
+
+    sc_signal< sc_uint<6>>  adr_dest;
+    sc_signal< sc_uint<32>> dec2exe_op1;
+    sc_signal< sc_uint<32>> dec2exe_op2;
+    sc_signal< sc_uint<32>> offset_branch_var ;
+    sc_signal< sc_uint<32>> mem_data ;
+    
+    sc_signal<sc_uint<2>>   mem_size ;
+    sc_signal<sc_uint<3>>   mem_load ;
+    sc_signal<sc_uint<3>>   mem_store ;
+
+    sc_signal<sc_uint<2>>   dec2exe_cmd ;
+    sc_signal<bool>         select_shift ;
+    sc_signal<bool>         dec2exe_neg_op1 ;
+    sc_signal<bool>         dec2exe_wb ;
+    sc_signal<bool>         mem_sign_extend ;
+
+
+    void dec2if_gestion() ;
+    void concat_dec2exe() ;
+    void unconcat_dec2exe() ;
+    void dec2exe_push_method() ;
+    void if2dec_pop_method() ;
     void decoding_instruction_type() ;
     void decoding_instruction() ;
     void affectation_registres() ;
     void affectation_calcul() ;
     void pc_inc() ;
+    void trace(sc_trace_file* tf);
 
     SC_CTOR(decod) :
-    dec2if("dec2if")    
+    dec2if("dec2if"),
+    dec2exe("dec2exe")    
     {
-        dec2if.DIN(DEC2IF_PC) ;
-        dec2if.DOUT(dec2if_pc_out) ;
-        dec2if.EMPTY(dec2if_empty) ;
+        dec2if.DIN(dec2if_pc_in) ;
+        dec2if.DOUT(DEC2IF_PC) ;
+        dec2if.EMPTY(DEC2IF_EMPTY) ;
         dec2if.FULL(dec2if_full) ;
-        dec2if.PUSH(DEC2IF_PUSH) ;
-        dec2if.POP(dec2if_pop) ;
+        dec2if.PUSH(dec2if_push) ;
+        dec2if.POP(DEC2IF_POP) ;
         dec2if.CLK(CLK) ;
         dec2if.RESET_N(RESET_N) ;
+    
+        dec2exe.DIN(dec2exe_in) ;
+        dec2exe.DOUT(DEC2EXE_OUT) ;
+        dec2exe.EMPTY(DEC2EXE_EMPTY) ;
+        dec2exe.FULL(dec2exe_full) ;
+        dec2exe.PUSH(dec2exe_push) ;
+        dec2exe.POP(DEC2EXE_POP) ;
+        dec2exe.CLK(CLK) ;
+        dec2exe.RESET_N(RESET_N) ;
 
-        SC_METHOD(pushingToIf) ;
-        sensitive << DEC2IF_PC << DEC2IF_PUSH ;
-        SC_METHOD(popFromIf) ;
-        sensitive << IF2DEC_POP << IF2DEC_EMPTY << IF2DEC_FULL ;
+        SC_METHOD(dec2if_gestion)
+        sensitive << dec2if_empty << READ_PC_VALID << dec2if_push ;
+
+        SC_METHOD(concat_dec2exe)
+        sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 
+                    << dec2exe_neg_op1
+                    << dec2exe_wb 
+                    << mem_data 
+                    << mem_load 
+                    << mem_store 
+                    << mem_sign_extend 
+                    << mem_size 
+                    << select_shift 
+                    << adr_dest ;
+        SC_METHOD(unconcat_dec2exe)
+        sensitive << DEC2EXE_OUT ;       
+        SC_METHOD(dec2exe_push_method)
+        sensitive << RADR1_VALID << RADR2_VALID << DEC2EXE_EMPTY << dec2exe_full << dec2exe_push ;
+
+        SC_METHOD(if2dec_pop_method)
+        sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP ;
+
         SC_METHOD(decoding_instruction_type)
         sensitive<<IF_IR ;
         SC_METHOD(decoding_instruction)
