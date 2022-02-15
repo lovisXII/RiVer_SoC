@@ -222,6 +222,35 @@ int sc_main(int argc, char* argv[])
         affectation_validity(REG_VALID,tab2) ;
 //--------------------------------------------2eme Test :--------------------------------------------------------
         sc_start(1,SC_NS) ;
+        
+        if_ir.write(0b00000001001000011100001000010011) ; 
+
+        radr1_data.write(REG[dec.RADR1.read()]) ;
+        radr2_data.write(REG[dec.RADR2.read()]) ;
+
+
+
+        radr1_valid.write(REG_VALID[radr1.read()]) ;
+        radr2_valid.write(REG_VALID[radr2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[33]) ;
+        read_pc_valid.write(1) ;
+        REG[33] = dec.dec2if_pc_in.read() ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        affectation_validity(REG_VALID,tab2) ;
+
+        sc_start(1,SC_NS) ;
 
         if_ir.write(0b00000001001000011100001000010011) ; 
 
@@ -247,12 +276,33 @@ int sc_main(int argc, char* argv[])
         {
             REG_VALID[dec.adr_dest.read()] = 0 ;
         }
-
-        affectation_validity(REG_VALID,tab2) ;
-
-        sc_start(1,SC_NS) ;
         affectation_validity(REG_VALID,tab2) ;
         sc_start(1,SC_NS) ;
+
+        if_ir.write(0b00000001001000011100001000010011) ; 
+
+        radr1_data.write(REG[dec.RADR1.read()]) ;
+        radr2_data.write(REG[dec.RADR2.read()]) ;
+
+
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[33]) ;
+        read_pc_valid.write(1) ;
+        REG[33] = dec.dec2if_pc_in.read() ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
         affectation_validity(REG_VALID,tab2) ;
         sc_start(1,SC_NS) ;
         affectation_validity(REG_VALID,tab2) ;

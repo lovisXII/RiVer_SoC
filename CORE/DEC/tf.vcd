@@ -1,5 +1,5 @@
 $date
-     Feb 15, 2022       16:36:24
+     Feb 15, 2022       17:07:26
 $end
 
 $version
@@ -295,59 +295,43 @@ b110010011110110010001111000110 aaadt
 0aaacp
 
 #6000
-1aaaag
 0aaaah
 1aaacp
 1aaacr
+0aaadr
+b1101011100010110100010101100111 aaads
+b1100110001100110100100001110011 aaadt
 
 #6500
 0aaacp
 
 #7000
-0aaaag
-1aaaah
 1aaacp
-b110010011110110010001111000110000000000000000000000000000100100100000000000000000000000000000000000000000100 aaacq
-0aaacr
-b10010 aaadi
-b110010011110110010001111000110 aaadj
-b100 aaadn
+b100 aaadm
 
 #7500
 0aaacp
 
 #8000
-1aaaag
-0aaaah
 1aaacp
-1aaacr
 
 #8500
 0aaacp
 
 #9000
-0aaaag
-1aaaah
 1aaacp
-0aaacr
 
 #9500
 0aaacp
 
 #10000
-1aaaag
-0aaaah
 1aaacp
-1aaacr
 
 #10500
 0aaacp
 
 #11000
-0aaaag
-1aaaah
 1aaacp
-0aaacr
 
 #11500
 0aaacp
