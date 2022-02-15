@@ -34,7 +34,7 @@ SC_MODULE(mem)
 
     sc_in< bool >               EXE_WB,  
                                 EXE_MEM_SIGN_EXTEND ; //taille fifo entrée : 74
-    sc_in< sc_uint<3> >         EXE_MEM_LOAD, 
+    sc_in< bool >               EXE_MEM_LOAD, 
                                 EXE_MEM_STORE ; 
 
     //exe2mem interface :

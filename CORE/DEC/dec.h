@@ -24,7 +24,7 @@ SC_MODULE(decod)
 
     sc_out  < sc_uint<32> >      DEC2EXE_OP1 ; // value of op1
     sc_out  < sc_uint<32> >      DEC2EXE_OP2 ; // value of op2
-    sc_out  < sc_uint<4> >       DEC2EXE_CMD ; // value of the command sent to exe
+    sc_out  < sc_uint<2> >       DEC2EXE_CMD ; // value of the command sent to exe
     sc_out  < bool >             DEC2EXE_NEG_OP1 ; // say if we take the opposite of the op1 to do a substraction for example
     sc_out  < bool >             DEC2EXE_WB ; // say if we plan to wbk the value of rd or no
     
