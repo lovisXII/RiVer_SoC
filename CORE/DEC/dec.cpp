@@ -30,13 +30,13 @@ void decod::if2dec_pop_method()
 
 void decod::dec2exe_push_method()
 {   
-    if(RADR1_VALID.read() && RADR2_VALID.read() && (DEC2EXE_EMPTY.read() | dec2exe_full.read()))
+    if(! RADR1_VALID.read()| ! RADR2_VALID.read() |  ! DEC2EXE_EMPTY.read() | dec2exe_full.read())
     {
-        dec2exe_push.write(1) ;
+        dec2exe_push.write(0) ; 
     }
     else
     {
-        dec2exe_push.write(0) ;
+        dec2exe_push.write(1) ;
     }
 
 }
@@ -457,7 +457,7 @@ void decod::affectation_calcul()
 
     //CMD : +
 
-    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i)
+    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i | lui_i)
     {
         dec2exe_cmd.write(0) ;
         select_shift.write(0) ;
@@ -475,7 +475,7 @@ void decod::affectation_calcul()
 
         //WBK GESTION :
 
-        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i) dec2exe_wb.write(1) ;
+        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i) dec2exe_wb.write(1) ;
         else if(sw_i | sh_i | sb_i)  dec2exe_wb.write(0) ;
         
         //MEMORY GESTION :
@@ -612,6 +612,17 @@ void decod::affectation_calcul()
         mem_size.write(0) ;
         select_shift.write(1) ;
 
+    }
+    else
+    {
+        dec2exe_cmd.write(0) ;
+        dec2exe_neg_op1.write(0) ;
+        dec2exe_wb.write(0) ;
+        mem_load.write(0) ;
+        mem_store.write(0) ;
+        mem_sign_extend.write(0) ;
+        mem_size.write(0) ;
+        select_shift.write(0) ;   
     }
 } 
 

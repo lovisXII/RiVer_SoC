@@ -18,9 +18,6 @@ void fifo_32b::function()
         bool pop = POP.read() ;
         if( fifo_v ) // if the data in the fifo is valide
         {
-            cout << "case fifo_v = 1" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
             
             if(!push && !pop)
             {
@@ -53,9 +50,6 @@ void fifo_32b::function()
         }
         else // case where data inside the fifo is not valid
         {
-            cout << "case fifo_v = 0" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
 
             if(!push && !pop )
             {

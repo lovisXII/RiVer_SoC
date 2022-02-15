@@ -1,12 +1,48 @@
 #include <systemc.h>
 #include "dec.h"
 
+using namespace std;
+int tab2[33] ; 
+
+void affectation_validity(bool* tab, int* tab2)
+/*This function will be used to reset the validity of a bit
+It receives a table (REG_VALID) and it checks the validity of each bits, if one bit is = to 0
+Then tab2 is incremented, tab2 is a counter for each validity bit 
+A unvalid bit is keep for 3 cycle.
+At the end of those 3 cycle it has to be reset to valid 
+*/
+{
+    for(int i = 0; i < 33 ; i++) // we check if there is unvalaible bits
+    {
+        if(tab[i] == 0) // if yes we increment the counter
+        {
+            tab2[i] ++;
+        }
+        if(tab2[i] == 3)
+        {
+            cout << "ivalue :" << i << endl ;
+            tab2[i] = 0 ;
+            tab[i] = 1 ;
+        }
+    
+    }
+    std::cout << "Cycle :" << sc_time_stamp() << std::endl ;
+    for(int i = 0 ; i < 33 ; i++)
+    {
+        cout << "REG_VALID[" << i <<"] : "<< " " << tab[i] <<endl ; 
+    } 
+
+    
+}
+
+
 int sc_main(int argc, char* argv[])
 {
 
     sc_trace_file *tf ;
     tf=sc_create_vcd_trace_file("tf");
-    
+    sc_time t1(10,SC_NS) ;
+
     decod dec("decode") ;
 
     //Interface with REG :
@@ -29,7 +65,7 @@ int sc_main(int argc, char* argv[])
 
     sc_signal   < sc_uint<32> >      dec2exe_op1 ; // value of op1
     sc_signal   < sc_uint<32> >      dec2exe_op2 ; // value of op2
-    sc_signal   < sc_uint<4> >       dec2exe_cmd ; // value of the command sent to exe
+    sc_signal   < sc_uint<2> >       dec2exe_cmd ; // value of the command sent to exe
     sc_signal   < bool >             dec2exe_neg_op1 ; // say if we take the opposite of the op1 to do a substraction for example
     sc_signal   < bool >             dec2exe_wb ; // say if we plan to wbk the value of rd or no
     
@@ -129,7 +165,7 @@ int sc_main(int argc, char* argv[])
     //Bank registre simulation :
 
     int REG[33] ;
-    int REG_VALID[33] ;
+    bool REG_VALID[33] ;
 
     //Resting bank register :
     
@@ -137,37 +173,100 @@ int sc_main(int argc, char* argv[])
     {
         REG[i] = rand() ;
         REG_VALID[i] = 1 ;
+        tab2[i] = 0 ;
     }
 
-    for(int i = 0 ; i <100 ; i++)
-    {
-    sc_start(1,SC_NS) ;
-    if_ir.write(0b00000000000100001000000110110011) ; 
-    //0000000 00001 00001 000 00011 0110011
-    //correspond at add r3 r1 r1
-    //111111000000 01100 110 11111 0010011
-    
 
-    /* Going to do a first manual test :
-    1) We sent the inst : add r3,r1,r1
-    2) r1 is designated as unvalaible
-    3) r1 is designated as valid
-    4) Let's see what happend !
-    */
+//--------------------------------------------1er Test :--------------------------------------------------------
 
-    radr1_data.write(REG[dec.RADR1.read()]) ;
-    radr2_data.write(REG[dec.RADR2.read()]) ;
-    radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
-    radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
-    read_pc.write(REG[33]) ;
-    read_pc_valid.write(1) ;
-    REG[33] = dec.dec2if_pc_in.read() ;
-    dec2if_pop.write(1) ;
-    if2dec_empty.write(1) ;
-    dec2exe_pop.write(1) ;
-    }
 
+        sc_start(1,SC_NS) ;
+        if_ir.write(0b00000000000100001000000110110011) ; 
+        
+        //0000000 00001 00001 000 00011 0110011
+        //correspond at add r3 r1 r1
+        //111111000000 01100 110 11111 0010011
+        
+
+        /* Going to do a first manual test :
+        1) We sent the inst : add r3,r1,r1
+        2) r1 is designated as unvalaible
+        3) r1 is designated as valid
+        4) Let's see what happend !
+        */
+        /*
+        If a data is set as unavailable, we wait 3 cycle for it to be WBK
+        */
+
+
+        radr1_data.write(REG[dec.RADR1.read()]) ;
+        radr2_data.write(REG[dec.RADR2.read()]) ;
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[33]) ;
+        read_pc_valid.write(1) ;
+        REG[33] = dec.dec2if_pc_in.read() ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+        
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        affectation_validity(REG_VALID,tab2) ;
+//--------------------------------------------2eme Test :--------------------------------------------------------
+        sc_start(1,SC_NS) ;
+
+        if_ir.write(0b00000001001000011100001000010011) ; 
+
+        radr1_data.write(REG[dec.RADR1.read()]) ;
+        radr2_data.write(REG[dec.RADR2.read()]) ;
+
+
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[33]) ;
+        read_pc_valid.write(1) ;
+        REG[33] = dec.dec2if_pc_in.read() ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        affectation_validity(REG_VALID,tab2) ;
+
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+        affectation_validity(REG_VALID,tab2) ;
 
     sc_close_vcd_trace_file(tf) ;
+    
     return 0; 
 }
+
