@@ -78,7 +78,7 @@ SC_MODULE(mux_decode)
   sc_in<bool> C0UNUSE_RD;				// comprocessor 0 unusable from register
   sc_out<bool> MUX_C0UNUSE_SD;			// res comprocessor 0 unusable
 
-  sc_in<sc_uint<32> > NEXTPC_XX;		// next instruction @ (hw) ?
+  sc_in<sc_uint<32> > NEXTPC_XX;		// next instruction @ (hardware)
   sc_in<sc_uint<32> > NEXTPC_SD;		// next instruction @
   sc_in<sc_uint<32> > NEXTPC_RD;		// next instruction @
   sc_out<sc_uint<32> > MUX_NEXTPC_SD;	// res next instruction @

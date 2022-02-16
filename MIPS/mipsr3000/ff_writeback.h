@@ -25,12 +25,12 @@
 
 SC_MODULE(ff_writeback)
 {
-  sc_in<bool> CK_SX;
+  sc_in<bool> CK_SX;              // internal clock
 
-  sc_in<sc_uint<32> > MUX_LO_SW;
-  sc_out<sc_uint<32> > LO_RW;
-  sc_in<sc_uint<32> > MUX_HI_SW;
-  sc_out<sc_uint<32> > HI_RW;
+  sc_in<sc_uint<32> > MUX_LO_SW;  // low register
+  sc_out<sc_uint<32> > LO_RW;     // res low register
+  sc_in<sc_uint<32> > MUX_HI_SW;  // high register
+  sc_out<sc_uint<32> > HI_RW;     // res high register
 
   SC_CTOR(ff_writeback)
   {

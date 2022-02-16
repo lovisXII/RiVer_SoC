@@ -59,8 +59,13 @@ void mux_memory::processMUX_DATA_SM()
     MUX_DATA_SM.write(DATA_SM.read());
 }
 
+
 void mux_memory::processMUX_BADVADR_SM()
 {
+  // if bad @ save instruction
+  // if bad instruction save @
+  // else save bad adresse register
+  
   if (BADDA_XM.read()==1)
     MUX_BADVADR_SM.write(RES_RE.read());
   else if (BADIA_XM.read()==1)

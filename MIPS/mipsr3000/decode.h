@@ -55,7 +55,7 @@ SC_MODULE(decode)
 	sc_signal<sc_uint<32> > COP0OP_SD;		// coprocessesor 0 source operator
 	sc_signal<bool> 		IMDSGN_SD;		// ?
 	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
-	sc_out<sc_uint<32> >	IOPER_SD;		// effective immediate operator ?
+	sc_out<sc_uint<32> >	IOPER_SD;		// effective immediate operand
 	sc_signal<sc_uint<32> >	OFFSET_SD;		// ?
 	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// ?
 	sc_signal<bool>			S_EQ_T_SD;		// ?
@@ -73,8 +73,11 @@ SC_MODULE(decode)
 
 	sc_in<sc_uint<32> > 	BADVADR_RM;		// bad virtual @ register
 	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts register (sts)?
-	sc_in<sc_uint<32> > 	EPC_RX;			// ?
-	sc_in<sc_uint<32> > 	CAUSE_RX;		// cause register ?
+
+	// @ of d'instrution to return when jump for example to kernel code
+	sc_in<sc_uint<32> > 	EPC_RX;		
+		
+	sc_in<sc_uint<32> > 	CAUSE_RX;		// cause(exception) register
 	sc_in<sc_uint<32> > 	LO_RW;			// low register
 	sc_in<sc_uint<32> > 	HI_RW;			// high register
 	sc_in<sc_uint<32> > 	SOPER_SD;		// effective s operator

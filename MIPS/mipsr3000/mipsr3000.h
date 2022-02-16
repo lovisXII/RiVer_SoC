@@ -150,12 +150,16 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> COPYCAP_RE;  			// copying capability
 
 	sc_signal<bool> FSTSWAP_SM;  			// first swap access
+
+	// source register number
+	// ex.: add r5, r4, r3 => source register number are 4 and 3 (r4 and r3)
 	sc_signal<sc_uint<5> > RS_SD;  			// source reg nbr
 	sc_signal<sc_uint<5> > RT_SD;  			// source reg nbr
 	sc_signal<sc_uint<5> > MUX_RT_SD;  		// source reg nbr reg.
 	sc_signal<sc_uint<5> > RT_RD;  			// source reg nbr reg.
 	sc_signal<sc_uint<5> > MUX_RS_SD;  		// source reg nbr reg.
 	sc_signal<sc_uint<5> > RS_RD;  			// source reg nbr reg.
+
 	sc_signal<sc_uint<32> > MUX_IR_SI;  	// instruction register
 	sc_signal<sc_uint<32> > IR_RI;  		// instruction register
 	sc_signal<sc_uint<32> > MUX_IR_SD;  	// instruction register
@@ -192,10 +196,14 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > CAUSE_SX;  		// exception cause (hw)
 	sc_signal<sc_uint<32> > CAUSE_RX;  		// cause register
 	sc_signal<bool> WCAUSE_SM;  			// excp cause wen (sw)
-	sc_signal<sc_uint<32> > RSTORSR_SM;  	// next ins sts (rfe)
-	sc_signal<sc_uint<32> > NEXTSR_SM;  	// next ins sts (sw)
-	sc_signal<sc_uint<32> > NEXTSR_XX;  	// next ins sts (hw it)
-	sc_signal<sc_uint<32> > NEXTSR_RX;  	// next ins sts reg.
+
+	// (mips1) RFE => restore user status(used for restore status before return to the main processus)
+	// (mips32) this instruction is called Eret
+	sc_signal<sc_uint<32> > RSTORSR_SM;  	// next instruction status (rfe instruction)
+
+	sc_signal<sc_uint<32> > NEXTSR_SM;  	// next instruction status (software)
+	sc_signal<sc_uint<32> > NEXTSR_XX;  	// next instruction status (hardware it)
+	sc_signal<sc_uint<32> > NEXTSR_RX;  	// next instruction status register
 
 	//coprocessor status register (data like mode user or system)
 	sc_signal<sc_uint<32> > SR_SI;  		// status register
@@ -226,9 +234,10 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<5> > COP0D_RD;  		// cop 0 dest. reg. nbr
 	sc_signal<sc_uint<5> > MUX_COP0D_SE;  	// cop 0 dest. reg. nbr
 	sc_signal<sc_uint<5> > COP0D_RE;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<32> > IOPER_SD;  		// eff. immediate oper.
-	sc_signal<sc_uint<32> > MUX_IOPER_SD;  	// eff. immediate oper.
-	sc_signal<sc_uint<32> > IOPER_RD;  		// eff. immediate oper.
+
+	sc_signal<sc_uint<32> > IOPER_SD;  		// effective immediate operand
+	sc_signal<sc_uint<32> > MUX_IOPER_SD;  	// effective immediate operand
+	sc_signal<sc_uint<32> > IOPER_RD;  		// effective immediate operand
 	
 	sc_signal<bool> SLEEP_SD;  				// sleep inst. stall
 	sc_signal<bool> HAZARDS_SD;  			// hazards (signal bypass()si ou no bypass)
@@ -290,12 +299,18 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> KEEP_SW;  				// keep the data 
 
 	sc_signal<sc_uint<32> > WREG_SW;  		// integer reg wen
+
+	// low and high register are used for hardware or software 
+	// operations like multiplication or division with 
 	sc_signal<bool> WLO_SW;  				// low reg's write en
 	sc_signal<sc_uint<32> > MUX_LO_SW;  	// low register
 	sc_signal<sc_uint<32> > LO_RW;  		// low register
 	sc_signal<bool> WHI_SW;  				// high reg's write en
 	sc_signal<sc_uint<32> > MUX_HI_SW;  	// high register
 	sc_signal<sc_uint<32> > HI_RW;  		// high register
+
+	// destination register number
+	// ex.: add r5, r4, r3 => destination register number is 5 (r5)
 	sc_signal<sc_uint<5> > RD_SD;  			// destination reg #
 	sc_signal<sc_uint<5> > MUX_RD_SD;  		// destination reg #
 	sc_signal<sc_uint<5> > RD_RD;  			// destination reg #
@@ -312,6 +327,7 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > MUX_RES_SE;  	// result out of alu 
 	sc_signal<sc_uint<32> > RES_RE;  		// result out of alu 
 	sc_signal<bool> OVERFLW_SE;  			// overflow out of alu
+
 	sc_signal<sc_uint<32> > MUX_WDATA_SE;  	// data bus output reg.
 	sc_signal<sc_uint<32> > WDATA_RE;  		// data bus output reg.
 	sc_signal<bool> DACCESS_SM;  			// data memory access
@@ -331,13 +347,16 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > BADVADR_RM;  	// bad virtual adr reg
 	sc_signal<bool> BADIA_XM;  				// bad inst adr
 	sc_signal<bool> BADDA_XM;  				// bad data adr
+	
 	sc_signal<bool> GLBMSK_XX;  			// global    it mask
 	sc_signal<sc_uint<8> > ITMASK_XX;  		// individual it mask
+
 	sc_signal<sc_uint<2> > SWINT_XM;  		// sw interrupt (mtc0)
 	sc_signal<sc_uint<2> > SWINTRQ_XM;  	// sw interrupt request
 	sc_signal<sc_uint<6> > IT_XX;  			// external interrupts
 	sc_signal<sc_uint<6> > HWINTRQ_XX;  	// hw interrupt request
 	sc_signal<bool> INTRQ_XX;  				// interrupt request
+
 	sc_signal<bool> BDSLOT_XI;  			// branch delayed slot
 	sc_signal<bool> MUX_BDSLOT_SI;  		// branch delayed slot
 	sc_signal<bool> BDSLOT_RI;  			// branch delayed slot
