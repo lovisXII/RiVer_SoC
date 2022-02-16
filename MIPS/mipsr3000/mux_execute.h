@@ -28,6 +28,7 @@ SC_MODULE(mux_execute)
 	sc_in<bool> BUBBLE_SE;				// introduce bubble
 	sc_in<bool> HOLD_SE;				// hold instruction
 	sc_in<bool> KEEP_SE;				// keep the data
+	
 	sc_in<bool> STALL_SM;				// sleep instruction stall
 	sc_in<bool> COPY_SM;				// duplicate instruction
 

@@ -231,8 +231,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<sc_uint<32> > IOPER_RD;  		// eff. immediate oper.
 	
 	sc_signal<bool> SLEEP_SD;  				// sleep inst. stall
-	sc_signal<bool> HAZARDS_SD;  			// hazards
-	sc_signal<bool> HAZARDS_SE;  			// hazards
+	sc_signal<bool> HAZARDS_SD;  			// hazards (signal bypass()si ou no bypass)
+	sc_signal<bool> HAZARDS_SE;  			// hazards (signal bypass)
 
 	// IFETCH instruction controller signals
 	sc_signal<bool> KILL_SI;  				// kill the instruction
