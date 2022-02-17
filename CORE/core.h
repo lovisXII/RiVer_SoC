@@ -88,14 +88,14 @@ SC_MODULE(core)
     sc_signal< bool >           REG_WB ;
 
     //Mcache interface
-    sc_out< sc_uint<32> >       MEM_ADR ;
-    sc_out< sc_uint<32> >       MEM_DATA ;
-    sc_out< bool>               MEM_ADR_VALID,
-                                MEM_STORE,
-                                MEM_LOAD ; 
+    sc_out< sc_uint<32> >       MCACHE_MEM_ADR ;
+    sc_out< sc_uint<32> >       MCACHE_MEM_DATA ;
+    sc_out< bool>               MCACHE_MEM_ADR_VALID,
+                                MCACHE_MEM_STORE,
+                                MCACHE_MEM_LOAD ; 
 
-    sc_in< sc_uint<32> >        MEM_RESULT ;
-    sc_in< bool>                MEM_STALL ;
+    sc_in< sc_uint<32> >        MCACHE_MEM_RESULT ;
+    sc_in< bool>                MCACHE_MEM_STALL ;
 
     //Icache interface
     sc_out< sc_uint<32> >       IF_ADR ; 
@@ -224,13 +224,13 @@ SC_MODULE(core)
         mem_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
         mem_inst.MEM2WBK_POP(MEM2WBK_POP);
 
-        mem_inst.MEM_ADR(MEM_ADR);
-        mem_inst.MEM_DATA(MEM_DATA);
-        mem_inst.MEM_ADR_VALID(MEM_ADR_VALID);
-        mem_inst.MEM_STORE(MEM_STORE);
-        mem_inst.MEM_LOAD(MEM_LOAD); 
-        mem_inst.MEM_RESULT(MEM_RESULT);
-        mem_inst.MEM_STALL(MEM_STALL);
+        mem_inst.MEM_ADR(MCACHE_MEM_ADR);
+        mem_inst.MEM_DATA(MCACHE_MEM_DATA);
+        mem_inst.MEM_ADR_VALID(MCACHE_MEM_ADR_VALID);
+        mem_inst.MEM_STORE(MCACHE_MEM_STORE);
+        mem_inst.MEM_LOAD(MCACHE_MEM_LOAD); 
+        mem_inst.MEM_RESULT(MCACHE_MEM_RESULT);
+        mem_inst.MEM_STALL(MCACHE_MEM_STALL);
 
         wbk_inst.MEM_DATA(WBK_DATA);
         wbk_inst.MEM_DEST(WBK_DEST);

@@ -1,0 +1,30 @@
+language: cpp
+
+dist: bionic
+
+compiler:
+- gcc
+
+os:
+- linux
+
+branches:
+    only:
+    - master
+
+notifications:
+    email: false
+
+before_install:
+- sudo apt-get update -qq
+
+install:
+- sudo apt-get install libboost-test-dev
+
+script:
+- mkdir build
+- cd build
+- cmake .. -DCMAKE_BUILD_TYPE=Release -DELFIO_BUILD_EXAMPLES=YES -DELFIO_BUILD_TESTS=YES
+- cmake --build . --config Release
+- ctest -VV
+- cd ..

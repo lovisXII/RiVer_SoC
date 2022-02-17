@@ -43,7 +43,7 @@ int sc_main(int argc, char* argv[])
     sc_signal< sc_uint<2> >   cmd ;
     sc_signal< sc_uint<2> >   mem_size ;
     sc_signal< bool >   neg_op1, wb, mem_sign_extend, select_shift ; //taille fifo entrée : 110
-    sc_signal< sc_uint<3> > mem_load, mem_store;
+    sc_signal< bool > mem_load, mem_store;
     sc_signal< bool >   exe2mem_pop, dec2exe_empty;
 
     sc_signal< sc_uint<32> >  ffout_exe_res ;
@@ -51,7 +51,7 @@ int sc_main(int argc, char* argv[])
     sc_signal< sc_uint<4> >   ffout_dest;
     sc_signal< sc_uint<2> >   ffout_mem_size ;
     sc_signal< bool >   ffout_wb, ffout_mem_sign_extend ; //taille fifo sortie : 74
-    sc_signal< sc_uint<3> >     ffout_mem_load, ffout_mem_store ; 
+    sc_signal< bool >     ffout_mem_load, ffout_mem_store ; 
     sc_signal< bool >   exe2mem_empty, dec2exe_pop;
 
     sc_signal< bool > reset;
@@ -147,9 +147,9 @@ int sc_main(int argc, char* argv[])
         int dest_ = rand() % 16;
         int mem_size_ = rand() % 4;
         bool wb_ = rand() % 2;
-        int mem_load_ = rand() % 4;
+        int mem_load_ = rand() % 2;
         bool mem_sign_extend_ = rand() % 2;
-        int mem_store_ = rand() % 4;
+        int mem_store_ = rand() % 2;
         bool exe2mem_pop_ = rand() % 2;
         bool dec2exe_empty_ = rand() % 2;
         op1 = op1_;
