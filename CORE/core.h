@@ -216,5 +216,33 @@ SC_MODULE(core)
         mem_inst.EXE2MEM_EMPTY(EXE2MEM_EMPTY);
         mem_inst.EXE2MEM_POP(EXE2MEM_POP);
 
+        mem_inst.WBK_DATA(WBK_DATA);
+        mem_inst.WBK_DEST(WBK_DEST);
+        mem_inst.WBK_MEM_SIZE(WBK_MEM_SIZE);
+        mem_inst.WBK_WB(WBK_WB);
+        mem_inst.WBK_MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
+        mem_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
+        mem_inst.MEM2WBK_POP(MEM2WBK_POP);
+
+        mem_inst.MEM_ADR(MEM_ADR);
+        mem_inst.MEM_DATA(MEM_DATA);
+        mem_inst.MEM_ADR_VALID(MEM_ADR_VALID);
+        mem_inst.MEM_STORE(MEM_STORE);
+        mem_inst.MEM_LOAD(MEM_LOAD); 
+        mem_inst.MEM_RESULT(MEM_RESULT);
+        mem_inst.MEM_STALL(MEM_STALL);
+
+        wbk_inst.MEM_DATA(WBK_DATA);
+        wbk_inst.MEM_DEST(WBK_DEST);
+        wbk_inst.MEM_SIZE(WBK_MEM_SIZE);
+        wbk_inst.MEM_WB(WBK_WB);
+        wbk_inst.MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
+        wbk_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
+        wbk_inst.MEM2WBK_POP(MEM2WBK_POP);
+
+        wbk_inst.REG_DEST(REG_DEST);
+        wbk_inst.REG_DATA(REG_DATA);
+        wbk_inst.REG_WB(REG_WB);
+
     }
 };
