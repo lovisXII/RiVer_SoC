@@ -179,7 +179,6 @@ SC_MODULE(decod)
     sc_signal<bool>         dec2exe_neg_op1 ;
     sc_signal<bool>         dec2exe_wb ;
     sc_signal<bool>         mem_sign_extend ;
-    sc_signal<bool>         inc_pc_branch_condition ;
 
     void dec2if_gestion() ;
     void concat_dec2exe() ;
@@ -191,7 +190,6 @@ SC_MODULE(decod)
     void affectation_registres() ;
     void affectation_calcul() ;
     void pc_inc() ;
-    void comparaison_for_branch() ;
     void trace(sc_trace_file* tf);
 
     SC_CTOR(decod) :
@@ -246,7 +244,6 @@ SC_MODULE(decod)
         sensitive   << IF_IR
                     << RADR1_DATA
                     << RADR2_DATA
-                    << inc_pc_branch_condition 
                     << r_type_inst 
                     << i_type_inst 
                     << i_type_inst 
@@ -293,18 +290,6 @@ SC_MODULE(decod)
                     << sw_i
                     << sh_i
                     << sb_i ;
-        SC_METHOD(comparaison_for_branch)
-        sensitive   << dec2exe_op1
-                    << dec2exe_op2
-                    << inc_pc 
-                    <<bne_i 
-                    << beq_i 
-                    << blt_i 
-                    << bltu_i 
-                    << bge_i 
-                    << bgeu_i 
-                    << IF_IR
-                    << b_type_inst;
         SC_METHOD(pc_inc)
         sensitive   << READ_PC
                     << offset_branch

@@ -329,7 +329,40 @@ void decod::affectation_registres()
         offset_branch_var.range(5,3)    = if_ir.range(11,8);
         offset_branch_var.range(2,0)    = 0 ;
         mem_data_var = 0 ;
-        inc_pc_var = inc_pc_branch_condition.read() ;
+
+        /*BRANCH CONDITION GESTION : */
+
+        sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op1_var ;
+        sc_uint<33> res_comparaison ;
+
+        res_comparaison = dec2exe_op1_var + not(dec2exe_op2_var + 1) ;
+        
+        if(bne_i.read())
+        {  
+            inc_pc_var = ((res != 0x0 ? 0 : 1)) ; 
+        }
+        else if(beq_i.read())
+        {  
+            inc_pc_var = ((res == 0x0 ? 0 : 1)) ; 
+        
+        }
+        else if(blt_i.read())
+        {  
+            inc_pc_var = ((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
+        }
+        else if(bltu_i.read())
+        {  
+            inc_pc_var = ((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 1 : 0) ; 
+        }
+        else if(bge_i.read())
+        {  
+            inc_pc_var = ((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
+        }
+        else if(bgeu_i.read())
+        {  
+            inc_pc_var = ((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 1 : 0) ; 
+        }
+
     }
     
     //U-type Instruction :
@@ -619,47 +652,6 @@ void decod::affectation_calcul()
         select_shift.write(0) ;   
     }
 } 
-
-//---------------------------------------------BRANCH CONDITION :---------------------------------------
-
-void decod::comparaison_for_branch()
-{
-    sc_uint<32> dec2exe_op1_var = dec2exe_op1.read() ;
-    sc_uint<32> dec2exe_op2_var = dec2exe_op2.read() ;
-
-    sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op1_var ;
-    sc_uint<33> res_comparaison ;
-
-    bool        branch_is_taken ;
-    res_comparaison = dec2exe_op1_var + not(dec2exe_op2_var + 1) ;
-    
-    if(bne_i.read())
-    {  
-        inc_pc_branch_condition.write((res != 0x0 ? 0 : 1)) ; 
-    }
-    else if(beq_i.read())
-    {  
-        inc_pc_branch_condition.write((res == 0x0 ? 0 : 1)) ;         
-    }
-    else if(blt_i.read())
-    {  
-        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
-    }
-    else if(bltu_i.read())
-    {  
-        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 1 : 0) ; 
-    }
-    else if(bge_i.read())
-    {  
-        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
-    }
-    else if(bgeu_i.read())
-    {  
-        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 1 : 0) ; 
-    }
-
-}
-
 
 //---------------------------------------------PC GESTION :---------------------------------------------
 
