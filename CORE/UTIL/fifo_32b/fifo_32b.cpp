@@ -72,7 +72,6 @@ void fifo_32b::function()
                 DOUT.write(DIN.read()) ;
                 
                 fifo_v.write(1) ;
-                cout << "push = 1 et pop = 0" << endl ;
             }
             else if(push && pop)
             {
@@ -83,7 +82,6 @@ void fifo_32b::function()
                 data_inside.write(DIN.read()) ; // we just push
                 DOUT.write(DIN.read()) ;
 
-                cout << "push = 1 et pop = 1" << endl ;
                 fifo_v.write(1) ; // became valid
             }
         }

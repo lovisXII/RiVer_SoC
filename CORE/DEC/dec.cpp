@@ -88,7 +88,6 @@ void decod::unconcat_dec2exe()
 
 void decod::decoding_instruction_type()
 {
-    cerr << "enter decoding inst type " << endl ;
     sc_uint<32> if_ir = IF_IR.read() ;
 
     r_type_inst     = if_ir.range(6,0) == 0b0110011 ? 1 : 0;

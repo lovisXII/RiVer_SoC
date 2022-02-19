@@ -8,9 +8,6 @@ void fifo_78b::function()
     EMPTY.write(1) ;
 
     wait(3) ;
-    cerr << "###############################################" << endl ;
-    cerr << "end of fifo reset" << endl ;
-    cerr << "###############################################" << endl ;
  
     //when fifo_v is valide, it means that we want the data and we can pop it
     //when it's unvalaible it means we don't care about it and we can push

@@ -18,10 +18,7 @@ void fifo_41b::function()
         bool pop = POP.read() ;
         if( fifo_v ) // if the data in the fifo is valide
         {
-            cout << "case fifo_v = 1" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
-            
+    
             if(!push && !pop)
             {
                 //do nothing
@@ -53,9 +50,6 @@ void fifo_41b::function()
         }
         else // case where data inside the fifo is not valid
         {
-            cout << "case fifo_v = 0" << endl ;
-            cout << "push :" << push <<endl ;
-            cout << "pop " << pop << endl ;
 
             if(!push && !pop )
             {
@@ -78,7 +72,6 @@ void fifo_41b::function()
                 DOUT.write(DIN.read()) ;
                 
                 fifo_v.write(1) ;
-                cout << "push = 1 et pop = 0" << endl ;
             }
             else if(push && pop)
             {
@@ -88,8 +81,6 @@ void fifo_41b::function()
                 
                 data_inside.write(DIN.read()) ; // we just push
                 DOUT.write(DIN.read()) ;
-
-                cout << "push = 1 et pop = 1" << endl ;
                 fifo_v.write(1) ; // became valid
             }
         }

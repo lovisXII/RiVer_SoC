@@ -2,9 +2,9 @@
 #include "dec.h"
 
 using namespace std;
-sc_signal<sc_uint<33>> tab2[33] ; 
+int tab2[33] ; 
 
-void affectation_validity(sc_signal<bool>* tab, sc_signal<sc_uint<33>>* tab2)
+void affectation_validity(sc_signal<bool>* tab, int* tab2)
 /*This function will be used to reset the validity of a bit
 It receives a table (REG_VALID) and it checks the validity of each bits, if one bit is = to 0
 Then tab2 is incremented, tab2 is a counter for each validity bit 
@@ -16,23 +16,20 @@ At the end of those 3 cycle it has to be reset to valid
     {
         if(tab[i] == 0) // if yes we increment the counter
         {
-            tab2[i].write(tab2[i].read()+1);
+            tab2[i]= tab2[i]+1;
         }
-        if(tab2[i].read() == 3)
+        if(tab2[i] == 3)
         {
-            cout << "ivalue :" << i << endl ;
             tab2[i] = 0 ;
             tab[i] = 1 ;
         }
     
-    }
-    std::cout << "Cycle :" << sc_time_stamp() << std::endl ;
-    for(int i = 0 ; i < 33 ; i++)
-    {
-        cout << "REG_VALID[" << i <<"] : "<< " " << tab[i] <<endl ; 
-    } 
-
-    
+    }  
+    // cout << sc_time_stamp() << endl ;  
+    // for(int i = 0 ; i < 33 ; i++)
+    // {
+    //     cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ; 
+    // }
 }
 
 
@@ -100,6 +97,11 @@ int sc_main(int argc, char* argv[])
     sc_signal  <bool>                 reset_n ;
     
 
+    //Signals for tb :
+
+    sc_signal<sc_uint<32>> REG[33] ;
+    sc_signal<bool> REG_VALID[33] ;
+
 
 
 
@@ -165,8 +167,7 @@ int sc_main(int argc, char* argv[])
    
     //Bank registre simulation :
 
-    sc_signal<sc_uint<33>> REG[33] ;
-    sc_signal<bool> REG_VALID[33] ;
+
 
     //Resting bank register :
     
@@ -174,7 +175,7 @@ int sc_main(int argc, char* argv[])
     {
         REG[i].write(rand()) ;
         REG_VALID[i].write(1) ;
-        tab2[i].write(0) ;
+        tab2[i] = 0 ;
     }
 
 
@@ -182,10 +183,6 @@ int sc_main(int argc, char* argv[])
 
 
         sc_start(1,SC_NS) ;
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
         if_ir.write(0b00000000000100001000000110110011) ; 
         
         //0000000 00001 00001 000 00011 0110011
@@ -212,16 +209,17 @@ int sc_main(int argc, char* argv[])
 
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33].read()) ;
+        read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[33] = dec.dec2if_pc_in.read() ;
+        REG[32].write(dec.dec2if_pc_in.read()) ;
         dec2if_pop.write(1) ;
         if2dec_empty.write(1) ;
         dec2exe_pop.write(1) ;
         
-        if(dec.adr_dest.read() != 0)
+        if(dec.ADR_DEST.read() != 0)
         {
-            REG_VALID[dec.adr_dest.read()] = 0 ;
+            cout << "##############################test############################## " << endl ;
+            REG_VALID[dec.ADR_DEST.read()].write(0) ;
         }
 
         affectation_validity(REG_VALID,tab2) ;
@@ -240,9 +238,9 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33].read()) ;
+        read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[33] = dec.dec2if_pc_in.read() ;
+        REG[32] = dec.dec2if_pc_in.read() ;
         dec2if_pop.write(1) ;
         if2dec_empty.write(1) ;
         dec2exe_pop.write(1) ;
@@ -269,9 +267,9 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33].read()) ;
+        read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[33] = dec.dec2if_pc_in.read() ;
+        REG[32].write(dec.dec2if_pc_in.read()) ;
         dec2if_pop.write(1) ;
         if2dec_empty.write(1) ;
         dec2exe_pop.write(1) ;
@@ -279,12 +277,9 @@ int sc_main(int argc, char* argv[])
 
         if(dec.adr_dest.read() != 0)
         {
+            cout << "test" << endl ;
             REG_VALID[dec.adr_dest.read()] = 0 ;
         }
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
-        sc_start(0,SC_NS) ;
 
         affectation_validity(REG_VALID,tab2) ;
         sc_start(1,SC_NS) ;
@@ -301,9 +296,9 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33].read()) ;
+        read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[33] = dec.dec2if_pc_in.read() ;
+        REG[32].write(dec.dec2if_pc_in.read()) ;
         dec2if_pop.write(1) ;
         if2dec_empty.write(1) ;
         dec2exe_pop.write(1) ;
