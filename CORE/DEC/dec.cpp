@@ -109,102 +109,102 @@ void decod::decoding_instruction()
     
     //R-type Instruction :
 
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b000) add_i = 1 ;
-    else add_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b010) slt_i = 1 ;
-    else slt_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b011) sltu_i = 1 ;
-    else sltu_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b111) and_i = 1 ;
-    else and_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) and_i = 1 ;
-    else and_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b100) xor_i = 1 ;
-    else xor_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) xor_i = 1 ;
-    else xor_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srl_i = 1 ;
-    else srl_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b000) sub_i = 1 ;
-    else sub_i = 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) sra_i = 1 ;
-    else sra_i = 0 ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b000) add_i.write(1) ;
+    else add_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b010) slt_i.write(1) ;
+    else slt_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b011) sltu_i.write(1) ;
+    else sltu_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b111) and_i.write(1) ;
+    else and_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) and_i.write(1) ;
+    else and_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b100) xor_i.write(1) ;
+    else xor_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) xor_i.write(1) ;
+    else xor_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srl_i.write(1) ;
+    else srl_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b000) sub_i.write(1) ;
+    else sub_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) sra_i.write(1) ;
+    else sra_i.write(0) ;
 
     //I-type Instructions :
 
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b000) addi_i = 1 ;
-    else addi_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b010) slti_i = 1 ;
-    else slti_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b011) sltiu_i = 1 ;
-    else sltiu_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b111) andi_i = 1 ;
-    else andi_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b110) ori_i = 1 ;
-    else ori_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b100) xori_i = 1 ;
-    else xori_i = 0 ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b000) addi_i.write(1) ;
+    else addi_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b010) slti_i.write(1) ;
+    else slti_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b011) sltiu_i.write(1) ;
+    else sltiu_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b111) andi_i.write(1) ;
+    else andi_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b110) ori_i.write(1) ;
+    else ori_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b100) xori_i.write(1) ;
+    else xori_i.write(0) ;
 
     // I-type shift instructions :
 
-    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) slli_i = 1 ;
-    else slli_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srli_i = 1 ;
-    else srli_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) srai_i = 1 ;
-    else srai_i = 0 ;
+    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) slli_i.write(1) ;
+    else slli_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srli_i.write(1) ;
+    else srli_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) srai_i.write(1) ;
+    else srai_i.write(0) ;
 
     // I-type load instructions :
 
-    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b010) lw_i = 1 ;
-    else lw_i = 0 ;
-    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b001) lh_i = 1 ;
-    else lh_i = 0 ;
-    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b101) lhu_i = 1 ;
-    else lhu_i = 0 ;
-    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b000) lb_i = 1 ;
-    else lhu_i = 0 ;
-    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b100) lbu_i = 1 ;
-    else lbu_i = 0 ;
+    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b010) lw_i.write(1) ;
+    else lw_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b001) lh_i.write(1) ;
+    else lh_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b101) lhu_i.write(1) ;
+    else lhu_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b000) lb_i.write(1) ;
+    else lhu_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b100) lbu_i.write(1) ;
+    else lbu_i.write(0) ;
 
     //B-type Instructions :
 
 
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b000) beq_i = 1 ;
-    else beq_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b001) bne_i = 1 ;
-    else bne_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b100) blt_i = 1 ;
-    else blt_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b101) bge_i = 1 ;
-    else bge_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b110) bltu_i = 1 ;
-    else bltu_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b111) bgeu_i = 1 ;
-    else bgeu_i = 0 ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b000) beq_i.write(1) ;
+    else beq_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b001) bne_i.write(1) ;
+    else bne_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b100) blt_i.write(1) ;
+    else blt_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b101) bge_i.write(1) ;
+    else bge_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b110) bltu_i.write(1) ;
+    else bltu_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b111) bgeu_i.write(1) ;
+    else bgeu_i.write(0) ;
 
     //U-type Instructions :
 
-    if(if_ir.range(6,0) == 0b0110111  ) lui_i = 1 ;
-    else lui_i = 0 ;
-    if(if_ir.range(6,0) == 0b0010111  ) auipc_i = 1 ;
-    else auipc_i = 0 ;
+    if(if_ir.range(6,0) == 0b0110111  ) lui_i.write(1) ;
+    else lui_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0010111  ) auipc_i.write(1) ;
+    else auipc_i.write(0) ;
 
     //J-type Instructions :
 
-    if(if_ir.range(6,0) == 0b1101111 ) jal_i = 1 ;
-    else jal_i = 0 ;
-    if(if_ir.range(6,0) == 0b1100111 ) jalr_i = 1 ;
-    else jalr_i = 0 ;
+    if(if_ir.range(6,0) == 0b1101111 ) jal_i.write(1) ;
+    else jal_i.write(0) ;
+    if(if_ir.range(6,0) == 0b1100111 ) jalr_i.write(1) ;
+    else jalr_i.write(0) ;
 
     //S-type Instructions :
 
-    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b010) sw_i = 1 ;
-    else sw_i = 0 ;
-    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b001) sh_i = 1 ;
-    else sh_i = 0 ;
-    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b000) sb_i = 1 ;
-    else sb_i = 0 ;
+    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b010) sw_i.write(1) ;
+    else sw_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b001) sh_i.write(1) ;
+    else sh_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b000) sb_i.write(1) ;
+    else sb_i.write(0) ;
 
     
 }

@@ -239,92 +239,74 @@ SC_MODULE(decod)
         sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive<<IF_IR << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst ;
+        sensitive   <<IF_IR  ;
         SC_METHOD(decoding_instruction)
-        sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst ;
+        sensitive << IF_IR ;
         SC_METHOD(affectation_registres)
-        sensitive << inc_pc_branch_condition << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst
-                    << add_i
-    	 	 	 << slt_i
-    	 	 	 << sltu_i
-    	 	 	 << and_i
-    	 	 	 << or_i
-    	 	 	 << xor_i
-    	 	 	 << sll_i
-    	 	 	 << srl_i
-    	 	 	 << sub_i
-    	 	 	 << sra_i
-    	 	 	 << addi_i
-    	 	 	 << slti_i
-    	 	 	 << sltiu_i
-    	 	 	 << andi_i
-    	 	 	 << ori_i
-    	 	 	 << xori_i
-    	 	 	 << jalr_i
-    	 	 	 << slli_i
-    	 	 	 << srli_i
-    	 	 	 << srai_i
-                 << lw_i
-                 << lh_i
-                 << lhu_i
-                << lb_i
-                << lbu_i
-    	 	 	 << beq_i
-    	 	 	 << bne_i
-    	 	 	 << blt_i
-    	 	 	 << bge_i
-    	 	 	 << bltu_i
-    	 	 	 << bgeu_i
-    	 	 	 << lui_i
-    	 	 	 << auipc_i
-    	 	 	 << jal_i
-    	 	 	 << sw_i
-    	 	 	 << sh_i
-    	 	 	 << sb_i ; 
+        sensitive   << IF_IR
+                    << RADR1_DATA
+                    << RADR2_DATA
+                    << inc_pc_branch_condition 
+                    << r_type_inst 
+                    << i_type_inst 
+                    << i_type_inst 
+                    << s_type_inst 
+                    << b_type_inst 
+                    << u_type_inst 
+                    << j_type_inst 
+                    << jalr_type_inst ; 
         SC_METHOD(affectation_calcul)
-        sensitive << add_i
-    	 	 	 << slt_i
-    	 	 	 << sltu_i
-    	 	 	 << and_i
-    	 	 	 << or_i
-    	 	 	 << xor_i
-    	 	 	 << sll_i
-    	 	 	 << srl_i
-    	 	 	 << sub_i
-    	 	 	 << sra_i
-    	 	 	 << addi_i
-    	 	 	 << slti_i
-    	 	 	 << sltiu_i
-    	 	 	 << andi_i
-    	 	 	 << ori_i
-    	 	 	 << xori_i
-    	 	 	 << jalr_i
-    	 	 	 << slli_i
-    	 	 	 << srli_i
-    	 	 	 << srai_i
-                 << lw_i
-                 << lh_i
-                 << lhu_i
-                << lb_i
-                << lbu_i
-    	 	 	 << beq_i
-    	 	 	 << bne_i
-    	 	 	 << blt_i
-    	 	 	 << bge_i
-    	 	 	 << bltu_i
-    	 	 	 << bgeu_i
-    	 	 	 << lui_i
-    	 	 	 << auipc_i
-    	 	 	 << jal_i
-    	 	 	 << sw_i
-    	 	 	 << sh_i
-    	 	 	 << sb_i ;
+        sensitive   << add_i
+                    << slt_i
+                    << sltu_i
+                    << and_i
+                    << or_i
+                    << xor_i
+                    << sll_i
+                    << srl_i
+                    << sub_i
+                    << sra_i
+                    << addi_i
+                    << slti_i
+                    << sltiu_i
+                    << andi_i
+                    << ori_i
+                    << xori_i
+                    << jalr_i
+                    << slli_i
+                    << srli_i
+                    << srai_i
+                    << lw_i
+                    << lh_i
+                    << lhu_i
+                    << lb_i
+                    << lbu_i
+                    << beq_i
+                    << bne_i
+                    << blt_i
+                    << bge_i
+                    << bltu_i
+                    << bgeu_i
+                    << lui_i
+                    << auipc_i
+                    << jal_i
+                    << sw_i
+                    << sh_i
+                    << sb_i ;
         SC_METHOD(comparaison_for_branch)
-        sensitive   << inc_pc <<bne_i << beq_i << blt_i << bltu_i << bge_i << bgeu_i 
+        sensitive   << dec2exe_op1
+                    << dec2exe_op2
+                    << inc_pc 
+                    <<bne_i 
+                    << beq_i 
+                    << blt_i 
+                    << bltu_i 
+                    << bge_i 
+                    << bgeu_i 
                     << IF_IR
                     << b_type_inst;
         SC_METHOD(pc_inc)
-        sensitive   << IF_IR << READ_PC << b_type_inst << j_type_inst << jalr_type_inst
+        sensitive   << READ_PC
                     << offset_branch
                     << inc_pc
                     << READ_PC_VALID ;

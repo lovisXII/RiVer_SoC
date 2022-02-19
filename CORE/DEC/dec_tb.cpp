@@ -307,9 +307,13 @@ int sc_main(int argc, char* argv[])
         sc_start(1,SC_NS) ;
 
         if_ir.write(0b10101010110101101000101011100011) ; 
-        //bne r13,r13 
+        //beq r13,r13 
         //1010101 01101 01101 000 1010 1 1100011
         //0b10101010110101101000101011100011
+
+        //beq r13,r14 
+        //1010101 01101 01110 000 1010 1 1100011
+        //0b10101010110101110000101011100011
 
         radr1_data.write(REG[dec.RADR1.read()].read()) ;
         radr2_data.write(REG[dec.RADR2.read()].read()) ;
