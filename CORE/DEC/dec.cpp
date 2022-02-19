@@ -110,101 +110,101 @@ void decod::decoding_instruction()
     //R-type Instruction :
 
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b000) add_i = 1 ;
-    else 0 ;
+    else add_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b010) slt_i = 1 ;
-    else 0 ;
+    else slt_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b011) sltu_i = 1 ;
-    else 0 ;
+    else sltu_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b111) and_i = 1 ;
-    else 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) or_i = 1 ;
-    else 0 ;
+    else and_i = 0 ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) and_i = 1 ;
+    else and_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b100) xor_i = 1 ;
-    else 0 ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) sll_i = 1 ;
-    else 0 ;
+    else xor_i = 0 ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) xor_i = 1 ;
+    else xor_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srl_i = 1 ;
-    else 0 ;
+    else srl_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b000) sub_i = 1 ;
-    else 0 ;
+    else sub_i = 0 ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) sra_i = 1 ;
-    else 0 ;
+    else sra_i = 0 ;
 
     //I-type Instructions :
 
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b000) addi_i = 1 ;
-    else 0 ;
+    else addi_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b010) slti_i = 1 ;
-    else 0 ;
+    else slti_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b011) sltiu_i = 1 ;
-    else 0 ;
+    else sltiu_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b111) andi_i = 1 ;
-    else 0 ;
+    else andi_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b110) ori_i = 1 ;
-    else 0 ;
+    else ori_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011  && if_ir.range(14,12) == 0b100) xori_i = 1 ;
-    else 0 ;
+    else xori_i = 0 ;
 
     // I-type shift instructions :
 
     if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) slli_i = 1 ;
-    else 0 ;
+    else slli_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srli_i = 1 ;
-    else 0 ;
+    else srli_i = 0 ;
     if(if_ir.range(6,0) == 0b0010011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b101) srai_i = 1 ;
-    else 0 ;
+    else srai_i = 0 ;
 
     // I-type load instructions :
 
     if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b010) lw_i = 1 ;
-    else 0 ;
+    else lw_i = 0 ;
     if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b001) lh_i = 1 ;
-    else 0 ;
+    else lh_i = 0 ;
     if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b101) lhu_i = 1 ;
-    else 0 ;
+    else lhu_i = 0 ;
     if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b000) lb_i = 1 ;
-    else 0 ;
+    else lhu_i = 0 ;
     if(if_ir.range(6,0) == 0b0000011 && if_ir.range(14,12) == 0b100) lbu_i = 1 ;
-    else 0 ;
+    else lbu_i = 0 ;
 
     //B-type Instructions :
 
 
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b000) beq_i = 1 ;
-    else 0 ;
+    else beq_i = 0 ;
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b001) bne_i = 1 ;
-    else 0 ;
+    else bne_i = 0 ;
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b100) blt_i = 1 ;
-    else 0 ;
+    else blt_i = 0 ;
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b101) bge_i = 1 ;
-    else 0 ;
+    else bge_i = 0 ;
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b110) bltu_i = 1 ;
-    else 0 ;
+    else bltu_i = 0 ;
     if(if_ir.range(6,0) == 0b1100011  && if_ir.range(14,12) == 0b111) bgeu_i = 1 ;
-    else 0 ;
+    else bgeu_i = 0 ;
 
     //U-type Instructions :
 
     if(if_ir.range(6,0) == 0b0110111  ) lui_i = 1 ;
-    else 0 ;
+    else lui_i = 0 ;
     if(if_ir.range(6,0) == 0b0010111  ) auipc_i = 1 ;
-    else 0 ;
+    else auipc_i = 0 ;
 
     //J-type Instructions :
 
     if(if_ir.range(6,0) == 0b1101111 ) jal_i = 1 ;
-    else 0 ;
+    else jal_i = 0 ;
     if(if_ir.range(6,0) == 0b1100111 ) jalr_i = 1 ;
-    else 0 ;
+    else jalr_i = 0 ;
 
     //S-type Instructions :
 
     if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b010) sw_i = 1 ;
-    else 0 ;
+    else sw_i = 0 ;
     if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b001) sh_i = 1 ;
-    else 0 ;
+    else sh_i = 0 ;
     if(if_ir.range(6,0) == 0b0100011 && if_ir.range(14,12) == 0b000) sb_i = 1 ;
-    else 0 ;
+    else sb_i = 0 ;
 
     
 }
@@ -329,8 +329,7 @@ void decod::affectation_registres()
         offset_branch_var.range(5,3)    = if_ir.range(11,8);
         offset_branch_var.range(2,0)    = 0 ;
         mem_data_var = 0 ;
-
-        //for branch instruction inc_pc is setup depending of if the branch condition is allowed or no
+        inc_pc_var = inc_pc_branch_condition.read() ;
     }
     
     //U-type Instruction :
@@ -447,10 +446,6 @@ void decod::affectation_registres()
 
 void decod::affectation_calcul()
 {
-
-    /*
-    Missing branch condition instructions
-    */
 
     //We are going to setup commands sent to EXE here, so each if will be execute for one type of command :
 
@@ -624,6 +619,47 @@ void decod::affectation_calcul()
         select_shift.write(0) ;   
     }
 } 
+
+//---------------------------------------------BRANCH CONDITION :---------------------------------------
+
+void decod::comparaison_for_branch()
+{
+    sc_uint<32> dec2exe_op1_var = dec2exe_op1.read() ;
+    sc_uint<32> dec2exe_op2_var = dec2exe_op2.read() ;
+
+    sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op1_var ;
+    sc_uint<33> res_comparaison ;
+
+    bool        branch_is_taken ;
+    res_comparaison = dec2exe_op1_var + not(dec2exe_op2_var + 1) ;
+    
+    if(bne_i.read())
+    {  
+        inc_pc_branch_condition.write((res != 0x0 ? 0 : 1)) ; 
+    }
+    else if(beq_i.read())
+    {  
+        inc_pc_branch_condition.write((res == 0x0 ? 0 : 1)) ;         
+    }
+    else if(blt_i.read())
+    {  
+        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
+    }
+    else if(bltu_i.read())
+    {  
+        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 1 | res_comparaison.range(31,31) == 1) ? 1 : 0) ; 
+    }
+    else if(bge_i.read())
+    {  
+        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 0 : 1) ; // if bit 31 == 1, it means rs1 < rs2 
+    }
+    else if(bgeu_i.read())
+    {  
+        inc_pc_branch_condition.write((res_comparaison.range(32,32) == 0 && res_comparaison.range(31,31) == 0) ? 1 : 0) ; 
+    }
+
+}
+
 
 //---------------------------------------------PC GESTION :---------------------------------------------
 

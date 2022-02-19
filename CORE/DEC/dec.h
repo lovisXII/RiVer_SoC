@@ -179,7 +179,7 @@ SC_MODULE(decod)
     sc_signal<bool>         dec2exe_neg_op1 ;
     sc_signal<bool>         dec2exe_wb ;
     sc_signal<bool>         mem_sign_extend ;
-
+    sc_signal<bool>         inc_pc_branch_condition ;
 
     void dec2if_gestion() ;
     void concat_dec2exe() ;
@@ -191,6 +191,7 @@ SC_MODULE(decod)
     void affectation_registres() ;
     void affectation_calcul() ;
     void pc_inc() ;
+    void comparaison_for_branch() ;
     void trace(sc_trace_file* tf);
 
     SC_CTOR(decod) :
@@ -238,11 +239,11 @@ SC_MODULE(decod)
         sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive<<IF_IR ;
+        sensitive<<IF_IR << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst ;
         SC_METHOD(decoding_instruction)
         sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst ;
         SC_METHOD(affectation_registres)
-        sensitive << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst
+        sensitive << inc_pc_branch_condition << r_type_inst << i_type_inst << i_type_inst << s_type_inst << b_type_inst << u_type_inst << j_type_inst << jalr_type_inst
                     << add_i
     	 	 	 << slt_i
     	 	 	 << sltu_i
@@ -318,8 +319,15 @@ SC_MODULE(decod)
     	 	 	 << sw_i
     	 	 	 << sh_i
     	 	 	 << sb_i ;
+        SC_METHOD(comparaison_for_branch)
+        sensitive   << inc_pc <<bne_i << beq_i << blt_i << bltu_i << bge_i << bgeu_i 
+                    << IF_IR
+                    << b_type_inst;
         SC_METHOD(pc_inc)
-        sensitive << IF_IR << b_type_inst << j_type_inst << jalr_type_inst ;
+        sensitive   << IF_IR << READ_PC << b_type_inst << j_type_inst << jalr_type_inst
+                    << offset_branch
+                    << inc_pc
+                    << READ_PC_VALID ;
         reset_signal_is(RESET_N,false) ;
 
     }

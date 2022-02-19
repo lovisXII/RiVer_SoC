@@ -4,6 +4,15 @@
 using namespace std;
 int tab2[33] ; 
 
+void print_reg(sc_signal<sc_uint<32>>* tab)
+{
+    cout << sc_time_stamp() << endl ;  
+    for(int i = 0 ; i < 33 ; i++)
+    {
+        cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ; 
+    }
+}
+
 void affectation_validity(sc_signal<bool>* tab, int* tab2)
 /*This function will be used to reset the validity of a bit
 It receives a table (REG_VALID) and it checks the validity of each bits, if one bit is = to 0
@@ -171,12 +180,15 @@ int sc_main(int argc, char* argv[])
 
     //Resting bank register :
     
-    for(int i = 0 ; i < 33 ; i++)
+    for(int i = 0 ; i < 32 ; i++)
     {
         REG[i].write(rand()) ;
         REG_VALID[i].write(1) ;
         tab2[i] = 0 ;
     }
+    REG[32].write(0) ;
+    REG_VALID[32].write(1) ;
+    tab2[32] = 0 ;
 
 
 //--------------------------------------------1er Test :--------------------------------------------------------
@@ -222,12 +234,13 @@ int sc_main(int argc, char* argv[])
             REG_VALID[dec.ADR_DEST.read()].write(0) ;
         }
 
+        print_reg(REG) ;
         affectation_validity(REG_VALID,tab2) ;
 //--------------------------------------------2eme Test :--------------------------------------------------------
         sc_start(1,SC_NS) ;
         
-        if_ir.write(0b00000001001000011100001000010011) ; 
-
+        if_ir.write(0b11111111110101010101110111101111) ; 
+        //jal
         radr1_data.write(REG[dec.RADR1.read()].read()) ;
         radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
@@ -251,41 +264,19 @@ int sc_main(int argc, char* argv[])
             REG_VALID[dec.adr_dest.read()] = 0 ;
         }
 
+        print_reg(REG) ;
         affectation_validity(REG_VALID,tab2) ;
+//--------------------------------------------3eme Test :--------------------------------------------------------
 
         sc_start(1,SC_NS) ;
 
-        if_ir.write(0b00000001001000011100001000010011) ; 
-
-        radr1_data.write(REG[dec.RADR1.read()].read()) ;
-        radr2_data.write(REG[dec.RADR2.read()].read()) ;
-
-
-
-        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
-        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
- 
-        //Setting the destination register as unvalaible :
-
-        read_pc.write(REG[32].read()) ;
-        read_pc_valid.write(1) ;
-        REG[32].write(dec.dec2if_pc_in.read()) ;
-        dec2if_pop.write(1) ;
-        if2dec_empty.write(1) ;
-        dec2exe_pop.write(1) ;
-
-
-        if(dec.adr_dest.read() != 0)
-        {
-            cout << "test" << endl ;
-            REG_VALID[dec.adr_dest.read()] = 0 ;
-        }
-
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-
-        if_ir.write(0b00000001001000011100001000010011) ; 
-
+        if_ir.write(0b10101011010101101100101011100011) ; 
+        //blt r13,r21 
+        //1010101 01101 10101 100 1010 1 1100011
+        //0b10101010110110101100101011100011
+        //blt r21,r13 
+        //1010101 10101 01101 100 1010 1 1100011
+        //0b10101011010101101100101011100011
         radr1_data.write(REG[dec.RADR1.read()].read()) ;
         radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
@@ -308,18 +299,43 @@ int sc_main(int argc, char* argv[])
         {
             REG_VALID[dec.adr_dest.read()] = 0 ;
         }
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
+        print_reg(REG) ;
         affectation_validity(REG_VALID,tab2) ;
 
+//--------------------------------------------4eme Test :--------------------------------------------------------
+
+        sc_start(1,SC_NS) ;
+
+        if_ir.write(0b10101010110101101000101011100011) ; 
+        //bne r13,r13 
+        //1010101 01101 01101 000 1010 1 1100011
+        //0b10101010110101101000101011100011
+
+        radr1_data.write(REG[dec.RADR1.read()].read()) ;
+        radr2_data.write(REG[dec.RADR2.read()].read()) ;
+
+
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.dec2if_pc_in.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
     sc_close_vcd_trace_file(tf) ;
     
     return 0; 
