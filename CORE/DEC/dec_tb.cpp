@@ -2,9 +2,9 @@
 #include "dec.h"
 
 using namespace std;
-int tab2[33] ; 
+sc_signal<sc_uint<33>> tab2[33] ; 
 
-void affectation_validity(bool* tab, int* tab2)
+void affectation_validity(sc_signal<bool>* tab, sc_signal<sc_uint<33>>* tab2)
 /*This function will be used to reset the validity of a bit
 It receives a table (REG_VALID) and it checks the validity of each bits, if one bit is = to 0
 Then tab2 is incremented, tab2 is a counter for each validity bit 
@@ -16,9 +16,9 @@ At the end of those 3 cycle it has to be reset to valid
     {
         if(tab[i] == 0) // if yes we increment the counter
         {
-            tab2[i] ++;
+            tab2[i].write(tab2[i].read()+1);
         }
-        if(tab2[i] == 3)
+        if(tab2[i].read() == 3)
         {
             cout << "ivalue :" << i << endl ;
             tab2[i] = 0 ;
@@ -160,20 +160,21 @@ int sc_main(int argc, char* argv[])
     reset_n.write(true) ;
     sc_start(1,SC_NS) ;
 
+    sc_start(1,SC_NS) ;
     //End of reset 
    
     //Bank registre simulation :
 
-    int REG[33] ;
-    bool REG_VALID[33] ;
+    sc_signal<sc_uint<33>> REG[33] ;
+    sc_signal<bool> REG_VALID[33] ;
 
     //Resting bank register :
     
     for(int i = 0 ; i < 33 ; i++)
     {
-        REG[i] = rand() ;
-        REG_VALID[i] = 1 ;
-        tab2[i] = 0 ;
+        REG[i].write(rand()) ;
+        REG_VALID[i].write(1) ;
+        tab2[i].write(0) ;
     }
 
 
@@ -181,6 +182,10 @@ int sc_main(int argc, char* argv[])
 
 
         sc_start(1,SC_NS) ;
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
         if_ir.write(0b00000000000100001000000110110011) ; 
         
         //0000000 00001 00001 000 00011 0110011
@@ -199,15 +204,15 @@ int sc_main(int argc, char* argv[])
         */
 
 
-        radr1_data.write(REG[dec.RADR1.read()]) ;
-        radr2_data.write(REG[dec.RADR2.read()]) ;
+        radr1_data.write(REG[dec.RADR1.read()].read()) ;
+        radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
         radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
         radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
 
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33]) ;
+        read_pc.write(REG[33].read()) ;
         read_pc_valid.write(1) ;
         REG[33] = dec.dec2if_pc_in.read() ;
         dec2if_pop.write(1) ;
@@ -225,8 +230,8 @@ int sc_main(int argc, char* argv[])
         
         if_ir.write(0b00000001001000011100001000010011) ; 
 
-        radr1_data.write(REG[dec.RADR1.read()]) ;
-        radr2_data.write(REG[dec.RADR2.read()]) ;
+        radr1_data.write(REG[dec.RADR1.read()].read()) ;
+        radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
 
 
@@ -235,7 +240,7 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33]) ;
+        read_pc.write(REG[33].read()) ;
         read_pc_valid.write(1) ;
         REG[33] = dec.dec2if_pc_in.read() ;
         dec2if_pop.write(1) ;
@@ -254,8 +259,8 @@ int sc_main(int argc, char* argv[])
 
         if_ir.write(0b00000001001000011100001000010011) ; 
 
-        radr1_data.write(REG[dec.RADR1.read()]) ;
-        radr2_data.write(REG[dec.RADR2.read()]) ;
+        radr1_data.write(REG[dec.RADR1.read()].read()) ;
+        radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
 
 
@@ -264,7 +269,7 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33]) ;
+        read_pc.write(REG[33].read()) ;
         read_pc_valid.write(1) ;
         REG[33] = dec.dec2if_pc_in.read() ;
         dec2if_pop.write(1) ;
@@ -276,13 +281,18 @@ int sc_main(int argc, char* argv[])
         {
             REG_VALID[dec.adr_dest.read()] = 0 ;
         }
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
+        sc_start(0,SC_NS) ;
+
         affectation_validity(REG_VALID,tab2) ;
         sc_start(1,SC_NS) ;
 
         if_ir.write(0b00000001001000011100001000010011) ; 
 
-        radr1_data.write(REG[dec.RADR1.read()]) ;
-        radr2_data.write(REG[dec.RADR2.read()]) ;
+        radr1_data.write(REG[dec.RADR1.read()].read()) ;
+        radr2_data.write(REG[dec.RADR2.read()].read()) ;
 
 
 
@@ -291,7 +301,7 @@ int sc_main(int argc, char* argv[])
  
         //Setting the destination register as unvalaible :
 
-        read_pc.write(REG[33]) ;
+        read_pc.write(REG[33].read()) ;
         read_pc_valid.write(1) ;
         REG[33] = dec.dec2if_pc_in.read() ;
         dec2if_pop.write(1) ;
