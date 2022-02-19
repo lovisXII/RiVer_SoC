@@ -75,6 +75,66 @@
 				- I_WRT31_SD: write into r31
 				- I_WRITE_SD: write into reg
 			
+				I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
+
+			##############################################################################
+
+						  JIR instruction format
+    		              ^^^ signed operation  branch signal
+    		              |||     |             |
+						0 0000 0000 0000 0000 0000 0000
+ 						|    |  vv          | ||
+				  operands used ST      if 7 or 8 then write into register
+						|    |                 |
+						|    v       if ((7 or 8) and 6) then write into r31
+						v 	uses operands signal
+			illegal instruction signal
+
+    		###############################################################################
+
+				IR_RI ou "instruction register" c'est une signal a 32 bits
+			
+			###############################################################################
+
+                                source register number T                      
+						              /   \ 
+									  |   | 
+						0000 00 00000 00000 00000 000 0000 0000
+						        \   /       |   |
+			   source register number S      \ /
+									       coprocesseur 0 signal
+
+                               | 0x1F         if write into r31
+			 dest reg number = | ir_ri[15,11] if write into reg and R instruction format
+	 				 		   | ir_ri[20,16] if write into reg and I instruction format
+							   | else 0
+			 
+			 		  | BADVADR if ir_ri[15,11] == badvadr_s -> bad virtual adresse
+			 		  | NEXTSR  if ir_ri[15,11] == status_s  -> next instruction status register
+			 COP0OP = | EPC     if ir_ri[15,11] == epc_s     -> exception pg counter reg
+					  | CAUSE   if ir_ri[15,11] == cause_s   -> cause register
+					  | else 0
+			
+			 (cop0_g ?)
+			 COP0 = | (cop0_g << 6) | (ir_ri[22,21] << 3) | ir_ri[24,23]  if ir_ri[25] == 0
+					| else (cop0_g << 6) | 0x20 | ir_ri[4,0]
+
+			 (special_g, special_i, bcond_i, cop0_i)
+                     | (special_g << 6) | ir_ri[5,0]    if ir_ri[31,26] == special_i
+			 OPCOD = | (special_g << 5) | ir_ri[20,16]  if ir_ri[31,26] == bcond_i
+	 			     | COP0                             if ir_ri[31,26] == cop0_i
+				     | else (others_g << 6) | ir_ri[31,26]
+
+			###############################################################################
+
+			BRAADR = NEXTPC + OFFSET
+			SEQADR = NEXTPC + 4
+
+			JMPADR[31,28] = nextpc_rd[31,28]
+			JMPADR[27,2]  = ir_ri[25,0]
+			JMPADR[1,0]   = 00
+			
+
 		4.2.2 Decod mux
 		4.2.3 Decod fifo
 	4.3 Exec
@@ -147,14 +207,13 @@ Q:
 	sc_signal<sc_uint<32> > EPC_XM;  		// exc pg counter
 	sc_signal<bool> WEPC_XX;  				// exc pg cntr write en
 	sc_signal<bool> WEPC_XM;  				// exc pg cntr write en
-	sc_signal<sc_uint<32> > EPC_RX;  		// exc pg counter reg
+	sc_signal<sc_uint<32> > EPC_RX;  		// exc pg counter reg, pg?
 
     sc_in<sc_uint<32> > 	CAUSE_RX;
 
 	sc_signal<sc_uint<4> > BYTSEL_SM;  		// byte select for rw, rw?
 	sc_signal<sc_uint<24> > BSEXT_SM;  		// data sign ext byte, sign ext?
 	sc_signal<sc_uint<32> > DATA_SM;  		// data bus / res
-
 - decode.h
 	sc_signal<bool> 		IMDSGN_SD;		// ?
 	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
@@ -176,6 +235,18 @@ Q:
 	sc_in<sc_uint<32> > DATA_RM;  // data bus input register
 	sc_in<sc_uint<32> > DATA_SM;  // data bus input register (from bypass ?)
 	sc_out<sc_uint<32> > MUX_DATA_SM;	// res data bus input register
+
+- constants.h
+	_o ?
+	_g ?
+	_i ?      => m and md
+	_type ?
+	_s ?
+	_a ?
+	_w ?
+	_h ?
+	_b ?
+
 
 - General 
 	rom.h ?
