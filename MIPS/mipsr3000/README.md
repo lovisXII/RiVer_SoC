@@ -35,9 +35,8 @@
 	the wire type and the stage.
 	
 	TYPES:
-		S: signal	(wire which is not connected to a register 	  from a fifo)
-		R: register (wire which is connected to a registe 
-		   from a fifo)
+		S: signal	(wire which is not connected to a register from a fifo)
+		R: register (wire which is connected to a registe from a fifo)
 		X: exception signal
 	STAGE:
 		I: ifetch  
@@ -57,13 +56,16 @@
 
 	4.1 Ifetch
 		4.1.1 Ifetch component
-			ifetch only manage 2 thinks, a bool witch tell if then incoming instruction is a delayed slot and a signal of 32 bits witch define the status register for the incoming instruction
+			ifetch only manage 2 thinks, a bool witch tell if then incoming instruction is a delayed slot and a signal of 32 bits witch define the status register for the incoming instruction.
+
 		4.1.2 Ifetch mux
 			The mux is gonna manage the instruction register, the new instruction fetched, a bool witch tell if is or not a delayed slot, the pc register and the status register with the 3 base mux signal(BUBBLE, HOLD and KEEP).
+
 		4.1.3 Ifetch fifo
 			The input of the fifo is the output of the mux.
-	4.2 Decod
-		4.2.1 Decod component
+
+	4.2 DECODE
+		4.2.1 DECODE COMPONENT
 			Decod can handle 3 instruction format J, I and R.
 			Decod use the coprocessor 0 and handle exceptions.
 			HIGH and LOW register are used by the exception handler(for example for instruction emulation see index 5).
@@ -75,74 +77,169 @@
 				- I_WRT31_SD: write into r31
 				- I_WRITE_SD: write into reg
 			
+			4.2.1.1 INSTRUCTION TYPE
+
 				I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 
-			##############################################################################
+				##############################################################################
 
-						  JIR instruction format
-    		              ^^^ signed operation  branch signal
-    		              |||     |             |
-						0 0000 0000 0000 0000 0000 0000
- 						|    |  vv          | ||
-				  operands used ST      if 7 or 8 then write into register
-						|    |                 |
-						|    v       if ((7 or 8) and 6) then write into r31
-						v 	uses operands signal
-			illegal instruction signal
+							  JIR instruction format
+    			              ^^^ signed operation  branch signal
+    			              |||     |             |
+			   I_TYPE_SD -> 0 0000 0000 0000 0000 0000 0000
+ 							|    |  vv          | ||
+					  operands used ST      if 7 or 8 then write into register
+							|    |                 |
+							|    v       if ((7 or 8) and 6) then write into r31
+							v 	uses operands signal
+				illegal instruction signal
 
-    		###############################################################################
+    			###############################################################################
+
+			4.2.1.2 INSTRUCTION REGISTER
 
 				IR_RI ou "instruction register" c'est une signal a 32 bits
-			
-			###############################################################################
 
-                                source register number T                      
-						              /   \ 
-									  |   | 
-						0000 00 00000 00000 00000 000 0000 0000
-						        \   /       |   |
-			   source register number S      \ /
-									       coprocesseur 0 signal
+				###############################################################################
 
-                               | 0x1F         if write into r31
-			 dest reg number = | ir_ri[15,11] if write into reg and R instruction format
-	 				 		   | ir_ri[20,16] if write into reg and I instruction format
-							   | else 0
-			 
-			 		  | BADVADR if ir_ri[15,11] == badvadr_s -> bad virtual adresse
-			 		  | NEXTSR  if ir_ri[15,11] == status_s  -> next instruction status register
-			 COP0OP = | EPC     if ir_ri[15,11] == epc_s     -> exception pg counter reg
-					  | CAUSE   if ir_ri[15,11] == cause_s   -> cause register
-					  | else 0
-			
-			 (cop0_g ?)
-			 COP0 = | (cop0_g << 6) | (ir_ri[22,21] << 3) | ir_ri[24,23]  if ir_ri[25] == 0
-					| else (cop0_g << 6) | 0x20 | ir_ri[4,0]
+            	                    source register number T                      
+							              /   \   IMDSGN_SD
+										  |   |   |
+				IR_RI ->	0000 00 00000 00000 00000 000 0000 0000
+							        \   /       |   |
+				   source register number S      \ /
+										       coprocesseur 0 signal
 
-			 (special_g, special_i, bcond_i, cop0_i)
-                     | (special_g << 6) | ir_ri[5,0]    if ir_ri[31,26] == special_i
-			 OPCOD = | (special_g << 5) | ir_ri[20,16]  if ir_ri[31,26] == bcond_i
-	 			     | COP0                             if ir_ri[31,26] == cop0_i
-				     | else (others_g << 6) | ir_ri[31,26]
+            	                   | 0x1F         if write into r31
+				 dest reg number = | IR_RI[15,11] if write into reg and R instruction format
+	 					 		   | IR_RI[20,16] if write into reg and I instruction format
+								   | else 0
 
-			###############################################################################
+				 		  | BADVADR if IR_RI[15,11] == badvadr_s -> bad virtual adresse
+				 		  | NEXTSR  if IR_RI[15,11] == status_s  -> next instruction status register
+				 COP0OP = | EPC     if IR_RI[15,11] == epc_s     -> exception pg counter reg
+						  | CAUSE   if IR_RI[15,11] == cause_s   -> cause register
+						  | else 0
 
-			BRAADR = NEXTPC + OFFSET
-			SEQADR = NEXTPC + 4
+				 (cop0_g ?)
+				 COP0 = | (cop0_g << 6) | (IR_RI[22,21] << 3) | IR_RI[24,23]  if IR_RI[25] == 0
+						| else (cop0_g << 6) | 0x20 | IR_RI[4,0]
 
-			JMPADR[31,28] = nextpc_rd[31,28]
-			JMPADR[27,2]  = ir_ri[25,0]
-			JMPADR[1,0]   = 00
-			
+				 (special_g, special_i, bcond_i, cop0_i)
+            	         | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
+				 OPCOD = | (special_g << 5) | IR_RI[20,16]  if IR_RI[31,26] == bcond_i
+	 				     | COP0                             if IR_RI[31,26] == cop0_i
+					     | else (others_g << 6) | IR_RI[31,26]
+
+				###############################################################################
+
+			4.2.1.3 PC AND BRANCH
+
+				IMDSEX = 0xFFFF if IMDSGN && I_OSGND else 0x0
+				OFFSET = IMDSEX[13,0] << 18 | IR_RI[15,0] << 2
+
+						 | SOPER_SD  	if OPCOD == (jr_i or jalr_i)
+				NEXTPC = | JMPADR_SD 	if OPCOD == (j_i or jal_i)
+						 | BRAADR_SD 	if OPCOD is branch instruction and the branch condition is valid 
+						 | SEQADR_SD        	 ex. (OPCOD == (beq_i) && S_EQ_T_SD == 1)
+																 ^           ^
+																 |        branch condition signal (equal)
+																 branch instruction
+				BRAADR = NEXTPC + OFFSET
+				SEQADR = NEXTPC + 4
+
+				JMPADR = JMPADR[31,28]  .  JMPADR[27,2] . 00
+							  |			       |
+							  v                v
+				       NEXTPC[31,28]    IR_RI[25,0]
+
+					   	| SEQADR 	  		if OPCOD == bltzal_i or jalr_i or jal_i or bgezal_i
+						| IR_RI[13,6] 		if OPCOD == sra_i or srl_i or sll_i
+				IOPER = | IR_RI[15,0] << 16 if OPCOD == lui_i
+						| LO_RW             if OPCOD == mflo_i
+						| HI_RW             if OPCOD == mfhi_i
+						| else IMDSEX_SD << 16 | IR_RI[15,0] 
+
+				Decode manage 4 branch condition:
+					1. S_CMP_T = SOPER xor TOPER    				compare condition
+					2. S_EQ_T  = (S_CMP_T == 0x0)   				equal condition
+					3. S_LT_Z  = (SOPER[31] == 1)   				less than zero condition
+					4. S_LE_Z  = (SOPER[31] == 1 or SOPER == 0x0)	less or equal zero
+
 
 		4.2.2 Decod mux
+			The mux is gonna manage the information flow with the 3 base mux signal(BUBBLE, HOLD and KEEP).
+
 		4.2.3 Decod fifo
-	4.3 Exec
-		4.3.1 Exec component
+			The input of the fifo is the output of the mux.
+
+	4.3 EEXECUTE
+		4.3.1 EXECUTE COMPONENT
+
+			4.3.1.1 INSTRUCTION TYPE
+
+				I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
+
+				##############################################################################
+
+								uses operands             
+						  I format  ^  alu operation
+				               |    |   / \ substraction operation and shift right operation
+							   |    |   | |  |signed result
+							   |    |   | |  ||     write into register
+							   |    |   | |  ||      |branch instruction
+							   |    |   | |  ||      ||
+    		 I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
+							        ||      | | | ||
+									||      | | | |exec stage produce result
+							        ||      | | | mem stage produce result
+                                    ||      \ / overflow result
+									||   logic operation
+									|uses operand t
+								uses operand s
+
+				##############################################################################
+			
+			4.3.1.2 RESULTS
+
+				Exec produce 2 results:
+					- X or XOPER = IOPER if OPCOD == (sll_i or srl_i or sra_i) else X_SE
+					- Y or YOPER = IOPER if I_IFMT_SE == 1                     else Y_SE
+			
+			4.3.1.3 ERROR MANAGEMENT
+
+				WREDOPC is the signal redopc write enable, redopc is the adresse to return when jump to syscall or exception code.
+				WREDOPC = I_BRNCH_SE
+				
+				IABUSER is the instruction adresse bus error is equal to the inverse of I_BERR_N witch is the signal of instruction bus error.
+
+				BREAK is the break signal
+				BREAK = (OPCOD == break_i)
+
+				SYSCALL is the syscall signal
+				SYSCALL = (OPCOD == syscall_i)
+
+				OVR is the overflow signal
+				OVR = OVERFLW_SE & I_OVRF_SE
+
+				IAMALGN is the instruction adresse miss alignement signal
+				IAMALGN = NEXTPC[1] | NEXTPC[0] 
+				        -> the first bit and the second because pc is a multiple of 4 if not its means the adresse is non aligned 
+				
+				IASVIOL is the instruction adresse segmentation violation signal
+				IASVIOL = NEXTPC[31] & NEXTSR[3] if OPCOD == rfe_i else NEXTPC[31] & NEXTSR[1]
+
 		4.3.2 ALU
-			The ALU are made for make logique operations (AND, OR, 	NOR and XOR), arithmetique operations (addition and substraction), 	shift operations 	and slt compare operation.
-		4.3.2 Exec mux
-		4.3.3 Exec fifo
+			The ALU are made for make logique operations (AND, OR, 	NOR and XOR), arithmetique operations (addition and substraction), shift operations	and slt compare operation.
+
+			The ALU component is instantiated on the core but connected directly with the execute stage.
+
+		4.3.3 EXECUTE MUX
+			The mux is gonna manage the information flow with the 3 base mux signal(BUBBLE, HOLD and KEEP).
+
+		4.3.4 EXECUTE FIFO
+			The input of the fifo is the output of the mux.
+			
 	4.4 Memory
 		4.4.1 Memory component
 		4.4.2 Memory mux
@@ -156,6 +253,142 @@
 
 on ajout l'opcode mult qui n'est pas une instruction, quand leprocesseur 	va la lire va generait une exception(unknown instruction)donc on va 	verifier les handler d'exception qui pour notre cas vatrouver qu'il existe 	un handler mult (multiplication) qui vabrancher vers une "fonction" qui va
 faire la multiplication que dans ce cas va ecrire sont reulta sur les registre low et high et apres il va returner a l'instruction mult ducode 	de base.
+
+
+
+ // ### ---------------------------------------------------- ###
+  // #   instruction flow control :				#
+  // #								#
+  // #   three cases can happen :					#
+  // # (1) Kill : the instruction in the corresponding stage is	#
+  // #            killed						#
+  // # (2) Stall: the instruction is not allowed to pass to the	#
+  // #            next pipe stage					#
+  // # (3) Copy : the instruction is duplicated. A copy remains	#
+  // #            in the current stage and the other goes down	#
+  // #            the pipe					#
+  // # (4) Exec : the instruction can be executed			#
+  // #								#
+  // #   Here follows a summary of different situations.		#
+  // #								#
+  // #                          | I | D | E | M | W |		#
+  // #     ---------------------+---+---+---+---+---|		#
+  // #     reset                | K | K | K | K | E |		#
+  // #     exception            | K | K | K | K | E |		#
+  // #     interrupt            | K | K | K | E | E |		#
+  // #     I_FRZ                | S | S | E | E | E |		#
+  // #     D_FRZ                | S | S | S | S | E |		#
+  // #     hazard in DEC        | S | S | E | E | E |		#
+  // #     hazard in EXE        | S | S | S | E | E |		#
+  // #     SLEEP                | K | C | E | E | E |		#
+  // #     SWAP - first access  | S | S | S | C | E |		#
+  // #								#
+  // # Note that if more than one situation occur in the same	#
+  // # time Kill is prior than Stall which is prior than Exec	#
+  // #								#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   The instruction in Instruction Fetch is never copied.	#
+  // #								#
+  // #   It is stalled (the fetch must be retried) if:		#
+  // #     - the next stage (Instruction Decode) is occupied	#
+  // #     - the instruction memory is not able to answer the	#
+  // #       instruction fetch request				#
+  // #								#
+  // #   It is killed if :					#
+  // #     - the third previous instruction causes an exception	#
+  // #     - a hardware or software interrupt occurs		#
+  // #     - a hardware reset is detected				#
+  // #     - the previous instruction is a sleep			#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   The instruction in Instruction Decode is copied if :	#
+  // #     - the current instruction is a sleep			#
+  // #								#
+  // #   It is stalled if :					#
+  // #     - the next stage (Execute) is occupied			#
+  // #     - there is a data hazard that cannot be resolved by	#
+  // #       bypasses						#
+  // #     - the instruction memory cannot answer the instruction	#
+  // #       fetch (the instruction cannot be executed because it	#
+  // #       may change the instruction stream)			#
+  // #								#
+  // #   It is killed if :					#
+  // #     - the second previous instruction causes an exception	#
+  // #     - a hardware reset is detected				#
+  // #     - a hardware or a software interrupt occurs		#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   The instruction in Execute is never copied.		#
+  // #								#
+  // #   It is stalled if :					#
+  // #     - the next stage (Memory Access) is occupied		#
+  // #     - there is a data hazard that cannot be resolved by	#
+  // #       bypasses						#
+  // #								#
+  // #   It is killed if :					#
+  // #     - the previous instruction causes an exception		#
+  // #     - a hardware reset is detected				#
+  // #     - a hardware or a software interrupt occurs		#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   The instruction in Memory Access is copied if:		#
+  // #     - the current instruction has a copying capability	#
+  // #       (that is, it is a swap instruction and is making	#
+  // #       its first access).					#
+  // #								#
+  // #   It is stalled if :					#
+  // #     - the data memory is not able to answer the request	#
+  // #								#
+  // #   It is killed if :					#
+  // #     - it causes an exception				#
+  // #     - a hardware reset is detected				#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   The instruction in Write Back is always executed		#
+  // ### ---------------------------------------------------- ###
+
+    // ### ---------------------------------------------------- ###
+  // #   actions on registers :					#
+  // #								#
+  // #   Three actions may be made on control registers:		#
+  // #      (1) shift : shift a new instruction into the stage	#
+  // #      (2) bubble: introduce a bubble (nop) into the pipe	#
+  // #      (3) hold  : hold the instruction			#
+  // #								#
+  // #   In each stage the action can be defined by the following	#
+  // # table (note that Write Back is always shifting):		#
+  // #								#
+  // #   stage   next stage   action in stage			#
+  // #   ------+------------+----------------			#
+  // #     K   |     K      |    bubble				#
+  // #     K   |     S      |     hold				#
+  // #     K   |     C      |     hold				#
+  // #     K   |     E      |    bubble				#
+  // #    -----+------------+----------------			#
+  // #     S   |     S      |     hold				#
+  // #     S   |     C      |     hold				#
+  // #     S   |     E      |    bubble				#
+  // #    -----+------------+----------------			#
+  // #     C   |     E      |    shift				#
+  // #    -----+------------+----------------			#
+  // #     E   |     E      |    shift				#
+  // ### ---------------------------------------------------- ###
+
+  // ### ---------------------------------------------------- ###
+  // #   actions on registers :					#
+  // #								#
+  // #   Two actions may be made on data registers (note that	#
+  // # Write Back is always loading) :				#
+  // #								#
+  // #      (1) load : load a new data into  the reg. (C or E)	#
+  // #      (2) keep : hold the same data in the reg. (K or S)	#
+  // ### ---------------------------------------------------- ###
 
 DONE LIST: (# : done |  / : not done)
 ALU         	#
@@ -217,11 +450,7 @@ Q:
 - decode.h
 	sc_signal<bool> 		IMDSGN_SD;		// ?
 	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
-	sc_signal<sc_uint<32> >	OFFSET_SD;		// ?
-	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// ?
-	sc_signal<bool>			S_EQ_T_SD;		// ?
-	sc_signal<bool>			S_LT_Z_SD;		// ?
-	sc_signal<bool>			S_LE_Z_SD;		// ?
+
 
    	sc_signal<sc_uint<32> > SEQADR_SD;		// seq @ ?
 
@@ -230,6 +459,7 @@ Q:
     sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts ?
 	// la valeur qui s'ecrit dans le meme registre a la fin du cycle
 
+	processIASVIOL 
 - mux_memory.h
 	// little explication about bus data 
 	sc_in<sc_uint<32> > DATA_RM;  // data bus input register

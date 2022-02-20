@@ -56,11 +56,13 @@ SC_MODULE(decode)
 	sc_signal<bool> 		IMDSGN_SD;		// ?
 	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
 	sc_out<sc_uint<32> >	IOPER_SD;		// effective immediate operand
-	sc_signal<sc_uint<32> >	OFFSET_SD;		// ?
-	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// ?
-	sc_signal<bool>			S_EQ_T_SD;		// ?
-	sc_signal<bool>			S_LT_Z_SD;		// ?
-	sc_signal<bool>			S_LE_Z_SD;		// ?
+	sc_signal<sc_uint<32> >	OFFSET_SD;		// pc offset
+
+	//branch condition
+	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// compare condition
+	sc_signal<bool>			S_EQ_T_SD;		// equal condition
+	sc_signal<bool>			S_LT_Z_SD;		// less than condition
+	sc_signal<bool>			S_LE_Z_SD;		// less or equal condition
 
 	sc_out<bool> 			SLEEP_SD;		// sleep instruction stall
 	sc_out<sc_uint<32>>		NEXTPC_SD;		// next PC output

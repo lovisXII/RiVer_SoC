@@ -30,7 +30,7 @@ SC_MODULE(execute)
 	sc_in<sc_uint<8> > 		OPCOD_RD;		// operation code
 	sc_in<sc_uint<32> > 	IOPER_RD;		// effective immediat operator
 
-	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts ?
+	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction status
 	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next inst. @
 
 	// ################################### deprecated ##########
@@ -62,7 +62,7 @@ SC_MODULE(execute)
 	sc_in<bool>		OVERFLW_SE;				// overflow out of alu
 
 	sc_out<sc_uint<32> >	XOPER_SE;		// effective x operand
-	sc_out<sc_uint<32> >	YOPER_SE;		// effective x operand
+	sc_out<sc_uint<32> >	YOPER_SE;		// effective y operand
 
 	sc_out<bool>		WREDOPC_SE;			// redopc write enable
 	sc_out<bool>		IABUSER_XE;			// instruction @ bus error
