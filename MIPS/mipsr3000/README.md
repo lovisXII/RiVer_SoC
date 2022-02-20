@@ -211,7 +211,7 @@
 				WREDOPC is the signal redopc write enable, redopc is the adresse to return when jump to syscall or exception code.
 				WREDOPC = I_BRNCH_SE
 				
-				IABUSER is the instruction adresse bus error is equal to the inverse of I_BERR_N witch is the signal of instruction bus error.
+				IABUSER is the instruction adresse bus error is equal to (not I_BERR_N) witch is the signal of instruction bus error.
 
 				BREAK is the break signal
 				BREAK = (OPCOD == break_i)
@@ -220,14 +220,14 @@
 				SYSCALL = (OPCOD == syscall_i)
 
 				OVR is the overflow signal
-				OVR = OVERFLW_SE & I_OVRF_SE
+				OVR = OVERFLW_SE and I_OVRF_SE
 
 				IAMALGN is the instruction adresse miss alignement signal
-				IAMALGN = NEXTPC[1] | NEXTPC[0] 
+				IAMALGN = NEXTPC[1] or NEXTPC[0] 
 				        -> the first bit and the second because pc is a multiple of 4 if not its means the adresse is non aligned 
 				
 				IASVIOL is the instruction adresse segmentation violation signal
-				IASVIOL = NEXTPC[31] & NEXTSR[3] if OPCOD == rfe_i else NEXTPC[31] & NEXTSR[1]
+				IASVIOL = NEXTPC[31] and NEXTSR[3] if OPCOD == rfe_i else NEXTPC[31] & NEXTSR[1]
 
 		4.3.2 ALU
 			The ALU are made for make logique operations (AND, OR, 	NOR and XOR), arithmetique operations (addition and substraction), shift operations	and slt compare operation.
@@ -240,8 +240,111 @@
 		4.3.4 EXECUTE FIFO
 			The input of the fifo is the output of the mux.
 			
-	4.4 Memory
-		4.4.1 Memory component
+	4.4 MEMORY
+		4.4.1 MEMORY COMPONENT
+			4.4.1.1 INSTRUCTION TYPE
+			
+				I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
+
+				##############################################################################
+
+									            mem produce result
+					                                |
+    			I_TYPE_RE ->    0 0000 0000 0000 0000 0000 0 000
+				  										 | | |||
+				 										 | | ||access type word
+														 | | |access type half word
+														 | |access type byte
+														 |write from memory
+													read from memory
+
+				I_WRITE_SM or "write into register" signal is equal to (I_TYPE[8] | I_TYPE[7])
+
+				##############################################################################
+
+			4.4.1.2 MEMORY MANAGEMENT
+
+				DACCESS_SM or "data memory access" is the signal witch is gonna interact with the memory for read or write.
+				DACCESS = (I_STOR_SM or I_LOAD_SM)
+
+				WRITE_SM or "write into storage" is the signal witch for write into the memory.
+				WRITE_SM = I_STOR_SM and not FSTSWAP_SM. The signal FSTSWAP is equal to (SWAP and COPYCAP) but all the swap signal are deprecated too thus the signal FSTSWAP or WRITE_SM need to be reworked.
+
+				DLOCK_SM or "lock data access"  =  FSTSWAP_SM, same problem of WRITE_SM (signal deprecated).
+
+				DATARED_SM or "read access" = (DACCESS_SM and not WRITE_SM).
+
+				RD_SM or "destination register" is equal to 00000 if (SWAP_RE and nop COPYCAP_RE) else RD_RE, SWAP signal deprecated, RD_SM need to be rework.
+
+							| 0x1 if temp == 0x10        BYTSEL(byte select for read and write)
+							| 0x2 if temp == 0x11
+							| 0x4 if temp == 0x12
+				BYTSEL_SM = | 0x8 if temp == 0x13        temp = (I_BYTE_SM << 4) or (I_HALF_SM << 3) or (I_WORD_SM << 2) or RES_SE[1,0]
+							| 0x3 if temp == 0x08
+							| 0xC if temp == 0x0A
+							| 0xF if temp == 0x04
+							| else 0x0
+
+
+											  | D_IN[31, 0]                  if BYTSEL[0] == 1
+				REDDAT_SM or "aligned data" = | D_IN[31, 8] + 0x00           if BYTSEL[1] == 1
+											  | D_IN[31, 16] + 0x0000        if BYTSEL[2] == 1
+											  | else D_IN[31, 24] + 0x000000
+
+
+				BSEXT_SM =  0xFFFFFF if (REDDAT[7] == 1 && OPCOD == lb_i) else 0x000000
+				HSEXT_SM =  0xFFFF   if (REDDAT[15] == 1 && OPCOD == lh_i) else 0x0000
+
+				DATA_SM is the result of the bus data
+
+						  | REDDAT_SM 					if (OPCOD == lw_i) or (OPCOD == swap_i)
+				DATA_SM = | BSEXT << 8 | REDDAT[7,0]    if (OPCOD == lb_i) or (OPCOD == lbu_i)
+						  | HSEXT << 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
+						  | else RES_RE 
+
+			4.4.1.3 MEMORY ERROR MANAGEMENT
+
+				DABUSER or "data adresse bus error" signal.
+				DABUSER = not D_BERR_N, D_BERR_N the bus error signal
+
+
+						  | RES_RE[1] or RES_RE[0] if I_WORD and I_LOAD
+				LAMALGN = | RES_RE[0] 			   if I_HALF and I_LOAD       LAMALGN or "load adresse miss alignment"
+						  | 0
+
+						  | RES_RE[1] or RES_RE[0] if I_WORD and I_STOR
+				SAMALGN = | RES_RE[0] 			   if I_HALF and I_STOR       SAMALGN or "store adresse miss alignment"
+						  | 0
+
+						  | RES_RE[31] and SR_RE[1] if I_LOAD
+				LASVIOL = | 0 			                                      LASVIOL or "load adresse segmentation violation"
+
+						  | RES_RE[31] and SR_RE[1] if I_STOR
+				SASVIOL = | 0  										          SASVIOL or "store adresse segmentation violation"
+
+				BADDA or "bad data adresse" is equal to (SASVIOL or LASVIOL or LAMALGN or SAMALGN)
+
+				IASVIOL is the instruction adresse segmentation violation
+				IAMALGN is the instruction adresse miss alignment
+				BADIA or "bad instruction adresse" is equal to (IASVIOL or IAMALGN)
+
+						  | 0     if INTRQ                                        interrupt request
+						  | 4	  if LAMALGN or LASVIOL or IAMALGN or IASVIOL
+						  | 5     if SAMALGN or SASVIOL			
+						  | 6     if IABUSER									  instruction adresse bus error
+						  | 7     if DABUSER  									  data adresse bus error
+				EXCCODE = | 8     if SYSCALL                                      syscall exception
+						  | 9     if BREAK                                        break exception
+						  | 0xA   if ILLGINS                                      unknown instruction
+						  | 0xB   if C0UNUSE                                      coprocessor 0 unused
+						  | else 0xC   
+
+				CAUSE or "cause register" signal of 32 bits 
+				CAUSE_XM =   x  .   0   .  xx   .  0x000 . xxxxxx .  xx   .   00   .    xxxx   .  00
+						   BDSLOT        COPERR              IT   CAUSE_RX             EXCCODE
+
+				
+
 		4.4.2 Memory mux
 		4.4.3 Memory fifo
 	4.5 Write back
@@ -446,6 +549,7 @@ Q:
 
 	sc_signal<sc_uint<4> > BYTSEL_SM;  		// byte select for rw, rw?
 	sc_signal<sc_uint<24> > BSEXT_SM;  		// data sign ext byte, sign ext?
+							HSEXT
 	sc_signal<sc_uint<32> > DATA_SM;  		// data bus / res
 - decode.h
 	sc_signal<bool> 		IMDSGN_SD;		// ?
