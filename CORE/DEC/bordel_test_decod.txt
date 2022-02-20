@@ -159,3 +159,38 @@
         affectation_validity(REG_VALID,tab2) ;
         sc_start(1,SC_NS) ; // 6 ns
         sc_close_vcd_trace_file(tf) ;
+
+//--------------------------------------------2eme Test :--------------------------------------------------------
+        sc_start(1,SC_NS) ; // 6 ns
+        
+        if_ir.write(0b00000010000100001001000010100011) ; 
+        //sw
+        //0000001 00001 00001 001 00001 0100011
+        //0b00000010000100001001000010100011
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
+
+
+
+        radr1_valid.write(REG_VALID[radr1.read()]) ;
+        radr2_valid.write(REG_VALID[radr2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ; // 6 ns
+        sc_close_vcd_trace_file(tf) ;
