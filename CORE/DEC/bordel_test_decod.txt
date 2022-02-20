@@ -1,0 +1,161 @@
+
+//--------------------------------------------1er Test :--------------------------------------------------------
+
+
+        sc_start(1,SC_NS) ; //5 ns
+        if_ir.write(0b00000000000100001000000110110011) ; 
+        
+        //0000000 00001 00001 000 00011 0110011
+        //correspond at add r3 r1 r1
+        //111111000000 01100 110 11111 0010011
+        
+
+        /* Going to do a first manual test :
+        1) We sent the inst : add r3,r1,r1
+        2) r1 is designated as unvalaible
+        3) r1 is designated as valid
+        4) Let's see what happend !
+        */
+        /*
+        If a data is set as unavailable, we wait 3 cycle for it to be WBK
+        */
+
+
+
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+        
+        if(dec.ADR_DEST.read() != 0)
+        {
+            cout << "##############################test############################## " << endl ;
+            REG_VALID[dec.ADR_DEST.read()].write(0) ;
+        }
+
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+//--------------------------------------------2eme Test :--------------------------------------------------------
+        sc_start(1,SC_NS) ; // 6 ns
+        
+        if_ir.write(0b11111111110101010101110111101111) ; 
+        //jal
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
+
+
+
+        radr1_valid.write(REG_VALID[radr1.read()]) ;
+        radr2_valid.write(REG_VALID[radr2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+
+//--------------------------------------------1er Test :--------------------------------------------------------
+
+
+        sc_start(1,SC_NS) ; //5 ns
+        if_ir.write(0b00000000000100001000000110110011) ; 
+        
+        //0000000 00001 00001 000 00011 0110011
+        //correspond at add r3 r1 r1
+        //111111000000 01100 110 11111 0010011
+        
+
+        /* Going to do a first manual test :
+        1) We sent the inst : add r3,r1,r1
+        2) r1 is designated as unvalaible
+        3) r1 is designated as valid
+        4) Let's see what happend !
+        */
+        /*
+        If a data is set as unavailable, we wait 3 cycle for it to be WBK
+        */
+
+
+
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
+
+        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
+        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
+
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+        
+        if(dec.ADR_DEST.read() != 0)
+        {
+            cout << "##############################test############################## " << endl ;
+            REG_VALID[dec.ADR_DEST.read()].write(0) ;
+        }
+
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ;
+
+
+//--------------------------------------------2eme Test :--------------------------------------------------------
+        sc_start(1,SC_NS) ; // 6 ns
+        
+        if_ir.write(0b00000000110010111010110100000011) ; 
+        //lw r26,12(r23)
+        //000000001100 10111 010 11010  0000011
+        //0b00000000110010111010110100000011
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
+
+
+
+        radr1_valid.write(REG_VALID[radr1.read()]) ;
+        radr2_valid.write(REG_VALID[radr2.read()]) ;
+ 
+        //Setting the destination register as unvalaible :
+
+        read_pc.write(REG[32].read()) ;
+        read_pc_valid.write(1) ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
+        dec2if_pop.write(1) ;
+        if2dec_empty.write(1) ;
+        dec2exe_pop.write(1) ;
+
+
+        if(dec.adr_dest.read() != 0)
+        {
+            REG_VALID[dec.adr_dest.read()] = 0 ;
+        }
+
+        print_reg(REG) ;
+        affectation_validity(REG_VALID,tab2) ;
+        sc_start(1,SC_NS) ; // 6 ns
+        sc_close_vcd_trace_file(tf) ;

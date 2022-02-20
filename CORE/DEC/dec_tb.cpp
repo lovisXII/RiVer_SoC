@@ -9,7 +9,7 @@ void print_reg(sc_signal<sc_uint<32>>* tab)
     cout << sc_time_stamp() << endl ;  
     for(int i = 0 ; i < 33 ; i++)
     {
-        cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ; 
+        // cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ; 
     }
 }
 
@@ -182,7 +182,7 @@ int sc_main(int argc, char* argv[])
     
     for(int i = 0 ; i < 32 ; i++)
     {
-        REG[i].write(rand()) ;
+        REG[i].write(0) ;
         REG_VALID[i].write(1) ;
         tab2[i] = 0 ;
     }
@@ -191,58 +191,15 @@ int sc_main(int argc, char* argv[])
     tab2[32] = 0 ;
 
 
-//--------------------------------------------1er Test :--------------------------------------------------------
-
-
-        sc_start(1,SC_NS) ;
-        if_ir.write(0b00000000000100001000000110110011) ; 
-        
-        //0000000 00001 00001 000 00011 0110011
-        //correspond at add r3 r1 r1
-        //111111000000 01100 110 11111 0010011
-        
-
-        /* Going to do a first manual test :
-        1) We sent the inst : add r3,r1,r1
-        2) r1 is designated as unvalaible
-        3) r1 is designated as valid
-        4) Let's see what happend !
-        */
-        /*
-        If a data is set as unavailable, we wait 3 cycle for it to be WBK
-        */
-
-
-        radr1_data.write(REG[dec.RADR1.read()].read()) ;
-        radr2_data.write(REG[dec.RADR2.read()].read()) ;
-
-        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
-        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
-
-        //Setting the destination register as unvalaible :
-
-        read_pc.write(REG[32].read()) ;
-        read_pc_valid.write(1) ;
-        REG[32].write(dec.dec2if_pc_in.read()) ;
-        dec2if_pop.write(1) ;
-        if2dec_empty.write(1) ;
-        dec2exe_pop.write(1) ;
-        
-        if(dec.ADR_DEST.read() != 0)
-        {
-            cout << "##############################test############################## " << endl ;
-            REG_VALID[dec.ADR_DEST.read()].write(0) ;
-        }
-
-        print_reg(REG) ;
-        affectation_validity(REG_VALID,tab2) ;
 //--------------------------------------------2eme Test :--------------------------------------------------------
-        sc_start(1,SC_NS) ;
+        sc_start(1,SC_NS) ; // 6 ns
         
-        if_ir.write(0b11111111110101010101110111101111) ; 
-        //jal
-        radr1_data.write(REG[dec.RADR1.read()].read()) ;
-        radr2_data.write(REG[dec.RADR2.read()].read()) ;
+        if_ir.write(0b00000000110010111010110100000011) ; 
+        //lw r26,12(r23)
+        //000000001100 10111 010 11010  0000011
+        //0b00000000110010111010110100000011
+        radr1_data.write(rand()) ;
+        radr2_data.write(rand()) ;
 
 
 
@@ -253,7 +210,7 @@ int sc_main(int argc, char* argv[])
 
         read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[32] = dec.dec2if_pc_in.read() ;
+        REG[32].write(dec.DEC2IF_PC.read()) ;
         dec2if_pop.write(1) ;
         if2dec_empty.write(1) ;
         dec2exe_pop.write(1) ;
@@ -266,81 +223,9 @@ int sc_main(int argc, char* argv[])
 
         print_reg(REG) ;
         affectation_validity(REG_VALID,tab2) ;
-//--------------------------------------------3eme Test :--------------------------------------------------------
-
-        sc_start(1,SC_NS) ;
-
-        if_ir.write(0b10101011010101101100101011100011) ; 
-        //blt r13,r21 
-        //1010101 01101 10101 100 1010 1 1100011
-        //0b10101010110110101100101011100011
-        //blt r21,r13 
-        //1010101 10101 01101 100 1010 1 1100011
-        //0b10101011010101101100101011100011
-        radr1_data.write(REG[dec.RADR1.read()].read()) ;
-        radr2_data.write(REG[dec.RADR2.read()].read()) ;
-
-
-
-        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
-        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
- 
-        //Setting the destination register as unvalaible :
-
-        read_pc.write(REG[32].read()) ;
-        read_pc_valid.write(1) ;
-        REG[32].write(dec.dec2if_pc_in.read()) ;
-        dec2if_pop.write(1) ;
-        if2dec_empty.write(1) ;
-        dec2exe_pop.write(1) ;
-
-
-        if(dec.adr_dest.read() != 0)
-        {
-            REG_VALID[dec.adr_dest.read()] = 0 ;
-        }
-        print_reg(REG) ;
-        affectation_validity(REG_VALID,tab2) ;
-
-//--------------------------------------------4eme Test :--------------------------------------------------------
-
-        sc_start(1,SC_NS) ;
-
-        if_ir.write(0b10101010110101110000101011100011) ; 
-        //beq r13,r13 
-        //1010101 01101 01101 000 1010 1 1100011
-        //0b10101010110101101000101011100011
-
-        //beq r13,r14 
-        //1010101 01101 01110 000 1010 1 1100011
-        //0b10101010110101110000101011100011
-
-        radr1_data.write(REG[dec.RADR1.read()].read()) ;
-        radr2_data.write(REG[dec.RADR2.read()].read()) ;
-
-
-
-        radr1_valid.write(REG_VALID[dec.RADR1.read()]) ;
-        radr2_valid.write(REG_VALID[dec.RADR2.read()]) ;
- 
-        //Setting the destination register as unvalaible :
-
-        read_pc.write(REG[32].read()) ;
-        read_pc_valid.write(1) ;
-        REG[32].write(dec.dec2if_pc_in.read()) ;
-        dec2if_pop.write(1) ;
-        if2dec_empty.write(1) ;
-        dec2exe_pop.write(1) ;
-
-
-        if(dec.adr_dest.read() != 0)
-        {
-            REG_VALID[dec.adr_dest.read()] = 0 ;
-        }
-        print_reg(REG) ;
-        affectation_validity(REG_VALID,tab2) ;
-        sc_start(1,SC_NS) ;
-    sc_close_vcd_trace_file(tf) ;
+        sc_start(1,SC_NS) ; // 6 ns
+        sc_close_vcd_trace_file(tf) ;
+    
     
     return 0; 
 }

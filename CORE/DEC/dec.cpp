@@ -89,9 +89,8 @@ void decod::unconcat_dec2exe()
 void decod::decoding_instruction_type()
 {
     sc_uint<32> if_ir = IF_IR.read() ;
-
     r_type_inst     = if_ir.range(6,0) == 0b0110011 ? 1 : 0;
-    i_type_inst     = if_ir.range(6,0) == 0b0010011 ? 1 : 0; 
+    i_type_inst     = (if_ir.range(6,0) == 0b0010011 | if_ir.range(6,0) == 0b0000011) ? 1 : 0; 
     s_type_inst     = if_ir.range(6,0) == 0b0100011 ? 1 : 0; 
     b_type_inst     = if_ir.range(6,0) == 0b1100011 ? 1 : 0;
     u_type_inst     = if_ir.range(6,0) == 0b0110111 ? 1 : 0;
@@ -332,19 +331,17 @@ void decod::affectation_registres()
 
         /*BRANCH CONDITION GESTION : */
 
-        sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op1_var ;
+        sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op2_var ;
         sc_uint<33> res_comparaison ;
+        res_comparaison = dec2exe_op1_var - dec2exe_op2_var ;
 
-        res_comparaison = dec2exe_op1_var + not(dec2exe_op2_var + 1) ;
-        
         if(bne_i.read())
         {  
-            inc_pc_var = ((res != 0x0 ? 0 : 1)) ; 
+            inc_pc_var = ((res == 0x0 ? 1 : 0)) ; 
         }
         else if(beq_i.read())
         {  
             inc_pc_var = ((res == 0x0 ? 0 : 1)) ; 
-        
         }
         else if(blt_i.read())
         {  
@@ -399,8 +396,8 @@ void decod::affectation_registres()
         radr2_var = 0 ;
         adr_dest_var = if_ir.range(11,7) ;
 
-        dec2exe_op1_var = 0 ;
-        dec2exe_op2_var = 0 ;
+        dec2exe_op1_var = 0x0 ;
+        dec2exe_op2_var = 0x0 ;
 
 
         if(if_ir.range(31,31) == 1)

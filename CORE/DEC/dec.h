@@ -39,7 +39,7 @@ SC_MODULE(decod)
 
     sc_in  < bool >               DEC2IF_POP ; // Ifecth say to decod if it wants a pop or no
     sc_out   < bool >             DEC2IF_EMPTY ;
-    sc_out  < sc_uint<32> >       DEC2IF_PC ;
+    sc_out  < sc_uint<32> >       DEC2IF_PC ; // this value must also be sent to REG
 
     //Interface with IF2DEC :
 
@@ -237,7 +237,7 @@ SC_MODULE(decod)
         sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive   <<IF_IR  ;
+        sensitive  << IF_IR  ;
         SC_METHOD(decoding_instruction)
         sensitive << IF_IR ;
         SC_METHOD(affectation_registres)
@@ -251,7 +251,13 @@ SC_MODULE(decod)
                     << b_type_inst 
                     << u_type_inst 
                     << j_type_inst 
-                    << jalr_type_inst ; 
+                    << jalr_type_inst 
+                    << beq_i
+                    << bne_i
+                    << blt_i
+                    << bge_i
+                    << bltu_i
+                    << bgeu_i ; 
         SC_METHOD(affectation_calcul)
         sensitive   << add_i
                     << slt_i
