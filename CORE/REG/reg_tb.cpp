@@ -34,7 +34,6 @@ int sc_main(int argc, char* argv[])
     //PC Gestion :
 
     sc_signal < sc_uint<32> >      read_pc ;
-    sc_signal < bool >              inc_pc_valid ;
     sc_signal < bool >             read_pc_valid ;
 
     //Global Interface :
@@ -66,7 +65,6 @@ int sc_main(int argc, char* argv[])
     //PC Gestion :
 
     reg_inst.READ_PC(read_pc) ;
-    reg_inst.INC_PC_VALID(inc_pc_valid) ;
     reg_inst.READ_PC_VALID(read_pc_valid) ;
 
     //Global Interface :
@@ -140,7 +138,6 @@ int sc_main(int argc, char* argv[])
         wadr1.write((sc_uint<6>) wadr1_) ;
         wadr1_valid.write(wadr1_valid_ );
         wadr1_data.write((sc_uint<32>) (wadr1_data_)) ;
-        inc_pc_valid.write(inc_pc_valid_) ;
         inval_adr.write(inval_adr_);
         inval_enable.write(inval_enable_);
 

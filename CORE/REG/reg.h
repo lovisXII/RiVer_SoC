@@ -28,7 +28,6 @@ SC_MODULE(reg)
     //PC Gestion :
 
     sc_out < sc_uint<32> >      READ_PC ;
-    sc_in < bool >              INC_PC_VALID ;
     sc_out < bool >             READ_PC_VALID ;
 
     //Global Interface :

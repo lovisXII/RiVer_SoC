@@ -80,7 +80,6 @@ void reg::trace(sc_trace_file* tf) {
         sc_trace(tf, INVAL_ADR, GET_NAME(INVAL_ADR));
         sc_trace(tf, INVAL_ENABLE, GET_NAME(INVAL_ENABLE));
         sc_trace(tf, READ_PC, GET_NAME(READ_PC));
-        sc_trace(tf, INC_PC_VALID, GET_NAME(INC_PC_VALID));
         sc_trace(tf, READ_PC_VALID, GET_NAME(READ_PC_VALID));
         
         for (int i = 0; i < 33; i++) {

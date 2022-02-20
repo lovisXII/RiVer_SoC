@@ -232,6 +232,30 @@ SC_MODULE(core)
         mem_inst.MEM_RESULT(MCACHE_MEM_RESULT);
         mem_inst.MEM_STALL(MCACHE_MEM_STALL);
 
+        reg_inst.RADR1(RADR1) ;
+        reg_inst.RADR2(RADR2) ;
+        reg_inst.RADR1_VALID(RADR1_VALID) ;
+        reg_inst.RADR2_VALID(RADR2_VALID) ;
+        reg_inst.RADR1_DATA(RADR1_DATA) ;
+        reg_inst.RADR2_DATA(RADR2_DATA) ;
+
+        reg_inst.WADR1(REG_DEST) ;
+        reg_inst.WADR1_VALID(REG_WB) ;
+        reg_inst.WADR1_DATA(REG_DATA) ;
+
+        reg_inst.INVAL_ADR(ADR_DEST) ;
+        reg_inst.INVAL_ENABLE() ;
+
+        reg_inst.READ_PC(READ_PC) ;
+        reg_inst.READ_PC_VALID(READ_PC_VALID) ;
+
+
+
+
+
+
+
+
         wbk_inst.MEM_DATA(WBK_DATA);
         wbk_inst.MEM_DEST(WBK_DEST);
         wbk_inst.MEM_SIZE(WBK_MEM_SIZE);
