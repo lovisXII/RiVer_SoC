@@ -1,1 +1,88 @@
 
+void memory::processSWINT_XM()
+{
+  sc_uint<32> res_re=RES_RE.read();
+  sc_uint<32> cause_rx=CAUSE_RX.read();
+
+  if (((int)OPCOD_RE.read() == mtc0_i ) && ((int)COP0D_RE.read() == cause_s) && (KEEP_SM.read()== 0))
+    SWINT_XM.write(res_re.range(9,8));
+  else
+    SWINT_XM.write(cause_rx.range(9,8));
+}
+
+void memory::processWCAUSE_SM()
+{
+  if (((int)OPCOD_RE.read() == mtc0_i ) && ((int)COP0D_RE.read() == cause_s))
+    WCAUSE_SM.write(1);
+  else
+    WCAUSE_SM.write(0);
+}
+
+void memory::processCAUSE_SM()
+{
+  sc_uint<32> res_re=RES_RE.read();
+  sc_uint<32> cause_rx=CAUSE_RX.read();
+
+  CAUSE_SM.write(cause_rx.range(31,16) << 16 | IT_XX.read() << 10 | res_re.range(9,8) << 8 | cause_rx.range(7,0));
+}
+
+void memory::processRSTORSR_SM()
+{
+  sc_uint<32> nextsr_rx=CAUSE_RX.read();
+
+  RSTORSR_SM.write(nextsr_rx.range(31,4) << 4 | nextsr_rx.range(5,2));
+}
+
+void memory::processNEXTSR_SM()
+{
+  if ((int)OPCOD_RE.read()==rfe_i)
+    NEXTSR_SM.write(RSTORSR_SM);
+  else
+    NEXTSR_SM.write(RES_RE);
+}
+
+void memory::processWSR_SM()
+{
+  if (((int)OPCOD_RE.read()==rfe_i)||(((int)OPCOD_RE.read() == mtc0_i)&&((int)COP0D_RE.read() == status_s)))
+    WSR_SM.write(1);
+  else
+    WSR_SM.write(0);
+}
+
+void memory::processEPC_XM()
+{
+  if (BDSLOT_RE.read()==0)
+    EPC_XM.write(PC_RE.read());
+  else
+    EPC_XM.write(REDOPC_RE.read());
+}
+
+void memory::processLATEEX_XM()
+{
+  LATEEX_XM.write(DABUSER_XM.read()) ;
+}
+
+void memory::processEARLYEX_XM()
+{
+  EARLYEX_XM.write(ILLGINS_RE.read() | C0UNUSE_RE.read() |
+                  IAMALGN_RE.read() | IASVIOL_RE.read() | IABUSER_RE.read() |
+                  OVF_RE.read()     | BREAK_RE.read()   | SYSCALL_RE.read() |
+                  LAMALGN_XM.read() | LASVIOL_XM.read() |
+                  SAMALGN_XM.read() | SASVIOL_XM.read());
+}
+
+void memory::processEXCRQ_XM()
+{
+  EXCRQ_XM.write(EARLYEX_XM.read() | LATEEX_XM.read());
+}
+
+void memory::processSWINTRQ_XM()
+{
+  sc_uint<32> cause_rx=CAUSE_RX.read();
+  SWINTRQ_XM.write(cause_rx.range(9,8));
+}
+
+void memory::processWEPC_XM()
+{
+  WEPC_XM.write(EXCRQ_XM.read());
+}

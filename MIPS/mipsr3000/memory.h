@@ -31,7 +31,7 @@ SC_MODULE(memory)
 	sc_in<bool> 		D_BERR_N;		// data bus error
 	sc_in<sc_uint<32> > 	SR_RE;		// status register
 	sc_in<bool> 		IASVIOL_RE;		// instruction @ segmentation violation
-	sc_in<bool> 		IAMALGN_RE;		// instruction @ miss alignement
+	sc_in<bool> 		IAMALGN_RE;		// instruction @ miss alignment
 	sc_in<bool> 		INTRQ_XX;		// interrupt request
 	sc_in<bool> 		IABUSER_RE;		// instruction @ bus error
 	sc_in<bool> 		SYSCALL_RE;		// syscall exception
@@ -75,8 +75,8 @@ SC_MODULE(memory)
 	sc_signal<sc_uint<16> > HSEXT_SM;	// data sign ext half word
 	sc_out<sc_uint<32> > 	DATA_SM;	// data bus / res
 	sc_signal<bool> 		DABUSER_XM;	// data @ bus error
-	sc_signal<bool> 		LAMALGN_XM;	// load @ miss alignement
-	sc_signal<bool> 		SAMALGN_XM;	// store @ miss alignement
+	sc_signal<bool> 		LAMALGN_XM;	// load @ miss alignment
+	sc_signal<bool> 		SAMALGN_XM;	// store @ miss alignment
 	sc_signal<bool> 		LASVIOL_XM;	// load @ segmentation violation
 	sc_signal<bool> 		SASVIOL_XM;	// store @ segmentation violation
 	sc_signal<bool> 		BADDA_XM;	// bad data @
