@@ -75,10 +75,10 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <110> > dec2exe_in ;
+    sc_signal < sc_bv <110> >   dec2exe_in ;
     sc_signal < bool >          dec2exe_push ;
     sc_signal < bool >          dec2exe_full ;
-
+    sc_signal < bool >          dec2exe_empty ;
 
     // Instruction format type :
 
@@ -198,7 +198,7 @@ SC_MODULE(decod)
     {
         dec2if.DIN(dec2if_pc_in) ;
         dec2if.DOUT(DEC2IF_PC) ;
-        dec2if.EMPTY(DEC2IF_EMPTY) ;
+        dec2if.EMPTY(dec2if_empty) ;
         dec2if.FULL(dec2if_full) ;
         dec2if.PUSH(dec2if_push) ;
         dec2if.POP(DEC2IF_POP) ;
@@ -207,7 +207,7 @@ SC_MODULE(decod)
     
         dec2exe.DIN(dec2exe_in) ;
         dec2exe.DOUT(DEC2EXE_OUT) ;
-        dec2exe.EMPTY(DEC2EXE_EMPTY) ;
+        dec2exe.EMPTY(dec2exe_empty) ;
         dec2exe.FULL(dec2exe_full) ;
         dec2exe.PUSH(dec2exe_push) ;
         dec2exe.POP(DEC2EXE_POP) ;
@@ -297,7 +297,9 @@ SC_MODULE(decod)
                     << sh_i
                     << sb_i ;
         SC_METHOD(pc_inc)
-        sensitive   << READ_PC
+        sensitive   << CLK.pos()
+                    << IF_IR
+                    << READ_PC
                     << offset_branch
                     << inc_pc
                     << READ_PC_VALID ;
