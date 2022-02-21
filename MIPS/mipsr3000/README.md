@@ -274,15 +274,15 @@ The ALU component is instantiated on the core but connected directly with the ex
 I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 
-			            mem produce result
-					|
+                                mem produce result
+                                        |
     I_TYPE_RE ->    0 0000 0000 0000 0000 0000 0 000
-					     | | |||
-					     | | ||access type word
-					     | | |access type half word
-					     | |access type byte
-					     |write from memory
-					read from memory
+                                             | | |||
+                                             | | ||access type word
+                                             | | |access type half word
+                                             | |access type byte
+                                             |write from memory
+                                       read from memory
 
 	I_WRITE_SM or "write into register" signal is equal to (I_TYPE[8] | I_TYPE[7])
 
