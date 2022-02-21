@@ -8,5 +8,8 @@ using namespace std ;
 
 int main(int argc, char* argv[])
 {
-   extract_file(argv[1]) ;
+   vector<string> s;
+   string test ;
+   s = extract_file(argv[1]) ;
+   string lala = convert_inst_to_binary(s[0]) ; 
 }

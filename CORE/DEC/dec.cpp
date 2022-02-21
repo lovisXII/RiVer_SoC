@@ -14,6 +14,7 @@ void decod::dec2if_gestion()
     {
         dec2if_push.write(0) ;
     }
+    DEC2IF_EMPTY.write(dec2if_empty.read()) ;
 }
 
 // ---------------------------------------------METHODS FOR IF2DEC GESTION :---------------------------------------------
@@ -30,7 +31,7 @@ void decod::if2dec_pop_method()
 
 void decod::dec2exe_push_method()
 {   
-    if(! RADR1_VALID.read()| ! RADR2_VALID.read() |  ! DEC2EXE_EMPTY.read() | dec2exe_full.read())
+    if(! RADR1_VALID.read()| ! RADR2_VALID.read() |  ! dec2exe_empty.read() | dec2exe_full.read())
     {
         dec2exe_push.write(0) ; 
     }
@@ -38,6 +39,7 @@ void decod::dec2exe_push_method()
     {
         dec2exe_push.write(1) ;
     }
+    DEC2EXE_EMPTY.write(dec2exe_empty.read()) ;
 
 }
 
@@ -705,6 +707,7 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,IF2DEC_POP,GET_NAME(IF2DEC_POP)); 
     sc_trace(tf,DEC2EXE_POP,GET_NAME(DEC2EXE_POP));
     sc_trace(tf,DEC2EXE_EMPTY,GET_NAME(DEC2EXE_EMPTY));
+    sc_trace(tf,dec2exe_empty,GET_NAME(dec2exe_empty));
     sc_trace(tf,DEC2EXE_OUT,GET_NAME(DEC2EXE_OUT));
     sc_trace(tf,CLK,GET_NAME(CLK));
     sc_trace(tf,RESET_N,GET_NAME(RESET_N));

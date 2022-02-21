@@ -22,5 +22,3 @@ $(fifo_110b).o: $(fifo_110b).cpp
 	
 clean:
 	rm -f *.o dec_tb *.vcd 
-	cd ../UTIL/fifo_32b/ && make clean 
-	cd ../UTIL/fifo_110b/ && make clean
