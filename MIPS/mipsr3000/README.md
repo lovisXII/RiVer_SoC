@@ -225,7 +225,7 @@ I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 				   |    |   | |  ||     write into register
 				   |    |   | |  ||      |branch instruction
 				   |    |   | |  ||      ||
-		    I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
+		 I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
 				        ||      | | | ||
 					||      | | | |exec stage produce result
 				        ||      | | | mem stage produce result
