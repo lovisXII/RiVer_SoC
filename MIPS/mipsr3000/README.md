@@ -129,9 +129,9 @@ Multiple interesting signals:
 
 I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 
-		  JIR instruction format
-                  ^^^ signed operation  branch signal
-                  |||     |             |
+		  	  JIR instruction format
+		  	  ^^^ signed operation  branch signal
+		  	  |||     |             |
 	  I_TYPE_SD -> 0 0000 0000 0000 0000 0000 0000
  				|    |  vv          | ||
 		  	  operands used ST	if 7 or 8 then write into register
