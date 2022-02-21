@@ -131,13 +131,13 @@ I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 
 		  	  JIR instruction format
 		  	  ^^^ signed operation  branch signal
-		  	  |||     |             |
+		  	  |||    |              |
 	  I_TYPE_SD -> 0 0000 0000 0000 0000 0000 0000
- 		         |  |   vv        | ||
+ 		         |  |   vv         | ||
 		  operands used ST	if 7 or 8 then write into register
-		         |  |                |
+		         |  |                 |
 			 |  v       if ((7 or 8) and 6) then write into r31
-			 v   uses operands signal
+			 v  uses operands signal
 	illegal instruction signal
 
 
@@ -153,7 +153,7 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 	       source register number S      \ /
 				 coprocesseur 0 signal
 >
-                          | 0x1F         if write into r31
+			  | 0x1F         if write into r31
 	dest reg number = | IR_RI[15,11] if write into reg and R instruction format
  	                  | IR_RI[20,16] if write into reg and I instruction format
 			  | else 0
