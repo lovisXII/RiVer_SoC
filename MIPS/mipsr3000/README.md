@@ -170,7 +170,7 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 >
 		 (special_g, special_i, bcond_i, cop0_i)
 
-                 | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
+		 | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
 	 OPCOD = | (special_g << 5) | IR_RI[20,16]  if IR_RI[31,26] == bcond_i
 		 | COP0                             if IR_RI[31,26] == cop0_i
 		 | else (others_g << 6) | IR_RI[31,26]
@@ -225,7 +225,7 @@ I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 				   |    |   | |  ||     write into register
 				   |    |   | |  ||      |branch instruction
 				   |    |   | |  ||      ||
-    		 I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
+		    I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
 				        ||      | | | ||
 					||      | | | |exec stage produce result
 				        ||      | | | mem stage produce result
