@@ -102,10 +102,13 @@ In addition of all components files,
 
 ### 5.1 IFETCH
 #### 5.1.1 IFETCH component
-	Ifetch only manage 2 thinks, a bool witch tell if then incoming instruction is a delayed slot and a signal of 32 bits witch define the status register for the incoming instruction.
+	Ifetch only manage 2 thinks, a bool witch tell if then incoming instruction is a delayed 
+	slot and a signal of 32 bits witch define the status register for the incoming instruction.
 
 #### 5.1.2 IFETCH MUX
-	The mux is gonna manage the instruction register, the new instruction fetched, a bool witch tell if is or not a delayed slot, the pc register and the status register with the 3 base mux signal(BUBBLE, HOLD and KEEP).
+	The mux is gonna manage the instruction register, the new instruction fetched, a bool witch
+	tell if is or not a delayed slot, the pc register and the status register with the 3 base 
+	mux signal(BUBBLE, HOLD and KEEP).
 
 #### 5.1.3 IFETCH FIFO
 	The input of the fifo is the output of the mux.
@@ -126,15 +129,15 @@ Multiple interesting signals:
 
 I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 
-				  JIR instruction format
+		  JIR instruction format
                   ^^^ signed operation  branch signal
                   |||     |             |
 	  I_TYPE_SD -> 0 0000 0000 0000 0000 0000 0000
  				|    |  vv          | ||
-		  operands used ST		if 7 or 8 then write into register
+		  	  operands used ST	if 7 or 8 then write into register
 				|    |                 |
 				|    v       if ((7 or 8) and 6) then write into r31
-				v 	uses operands signal
+				v   uses operands signal
 	illegal instruction signal
 
 
@@ -144,33 +147,33 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 
            	                    source register number T                      
 						              /   \   IMDSGN_SD
-									  |   |   |
+  							      |   |   |
 			IR_RI ->	0000 00 00000 00000 00000 000 0000 0000
 						        \   /       |   |
-			   source register number S      \ /
-									     coprocesseur 0 signal
+			 	       source register number S      \ /
+								 coprocesseur 0 signal
 >
-           	                   | 0x1F         if write into r31
-			 dest reg number = | IR_RI[15,11] if write into reg and R instruction format
- 					 		   | IR_RI[20,16] if write into reg and I instruction format
-							   | else 0
->
-	 		  | BADVADR if IR_RI[15,11] == badvadr_s -> bad virtual adresse
-	 		  | NEXTSR  if IR_RI[15,11] == status_s  -> next instruction status register
-	 COP0OP = | EPC     if IR_RI[15,11] == epc_s     -> exception pg counter reg
-			  | CAUSE   if IR_RI[15,11] == cause_s   -> cause register
+                          | 0x1F         if write into r31
+	dest reg number = | IR_RI[15,11] if write into reg and R instruction format
+ 	                  | IR_RI[20,16] if write into reg and I instruction format
 			  | else 0
+>
+	 	  | BADVADR if IR_RI[15,11] == badvadr_s -> bad virtual adresse
+	 	  | NEXTSR  if IR_RI[15,11] == status_s  -> next instruction status register
+	 COP0OP = | EPC     if IR_RI[15,11] == epc_s     -> exception pg counter reg
+		  | CAUSE   if IR_RI[15,11] == cause_s   -> cause register
+		  | else 0
 
 	 (cop0_g ?)
 	 COP0 = | (cop0_g << 6) | (IR_RI[22,21] << 3) | IR_RI[24,23]  if IR_RI[25] == 0
-			| else (cop0_g << 6) | 0x20 | IR_RI[4,0]
+		| else (cop0_g << 6) | 0x20 | IR_RI[4,0]
 >
-			 (special_g, special_i, bcond_i, cop0_i)
+		 (special_g, special_i, bcond_i, cop0_i)
 
-             | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
+                 | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
 	 OPCOD = | (special_g << 5) | IR_RI[20,16]  if IR_RI[31,26] == bcond_i
-		     | COP0                             if IR_RI[31,26] == cop0_i
-		     | else (others_g << 6) | IR_RI[31,26]
+		 | COP0                             if IR_RI[31,26] == cop0_i
+		 | else (others_g << 6) | IR_RI[31,26]
 
 
 
@@ -179,28 +182,28 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 	IMDSEX = 0xFFFF if IMDSGN && I_OSGND else 0x0
 	OFFSET = IMDSEX[13,0] << 18 | IR_RI[15,0] << 2
 
-			 | SOPER_SD  	if OPCOD == (jr_i or jalr_i)
+		 | SOPER_SD  	if OPCOD == (jr_i or jalr_i)
 	NEXTPC = | JMPADR_SD 	if OPCOD == (j_i or jal_i)
-			 | BRAADR_SD 	if OPCOD is branch instruction and the branch condition is valid 
-			 | SEQADR_SD        	 ex. (OPCOD == (beq_i) && S_EQ_T_SD == 1)
-													 ^           ^
-													 |        branch condition signal(equal)
-													 branch instruction
+		 | BRAADR_SD 	if OPCOD is branch instruction and the branch condition is valid 
+		 | SEQADR_SD        	 ex. (OPCOD == (beq_i) && S_EQ_T_SD == 1)
+							 ^           ^
+							 |        branch condition signal(equal)
+							 branch instruction
 >
 	BRAADR = NEXTPC + OFFSET
 	SEQADR = NEXTPC + 4
 
 	JMPADR = JMPADR[31,28]  .  JMPADR[27,2] . 00
-				  |			       |
-				  v                v
-	       NEXTPC[31,28]    IR_RI[25,0]
+		  |		       |
+		  v                    v
+	       NEXTPC[31,28]       IR_RI[25,0]
 >
-		   	| SEQADR 	  		if OPCOD == bltzal_i or jalr_i or jal_i or bgezal_i
-			| IR_RI[13,6] 		if OPCOD == sra_i or srl_i or sll_i
+		| SEQADR 	    if OPCOD == bltzal_i or jalr_i or jal_i or bgezal_i
+		| IR_RI[13,6]       if OPCOD == sra_i or srl_i or sll_i
 	IOPER = | IR_RI[15,0] << 16 if OPCOD == lui_i
-			| LO_RW             if OPCOD == mflo_i
-			| HI_RW             if OPCOD == mfhi_i
-			| else IMDSEX_SD << 16 | IR_RI[15,0] 
+		| LO_RW             if OPCOD == mflo_i
+		| HI_RW             if OPCOD == mfhi_i
+		| else IMDSEX_SD << 16 | IR_RI[15,0] 
 >
 	Decode manage 4 branch condition:
 		1. S_CMP_T = SOPER xor TOPER    				compare condition
@@ -215,21 +218,21 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 #### 5.3.1.1 INSTRUCTION TYPE
 I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
-								uses operands             
-						  I format  ^  alu operation
-				               |    |   / \ substraction operation and shift right operation
-							   |    |   | |  |signed result
-							   |    |   | |  ||     write into register
-							   |    |   | |  ||      |branch instruction
-							   |    |   | |  ||      ||
+					uses operands             
+				  I format  ^  alu operation
+			           |    |   / \ substraction operation and shift right operation
+				   |    |   | |  |signed result
+				   |    |   | |  ||     write into register
+				   |    |   | |  ||      |branch instruction
+				   |    |   | |  ||      ||
     		 I_TYPE_RD ->   0 0000 0000 000 000 0 00 000 0000
-							        ||      | | | ||
-									||      | | | |exec stage produce result
-							        ||      | | | mem stage produce result
-                                    ||      \ / overflow result
-									||   logic operation
-									|uses operand t
-								uses operand s
+				        ||      | | | ||
+					||      | | | |exec stage produce result
+				        ||      | | | mem stage produce result
+                        	        ||      \ / overflow result
+					||   logic operation
+					|uses operand t
+					uses operand s
 	
 #### 5.3.1.2 RESULTS
 
@@ -256,7 +259,7 @@ I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 	IAMALGN is the instruction adresse miss alignement signal
 	IAMALGN = NEXTPC[1] or NEXTPC[0] 
 		      -> the first bit and the second because pc is a multiple  
-			  	  of 4 if not its means the adresse is non aligned 
+			  of 4 if not its means the adresse is non aligned 
 				
 	IASVIOL is the instruction adresse segmentation violation signal
 	IASVIOL = NEXTPC[31] and NEXTSR[3] if OPCOD == rfe_i else NEXTPC[31] & NEXTSR[1]
@@ -271,15 +274,15 @@ The ALU component is instantiated on the core but connected directly with the ex
 I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 
-						            mem produce result
-		                                |
+			            mem produce result
+	                                |
     I_TYPE_RE ->    0 0000 0000 0000 0000 0000 0 000
-	  										 | | |||
-	 										 | | ||access type word
-											 | | |access type half word
-											 | |access type byte
-											 |write from memory
-										read from memory
+	                                     | | |||
+	 				     | | ||access type word
+					     | | |access type half word
+					     | |access type byte
+					     |write from memory
+					read from memory
 
 	I_WRITE_SM or "write into register" signal is equal to (I_TYPE[8] | I_TYPE[7])
 
@@ -297,19 +300,19 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 	RD_SM or "destination register" is equal to 00000 if (SWAP_RE and nop COPYCAP_RE) else RD_RE, SWAP signaldeprecated, RD_SM need to be rework.
 >
-				| 0x1 if temp == 0x10        BYTSEL(byte select for read and write)
-				| 0x2 if temp == 0x11
-				| 0x4 if temp == 0x12
+		    | 0x1 if temp == 0x10        BYTSEL(byte select for read and write)
+		    | 0x2 if temp == 0x11
+		    | 0x4 if temp == 0x12
 	BYTSEL_SM = | 0x8 if temp == 0x13        temp = (I_BYTE_SM << 4) or (I_HALF_SM << 3) or
-				| 0x3 if temp == 0x08              	(I_WORD_SM << 2) or RES_SE[1,0]
-				| 0xC if temp == 0x0A
-				| 0xF if temp == 0x04
-				| else 0x0
+		    | 0x3 if temp == 0x08              	(I_WORD_SM << 2) or RES_SE[1,0]
+		    | 0xC if temp == 0x0A
+		    | 0xF if temp == 0x04
+		    | else 0x0
 >
-								  | D_IN[31, 0]                  if BYTSEL[0] == 1
+			              | D_IN[31, 0]                  if BYTSEL[0] == 1
 	REDDAT_SM or "aligned data" = | D_IN[31, 8] + 0x00           if BYTSEL[1] == 1
-								  | D_IN[31, 16] + 0x0000        if BYTSEL[2] == 1
-								  | else D_IN[31, 24] + 0x000000
+				      | D_IN[31, 16] + 0x0000        if BYTSEL[2] == 1
+				      | else D_IN[31, 24] + 0x000000
 
 >
 	BSEXT_SM =  0xFFFFFF if (REDDAT[7] == 1 && OPCOD == lb_i) else 0x000000
@@ -317,10 +320,10 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 >
 	DATA_SM is the result of the bus data
 
-			  | REDDAT_SM 					if (OPCOD == lw_i) or (OPCOD == swap_i)
+		  | REDDAT_SM 					if (OPCOD == lw_i) or (OPCOD == swap_i)
 	DATA_SM = | BSEXT << 8 | REDDAT[7,0]    if (OPCOD == lb_i) or (OPCOD == lbu_i)
-			  | HSEXT << 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
-			  | else RES_RE 
+		  | HSEXT << 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
+		  | else RES_RE 
 >
 #### 5.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT
 	DABUSER or "data adresse bus error" signal.
@@ -328,25 +331,25 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 >
 					LAMALGN or "load adresse miss alignment"
 
-			  | RES_RE[1] or RES_RE[0] if I_WORD and I_LOAD
+		  | RES_RE[1] or RES_RE[0] if I_WORD and I_LOAD
 	LAMALGN = | RES_RE[0] 			   if I_HALF and I_LOAD    
-			  | 0                                                         			
+		  | 0                                                         			
 >
 					SAMALGN or "store adresse miss alignment"
 
-			  | RES_RE[1] or RES_RE[0] if I_WORD and I_STOR
+		  | RES_RE[1] or RES_RE[0] if I_WORD and I_STOR
 	SAMALGN = | RES_RE[0] 			   if I_HALF and I_STOR    
-			  | 0                                                          
+		  | 0                                                          
 					
 >
 					LASVIOL or "load adresse segmentation violation"
 
-			  | RES_RE[31] and SR_RE[1] if I_LOAD
+		  | RES_RE[31] and SR_RE[1] if I_LOAD
 	LASVIOL = | 0 			                           										   
 >
 					SASVIOL or "store adresse segmentation violation"
 
-			  | RES_RE[31] and SR_RE[1] if I_STOR
+		  | RES_RE[31] and SR_RE[1] if I_STOR
 	SASVIOL = | 0 							           											  
 >
 	BADDA or "bad data adresse" is equal to (SASVIOL or LASVIOL or LAMALGN or SAMALGN)
@@ -355,27 +358,27 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 	IAMALGN is the instruction adresse miss alignment
 	BADIA or "bad instruction adresse" is equal to (IASVIOL or IAMALGN)
 >
-			  | 0    if INTRQ                                    interrupt request
-			  | 4	 if LAMALGN or LASVIOL or IAMALGN or IASVIOL
-			  | 5    if SAMALGN or SASVIOL			
-			  | 6    if IABUSER									 instruction adresse bus error
-			  | 7    if DABUSER  								 data adresse bus error
+		  | 0    if INTRQ                                    interrupt request
+		  | 4	 if LAMALGN or LASVIOL or IAMALGN or IASVIOL
+		  | 5    if SAMALGN or SASVIOL			
+		  | 6    if IABUSER				     instruction adresse bus error
+		  | 7    if DABUSER  				     data adresse bus error
 	EXCCODE = | 8    if SYSCALL                                  syscall exception
-			  | 9    if BREAK                                    break exception
-			  | 0xA  if ILLGINS                                  unknown instruction
-			  | 0xB  if C0UNUSE                                  coprocessor 0 unused
-			  | else 0xC   
+		  | 9    if BREAK                                    break exception
+		  | 0xA  if ILLGINS                                  unknown instruction
+		  | 0xB  if C0UNUSE                                  coprocessor 0 unused
+		  | else 0xC   
 >
 	CAUSE_XM or "exception cause (exp)" signal of 32 bits 
 	CAUSE_XM =   x  .   0   .  xx   .  0x000 . xxxxxx .  xx   .   00   .    xxxx   .  00
-			   BDSLOT        COPERR              IT   CAUSE_RX             EXCCODE
+		   BDSLOT        COPERR              IT   CAUSE_RX             EXCCODE
 
 	CAUSE_SM or "exception cause (software)" signal of 32bits
 	CAUSE_SM =   xxxx xxxx xxxx xxxx  .   xxxxxx   .     xx      .    xxxx xxxx
-				   CAUSE_RX[31,16]        IT_XX      RES_RE[9,8]     CAUSE_RX[7,0]
+		       CAUSE_RX[31,16]        IT_XX      RES_RE[9,8]     CAUSE_RX[7,0]
 
-    WCAUSE_SM or "exception cause write enable (software)"
-	WCAUSE_SM = 1 if OPCOD == (mtc0_i or cause_s) else 0
+        WCAUSE_SM or "exception cause write enable (software)"
+        WCAUSE_SM = 1 if OPCOD == (mtc0_i or cause_s) else 0
 >
 	LATEEX_XM or "late exceptions" = DABUSER_XM
 
@@ -388,8 +391,8 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 	SWINTRQ or "software interrupt request" = CAUSE_RX[9,8]
 
 	SWINT_XM or "software interrupt (mtc0)" = RES_SE[9,8] if (OPCODE == (mtc0_i and cause_s) 
-																		and not KEEP)
-														  else CAUSE_RX[9,8]
+		                                                  and not KEEP)
+							      else CAUSE_RX[9,8]
 
 	WEPC or  "exception program counter write enable" = EXCRQ_XM
 
@@ -421,8 +424,12 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 ## 6 EMULATION D'INSTRUCTION
 
-on ajout l'opcode mult qui n'est pas une instruction, quand leprocesseur 	va la lire va generait une exception(unknown instruction)donc on va 	verifier les handler d'exception qui pour notre cas vatrouver qu'il existe 	un handler mult (multiplication) qui vabrancher vers une "fonction" qui va
-faire la multiplication que dans ce cas va ecrire sont reulta sur les registre low et high et apres il va returner a l'instruction mult ducode 	de base.
+On ajout l'opcode mult qui n'est pas une instruction, quand le processeur
+va la lire va generait une exception(unknown instruction)donc on va verifier
+les handler d'exception qui pour notre cas vatrouver qu'il existe
+un handler mult (multiplication) qui vabrancher vers une "fonction" qui va
+faire la multiplication que dans ce cas va ecrire sont reulta sur les registre
+low et high et apres il va returner a l'instruction mult ducode de base.
 
 
 ## 7 TO DO 
