@@ -1,7 +1,6 @@
 
 # REPORT
 by Kevin LASTRA 
-a
 
 ## TABLE OF CONTENTS
 - [REPORT](#report)
@@ -37,10 +36,18 @@ a
 	- [6 EMULATION D'INSTRUCTION](#6-emulation-dinstruction)
 	- [7 TO DO](#7-to-do)
 ## 1. RESUME
-	This MIPS1/32 architecture resume is maid in part of the Project "SystemC modeling for pipelined RiscV and assembly of TME platform", its have for goal to help the students for the good understanding of basic mips components, tools and structures.
+	This MIPS1/32 architecture resume is maid in part of the Project 
+	"SystemC modeling for pipelined RiscV and assembly of TME platform",
+	its have for goal to help the students for the good understanding
+	of basic mips components, tools and structures.
 
 ## 2. ADVISE
-	All the information present on this report are a combination of suppositions and information given by Mr. Pirouz Bazargan Sabet and	translated to this document but it can be bad understood then the 	information can be wrong or true, i recommend take the information with precaution and in case of doubt please go to the information source so directly to Mr. Pirouz Bazargan Sabet.
+	All the information present on this report are a combination of
+	suppositions and information given by Mr. Pirouz Bazargan Sabet 
+	and	translated to this document but it can be bad understood then
+	the	information can be wrong or true, i recommend take the information
+	with precaution and in case of doubt please go to the information
+	source so directly to Mr. Pirouz Bazargan Sabet.
 
 ## 3. MIPS STRUCTURE
   This architecture is based on the mips1 and/or mips32 instruction set.
@@ -124,7 +131,7 @@ I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
                   |||     |             |
 	  I_TYPE_SD -> 0 0000 0000 0000 0000 0000 0000
  				|    |  vv          | ||
-		  operands used ST      if 7 or 8 then write into register
+		  operands used ST		if 7 or 8 then write into register
 				|    |                 |
 				|    v       if ((7 or 8) and 6) then write into r31
 				v 	uses operands signal
@@ -141,7 +148,7 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 			IR_RI ->	0000 00 00000 00000 00000 000 0000 0000
 						        \   /       |   |
 			   source register number S      \ /
-									       coprocesseur 0 signal
+									     coprocesseur 0 signal
 >
            	                   | 0x1F         if write into r31
 			 dest reg number = | IR_RI[15,11] if write into reg and R instruction format
