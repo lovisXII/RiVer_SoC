@@ -1,2 +1,2 @@
-add r4,r1,r3
-sub r4,r4,r2
+add x4,x1,x3
+sub x4,x4,x2
