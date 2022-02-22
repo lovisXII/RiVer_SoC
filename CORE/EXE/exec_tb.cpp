@@ -39,7 +39,7 @@ int sc_main(int argc, char* argv[])
     sc_signal< sc_uint<32> >  op1;
     sc_signal< sc_uint<32> >  op2;
     sc_signal< sc_uint<32> >  mem_data;
-    sc_signal< sc_uint<4> >   dest;
+    sc_signal< sc_uint<6> >   dest;
     sc_signal< sc_uint<2> >   cmd ;
     sc_signal< sc_uint<2> >   mem_size ;
     sc_signal< bool >   neg_op1, wb, mem_sign_extend, select_shift ; //taille fifo entrée : 110
@@ -48,9 +48,9 @@ int sc_main(int argc, char* argv[])
 
     sc_signal< sc_uint<32> >  ffout_exe_res ;
     sc_signal< sc_uint<32> >  ffout_mem_data;
-    sc_signal< sc_uint<4> >   ffout_dest;
+    sc_signal< sc_uint<6> >   ffout_dest;
     sc_signal< sc_uint<2> >   ffout_mem_size ;
-    sc_signal< bool >   ffout_wb, ffout_mem_sign_extend ; //taille fifo sortie : 74
+    sc_signal< bool >   ffout_wb, ffout_mem_sign_extend ; //taille fifo sortie : 76
     sc_signal< bool >     ffout_mem_load, ffout_mem_store ; 
     sc_signal< bool >   exe2mem_empty, dec2exe_pop;
 
@@ -81,7 +81,7 @@ int sc_main(int argc, char* argv[])
     unit_exec.FFOUT_WB(ffout_wb);
     unit_exec.FFOUT_MEM_LOAD(ffout_mem_load);
     unit_exec.FFOUT_MEM_STORE(ffout_mem_store);
-    unit_exec.FFOUT_MEM_SIGN_EXTEND(ffout_mem_sign_extend); //taille fifo sortie : 74
+    unit_exec.FFOUT_MEM_SIGN_EXTEND(ffout_mem_sign_extend); //taille fifo sortie : 76
     unit_exec.EXE2MEM_EMPTY(exe2mem_empty);
     unit_exec.DEC2EXE_POP(dec2exe_pop);
 
@@ -111,7 +111,7 @@ int sc_main(int argc, char* argv[])
 //     sc_trace(tf,unit_exec.FFOUT_WB,"FFOUT_WB");
 //     sc_trace(tf,unit_exec.FFOUT_MEM_LOAD,"FFOUT_MEM_LOAD");
 //     sc_trace(tf,unit_exec.FFOUT_MEM_STORE,"FFOUT_MEM_STORE");
-//     sc_trace(tf,unit_exec.FFOUT_MEM_SIGN_EXTEND,"FFOUT_MEM_SIGN_EXTEND") ;//taille fifo sortie : 74
+//     sc_trace(tf,unit_exec.FFOUT_MEM_SIGN_EXTEND,"FFOUT_MEM_SIGN_EXTEND") ;//taille fifo sortie : 76
 //     sc_trace(tf,unit_exec.EXE2MEM_EMPTY,"EXE2MEM_EMPTY");
 //     sc_trace(tf,unit_exec.DEC2EXE_POP,"DEC2EXE_POP");
 

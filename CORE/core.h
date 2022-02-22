@@ -60,8 +60,9 @@ SC_MODULE(core)
     sc_signal< bool >           INVAL_ENABLE ;
 
     sc_signal< sc_uint<32> >    READ_PC ;
-    sc_signal< bool >           INC_PC ;
     sc_signal< bool >           READ_PC_VALID ;
+    sc_signal< sc_uint<32> >    WRITE_PC ;
+    sc_signal< bool >           WRITE_PC_ENABLE ;
 
     //EXE-MEM interface
     sc_signal< sc_uint<32> >    MEM_EXE_RES ;
@@ -189,8 +190,9 @@ SC_MODULE(core)
         dec_inst.EXE_DEST(EXE_DEST);
 
         dec_inst.READ_PC(READ_PC);
-        dec_inst.INC_PC(INC_PC);
         dec_inst.READ_PC_VALID(READ_PC_VALID);
+        dec_inst.WRITE_PC(WRITE_PC);
+        dec_inst.WRITE_PC_ENABLE(WRITE_PC_ENABLE);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -275,6 +277,8 @@ SC_MODULE(core)
 
         reg_inst.READ_PC(READ_PC) ;
         reg_inst.READ_PC_VALID(READ_PC_VALID) ;
+        reg_inst.WRITE_PC(WRITE_PC);
+        reg_inst.WRITE_PC_ENABLE(WRITE_PC_ENABLE);
         reg_inst.DEBUG_PC_RESET(DEBUG_PC_RESET);
 
         reg_inst.CLK(CLK);

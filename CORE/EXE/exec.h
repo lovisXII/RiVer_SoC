@@ -4,7 +4,7 @@
 #include <string>
 #include "alu.h"
 #include "shifter.h"
-#include "../UTIL/fifo_74b/fifo_74b.h"
+#include "../UTIL/fifo_76b/fifo_76b.h"
 #include "../UTIL/debug_util.h"
 SC_MODULE(exec)
 {
@@ -29,7 +29,7 @@ SC_MODULE(exec)
     sc_out< sc_uint<6> >   FFOUT_DEST;
     sc_out< sc_uint<2> >   FFOUT_MEM_SIZE ;
 
-    sc_out< bool >   FFOUT_WB,  FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 78
+    sc_out< bool >   FFOUT_WB,  FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 7
     sc_out< bool > FFOUT_MEM_LOAD, FFOUT_MEM_STORE ; 
     sc_out< bool >   EXE2MEM_EMPTY, DEC2EXE_POP;
     
@@ -38,8 +38,8 @@ SC_MODULE(exec)
     
     sc_signal< sc_uint<32> >  FFIN_EXE_RES ;
 
-    sc_signal< sc_bv<74> >    FF_DIN; // concatenation of exe_res, mem_data...etc
-    sc_signal< sc_bv<74> >    FF_DOUT;
+    sc_signal< sc_bv<76> >    FF_DIN; // concatenation of exe_res, mem_data...etc
+    sc_signal< sc_bv<76> >    FF_DOUT;
 
     sc_signal< sc_uint<32> > ALU_IN_OP1;
     sc_signal< sc_uint<32> > ALU_OUT;
@@ -51,7 +51,7 @@ SC_MODULE(exec)
 
     alu         alu_inst;
     shifter     shifter_inst;
-    fifo_74b    fifo_inst;
+    fifo_76b    fifo_inst;
     
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT

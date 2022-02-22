@@ -679,6 +679,8 @@ void decod::pc_inc()
         pc_out = pc + offset_branch_var ;
     }
     dec2if_pc_in.write(pc_out) ;
+    WRITE_PC.write(pc_out);
+    WRITE_PC_ENABLE.write(1);
 }
 
 
@@ -696,7 +698,6 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,RADR2,GET_NAME(RADR2)); 
     sc_trace(tf,EXE_DEST,GET_NAME(EXE_DEST)); 
     sc_trace(tf,READ_PC,GET_NAME(READ_PC)); 
-    sc_trace(tf,INC_PC,GET_NAME(INC_PC)); 
     sc_trace(tf,READ_PC_VALID,GET_NAME(READ_PC_VALID));   
     sc_trace(tf,DEC2EXE_OP1,GET_NAME(DEC2EXE_OP1)); 
     sc_trace(tf,DEC2EXE_OP2,GET_NAME(DEC2EXE_OP2)); 
@@ -787,4 +788,6 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,dec2exe_neg_op1,GET_NAME(dec2exe_neg_op1));
     sc_trace(tf,dec2exe_wb,GET_NAME(dec2exe_wb));
     sc_trace(tf,mem_sign_extend,GET_NAME(mem_sign_extend));
+    sc_trace(tf,WRITE_PC,GET_NAME(WRITE_PC));
+    sc_trace(tf,WRITE_PC_ENABLE,GET_NAME(WRITE_PC_ENABLE));
 }

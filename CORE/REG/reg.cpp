@@ -10,7 +10,13 @@ void reg::reading_adresses()
 {
     RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 1
     RADR2_DATA.write(REG[RADR2.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 2
-    READ_PC.write(REG[32]);
+    if (RESET_N.read()) {
+        READ_PC.write(REG[32]);
+    }
+    else {
+        READ_PC.write(DEBUG_PC_RESET.read());
+    }
+   
         
     /*
     The register 1 or 2 validity is based on the destination register. So the validity of radr1 and radr2 is the valid bit from rd
@@ -40,15 +46,21 @@ void reg::writing_adresse()
     }
     while(1)
     {
-        if(WADR1.read() != 0) // si on cherche à écrire dans le registre 0 on ne fait rien
-        {
-            if(WADR1_VALID.read()) // if the register written is valid
-            {
-            REG[WADR1.read()].write(WADR1_DATA) ; // we write the data into the register from the written adress
-            REG_VALID[WADR1.read()].write(1) ;    // Register written is written as valid 
-            } 
-        }
 
+        if (WRITE_PC_ENABLE.read()) {
+            REG[32].write(WRITE_PC) ; // we write the data into the register from the written adress
+            REG_VALID[32].write(1) ;    // Register written is written as valid
+        }
+        if (not(WADR1.read() == 32 && WRITE_PC_ENABLE.read())) {
+            if(WADR1.read() != 0) // si on cherche à écrire dans le registre 0 on ne fait rien
+            {
+                if(WADR1_VALID.read()) // if the register written is valid
+                {
+                REG[WADR1.read()].write(WADR1_DATA) ; // we write the data into the register from the written adress
+                REG_VALID[WADR1.read()].write(1) ;    // Register written is written as valid 
+                } 
+            }
+        }
         // Invalidation du registre destination
         /*
         While the register written is unvalid, we set up his valid bit to 0.
@@ -82,6 +94,8 @@ void reg::trace(sc_trace_file* tf) {
         sc_trace(tf, INVAL_ENABLE, GET_NAME(INVAL_ENABLE));
         sc_trace(tf, READ_PC, GET_NAME(READ_PC));
         sc_trace(tf, READ_PC_VALID, GET_NAME(READ_PC_VALID));
+        sc_trace(tf,WRITE_PC,GET_NAME(WRITE_PC));
+        sc_trace(tf,WRITE_PC_ENABLE,GET_NAME(WRITE_PC_ENABLE)); 
         
         for (int i = 0; i < 33; i++) {
             std::string regname = "REG_";

@@ -30,12 +30,12 @@ void exec::fifo_concat() {
     sc_bv<78> ff_din;
     ff_din.range(31, 0) = FFIN_EXE_RES.read();
     ff_din.range(63, 32) = MEM_DATA.read();
-    ff_din.range(67, 64) = DEST.read();
-    ff_din.range(69, 68) = MEM_SIZE.read();
-    ff_din[70] = WB.read();
-    ff_din[71] = MEM_LOAD.read();
-    ff_din[72] = MEM_STORE.read();
-    ff_din[73] = MEM_SIGN_EXTEND.read();
+    ff_din.range(69, 64) = DEST.read();
+    ff_din.range(71, 70) = MEM_SIZE.read();
+    ff_din[72] = WB.read();
+    ff_din[73] = MEM_LOAD.read();
+    ff_din[74] = MEM_STORE.read();
+    ff_din[75] = MEM_SIGN_EXTEND.read();
     FF_DIN.write(ff_din);
     
 }

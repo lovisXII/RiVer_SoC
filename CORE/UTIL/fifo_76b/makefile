@@ -5,11 +5,11 @@ LINKER_ARGS=-rpath=/usr/local/systemc-2.3.3/lib-linux64
 LIBS=-lsystemc -lm
 C_FLAGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS)
 
-fifo_74b: fifo_74b.o fifo_74b_tb.o
+fifo_76b: fifo_76b.o fifo_76b_tb.o
 	$(CC) $^ -o $@ $(C_FLAGS)
 
 %.o: %.cpp
 	$(CC) -c $^ $(C_FLAGS) 
 
 clean:
-	rm -f *.o fifo_74b
+	rm -f *.o fifo_76b

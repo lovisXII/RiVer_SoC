@@ -20,6 +20,9 @@ SC_MODULE(reg)
     sc_in <bool>                WADR1_VALID ;
     sc_in < sc_uint<32> >       WADR1_DATA ;
 
+    sc_in  < sc_uint<32> >      WRITE_PC ;
+    sc_in  < bool >             WRITE_PC_ENABLE ;
+
     // Inval Port :
 
     sc_in < sc_uint<6> >        INVAL_ADR ;
