@@ -225,6 +225,7 @@ void decod::affectation_registres()
     sc_uint<32> dec2exe_op2_var;
     sc_uint<32> offset_branch_var ;
     sc_uint<32> mem_data_var ;
+    bool inval_adr_dest ;
     bool inc_pc_var ;
 
     //R-type Instruction :
@@ -241,6 +242,7 @@ void decod::affectation_registres()
         offset_branch_var = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 1 ;
+        inval_adr_dest = true ;
     }
 
     //I-type Instruction :
@@ -267,6 +269,7 @@ void decod::affectation_registres()
         offset_branch_var = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 1 ;
+        inval_adr_dest = true ;
 
 
     }
@@ -299,6 +302,7 @@ void decod::affectation_registres()
         
         mem_data_var = RADR2_DATA.read() ;
         inc_pc_var = 1 ;
+        inval_adr_dest = false ;
 
     }
     
@@ -330,6 +334,7 @@ void decod::affectation_registres()
         offset_branch_var.range(5,3)    = if_ir.range(11,8);
         offset_branch_var.range(2,0)    = 0 ;
         mem_data_var = 0 ;
+        inval_adr_dest = false ;
 
         /*BRANCH CONDITION GESTION : */
 
@@ -388,6 +393,7 @@ void decod::affectation_registres()
         }
         mem_data_var = 0 ;
         inc_pc_var = 1 ;
+        inval_adr_dest = true ;
     }
     
     //J-type Instruction :
@@ -417,6 +423,7 @@ void decod::affectation_registres()
         offset_branch_var.range(2,0)    = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
+        inval_adr_dest = true ;
 
     }
 
@@ -443,6 +450,7 @@ void decod::affectation_registres()
         offset_branch_var.range(11,0) = if_ir.range(31,20) ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
+        inval_adr_dest = true ;
 
     }
     //Default case :
@@ -456,6 +464,7 @@ void decod::affectation_registres()
         offset_branch_var = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
+        inval_adr_dest = false ;
     }
     
 

@@ -15,6 +15,8 @@ SC_MODULE(decod)
     sc_out  < sc_uint<6> >       RADR2 ; // adress of rt
 
     sc_out  < sc_uint<6> >       ADR_DEST ; // rd
+    sc_out  < bool >             INVAL_ADR_DEST ;
+
 
     sc_in   < sc_uint<32> >      READ_PC ; // value of r32 which is pc coming from REG
     sc_out  < bool >             INC_PC ; // tells to reg if he does pc+4 or no
