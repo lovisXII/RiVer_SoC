@@ -1,4 +1,8 @@
-# D-type test :
+
+.section .text
+.global _start
+
+_start:
 
 add x1,x2,x3
 addi x10, x2,10
@@ -29,5 +33,6 @@ srai x3,x2,15
 
 lui x2,150
 auipc x4,200
+
 
 

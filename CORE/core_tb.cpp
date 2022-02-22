@@ -10,15 +10,18 @@ int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
     elfio reader;
     string path(argv[1]);
-    if (find(path.begin(), path.end(), ".s") != path.end()) {
+    int start_adr;
+    int good_adr;
+    int bad_adr;
+    if (path.substr(path.find_last_of(".") + 1) == "s") {
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-as -%s", path);
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
         system((char *)temp);
         path = "a.out";
     }
-    if (find(path.begin(), path.end(), ".c") != path.end()) {
+    if (path.substr(path.find_last_of(".") + 1) == "c") {
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -%s", path);
+        sprintf(temp, "riscv32-unknown-elf-gcc %s", path.c_str());
         system((char *)temp);
         path = "a.out";
     }
@@ -26,56 +29,141 @@ int sc_main(int argc, char* argv[]) {
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl; 
         return 2; 
     }
-    int n_seg = reader.segments.size();
     cout << "Loading ELF file..." << endl;
-    for (int i = 0; i < n_seg; i++) {
-        const segment* seg;
-        cout << "Segment " << i << " at address " << seg->get_virtual_address() << endl;
-        int adr = seg->get_virtual_address();
-        int size = seg->get_memory_size();
-        int* data = (int*) seg->get_data();
-        for (int j = 0; j < size; j+=4) {
-            ram.insert(adr + j, data[j/4]);
+    int n_sec = reader.sections.size();
+    for (int i = 0; i < n_sec; i++) {
+        section * sec = reader.sections[i];
+        cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;
+        int adr = sec->get_address();
+        int size = sec->get_size();
+        int* data = (int*) sec->get_data();
+        if (adr) {
+            cout << "Loading data";
+            for (int j = 0; j < size; j+=4) {
+                cout << ".";
+                ram[adr + j] =  data[j/4];
+            }
+            cout << endl;
         }
+
+        if ( sec->get_type() == SHT_SYMTAB ) {
+            cout << "Reading symbols table..." << endl;                              
+            const symbol_section_accessor symbols( reader, sec );              
+            for ( unsigned int j = 0; j < symbols.get_symbols_num(); ++j ) {    
+                std::string   name; 
+                Elf64_Addr    value; 
+                Elf_Xword     size; 
+                unsigned char bind; 
+                unsigned char type; 
+                Elf_Half      section_index; 
+                unsigned char other; 
+        
+                symbols.get_symbol( j, name, value, size, bind, 
+                                    type, section_index, other );               
+                if (name == "_start") {
+                    cout << "Found start" << endl;
+                    start_adr = value;
+                }            
+                if (name == "_bad") {
+                    cout << "Found bad" << endl;
+                    bad_adr = value;
+                }            
+                if (name == "_good") {
+                    cout << "Found good" << endl;
+                    good_adr = value;
+                }            
+            } 
+}
     }
 
     core core_inst("core_inst");
 
     sc_trace_file *tf;
     tf=sc_create_vcd_trace_file("tf");
+    
 
+    sc_signal< sc_uint<32> >        MEM_ADR ;
+    sc_signal< sc_uint<32> >        MEM_DATA ;
+    sc_signal< bool>                MEM_ADR_VALID,
+                                    MEM_STORE,
+                                    MEM_LOAD ; 
 
-    sc_signal< sc_uint<32> >        mem_adr ;
-    sc_signal< sc_uint<32> >        mem_data ;
-    sc_signal< bool>                mem_adr_valid,
-                                    mem_store,
-                                    mem_load ; 
-
-    sc_signal< sc_uint<32> >        mem_result ;
-    sc_signal< bool>                mem_stall ;
+    sc_signal< sc_uint<32> >        MEM_RESULT ;
+    sc_signal< bool>                MEM_STALL ;
 
     //Icache interface
-    sc_signal< sc_uint<32> >        if_adr ; 
-    sc_signal< bool >               if_adr_valid ; 
+    sc_signal< sc_uint<32> >        IF_ADR ; 
+    sc_signal< bool >               IF_ADR_VALID ; 
 
-    sc_signal< sc_uint<32> >        ic_inst ;
-    sc_signal< bool >               ic_stall ;
-    sc_clock                        clk("clk",1,SC_NS);  
-    sc_signal<bool>                 reset;
+    sc_signal< sc_uint<32> >        IC_INST ;
+    sc_signal< bool >               IC_STALL ;
 
-    core_inst.MCACHE_MEM_ADR(mem_adr);
-    core_inst.MCACHE_MEM_DATA(mem_data);
-    core_inst.MCACHE_MEM_ADR_VALID(mem_adr_valid);
-    core_inst.MCACHE_MEM_STORE(mem_store);
-    core_inst.MCACHE_MEM_LOAD(mem_load);
-    core_inst.MCACHE_MEM_RESULT(mem_result);
-    core_inst.MCACHE_MEM_STALL(mem_stall);
+    sc_signal< sc_uint<32> >        PC_RESET;
+    sc_signal< sc_uint<32> >        PC_VALUE; 
+    sc_clock                        CLK("clk",1,SC_NS);  
+    sc_signal<bool>                 RESET;
 
-    core_inst.IF_ADR(if_adr);
-    core_inst.IF_ADR_VALID(if_adr_valid);
-    core_inst.IC_INST(ic_inst);
-    core_inst.IC_STALL(ic_stall);
-    core_inst.CLK(clk);
-    core_inst.RESET(reset);
+    core_inst.MCACHE_MEM_ADR(MEM_ADR);
+    core_inst.MCACHE_MEM_DATA(MEM_DATA);
+    core_inst.MCACHE_MEM_ADR_VALID(MEM_ADR_VALID);
+    core_inst.MCACHE_MEM_STORE(MEM_STORE);
+    core_inst.MCACHE_MEM_LOAD(MEM_LOAD);
+    core_inst.MCACHE_MEM_RESULT(MEM_RESULT);
+    core_inst.MCACHE_MEM_STALL(MEM_STALL);
 
+    core_inst.IF_ADR(IF_ADR);
+    core_inst.IF_ADR_VALID(IF_ADR_VALID);
+    core_inst.IC_INST(IC_INST);
+    core_inst.IC_STALL(IC_STALL);
+    core_inst.CLK(CLK);
+    core_inst.RESET(RESET);
+
+    core_inst.DEBUG_PC_READ(PC_VALUE);
+    core_inst.DEBUG_PC_RESET(PC_RESET);
+    core_inst.trace(tf);
+
+    cout << "Reseting...";
+
+    RESET.write(false) ; // reset 
+    PC_RESET.write(start_adr);
+    sc_start(3,SC_NS) ; // wait for 1 cycle
+    RESET.write(true) ; // end of reset
+    cerr << "done." << endl ;
+
+    while (1) {
+
+        int mem_adr = MEM_ADR.read();
+        bool mem_adr_valid = MEM_ADR_VALID.read();
+        int mem_data = MEM_DATA.read();
+        bool mem_store = MEM_STORE.read();
+        bool mem_load = MEM_LOAD.read();
+        int mem_result;
+
+        int if_adr = IF_ADR.read() ; 
+        bool if_afr_valid = IF_ADR_VALID.read() ; 
+        int if_result;
+
+        int pc_adr = PC_VALUE.read();
+        if (pc_adr == bad_adr) {
+            cout << "Found bad at adr 0x" << std::hex << pc_adr << endl;
+            exit(1);
+        }
+        else if (pc_adr == good_adr) {
+            cout << "Found good at adr 0x" << std::hex << pc_adr << endl;
+            exit(0);
+        }
+
+        if (mem_store && mem_adr_valid) {
+            ram[mem_adr] = mem_data;
+        }
+        mem_result = ram[mem_adr];
+        if_result = ram[if_adr];
+        MEM_RESULT.write(mem_result);
+        MEM_STALL.write(false);
+        IC_INST.write(if_result);
+        IC_STALL.write(false);
+
+        sc_start(1, SC_NS);
+    }
+    return 0;
 }

@@ -29,7 +29,7 @@ SC_MODULE(mem)
 
     sc_in< sc_uint<32> >        EXE_RES ;
     sc_in< sc_uint<32> >        EXE_MEM_DATA;
-    sc_in< sc_uint<4> >         EXE_DEST;
+    sc_in< sc_uint<6> >         EXE_DEST;
     sc_in< sc_uint<2> >         EXE_MEM_SIZE ;
 
     sc_in< bool >               EXE_WB,  
@@ -52,7 +52,7 @@ SC_MODULE(mem)
 
     //WBK interface 
     sc_out< sc_uint<32> >       WBK_DATA;
-    sc_out< sc_uint<5> >        WBK_DEST;
+    sc_out< sc_uint<6> >        WBK_DEST;
     sc_out< sc_uint<2> >        WBK_MEM_SIZE ;
     sc_out< bool >              WBK_WB;
     sc_out< bool >              WBK_MEM_SIGN_EXTEND;

@@ -29,10 +29,11 @@ void reg::writing_adresse()
 {
     //Starting RESET :
     
-    for(int i = 0 ; i < 33 ; i++)
+    for(int i = 0 ; i < 32 ; i++)
     {
         REG[i].write(0) ; // all register are initialized to 0
     }
+    REG[32].write(DEBUG_PC_RESET.read());
     for(int i = 0 ; i < 33 ; i++)
     {
         REG_VALID[i] = true ;// Valid bits from every register are setup to true during reset
@@ -59,7 +60,7 @@ void reg::writing_adresse()
         {
          REG_VALID[INVAL_ADR.read()].write(0) ; // Invalidation du port lié au registre destination 
         }
-
+ 
         // Invalidation de la data lue par adr1 et adr2 
 
 

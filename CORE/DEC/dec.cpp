@@ -82,7 +82,7 @@ void decod::unconcat_dec2exe()
     MEM_SIGN_EXTEND.write((bool)dec2exe_out_var[9])   ;
     MEM_SIZE.write((sc_bv_base)dec2exe_out_var.range(8,7))   ;
     SELECT_SHIFT.write((bool)dec2exe_out_var[6])   ;
-    ADR_DEST.write((sc_bv_base)dec2exe_out_var.range(5,0))   ;
+    EXE_DEST.write((sc_bv_base)dec2exe_out_var.range(5,0))   ;
 }
 
 //---------------------------------------------INSTRUCTION TYPE DETECTION :---------------------------------------------
@@ -472,6 +472,7 @@ void decod::affectation_registres()
     RADR1.write(radr1_var) ;
     RADR2.write(radr2_var) ;
     adr_dest.write(adr_dest_var) ;
+    INVAL_DEST.write(adr_dest_var);
     offset_branch.write(offset_branch_var) ;
     dec2exe_op1.write(dec2exe_op1_var) ;
     dec2exe_op2.write(dec2exe_op2_var) ;
@@ -693,7 +694,7 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,RADR2_VALID,GET_NAME(RADR2_VALID)); 
     sc_trace(tf,RADR1,GET_NAME(RADR1)); 
     sc_trace(tf,RADR2,GET_NAME(RADR2)); 
-    sc_trace(tf,ADR_DEST,GET_NAME(ADR_DEST)); 
+    sc_trace(tf,EXE_DEST,GET_NAME(EXE_DEST)); 
     sc_trace(tf,READ_PC,GET_NAME(READ_PC)); 
     sc_trace(tf,INC_PC,GET_NAME(INC_PC)); 
     sc_trace(tf,READ_PC_VALID,GET_NAME(READ_PC_VALID));   

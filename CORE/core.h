@@ -22,10 +22,11 @@ SC_MODULE(core)
     sc_signal< sc_uint<32> >    DEC2IF_PC ;
 
         // IF2DEC :
-
+    
     sc_signal< sc_uint<32> >    IF_IR ;
     sc_signal< bool >           IF2DEC_EMPTY ;
     sc_signal< bool >           IF2DEC_POP ; 
+    sc_signal< bool >           IF2DEC_FLUSH ; 
 
     //DEC-EXE interface
     
@@ -54,7 +55,9 @@ SC_MODULE(core)
     sc_signal< sc_uint<6> >     RADR1 ;
     sc_signal< sc_uint<6> >     RADR2 ;
 
-    sc_signal< sc_uint<6> >     ADR_DEST ;
+    sc_signal< sc_uint<6> >     EXE_DEST ;
+    sc_signal< sc_uint<6> >     INVAL_DEST ;
+    sc_signal< bool >           INVAL_ENABLE ;
 
     sc_signal< sc_uint<32> >    READ_PC ;
     sc_signal< bool >           INC_PC ;
@@ -63,7 +66,7 @@ SC_MODULE(core)
     //EXE-MEM interface
     sc_signal< sc_uint<32> >    MEM_EXE_RES ;
     sc_signal< sc_uint<32> >    MEM_DATA;
-    sc_signal< sc_uint<4> >     MEM_DEST;
+    sc_signal< sc_uint<6> >     MEM_DEST;
     sc_signal< sc_uint<2> >     MEM_SIZE ;
 
     sc_signal< bool >           MEM_WB,  
@@ -75,7 +78,7 @@ SC_MODULE(core)
 
     //MEM-WBK interface
     sc_signal< sc_uint<32> >    WBK_DATA;
-    sc_signal< sc_uint<5> >     WBK_DEST;
+    sc_signal< sc_uint<6> >     WBK_DEST;
     sc_signal< sc_uint<2> >     WBK_MEM_SIZE ;
     sc_signal< bool >           WBK_WB;
     sc_signal< bool >           WBK_MEM_SIGN_EXTEND;
@@ -83,7 +86,7 @@ SC_MODULE(core)
     sc_signal< bool >           MEM2WBK_POP;
 
     //WBK-REG interface
-    sc_signal< sc_uint<5> >     REG_DEST ;
+    sc_signal< sc_uint<6> >     REG_DEST ;
     sc_signal< sc_uint<32> >    REG_DATA ;
     sc_signal< bool >           REG_WB ;
 
@@ -104,6 +107,10 @@ SC_MODULE(core)
     sc_in< sc_uint<32> >        IC_INST ;
     sc_in< bool >               IC_STALL ;
 
+    //Debug
+    sc_in< sc_uint<32> >       DEBUG_PC_RESET;
+    sc_out< sc_uint<32> >      DEBUG_PC_READ;
+
 
     //Stage instanciation
     decod   dec_inst;
@@ -112,6 +119,8 @@ SC_MODULE(core)
     mem     mem_inst;
     reg     reg_inst;
     wbk     wbk_inst;
+
+    void core_method();
 
     void trace(sc_trace_file* tf);
     SC_CTOR(core) : 
@@ -122,7 +131,8 @@ SC_MODULE(core)
         reg_inst("reg"), 
         wbk_inst("wbk")
     {
-
+        SC_METHOD(core_method);
+        sensitive << READ_PC;
             
         ifetch_inst.DEC2IF_POP(DEC2IF_POP);
         ifetch_inst.DEC2IF_EMPTY(DEC2IF_EMPTY);
@@ -130,12 +140,16 @@ SC_MODULE(core)
         ifetch_inst.IF_IR(IF_IR);
         ifetch_inst.IF2DEC_EMPTY(IF2DEC_EMPTY);
         ifetch_inst.IF2DEC_POP(IF2DEC_POP);
+        ifetch_inst.IF2DEC_FLUSH(IF2DEC_FLUSH);
 
         ifetch_inst.IF_ADR(IF_ADR);
         ifetch_inst.IF_ADR_VALID(IF_ADR_VALID);
 
         ifetch_inst.IC_INST(IC_INST);
         ifetch_inst.IC_STALL(IC_STALL);
+
+        ifetch_inst.CLK(CLK);
+        ifetch_inst.RESET(RESET);
 
 
         dec_inst.DEC2IF_POP(DEC2IF_POP);
@@ -161,6 +175,9 @@ SC_MODULE(core)
         dec_inst.DEC2EXE_POP(DEC2EXE_POP);
         dec_inst.DEC2EXE_EMPTY(DEC2EXE_EMPTY);
 
+        dec_inst.INVAL_DEST(INVAL_DEST);
+        dec_inst.INVAL_ENABLE(INVAL_ENABLE);
+
         dec_inst.RADR1_DATA(RADR1_DATA);
         dec_inst.RADR2_DATA(RADR2_DATA);
         dec_inst.RADR1_VALID(RADR1_VALID);
@@ -169,15 +186,19 @@ SC_MODULE(core)
         dec_inst.RADR1(RADR1);
         dec_inst.RADR2(RADR2);
 
-        dec_inst.ADR_DEST(ADR_DEST);
+        dec_inst.EXE_DEST(EXE_DEST);
 
         dec_inst.READ_PC(READ_PC);
         dec_inst.INC_PC(INC_PC);
         dec_inst.READ_PC_VALID(READ_PC_VALID);
 
+        dec_inst.CLK(CLK);
+        dec_inst.RESET_N(RESET);
+
         exec_inst.OP1(EXE_OP1);
         exec_inst.OP2(EXE_OP2);
         exec_inst.CMD(EXE_CMD);
+        exec_inst.DEST(EXE_DEST);
         exec_inst.NEG_OP1(EXE_NEG_OP1);
         exec_inst.WB(EXE_WB);
         exec_inst.SELECT_SHIFT(EXE_SELECT_SHIFT);
@@ -203,9 +224,12 @@ SC_MODULE(core)
         exec_inst.EXE2MEM_EMPTY(EXE2MEM_EMPTY);
         exec_inst.EXE2MEM_POP(EXE2MEM_POP);
 
+        exec_inst.CLK(CLK);
+        exec_inst.RESET(RESET);
+
 
         mem_inst.EXE_RES(MEM_EXE_RES);
-        mem_inst.MEM_DATA(MEM_DATA);
+        mem_inst.EXE_MEM_DATA(MEM_DATA);
         mem_inst.EXE_DEST(MEM_DEST);
         mem_inst.EXE_MEM_SIZE(MEM_SIZE);
 
@@ -232,6 +256,9 @@ SC_MODULE(core)
         mem_inst.MEM_RESULT(MCACHE_MEM_RESULT);
         mem_inst.MEM_STALL(MCACHE_MEM_STALL);
 
+        mem_inst.CLK(CLK);
+        mem_inst.RESET(RESET);
+
         reg_inst.RADR1(RADR1) ;
         reg_inst.RADR2(RADR2) ;
         reg_inst.RADR1_VALID(RADR1_VALID) ;
@@ -243,18 +270,15 @@ SC_MODULE(core)
         reg_inst.WADR1_VALID(REG_WB) ;
         reg_inst.WADR1_DATA(REG_DATA) ;
 
-        reg_inst.INVAL_ADR(ADR_DEST) ;
-        reg_inst.INVAL_ENABLE() ;
+        reg_inst.INVAL_ADR(INVAL_DEST) ;
+        reg_inst.INVAL_ENABLE(INVAL_ENABLE) ;
 
         reg_inst.READ_PC(READ_PC) ;
         reg_inst.READ_PC_VALID(READ_PC_VALID) ;
+        reg_inst.DEBUG_PC_RESET(DEBUG_PC_RESET);
 
-
-
-
-
-
-
+        reg_inst.CLK(CLK);
+        reg_inst.RESET_N(RESET);
 
         wbk_inst.MEM_DATA(WBK_DATA);
         wbk_inst.MEM_DEST(WBK_DEST);
@@ -267,6 +291,9 @@ SC_MODULE(core)
         wbk_inst.REG_DEST(REG_DEST);
         wbk_inst.REG_DATA(REG_DATA);
         wbk_inst.REG_WB(REG_WB);
+
+        wbk_inst.CLK(CLK);
+        wbk_inst.RESET(RESET);
 
     }
 };

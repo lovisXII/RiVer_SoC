@@ -13,7 +13,7 @@ SC_MODULE(exec)
     sc_in< sc_uint<32> >    OP1 ;
     sc_in< sc_uint<32> >    OP2 ;
     sc_in< sc_uint<32> >    MEM_DATA;
-    sc_in< sc_uint<4> >     DEST;
+    sc_in< sc_uint<6> >     DEST;
     sc_in< sc_uint<2> >     CMD ;
     sc_in< sc_uint<2> >     MEM_SIZE ;
     sc_in< bool >           NEG_OP1, WB, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
@@ -26,10 +26,10 @@ SC_MODULE(exec)
 
     sc_out< sc_uint<32> >  FFOUT_EXE_RES ;
     sc_out< sc_uint<32> >  FFOUT_MEM_DATA;
-    sc_out< sc_uint<4> >   FFOUT_DEST;
+    sc_out< sc_uint<6> >   FFOUT_DEST;
     sc_out< sc_uint<2> >   FFOUT_MEM_SIZE ;
 
-    sc_out< bool >   FFOUT_WB,  FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 74
+    sc_out< bool >   FFOUT_WB,  FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 78
     sc_out< bool > FFOUT_MEM_LOAD, FFOUT_MEM_STORE ; 
     sc_out< bool >   EXE2MEM_EMPTY, DEC2EXE_POP;
     

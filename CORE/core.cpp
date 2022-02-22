@@ -9,3 +9,6 @@ void core::trace(sc_trace_file* tf) {
     reg_inst.trace(tf);
 }
 
+void core::core_method() {
+    DEBUG_PC_READ.write(READ_PC.read());
+}

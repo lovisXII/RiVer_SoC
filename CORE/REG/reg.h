@@ -34,6 +34,7 @@ SC_MODULE(reg)
 
     sc_in_clk CLK ;
     sc_in <bool> RESET_N ;
+    sc_in <sc_uint<32>> DEBUG_PC_RESET;
 
     //Registres :
 

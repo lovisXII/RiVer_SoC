@@ -14,8 +14,8 @@ SC_MODULE(decod)
     sc_out  < sc_uint<6> >       RADR1 ; // adress of rs
     sc_out  < sc_uint<6> >       RADR2 ; // adress of rt
 
-    sc_out  < sc_uint<6> >       ADR_DEST ; // rd
-    sc_out  < bool >             INVAL_ADR_DEST ;
+    sc_out  < sc_uint<6> >       INVAL_DEST ; // rd
+    sc_out  < bool >             INVAL_ENABLE ;
 
 
     sc_in   < sc_uint<32> >      READ_PC ; // value of r32 which is pc coming from REG
@@ -29,7 +29,8 @@ SC_MODULE(decod)
     sc_out  < sc_uint<2> >       DEC2EXE_CMD ; // value of the command sent to exe
     sc_out  < bool >             DEC2EXE_NEG_OP1 ; // say if we take the opposite of the op1 to do a substraction for example
     sc_out  < bool >             DEC2EXE_WB ; // say if we plan to wbk the value of rd or no
-    
+    sc_out  < sc_uint<6> >       EXE_DEST;    //the destination register
+
     sc_out  < sc_uint<32> >      MEM_DATA ; // data sent to mem for storage
     sc_out  < bool>              MEM_LOAD ; // say to mem if we do a load
     sc_out  < bool >             MEM_STORE ; // say to mem if we do a store
@@ -53,7 +54,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP ;
     sc_out< bool >                DEC2EXE_EMPTY ;                    
-    sc_out< sc_bv<110> >          DEC2EXE_OUT ;
+    sc_signal< sc_bv<110> >          DEC2EXE_OUT ;
 
     //General Interface :
     sc_in_clk                     CLK ;

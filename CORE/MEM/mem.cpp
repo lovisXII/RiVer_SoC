@@ -14,7 +14,7 @@ void mem::mem2wbk_unconcat() {
     WBK_DATA.write(ff_dout.range(31, 0));
     WBK_DEST.write(ff_dout.range(36, 32));
     WBK_MEM_SIZE.write(ff_dout.range(38, 37));
-    WB.write(ff_dout[39]);
+    WBK_WB.write(ff_dout[39]);
     WBK_MEM_SIGN_EXTEND.write(ff_dout[40]);
 }
 

@@ -1,3 +1,4 @@
+#pragma once
 #include <systemc.h>
 #include "../debug_util.h"
 SC_MODULE(fifo_41b)
