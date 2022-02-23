@@ -4,7 +4,7 @@ LINK_PATH=-L /usr/local/systemc-2.3.3/lib-linux64
 LINKER_ARGS=-rpath=/usr/local/systemc-2.3.3/lib-linux64
 LIBS=-lsystemc -lm
 C_ARGS=$(INCLUDE_PATH) $(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
-OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o EXE/shifter.o EXE/exec.o MEM/mem.o REG/reg.o WBK/wbk.o UTIL/fifo_78b/fifo_78b.o UTIL/fifo_76b/fifo_76b.o UTIL/fifo_32b/fifo_32b.o UTIL/fifo_41b/fifo_41b.o UTIL/fifo_110b/fifo_110b.o
+OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o EXE/shifter.o EXE/exec.o MEM/mem.o REG/reg.o WBK/wbk.o
 
 all: core_tb
 

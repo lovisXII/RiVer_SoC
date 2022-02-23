@@ -6,7 +6,7 @@
 
 void decod::dec2if_gestion()
 {  
-    if(READ_PC_VALID.read() && dec2if_empty.read())
+    if(READ_PC_VALID.read() && !dec2if_full.read())
     {
         dec2if_push.write(1) ;
     }
@@ -21,9 +21,12 @@ void decod::dec2if_gestion()
 
 void decod::if2dec_pop_method()
 {
-    if(RADR1_VALID.read() && RADR2_VALID.read() && ! IF2DEC_EMPTY.read())
+    if(RADR1_VALID.read() && RADR2_VALID.read() && ! IF2DEC_EMPTY.read() && !dec2exe_full.read())
     {
         IF2DEC_POP.write(1) ;
+    }
+    else {
+        IF2DEC_POP.write(0) ;
     }
 }
 
@@ -31,7 +34,7 @@ void decod::if2dec_pop_method()
 
 void decod::dec2exe_push_method()
 {   
-    if(! RADR1_VALID.read()| ! RADR2_VALID.read() |  ! dec2exe_empty.read() | dec2exe_full.read())
+    if(! RADR1_VALID.read() || ! RADR2_VALID.read() || dec2exe_full.read() || IF2DEC_EMPTY.read())
     {
         dec2exe_push.write(0) ; 
     }
@@ -215,7 +218,6 @@ void decod::decoding_instruction()
 
 void decod::affectation_registres() 
 {
-    //MISSING VERIFICATION OF VALIDATION NEED TO ADD A KIND OF WAIT TO CHECK IF DATA IS VALID
     
     sc_uint<32> if_ir = IF_IR.read() ;
     sc_uint<6> radr1_var;
@@ -328,11 +330,11 @@ void decod::affectation_registres()
         {
             offset_branch_var.range(31,15) = 0b000000000000000000 ;
         }
-        offset_branch_var.range(14,14)  = if_ir.range(31,31);
-        offset_branch_var.range(13,13)  = if_ir.range(7,7);
-        offset_branch_var.range(12,7)   = if_ir.range(30,25);
-        offset_branch_var.range(5,3)    = if_ir.range(11,8);
-        offset_branch_var.range(2,0)    = 0 ;
+        offset_branch_var.range(12,12)  = if_ir.range(31,31);
+        offset_branch_var.range(11,11)  = if_ir.range(7,7);
+        offset_branch_var.range(10,5)   = if_ir.range(30,25);
+        offset_branch_var.range(4, 1)    = if_ir.range(11,8);
+        offset_branch_var.range(0,0)    = 0;
         mem_data_var = 0 ;
         inval_adr_dest = false ;
 
@@ -416,11 +418,11 @@ void decod::affectation_registres()
         {
             offset_branch_var.range(31,23) = 0b000000000 ;
         }
-        offset_branch_var.range(22,22)  = if_ir.range(31,31) ;
-        offset_branch_var.range(21,14)  = if_ir.range(19,12) ;
-        offset_branch_var.range(13,13)  = if_ir.range(20,20) ;
-        offset_branch_var.range(12,3)   = if_ir.range(30,21) ;
-        offset_branch_var.range(2,0)    = 0 ;
+        offset_branch_var.range(20,20)  = if_ir.range(31,31) ;
+        offset_branch_var.range(19,12)  = if_ir.range(19,12) ;
+        offset_branch_var.range(11,11)  = if_ir.range(20,20) ;
+        offset_branch_var.range(10,1)   = if_ir.range(30,21) ;
+        offset_branch_var.range(0,0)    = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
         inval_adr_dest = true ;
@@ -492,7 +494,7 @@ void decod::affectation_calcul()
     //We are going to setup commands sent to EXE here, so each if will be execute for one type of command :
 
     //CMD : +
-
+    bool dec2exe_wb_var;
     if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i | lui_i)
     {
         dec2exe_cmd.write(0) ;
@@ -511,8 +513,8 @@ void decod::affectation_calcul()
 
         //WBK GESTION :
 
-        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i) dec2exe_wb.write(1) ;
-        else if(sw_i | sh_i | sb_i)  dec2exe_wb.write(0) ;
+        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i) dec2exe_wb_var = 1 ;
+        else if(sw_i | sh_i | sb_i)  dec2exe_wb_var = 0 ;
         
         //MEMORY GESTION :
 
@@ -577,7 +579,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(1) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -591,7 +593,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(2) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -603,7 +605,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(3) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -615,7 +617,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(0) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -628,7 +630,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(1) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -641,7 +643,7 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(2) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(1) ;
+        dec2exe_wb_var = 1 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
@@ -653,13 +655,16 @@ void decod::affectation_calcul()
     {
         dec2exe_cmd.write(0) ;
         dec2exe_neg_op1.write(0) ;
-        dec2exe_wb.write(0) ;
+        dec2exe_wb_var = 0 ;
         mem_load.write(0) ;
         mem_store.write(0) ;
         mem_sign_extend.write(0) ;
         mem_size.write(0) ;
         select_shift.write(0) ;   
     }
+    INVAL_ENABLE.write(dec2exe_wb_var);
+    dec2exe_wb.write(dec2exe_wb_var);
+    cout << INVAL_ENABLE.read() << dec2exe_wb.read() << endl;
 } 
 
 //---------------------------------------------PC GESTION :---------------------------------------------
@@ -690,6 +695,8 @@ void decod::pc_inc()
 
 void decod::trace(sc_trace_file* tf)
 {
+    dec2if.trace(tf);
+    dec2exe.trace(tf); 
     sc_trace(tf,RADR1_DATA,GET_NAME(RADR1_DATA)); 
     sc_trace(tf,RADR2_DATA,GET_NAME(RADR2_DATA));
     sc_trace(tf,RADR1_VALID,GET_NAME(RADR1_VALID)); 
@@ -790,4 +797,6 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,mem_sign_extend,GET_NAME(mem_sign_extend));
     sc_trace(tf,WRITE_PC,GET_NAME(WRITE_PC));
     sc_trace(tf,WRITE_PC_ENABLE,GET_NAME(WRITE_PC_ENABLE));
+    sc_trace(tf,INVAL_ENABLE,GET_NAME(INVAL_ENABLE));
+    sc_trace(tf,INVAL_DEST,GET_NAME(INVAL_DEST));
 }

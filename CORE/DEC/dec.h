@@ -1,6 +1,5 @@
 #include <systemc.h>
-#include "../UTIL/fifo_32b/fifo_32b.h"
-#include "../UTIL/fifo_110b/fifo_110b.h"
+#include "../UTIL/fifo_generic/fifo_generic.h"
 SC_MODULE(decod)
 {
     
@@ -43,11 +42,11 @@ SC_MODULE(decod)
 
     sc_in  < bool >               DEC2IF_POP ; // Ifecth say to decod if it wants a pop or no
     sc_out   < bool >             DEC2IF_EMPTY ;
-    sc_out  < sc_uint<32> >       DEC2IF_PC ; // this value must also be sent to REG
+    sc_out  < sc_bv<32> >         DEC2IF_PC ; // this value must also be sent to REG
 
     //Interface with IF2DEC :
 
-    sc_in   < sc_uint<32> >       IF_IR ;
+    sc_in   < sc_bv<32> >         IF_IR ;
     sc_in   < bool >              IF2DEC_EMPTY ;
     sc_out  < bool >              IF2DEC_POP ; //Decod says to IFETCH if it wants a pop or no
 
@@ -64,18 +63,18 @@ SC_MODULE(decod)
 
     //Instance used :
     
-    fifo_32b dec2if ;
-    fifo_110b dec2exe ;
+    fifo_generic<32> dec2if ;
+    fifo_generic<110> dec2exe ;
 
     // Signals :
 
     //fifo dec2if :
     
-    sc_signal < sc_uint<32> >   dec2if_pc_in ; // pc sent to fifo
+    sc_signal < sc_bv<32> >   dec2if_pc_in ; // pc sent to fifo
     sc_signal < bool >          dec2if_push ;
     sc_signal < bool >          dec2if_empty ;
     sc_signal < bool >          dec2if_full ;
-    sc_signal < sc_uint<32> >   dec2if_pc_out ;
+    sc_signal < sc_bv<32> >   dec2if_pc_out ;
 
     //fifo dec2exe :
 

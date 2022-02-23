@@ -1,5 +1,61 @@
 #include "fifo_41b.h"
  
+void fifo_41b::flags_update() {
+    bool push = PUSH.read() ;
+    bool pop = POP.read() ;
+    if( fifo_v ) // if the data in the fifo is valide
+    {
+        
+        if(!push && !pop)
+        {
+            //do nothing
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+        else if(!push  && pop ) // when data is valid and pop is able we sent data
+        {
+            FULL.write(0) ;
+            EMPTY.write(1) ;
+        }
+        else if(push  && !pop )
+        {
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+        else if(push && pop )
+        {
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+    }
+    else // case where data inside the fifo is not valid
+    {
+
+        if(!push && !pop )
+        {
+            FULL.write(0) ;
+            EMPTY.write(1) ;
+            //do nothing
+        }
+        else if(!push && pop) // when data is valid and pop is able we sent data
+        {
+            FULL.write(0) ;
+            EMPTY.write(1) ;
+            //do nothing cause data is not valid
+        }
+        else if(push && !pop)
+        {
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+        else if(push && pop)
+        {
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+    }
+}
+
 void fifo_41b::function()
 {
     fifo_v.write(false) ;
@@ -18,31 +74,18 @@ void fifo_41b::function()
         bool pop = POP.read() ;
         if( fifo_v ) // if the data in the fifo is valide
         {
-    
-            if(!push && !pop)
+            if(!push  && pop ) // when data is valid and pop is able we sent data
             {
-                //do nothing
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-            }
-            else if(!push  && pop ) // when data is valid and pop is able we sent data
-            {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
 
                 DOUT.write(data_inside) ;
                 fifo_v.write(0) ;
             }
             else if(push  && !pop )
             {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
                 DOUT.write(data_inside) ;
             }
             else if(push && pop )
             {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
                 DOUT.write(data_inside) ;
                 data_inside.write(DIN.read()) ;
                 fifo_v.write(1) ; // stay valid
@@ -51,23 +94,8 @@ void fifo_41b::function()
         else // case where data inside the fifo is not valid
         {
 
-            if(!push && !pop )
+            if(push && !pop)
             {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
-                //do nothing
-            }
-            else if(!push && pop) // when data is valid and pop is able we sent data
-            {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
-                //do nothing cause data is not valid
-            }
-            else if(push && !pop)
-            {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-
                 data_inside.write(DIN.read()) ;
                 DOUT.write(DIN.read()) ;
                 
@@ -75,12 +103,9 @@ void fifo_41b::function()
             }
             else if(push && pop)
             {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-                
-                
                 data_inside.write(DIN.read()) ; // we just push
                 DOUT.write(DIN.read()) ;
+
                 fifo_v.write(1) ; // became valid
             }
         }

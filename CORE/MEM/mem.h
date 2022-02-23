@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo_41b/fifo_41b.h"
+#include "../UTIL/fifo_generic/fifo_generic.h"
 #include "../UTIL/debug_util.h"
 
 /*
@@ -58,8 +58,8 @@ SC_MODULE(mem)
     sc_out< bool >              WBK_MEM_SIGN_EXTEND;
 
     //Internal signals
-    sc_signal< sc_uint<41> >    MEM2WBK_FFIN;
-    sc_signal< sc_uint<41> >    MEM2WBK_FFOUT;
+    sc_signal< sc_bv<41> >      MEM2WBK_FFIN;
+    sc_signal< sc_bv<41> >      MEM2WBK_FFOUT;
     sc_signal< sc_uint<32> >    DATA;
     sc_signal< bool >           WB;
     //Global Interface :
@@ -68,7 +68,7 @@ SC_MODULE(mem)
     sc_in_clk                   RESET;
 
     // FIFO
-    fifo_41b    fifo_inst;
+    fifo_generic<41>    fifo_inst;
 
     void mem2wbk_concat();
     void mem2wbk_unconcat();

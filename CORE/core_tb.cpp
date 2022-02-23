@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include "elfio/elfio.hpp"
 #include <string>
+#include "UTIL/colors.h"
 using namespace std; 
 using namespace ELFIO;
 //arguments 
@@ -21,7 +22,7 @@ int sc_main(int argc, char* argv[]) {
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") {
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc %s", path.c_str());
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
         system((char *)temp);
         path = "a.out";
     }
@@ -95,7 +96,7 @@ int sc_main(int argc, char* argv[]) {
     sc_signal< sc_uint<32> >        IF_ADR ; 
     sc_signal< bool >               IF_ADR_VALID ; 
 
-    sc_signal< sc_uint<32> >        IC_INST ;
+    sc_signal< sc_bv<32> >          IC_INST ;
     sc_signal< bool >               IC_STALL ;
 
     sc_signal< sc_uint<32> >        PC_RESET;
@@ -145,11 +146,13 @@ int sc_main(int argc, char* argv[]) {
 
         int pc_adr = PC_VALUE.read();
         if (pc_adr == bad_adr) {
-            cout << "Found bad at adr 0x" << std::hex << pc_adr << endl;
+            cout << FRED("Error ! ")  << "Found bad at adr 0x" << std::hex << pc_adr << endl;
+            sc_start(3,SC_NS) ;
             exit(1);
         }
         else if (pc_adr == good_adr) {
-            cout << "Found good at adr 0x" << std::hex << pc_adr << endl;
+            cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
+            sc_start(3,SC_NS) ;
             exit(0);
         }
 

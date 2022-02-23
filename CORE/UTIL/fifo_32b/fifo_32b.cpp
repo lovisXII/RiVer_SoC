@@ -1,11 +1,45 @@
 #include "fifo_32b.h"
 
+
+void fifo_32b::flags_update() {
+    bool push = PUSH.read() ;
+    bool pop = POP.read() ;
+    if( fifo_v ) // if the data in the fifo is valide
+    {
+        
+        if(pop)
+        {
+            FULL.write(0) ;
+            EMPTY.write(0) ;
+        }
+        else
+        {
+            FULL.write(1) ;
+            EMPTY.write(0) ;
+        }
+    }
+    else // case where data inside the fifo is not valid
+    {
+
+        if(push)
+        {
+            FULL.write(0) ;
+            EMPTY.write(0) ;
+        }
+        else
+        {
+            FULL.write(0) ;
+            EMPTY.write(1) ;
+        }
+    }
+
+    DOUT.write(data_inside) ;
+}
+
 void fifo_32b::function()
 {
     fifo_v.write(false) ;
     data_inside.write(0) ;
-    FULL.write(0) ;
-    EMPTY.write(1) ;
 
     wait(3) ;
 
@@ -18,71 +52,22 @@ void fifo_32b::function()
         bool pop = POP.read() ;
         if( fifo_v ) // if the data in the fifo is valide
         {
-            
-            if(!push && !pop)
+            if(!push  && pop ) // when data is valid and pop is able we sent data
             {
-                //do nothing
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-            }
-            else if(!push  && pop ) // when data is valid and pop is able we sent data
-            {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
-
-                DOUT.write(data_inside) ;
                 fifo_v.write(0) ;
-            }
-            else if(push  && !pop )
-            {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-                DOUT.write(data_inside) ;
             }
             else if(push && pop )
             {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-                DOUT.write(data_inside) ;
                 data_inside.write(DIN.read()) ;
                 fifo_v.write(1) ; // stay valid
             }
         }
         else // case where data inside the fifo is not valid
         {
-
-            if(!push && !pop )
+            if(push)
             {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
-                //do nothing
-            }
-            else if(!push && pop) // when data is valid and pop is able we sent data
-            {
-                FULL.write(0) ;
-                EMPTY.write(1) ;
-                //do nothing cause data is not valid
-            }
-            else if(push && !pop)
-            {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-
-                data_inside.write(DIN.read()) ;
-                DOUT.write(DIN.read()) ;
-                
+                data_inside.write(DIN.read()) ;                
                 fifo_v.write(1) ;
-            }
-            else if(push && pop)
-            {
-                FULL.write(1) ;
-                EMPTY.write(0) ;
-                
-                
-                data_inside.write(DIN.read()) ; // we just push
-                DOUT.write(DIN.read()) ;
-
-                fifo_v.write(1) ; // became valid
             }
         }
 
@@ -96,9 +81,9 @@ void fifo_32b::trace(sc_trace_file* tf) {
         sc_trace(tf, DIN, GET_NAME(DIN));
         sc_trace(tf, PUSH, GET_NAME(PUSH));
         sc_trace(tf, POP, GET_NAME(POP));
-        sc_trace(tf, DIN, GET_NAME(FULL));
-        sc_trace(tf, DIN, GET_NAME(EMPTY));
-        sc_trace(tf, DIN, GET_NAME(DOUT));
-        sc_trace(tf, DIN, GET_NAME(fifo_v));
-        sc_trace(tf, DIN, GET_NAME(data_inside));
+        sc_trace(tf, FULL, GET_NAME(FULL));
+        sc_trace(tf, EMPTY, GET_NAME(EMPTY));
+        sc_trace(tf, DOUT, GET_NAME(DOUT));
+        sc_trace(tf, fifo_v, GET_NAME(fifo_v));
+        sc_trace(tf, data_inside, GET_NAME(data_inside));
 }

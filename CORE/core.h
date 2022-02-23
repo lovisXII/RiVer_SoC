@@ -19,11 +19,11 @@ SC_MODULE(core)
 
     sc_signal< bool >           DEC2IF_POP ; 
     sc_signal< bool >           DEC2IF_EMPTY ;
-    sc_signal< sc_uint<32> >    DEC2IF_PC ;
+    sc_signal< sc_bv<32> >      DEC2IF_PC ;
 
         // IF2DEC :
     
-    sc_signal< sc_uint<32> >    IF_IR ;
+    sc_signal< sc_bv<32> >      IF_IR ;
     sc_signal< bool >           IF2DEC_EMPTY ;
     sc_signal< bool >           IF2DEC_POP ; 
     sc_signal< bool >           IF2DEC_FLUSH ; 
@@ -105,7 +105,7 @@ SC_MODULE(core)
     sc_out< sc_uint<32> >       IF_ADR ; 
     sc_out< bool >              IF_ADR_VALID ; 
 
-    sc_in< sc_uint<32> >        IC_INST ;
+    sc_in< sc_bv<32> >          IC_INST ;
     sc_in< bool >               IC_STALL ;
 
     //Debug

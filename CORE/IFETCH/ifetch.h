@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo_32b/fifo_32b.h"
+#include "../UTIL/fifo_generic/fifo_generic.h"
 #include "../UTIL/debug_util.h"
 SC_MODULE(ifetch)
 {
@@ -10,7 +10,7 @@ SC_MODULE(ifetch)
     sc_out<sc_uint<32> > IF_ADR ; // @ which we search a data block from memory
     sc_out<bool> IF_ADR_VALID ; 
 
-    sc_in<sc_uint<32> > IC_INST ;
+    sc_in<sc_bv<32> > IC_INST ;
     sc_in<bool> IC_STALL ;
     
     //Dec Interface :
@@ -29,8 +29,8 @@ SC_MODULE(ifetch)
     sc_signal<bool> IF2DEC_FULL ;
     sc_out<bool> IF2DEC_EMPTY ;
     
-    sc_in<sc_uint<32>  > DEC_PC ; // PC coming to fetch an instruction
-    sc_out<sc_uint<32> > IF_IR ; // instruction sent to if2dec 
+    sc_in<sc_bv<32>  > DEC_PC ; // PC coming to fetch an instruction
+    sc_out<sc_bv<32> > IF_IR ; // instruction sent to if2dec 
     
     //Global Interface :
 
@@ -38,7 +38,7 @@ SC_MODULE(ifetch)
     sc_in_clk RESET;
 
     // FIFO
-    fifo_32b    fifo_inst;
+    fifo_generic<32>    fifo_inst;
 
     void fetch_method();
     void trace(sc_trace_file* tf);
