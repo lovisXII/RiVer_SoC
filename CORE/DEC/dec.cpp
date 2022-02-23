@@ -21,28 +21,33 @@ void decod::dec2if_gestion()
 
 void decod::if2dec_pop_method()
 {
-    if(RADR1_VALID.read() && RADR2_VALID.read() && ! IF2DEC_EMPTY.read() && !dec2exe_full.read())
+    if (add_offset_to_pc.read()) {
+        IF2DEC_POP.write(1) ;
+        IF2DEC_FLUSH.write(1);
+    }
+    else if(RADR1_VALID.read() && RADR2_VALID.read() && ! IF2DEC_EMPTY.read() && !dec2exe_full.read())
     {
         IF2DEC_POP.write(1) ;
+        IF2DEC_FLUSH.write(0);
     }
     else {
         IF2DEC_POP.write(0) ;
+        IF2DEC_FLUSH.write(0);
     }
 }
 
 // ---------------------------------------------METHODS FOR DEC2EXE GESTION :---------------------------------------------
 
 void decod::dec2exe_push_method()
-{   
+{
     if(! RADR1_VALID.read() || ! RADR2_VALID.read() || dec2exe_full.read() || IF2DEC_EMPTY.read())
     {
         dec2exe_push.write(0) ; 
     }
-    else
+    else 
     {
         dec2exe_push.write(1) ;
     }
-    DEC2EXE_EMPTY.write(dec2exe_empty.read()) ;
 
 }
 
@@ -229,6 +234,7 @@ void decod::affectation_registres()
     sc_uint<32> mem_data_var ;
     bool inval_adr_dest ;
     bool inc_pc_var ;
+    bool invalid_instr = false;
 
     //R-type Instruction :
 
@@ -467,9 +473,10 @@ void decod::affectation_registres()
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
         inval_adr_dest = false ;
+        invalid_instr = true;
     }
     
-
+    invalid_instr = invalid_instr || IF2DEC_EMPTY.read();
 
     RADR1.write(radr1_var) ;
     RADR2.write(radr2_var) ;
@@ -479,7 +486,8 @@ void decod::affectation_registres()
     dec2exe_op1.write(dec2exe_op1_var) ;
     dec2exe_op2.write(dec2exe_op2_var) ;
     mem_data.write(mem_data_var) ;
-    inc_pc.write(inc_pc_var) ;
+    inc_pc.write((inc_pc_var && dec2if_push.read()) || invalid_instr) ;
+    add_offset_to_pc.write(!inc_pc_var && dec2if_push.read() && RADR1_VALID.read() && RADR2_VALID.read() && ! invalid_instr);
 }
 
 
@@ -664,7 +672,6 @@ void decod::affectation_calcul()
     }
     INVAL_ENABLE.write(dec2exe_wb_var);
     dec2exe_wb.write(dec2exe_wb_var);
-    cout << INVAL_ENABLE.read() << dec2exe_wb.read() << endl;
 } 
 
 //---------------------------------------------PC GESTION :---------------------------------------------
@@ -672,20 +679,25 @@ void decod::affectation_calcul()
 void decod::pc_inc()
 {
     sc_uint<32> pc = READ_PC.read() ;
-    sc_uint<32> pc_out ;
+    sc_uint<32> pc_out = pc;
     sc_uint<32> offset_branch_var = offset_branch.read() ;
 
-    if(inc_pc & READ_PC_VALID.read())
+    if(inc_pc && READ_PC_VALID.read())
     {
         pc_out = pc + 4 ;
+        WRITE_PC.write(pc_out);
+        WRITE_PC_ENABLE.write(1);
     }
-    else if (! inc_pc  & READ_PC_VALID.read())
+    else if (!inc_pc  && READ_PC_VALID.read() && add_offset_to_pc.read())
     {
-        pc_out = pc + offset_branch_var ;
+        pc_out = pc + offset_branch_var - 4 ;
+        WRITE_PC.write(pc_out);
+        WRITE_PC_ENABLE.write(1);
+    }
+    else {
+        WRITE_PC_ENABLE.write(0);
     }
     dec2if_pc_in.write(pc_out) ;
-    WRITE_PC.write(pc_out);
-    WRITE_PC_ENABLE.write(1);
 }
 
 
@@ -725,7 +737,6 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,IF2DEC_POP,GET_NAME(IF2DEC_POP)); 
     sc_trace(tf,DEC2EXE_POP,GET_NAME(DEC2EXE_POP));
     sc_trace(tf,DEC2EXE_EMPTY,GET_NAME(DEC2EXE_EMPTY));
-    sc_trace(tf,dec2exe_empty,GET_NAME(dec2exe_empty));
     sc_trace(tf,DEC2EXE_OUT,GET_NAME(DEC2EXE_OUT));
     sc_trace(tf,CLK,GET_NAME(CLK));
     sc_trace(tf,RESET_N,GET_NAME(RESET_N));
@@ -799,4 +810,6 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,WRITE_PC_ENABLE,GET_NAME(WRITE_PC_ENABLE));
     sc_trace(tf,INVAL_ENABLE,GET_NAME(INVAL_ENABLE));
     sc_trace(tf,INVAL_DEST,GET_NAME(INVAL_DEST));
+    sc_trace(tf,add_offset_to_pc,GET_NAME(add_offset_to_pc));
+    sc_trace(tf,IF2DEC_FLUSH, GET_NAME(IF2DEC_FLUSH));
 }

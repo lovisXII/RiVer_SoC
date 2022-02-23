@@ -55,7 +55,7 @@ SC_MODULE(ifetch)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << DEC2IF_EMPTY << IF2DEC_FULL << DEC_PC;
+        sensitive << DEC2IF_EMPTY << IF2DEC_FULL << DEC_PC << IF2DEC_FLUSH << IC_STALL << RESET; 
     }
 
 };

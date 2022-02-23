@@ -49,12 +49,13 @@ SC_MODULE(decod)
     sc_in   < sc_bv<32> >         IF_IR ;
     sc_in   < bool >              IF2DEC_EMPTY ;
     sc_out  < bool >              IF2DEC_POP ; //Decod says to IFETCH if it wants a pop or no
+    sc_out  < bool >              IF2DEC_FLUSH ;
 
     //Interface with DEC2EXE
 
     sc_in< bool >                 DEC2EXE_POP ;
     sc_out< bool >                DEC2EXE_EMPTY ;                    
-    sc_signal< sc_bv<110> >          DEC2EXE_OUT ;
+    sc_signal< sc_bv<110> >       DEC2EXE_OUT ;
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -81,7 +82,6 @@ SC_MODULE(decod)
     sc_signal < sc_bv <110> >   dec2exe_in ;
     sc_signal < bool >          dec2exe_push ;
     sc_signal < bool >          dec2exe_full ;
-    sc_signal < bool >          dec2exe_empty ;
 
     // Instruction format type :
 
@@ -163,6 +163,7 @@ SC_MODULE(decod)
     //PC gestion :
 
     sc_signal <bool> inc_pc ;
+    sc_signal <bool> add_offset_to_pc ;
 
 
     //Internal signals :
@@ -210,7 +211,7 @@ SC_MODULE(decod)
     
         dec2exe.DIN(dec2exe_in) ;
         dec2exe.DOUT(DEC2EXE_OUT) ;
-        dec2exe.EMPTY(dec2exe_empty) ;
+        dec2exe.EMPTY(DEC2EXE_EMPTY) ;
         dec2exe.FULL(dec2exe_full) ;
         dec2exe.PUSH(dec2exe_push) ;
         dec2exe.POP(DEC2EXE_POP) ;
@@ -218,7 +219,7 @@ SC_MODULE(decod)
         dec2exe.RESET_N(RESET_N) ;
 
         SC_METHOD(dec2if_gestion)
-        sensitive << dec2if_empty << READ_PC_VALID << dec2if_push ;
+        sensitive << dec2if_empty << READ_PC_VALID << dec2if_push << dec2if_full << RESET_N;
 
         SC_METHOD(concat_dec2exe)
         sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 
@@ -230,23 +231,27 @@ SC_MODULE(decod)
                     << mem_sign_extend 
                     << mem_size 
                     << select_shift 
-                    << adr_dest ;
+                    << adr_dest  << RESET_N;
         SC_METHOD(unconcat_dec2exe)
-        sensitive << DEC2EXE_OUT ;       
+        sensitive << DEC2EXE_OUT  << RESET_N;       
         SC_METHOD(dec2exe_push_method)
-        sensitive << RADR1_VALID << RADR2_VALID << DEC2EXE_EMPTY << dec2exe_full << dec2exe_push ;
+        sensitive << RADR1_VALID << RADR2_VALID << dec2exe_full << IF2DEC_EMPTY << RESET_N ;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP ;
+        sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP << add_offset_to_pc << RESET_N;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive  << IF_IR  ;
+        sensitive  << IF_IR   << RESET_N;
         SC_METHOD(decoding_instruction)
-        sensitive << IF_IR ;
+        sensitive << IF_IR  << RESET_N;
         SC_METHOD(affectation_registres)
         sensitive   << IF_IR
                     << RADR1_DATA
                     << RADR2_DATA
+                    << RADR1_VALID
+                    << RADR2_VALID
+                    << IF2DEC_EMPTY
+                    << dec2if_push
                     << r_type_inst 
                     << i_type_inst 
                     << i_type_inst 
@@ -260,7 +265,7 @@ SC_MODULE(decod)
                     << blt_i
                     << bge_i
                     << bltu_i
-                    << bgeu_i ; 
+                    << bgeu_i  << RESET_N; 
         SC_METHOD(affectation_calcul)
         sensitive   << add_i
                     << slt_i
@@ -298,14 +303,16 @@ SC_MODULE(decod)
                     << jal_i
                     << sw_i
                     << sh_i
-                    << sb_i ;
+                    << sb_i  << RESET_N;
         SC_METHOD(pc_inc)
         sensitive   << CLK.pos()
                     << IF_IR
                     << READ_PC
                     << offset_branch
                     << inc_pc
-                    << READ_PC_VALID ;
+                    << add_offset_to_pc
+                    << READ_PC_VALID 
+                    << RESET_N;
         reset_signal_is(RESET_N,false) ;
 
     }

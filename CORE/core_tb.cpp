@@ -63,7 +63,7 @@ int sc_main(int argc, char* argv[]) {
                                     type, section_index, other );               
                 if (name == "_start") {
                     cout << "Found start" << endl;
-                    start_adr = value;
+                    start_adr = value - 4; //minus 4 to acount for init inc_pc
                 }            
                 if (name == "_bad") {
                     cout << "Found bad" << endl;

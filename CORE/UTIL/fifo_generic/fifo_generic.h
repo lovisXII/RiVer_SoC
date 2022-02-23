@@ -48,16 +48,8 @@ void fifo_generic<T>::flags_update() {
     else // case where data inside the fifo is not valid
     {
 
-        if(push)
-        {
-            FULL.write(0) ;
-            EMPTY.write(0) ;
-        }
-        else
-        {
-            FULL.write(0) ;
-            EMPTY.write(1) ;
-        }
+        FULL.write(0) ;
+        EMPTY.write(1) ;
     }
 
     DOUT.write(data_inside) ;

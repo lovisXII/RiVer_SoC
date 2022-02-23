@@ -159,6 +159,7 @@ SC_MODULE(core)
         dec_inst.IF_IR(IF_IR);
         dec_inst.IF2DEC_EMPTY(IF2DEC_EMPTY);
         dec_inst.IF2DEC_POP(IF2DEC_POP);
+        dec_inst.IF2DEC_FLUSH(IF2DEC_FLUSH);
 
         dec_inst.DEC2EXE_OP1(EXE_OP1);
         dec_inst.DEC2EXE_OP2(EXE_OP2);

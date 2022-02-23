@@ -94,7 +94,7 @@ SC_MODULE(mem)
         SC_METHOD(mem2wbk_unconcat);
         sensitive << MEM2WBK_FFOUT;
         SC_METHOD(fifo_gestion);
-        sensitive << MEM_STALL << MEM2WBK_FULL << EXE2MEM_EMPTY;
+        sensitive << MEM_STALL << MEM2WBK_FULL << EXE2MEM_EMPTY << WB;
         SC_METHOD(mem_preprocess);
         sensitive << EXE_WB << EXE_MEM_LOAD << MEM_RESULT << EXE_RES << EXE_MEM_DATA << EXE_MEM_STORE << EXE2MEM_EMPTY;
     }
