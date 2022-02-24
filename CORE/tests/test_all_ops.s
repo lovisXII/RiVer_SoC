@@ -13,13 +13,13 @@ _start:
     bne x1, x3, _bad
 
     slti x1, x0, -3
-    beq  x0, x1, _bad
+    bne  x0, x1, _bad
 
     sltiu x1, x0, -3
-    bne  x0, x1, _bad
+    beq  x0, x1, _bad
 
     slti x1, x0, 3
-    bne  x0, x1, _bad
+    beq  x0, x1, _bad
 
     xori x1, x2, 10
     bne  x0, x1, _bad
@@ -38,7 +38,7 @@ _start:
     ori  x6, x0, 1
     slli x6, x6, 29
     srli x1, x4, 1
-    bge  x1, x6, _bad
+    blt  x1, x6, _bad
     j _good
 
     nop

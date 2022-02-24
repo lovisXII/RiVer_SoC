@@ -28,7 +28,12 @@ void wbk::wbk_method() {
         dout = 0;
     }
     dout.range(range_start, 0) = din.range(range_start, 0);
-    REG_DATA.write(dout);
+    if (MEM_LOAD.read()) {
+        REG_DATA.write(dout);
+    }
+    else {
+        REG_DATA.write(din);
+    }
     REG_DEST.write(MEM_DEST);
     REG_WB.write(MEM_WB && !MEM2WBK_EMPTY.read());
     MEM2WBK_POP.write(!MEM2WBK_EMPTY.read());

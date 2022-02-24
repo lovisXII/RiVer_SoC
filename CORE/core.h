@@ -87,6 +87,7 @@ SC_MODULE(core)
     sc_signal< bool >           WBK_MEM_SIGN_EXTEND;
     sc_signal< bool >           MEM2WBK_EMPTY;
     sc_signal< bool >           MEM2WBK_POP;
+    sc_signal< bool >           WBK_MEM_LOAD;
 
     //WBK-REG interface
     sc_signal< sc_uint<6> >     REG_DEST ;
@@ -256,6 +257,7 @@ SC_MODULE(core)
         mem_inst.WBK_MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
         mem_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
         mem_inst.MEM2WBK_POP(MEM2WBK_POP);
+        mem_inst.WBK_MEM_LOAD(WBK_MEM_LOAD);
 
         mem_inst.MEM_ADR(MCACHE_MEM_ADR);
         mem_inst.MEM_DATA(MCACHE_MEM_DATA);
@@ -298,6 +300,7 @@ SC_MODULE(core)
         wbk_inst.MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
         wbk_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
         wbk_inst.MEM2WBK_POP(MEM2WBK_POP);
+        wbk_inst.MEM_LOAD(WBK_MEM_LOAD);
 
         wbk_inst.REG_DEST(REG_DEST);
         wbk_inst.REG_DATA(REG_DATA);

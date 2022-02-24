@@ -90,7 +90,7 @@ SC_MODULE(exec)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << OP1 << NEG_OP1;
+        sensitive << OP1 << NEG_OP1 << OP2;
         SC_METHOD(select_exec_res);
         sensitive << ALU_OUT << SHIFTER_OUT << SELECT_SHIFT;
         SC_METHOD(fifo_concat);

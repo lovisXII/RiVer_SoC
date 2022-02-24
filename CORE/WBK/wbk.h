@@ -17,6 +17,7 @@ SC_MODULE(wbk)
     sc_in< sc_uint<2> >         MEM_SIZE ;
     sc_in< bool >               MEM_WB;
     sc_in< bool >               MEM_SIGN_EXTEND;
+    sc_in< bool >               MEM_LOAD;
 
     //Mem2wbk interface
 

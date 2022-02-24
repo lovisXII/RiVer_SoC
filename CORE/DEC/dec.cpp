@@ -53,7 +53,8 @@ void decod::dec2exe_push_method()
 
 void decod::concat_dec2exe()
 {
-    sc_bv<112> dec2exe_in_var ;
+    sc_bv<114> dec2exe_in_var ;
+    dec2exe_in_var.range(113, 112) = dec2exe_cmd.read();
     dec2exe_in_var.range(111,80) = dec2exe_op1.read() ;
     dec2exe_in_var.range(79,48)  = dec2exe_op2.read() ;
     dec2exe_in_var[47]  = dec2exe_neg_op1.read() ;
@@ -78,7 +79,9 @@ void decod::concat_dec2exe()
 
 void decod::unconcat_dec2exe()
 {
-    sc_bv<112> dec2exe_out_var = DEC2EXE_OUT.read() ;
+    sc_bv<114> dec2exe_out_var = DEC2EXE_OUT.read() ;
+
+    DEC2EXE_CMD.write((sc_bv_base) dec2exe_out_var.range(113, 112));
 
     DEC2EXE_OP1.write((sc_bv_base) dec2exe_out_var.range(111,80)) ;
     DEC2EXE_OP2.write((sc_bv_base)dec2exe_out_var.range(79,48)) ;
@@ -526,8 +529,8 @@ void decod::affectation_calcul()
 
         //WBK GESTION :
 
-        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i | slt_i | slti_i | sltu_i | sltiu_i) dec2exe_wb_var = 1 ;
-        else if(sw_i | sh_i | sb_i)  dec2exe_wb_var = 0 ;
+        if(sw_i | sh_i | sb_i)  dec2exe_wb_var = 0 ;
+        else dec2exe_wb_var = 1 ;
         
         //MEMORY GESTION :
 
@@ -588,7 +591,7 @@ void decod::affectation_calcul()
     }
 
     //CMD : &
-    else if(and_i | and_i)
+    else if(and_i | andi_i)
     {
         dec2exe_cmd.write(1) ;
         dec2exe_neg_op1.write(0) ;
@@ -675,7 +678,7 @@ void decod::affectation_calcul()
         mem_size.write(0) ;
         select_shift.write(0) ;   
     }
-    INVAL_ENABLE.write(dec2exe_wb_var);
+    INVAL_ENABLE.write(dec2exe_wb_var && dec2exe_push);
     dec2exe_wb.write(dec2exe_wb_var);
 } 
 

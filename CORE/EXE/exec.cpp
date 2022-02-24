@@ -22,25 +22,25 @@ void exec::select_exec_res() {
         FFIN_EXE_RES.write(SHIFTER_OUT);
     }
     else if (SLT.read()) {
-        if (OP1.read()[31] == 1 && OP1.read()[31] == 0) {
+        if (OP1.read()[31] == 1 && OP2.read()[31] == 0) {
             FFIN_EXE_RES.write(1);
         }
-        else if (OP1.read()[31] == 0 && OP1.read()[31] == 1) {
+        else if (OP1.read()[31] == 0 && OP2.read()[31] == 1) {
             FFIN_EXE_RES.write(0);
         }
         else {
-            FFIN_EXE_RES.write((bool) ALU_OUT.read()[31]);
+            FFIN_EXE_RES.write(!(bool) ALU_OUT.read()[31]);
         }
     }
     else if (SLTU.read()) {
-        if (OP1.read()[31] == 1 && OP1.read()[31] == 0) {
+        if (OP1.read()[31] == 1 && OP2.read()[31] == 0) {
             FFIN_EXE_RES.write(0);
         }
-        else if (OP1.read()[31] == 0 && OP1.read()[31] == 1) {
+        else if (OP1.read()[31] == 0 && OP2.read()[31] == 1) {
             FFIN_EXE_RES.write(1);
         }
         else {
-            FFIN_EXE_RES.write((bool) ALU_OUT.read()[31]);
+            FFIN_EXE_RES.write(!(bool) ALU_OUT.read()[31]);
         }
     }
     else {

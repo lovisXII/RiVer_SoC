@@ -56,10 +56,11 @@ SC_MODULE(mem)
     sc_out< sc_uint<2> >        WBK_MEM_SIZE ;
     sc_out< bool >              WBK_WB;
     sc_out< bool >              WBK_MEM_SIGN_EXTEND;
+    sc_out< bool >              WBK_MEM_LOAD;
 
     //Internal signals
-    sc_signal< sc_bv<41> >      MEM2WBK_FFIN;
-    sc_signal< sc_bv<41> >      MEM2WBK_FFOUT;
+    sc_signal< sc_bv<42> >      MEM2WBK_FFIN;
+    sc_signal< sc_bv<42> >      MEM2WBK_FFOUT;
     sc_signal< sc_uint<32> >    DATA;
     sc_signal< bool >           WB;
     //Global Interface :
@@ -68,7 +69,7 @@ SC_MODULE(mem)
     sc_in_clk                   RESET;
 
     // FIFO
-    fifo_generic<41>    fifo_inst;
+    fifo_generic<42>    fifo_inst;
 
     void mem2wbk_concat();
     void mem2wbk_unconcat();

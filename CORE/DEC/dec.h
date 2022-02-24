@@ -57,7 +57,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP ;
     sc_out< bool >                DEC2EXE_EMPTY ;                    
-    sc_signal< sc_bv<112> >       DEC2EXE_OUT ;
+    sc_signal< sc_bv<114> >       DEC2EXE_OUT ;
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -67,7 +67,7 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo_generic<32> dec2if ;
-    fifo_generic<112> dec2exe ;
+    fifo_generic<114> dec2exe ;
 
     // Signals :
 
@@ -81,7 +81,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <112> >   dec2exe_in ;
+    sc_signal < sc_bv <114> >   dec2exe_in ;
     sc_signal < bool >          dec2exe_push ;
     sc_signal < bool >          dec2exe_full ;
 
@@ -224,7 +224,7 @@ SC_MODULE(decod)
         sensitive << dec2if_empty << READ_PC_VALID << dec2if_push << dec2if_full << RESET_N;
 
         SC_METHOD(concat_dec2exe)
-        sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 
+        sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 << dec2exe_cmd
                     << dec2exe_neg_op1
                     << dec2exe_wb 
                     << mem_data 
@@ -305,7 +305,7 @@ SC_MODULE(decod)
                     << jal_i
                     << sw_i
                     << sh_i
-                    << sb_i  << RESET_N;
+                    << sb_i  << RESET_N << dec2exe_push;
         SC_METHOD(pc_inc)
         sensitive   << CLK.pos()
                     << IF_IR
