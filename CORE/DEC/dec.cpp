@@ -53,21 +53,24 @@ void decod::dec2exe_push_method()
 
 void decod::concat_dec2exe()
 {
-    sc_bv<110> dec2exe_in_var ;
-    dec2exe_in_var.range(109,78) = dec2exe_op1.read() ;
-    dec2exe_in_var.range(77,46)  = dec2exe_op2.read() ;
-    dec2exe_in_var.range(45,45)  = dec2exe_neg_op1.read() ;
-    dec2exe_in_var.range(44,44)  = dec2exe_wb.read() ;
+    sc_bv<112> dec2exe_in_var ;
+    dec2exe_in_var.range(111,80) = dec2exe_op1.read() ;
+    dec2exe_in_var.range(79,48)  = dec2exe_op2.read() ;
+    dec2exe_in_var[47]  = dec2exe_neg_op1.read() ;
+    dec2exe_in_var[46]  = dec2exe_wb.read() ;
 
-    dec2exe_in_var.range(43,12)  = mem_data.read() ;
+    dec2exe_in_var.range(45,14)  = mem_data.read() ;
 
-    dec2exe_in_var.range(11,11)  = mem_load.read() ;
-    dec2exe_in_var.range(10,10)  = mem_store.read() ;
+    dec2exe_in_var[13] = mem_load.read() ;
+    dec2exe_in_var[12] = mem_store.read() ;
 
-    dec2exe_in_var.range(9,9)   = mem_sign_extend.read() ;
-    dec2exe_in_var.range(8,7)   = mem_size.read() ;
-    dec2exe_in_var.range(6,6)   = select_shift.read() ;
-    dec2exe_in_var.range(5,0)   = adr_dest.read() ;
+    dec2exe_in_var[11]   = mem_sign_extend.read() ;
+    dec2exe_in_var.range(10,9)   = mem_size.read() ;
+    dec2exe_in_var[8]   = select_shift.read() ;
+    dec2exe_in_var.range(7,2)   = adr_dest.read() ;
+    dec2exe_in_var[1]   = slt_i.read() | slti_i.read() ;
+    dec2exe_in_var[0]   = sltu_i.read() | sltiu_i.read() ;
+    
 
     dec2exe_in.write(dec2exe_in_var) ;
 
@@ -75,22 +78,24 @@ void decod::concat_dec2exe()
 
 void decod::unconcat_dec2exe()
 {
-    sc_bv<110> dec2exe_out_var = DEC2EXE_OUT.read() ;
+    sc_bv<112> dec2exe_out_var = DEC2EXE_OUT.read() ;
 
-    DEC2EXE_OP1.write((sc_bv_base) dec2exe_out_var.range(109,78)) ;
-    DEC2EXE_OP2.write((sc_bv_base)dec2exe_out_var.range(77,46)) ;
-    DEC2EXE_NEG_OP1.write((bool)dec2exe_out_var[45]) ;
-    DEC2EXE_WB.write((bool)dec2exe_out_var[44]) ;
+    DEC2EXE_OP1.write((sc_bv_base) dec2exe_out_var.range(111,80)) ;
+    DEC2EXE_OP2.write((sc_bv_base)dec2exe_out_var.range(79,48)) ;
+    DEC2EXE_NEG_OP1.write((bool)dec2exe_out_var[47]) ;
+    DEC2EXE_WB.write((bool)dec2exe_out_var[46]) ;
 
-    MEM_DATA.write((sc_bv_base)dec2exe_out_var.range(43,12)) ;
+    MEM_DATA.write((sc_bv_base)dec2exe_out_var.range(45,14)) ;
 
-    MEM_LOAD.write((bool)dec2exe_out_var[11]) ;
-    MEM_STORE.write((bool)dec2exe_out_var[10]) ;
+    MEM_LOAD.write((bool)dec2exe_out_var[13]) ;
+    MEM_STORE.write((bool)dec2exe_out_var[12]) ;
 
-    MEM_SIGN_EXTEND.write((bool)dec2exe_out_var[9])   ;
-    MEM_SIZE.write((sc_bv_base)dec2exe_out_var.range(8,7))   ;
-    SELECT_SHIFT.write((bool)dec2exe_out_var[6])   ;
-    EXE_DEST.write((sc_bv_base)dec2exe_out_var.range(5,0))   ;
+    MEM_SIGN_EXTEND.write((bool)dec2exe_out_var[11])   ;
+    MEM_SIZE.write((sc_bv_base)dec2exe_out_var.range(10,9))   ;
+    SELECT_SHIFT.write((bool)dec2exe_out_var[8])   ;
+    EXE_DEST.write((sc_bv_base)dec2exe_out_var.range(7,2))   ;
+    SLT.write((bool)dec2exe_out_var[1])   ;
+    SLTU.write((bool)dec2exe_out_var[0])   ;
 }
 
 //---------------------------------------------INSTRUCTION TYPE DETECTION :---------------------------------------------
@@ -503,14 +508,14 @@ void decod::affectation_calcul()
 
     //CMD : +
     bool dec2exe_wb_var;
-    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i | lui_i)
+    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i | lui_i | slti_i | slt_i | sltiu_i | sltu_i)
     {
         dec2exe_cmd.write(0) ;
         select_shift.write(0) ;
 
         //NEG OP1 GESTION :
 
-        if(sub_i)
+        if(sub_i | slt_i | slti_i | sltu_i | sltiu_i)
         {
             dec2exe_neg_op1.write(1) ;
         }
@@ -521,7 +526,7 @@ void decod::affectation_calcul()
 
         //WBK GESTION :
 
-        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i) dec2exe_wb_var = 1 ;
+        if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | auipc_i | lui_i | slt_i | slti_i | sltu_i | sltiu_i) dec2exe_wb_var = 1 ;
         else if(sw_i | sh_i | sb_i)  dec2exe_wb_var = 0 ;
         
         //MEMORY GESTION :

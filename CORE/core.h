@@ -42,6 +42,8 @@ SC_MODULE(core)
     sc_signal< bool >           EXE_MEM_STORE ;
     sc_signal< bool >           EXE_MEM_SIGN_EXTEND ; 
     sc_signal< sc_uint<2> >     EXE_MEM_SIZE ;
+    sc_signal< bool >           EXE_SLT ;
+    sc_signal< bool >           EXE_SLTU ;
 
     sc_signal< bool >           DEC2EXE_POP ;
     sc_signal< bool >           DEC2EXE_EMPTY ;                    
@@ -173,6 +175,8 @@ SC_MODULE(core)
         dec_inst.MEM_STORE(EXE_MEM_STORE);
         dec_inst.MEM_SIGN_EXTEND(EXE_MEM_SIGN_EXTEND);
         dec_inst.MEM_SIZE(EXE_MEM_SIZE);
+        dec_inst.SLT(EXE_SLT);
+        dec_inst.SLTU(EXE_SLTU);
 
         dec_inst.DEC2EXE_POP(DEC2EXE_POP);
         dec_inst.DEC2EXE_EMPTY(DEC2EXE_EMPTY);
@@ -211,6 +215,8 @@ SC_MODULE(core)
         exec_inst.MEM_STORE(EXE_MEM_STORE);
         exec_inst.MEM_SIGN_EXTEND(EXE_MEM_SIGN_EXTEND);
         exec_inst.MEM_SIZE(EXE_MEM_SIZE);
+        exec_inst.SLT(EXE_SLT);
+        exec_inst.SLTU(EXE_SLTU);
 
         exec_inst.DEC2EXE_POP(DEC2EXE_POP);
         exec_inst.DEC2EXE_EMPTY(DEC2EXE_EMPTY);

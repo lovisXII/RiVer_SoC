@@ -37,6 +37,8 @@ SC_MODULE(decod)
     sc_out  < bool >             MEM_SIGN_EXTEND ; 
     sc_out  < sc_uint<2> >       MEM_SIZE ; // tells to mem if we do an acces in word, hw or byte
     sc_out  < bool >             SELECT_SHIFT ; //taille fifo entrée : 110
+    sc_out  < bool >             SLT ;
+    sc_out  < bool >             SLTU ;
     
     // Interface with DEC2IF : 
 
@@ -55,7 +57,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP ;
     sc_out< bool >                DEC2EXE_EMPTY ;                    
-    sc_signal< sc_bv<110> >       DEC2EXE_OUT ;
+    sc_signal< sc_bv<112> >       DEC2EXE_OUT ;
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -65,7 +67,7 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo_generic<32> dec2if ;
-    fifo_generic<110> dec2exe ;
+    fifo_generic<112> dec2exe ;
 
     // Signals :
 
@@ -79,7 +81,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <110> >   dec2exe_in ;
+    sc_signal < sc_bv <112> >   dec2exe_in ;
     sc_signal < bool >          dec2exe_push ;
     sc_signal < bool >          dec2exe_full ;
 
@@ -175,8 +177,8 @@ SC_MODULE(decod)
     sc_signal< sc_uint<32>> mem_data ;
     
     sc_signal<sc_uint<2>>   mem_size ;
-    sc_signal<sc_uint<3>>   mem_load ;
-    sc_signal<sc_uint<3>>   mem_store ;
+    sc_signal<bool>   mem_load ;
+    sc_signal<bool>   mem_store ;
 
     sc_signal<sc_uint<2>>   dec2exe_cmd ;
     sc_signal<bool>         select_shift ;
@@ -231,7 +233,7 @@ SC_MODULE(decod)
                     << mem_sign_extend 
                     << mem_size 
                     << select_shift 
-                    << adr_dest  << RESET_N;
+                    << adr_dest  << RESET_N << slti_i << slt_i << sltiu_i << sltu_i;
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT  << RESET_N;       
         SC_METHOD(dec2exe_push_method)

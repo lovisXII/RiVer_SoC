@@ -19,6 +19,7 @@ SC_MODULE(exec)
     sc_in< bool >           NEG_OP1, WB, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
     sc_in< bool >           MEM_LOAD, MEM_STORE ; 
     sc_in< bool >           EXE2MEM_POP, DEC2EXE_EMPTY;
+    sc_in< bool >           SLT, SLTU;
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
     
