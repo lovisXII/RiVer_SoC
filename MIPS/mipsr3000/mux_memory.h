@@ -1,7 +1,7 @@
 // ### -------------------------------------------------------------- ###
-// # file       : mux_memory.h                                          #
-// # date       : Oct 28 2003                                           #
-// # version    : v2.0                                                  #
+// # files      : mux_memory.h, mux_memory.cpp                          #
+// # date       : Mar 01 2022                                           #
+// # version    : v2.1                                                  #
 // #                                                                    #
 // # origin     : this description has been developed by CAO-VLSI team  #
 // #              at MASI laboratory, University Pierre et Marie Curie  #
@@ -15,6 +15,8 @@
 // #                                                                    #
 // # System-C                                                           #
 // # rewriting  : F. Pecheux                                            #
+// #                                                                    #
+// # updating   : K. Lastra                                             #
 // ### -------------------------------------------------------------- ###
 
 #ifndef _MUX_MEMORY
