@@ -134,12 +134,12 @@ void decod::decoding_instruction()
     else sltu_i.write(0) ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b111) and_i.write(1) ;
     else and_i.write(0) ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) and_i.write(1) ;
-    else and_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b110) or_i.write(1) ;
+    else or_i.write(0) ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b100) xor_i.write(1) ;
     else xor_i.write(0) ;
-    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) xor_i.write(1) ;
-    else xor_i.write(0) ;
+    if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b001) sll_i.write(1) ;
+    else sll_i.write(0) ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0000000 && if_ir.range(14,12) == 0b101) srl_i.write(1) ;
     else srl_i.write(0) ;
     if(if_ir.range(6,0) == 0b0110011 && if_ir.range(31,25) == 0b0100000 && if_ir.range(14,12) == 0b000) sub_i.write(1) ;
