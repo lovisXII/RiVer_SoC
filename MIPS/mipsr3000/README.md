@@ -1,64 +1,72 @@
 
-# REPORT
-by Kevin LASTRA 
+<p style="text-align: center;">
+REPORT OF MIPSR3000<br>
+by Kevin LASTRA<br>
+<br>
+<br>
+The original authors of the architecture description are<br>
+D. Hommais and P. Bazargan Sabet<br>
+<br>
+Rewrited on SystemC by<br>
+F. Pecheux<br>
+<br>
+Last update on march 01 2022 by<br>
+K. Lastra
+<br>
+<br>
+</p>
 
 ## TABLE OF CONTENTS
-- [REPORT](#report)
-	- [TABLE OF CONTENTS](#table-of-contents)
-	- [1. RESUME](#1-resume)
-	- [2. ADVISE](#2-advise)
-	- [3. MIPS STRUCTURE](#3-mips-structure)
-		- [3.1 PIPELINE](#31-pipeline)
-	- [4. AGREEMENT FOR INPUT, OUTPUT OR INNER SIGNALS DECLARATION](#4-agreement-for-input-output-or-inner-signals-declaration)
-	- [5. STAGES AND COMPONENTS DESCRIPTION](#5-stages-and-components-description)
-		- [5.1 IFETCH](#51-ifetch)
-			- [5.1.1 IFETCH component](#511-ifetch-component)
-			- [5.1.2 IFETCH MUX](#512-ifetch-mux)
-			- [5.1.3 IFETCH FIFO](#513-ifetch-fifo)
-		- [5.2 DECODE](#52-decode)
-			- [5.2.1 INSTRUCTION TYPE](#521-instruction-type)
-			- [5.2.2 INSTRUCTION REGISTER](#522-instruction-register)
-			- [5.2.3 PC AND BRANCH](#523-pc-and-branch)
-		- [5.3 EXECUTE](#53-execute)
-			- [5.3.1 EXECUTE COMPONENT](#531-execute-component)
-			- [5.3.1.1 INSTRUCTION TYPE](#5311-instruction-type)
-			- [5.3.1.2 RESULTS](#5312-results)
-			- [5.3.1.3 ERROR MANAGEMENT](#5313-error-management)
-			- [5.3.2 ALU](#532-alu)
-		- [5.4 MEMORY](#54-memory)
-			- [5.4.1 INSTRUCTION TYPE](#541-instruction-type)
-			- [5.4.2 MEMORY MANAGEMENT](#542-memory-management)
-			- [5.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT](#543-memory-errors-exceptions-and-interruptions-management)
-			- [5.4.4 PC AND EPC](#544-pc-and-epc)
-		- [5.5 Write back](#55-write-back)
-			- [5.5.1 INSTRUCTION TYPE](#551-instruction-type)
-			- [5.5.2 HI AND LOW](#552-hi-and-low)
-	- [6 EMULATION D'INSTRUCTION](#6-emulation-dinstruction)
-	- [7 TO DO](#7-to-do)
+- [TABLE OF CONTENTS](#table-of-contents)
+- [1. RESUME](#1-resume)
+- [2. MIPS STRUCTURE](#2-mips-structure)
+	- [2.1 PIPELINE](#21-pipeline)
+		- [2.1.1 STRUCTURE](#211-structure)
+	- [2.1.2 INSTRUCTION FLOW CONTROL](#212-instruction-flow-control)
+- [3. AGREEMENT FOR INPUT, OUTPUT OR INNER SIGNALS DECLARATION](#3-agreement-for-input-output-or-inner-signals-declaration)
+- [4. STAGES AND COMPONENTS DESCRIPTION](#4-stages-and-components-description)
+	- [4.1 IFETCH](#41-ifetch)
+		- [4.1.1 IFETCH component](#411-ifetch-component)
+		- [4.1.2 IFETCH MUX](#412-ifetch-mux)
+		- [4.1.3 IFETCH FIFO](#413-ifetch-fifo)
+	- [4.2 DECODE](#42-decode)
+		- [4.2.1 INSTRUCTION TYPE](#421-instruction-type)
+		- [4.2.2 INSTRUCTION REGISTER](#422-instruction-register)
+		- [4.2.3 PC AND BRANCH](#423-pc-and-branch)
+	- [4.3 EXECUTE](#43-execute)
+		- [4.3.1 EXECUTE COMPONENT](#431-execute-component)
+		- [4.3.1.1 INSTRUCTION TYPE](#4311-instruction-type)
+		- [4.3.1.2 RESULTS](#4312-results)
+		- [4.3.1.3 ERROR MANAGEMENT](#4313-error-management)
+		- [4.3.2 ALU](#432-alu)
+	- [4.4 MEMORY](#44-memory)
+		- [4.4.1 INSTRUCTION TYPE](#441-instruction-type)
+		- [4.4.2 MEMORY MANAGEMENT](#442-memory-management)
+		- [4.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT](#443-memory-errors-exceptions-and-interruptions-management)
+		- [4.4.4 PC AND EPC](#444-pc-and-epc)
+	- [4.5 Write back](#45-write-back)
+		- [4.5.1 INSTRUCTION TYPE](#451-instruction-type)
+		- [4.5.2 HI AND LOW](#452-hi-and-low)
+- [5 EMULATION D'INSTRUCTION](#5-emulation-dinstruction)
+  
+
 ## 1. RESUME
-	This MIPS1/32 architecture resume is maid in part of the Project 
-	"SystemC modeling for pipelined RiscV and assembly of TME platform",
-	its have for goal to help the students for the good understanding
-	of basic mips components, tools and structures.
+This MIPS1(first version of mips 1981) architecture resume is maid inpart of the Project 
+"SystemC modeling for pipelined RiscV andassembly of TME platform",
+its have for goal to help the students for thegood understanding
+of basic mips components, tools and structures.
 
-## 2. ADVISE
-	All the information present on this report are a combination of
-	suppositions and information given by Mr. Pirouz Bazargan Sabet 
-	and	translated to this document but it can be bad understood then
-	the	information can be wrong or true, i recommend take the information
-	with precaution and in case of doubt please go to the information
-	source so directly to Mr. Pirouz Bazargan Sabet.
-
-## 3. MIPS STRUCTURE
+The systemC architecture description was updated to the last version at this
+day "systemc2.3.3"
+## 2. MIPS STRUCTURE
   This architecture is based on the mips1 and/or mips32 instruction set.
 The architecture is a 5 stage pipelined, each stage are compound by 3 	elements:
  1. The stage core witch is named like the stage, ex. decode.h
  2. A multiplexer which is gonna handle the information flow in the pipeline, named like the stage with the  "mux" prefix, ex. mux_decode.h.
  3. A fifo (first in first out) which gonna literally just put the input on the output, named like the stage  with the "ff" prefix, ex.	ff_decode.h
- 4. Exception : the alu is defined on the core but directly 
-	connected
-	to the stage execute.
-### 3.1 PIPELINE
+ 4. Exception : the alu is defined on the core but directly connected to the stage execute.
+### 2.1 PIPELINE
+#### 2.1.1 STRUCTURE
 The pipeline is composed with the manager (multiplexer) and the fifo.
 - A pipeline have 2 types of register:
 	1. command register (ex. opcode)
@@ -72,8 +80,75 @@ The pipeline is composed with the manager (multiplexer) and the fifo.
 		- Either delete the command (bubble)
 			ex. Eret - so insert nop*
 		- Either add a new command (!hold and !bubble)
-				
-## 4. AGREEMENT FOR INPUT, OUTPUT OR INNER SIGNALS DECLARATION
+### 2.1.2 INSTRUCTION FLOW CONTROL
+Three cases can happen:
+- Kill : the instruction in the corresponding stage is killed.
+- Stall : the instruction is not allowed to pass to the next pipe stage.
+- Copy : the instruction is duplicated. A copy remains in the current stage
+and the other goes down the pipe.
+- Exec : the instruction can be executed.
+  
+Exec(execute signal) is equal to "not (Copy or Stall or Kill)", each stage have
+di erent situation for these 3 signals.
+
+1. Instruction Fetch:
+- Copy, the instruction is never copied.
+- Stall, stalled if:
+	- the next stage (Decode) is occupied.
+	- the instruction memory is not able to answer the instruction fetch request.
+- Kill, killed if:
+	- the third previous instruction causes an exception.
+	- a hardware or software interrupt occurs.
+	- the previous instruction is a sleep.
+2. Decode:
+- Copy, the instruction in the decode stage is copied if the current
+instruction is a sleep.
+- Stall, stalled if:
+	- the next stage (Execute) is occupied.
+	- there is a data hazard that cannot be resolved by bypasses.
+	- the instruction memory cannot answer the instruction fetch
+(the instruction cannot be executed because ir may change the
+instruction stream).
+- Kill, killed if:
+	- the second previous instruction causes an exception.
+	- a hardware reset is detected.
+	- a hardware or a software interrupt occurs.
+3. Execute:
+- Copy, the instruction is never copied.
+- Stall, stalled if:
+	- the next stage (Memory Access) is occupied.
+	- there is a data hazard that cannot be resolved by bypasses.
+- Kill, killed if:
+	- the previous instruction causes an exception.
+	- a hardware reset is detected.
+	- a hardware or a software interrupt occurs.
+4. Memory:
+- Copy, the instruction is copied if the instruction has a copying
+capability(that is, it is a swap instruction and is making its rst
+access).
+- Stall, stalled if the data memory is not able to answer the request.
+- Kill, killed if:
+	- it causes an exception.
+	- a hardware reset is detected.
+5. Write back, the instruction in write back is always executed.
+These follows a summary of di erent situations.
+
+
+|   |  I  |  D  |  E |  M |  W |
+| --- | :---: | :---: | :---: | :---: | :---: |
+| reset               | K | K | K | K | E |
+| exception     	  | K | K | K | K | E |
+| interrupt           | K | K | K | E | E |
+| I\_FRZ        	  | S | S | E | E | E |
+| D\_FRZ        	  | S | S | S | S | E |
+| hazard in DEC 	  | S | S | E | E | E |
+| hazard in EXE       | S | S | S | E | E |
+| SLEEP               | K | C | E | E | E |
+| SWAP - first access | S | S | S | C | E |
+
+Note that if more than one situation occur in the same time Kill is prior than
+Stall which is prior than Exec.
+## 3. AGREEMENT FOR INPUT, OUTPUT OR INNER SIGNALS DECLARATION
 The agreement for declare a wire is compound by a name or 
 an acronym, and a suffix connected by an underscore.
 The suffix is compound by 2 capital letters, 
@@ -96,24 +171,24 @@ the wire type and the stage.
 	    type  :  signal
 	    stage :  exec
 
-## 5. STAGES AND COMPONENTS DESCRIPTION
+## 4. STAGES AND COMPONENTS DESCRIPTION
 In addition of all components files, 
 "constants.h" contains all instructions encoding and special signals encoding.
 
-### 5.1 IFETCH
-#### 5.1.1 IFETCH component
+### 4.1 IFETCH
+#### 4.1.1 IFETCH component
 	Ifetch only manage 2 thinks, a bool witch tell if then incoming instruction is a delayed 
 	slot and a signal of 32 bits witch define the status register for the incoming instruction.
 
-#### 5.1.2 IFETCH MUX
+#### 4.1.2 IFETCH MUX
 	The mux is gonna manage the instruction register, the new instruction fetched, a bool witch
 	tell if is or not a delayed slot, the pc register and the status register with the 3 base 
 	mux signal(BUBBLE, HOLD and KEEP).
 
-#### 5.1.3 IFETCH FIFO
+#### 4.1.3 IFETCH FIFO
 	The input of the fifo is the output of the mux.
 
-### 5.2 DECODE
+### 4.2 DECODE
 Decod can handle 3 instruction format J, I and R.
 Decod use the coprocessor 0 and handle exceptions.
 HIGH and LOW register are used by the exception handler(for example for instruction emulation see index 5).
@@ -125,7 +200,7 @@ Multiple interesting signals:
 - I_WRT31_SD: write into r31
 - I_WRITE_SD: write into reg
 		
-#### 5.2.1 INSTRUCTION TYPE
+#### 4.2.1 INSTRUCTION TYPE
 
 I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 
@@ -141,7 +216,7 @@ I_TYPE_SD ou "instruction type" c'est une signal a 25 bits
 	illegal instruction signal
 
 
-#### 5.2.2 INSTRUCTION REGISTER
+#### 4.2.2 INSTRUCTION REGISTER
 
 IR_RI ou "instruction register" c'est une signal a 32 bits
 
@@ -177,7 +252,7 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 
 
 
-#### 5.2.3 PC AND BRANCH
+#### 4.2.3 PC AND BRANCH
 
 	IMDSEX = 0xFFFF if IMDSGN && I_OSGND else 0x0
 	OFFSET = IMDSEX[13,0] << 18 | IR_RI[15,0] << 2
@@ -213,13 +288,13 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 
 
 
-### 5.3 EXECUTE
-#### 5.3.1 EXECUTE COMPONENT
-#### 5.3.1.1 INSTRUCTION TYPE
+### 4.3 EXECUTE
+#### 4.3.1 EXECUTE COMPONENT
+#### 4.3.1.1 INSTRUCTION TYPE
 I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 					uses operands             
-				  I format  ^  alu operation
+				  I format   ^  alu operation
 			           |    |   / \ substraction operation and shift right operation
 				   |    |   | |  |signed result
 				   |    |   | |  ||     write into register
@@ -234,13 +309,13 @@ I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 					|uses operand t
 					uses operand s
 	
-#### 5.3.1.2 RESULTS
+#### 4.3.1.2 RESULTS
 
 	Exec produce 2 results:
 		- X or XOPER = IOPER if OPCOD == (sll_i or srl_i or sra_i) else X_SE
 		- Y or YOPER = IOPER if I_IFMT_SE == 1                     else Y_SE
 			
-#### 5.3.1.3 ERROR MANAGEMENT
+#### 4.3.1.3 ERROR MANAGEMENT
 
 	WREDOPC is the signal redopc write enable, redopc is the adresse to return when jump to syscall or exception code.
 	WREDOPC = I_BRNCH_SE
@@ -264,13 +339,13 @@ I_TYPE_RD ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 	IASVIOL is the instruction adresse segmentation violation signal
 	IASVIOL = NEXTPC[31] and NEXTSR[3] if OPCOD == rfe_i else NEXTPC[31] & NEXTSR[1]
 
-#### 5.3.2 ALU
+#### 4.3.2 ALU
 The ALU are made for make logique operations (AND, OR, 	NOR and XOR), arithmetique operations (addition and substraction), shift operations	and slt compare operation.
 
 The ALU component is instantiated on the core but connected directly with the execute stage.
 			
-### 5.4 MEMORY
-#### 5.4.1 INSTRUCTION TYPE
+### 4.4 MEMORY
+#### 4.4.1 INSTRUCTION TYPE
 I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 
@@ -286,7 +361,7 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 	I_WRITE_SM or "write into register" signal is equal to (I_TYPE[8] | I_TYPE[7])
 
-#### 5.4.2 MEMORY MANAGEMENT
+#### 4.4.2 MEMORY MANAGEMENT
 
 	DACCESS_SM or "data memory access" is the signal witch is gonna interact with the memory for read or write.
 	DACCESS = (I_STOR_SM or I_LOAD_SM)
@@ -325,7 +400,7 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 		  | HSEXT << 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
 		  | else RES_RE 
 >
-#### 5.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT
+#### 4.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT
 	DABUSER or "data adresse bus error" signal.
 	DABUSER = not D_BERR_N, D_BERR_N the bus error signal
 >
@@ -396,7 +471,7 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 	WEPC or  "exception program counter write enable" = EXCRQ_XM
 
-#### 5.4.4 PC AND EPC
+#### 4.4.4 PC AND EPC
 
 	RSTORSR_SW or "next instruction status(rfe)"
 	RSTORSR_SW = NEXTSR[31,4] . NEXTSR[5,2]
@@ -408,21 +483,21 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 	EPC_XM or "exception program counter" = PC_RE  if BDSLOT == 0 else  REDOPC
 
-### 5.5 Write back
+### 4.5 Write back
 
-#### 5.5.1 INSTRUCTION TYPE
+#### 4.5.1 INSTRUCTION TYPE
 			
 	I_TYPE_RM ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 
 	I_WRITE_SM or "write into register" signal is equal to (I_TYPE[8] | I_TYPE[7])
 
-#### 5.5.2 HI AND LOW
+#### 4.5.2 HI AND LOW
 
 	WLO or "low register write enable" = 1 IF OPCOD == mtlo_i else 0
 
 	WLO or "high register write enable" = 1 IF OPCOD == mthi_i else 0
 
-## 6 EMULATION D'INSTRUCTION
+## 5 EMULATION D'INSTRUCTION
 
 On ajout l'opcode mult qui n'est pas une instruction, quand le processeur
 va la lire va generait une exception(unknown instruction)donc on va verifier
@@ -430,160 +505,6 @@ les handler d'exception qui pour notre cas vatrouver qu'il existe
 un handler mult (multiplication) qui vabrancher vers une "fonction" qui va
 faire la multiplication que dans ce cas va ecrire sont reulta sur les registre
 low et high et apres il va returner a l'instruction mult ducode de base.
-
-
-## 7 TO DO 
- // ### ---------------------------------------------------- ###
-  // #   instruction flow control :				#
-  // #								#
-  // #   three cases can happen :					#
-  // # (1) Kill : the instruction in the corresponding stage is	#
-  // #            killed						#
-  // # (2) Stall: the instruction is not allowed to pass to the	#
-  // #            next pipe stage					#
-  // # (3) Copy : the instruction is duplicated. A copy remains	#
-  // #            in the current stage and the other goes down	#
-  // #            the pipe					#
-  // # (4) Exec : the instruction can be executed			#
-  // #								#
-  // #   Here follows a summary of different situations.		#
-  // #								#
-  // #                          | I | D | E | M | W |		#
-  // #     ---------------------+---+---+---+---+---|		#
-  // #     reset                | K | K | K | K | E |		#
-  // #     exception            | K | K | K | K | E |		#
-  // #     interrupt            | K | K | K | E | E |		#
-  // #     I_FRZ                | S | S | E | E | E |		#
-  // #     D_FRZ                | S | S | S | S | E |		#
-  // #     hazard in DEC        | S | S | E | E | E |		#
-  // #     hazard in EXE        | S | S | S | E | E |		#
-  // #     SLEEP                | K | C | E | E | E |		#
-  // #     SWAP - first access  | S | S | S | C | E |		#
-  // #								#
-  // # Note that if more than one situation occur in the same	#
-  // # time Kill is prior than Stall which is prior than Exec	#
-  // #								#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   The instruction in Instruction Fetch is never copied.	#
-  // #								#
-  // #   It is stalled (the fetch must be retried) if:		#
-  // #     - the next stage (Instruction Decode) is occupied	#
-  // #     - the instruction memory is not able to answer the	#
-  // #       instruction fetch request				#
-  // #								#
-  // #   It is killed if :					#
-  // #     - the third previous instruction causes an exception	#
-  // #     - a hardware or software interrupt occurs		#
-  // #     - a hardware reset is detected				#
-  // #     - the previous instruction is a sleep			#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   The instruction in Instruction Decode is copied if :	#
-  // #     - the current instruction is a sleep			#
-  // #								#
-  // #   It is stalled if :					#
-  // #     - the next stage (Execute) is occupied			#
-  // #     - there is a data hazard that cannot be resolved by	#
-  // #       bypasses						#
-  // #     - the instruction memory cannot answer the instruction	#
-  // #       fetch (the instruction cannot be executed because it	#
-  // #       may change the instruction stream)			#
-  // #								#
-  // #   It is killed if :					#
-  // #     - the second previous instruction causes an exception	#
-  // #     - a hardware reset is detected				#
-  // #     - a hardware or a software interrupt occurs		#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   The instruction in Execute is never copied.		#
-  // #								#
-  // #   It is stalled if :					#
-  // #     - the next stage (Memory Access) is occupied		#
-  // #     - there is a data hazard that cannot be resolved by	#
-  // #       bypasses						#
-  // #								#
-  // #   It is killed if :					#
-  // #     - the previous instruction causes an exception		#
-  // #     - a hardware reset is detected				#
-  // #     - a hardware or a software interrupt occurs		#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   The instruction in Memory Access is copied if:		#
-  // #     - the current instruction has a copying capability	#
-  // #       (that is, it is a swap instruction and is making	#
-  // #       its first access).					#
-  // #								#
-  // #   It is stalled if :					#
-  // #     - the data memory is not able to answer the request	#
-  // #								#
-  // #   It is killed if :					#
-  // #     - it causes an exception				#
-  // #     - a hardware reset is detected				#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   The instruction in Write Back is always executed		#
-  // ### ---------------------------------------------------- ###
-
-    // ### ---------------------------------------------------- ###
-  // #   actions on registers :					#
-  // #								#
-  // #   Three actions may be made on control registers:		#
-  // #      (1) shift : shift a new instruction into the stage	#
-  // #      (2) bubble: introduce a bubble (nop) into the pipe	#
-  // #      (3) hold  : hold the instruction			#
-  // #								#
-  // #   In each stage the action can be defined by the following	#
-  // # table (note that Write Back is always shifting):		#
-  // #								#
-  // #   stage   next stage   action in stage			#
-  // #   ------+------------+----------------			#
-  // #     K   |     K      |    bubble				#
-  // #     K   |     S      |     hold				#
-  // #     K   |     C      |     hold				#
-  // #     K   |     E      |    bubble				#
-  // #    -----+------------+----------------			#
-  // #     S   |     S      |     hold				#
-  // #     S   |     C      |     hold				#
-  // #     S   |     E      |    bubble				#
-  // #    -----+------------+----------------			#
-  // #     C   |     E      |    shift				#
-  // #    -----+------------+----------------			#
-  // #     E   |     E      |    shift				#
-  // ### ---------------------------------------------------- ###
-
-  // ### ---------------------------------------------------- ###
-  // #   actions on registers :					#
-  // #								#
-  // #   Two actions may be made on data registers (note that	#
-  // # Write Back is always loading) :				#
-  // #								#
-  // #      (1) load : load a new data into  the reg. (C or E)	#
-  // #      (2) keep : hold the same data in the reg. (K or S)	#
-  // ### ---------------------------------------------------- ###
-
-DONE LIST: (# : done |  / : not done)
-ALU         	#
-ifetch      	#
-mux_ifetch  	#
-ff_ifetch   	#
-decode      	/
-mux_decode  	/
-ff_decode   	/
-execute     	/
-mux_execute 	#
-ff_execute  	#
-memory      	/
-mux_memory		#
-ff_memory		#
-writeback		#
-mux_writeback	#
-ff_writeback	#
 
 Q:
 

@@ -1,7 +1,7 @@
 // ### -------------------------------------------------------------- ###
-// # file       : decode_rom.h                                          #
-// # date       : Oct 28 2003                                           #
-// # version    : v2.0                                                  #
+// # files      : decode_rom.h, decode_rom.h                            #
+// # date       : Mar 01 2022                                           #
+// # version    : v2.1                                                  #
 // #                                                                    #
 // # origin     : this description has been developed by CAO-VLSI team  #
 // #              at MASI laboratory, University Pierre et Marie Curie  #
@@ -15,7 +15,10 @@
 // #                                                                    #
 // # System-C                                                           #
 // # rewriting  : F. Pecheux                                            #
+// #                                                                    #
+// # updating   : K. Lastra                                             #
 // ### -------------------------------------------------------------- ###
+
 
 #ifndef _DECODE_ROM
 #define _DECODE_ROM
