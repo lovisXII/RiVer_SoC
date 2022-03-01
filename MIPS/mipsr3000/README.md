@@ -131,7 +131,8 @@ access).
 	- it causes an exception.
 	- a hardware reset is detected.
 5. Write back, the instruction in write back is always executed.
-These follows a summary of di erent situations.
+
+These follows a summary of different situations.
 
 
 |   |  I  |  D  |  E |  M |  W |
