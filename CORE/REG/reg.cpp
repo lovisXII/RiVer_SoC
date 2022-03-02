@@ -8,8 +8,8 @@
 
 void reg::reading_adresses()
 {
-    RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 1
-    RADR2_DATA.write(REG[RADR2.read()]) ; //on charge la donnée dans REG[index] dans le port de lectrue 2
+    RADR1_DATA.write(REG[RADR1.read()]) ; //on charge la donnée dans REG[index] dans le port de lecture 1
+    RADR2_DATA.write(REG[RADR2.read()]) ; //on charge la donnée dans REG[index] dans le port de lecture 2
     if (RESET_N.read()) {
         READ_PC.write(REG[32]);
     }

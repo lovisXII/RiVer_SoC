@@ -35,7 +35,8 @@ void wbk::wbk_method() {
         REG_DATA.write(din);
     }
     REG_DEST.write(MEM_DEST);
-    REG_WB.write(MEM_WB && !MEM2WBK_EMPTY.read());
+    if(MEM_WB.read() && !MEM2WBK_EMPTY.read()) REG_WB.write(1) ;
+    else REG_WB.write(0) ;
     MEM2WBK_POP.write(!MEM2WBK_EMPTY.read());
 }
 
