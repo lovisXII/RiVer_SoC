@@ -50,7 +50,6 @@ void reg::writing_adresse()
     {
 
         if (WRITE_PC_ENABLE.read()) {
-            cerr << sc_time_stamp() << "write pc : " << WRITE_PC.read() << endl ;
             REG[32].write(WRITE_PC) ; // we write the data into the register from the written adress
             REG_VALID[32].write(1) ;    // Register written is written as valid
         }
