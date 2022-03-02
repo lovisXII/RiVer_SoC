@@ -10,6 +10,8 @@ SC_MODULE(reg)
     
     sc_out <bool>               RADR1_VALID ; // tells if the register read is valid or no
     sc_out <bool>               RADR2_VALID ;
+    sc_out <bool>               ADR_DEST_VALID ;
+    sc_in < sc_uint<6> >        ADR_DEST_DECOD ;
 
     sc_out < sc_uint<32> >      RADR1_DATA ; //data output read from register
     sc_out < sc_uint<32> >      RADR2_DATA ;
@@ -52,7 +54,7 @@ SC_MODULE(reg)
     SC_CTOR(reg)
     {
         SC_METHOD  (reading_adresses) ;
-        sensitive << RADR1 << RADR2;
+        sensitive << RADR1 << RADR2 << ADR_DEST_DECOD;
         for (int i = 0; i < 33; i++) sensitive << REG[i];
         for (int i = 0; i < 33; i++) sensitive << REG_VALID[i];
         SC_CTHREAD  (writing_adresse,reg::CLK.pos()) ;

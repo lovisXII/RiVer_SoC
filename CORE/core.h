@@ -53,6 +53,10 @@ SC_MODULE(core)
     sc_signal< sc_uint<32> >    RADR2_DATA ;
     sc_signal< bool >           RADR1_VALID ;
     sc_signal< bool >           RADR2_VALID ;
+    
+    sc_signal <bool>            ADR_DEST_VALID ;
+    sc_signal< sc_uint<6>>      ADR_DEST_DECOD ;
+
 
     sc_signal< sc_uint<6> >     RADR1 ;
     sc_signal< sc_uint<6> >     RADR2 ;
@@ -190,6 +194,9 @@ SC_MODULE(core)
         dec_inst.RADR1_VALID(RADR1_VALID);
         dec_inst.RADR2_VALID(RADR2_VALID);
 
+        dec_inst.ADR_DEST_VALID(ADR_DEST_VALID) ;
+        dec_inst.ADR_DEST_DECOD(ADR_DEST_DECOD) ;
+
         dec_inst.RADR1(RADR1);
         dec_inst.RADR2(RADR2);
 
@@ -274,6 +281,8 @@ SC_MODULE(core)
         reg_inst.RADR2(RADR2) ;
         reg_inst.RADR1_VALID(RADR1_VALID) ;
         reg_inst.RADR2_VALID(RADR2_VALID) ;
+        reg_inst.ADR_DEST_VALID(ADR_DEST_VALID) ;
+        reg_inst.ADR_DEST_DECOD(ADR_DEST_DECOD) ;
         reg_inst.RADR1_DATA(RADR1_DATA) ;
         reg_inst.RADR2_DATA(RADR2_DATA) ;
 

@@ -5,11 +5,11 @@
 #but it gaves 1973, because it doesn't correctly wait for x1 to be wbk
 
 _start:
-    ori x1,x0,1953
-    slli x1,x1,6 # x1 = 124992
-    ori x1,x1,20 # x1 = 125012
-    bne x5,x6, _bad
-    beq x6,x5, _good
+    ori x1, x0, 3
+    ori x1, x0, 4
+    or x2, x1, x0
+    bne x2,x1, _bad
+    beq x1,x2, _good
     nop
     nop
 _bad: 

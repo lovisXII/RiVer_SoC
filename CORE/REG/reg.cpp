@@ -26,6 +26,8 @@ void reg::reading_adresses()
 
     RADR2_VALID.write(REG_VALID[RADR2.read()]) ;
 
+    ADR_DEST_VALID.write(REG_VALID[ADR_DEST_DECOD.read()]) ;
+
     READ_PC_VALID.write(REG_VALID[32]) ; // la validité de PC est la validité du registre correspondant soit r32
 
 
@@ -85,6 +87,8 @@ void reg::trace(sc_trace_file* tf) {
         sc_trace(tf, RADR2, GET_NAME(RADR2));
         sc_trace(tf, RADR1_VALID, GET_NAME(RADR1_VALID));
         sc_trace(tf, RADR2_VALID, GET_NAME(RADR2_VALID));
+        sc_trace(tf, ADR_DEST_VALID, GET_NAME(ADR_DEST_VALID));
+        sc_trace(tf, ADR_DEST_DECOD, GET_NAME(ADR_DEST_DECOD));
         sc_trace(tf, RADR1_DATA, GET_NAME(RADR1_DATA)); 
         sc_trace(tf, RADR2_DATA, GET_NAME(RADR2_DATA));
         sc_trace(tf, WADR1, GET_NAME(WADR1));

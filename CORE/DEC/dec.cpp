@@ -25,7 +25,7 @@ void decod::if2dec_pop_method()
         IF2DEC_POP.write(1) ;
         IF2DEC_FLUSH.write(1);
     }
-    else if(RADR1_VALID.read() && RADR2_VALID.read() && ! IF2DEC_EMPTY.read() && !dec2exe_full.read())
+    else if(RADR1_VALID.read() && RADR2_VALID.read() && ADR_DEST_VALID.read() && ! IF2DEC_EMPTY.read() && !dec2exe_full.read())
     {
         IF2DEC_POP.write(1) ;
         IF2DEC_FLUSH.write(0);
@@ -40,7 +40,7 @@ void decod::if2dec_pop_method()
 
 void decod::dec2exe_push_method()
 {
-    if(! RADR1_VALID.read() || ! RADR2_VALID.read() || dec2exe_full.read() || IF2DEC_EMPTY.read())
+    if(! RADR1_VALID.read() || ! RADR2_VALID.read() || ! ADR_DEST_VALID.read() || dec2exe_full.read() || IF2DEC_EMPTY.read())
     {
         dec2exe_push.write(0) ; 
     }
@@ -489,6 +489,7 @@ void decod::affectation_registres()
     RADR1.write(radr1_var) ;
     RADR2.write(radr2_var) ;
     adr_dest.write(adr_dest_var) ;
+    ADR_DEST_DECOD.write(adr_dest_var) ;
     INVAL_DEST.write(adr_dest_var);
     offset_branch.write(offset_branch_var) ;
     dec2exe_op1.write(dec2exe_op1_var) ;
@@ -723,6 +724,8 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,RADR2_VALID,GET_NAME(RADR2_VALID)); 
     sc_trace(tf,RADR1,GET_NAME(RADR1)); 
     sc_trace(tf,RADR2,GET_NAME(RADR2)); 
+    sc_trace(tf,ADR_DEST_VALID,GET_NAME(ADR_DEST_VALID)); 
+    sc_trace(tf,ADR_DEST_DECOD,GET_NAME(ADR_DEST_DECOD)); 
     sc_trace(tf,EXE_DEST,GET_NAME(EXE_DEST)); 
     sc_trace(tf,READ_PC,GET_NAME(READ_PC)); 
     sc_trace(tf,READ_PC_VALID,GET_NAME(READ_PC_VALID));   

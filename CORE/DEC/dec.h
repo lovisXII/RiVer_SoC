@@ -10,12 +10,15 @@ SC_MODULE(decod)
     sc_in   < bool >              RADR1_VALID ; // tells if the data read is valid or no
     sc_in   < bool >              RADR2_VALID ; // same but for rt
 
+    sc_in   < bool >              ADR_DEST_VALID ;
+    sc_out  <sc_uint<6>>          ADR_DEST_DECOD ;
+
     sc_out  < sc_uint<6> >       RADR1 ; // adress of rs
     sc_out  < sc_uint<6> >       RADR2 ; // adress of rt
 
     sc_out  < sc_uint<6> >       INVAL_DEST ; // rd
     sc_out  < bool >             INVAL_ENABLE ;
-
+        
     sc_out  < sc_uint<32> >      WRITE_PC ;
     sc_out  < bool >             WRITE_PC_ENABLE ;
 
@@ -221,7 +224,11 @@ SC_MODULE(decod)
         dec2exe.RESET_N(RESET_N) ;
 
         SC_METHOD(dec2if_gestion)
-        sensitive << dec2if_empty << READ_PC_VALID << dec2if_push << dec2if_full << RESET_N;
+        sensitive   << dec2if_empty 
+                    << READ_PC_VALID
+                    << dec2if_push 
+                    << dec2if_full 
+                    << RESET_N;
 
         SC_METHOD(concat_dec2exe)
         sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 << dec2exe_cmd
@@ -237,10 +244,21 @@ SC_MODULE(decod)
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT  << RESET_N;       
         SC_METHOD(dec2exe_push_method)
-        sensitive << RADR1_VALID << RADR2_VALID << dec2exe_full << IF2DEC_EMPTY << RESET_N ;
+        sensitive   << RADR1_VALID 
+                    << RADR2_VALID 
+                    << ADR_DEST_VALID
+                    << dec2exe_full 
+                    << IF2DEC_EMPTY 
+                    << RESET_N ;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << RADR1_VALID << RADR2_VALID << IF2DEC_EMPTY << IF2DEC_POP << add_offset_to_pc << RESET_N;
+        sensitive   << ADR_DEST_VALID 
+                    << RADR1_VALID 
+                    << RADR2_VALID 
+                    << IF2DEC_EMPTY 
+                    << dec2exe_full
+                    << add_offset_to_pc 
+                    << RESET_N;
 
         SC_METHOD(decoding_instruction_type)
         sensitive  << IF_IR   << RESET_N;
