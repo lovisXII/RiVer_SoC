@@ -226,12 +226,13 @@ SC_MODULE(decod)
         SC_METHOD(dec2if_gestion)
         sensitive   << dec2if_empty 
                     << READ_PC_VALID
-                    << dec2if_push 
-                    << dec2if_full 
-                    << RESET_N;
+                    << dec2if_full ;
 
         SC_METHOD(concat_dec2exe)
-        sensitive   << dec2exe_in << dec2exe_op1 << dec2exe_op2 << dec2exe_cmd
+        sensitive   << dec2exe_in 
+                    << dec2exe_op1 
+                    << dec2exe_op2 
+                    << dec2exe_cmd
                     << dec2exe_neg_op1
                     << dec2exe_wb 
                     << mem_data 
@@ -240,16 +241,19 @@ SC_MODULE(decod)
                     << mem_sign_extend 
                     << mem_size 
                     << select_shift 
-                    << adr_dest  << RESET_N << slti_i << slt_i << sltiu_i << sltu_i;
+                    << adr_dest
+                    << slti_i 
+                    << slt_i 
+                    << sltiu_i 
+                    << sltu_i;
         SC_METHOD(unconcat_dec2exe)
-        sensitive << DEC2EXE_OUT  << RESET_N;       
+        sensitive << DEC2EXE_OUT ;       
         SC_METHOD(dec2exe_push_method)
         sensitive   << RADR1_VALID 
                     << RADR2_VALID 
                     << ADR_DEST_VALID
                     << dec2exe_full 
-                    << IF2DEC_EMPTY 
-                    << RESET_N ;
+                    << IF2DEC_EMPTY ;
 
         SC_METHOD(if2dec_pop_method)
         sensitive   << ADR_DEST_VALID 
@@ -257,13 +261,12 @@ SC_MODULE(decod)
                     << RADR2_VALID 
                     << IF2DEC_EMPTY 
                     << dec2exe_full
-                    << add_offset_to_pc 
-                    << RESET_N;
+                    << add_offset_to_pc ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive  << IF_IR   << RESET_N;
+        sensitive  << IF_IR ;
         SC_METHOD(decoding_instruction)
-        sensitive << IF_IR  << RESET_N;
+        sensitive << IF_IR ;
         SC_METHOD(affectation_registres)
         sensitive   << IF_IR
                     << RADR1_DATA
@@ -285,7 +288,8 @@ SC_MODULE(decod)
                     << blt_i
                     << bge_i
                     << bltu_i
-                    << bgeu_i  << RESET_N; 
+                    << bgeu_i  
+                    << dec2if_push; 
         SC_METHOD(affectation_calcul)
         sensitive   << add_i
                     << slt_i
@@ -323,16 +327,15 @@ SC_MODULE(decod)
                     << jal_i
                     << sw_i
                     << sh_i
-                    << sb_i  << RESET_N << dec2exe_push;
+                    << sb_i  
+                    << dec2exe_push;
         SC_METHOD(pc_inc)
         sensitive   << CLK.pos()
-                    << IF_IR
                     << READ_PC
                     << offset_branch
                     << inc_pc
                     << add_offset_to_pc
-                    << READ_PC_VALID 
-                    << RESET_N;
+                    << READ_PC_VALID ;
         reset_signal_is(RESET_N,false) ;
 
     }

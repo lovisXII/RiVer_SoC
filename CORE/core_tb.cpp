@@ -9,40 +9,47 @@ using namespace ELFIO;
 //arguments 
 int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
-    elfio reader;
+    elfio reader; // creation of an elfio object
     string path(argv[1]);
     int start_adr;
     int good_adr;
     int bad_adr;
-    if (path.substr(path.find_last_of(".") + 1) == "s") {
+    if (path.substr(path.find_last_of(".") + 1) == "s") { // checking if the argument is a assembly file
+        char temp[512];
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str()); // writting "riscv32-unknown-elf-gcc -nostdlib path" in temp
+        system((char *)temp); // send the command in temp to the terminal
+        path = "a.out"; // give the output
+    }
+    if (path.substr(path.find_last_of(".") + 1) == "c") { //do the same but for .c file
         char temp[512];
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
         system((char *)temp);
         path = "a.out";
     }
-    if (path.substr(path.find_last_of(".") + 1) == "c") {
-        char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
-        system((char *)temp);
-        path = "a.out";
-    }
-    if ( !reader.load( path ) ) {        
+    if ( !reader.load( path ) ) {// verify if the path is correctly load
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl; 
         return 2; 
     }
     cout << "Loading ELF file..." << endl;
-    int n_sec = reader.sections.size();
+
+    /*
+    An Elf binary file consist of segments and sections. Each sections has its own responsability, some contains executable code, others programs
+    data...etc.
+    We need to find out the sections of ELF file. The code below find out theses sections.
+    */
+
+    int n_sec = reader.sections.size(); // get the total amount of sectionss
     for (int i = 0; i < n_sec; i++) {
         section * sec = reader.sections[i];
         cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;
-        int adr = sec->get_address();
+        int adr = sec->get_address(); 
         int size = sec->get_size();
         int* data = (int*) sec->get_data();
         if (adr) {
             cout << "Loading data";
             for (int j = 0; j < size; j+=4) {
                 cout << ".";
-                ram[adr + j] =  data[j/4];
+                ram[adr + j] =  data[j/4];// put every adress segment in the ram
             }
             cout << endl;
         }

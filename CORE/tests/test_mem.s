@@ -14,7 +14,8 @@ _start:
     ori x6,x0,61
     sll x6,x6,11 # sll = 124928
     bne x5,x6, _bad
-    beq x6,x5, _good
+    nop
+    jal x6, _good
     nop
     nop
 _bad: 

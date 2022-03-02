@@ -54,7 +54,7 @@ SC_MODULE(reg)
     SC_CTOR(reg)
     {
         SC_METHOD  (reading_adresses) ;
-        sensitive << RADR1 << RADR2 << ADR_DEST_DECOD;
+        sensitive << RADR1 << RADR2 << ADR_DEST_DECOD << RESET_N;
         for (int i = 0; i < 33; i++) sensitive << REG[i];
         for (int i = 0; i < 33; i++) sensitive << REG_VALID[i];
         SC_CTHREAD  (writing_adresse,reg::CLK.pos()) ;

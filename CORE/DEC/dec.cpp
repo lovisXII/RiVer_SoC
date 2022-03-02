@@ -488,8 +488,8 @@ void decod::affectation_registres()
 
     RADR1.write(radr1_var) ;
     RADR2.write(radr2_var) ;
-    adr_dest.write(adr_dest_var) ;
     ADR_DEST_DECOD.write(adr_dest_var) ;
+    adr_dest.write(adr_dest_var) ;
     INVAL_DEST.write(adr_dest_var);
     offset_branch.write(offset_branch_var) ;
     dec2exe_op1.write(dec2exe_op1_var) ;

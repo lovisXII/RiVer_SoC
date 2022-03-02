@@ -16,7 +16,7 @@ _start:
     sw a1, 0(x0)
 
     loop:
-        j loop
+        jal r12 loop
 
     nop
 _good:
