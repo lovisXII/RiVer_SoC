@@ -1,0 +1,12 @@
+#ifndef D_CACHE
+#define D_CACHE
+
+#include <systemc.h>
+
+SC_MODULE(d_cache)
+{
+  sc_in<bool> CK;
+  sc_in<bool> reset;
+}
+
+#endif
