@@ -1,0 +1,29 @@
+
+a.out:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010054 <_start>:
+   10054:	7a106093          	ori	ra,zero,1953
+   10058:	00609093          	slli	ra,ra,0x6
+   1005c:	0140e093          	ori	ra,ra,20
+   10060:	05406113          	ori	sp,zero,84
+   10064:	02102023          	sw	ra,32(zero) # 20 <_start-0x10034>
+   10068:	02002183          	lw	gp,32(zero) # 20 <_start-0x10034>
+   1006c:	02200223          	sb	sp,36(zero) # 24 <_start-0x10030>
+   10070:	02400203          	lb	tp,36(zero) # 24 <_start-0x10030>
+   10074:	403202b3          	sub	t0,tp,gp
+   10078:	03d06313          	ori	t1,zero,61
+   1007c:	00b31313          	slli	t1,t1,0xb
+   10080:	00629a63          	bne	t0,t1,10094 <_bad>
+   10084:	00000013          	nop
+   10088:	0100036f          	jal	t1,10098 <_good>
+   1008c:	00000013          	nop
+   10090:	00000013          	nop
+
+00010094 <_bad>:
+   10094:	00000013          	nop
+
+00010098 <_good>:
+   10098:	00000013          	nop

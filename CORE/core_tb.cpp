@@ -14,17 +14,30 @@ int sc_main(int argc, char* argv[]) {
     int start_adr;
     int good_adr;
     int bad_adr;
+    char test[512] = "> a.out.txt" ;
+
     if (path.substr(path.find_last_of(".") + 1) == "s") { // checking if the argument is a assembly file
         char temp[512];
+        char temp_text[512] ;
+
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str()); // writting "riscv32-unknown-elf-gcc -nostdlib path" in temp
         system((char *)temp); // send the command in temp to the terminal
         path = "a.out"; // give the output
+
+        sprintf(temp_text,"riscv32-unknown-elf-objdump -d %s", path.c_str()) ;
+        strcat(temp_text, test) ;
+        system((char *)temp_text) ;
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") { //do the same but for .c file
         char temp[512];
+        char temp_text[512] ;
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
         system((char *)temp);
         path = "a.out";
+
+        sprintf(temp_text,"riscv32-unknown-elf-objdump -d %s", path.c_str()) ;
+        strcat(temp_text, test) ;
+        system((char *)temp_text) ;
     }
     if ( !reader.load( path ) ) {// verify if the path is correctly load
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl; 
