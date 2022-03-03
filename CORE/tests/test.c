@@ -4,31 +4,27 @@ extern void _good();
 __asm__(".section .text") ;
 __asm__(".global _start") ;
 
+
 __asm__("_start:");
 __asm__("addi x2,x0, 0x100");
 __asm__("addi x1,x1, 4");
 __asm__("sub x2, x1,x2 ");
 __asm__("jal x5, main");
 
+
 int main() {
-    if (fib(10) == 55) {
+    int a = 3;
+    int b = 4;
+    for (;a >= 0; a--) {
+        b ++;
+    }
+    if (b == 3) {
+        b = 8;
+    }
+    else {
         _good();
     }
-    else {
-        _bad();
-    }
-}
-
-int fib(int n) {
-    if (n == 0) {
-        return 0;
-    }
-    else if (n == 1) {
-        return 1;
-    }
-    else {
-        return fib(n-1) + fib(n-2);
-    }
+    _bad();
 }
 
 __asm__("nop");

@@ -264,9 +264,10 @@ SC_MODULE(decod)
                     << add_offset_to_pc ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive  << IF_IR << READ_PC;
+        sensitive   << IF_IR 
+                    << READ_PC ;
         SC_METHOD(decoding_instruction)
-        sensitive << IF_IR ;
+        sensitive   << IF_IR ;
         SC_METHOD(affectation_registres)
         sensitive   << IF_IR
                     << RADR1_DATA
@@ -289,7 +290,7 @@ SC_MODULE(decod)
                     << bge_i
                     << bltu_i
                     << bgeu_i  
-                    << dec2if_push; 
+                    << dec2if_push ;
         SC_METHOD(affectation_calcul)
         sensitive   << add_i
                     << slt_i

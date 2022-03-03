@@ -5,13 +5,47 @@ a.out:     file format elf32-littleriscv
 Disassembly of section .text:
 
 00010054 <_start>:
-   10054:	00400093          	li	ra,4
-   10058:	00006033          	or	zero,zero,zero
-   1005c:	f9def0ef          	jal	ra,fffffff8 <__global_pointer$+0xfffee78c>
-   10060:	00000013          	nop
+   10054:	10000113          	li	sp,256
+   10058:	00408093          	addi	ra,ra,4
+   1005c:	40208133          	sub	sp,ra,sp
+   10060:	004002ef          	jal	t0,10064 <main>
 
-00010064 <_bad>:
-   10064:	00000013          	nop
+00010064 <main>:
+   10064:	fe010113          	addi	sp,sp,-32
+   10068:	00112e23          	sw	ra,28(sp)
+   1006c:	00812c23          	sw	s0,24(sp)
+   10070:	02010413          	addi	s0,sp,32
+   10074:	00300793          	li	a5,3
+   10078:	fef42623          	sw	a5,-20(s0)
+   1007c:	00400793          	li	a5,4
+   10080:	fef42423          	sw	a5,-24(s0)
+   10084:	01c0006f          	j	100a0 <main+0x3c>
+   10088:	fe842783          	lw	a5,-24(s0)
+   1008c:	00178793          	addi	a5,a5,1
+   10090:	fef42423          	sw	a5,-24(s0)
+   10094:	fec42783          	lw	a5,-20(s0)
+   10098:	fff78793          	addi	a5,a5,-1
+   1009c:	fef42623          	sw	a5,-20(s0)
+   100a0:	fec42783          	lw	a5,-20(s0)
+   100a4:	fe07d2e3          	bgez	a5,10088 <main+0x24>
+   100a8:	fe842703          	lw	a4,-24(s0)
+   100ac:	00300793          	li	a5,3
+   100b0:	00f71863          	bne	a4,a5,100c0 <main+0x5c>
+   100b4:	00800793          	li	a5,8
+   100b8:	fef42423          	sw	a5,-24(s0)
+   100bc:	0080006f          	j	100c4 <main+0x60>
+   100c0:	028000ef          	jal	ra,100e8 <_good>
+   100c4:	020000ef          	jal	ra,100e4 <_bad>
+   100c8:	00000793          	li	a5,0
+   100cc:	00078513          	mv	a0,a5
+   100d0:	01c12083          	lw	ra,28(sp)
+   100d4:	01812403          	lw	s0,24(sp)
+   100d8:	02010113          	addi	sp,sp,32
+   100dc:	00008067          	ret
+   100e0:	00000013          	nop
 
-00010068 <_good>:
-   10068:	00000013          	nop
+000100e4 <_bad>:
+   100e4:	00000033          	add	zero,zero,zero
+
+000100e8 <_good>:
+   100e8:	001080b3          	add	ra,ra,ra

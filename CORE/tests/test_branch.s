@@ -2,9 +2,8 @@
 .global _start
 
 _start:
-    addi x1,x0,4
-    or x0,x0,x0
-    jal x1, -8
+    addi x2,x0,4
+    jalr x1, x2,8 
     nop
 _bad: 
     nop

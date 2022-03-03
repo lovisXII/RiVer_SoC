@@ -483,7 +483,7 @@ void decod::affectation_registres()
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
         inval_adr_dest = false ;
-        invalid_instr = true;
+        invalid_instr = false;
     }
     
     invalid_instr = invalid_instr || IF2DEC_EMPTY.read();
@@ -513,8 +513,8 @@ void decod::affectation_calcul()
     //We are going to setup commands sent to EXE here, so each if will be execute for one type of command :
 
     //CMD : +
-    bool dec2exe_wb_var;
-    if(add_i | sub_i | addi_i | lw_i | lh_i | lhu_i | lb_i | lbu_i | sw_i | sh_i | sb_i | auipc_i | lui_i | slti_i | slt_i | sltiu_i | sltu_i)
+    int dec2exe_wb_var;
+    if(add_i || sub_i || addi_i || lw_i || lh_i | lhu_i || lb_i || lbu_i || sw_i || sh_i || sb_i || auipc_i || lui_i || slti_i || slt_i || sltiu_i || sltu_i)
     {
         dec2exe_cmd.write(0) ;
         select_shift.write(0) ;
@@ -670,7 +670,7 @@ void decod::affectation_calcul()
         select_shift.write(1) ;
 
     }
-    if(jalr_type_inst.read() || j_type_inst.read())
+    else if(jalr_type_inst.read() || j_type_inst.read())
     {
         dec2exe_cmd.write(0) ;
         dec2exe_neg_op1.write(0) ;
@@ -692,7 +692,6 @@ void decod::affectation_calcul()
         mem_size.write(0) ;
         select_shift.write(0) ;   
     }
-    
     INVAL_ENABLE.write(dec2exe_wb_var && dec2exe_push);
     dec2exe_wb.write(dec2exe_wb_var);
 } 
@@ -705,7 +704,7 @@ void decod::pc_inc()
     sc_uint<32> pc_out = pc;
     sc_uint<32> offset_branch_var = offset_branch.read() ;
 
-    if(inc_pc && READ_PC_VALID.read())
+    if(inc_pc && READ_PC_VALID.read() )
     {
         pc_out = pc + 4 ;
         WRITE_PC.write(pc_out);

@@ -2,6 +2,7 @@
 .global _start
 
 _start:
+    addi x1,x0,12
     ori x1,x0,1953
     slli x1,x1,6 # x1 = 124992
     ori x1,x1,20 # x1 = 125012
