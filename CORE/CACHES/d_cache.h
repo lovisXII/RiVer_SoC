@@ -54,10 +54,15 @@ SC_MODULE(d_cache)
   WAY_128 way1;
 
   void init();
+  void transition();
   
   SC_CTOR(d_cache)
   {
     SC_METHOD(init);
+    sensitive << RESET;
+
+    SC_METHOD(transition);
+    sensitive << CK.pos();
   }
 }
 
