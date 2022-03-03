@@ -12,14 +12,23 @@ __asm__("sub x2, x1,x2 ");
 __asm__("jal x5, main");
 
 
+int somme(int a)
+{
+    return a++ ;
+}
+
+int lala()
+{
+    return 8 ;
+}
 int main() {
     int a = 3;
     int b = 4;
     for (;a >= 0; a--) {
-        b ++;
+        somme(b);
     }
     if (b == 3) {
-        b = 8;
+        b = lala() ;
     }
     else {
         _good();
