@@ -420,17 +420,17 @@ void decod::affectation_registres()
         radr2_var = 0 ;
         adr_dest_var = if_ir.range(11,7) ;
 
-        dec2exe_op1_var = 0x0 ;
-        dec2exe_op2_var = 0x0 ;
+        dec2exe_op1_var = READ_PC.read() ;
+        dec2exe_op2_var = 0x0 ; // on va envoyer l'adresse de retour
 
 
         if(if_ir.range(31,31) == 1)
         {
-            offset_branch_var.range(31,23) = 0b111111111 ;
+            offset_branch_var.range(31,21) = 0b11111111111 ;
         }
         else
         {
-            offset_branch_var.range(31,23) = 0b000000000 ;
+            offset_branch_var.range(31,21) = 0b00000000000 ;
         }
         offset_branch_var.range(20,20)  = if_ir.range(31,31) ;
         offset_branch_var.range(19,12)  = if_ir.range(19,12) ;
@@ -452,8 +452,8 @@ void decod::affectation_registres()
 
         adr_dest_var = if_ir.range(11,7) ;
 
-        dec2exe_op1_var = 0 ;
-        dec2exe_op2_var = 0 ;
+        dec2exe_op1_var = READ_PC.read() ;
+        dec2exe_op2_var = 0x0 ;
         
         if(if_ir.range(31,31) == 1)
         {
@@ -464,6 +464,8 @@ void decod::affectation_registres()
             offset_branch_var.range(31,12) = 0b00000000000000000000 ;
         }
         offset_branch_var.range(11,0) = if_ir.range(31,20) ;
+        offset_branch_var += RADR1_DATA.read() ;
+        offset_branch_var.range(0,0) = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
         inval_adr_dest = true ;
@@ -668,6 +670,17 @@ void decod::affectation_calcul()
         select_shift.write(1) ;
 
     }
+    if(jalr_type_inst.read() || j_type_inst.read())
+    {
+        dec2exe_cmd.write(0) ;
+        dec2exe_neg_op1.write(0) ;
+        dec2exe_wb_var = 1 ;
+        mem_load.write(0) ;
+        mem_store.write(0) ;
+        mem_sign_extend.write(0) ;
+        mem_size.write(0) ;
+        select_shift.write(0) ;
+    }
     else
     {
         dec2exe_cmd.write(0) ;
@@ -679,6 +692,7 @@ void decod::affectation_calcul()
         mem_size.write(0) ;
         select_shift.write(0) ;   
     }
+    
     INVAL_ENABLE.write(dec2exe_wb_var && dec2exe_push);
     dec2exe_wb.write(dec2exe_wb_var);
 } 
@@ -708,7 +722,6 @@ void decod::pc_inc()
     }
     dec2if_pc_in.write(pc_out) ;
 }
-
 
 
 //---------------------------------------------METHOD TO TRACE SIGNALS :---------------------------------------------

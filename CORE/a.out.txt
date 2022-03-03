@@ -1,0 +1,17 @@
+
+a.out:     file format elf32-littleriscv
+
+
+Disassembly of section .text:
+
+00010054 <_start>:
+   10054:	00400093          	li	ra,4
+   10058:	00006033          	or	zero,zero,zero
+   1005c:	f9def0ef          	jal	ra,fffffff8 <__global_pointer$+0xfffee78c>
+   10060:	00000013          	nop
+
+00010064 <_bad>:
+   10064:	00000013          	nop
+
+00010068 <_good>:
+   10068:	00000013          	nop

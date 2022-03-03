@@ -264,7 +264,7 @@ SC_MODULE(decod)
                     << add_offset_to_pc ;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive  << IF_IR ;
+        sensitive  << IF_IR << READ_PC;
         SC_METHOD(decoding_instruction)
         sensitive << IF_IR ;
         SC_METHOD(affectation_registres)
@@ -328,6 +328,8 @@ SC_MODULE(decod)
                     << sw_i
                     << sh_i
                     << sb_i  
+                    << j_type_inst
+                    << jalr_type_inst
                     << dec2exe_push;
         SC_METHOD(pc_inc)
         sensitive   << CLK.pos()

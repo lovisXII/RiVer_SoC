@@ -2,10 +2,9 @@
 .global _start
 
 _start:
-    ori x1, x0, 10
-    ori x2, x0, 10
-    beq x1, x2, _good
-    nop
+    addi x1,x0,4
+    or x0,x0,x0
+    jal x1, -8
     nop
 _bad: 
     nop
