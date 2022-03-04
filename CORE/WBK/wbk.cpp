@@ -21,7 +21,7 @@ void wbk::wbk_method() {
             break;
     }
 
-    if (sign_extend && din[range_start]) {
+    if (sign_extend && din(range_start,range_start)) {
         dout = 0xFFFFFFFF;
     }
     else {
