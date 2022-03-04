@@ -13,12 +13,22 @@
 // index  = ligne    <= size est one hot
 // offset = column
 
+#define WAY_SIZE 128
 struct WAY_128
 {
     sc_uint<32> DATA[128];
     sc_uint<23> TAGS[128];
-    bool LRU[128];
-    bool PRESENCE[128];
+    bool LRU[128];          //least recently used
+  //bool VALID[128];  usefull on write trough?
+};
+
+struct BUFFER
+{
+    sc_uint<32> DATA[32];
+    sc_uint<32> DATA_ADDRESS[32];
+    sc_uint READ;
+    sc_uint WRITE;
+    sc_uint VALIDATE;  // buffer validation
 };
 SC_MODULE(d_cache)
 {
@@ -26,10 +36,15 @@ SC_MODULE(d_cache)
   sc_in<bool> RESET;
 
 // interfaz processeur
-  sc_in<sc_uint<32>> DATA_ADDRESS;
+  sc_in<sc_uint<32>> DATA_ADDRESS_M;
+  sc_in<sc_uint<32>> DATA_M;
+  sc_in<bool> LOAD_M;
+  sc_in<bool> STORE_M;
+  sc_in<bool> VALID_ADDRESS_M;
 
-  sc_out<bool> HIT;
-
+  sc_out<sc_uint<32>> DATA_C;
+  sc_out<bool> HIT_C; // 1 : HIT, 0 : MISS
+  sc_out<bool> VALID_DATA_C;
 // interfaz bus
   sc_in<bool> PI_DATA_REQUEST;
   sc_in<sc_uint<3>> PI_ACKNOWLEDGE;
@@ -47,20 +62,31 @@ SC_MODULE(d_cache)
   sc_signal<sc_uint<7>> address_index;
   sc_signal<sc_uint<2>> address_offset;
 
+  sc_signal<bool> way0_hit;
+  sc_signal<bool> way1_hit;
+  
   sc_signal<sc_uint<32>> selected_data;
   
 // data structures
   WAY_128 way0;
   WAY_128 way1;
 
-  void init();
+  BUFFER buff0;
+  BUFFER buff1;
+  enum
+  {
+    IDLE,
+    COMPARE_TAG,
+    ALLOCATE,
+    WRITE_BACK,
+  };
+//fsm : finite state machine
+  sc_register<int> fsm_current_state;
+
   void transition();
   
   SC_CTOR(d_cache)
   {
-    SC_METHOD(init);
-    sensitive << RESET;
-
     SC_METHOD(transition);
     sensitive << CK.pos();
   }
