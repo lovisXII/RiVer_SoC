@@ -5,69 +5,13 @@ a.out:     file format elf32-littleriscv
 Disassembly of section .text:
 
 00010054 <_start>:
-   10054:	10000113          	li	sp,256
-   10058:	00408093          	addi	ra,ra,4
-   1005c:	40208133          	sub	sp,ra,sp
-   10060:	050002ef          	jal	t0,100b0 <main>
+   10054:	7e400113          	li	sp,2020
+   10058:	00202223          	sw	sp,4(zero) # 4 <_start-0x10050>
+   1005c:	00400183          	lb	gp,4(zero) # 4 <_start-0x10050>
+   10060:	00218463          	beq	gp,sp,10068 <_good>
 
-00010064 <somme>:
-   10064:	fe010113          	addi	sp,sp,-32
-   10068:	00812e23          	sw	s0,28(sp)
-   1006c:	02010413          	addi	s0,sp,32
-   10070:	fea42623          	sw	a0,-20(s0)
-   10074:	fec42783          	lw	a5,-20(s0)
-   10078:	00178713          	addi	a4,a5,1
-   1007c:	fee42623          	sw	a4,-20(s0)
-   10080:	00078513          	mv	a0,a5
-   10084:	01c12403          	lw	s0,28(sp)
-   10088:	02010113          	addi	sp,sp,32
-   1008c:	00008067          	ret
+00010064 <_bad>:
+   10064:	00000013          	nop
 
-00010090 <lala>:
-   10090:	ff010113          	addi	sp,sp,-16
-   10094:	00812623          	sw	s0,12(sp)
-   10098:	01010413          	addi	s0,sp,16
-   1009c:	00800793          	li	a5,8
-   100a0:	00078513          	mv	a0,a5
-   100a4:	00c12403          	lw	s0,12(sp)
-   100a8:	01010113          	addi	sp,sp,16
-   100ac:	00008067          	ret
-
-000100b0 <main>:
-   100b0:	fe010113          	addi	sp,sp,-32
-   100b4:	00112e23          	sw	ra,28(sp)
-   100b8:	00812c23          	sw	s0,24(sp)
-   100bc:	02010413          	addi	s0,sp,32
-   100c0:	00300793          	li	a5,3
-   100c4:	fef42623          	sw	a5,-20(s0)
-   100c8:	00400793          	li	a5,4
-   100cc:	fef42423          	sw	a5,-24(s0)
-   100d0:	0180006f          	j	100e8 <main+0x38>
-   100d4:	fe842503          	lw	a0,-24(s0)
-   100d8:	f8dff0ef          	jal	ra,10064 <somme>
-   100dc:	fec42783          	lw	a5,-20(s0)
-   100e0:	fff78793          	addi	a5,a5,-1
-   100e4:	fef42623          	sw	a5,-20(s0)
-   100e8:	fec42783          	lw	a5,-20(s0)
-   100ec:	fe07d4e3          	bgez	a5,100d4 <main+0x24>
-   100f0:	fe842703          	lw	a4,-24(s0)
-   100f4:	00300793          	li	a5,3
-   100f8:	00f71863          	bne	a4,a5,10108 <main+0x58>
-   100fc:	f95ff0ef          	jal	ra,10090 <lala>
-   10100:	fea42423          	sw	a0,-24(s0)
-   10104:	0080006f          	j	1010c <main+0x5c>
-   10108:	028000ef          	jal	ra,10130 <_good>
-   1010c:	020000ef          	jal	ra,1012c <_bad>
-   10110:	00000793          	li	a5,0
-   10114:	00078513          	mv	a0,a5
-   10118:	01c12083          	lw	ra,28(sp)
-   1011c:	01812403          	lw	s0,24(sp)
-   10120:	02010113          	addi	sp,sp,32
-   10124:	00008067          	ret
-   10128:	00000013          	nop
-
-0001012c <_bad>:
-   1012c:	00000033          	add	zero,zero,zero
-
-00010130 <_good>:
-   10130:	001080b3          	add	ra,ra,ra
+00010068 <_good>:
+   10068:	00000013          	nop

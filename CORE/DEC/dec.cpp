@@ -338,11 +338,11 @@ void decod::affectation_registres()
 
         if(if_ir.range(31,31) == 1)
         {
-            offset_branch_var.range(31,15) = 0b111111111111111111 ;
+            offset_branch_var.range(31,13) = 0b1111111111111111111 ;
         }
         else
         {
-            offset_branch_var.range(31,15) = 0b000000000000000000 ;
+            offset_branch_var.range(31,13) = 0b0000000000000000000 ;
         }
         offset_branch_var.range(12,12)  = if_ir.range(31,31);
         offset_branch_var.range(11,11)  = if_ir.range(7,7);
