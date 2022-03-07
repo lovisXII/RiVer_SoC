@@ -11,7 +11,7 @@ all: core_tb
 core_tb: $(OBJECTS) core.h
 	$(CC) $^ -o $@ $(C_ARGS)
 
-%.o: %.cpp %.h
+%.o: %.cpp 
 	$(CC) -c $^ $(C_ARGS) -o $@
 
 clean: 
