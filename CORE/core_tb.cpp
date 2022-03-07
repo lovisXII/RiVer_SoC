@@ -186,7 +186,7 @@ int sc_main(int argc, char* argv[]) {
         IC_INST.write(if_result);
         IC_STALL.write(false);
 
-        sc_start(1, SC_NS);
+        sc_start(500, SC_PS);
     }
     return 0;
 }

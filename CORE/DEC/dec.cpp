@@ -464,7 +464,7 @@ void decod::affectation_registres()
             offset_branch_var.range(31,12) = 0b00000000000000000000 ;
         }
         offset_branch_var.range(11,0) = if_ir.range(31,20) ;
-        offset_branch_var += RADR1_DATA.read() ;
+        offset_branch_var += RADR1_DATA.read() - READ_PC.read() + 4 ;
         offset_branch_var.range(0,0) = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;

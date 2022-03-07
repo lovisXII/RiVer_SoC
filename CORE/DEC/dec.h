@@ -290,7 +290,8 @@ SC_MODULE(decod)
                     << bge_i
                     << bltu_i
                     << bgeu_i  
-                    << dec2if_push ;
+                    << dec2if_push
+                    << READ_PC ;
         SC_METHOD(affectation_calcul)
         sensitive   << add_i
                     << slt_i

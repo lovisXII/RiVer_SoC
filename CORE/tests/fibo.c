@@ -10,14 +10,6 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x1,x2 ");
 __asm__("jal x5, main");
 
-int main() {
-    if (fib(10) == 55) {
-        _good();
-    }
-    else {
-        _bad();
-    }
-}
 
 int fib(int n) {
     if (n == 0) {
@@ -31,6 +23,16 @@ int fib(int n) {
     }
 }
 
+
+
+int main() {
+    if (fib(10) == 55) {
+        _good();
+    }
+    else {
+        _bad();
+    }
+}
 __asm__("nop");
 __asm__("_bad:");
 __asm__("    add x0, x0, x0");

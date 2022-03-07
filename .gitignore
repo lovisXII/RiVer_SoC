@@ -4,3 +4,5 @@
 *a.out
 *core_tb
 *.vcd
+*.txt
+*.text
