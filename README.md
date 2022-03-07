@@ -11,9 +11,8 @@ This project is design as follow :
 * MIPS : old description of a MIPS32 architecture made byt the lip6 of Sorbonne Unversity, it used an old version of systemc, we modify it to be able to compile on systemc2.3.3,
 * Risc-sim : contain the begining of a parsor to transfrom a assembly file into binary code
 
-
-## I. Convention we took to name signals
-### A. Entity :
+# I. Convention we took to name signals
+## A. Entity :
 Signals of pure entity such as arithemitcal logic unit, shifter, fifo ...etc. are named according to the following rule :  
  - **Upper case** : designate the input/ output of an entity
 - **Lower case** : internal signals of an entity  
@@ -23,7 +22,7 @@ __example__ :
 - DIN : alu's data input  
 - RES : alu's result  
 - CMD :  alu's command  
-### B. Stage : 
+## B. Stage : 
 Our signals are name according to the following convention :  
 
 __**From_to_description_stage**__  

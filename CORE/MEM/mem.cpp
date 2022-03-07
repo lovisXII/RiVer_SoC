@@ -17,7 +17,7 @@ void mem::mem2wbk_unconcat() {
     WBK_MEM_SIZE_SM.write(ff_dout.range(38, 37));
     WBK_WB_SM.write(ff_dout[39]);
     WBK_SIGN_EXTEND_SM.write(ff_dout[40]);
-    WBK_LOAD_SM.write(ff_dout[40]);
+    WBK_LOAD_SM.write(ff_dout[41]);
 }
 
 void mem::fifo_gestion() {
@@ -72,6 +72,7 @@ void mem::trace(sc_trace_file* tf) {
         sc_trace(tf, WBK_MEM_SIZE_SM, GET_NAME(WBK_MEM_SIZE_SM));
         sc_trace(tf, WBK_WB_SM, GET_NAME(WBK_WB_SM));
         sc_trace(tf, WBK_SIGN_EXTEND_SM, GET_NAME(WBK_SIGN_EXTEND_SM));
+        sc_trace(tf, WBK_LOAD_SM, GET_NAME(WBK_LOAD_SM));
         sc_trace(tf, mem2wbk_din_sm, GET_NAME(mem2wbk_din_sm));
         sc_trace(tf, mem2wbk_dout_sm, GET_NAME(mem2wbk_dout_sm));
         sc_trace(tf, data_sm, GET_NAME(data_sm));
