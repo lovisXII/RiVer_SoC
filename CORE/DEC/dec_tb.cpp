@@ -86,10 +86,10 @@ int sc_main(int argc, char* argv[])
 
     sc_signal    < bool >              dec2if_pop ;
     sc_signal    < bool >              dec2if_empty ;
-    sc_signal   < sc_uint<32> >        dec2if_pc ;
+    sc_signal   < sc_bv<32> >        dec2if_pc ;
 
 
-    sc_signal   < sc_uint<32> >        if_ir ;
+    sc_signal   < sc_bv<32> >        if_ir ;
     sc_signal   < bool >               if2dec_empty ;
     sc_signal   < bool >               if2dec_pop ;
 
@@ -98,7 +98,7 @@ int sc_main(int argc, char* argv[])
 
     sc_signal   < bool >              dec2exe_pop ;
     sc_signal    < bool >             dec2exe_empty ;
-    sc_signal    < sc_bv<110> >       dec2exe_out ;
+    sc_signal    < sc_bv<114> >       dec2exe_out ;
 
 
     //General Interface :
@@ -116,48 +116,45 @@ int sc_main(int argc, char* argv[])
 
     //Port MAP :
 
-    dec.RADR1_DATA(radr1_data) ; 
-    dec.RADR2_DATA(radr2_data) ;
-    dec.RADR1_VALID(radr1_valid) ; 
-    dec.RADR2_VALID(radr2_valid) ; 
+    dec.RDATA1_SD(radr1_data) ; 
+    dec.RDATA2_SD(radr2_data) ;
+    dec.R1_VALID_SD(radr1_valid) ; 
+    dec.R2_VALID_SD(radr2_valid) ; 
 
-    dec.RADR1(radr1) ; 
-    dec.RADR2(radr2) ; 
+    dec.RADR1_SD(radr1) ; 
+    dec.RADR2_SD(radr2) ; 
 
-    dec.ADR_DEST(adr_dest) ; 
 
-    dec.READ_PC(read_pc) ; 
-    dec.INC_PC(inc_pc) ; 
-    dec.READ_PC_VALID(read_pc_valid) ; 
+    dec.READ_PC_SD(read_pc) ; 
+    dec.READ_PC_VALID_SD(read_pc_valid) ; 
 
     
 
-    dec.DEC2EXE_OP1(dec2exe_op1) ; 
-    dec.DEC2EXE_OP2(dec2exe_op2) ; 
-    dec.DEC2EXE_CMD(dec2exe_cmd) ; 
-    dec.DEC2EXE_NEG_OP1(dec2exe_neg_op1) ; 
-    dec.DEC2EXE_WB(dec2exe_wb) ; 
+    dec.EXE_OP1_SD(dec2exe_op1) ; 
+    dec.EXE_OP2_SD(dec2exe_op2) ; 
+    dec.EXE_CMD_SD(dec2exe_cmd) ; 
+    dec.EXE_NEG_OP1_SD(dec2exe_neg_op1) ; 
+    dec.EXE_WB_SD(dec2exe_wb) ; 
     
-    dec.MEM_DATA(mem_data) ; 
-    dec.MEM_LOAD(mem_load) ; 
-    dec.MEM_STORE(mem_store) ; 
-    dec.MEM_SIGN_EXTEND(mem_sign_extend) ; 
-    dec.MEM_SIZE(mem_size) ; 
-    dec.SELECT_SHIFT(select_shift) ; 
+    dec.MEM_DATA_SD(mem_data) ; 
+    dec.MEM_LOAD_SD(mem_load) ; 
+    dec.MEM_STORE_SD(mem_store) ; 
+    dec.MEM_SIGN_EXTEND_SD(mem_sign_extend) ; 
+    dec.MEM_SIZE_SD(mem_size) ; 
+    dec.EXE_SELECT_SHIFT_SD(select_shift) ; 
     
     
 
-    dec.DEC2IF_POP(dec2if_pop) ;
-    dec.DEC2IF_EMPTY(dec2if_empty) ;
-    dec.DEC2IF_PC(dec2if_pc) ;
+    dec.DEC2IF_POP_SD(dec2if_pop) ;
+    dec.DEC2IF_EMPTY_SD(dec2if_empty) ;
+    dec.IF_PC_SD(dec2if_pc) ;
 
-    dec.IF_IR(if_ir) ;
-    dec.IF2DEC_EMPTY(if2dec_empty) ;
-    dec.IF2DEC_POP(if2dec_pop) ;
+    dec.INSTR_SD(if_ir) ;
+    dec.IF2DEC_EMPTY_SD(if2dec_empty) ;
+    dec.IF2DEC_POP_SD(if2dec_pop) ;
 
-    dec.DEC2EXE_POP(dec2exe_pop) ;
-    dec.DEC2EXE_EMPTY(dec2exe_empty) ;
-    dec.DEC2EXE_OUT(dec2exe_out) ;
+    dec.DEC2EXE_POP_SD(dec2exe_pop) ;
+    dec.DEC2EXE_EMPTY_SD(dec2exe_empty) ;
     
     dec.CLK(clk) ;
     dec.RESET_N(reset_n) ;
@@ -209,7 +206,7 @@ int sc_main(int argc, char* argv[])
 
         read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[32].write(dec.DEC2IF_PC.read()) ;
+        REG[32].write(dec.IF_PC_SD.read()) ;
 
         if2dec_empty.write(1) ;
 
@@ -217,9 +214,9 @@ int sc_main(int argc, char* argv[])
         dec2exe_pop.write(1) ;
 
 
-        if(dec.adr_dest.read() != 0)
+        if(dec.adr_dest_sd.read() != 0)
         {
-            REG_VALID[dec.adr_dest.read()] = 0 ;
+            REG_VALID[dec.adr_dest_sd.read()] = 0 ;
         }
 
         print_reg(REG) ;
@@ -243,16 +240,16 @@ int sc_main(int argc, char* argv[])
 
         read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[32].write(dec.DEC2IF_PC.read()) ;
+        REG[32].write(dec.IF_PC_SD.read()) ;
 
 
         dec2if_pop.write(1) ;
         dec2exe_pop.write(1) ;
 
 
-        if(dec.adr_dest.read() != 0)
+        if(dec.adr_dest_sd.read() != 0)
         {
-            REG_VALID[dec.adr_dest.read()] = 0 ;
+            REG_VALID[dec.adr_dest_sd.read()] = 0 ;
         }
 
         print_reg(REG) ;

@@ -5,46 +5,46 @@ SC_MODULE(reg)
 {
     // Reading Port :
 
-    sc_in < sc_uint<6> >        RADR1 ;
-    sc_in < sc_uint<6> >        RADR2 ;
+    sc_in < sc_uint<6> >        RADR1_SD ;
+    sc_in < sc_uint<6> >        RADR2_SD ;
     
-    sc_out <bool>               RADR1_VALID ; // tells if the register read is valid or no
-    sc_out <bool>               RADR2_VALID ;
-    sc_out <bool>               ADR_DEST_VALID ;
-    sc_in < sc_uint<6> >        ADR_DEST_DECOD ;
+    sc_out <bool>               R1_VALID_SD ; // tells if the register read is valid or no
+    sc_out <bool>               R2_VALID_SD ;
+    sc_out <bool>               RDEST_VALID_SD ;
+    sc_in < sc_uint<6> >        RDEST_SD ;
 
-    sc_out < sc_uint<32> >      RADR1_DATA ; //data output read from register
-    sc_out < sc_uint<32> >      RADR2_DATA ;
+    sc_out < sc_uint<32> >      RDATA1_SD ; //data output read from register
+    sc_out < sc_uint<32> >      RDATA2_SD ;
 
     // Writing Port :
 
-    sc_in < sc_uint<6> >        WADR1 ;
-    sc_in <bool>                WADR1_VALID ;
-    sc_in < sc_uint<32> >       WADR1_DATA ;
+    sc_in < sc_uint<6> >        WADR_SD ;
+    sc_in <bool>                WENABLE_SD ;
+    sc_in < sc_uint<32> >       WDATA_SD ;
 
-    sc_in  < sc_uint<32> >      WRITE_PC ;
-    sc_in  < bool >             WRITE_PC_ENABLE ;
+    sc_in  < sc_uint<32> >      WRITE_PC_SD ;
+    sc_in  < bool >             WRITE_PC_ENABLE_SD ;
 
     // Inval Port :
 
-    sc_in < sc_uint<6> >        INVAL_ADR ;
-    sc_in <bool>                INVAL_ENABLE ;
+    sc_in < sc_uint<6> >        INVAL_ADR_SD ;
+    sc_in <bool>                INVAL_ENABLE_SD ;
 
     //PC Gestion :
 
-    sc_out < sc_uint<32> >      READ_PC ;
-    sc_out < bool >             READ_PC_VALID ;
+    sc_out < sc_uint<32> >      READ_PC_SD ;
+    sc_out < bool >             READ_PC_VALID_SD ;
 
     //Global Interface :
 
     sc_in_clk CLK ;
     sc_in <bool> RESET_N ;
-    sc_in <sc_uint<32>> DEBUG_PC_RESET;
+    sc_in <sc_uint<32>> PC_INIT;
 
     //Registres :
 
-    sc_signal < bool >        REG_VALID[33] ; //bit de validité des registres
-    sc_signal < sc_uint<32> > REG[33] ;
+    sc_signal < bool >        REG_VALID_RD[33] ; //bit de validité des registres
+    sc_signal < sc_uint<32> > REG_RD[33] ;
     
 
     void reading_adresses() ;
@@ -54,9 +54,9 @@ SC_MODULE(reg)
     SC_CTOR(reg)
     {
         SC_METHOD  (reading_adresses) ;
-        sensitive << RADR1 << RADR2 << ADR_DEST_DECOD << RESET_N;
-        for (int i = 0; i < 33; i++) sensitive << REG[i];
-        for (int i = 0; i < 33; i++) sensitive << REG_VALID[i];
+        sensitive << RADR1_SD << RADR2_SD << RDEST_SD << RESET_N;
+        for (int i = 0; i < 33; i++) sensitive << REG_RD[i];
+        for (int i = 0; i < 33; i++) sensitive << REG_VALID_RD[i];
         SC_CTHREAD  (writing_adresse,reg::CLK.pos()) ;
         reset_signal_is(RESET_N,false ) ;
         

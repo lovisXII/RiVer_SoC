@@ -8,16 +8,16 @@
 
 SC_MODULE(shifter)
 {
-    sc_in< sc_uint<32> >  DIN ; //input
-    sc_in< sc_uint<5> >  SHIFT_VAL ; //shift value
-    sc_in< sc_uint<2> > CMD ; //command
+    sc_in< sc_uint<32> >  DIN_SE ; //input
+    sc_in< sc_uint<5> >  SHIFT_VAL_SE ; //shift value
+    sc_in< sc_uint<2> > CMD_SE ; //command
 
-    sc_out< sc_uint<32> > DOUT ; //output
+    sc_out< sc_uint<32> > DOUT_SE ; //output
 
     //Internal signals :
     
-    sc_signal< bool > SLL, SRL, SRA ; //command, only one must be true
-    sc_signal< sc_uint<32> > SLL_DOUT, SR_DOUT; //temporary output for each component
+    sc_signal< bool > sll_se, srl_se, sra_se ; //command, only one must be true
+    sc_signal< sc_uint<32> > sll_dout_se, sr_dout_se; //temporary output for each component
     
     void decode_cmd();
     void shifter_sll() ; //component to shift left the input
@@ -28,13 +28,13 @@ SC_MODULE(shifter)
     SC_CTOR(shifter)
     {
         SC_METHOD(decode_cmd);
-        sensitive << CMD;
+        sensitive << CMD_SE;
         SC_METHOD(shifter_sll);
-        sensitive << DIN << SHIFT_VAL ;
+        sensitive << DIN_SE << SHIFT_VAL_SE ;
         SC_METHOD(shifter_sr);
-        sensitive << DIN << SHIFT_VAL << SRA ;
+        sensitive << DIN_SE << SHIFT_VAL_SE << sra_se ;
         SC_METHOD(shifter_agregate);
-        sensitive << SLL_DOUT << SR_DOUT << SLL << SRL << SRA ;
+        sensitive << sll_dout_se << sr_dout_se << sll_se << srl_se << sra_se ;
     }
 };
 

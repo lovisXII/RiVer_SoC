@@ -1,9 +1,9 @@
 #include "wbk.h"
 
 void wbk::wbk_method() {
-    sc_uint<32> din = MEM_DATA.read();
-    int size = MEM_SIZE.read();
-    bool sign_extend = MEM_SIGN_EXTEND.read();
+    sc_uint<32> din = MEM_DATA_SW.read();
+    int size = MEM_SIZE_SW.read();
+    bool sign_extend = SIGN_EXTEND_SW.read();
     sc_uint<32> dout;
     int range_start; //The beginning of the range of din that should actually be written to the register
     switch (size) {
@@ -28,29 +28,29 @@ void wbk::wbk_method() {
         dout = 0;
     }
     dout.range(range_start, 0) = din.range(range_start, 0);
-    if (MEM_LOAD.read()) {
-        REG_DATA.write(dout);
+    if (LOAD_SW.read()) {
+        REG_DATA_SW.write(dout);
     }
     else {
-        REG_DATA.write(din);
+        REG_DATA_SW.write(din);
     }
-    REG_DEST.write(MEM_DEST);
-    if(MEM_WB.read() && !MEM2WBK_EMPTY.read()) REG_WB.write(1) ;
-    else REG_WB.write(0) ;
-    MEM2WBK_POP.write(!MEM2WBK_EMPTY.read());
+    REG_DEST_SW.write(MEM_DEST_SW);
+    if(MEM_WB_SW.read() && !MEM2WBK_EMPTY_SW.read()) REG_WB_SW.write(1) ;
+    else REG_WB_SW.write(0) ;
+    MEM2WBK_POP_SW.write(!MEM2WBK_EMPTY_SW.read());
 }
 
 void wbk::trace(sc_trace_file* tf) {
-        sc_trace(tf, REG_DEST, GET_NAME(REG_DEST));
-        sc_trace(tf, REG_DATA, GET_NAME(REG_DATA));
-        sc_trace(tf, REG_WB, GET_NAME(REG_WB));
-        sc_trace(tf, MEM_DATA, GET_NAME(MEM_DATA));
-        sc_trace(tf, MEM_DEST, GET_NAME(MEM_DEST));
-        sc_trace(tf, MEM_SIZE, GET_NAME(MEM_SIZE));
-        sc_trace(tf, MEM_WB, GET_NAME(MEM_WB));
-        sc_trace(tf, MEM_SIGN_EXTEND, GET_NAME(MEM_SIGN_EXTEND));
-        sc_trace(tf, MEM2WBK_EMPTY, GET_NAME(MEM2WBK_EMPTY));
-        sc_trace(tf, MEM2WBK_POP, GET_NAME(MEM2WBK_POP));
+        sc_trace(tf, REG_DEST_SW, GET_NAME(REG_DEST_SW));
+        sc_trace(tf, REG_DATA_SW, GET_NAME(REG_DATA_SW));
+        sc_trace(tf, REG_WB_SW, GET_NAME(REG_WB_SW));
+        sc_trace(tf, MEM_DATA_SW, GET_NAME(MEM_DATA_SW));
+        sc_trace(tf, MEM_DEST_SW, GET_NAME(MEM_DEST_SW));
+        sc_trace(tf, MEM_SIZE_SW, GET_NAME(MEM_SIZE_SW));
+        sc_trace(tf, MEM_WB_SW, GET_NAME(MEM_WB_SW));
+        sc_trace(tf, SIGN_EXTEND_SW, GET_NAME(SIGN_EXTEND_SW));
+        sc_trace(tf, MEM2WBK_EMPTY_SW, GET_NAME(MEM2WBK_EMPTY_SW));
+        sc_trace(tf, MEM2WBK_POP_SW, GET_NAME(MEM2WBK_POP_SW));
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
 }

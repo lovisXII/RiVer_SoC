@@ -10,43 +10,43 @@ SC_MODULE(exec)
 {
     // Input/Output of EXE : 
 
-    sc_in< sc_uint<32> >    OP1 ;
-    sc_in< sc_uint<32> >    OP2 ;
-    sc_in< sc_uint<32> >    MEM_DATA;
-    sc_in< sc_uint<6> >     DEST;
-    sc_in< sc_uint<2> >     CMD ;
-    sc_in< sc_uint<2> >     MEM_SIZE ;
-    sc_in< bool >           NEG_OP1, WB, MEM_SIGN_EXTEND, SELECT_SHIFT ; //taille fifo entrée : 110
-    sc_in< bool >           MEM_LOAD, MEM_STORE ; 
-    sc_in< bool >           EXE2MEM_POP, DEC2EXE_EMPTY;
-    sc_in< bool >           SLT, SLTU;
+    sc_in< sc_uint<32> >    OP1_SE ;
+    sc_in< sc_uint<32> >    OP2_SE ;
+    sc_in< sc_uint<32> >    IN_MEM_DATA_SE;
+    sc_in< sc_uint<6> >     IN_DEST_SE;
+    sc_in< sc_uint<2> >     CMD_SE ;
+    sc_in< sc_uint<2> >     IN_MEM_SIZE_SE ;
+    sc_in< bool >           NEG_OP1_SE, IN_WB_SE, IN_MEM_SIGN_EXTEND_SE, SELECT_SHIFT_SE ; //taille fifo entrée : 110
+    sc_in< bool >           IN_MEM_LOAD_SE, IN_MEM_STORE_SE ; 
+    sc_in< bool >           EXE2MEM_POP_SE, DEC2EXE_EMPTY_SE;
+    sc_in< bool >           SLT_SE, SLTU_SE;
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
     
     //Fifo exe2mem interface :
 
-    sc_out< sc_uint<32> >  FFOUT_EXE_RES ;
-    sc_out< sc_uint<32> >  FFOUT_MEM_DATA;
-    sc_out< sc_uint<6> >   FFOUT_DEST;
-    sc_out< sc_uint<2> >   FFOUT_MEM_SIZE ;
+    sc_out< sc_uint<32> >  EXE_RES_SE ;
+    sc_out< sc_uint<32> >  OUT_MEM_DATA_SE;
+    sc_out< sc_uint<6> >   OUT_DEST_SE;
+    sc_out< sc_uint<2> >   OUT_MEM_SIZE_SE ;
 
-    sc_out< bool >   FFOUT_WB,  FFOUT_MEM_SIGN_EXTEND ; //taille fifo sortie : 7
-    sc_out< bool > FFOUT_MEM_LOAD, FFOUT_MEM_STORE ; 
-    sc_out< bool >   EXE2MEM_EMPTY, DEC2EXE_POP;
+    sc_out< bool >   OUT_WB_SE,  OUT_MEM_SIGN_EXTEND_SE ; //taille fifo sortie : 7
+    sc_out< bool > OUT_MEM_LOAD_SE, OUT_MEM_STORE_SE ; 
+    sc_out< bool >   EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
     
 
     //Internals signals :
     
-    sc_signal< sc_uint<32> >  FFIN_EXE_RES ;
+    sc_signal< sc_uint<32> >  exe_res_se ;
 
-    sc_signal< sc_bv<76> >    FF_DIN; // concatenation of exe_res, mem_data...etc
-    sc_signal< sc_bv<76> >    FF_DOUT;
+    sc_signal< sc_bv<76> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
+    sc_signal< sc_bv<76> >    exe2mem_dout_se;
 
-    sc_signal< sc_uint<32> > ALU_IN_OP1;
-    sc_signal< sc_uint<32> > ALU_OUT;
-    sc_signal< sc_uint<32> > SHIFTER_OUT;
-    sc_signal< sc_uint<5> > SHIFT_VAL;  
-    sc_signal< bool > EXE2MEM_PUSH, EXE2MEM_FULL;  
+    sc_signal< sc_uint<32> > alu_in_op1_se;
+    sc_signal< sc_uint<32> > alu_out_se;
+    sc_signal< sc_uint<32> > shifter_out_se;
+    sc_signal< sc_uint<5> > shift_val_se;  
+    sc_signal< bool > exe2mem_push_se, exe2mem_full_se;  
 
     //Instance used :
 
@@ -67,38 +67,38 @@ SC_MODULE(exec)
     {
         //ALU port map :
 
-        alu_inst.OP1(ALU_IN_OP1);
-        alu_inst.OP2(OP2);
-        alu_inst.CMD(CMD);
-        alu_inst.CIN(NEG_OP1);
-        alu_inst.RES(ALU_OUT);
+        alu_inst.OP1_SE(alu_in_op1_se);
+        alu_inst.OP2_SE(OP2_SE);
+        alu_inst.CMD_SE(CMD_SE);
+        alu_inst.CIN_SE(NEG_OP1_SE);
+        alu_inst.RES_SE(alu_out_se);
 
         //Shifter port map :
 
-        shifter_inst.DIN(OP1);
-        shifter_inst.SHIFT_VAL(SHIFT_VAL);
-        shifter_inst.CMD(CMD);
-        shifter_inst.DOUT(SHIFTER_OUT);
+        shifter_inst.DIN_SE(OP1_SE);
+        shifter_inst.SHIFT_VAL_SE(shift_val_se);
+        shifter_inst.CMD_SE(CMD_SE);
+        shifter_inst.DOUT_SE(shifter_out_se);
         
-        fifo_inst.DIN(FF_DIN);
-        fifo_inst.DOUT(FF_DOUT);
-        fifo_inst.EMPTY(EXE2MEM_EMPTY);
-        fifo_inst.FULL(EXE2MEM_FULL);
-        fifo_inst.PUSH(EXE2MEM_PUSH);
-        fifo_inst.POP(EXE2MEM_POP);
+        fifo_inst.DIN(exe2mem_din_se);
+        fifo_inst.DOUT(exe2mem_dout_se);
+        fifo_inst.EMPTY(EXE2MEM_EMPTY_SE);
+        fifo_inst.FULL(exe2mem_full_se);
+        fifo_inst.PUSH(exe2mem_push_se);
+        fifo_inst.POP(EXE2MEM_POP_SE);
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << OP1 << NEG_OP1 << OP2;
+        sensitive << OP1_SE << NEG_OP1_SE << OP2_SE;
         SC_METHOD(select_exec_res);
-        sensitive << ALU_OUT << SHIFTER_OUT << SELECT_SHIFT;
+        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);
-        sensitive << MEM_DATA << DEST << MEM_SIZE << MEM_LOAD << MEM_SIGN_EXTEND << MEM_STORE << WB << FFIN_EXE_RES;
+        sensitive << IN_MEM_DATA_SE << IN_DEST_SE << IN_MEM_SIZE_SE << IN_MEM_LOAD_SE << IN_MEM_SIGN_EXTEND_SE << IN_MEM_STORE_SE << IN_WB_SE << exe_res_se;
         SC_METHOD(fifo_unconcat);
-        sensitive << FF_DOUT;
+        sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << EXE2MEM_FULL << DEC2EXE_EMPTY;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE;
     }
 };
 

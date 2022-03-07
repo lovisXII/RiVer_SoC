@@ -32,10 +32,10 @@ int sc_main(int argc, char* argv[])
     
     //link shifter with signals
 
-    unit_shifter.DIN(shifter_din);
-    unit_shifter.DOUT(shifter_dout);
-    unit_shifter.CMD(shifter_shift_cmd) ;
-    unit_shifter.SHIFT_VAL(shifter_shift_val);
+    unit_shifter.DIN_SE(shifter_din);
+    unit_shifter.DOUT_SE(shifter_dout);
+    unit_shifter.CMD_SE(shifter_shift_cmd) ;
+    unit_shifter.SHIFT_VAL_SE(shifter_shift_val);
 
     //run one tick of simulation
     sc_start(1, SC_NS);

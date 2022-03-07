@@ -14,23 +14,23 @@ SC_MODULE(wbk)
 {
     // Reg Interface :
 
-    sc_out<sc_uint<6> >         REG_DEST ;
-    sc_out<sc_uint<32> >        REG_DATA ;
-    sc_out<bool>                REG_WB ;
+    sc_out<sc_uint<6> >         REG_DEST_SW ;
+    sc_out<sc_uint<32> >        REG_DATA_SW ;
+    sc_out<bool>                REG_WB_SW ;
     
     //Mem Interface :
 
-    sc_in< sc_uint<32> >        MEM_DATA;
-    sc_in< sc_uint<6> >         MEM_DEST;
-    sc_in< sc_uint<2> >         MEM_SIZE ;
-    sc_in< bool >               MEM_WB;
-    sc_in< bool >               MEM_SIGN_EXTEND;
-    sc_in< bool >               MEM_LOAD;
+    sc_in< sc_uint<32> >        MEM_DATA_SW;
+    sc_in< sc_uint<6> >         MEM_DEST_SW;
+    sc_in< sc_uint<2> >         MEM_SIZE_SW ;
+    sc_in< bool >               MEM_WB_SW;
+    sc_in< bool >               SIGN_EXTEND_SW;
+    sc_in< bool >               LOAD_SW;
 
     //Mem2wbk interface
 
-    sc_in<bool>                 MEM2WBK_EMPTY;
-    sc_out<bool>                MEM2WBK_POP;
+    sc_in<bool>                 MEM2WBK_EMPTY_SW;
+    sc_out<bool>                MEM2WBK_POP_SW;
 
     //Internal signals
 
@@ -46,6 +46,6 @@ SC_MODULE(wbk)
     SC_CTOR(wbk)
     {
         SC_METHOD(wbk_method);
-        sensitive << MEM_DATA << MEM_DEST << MEM_SIZE << MEM_WB << MEM_SIGN_EXTEND << MEM2WBK_EMPTY;
+        sensitive << MEM_DATA_SW << MEM_DEST_SW << MEM_SIZE_SW << MEM_WB_SW << SIGN_EXTEND_SW << MEM2WBK_EMPTY_SW;
     }
 };

@@ -4,123 +4,123 @@
 
 
 void exec::preprocess_op() {
-    sc_uint<32> op1 = OP1.read();
-    sc_uint<32> op2 = OP2.read() ;
-    if (NEG_OP1.read()) {
-        ALU_IN_OP1.write(~op1);
+    sc_uint<32> op1 = OP1_SE.read();
+    sc_uint<32> op2 = OP2_SE.read() ;
+    if (NEG_OP1_SE.read()) {
+        alu_in_op1_se.write(~op1);
     }
     else {
-        ALU_IN_OP1.write(op1);
+        alu_in_op1_se.write(op1);
     }
-    SHIFT_VAL.write(op2.range(4, 0));
+    shift_val_se.write(op2.range(4, 0));
 }
 
 void exec::select_exec_res() {
-    sc_uint<32> alu_out = ALU_OUT.read();
-    sc_uint<32> shifter_out = SHIFTER_OUT.read();
-    if (SELECT_SHIFT.read()) {
-        FFIN_EXE_RES.write(SHIFTER_OUT);
+    sc_uint<32> alu_out = alu_out_se.read();
+    sc_uint<32> shifter_out = shifter_out_se.read();
+    if (SELECT_SHIFT_SE.read()) {
+        exe_res_se.write(shifter_out_se);
     }
-    else if (SLT.read()) {
-        if (OP1.read()[31] == 1 && OP2.read()[31] == 0) {
-            FFIN_EXE_RES.write(1);
+    else if (SLT_SE.read()) {
+        if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
+            exe_res_se.write(1);
         }
-        else if (OP1.read()[31] == 0 && OP2.read()[31] == 1) {
-            FFIN_EXE_RES.write(0);
+        else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
+            exe_res_se.write(0);
         }
         else {
-            FFIN_EXE_RES.write(!(bool) ALU_OUT.read()[31]);
+            exe_res_se.write(!(bool) alu_out_se.read()[31]);
         }
     }
-    else if (SLTU.read()) {
-        if (OP1.read()[31] == 1 && OP2.read()[31] == 0) {
-            FFIN_EXE_RES.write(0);
+    else if (SLTU_SE.read()) {
+        if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
+            exe_res_se.write(0);
         }
-        else if (OP1.read()[31] == 0 && OP2.read()[31] == 1) {
-            FFIN_EXE_RES.write(1);
+        else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
+            exe_res_se.write(1);
         }
         else {
-            FFIN_EXE_RES.write(!(bool) ALU_OUT.read()[31]);
+            exe_res_se.write(!(bool) alu_out_se.read()[31]);
         }
     }
     else {
-        FFIN_EXE_RES.write(ALU_OUT);
+        exe_res_se.write(alu_out_se);
     }
     
 }
 void exec::fifo_concat() {
     sc_bv<76> ff_din;
-    ff_din.range(31, 0) = FFIN_EXE_RES.read();
-    ff_din.range(63, 32) = MEM_DATA.read();
-    ff_din.range(69, 64) = DEST.read();
-    ff_din.range(71, 70) = MEM_SIZE.read();
-    ff_din[72] = WB.read();
-    ff_din[73] = MEM_LOAD.read();
-    ff_din[74] = MEM_STORE.read();
-    ff_din[75] = MEM_SIGN_EXTEND.read();
-    FF_DIN.write(ff_din);
+    ff_din.range(31, 0) = exe_res_se.read();
+    ff_din.range(63, 32) = IN_MEM_DATA_SE.read();
+    ff_din.range(69, 64) = IN_DEST_SE.read();
+    ff_din.range(71, 70) = IN_MEM_SIZE_SE.read();
+    ff_din[72] = IN_WB_SE.read();
+    ff_din[73] = IN_MEM_LOAD_SE.read();
+    ff_din[74] = IN_MEM_STORE_SE.read();
+    ff_din[75] = IN_MEM_SIGN_EXTEND_SE.read();
+    exe2mem_din_se.write(ff_din);
     
 }
 void exec::fifo_unconcat() {
-    sc_bv<76> ff_dout = FF_DOUT.read();
-    FFOUT_EXE_RES.write((sc_bv_base) ff_dout.range(31, 0));
-    FFOUT_MEM_DATA.write((sc_bv_base) ff_dout.range(63, 32));
-    FFOUT_DEST.write((sc_bv_base) ff_dout.range(69, 64));
-    FFOUT_MEM_SIZE.write((sc_bv_base) ff_dout.range(71, 70));
-    FFOUT_WB.write((bool) ff_dout[72]);
-    FFOUT_MEM_LOAD.write((bool) ff_dout[73]);
-    FFOUT_MEM_STORE.write((bool) ff_dout[74]);
-    FFOUT_MEM_SIGN_EXTEND.write((bool) ff_dout[75]);
+    sc_bv<76> ff_dout = exe2mem_dout_se.read();
+    EXE_RES_SE.write((sc_bv_base) ff_dout.range(31, 0));
+    OUT_MEM_DATA_SE.write((sc_bv_base) ff_dout.range(63, 32));
+    OUT_DEST_SE.write((sc_bv_base) ff_dout.range(69, 64));
+    OUT_MEM_SIZE_SE.write((sc_bv_base) ff_dout.range(71, 70));
+    OUT_WB_SE.write((bool) ff_dout[72]);
+    OUT_MEM_LOAD_SE.write((bool) ff_dout[73]);
+    OUT_MEM_STORE_SE.write((bool) ff_dout[74]);
+    OUT_MEM_SIGN_EXTEND_SE.write((bool) ff_dout[75]);
 }
 
 void exec::manage_fifo() {
-    bool blocked = EXE2MEM_FULL.read() | DEC2EXE_EMPTY.read();
+    bool blocked = exe2mem_full_se.read() | DEC2EXE_EMPTY_SE.read();
     if (blocked) {
-        EXE2MEM_PUSH.write(false);
-        DEC2EXE_POP.write(false);
+        exe2mem_push_se.write(false);
+        DEC2EXE_POP_SE.write(false);
     }
     else {
-        EXE2MEM_PUSH.write(true);
-        DEC2EXE_POP.write(true);
+        exe2mem_push_se.write(true);
+        DEC2EXE_POP_SE.write(true);
     }
 }
 
 void exec::trace(sc_trace_file* tf) {
-        sc_trace(tf, OP1, GET_NAME(OP1));
-        sc_trace(tf, OP2, GET_NAME(OP2));
-        sc_trace(tf, MEM_DATA, GET_NAME(MEM_DATA));
-        sc_trace(tf, DEST, GET_NAME(DEST));
-        sc_trace(tf, CMD, GET_NAME(CMD));
-        sc_trace(tf, MEM_SIZE, GET_NAME(MEM_SIZE));
-        sc_trace(tf, SELECT_SHIFT, GET_NAME(SELECT_SHIFT));
-        sc_trace(tf, MEM_SIGN_EXTEND, GET_NAME(MEM_SIGN_EXTEND));
-        sc_trace(tf, WB, GET_NAME(WB));
-        sc_trace(tf, NEG_OP1, GET_NAME(NEG_OP1));
-        sc_trace(tf, MEM_LOAD, GET_NAME(MEM_LOAD));
-        sc_trace(tf, MEM_STORE, GET_NAME(MEM_STORE));
-        sc_trace(tf, EXE2MEM_POP, GET_NAME(EXE2MEM_POP));
-        sc_trace(tf, DEC2EXE_EMPTY, GET_NAME(DEC2EXE_EMPTY));
+        sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
+        sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+        sc_trace(tf, IN_MEM_DATA_SE, GET_NAME(IN_MEM_DATA_SE));
+        sc_trace(tf, IN_DEST_SE, GET_NAME(IN_DEST_SE));
+        sc_trace(tf, CMD_SE, GET_NAME(CMD_SE));
+        sc_trace(tf, IN_MEM_SIZE_SE, GET_NAME(IN_MEM_SIZE_SE));
+        sc_trace(tf, SELECT_SHIFT_SE, GET_NAME(SELECT_SHIFT_SE));
+        sc_trace(tf, IN_MEM_SIGN_EXTEND_SE, GET_NAME(IN_MEM_SIGN_EXTEND_SE));
+        sc_trace(tf, IN_WB_SE, GET_NAME(IN_WB_SE));
+        sc_trace(tf, NEG_OP1_SE, GET_NAME(NEG_OP1_SE));
+        sc_trace(tf, IN_MEM_LOAD_SE, GET_NAME(IN_MEM_LOAD_SE));
+        sc_trace(tf, IN_MEM_STORE_SE, GET_NAME(IN_MEM_STORE_SE));
+        sc_trace(tf, EXE2MEM_POP_SE, GET_NAME(EXE2MEM_POP_SE));
+        sc_trace(tf, DEC2EXE_EMPTY_SE, GET_NAME(DEC2EXE_EMPTY_SE));
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
-        sc_trace(tf, FFOUT_EXE_RES, GET_NAME(FFOUT_EXE_RES));
-        sc_trace(tf, FFOUT_MEM_DATA, GET_NAME(FFOUT_MEM_DATA));
-        sc_trace(tf, FFOUT_DEST, GET_NAME(FFOUT_DEST));
-        sc_trace(tf, FFOUT_MEM_SIZE, GET_NAME(FFOUT_MEM_SIZE));
-        sc_trace(tf, FFOUT_WB, GET_NAME(FFOUT_WB));
-        sc_trace(tf, FFOUT_MEM_SIGN_EXTEND, GET_NAME(FFOUT_MEM_SIGN_EXTEND));
-        sc_trace(tf, FFOUT_MEM_LOAD, GET_NAME(FFOUT_MEM_LOAD));
-        sc_trace(tf, FFOUT_MEM_STORE, GET_NAME(FFOUT_MEM_STORE));
-        sc_trace(tf, EXE2MEM_EMPTY, GET_NAME(EXE2MEM_EMPTY));
-        sc_trace(tf, DEC2EXE_POP, GET_NAME(DEC2EXE_POP));
-        sc_trace(tf, FFIN_EXE_RES, GET_NAME(FFIN_EXE_RES));
-        sc_trace(tf, FF_DIN, GET_NAME(FF_DIN));
-        sc_trace(tf, FF_DOUT, GET_NAME(FF_DOUT));
-        sc_trace(tf, ALU_IN_OP1, GET_NAME(ALU_IN_OP1));
-        sc_trace(tf, ALU_OUT, GET_NAME(ALU_OUT));
-        sc_trace(tf, SHIFTER_OUT, GET_NAME(SHIFTER_OUT));
-        sc_trace(tf, SHIFT_VAL, GET_NAME(SHIFT_VAL));
-        sc_trace(tf, EXE2MEM_PUSH, GET_NAME(EXE2MEM_PUSH));
-        sc_trace(tf, EXE2MEM_FULL, GET_NAME(EXE2MEM_FULL));
+        sc_trace(tf, EXE_RES_SE, GET_NAME(EXE_RES_SE));
+        sc_trace(tf, OUT_MEM_DATA_SE, GET_NAME(OUT_MEM_DATA_SE));
+        sc_trace(tf, OUT_DEST_SE, GET_NAME(OUT_DEST_SE));
+        sc_trace(tf, OUT_MEM_SIZE_SE, GET_NAME(OUT_MEM_SIZE_SE));
+        sc_trace(tf, OUT_WB_SE, GET_NAME(OUT_WB_SE));
+        sc_trace(tf, OUT_MEM_SIGN_EXTEND_SE, GET_NAME(OUT_MEM_SIGN_EXTEND_SE));
+        sc_trace(tf, OUT_MEM_LOAD_SE, GET_NAME(OUT_MEM_LOAD_SE));
+        sc_trace(tf, OUT_MEM_STORE_SE, GET_NAME(OUT_MEM_STORE_SE));
+        sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
+        sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
+        sc_trace(tf, exe_res_se, GET_NAME(exe_res_se));
+        sc_trace(tf, exe2mem_din_se, GET_NAME(exe2mem_din_se));
+        sc_trace(tf, exe2mem_dout_se, GET_NAME(exe2mem_dout_se));
+        sc_trace(tf, alu_in_op1_se, GET_NAME(alu_in_op1_se));
+        sc_trace(tf, alu_out_se, GET_NAME(alu_out_se));
+        sc_trace(tf, shifter_out_se, GET_NAME(shifter_out_se));
+        sc_trace(tf, shift_val_se, GET_NAME(shift_val_se));
+        sc_trace(tf, exe2mem_push_se, GET_NAME(exe2mem_push_se));
+        sc_trace(tf, exe2mem_full_se, GET_NAME(exe2mem_full_se));
         alu_inst.trace(tf);
         shifter_inst.trace(tf);
         fifo_inst.trace(tf);

@@ -6,10 +6,10 @@
 
 SC_MODULE(alu)
 {
-    sc_in< sc_uint<32> >  OP1,OP2 ;
-    sc_in< bool > CIN ;
-    sc_in< sc_uint<2> > CMD ;
-    sc_out< sc_uint<32> > RES ;
+    sc_in< sc_uint<32> >  OP1_SE,OP2_SE ;
+    sc_in< bool > CIN_SE ;
+    sc_in< sc_uint<2> > CMD_SE ;
+    sc_out< sc_uint<32> > RES_SE ;
         
     void operation() ;
     void trace(sc_trace_file* tf);
@@ -17,7 +17,7 @@ SC_MODULE(alu)
     SC_CTOR(alu)
     {
         SC_METHOD(operation);
-        sensitive << OP1 << OP2 << CIN ;
+        sensitive << OP1_SE << OP2_SE << CIN_SE ;
     }
 };
 

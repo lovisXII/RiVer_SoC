@@ -59,31 +59,31 @@ int sc_main(int argc, char* argv[])
     
     //Port Map :
     
-    unit_exec.OP1(op1);
-    unit_exec.OP2(op2);
-    unit_exec.MEM_DATA(mem_data);
-    unit_exec.DEST(dest);
-    unit_exec.CMD(cmd);
-    unit_exec.MEM_SIZE(mem_size);
-    unit_exec.NEG_OP1(neg_op1);
-    unit_exec.WB(wb);
-    unit_exec.MEM_LOAD(mem_load);
-    unit_exec.MEM_STORE(mem_store);
-    unit_exec.MEM_SIGN_EXTEND(mem_sign_extend);
-    unit_exec.SELECT_SHIFT(select_shift); //taille fifo entrée : 110
-    unit_exec.EXE2MEM_POP(exe2mem_pop);
-    unit_exec.DEC2EXE_EMPTY(dec2exe_empty);
+    unit_exec.OP1_SE(op1);
+    unit_exec.OP2_SE(op2);
+    unit_exec.IN_MEM_DATA_SE(mem_data);
+    unit_exec.IN_DEST_SE(dest);
+    unit_exec.CMD_SE(cmd);
+    unit_exec.IN_MEM_SIZE_SE(mem_size);
+    unit_exec.NEG_OP1_SE(neg_op1);
+    unit_exec.IN_WB_SE(wb);
+    unit_exec.IN_MEM_LOAD_SE(mem_load);
+    unit_exec.IN_MEM_STORE_SE(mem_store);
+    unit_exec.IN_MEM_SIGN_EXTEND_SE(mem_sign_extend);
+    unit_exec.SELECT_SHIFT_SE(select_shift); //taille fifo entrée : 110
+    unit_exec.EXE2MEM_POP_SE(exe2mem_pop);
+    unit_exec.DEC2EXE_EMPTY_SE(dec2exe_empty);
 
-    unit_exec.FFOUT_EXE_RES(ffout_exe_res);
-    unit_exec.FFOUT_MEM_DATA(ffout_mem_data);
-    unit_exec.FFOUT_DEST(ffout_dest);
-    unit_exec.FFOUT_MEM_SIZE(ffout_mem_size);
-    unit_exec.FFOUT_WB(ffout_wb);
-    unit_exec.FFOUT_MEM_LOAD(ffout_mem_load);
-    unit_exec.FFOUT_MEM_STORE(ffout_mem_store);
-    unit_exec.FFOUT_MEM_SIGN_EXTEND(ffout_mem_sign_extend); //taille fifo sortie : 76
-    unit_exec.EXE2MEM_EMPTY(exe2mem_empty);
-    unit_exec.DEC2EXE_POP(dec2exe_pop);
+    unit_exec.EXE_RES_SE(ffout_exe_res);
+    unit_exec.OUT_MEM_DATA_SE(ffout_mem_data);
+    unit_exec.OUT_DEST_SE(ffout_dest);
+    unit_exec.OUT_MEM_SIZE_SE(ffout_mem_size);
+    unit_exec.OUT_WB_SE(ffout_wb);
+    unit_exec.OUT_MEM_LOAD_SE(ffout_mem_load);
+    unit_exec.OUT_MEM_STORE_SE(ffout_mem_store);
+    unit_exec.OUT_MEM_SIGN_EXTEND_SE(ffout_mem_sign_extend); //taille fifo sortie : 76
+    unit_exec.EXE2MEM_EMPTY_SE(exe2mem_empty);
+    unit_exec.DEC2EXE_POP_SE(dec2exe_pop);
 
     unit_exec.CLK(clk);
     unit_exec.RESET(reset);
@@ -170,7 +170,7 @@ int sc_main(int argc, char* argv[])
 
         if(cmd_ == 0 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ + op2_)))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ + op2_)))
             {
                 cerr << "error sur +" <<endl ;
                 test_passed = false ;
@@ -178,7 +178,7 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 1 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ && op2_)))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ && op2_)))
             {
                 cerr << "error sur &&" <<endl ;
                 test_passed = false ;
@@ -186,7 +186,7 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 2 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ | op2_)))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ | op2_)))
             {
                 cerr << "error sur |" <<endl ;
                 test_passed = false ;
@@ -194,32 +194,32 @@ int sc_main(int argc, char* argv[])
         }
         if(cmd_ == 3 && select_shift_ == 0)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ ^ op2_)))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ ^ op2_)))
             {
                 cerr << "error sur ^" <<endl ;
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD.read() == 0)
+        if(select_shift_ && unit_exec.CMD_SE.read() == 0)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ << unit_exec.SHIFT_VAL.read())))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ << unit_exec.shift_val_se.read())))
             {
                 cerr << "error sur sll" <<endl ;
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD.read() == 1)
+        if(select_shift_ && unit_exec.CMD_SE.read() == 1)
         {
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.SHIFT_VAL.read())))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.shift_val_se.read())))
             {
                 cerr << "error sra" <<endl ;
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD.read() == 2)
+        if(select_shift_ && unit_exec.CMD_SE.read() == 2)
         {
 
-            if(unit_exec.FFIN_EXE_RES.read() != (sc_uint<32>) ((op1_ >> unit_exec.SHIFT_VAL.read())))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ >> unit_exec.shift_val_se.read())))
             {
                 cerr << "error srl" <<endl ;
                 test_passed = false ;

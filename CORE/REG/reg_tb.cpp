@@ -48,24 +48,24 @@ int sc_main(int argc, char* argv[])
     //Port Map :
     // Reading Port :
 
-    reg_inst.RADR1(radr1) ;
-    reg_inst.RADR2(radr2) ;
+    reg_inst.RADR1_SD(radr1) ;
+    reg_inst.RADR2_SD(radr2) ;
     
-    reg_inst.RADR1_VALID(radr1_valid) ;
-    reg_inst.RADR2_VALID(radr2_valid) ;
+    reg_inst.R1_VALID_SD(radr1_valid) ;
+    reg_inst.R2_VALID_SD(radr2_valid) ;
 
-    reg_inst.RADR1_DATA(radr1_data) ;
-    reg_inst.RADR2_DATA(radr2_data) ;
-    reg_inst.WADR1(wadr1) ;
-    reg_inst.WADR1_VALID(wadr1_valid) ;
-    reg_inst.WADR1_DATA(wadr1_data) ;
-    reg_inst.INVAL_ADR(inval_adr);
-    reg_inst.INVAL_ENABLE(inval_enable);
+    reg_inst.RDATA1_SD(radr1_data) ;
+    reg_inst.RDATA2_SD(radr2_data) ;
+    reg_inst.WADR_SD(wadr1) ;
+    reg_inst.WENABLE_SD(wadr1_valid) ;
+    reg_inst.WDATA_SD(wadr1_data) ;
+    reg_inst.INVAL_ADR_SD(inval_adr);
+    reg_inst.INVAL_ENABLE_SD(inval_enable);
 
     //PC Gestion :
 
-    reg_inst.READ_PC(read_pc) ;
-    reg_inst.READ_PC_VALID(read_pc_valid) ;
+    reg_inst.READ_PC_SD(read_pc) ;
+    reg_inst.READ_PC_VALID_SD(read_pc_valid) ;
 
     //Global Interface :
 

@@ -1,28 +1,28 @@
 #include "shifter.h"
 
 void shifter::decode_cmd() {
-    switch (CMD.read()) {
+    switch (CMD_SE.read()) {
         case 0:
-            SLL.write(1);
-            SRL.write(0);
-            SRA.write(0);
+            sll_se.write(1);
+            srl_se.write(0);
+            sra_se.write(0);
             break;
         case 1:
-            SLL.write(0);
-            SRL.write(1);
-            SRA.write(0);
+            sll_se.write(0);
+            srl_se.write(1);
+            sra_se.write(0);
             break;
         default:
-            SLL.write(0);
-            SRL.write(0);
-            SRA.write(1);
+            sll_se.write(0);
+            srl_se.write(0);
+            sra_se.write(1);
             break;
     }
 }
 
 void shifter::shifter_sll() {
-    sc_uint<32> din = DIN.read();
-    sc_uint<5> shift_val = SHIFT_VAL.read();
+    sc_uint<32> din = DIN_SE.read();
+    sc_uint<5> shift_val = SHIFT_VAL_SE.read();
     sc_uint<32> sll_dout;
     switch(shift_val)
     {
@@ -60,16 +60,16 @@ void shifter::shifter_sll() {
         case 30: sll_dout.range(31,30)=din.range( 1,0); sll_dout.range(29,0)= 0; break;
         case 31: sll_dout.range(31,31)=din.range( 0,0); sll_dout.range(30,0)= 0; break;
     }
-    SLL_DOUT.write(sll_dout);
+    sll_dout_se.write(sll_dout);
 }
 
 void shifter::shifter_sr() {
-    sc_uint<32> din = DIN.read();
-    sc_uint<5> shift_val = SHIFT_VAL.read();
+    sc_uint<32> din = DIN_SE.read();
+    sc_uint<5> shift_val = SHIFT_VAL_SE.read();
     sc_uint<32> sr_dout;
     sc_uint<32> shiftin;
     //compute the sign extension for arithmetic shift
-    if (SRA.read() & din[31]) {
+    if (sra_se.read() & din[31]) {
         shiftin = 0xFFFFFFFF;
     }
     else {
@@ -110,26 +110,26 @@ void shifter::shifter_sr() {
         case 30: sr_dout.range(31, 2)=shiftin.range(31, 2); sr_dout.range( 1,0)=din.range(31,30); break;
         case 31: sr_dout.range(31, 1)=shiftin.range(31, 1); sr_dout.range( 0,0)=din.range(31,31); break;
     }
-    SR_DOUT.write(sr_dout);
+    sr_dout_se.write(sr_dout);
 }
 
 void shifter::shifter_agregate() {
-    if (SLL.read()) {
-        DOUT.write(SLL_DOUT.read());
+    if (sll_se.read()) {
+        DOUT_SE.write(sll_dout_se.read());
     }
     else {
-        DOUT.write(SR_DOUT.read());
+        DOUT_SE.write(sr_dout_se.read());
     }
 }
 
 void shifter::trace(sc_trace_file* tf) {
-        sc_trace(tf, DIN, GET_NAME(DIN));
-        sc_trace(tf, SHIFT_VAL, GET_NAME(SHIFT_VAL));
-        sc_trace(tf, CMD, GET_NAME(CMD));
-        sc_trace(tf, DOUT, GET_NAME(DOUT));
-        sc_trace(tf, SRA, GET_NAME(SRA));
-        sc_trace(tf, SLL, GET_NAME(SLL));
-        sc_trace(tf, SRL, GET_NAME(SRL));
-        sc_trace(tf, SLL_DOUT, GET_NAME(SLL_DOUT));
-        sc_trace(tf, SR_DOUT, GET_NAME(SR_DOUT));
+        sc_trace(tf, DIN_SE, GET_NAME(DIN_SE));
+        sc_trace(tf, SHIFT_VAL_SE, GET_NAME(SHIFT_VAL_SE));
+        sc_trace(tf, CMD_SE, GET_NAME(CMD_SE));
+        sc_trace(tf, DOUT_SE, GET_NAME(DOUT_SE));
+        sc_trace(tf, sra_se, GET_NAME(sra_se));
+        sc_trace(tf, sll_se, GET_NAME(sll_se));
+        sc_trace(tf, srl_se, GET_NAME(srl_se));
+        sc_trace(tf, sll_dout_se, GET_NAME(sll_dout_se));
+        sc_trace(tf, sr_dout_se, GET_NAME(sr_dout_se));
 }

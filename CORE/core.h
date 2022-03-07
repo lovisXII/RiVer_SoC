@@ -142,178 +142,178 @@ SC_MODULE(core)
         SC_METHOD(core_method);
         sensitive << READ_PC;
             
-        ifetch_inst.DEC2IF_POP(DEC2IF_POP);
-        ifetch_inst.DEC2IF_EMPTY(DEC2IF_EMPTY);
-        ifetch_inst.DEC_PC(DEC2IF_PC);
-        ifetch_inst.IF_IR(IF_IR);
-        ifetch_inst.IF2DEC_EMPTY(IF2DEC_EMPTY);
-        ifetch_inst.IF2DEC_POP(IF2DEC_POP);
-        ifetch_inst.IF2DEC_FLUSH(IF2DEC_FLUSH);
+        ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP);
+        ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY);
+        ifetch_inst.PC_SI(DEC2IF_PC);
+        ifetch_inst.INSTR_SI(IF_IR);
+        ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY);
+        ifetch_inst.IF2DEC_POP_SI(IF2DEC_POP);
+        ifetch_inst.IF2DEC_FLUSH_SI(IF2DEC_FLUSH);
 
-        ifetch_inst.IF_ADR(IF_ADR);
-        ifetch_inst.IF_ADR_VALID(IF_ADR_VALID);
+        ifetch_inst.ADR_SI(IF_ADR);
+        ifetch_inst.ADR_VALID_SI(IF_ADR_VALID);
 
-        ifetch_inst.IC_INST(IC_INST);
-        ifetch_inst.IC_STALL(IC_STALL);
+        ifetch_inst.IC_INST_SI(IC_INST);
+        ifetch_inst.IC_STALL_SI(IC_STALL);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
 
 
-        dec_inst.DEC2IF_POP(DEC2IF_POP);
-        dec_inst.DEC2IF_EMPTY(DEC2IF_EMPTY);
-        dec_inst.DEC2IF_PC(DEC2IF_PC);
-        dec_inst.IF_IR(IF_IR);
-        dec_inst.IF2DEC_EMPTY(IF2DEC_EMPTY);
-        dec_inst.IF2DEC_POP(IF2DEC_POP);
-        dec_inst.IF2DEC_FLUSH(IF2DEC_FLUSH);
+        dec_inst.DEC2IF_POP_SD(DEC2IF_POP);
+        dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY);
+        dec_inst.IF_PC_SD(DEC2IF_PC);
+        dec_inst.INSTR_SD(IF_IR);
+        dec_inst.IF2DEC_EMPTY_SD(IF2DEC_EMPTY);
+        dec_inst.IF2DEC_POP_SD(IF2DEC_POP);
+        dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH);
 
-        dec_inst.DEC2EXE_OP1(EXE_OP1);
-        dec_inst.DEC2EXE_OP2(EXE_OP2);
-        dec_inst.DEC2EXE_CMD(EXE_CMD);
-        dec_inst.DEC2EXE_NEG_OP1(EXE_NEG_OP1);
-        dec_inst.DEC2EXE_WB(EXE_WB);
-        dec_inst.SELECT_SHIFT(EXE_SELECT_SHIFT);
+        dec_inst.EXE_OP1_SD(EXE_OP1);
+        dec_inst.EXE_OP2_SD(EXE_OP2);
+        dec_inst.EXE_CMD_SD(EXE_CMD);
+        dec_inst.EXE_NEG_OP1_SD(EXE_NEG_OP1);
+        dec_inst.EXE_WB_SD(EXE_WB);
+        dec_inst.EXE_SELECT_SHIFT_SD(EXE_SELECT_SHIFT);
         
-        dec_inst.MEM_DATA(EXE_MEM_DATA);
-        dec_inst.MEM_LOAD(EXE_MEM_LOAD);
-        dec_inst.MEM_STORE(EXE_MEM_STORE);
-        dec_inst.MEM_SIGN_EXTEND(EXE_MEM_SIGN_EXTEND);
-        dec_inst.MEM_SIZE(EXE_MEM_SIZE);
-        dec_inst.SLT(EXE_SLT);
-        dec_inst.SLTU(EXE_SLTU);
+        dec_inst.MEM_DATA_SD(EXE_MEM_DATA);
+        dec_inst.MEM_LOAD_SD(EXE_MEM_LOAD);
+        dec_inst.MEM_STORE_SD(EXE_MEM_STORE);
+        dec_inst.MEM_SIGN_EXTEND_SD(EXE_MEM_SIGN_EXTEND);
+        dec_inst.MEM_SIZE_SD(EXE_MEM_SIZE);
+        dec_inst.EXE_SLT_SD(EXE_SLT);
+        dec_inst.EXE_SLTU_SD(EXE_SLTU);
 
-        dec_inst.DEC2EXE_POP(DEC2EXE_POP);
-        dec_inst.DEC2EXE_EMPTY(DEC2EXE_EMPTY);
+        dec_inst.DEC2EXE_POP_SD(DEC2EXE_POP);
+        dec_inst.DEC2EXE_EMPTY_SD(DEC2EXE_EMPTY);
 
-        dec_inst.INVAL_DEST(INVAL_DEST);
-        dec_inst.INVAL_ENABLE(INVAL_ENABLE);
+        dec_inst.INVAL_DEST_SD(INVAL_DEST);
+        dec_inst.INVAL_ENABLE_SD(INVAL_ENABLE);
 
-        dec_inst.RADR1_DATA(RADR1_DATA);
-        dec_inst.RADR2_DATA(RADR2_DATA);
-        dec_inst.RADR1_VALID(RADR1_VALID);
-        dec_inst.RADR2_VALID(RADR2_VALID);
+        dec_inst.RDATA1_SD(RADR1_DATA);
+        dec_inst.RDATA2_SD(RADR2_DATA);
+        dec_inst.R1_VALID_SD(RADR1_VALID);
+        dec_inst.R2_VALID_SD(RADR2_VALID);
 
-        dec_inst.ADR_DEST_VALID(ADR_DEST_VALID) ;
-        dec_inst.ADR_DEST_DECOD(ADR_DEST_DECOD) ;
+        dec_inst.ADR_DEST_VALID_SD(ADR_DEST_VALID) ;
+        dec_inst.ADR_DEST_SD(ADR_DEST_DECOD) ;
 
-        dec_inst.RADR1(RADR1);
-        dec_inst.RADR2(RADR2);
+        dec_inst.RADR1_SD(RADR1);
+        dec_inst.RADR2_SD(RADR2);
 
-        dec_inst.EXE_DEST(EXE_DEST);
+        dec_inst.EXE_DEST_SD(EXE_DEST);
 
-        dec_inst.READ_PC(READ_PC);
-        dec_inst.READ_PC_VALID(READ_PC_VALID);
-        dec_inst.WRITE_PC(WRITE_PC);
-        dec_inst.WRITE_PC_ENABLE(WRITE_PC_ENABLE);
+        dec_inst.READ_PC_SD(READ_PC);
+        dec_inst.READ_PC_VALID_SD(READ_PC_VALID);
+        dec_inst.WRITE_PC_SD(WRITE_PC);
+        dec_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
-        exec_inst.OP1(EXE_OP1);
-        exec_inst.OP2(EXE_OP2);
-        exec_inst.CMD(EXE_CMD);
-        exec_inst.DEST(EXE_DEST);
-        exec_inst.NEG_OP1(EXE_NEG_OP1);
-        exec_inst.WB(EXE_WB);
-        exec_inst.SELECT_SHIFT(EXE_SELECT_SHIFT);
+        exec_inst.OP1_SE(EXE_OP1);
+        exec_inst.OP2_SE(EXE_OP2);
+        exec_inst.CMD_SE(EXE_CMD);
+        exec_inst.IN_DEST_SE(EXE_DEST);
+        exec_inst.NEG_OP1_SE(EXE_NEG_OP1);
+        exec_inst.IN_WB_SE(EXE_WB);
+        exec_inst.SELECT_SHIFT_SE(EXE_SELECT_SHIFT);
         
-        exec_inst.MEM_DATA(EXE_MEM_DATA);
-        exec_inst.MEM_LOAD(EXE_MEM_LOAD);
-        exec_inst.MEM_STORE(EXE_MEM_STORE);
-        exec_inst.MEM_SIGN_EXTEND(EXE_MEM_SIGN_EXTEND);
-        exec_inst.MEM_SIZE(EXE_MEM_SIZE);
-        exec_inst.SLT(EXE_SLT);
-        exec_inst.SLTU(EXE_SLTU);
+        exec_inst.IN_MEM_DATA_SE(EXE_MEM_DATA);
+        exec_inst.IN_MEM_LOAD_SE(EXE_MEM_LOAD);
+        exec_inst.IN_MEM_STORE_SE(EXE_MEM_STORE);
+        exec_inst.IN_MEM_SIGN_EXTEND_SE(EXE_MEM_SIGN_EXTEND);
+        exec_inst.IN_MEM_SIZE_SE(EXE_MEM_SIZE);
+        exec_inst.SLT_SE(EXE_SLT);
+        exec_inst.SLTU_SE(EXE_SLTU);
 
-        exec_inst.DEC2EXE_POP(DEC2EXE_POP);
-        exec_inst.DEC2EXE_EMPTY(DEC2EXE_EMPTY);
+        exec_inst.DEC2EXE_POP_SE(DEC2EXE_POP);
+        exec_inst.DEC2EXE_EMPTY_SE(DEC2EXE_EMPTY);
 
-        exec_inst.FFOUT_EXE_RES(MEM_EXE_RES);
-        exec_inst.FFOUT_MEM_DATA(MEM_DATA);
-        exec_inst.FFOUT_DEST(MEM_DEST);
-        exec_inst.FFOUT_MEM_SIZE(MEM_SIZE);
+        exec_inst.EXE_RES_SE(MEM_EXE_RES);
+        exec_inst.OUT_MEM_DATA_SE(MEM_DATA);
+        exec_inst.OUT_DEST_SE(MEM_DEST);
+        exec_inst.OUT_MEM_SIZE_SE(MEM_SIZE);
 
-        exec_inst.FFOUT_WB(MEM_WB);
-        exec_inst.FFOUT_MEM_SIGN_EXTEND(MEM_SIGN_EXTEND) ;
-        exec_inst.FFOUT_MEM_LOAD(MEM_LOAD);
-        exec_inst.FFOUT_MEM_STORE(MEM_STORE) ; 
-        exec_inst.EXE2MEM_EMPTY(EXE2MEM_EMPTY);
-        exec_inst.EXE2MEM_POP(EXE2MEM_POP);
+        exec_inst.OUT_WB_SE(MEM_WB);
+        exec_inst.OUT_MEM_SIGN_EXTEND_SE(MEM_SIGN_EXTEND) ;
+        exec_inst.OUT_MEM_LOAD_SE(MEM_LOAD);
+        exec_inst.OUT_MEM_STORE_SE(MEM_STORE) ; 
+        exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY);
+        exec_inst.EXE2MEM_POP_SE(EXE2MEM_POP);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
 
-        mem_inst.EXE_RES(MEM_EXE_RES);
-        mem_inst.EXE_MEM_DATA(MEM_DATA);
-        mem_inst.EXE_DEST(MEM_DEST);
-        mem_inst.EXE_MEM_SIZE(MEM_SIZE);
+        mem_inst.EXE_RES_SM(MEM_EXE_RES);
+        mem_inst.MEM_DATA_SM(MEM_DATA);
+        mem_inst.EXE_DEST_SM(MEM_DEST);
+        mem_inst.EXE_MEM_SIZE_SM(MEM_SIZE);
 
-        mem_inst.EXE_WB(MEM_WB);
-        mem_inst.EXE_MEM_SIGN_EXTEND(MEM_SIGN_EXTEND) ;
-        mem_inst.EXE_MEM_LOAD(MEM_LOAD);
-        mem_inst.EXE_MEM_STORE(MEM_STORE) ; 
-        mem_inst.EXE2MEM_EMPTY(EXE2MEM_EMPTY);
-        mem_inst.EXE2MEM_POP(EXE2MEM_POP);
+        mem_inst.EXE_WB_SM(MEM_WB);
+        mem_inst.SIGN_EXTEND_SM(MEM_SIGN_EXTEND) ;
+        mem_inst.LOAD_SM(MEM_LOAD);
+        mem_inst.STORE_SM(MEM_STORE) ; 
+        mem_inst.EXE2MEM_EMPTY_SM(EXE2MEM_EMPTY);
+        mem_inst.EXE2MEM_POP_SM(EXE2MEM_POP);
 
-        mem_inst.WBK_DATA(WBK_DATA);
-        mem_inst.WBK_DEST(WBK_DEST);
-        mem_inst.WBK_MEM_SIZE(WBK_MEM_SIZE);
-        mem_inst.WBK_WB(WBK_WB);
-        mem_inst.WBK_MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
-        mem_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
-        mem_inst.MEM2WBK_POP(MEM2WBK_POP);
-        mem_inst.WBK_MEM_LOAD(WBK_MEM_LOAD);
+        mem_inst.WBK_DATA_SM(WBK_DATA);
+        mem_inst.WBK_DEST_SM(WBK_DEST);
+        mem_inst.WBK_MEM_SIZE_SM(WBK_MEM_SIZE);
+        mem_inst.WBK_WB_SM(WBK_WB);
+        mem_inst.WBK_SIGN_EXTEND_SM(WBK_MEM_SIGN_EXTEND);
+        mem_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY);
+        mem_inst.MEM2WBK_POP_SM(MEM2WBK_POP);
+        mem_inst.WBK_LOAD_SM(WBK_MEM_LOAD);
 
-        mem_inst.MEM_ADR(MCACHE_MEM_ADR);
-        mem_inst.MEM_DATA(MCACHE_MEM_DATA);
-        mem_inst.MEM_ADR_VALID(MCACHE_MEM_ADR_VALID);
-        mem_inst.MEM_STORE(MCACHE_MEM_STORE);
-        mem_inst.MEM_LOAD(MCACHE_MEM_LOAD); 
-        mem_inst.MEM_RESULT(MCACHE_MEM_RESULT);
-        mem_inst.MEM_STALL(MCACHE_MEM_STALL);
+        mem_inst.MCACHE_ADR_SM(MCACHE_MEM_ADR);
+        mem_inst.MCACHE_DATA_SM(MCACHE_MEM_DATA);
+        mem_inst.MCACHE_ADR_VALID_SM(MCACHE_MEM_ADR_VALID);
+        mem_inst.MCACHE_STORE_SM(MCACHE_MEM_STORE);
+        mem_inst.MCACHE_LOAD_SM(MCACHE_MEM_LOAD); 
+        mem_inst.MCACHE_RESULT_SM(MCACHE_MEM_RESULT);
+        mem_inst.MCACHE_STALL_SM(MCACHE_MEM_STALL);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
 
-        reg_inst.RADR1(RADR1) ;
-        reg_inst.RADR2(RADR2) ;
-        reg_inst.RADR1_VALID(RADR1_VALID) ;
-        reg_inst.RADR2_VALID(RADR2_VALID) ;
-        reg_inst.ADR_DEST_VALID(ADR_DEST_VALID) ;
-        reg_inst.ADR_DEST_DECOD(ADR_DEST_DECOD) ;
-        reg_inst.RADR1_DATA(RADR1_DATA) ;
-        reg_inst.RADR2_DATA(RADR2_DATA) ;
+        reg_inst.RADR1_SD(RADR1) ;
+        reg_inst.RADR2_SD(RADR2) ;
+        reg_inst.R1_VALID_SD(RADR1_VALID) ;
+        reg_inst.R2_VALID_SD(RADR2_VALID) ;
+        reg_inst.RDEST_VALID_SD(ADR_DEST_VALID) ;
+        reg_inst.RDEST_SD(ADR_DEST_DECOD) ;
+        reg_inst.RDATA1_SD(RADR1_DATA) ;
+        reg_inst.RDATA2_SD(RADR2_DATA) ;
 
-        reg_inst.WADR1(REG_DEST) ;
-        reg_inst.WADR1_VALID(REG_WB) ;
-        reg_inst.WADR1_DATA(REG_DATA) ;
+        reg_inst.WADR_SD(REG_DEST) ;
+        reg_inst.WENABLE_SD(REG_WB) ;
+        reg_inst.WDATA_SD(REG_DATA) ;
 
-        reg_inst.INVAL_ADR(INVAL_DEST) ;
-        reg_inst.INVAL_ENABLE(INVAL_ENABLE) ;
+        reg_inst.INVAL_ADR_SD(INVAL_DEST) ;
+        reg_inst.INVAL_ENABLE_SD(INVAL_ENABLE) ;
 
-        reg_inst.READ_PC(READ_PC) ;
-        reg_inst.READ_PC_VALID(READ_PC_VALID) ;
-        reg_inst.WRITE_PC(WRITE_PC);
-        reg_inst.WRITE_PC_ENABLE(WRITE_PC_ENABLE);
-        reg_inst.DEBUG_PC_RESET(DEBUG_PC_RESET);
+        reg_inst.READ_PC_SD(READ_PC) ;
+        reg_inst.READ_PC_VALID_SD(READ_PC_VALID) ;
+        reg_inst.WRITE_PC_SD(WRITE_PC);
+        reg_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE);
+        reg_inst.PC_INIT(DEBUG_PC_RESET);
 
         reg_inst.CLK(CLK);
         reg_inst.RESET_N(RESET);
 
-        wbk_inst.MEM_DATA(WBK_DATA);
-        wbk_inst.MEM_DEST(WBK_DEST);
-        wbk_inst.MEM_SIZE(WBK_MEM_SIZE);
-        wbk_inst.MEM_WB(WBK_WB);
-        wbk_inst.MEM_SIGN_EXTEND(WBK_MEM_SIGN_EXTEND);
-        wbk_inst.MEM2WBK_EMPTY(MEM2WBK_EMPTY);
-        wbk_inst.MEM2WBK_POP(MEM2WBK_POP);
-        wbk_inst.MEM_LOAD(WBK_MEM_LOAD);
+        wbk_inst.MEM_DATA_SW(WBK_DATA);
+        wbk_inst.MEM_DEST_SW(WBK_DEST);
+        wbk_inst.MEM_SIZE_SW(WBK_MEM_SIZE);
+        wbk_inst.MEM_WB_SW(WBK_WB);
+        wbk_inst.SIGN_EXTEND_SW(WBK_MEM_SIGN_EXTEND);
+        wbk_inst.MEM2WBK_EMPTY_SW(MEM2WBK_EMPTY);
+        wbk_inst.MEM2WBK_POP_SW(MEM2WBK_POP);
+        wbk_inst.LOAD_SW(WBK_MEM_LOAD);
 
-        wbk_inst.REG_DEST(REG_DEST);
-        wbk_inst.REG_DATA(REG_DATA);
-        wbk_inst.REG_WB(REG_WB);
+        wbk_inst.REG_DEST_SW(REG_DEST);
+        wbk_inst.REG_DATA_SW(REG_DATA);
+        wbk_inst.REG_WB_SW(REG_WB);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);
