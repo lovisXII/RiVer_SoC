@@ -5,8 +5,8 @@ SC_MODULE(decod)
     
     //Interface with REG :
 
-    sc_in   < sc_uint<32> >       RDATA1_SD ; 
-    sc_in   < sc_uint<32> >       RDATA2_SD ;
+    sc_in   < sc_uint<32> >       IN_RDATA1_SD ; 
+    sc_in   < sc_uint<32> >       IN_RDATA2_SD ;
     sc_in   < bool >              R1_VALID_SD ; // tells if the data read is valid or no
     sc_in   < bool >              R2_VALID_SD ; // same but for rt
 
@@ -62,6 +62,12 @@ SC_MODULE(decod)
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
     sc_signal< sc_bv<114> >       DEC2EXE_OUT_SD ;
 
+    //Bypasses
+    sc_in < sc_uint<6> >          BP_EXE_DEST_SD ;
+    sc_in < sc_uint<32> >         BP_EXE_RES_SD ;
+    sc_in < sc_uint<6> >          BP_MEM_DEST_SD ;
+    sc_in < sc_uint<32> >         BP_MEM_RES_SD ;
+
     //General Interface :
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
@@ -73,6 +79,9 @@ SC_MODULE(decod)
     fifo_generic<114> dec2exe ;
 
     // Signals :
+
+    sc_signal   < sc_uint<32> >       rdata1_sd ; 
+    sc_signal   < sc_uint<32> >       rdata2_sd ;
 
     //fifo dec2if :
     
@@ -198,6 +207,7 @@ SC_MODULE(decod)
     void affectation_registres() ;
     void affectation_calcul() ;
     void pc_inc() ;
+    void bypasses() ;
     void trace(sc_trace_file* tf);
 
     SC_CTOR(decod) :
@@ -269,8 +279,8 @@ SC_MODULE(decod)
         sensitive   << INSTR_SD ;
         SC_METHOD(affectation_registres)
         sensitive   << INSTR_SD
-                    << RDATA1_SD
-                    << RDATA2_SD
+                    << rdata1_sd
+                    << rdata2_sd
                     << R1_VALID_SD
                     << R2_VALID_SD
                     << IF2DEC_EMPTY_SD

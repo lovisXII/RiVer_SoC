@@ -16,12 +16,19 @@ int sc_main(int argc, char* argv[]) {
     int good_adr;
     int bad_adr;
     char test[512] = "> a.out.txt" ;
+    string opt;
+    if (argc >= 2 && argv[2] == "O") {
+        opt = "-O2";
+    }
+    else {
+        opt = "";
+    }
 
     if (path.substr(path.find_last_of(".") + 1) == "s") { // checking if the argument is a assembly file
         char temp[512];
         char temp_text[512] ;
 
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str()); // writting "riscv32-unknown-elf-gcc -nostdlib path" in temp
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s %s", opt.c_str(), path.c_str()); // writting "riscv32-unknown-elf-gcc -nostdlib path" in temp
         system((char *)temp); // send the command in temp to the terminal
         path = "a.out"; // give the output
 
@@ -32,7 +39,7 @@ int sc_main(int argc, char* argv[]) {
     if (path.substr(path.find_last_of(".") + 1) == "c") { //do the same but for .c file
         char temp[512];
         char temp_text[512] ;
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s", path.c_str());
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s %s", opt.c_str(), path.c_str());
         system((char *)temp);
         path = "a.out";
 
