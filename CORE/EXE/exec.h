@@ -10,8 +10,13 @@ SC_MODULE(exec)
 {
     // Input/Output of EXE : 
 
-    sc_in< sc_uint<32> >    OP1_SE ;
-    sc_in< sc_uint<32> >    OP2_SE ;
+    sc_in< sc_uint<32> >    IN_OP1_SE ;
+    sc_in< sc_uint<32> >    IN_OP2_SE ;
+    sc_in< bool >           OP1_VALID_SE ;
+    sc_in< bool >           OP2_VALID_SE ;
+    sc_in< sc_uint<6> >     RADR1_SE ;
+    sc_in< sc_uint<6> >     RADR2_SE ;
+
     sc_in< sc_uint<32> >    IN_MEM_DATA_SE;
     sc_in< sc_uint<6> >     IN_DEST_SE;
     sc_in< sc_uint<2> >     CMD_SE ;
@@ -42,11 +47,19 @@ SC_MODULE(exec)
     sc_signal< sc_bv<76> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
     sc_signal< sc_bv<76> >    exe2mem_dout_se;
 
+    sc_signal< sc_uint<32> > op1_se;
+    sc_signal< sc_uint<32> > op2_se;
     sc_signal< sc_uint<32> > alu_in_op2_se;
     sc_signal< sc_uint<32> > alu_out_se;
     sc_signal< sc_uint<32> > shifter_out_se;
     sc_signal< sc_uint<5> > shift_val_se;  
     sc_signal< bool > exe2mem_push_se, exe2mem_full_se;  
+    sc_signal< bool > bypass;    
+
+    //bypasses
+
+    sc_in< sc_uint<6> >  MEM_DEST_SE;
+    sc_in< sc_uint<32> > MEM_RES_SE;
 
     //Instance used :
 
@@ -59,6 +72,8 @@ SC_MODULE(exec)
     void fifo_concat();     // setup result  in fifo exe2mem
     void fifo_unconcat();   // unconcatenet result from the fifo
     void manage_fifo(); // allow the push/pop of fifo exe2mem
+
+    void bypasses(); // allow the push/pop of fifo exe2mem
     void trace(sc_trace_file* tf);
     SC_CTOR(exec) :
         alu_inst("alu"), 
@@ -67,7 +82,7 @@ SC_MODULE(exec)
     {
         //ALU port map :
 
-        alu_inst.OP1_SE(OP1_SE);
+        alu_inst.OP1_SE(op1_se);
         alu_inst.OP2_SE(alu_in_op2_se);
         alu_inst.CMD_SE(CMD_SE);
         alu_inst.CIN_SE(NEG_OP2_SE);
@@ -75,7 +90,7 @@ SC_MODULE(exec)
 
         //Shifter port map :
 
-        shifter_inst.DIN_SE(OP1_SE);
+        shifter_inst.DIN_SE(op1_se);
         shifter_inst.SHIFT_VAL_SE(shift_val_se);
         shifter_inst.CMD_SE(CMD_SE);
         shifter_inst.DOUT_SE(shifter_out_se);
@@ -90,7 +105,7 @@ SC_MODULE(exec)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << OP1_SE << NEG_OP2_SE << OP2_SE;
+        sensitive << op1_se << NEG_OP2_SE << op2_se;
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);

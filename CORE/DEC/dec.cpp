@@ -252,8 +252,8 @@ void decod::affectation_registres()
         radr2_var       = if_ir.range(24,20) ;
         adr_dest_var    = if_ir.range(11,7) ;
         
-        dec2exe_op1_var = (RDATA1_SD.read()) ;
-        dec2exe_op2_var = (RDATA2_SD.read()) ;
+        dec2exe_op1_var = (rdata1_sd.read()) ;
+        dec2exe_op2_var = (rdata2_sd.read()) ;
 
         offset_branch_var = 0 ;
         mem_data_var = 0 ;
@@ -269,7 +269,7 @@ void decod::affectation_registres()
         radr2_var                       =   0 ;
         adr_dest_var                    =   if_ir.range(11,7) ;
 
-        dec2exe_op1_var                 =   RDATA1_SD.read() ;
+        dec2exe_op1_var                 =   rdata1_sd.read() ;
 
         //OP2 is sign extended
         if(if_ir.range(31,31) == 1)
@@ -301,7 +301,7 @@ void decod::affectation_registres()
         radr2_var                       =   if_ir.range(24,20) ;
         adr_dest_var                    =   0 ;
 
-        dec2exe_op1_var                 =   RDATA1_SD.read() ;
+        dec2exe_op1_var                 =   rdata1_sd.read() ;
 
         if(if_ir.range(31,31) == 1)
         {
@@ -316,7 +316,7 @@ void decod::affectation_registres()
         
         offset_branch_var = 0 ;
         
-        mem_data_var = RDATA2_SD.read() ;
+        mem_data_var = rdata2_sd.read() ;
         inc_pc_var = 1 ;
         inval_adr_dest = false ;
 
@@ -331,8 +331,8 @@ void decod::affectation_registres()
 
         adr_dest_var = 0 ;
 
-        dec2exe_op1_var = RDATA1_SD.read() ;
-        dec2exe_op2_var = RDATA2_SD.read() ;
+        dec2exe_op1_var = rdata1_sd.read() ;
+        dec2exe_op2_var = rdata2_sd.read() ;
         
         //Offset must be *4, so he's shift by 2 on the left
 
@@ -400,7 +400,7 @@ void decod::affectation_registres()
         if(auipc_i_sd == 1) // on case of an auipc instruction we need to send PC+imm to rd so we need to get the value from r33
         {
             radr2_var = 0x2F ; 
-            dec2exe_op2_var = RDATA2_SD.read() ;
+            dec2exe_op2_var = rdata2_sd.read() ;
         }
         else // if we don't do an auipc instruction
         {
@@ -464,7 +464,7 @@ void decod::affectation_registres()
             offset_branch_var.range(31,12) = 0b00000000000000000000 ;
         }
         offset_branch_var.range(11,0) = if_ir.range(31,20) ;
-        offset_branch_var += RDATA1_SD.read() - READ_PC_SD.read() + 4 ;
+        offset_branch_var += rdata1_sd.read() - READ_PC_SD.read() + 4 ;
         offset_branch_var.range(0,0) = 0 ;
         mem_data_var = 0 ;
         inc_pc_var = 0 ;
@@ -722,6 +722,10 @@ void decod::pc_inc()
     dec2if_in_sd.write(pc_out) ;
 }
 
+void bypasses() {
+    
+}
+
 
 //---------------------------------------------METHOD TO TRACE SIGNALS :---------------------------------------------
 
@@ -730,8 +734,8 @@ void decod::trace(sc_trace_file* tf)
 {
     dec2if.trace(tf);
     dec2exe.trace(tf); 
-    sc_trace(tf,RDATA1_SD,GET_NAME(RDATA1_SD)); 
-    sc_trace(tf,RDATA2_SD,GET_NAME(RDATA2_SD));
+    sc_trace(tf,rdata1_sd,GET_NAME(rdata1_sd)); 
+    sc_trace(tf,rdata2_sd,GET_NAME(rdata2_sd));
     sc_trace(tf,R1_VALID_SD,GET_NAME(R1_VALID_SD)); 
     sc_trace(tf,R2_VALID_SD,GET_NAME(R2_VALID_SD)); 
     sc_trace(tf,RADR1_SD,GET_NAME(RADR1_SD)); 

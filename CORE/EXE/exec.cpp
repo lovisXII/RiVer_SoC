@@ -4,8 +4,8 @@
 
 
 void exec::preprocess_op() {
-    sc_uint<32> op1 = OP1_SE.read();
-    sc_uint<32> op2 = OP2_SE.read() ;
+    sc_uint<32> op1 = op1_se.read();
+    sc_uint<32> op2 = op2_se.read() ;
     if (NEG_OP2_SE.read()) {
         alu_in_op2_se.write(~op2);
     }
@@ -22,10 +22,10 @@ void exec::select_exec_res() {
         exe_res_se.write(shifter_out_se);
     }
     else if (SLT_SE.read()) {
-        if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
+        if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
             exe_res_se.write(0);
         }
-        else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
+        else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
             exe_res_se.write(1);
         }
         else {
@@ -33,10 +33,10 @@ void exec::select_exec_res() {
         }
     }
     else if (SLTU_SE.read()) {
-        if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
+        if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
             exe_res_se.write(1);
         }
-        else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
+        else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
             exe_res_se.write(0);
         }
         else {
@@ -74,7 +74,10 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool blocked = exe2mem_full_se.read() | DEC2EXE_EMPTY_SE.read();
+    bool blocked = exe2mem_full_se.read() 
+                || DEC2EXE_EMPTY_SE.read() 
+                || (!OP1_VALID_SE.read() && !bypass) 
+                || (!OP2_VALID_SE.read() && !bypass);
     if (blocked) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
@@ -85,9 +88,39 @@ void exec::manage_fifo() {
     }
 }
 
+void exec::bypasses() {
+    bool bypass_var = false;
+    if (OP1_VALID_SE.read()) { 
+        op1_se.write(IN_OP1_SE.read());
+    }
+    else {
+        bypass_var = true;
+        if (MEM_DEST_SE.read() == RADR1_SE.read()) {
+            op1_se.write(MEM_RES_SE.read());
+        }
+        else if (OUT_DEST_SE.read() == RADR1_SE.read()) {
+            op1_se.write(EXE_RES_SE.read());
+        }
+
+    }
+    if (OP2_VALID_SE.read()) { 
+        op2_se.write(IN_OP2_SE.read());
+    }
+    else {
+        bypass_var = true;
+        if (MEM_DEST_SE.read() == RADR2_SE.read()) {
+            op2_se.write(MEM_RES_SE.read());
+        }
+        else if (OUT_DEST_SE.read() == RADR2_SE.read()) {
+            op2_se.write(EXE_RES_SE.read());
+        }
+    }
+    bypass.write(bypass_var);
+}
+
 void exec::trace(sc_trace_file* tf) {
-        sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
-        sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+        sc_trace(tf, op1_se, GET_NAME(op1_se));
+        sc_trace(tf, op2_se, GET_NAME(op2_se));
         sc_trace(tf, IN_MEM_DATA_SE, GET_NAME(IN_MEM_DATA_SE));
         sc_trace(tf, IN_DEST_SE, GET_NAME(IN_DEST_SE));
         sc_trace(tf, CMD_SE, GET_NAME(CMD_SE));
@@ -120,7 +153,11 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, shifter_out_se, GET_NAME(shifter_out_se));
         sc_trace(tf, shift_val_se, GET_NAME(shift_val_se));
         sc_trace(tf, exe2mem_push_se, GET_NAME(exe2mem_push_se));
-        sc_trace(tf, exe2mem_full_se, GET_NAME(exe2mem_full_se));
+        sc_trace(tf, RADR1_SE, GET_NAME(RADR1_SE));
+        sc_trace(tf, RADR2_SE, GET_NAME(RADR2_SE));
+        sc_trace(tf, MEM_DEST_SE, GET_NAME(MEM_DEST_SE));
+        sc_trace(tf, MEM_RES_SE, GET_NAME(MEM_RES_SE));
+        sc_trace(tf, bypass, GET_NAME(bypass));
         alu_inst.trace(tf);
         shifter_inst.trace(tf);
         fifo_inst.trace(tf);
