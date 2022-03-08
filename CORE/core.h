@@ -33,7 +33,7 @@ SC_MODULE(core)
     sc_signal< sc_uint<32> >    EXE_OP1 ;
     sc_signal< sc_uint<32> >    EXE_OP2 ;
     sc_signal< sc_uint<2> >     EXE_CMD ;
-    sc_signal< bool >           EXE_NEG_OP1 ;
+    sc_signal< bool >           EXE_NEG_OP2 ;
     sc_signal< bool >           EXE_WB ;
     sc_signal< bool >           EXE_SELECT_SHIFT ;
     
@@ -171,7 +171,7 @@ SC_MODULE(core)
         dec_inst.EXE_OP1_SD(EXE_OP1);
         dec_inst.EXE_OP2_SD(EXE_OP2);
         dec_inst.EXE_CMD_SD(EXE_CMD);
-        dec_inst.EXE_NEG_OP1_SD(EXE_NEG_OP1);
+        dec_inst.EXE_NEG_OP2_SD(EXE_NEG_OP2);
         dec_inst.EXE_WB_SD(EXE_WB);
         dec_inst.EXE_SELECT_SHIFT_SD(EXE_SELECT_SHIFT);
         
@@ -214,7 +214,7 @@ SC_MODULE(core)
         exec_inst.OP2_SE(EXE_OP2);
         exec_inst.CMD_SE(EXE_CMD);
         exec_inst.IN_DEST_SE(EXE_DEST);
-        exec_inst.NEG_OP1_SE(EXE_NEG_OP1);
+        exec_inst.NEG_OP2_SE(EXE_NEG_OP2);
         exec_inst.IN_WB_SE(EXE_WB);
         exec_inst.SELECT_SHIFT_SE(EXE_SELECT_SHIFT);
         

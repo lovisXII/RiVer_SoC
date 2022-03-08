@@ -12,29 +12,19 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x1,x2 ");
 __asm__("jal x5, main");
 
-int modulo(int a, int b){
-    while(a >= b) a -= b;
-    return a ;
-}
 int main()
 {
     int nbr1, nbr2 ;
-    int pgcd, i;
 	
 	nbr1 = 1 ;
     nbr2 = 10 ;
     
-    for(i=1; i <= nbr1 && i <= nbr2; ++i)
-    {
-        if(modulo(nbr1,i) == 0 && modulo(nbr2,i) == 0)
-            pgcd = i;
+    nbr2 -= nbr1;
+    if (nbr2 == 9) {
+        _good();
     }
-	if(pgcd == 1)
-    {
-        _good() ;
-    }
-    else{
-        _bad() ;
+    else {
+        _bad();
     }
 }
 

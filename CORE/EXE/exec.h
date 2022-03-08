@@ -16,7 +16,7 @@ SC_MODULE(exec)
     sc_in< sc_uint<6> >     IN_DEST_SE;
     sc_in< sc_uint<2> >     CMD_SE ;
     sc_in< sc_uint<2> >     IN_MEM_SIZE_SE ;
-    sc_in< bool >           NEG_OP1_SE, IN_WB_SE, IN_MEM_SIGN_EXTEND_SE, SELECT_SHIFT_SE ; //taille fifo entrée : 110
+    sc_in< bool >           NEG_OP2_SE, IN_WB_SE, IN_MEM_SIGN_EXTEND_SE, SELECT_SHIFT_SE ; //taille fifo entrée : 110
     sc_in< bool >           IN_MEM_LOAD_SE, IN_MEM_STORE_SE ; 
     sc_in< bool >           EXE2MEM_POP_SE, DEC2EXE_EMPTY_SE;
     sc_in< bool >           SLT_SE, SLTU_SE;
@@ -42,7 +42,7 @@ SC_MODULE(exec)
     sc_signal< sc_bv<76> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
     sc_signal< sc_bv<76> >    exe2mem_dout_se;
 
-    sc_signal< sc_uint<32> > alu_in_op1_se;
+    sc_signal< sc_uint<32> > alu_in_op2_se;
     sc_signal< sc_uint<32> > alu_out_se;
     sc_signal< sc_uint<32> > shifter_out_se;
     sc_signal< sc_uint<5> > shift_val_se;  
@@ -67,10 +67,10 @@ SC_MODULE(exec)
     {
         //ALU port map :
 
-        alu_inst.OP1_SE(alu_in_op1_se);
-        alu_inst.OP2_SE(OP2_SE);
+        alu_inst.OP1_SE(OP1_SE);
+        alu_inst.OP2_SE(alu_in_op2_se);
         alu_inst.CMD_SE(CMD_SE);
-        alu_inst.CIN_SE(NEG_OP1_SE);
+        alu_inst.CIN_SE(NEG_OP2_SE);
         alu_inst.RES_SE(alu_out_se);
 
         //Shifter port map :
@@ -90,7 +90,7 @@ SC_MODULE(exec)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << OP1_SE << NEG_OP1_SE << OP2_SE;
+        sensitive << OP1_SE << NEG_OP2_SE << OP2_SE;
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);

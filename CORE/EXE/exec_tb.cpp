@@ -65,7 +65,7 @@ int sc_main(int argc, char* argv[])
     unit_exec.IN_DEST_SE(dest);
     unit_exec.CMD_SE(cmd);
     unit_exec.IN_MEM_SIZE_SE(mem_size);
-    unit_exec.NEG_OP1_SE(neg_op1);
+    unit_exec.NEG_OP2_SE(neg_op1);
     unit_exec.IN_WB_SE(wb);
     unit_exec.IN_MEM_LOAD_SE(mem_load);
     unit_exec.IN_MEM_STORE_SE(mem_store);

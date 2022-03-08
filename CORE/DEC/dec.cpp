@@ -57,7 +57,7 @@ void decod::concat_dec2exe()
     dec2exe_in_var.range(113, 112) = exe_cmd_sd.read();
     dec2exe_in_var.range(111,80) = exe_op1_sd.read() ;
     dec2exe_in_var.range(79,48)  = exe_op2_sd.read() ;
-    dec2exe_in_var[47]  = exe_neg_op1_sd.read() ;
+    dec2exe_in_var[47]  = exe_neg_op2_sd.read() ;
     dec2exe_in_var[46]  = exe_wb_sd.read() ;
 
     dec2exe_in_var.range(45,14)  = mem_data_sd.read() ;
@@ -85,7 +85,7 @@ void decod::unconcat_dec2exe()
 
     EXE_OP1_SD.write((sc_bv_base) dec2exe_out_var.range(111,80)) ;
     EXE_OP2_SD.write((sc_bv_base)dec2exe_out_var.range(79,48)) ;
-    EXE_NEG_OP1_SD.write((bool)dec2exe_out_var[47]) ;
+    EXE_NEG_OP2_SD.write((bool)dec2exe_out_var[47]) ;
     EXE_WB_SD.write((bool)dec2exe_out_var[46]) ;
 
     MEM_DATA_SD.write((sc_bv_base)dec2exe_out_var.range(45,14)) ;
@@ -523,11 +523,11 @@ void decod::affectation_calcul()
 
         if(sub_i_sd | slt_i_sd | slti_i_sd | sltu_i_sd | sltiu_i_sd)
         {
-            exe_neg_op1_sd.write(1) ;
+            exe_neg_op2_sd.write(1) ;
         }
         else
         {
-            exe_neg_op1_sd.write(0) ;
+            exe_neg_op2_sd.write(0) ;
         }
 
         //WBK GESTION :
@@ -597,7 +597,7 @@ void decod::affectation_calcul()
     else if(and_i_sd || andi_i_sd)
     {
         exe_cmd_sd.write(1) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -611,7 +611,7 @@ void decod::affectation_calcul()
     else if(or_i_sd || ori_i_sd)
     {
         exe_cmd_sd.write(2) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -623,7 +623,7 @@ void decod::affectation_calcul()
     else if(xor_i_sd || xori_i_sd)
     {
         exe_cmd_sd.write(3) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -635,7 +635,7 @@ void decod::affectation_calcul()
     else if(sll_i_sd || slli_i_sd)
     {
         exe_cmd_sd.write(0) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -648,7 +648,7 @@ void decod::affectation_calcul()
     else if(srl_i_sd || srli_i_sd)
     {
         exe_cmd_sd.write(1) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -661,7 +661,7 @@ void decod::affectation_calcul()
     else if(sra_i_sd || srai_i_sd)
     {
         exe_cmd_sd.write(2) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -673,7 +673,7 @@ void decod::affectation_calcul()
     else if(jalr_type_inst_sd.read() || j_type_inst_sd.read())
     {
         exe_cmd_sd.write(0) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 1 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -684,7 +684,7 @@ void decod::affectation_calcul()
     else
     {
         exe_cmd_sd.write(0) ;
-        exe_neg_op1_sd.write(0) ;
+        exe_neg_op2_sd.write(0) ;
         dec2exe_wb_var = 0 ;
         mem_load_sd.write(0) ;
         mem_store_sd.write(0) ;
@@ -744,7 +744,7 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,EXE_OP1_SD,GET_NAME(EXE_OP1_SD)); 
     sc_trace(tf,EXE_OP2_SD,GET_NAME(EXE_OP2_SD)); 
     sc_trace(tf,EXE_CMD_SD,GET_NAME(EXE_CMD_SD)); 
-    sc_trace(tf,EXE_NEG_OP1_SD,GET_NAME(EXE_NEG_OP1_SD)); 
+    sc_trace(tf,EXE_NEG_OP2_SD,GET_NAME(EXE_NEG_OP2_SD)); 
     sc_trace(tf,EXE_WB_SD,GET_NAME(EXE_WB_SD)); 
     sc_trace(tf,MEM_DATA_SD,GET_NAME(MEM_DATA_SD));
     sc_trace(tf,MEM_LOAD_SD,GET_NAME(MEM_LOAD_SD)); 
@@ -825,7 +825,7 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,mem_store_sd,GET_NAME(mem_store_sd));
     sc_trace(tf,exe_cmd_sd,GET_NAME(exe_cmd_sd));
     sc_trace(tf,select_shift_sd,GET_NAME(select_shift_sd));
-    sc_trace(tf,exe_neg_op1_sd,GET_NAME(exe_neg_op1_sd));
+    sc_trace(tf,exe_neg_op2_sd,GET_NAME(exe_neg_op2_sd));
     sc_trace(tf,exe_wb_sd,GET_NAME(exe_wb_sd));
     sc_trace(tf,mem_sign_extend_sd,GET_NAME(mem_sign_extend_sd));
     sc_trace(tf,WRITE_PC_SD,GET_NAME(WRITE_PC_SD));

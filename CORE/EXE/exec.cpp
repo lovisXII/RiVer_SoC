@@ -6,11 +6,11 @@
 void exec::preprocess_op() {
     sc_uint<32> op1 = OP1_SE.read();
     sc_uint<32> op2 = OP2_SE.read() ;
-    if (NEG_OP1_SE.read()) {
-        alu_in_op1_se.write(~op1);
+    if (NEG_OP2_SE.read()) {
+        alu_in_op2_se.write(~op2);
     }
     else {
-        alu_in_op1_se.write(op1);
+        alu_in_op2_se.write(op2);
     }
     shift_val_se.write(op2.range(4, 0));
 }
@@ -23,10 +23,10 @@ void exec::select_exec_res() {
     }
     else if (SLT_SE.read()) {
         if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
-            exe_res_se.write(1);
+            exe_res_se.write(0);
         }
         else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
-            exe_res_se.write(0);
+            exe_res_se.write(1);
         }
         else {
             exe_res_se.write(!(bool) alu_out_se.read()[31]);
@@ -34,10 +34,10 @@ void exec::select_exec_res() {
     }
     else if (SLTU_SE.read()) {
         if (OP1_SE.read()[31] == 1 && OP2_SE.read()[31] == 0) {
-            exe_res_se.write(0);
+            exe_res_se.write(1);
         }
         else if (OP1_SE.read()[31] == 0 && OP2_SE.read()[31] == 1) {
-            exe_res_se.write(1);
+            exe_res_se.write(0);
         }
         else {
             exe_res_se.write(!(bool) alu_out_se.read()[31]);
@@ -95,7 +95,7 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, SELECT_SHIFT_SE, GET_NAME(SELECT_SHIFT_SE));
         sc_trace(tf, IN_MEM_SIGN_EXTEND_SE, GET_NAME(IN_MEM_SIGN_EXTEND_SE));
         sc_trace(tf, IN_WB_SE, GET_NAME(IN_WB_SE));
-        sc_trace(tf, NEG_OP1_SE, GET_NAME(NEG_OP1_SE));
+        sc_trace(tf, NEG_OP2_SE, GET_NAME(NEG_OP2_SE));
         sc_trace(tf, IN_MEM_LOAD_SE, GET_NAME(IN_MEM_LOAD_SE));
         sc_trace(tf, IN_MEM_STORE_SE, GET_NAME(IN_MEM_STORE_SE));
         sc_trace(tf, EXE2MEM_POP_SE, GET_NAME(EXE2MEM_POP_SE));
@@ -115,7 +115,7 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, exe_res_se, GET_NAME(exe_res_se));
         sc_trace(tf, exe2mem_din_se, GET_NAME(exe2mem_din_se));
         sc_trace(tf, exe2mem_dout_se, GET_NAME(exe2mem_dout_se));
-        sc_trace(tf, alu_in_op1_se, GET_NAME(alu_in_op1_se));
+        sc_trace(tf, alu_in_op2_se, GET_NAME(alu_in_op2_se));
         sc_trace(tf, alu_out_se, GET_NAME(alu_out_se));
         sc_trace(tf, shifter_out_se, GET_NAME(shifter_out_se));
         sc_trace(tf, shift_val_se, GET_NAME(shift_val_se));

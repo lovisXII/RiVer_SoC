@@ -30,7 +30,7 @@ SC_MODULE(decod)
     sc_out  < sc_uint<32> >      EXE_OP1_SD ; // value of op1
     sc_out  < sc_uint<32> >      EXE_OP2_SD ; // value of op2
     sc_out  < sc_uint<2> >       EXE_CMD_SD ; // value of the command sent to exe
-    sc_out  < bool >             EXE_NEG_OP1_SD ; // say if we take the opposite of the op1 to do a substraction for example
+    sc_out  < bool >             EXE_NEG_OP2_SD ; // say if we take the opposite of the op1 to do a substraction for example
     sc_out  < bool >             EXE_WB_SD ; // say if we plan to wbk the value of rd or no
     sc_out  < sc_uint<6> >       EXE_DEST_SD;    //the destination register
     sc_out  < bool >             EXE_SELECT_SHIFT_SD ; //taille fifo entrée : 110
@@ -184,7 +184,7 @@ SC_MODULE(decod)
 
     sc_signal<sc_uint<2>>   exe_cmd_sd ;
     sc_signal<bool>         select_shift_sd ;
-    sc_signal<bool>         exe_neg_op1_sd ;
+    sc_signal<bool>         exe_neg_op2_sd ;
     sc_signal<bool>         exe_wb_sd ;
     sc_signal<bool>         mem_sign_extend_sd ;
 
@@ -232,7 +232,7 @@ SC_MODULE(decod)
                     << exe_op1_sd 
                     << exe_op2_sd 
                     << exe_cmd_sd
-                    << exe_neg_op1_sd
+                    << exe_neg_op2_sd
                     << exe_wb_sd 
                     << mem_data_sd 
                     << mem_load_sd 

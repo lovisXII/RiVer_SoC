@@ -133,7 +133,7 @@ int sc_main(int argc, char* argv[])
     dec.EXE_OP1_SD(dec2exe_op1) ; 
     dec.EXE_OP2_SD(dec2exe_op2) ; 
     dec.EXE_CMD_SD(dec2exe_cmd) ; 
-    dec.EXE_NEG_OP1_SD(dec2exe_neg_op1) ; 
+    dec.EXE_NEG_OP2_SD(dec2exe_neg_op1) ; 
     dec.EXE_WB_SD(dec2exe_wb) ; 
     
     dec.MEM_DATA_SD(mem_data) ; 
