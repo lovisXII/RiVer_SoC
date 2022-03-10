@@ -7,8 +7,8 @@ SC_MODULE(decod)
 
     sc_in   < sc_uint<32> >       IN_RDATA1_SD ; 
     sc_in   < sc_uint<32> >       IN_RDATA2_SD ;
-    sc_in   < bool >              R1_VALID_SD ; // tells if the data read is valid or no
-    sc_in   < bool >              R2_VALID_SD ; // same but for rt
+    sc_in   < bool >              IN_R1_VALID_SD ;
+    sc_in   < bool >              IN_R2_VALID_SD ; // same but for rt
 
     sc_in   < bool >              ADR_DEST_VALID_SD ;
     sc_out  <sc_uint<6>>          ADR_DEST_SD ;
@@ -42,6 +42,7 @@ SC_MODULE(decod)
     sc_out  < bool >             MEM_STORE_SD ; // say to mem if we do a store
     sc_out  < bool >             MEM_SIGN_EXTEND_SD ; 
     sc_out  < sc_uint<2> >       MEM_SIZE_SD ; // tells to mem if we do an acces in word, hw or byte
+
     
     // Interface with DEC2IF : 
 
@@ -60,13 +61,19 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP_SD ;
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
-    sc_signal< sc_bv<114> >       DEC2EXE_OUT_SD ;
+    sc_signal< sc_bv<128> >       DEC2EXE_OUT_SD ;
 
     //Bypasses
     sc_in < sc_uint<6> >          BP_EXE_DEST_SD ;
     sc_in < sc_uint<32> >         BP_EXE_RES_SD ;
     sc_in < sc_uint<6> >          BP_MEM_DEST_SD ;
     sc_in < sc_uint<32> >         BP_MEM_RES_SD ;
+
+
+    sc_out  < bool >             BP_R1_VALID_SD ;
+    sc_out  < bool >             BP_R2_VALID_SD ;
+    sc_out  < sc_uint<6> >       BP_RADR1_SD ;
+    sc_out  < sc_uint<6> >       BP_RADR2_SD ;
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -76,12 +83,15 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo_generic<32> dec2if ;
-    fifo_generic<114> dec2exe ;
+    fifo_generic<128> dec2exe ;
 
     // Signals :
 
-    sc_signal   < sc_uint<32> >       rdata1_sd ; 
-    sc_signal   < sc_uint<32> >       rdata2_sd ;
+    sc_signal   < sc_uint<32> >    rdata1_sd ; 
+    sc_signal   < sc_uint<32> >    rdata2_sd ;
+    sc_signal   < bool >           r1_valid_sd ;
+    sc_signal   < bool >           r2_valid_sd ; 
+    sc_signal   < bool >           stall ; 
 
     //fifo dec2if :
     
@@ -93,7 +103,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <114> >   dec2exe_in_sd ;
+    sc_signal < sc_bv <128> >   dec2exe_in_sd ;
     sc_signal < bool >          dec2exe_push_sd ;
     sc_signal < bool >          dec2exe_full_sd ;
 
@@ -208,6 +218,7 @@ SC_MODULE(decod)
     void affectation_calcul() ;
     void pc_inc() ;
     void bypasses() ;
+    void stall_method() ;
     void trace(sc_trace_file* tf);
 
     SC_CTOR(decod) :
@@ -235,7 +246,8 @@ SC_MODULE(decod)
         SC_METHOD(dec2if_gestion)
         sensitive   << dec2if_empty_sd 
                     << READ_PC_VALID_SD
-                    << dec2if_full_sd ;
+                    << dec2if_full_sd 
+                    << stall;
 
         SC_METHOD(concat_dec2exe)
         sensitive   << dec2exe_in_sd 
@@ -254,23 +266,32 @@ SC_MODULE(decod)
                     << slti_i_sd 
                     << slt_i_sd 
                     << sltiu_i_sd 
-                    << sltu_i_sd;
+                    << sltu_i_sd
+                    << RADR1_SD
+                    << RADR2_SD
+                    << r1_valid_sd
+                    << r2_valid_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)
-        sensitive   << R1_VALID_SD 
-                    << R2_VALID_SD 
-                    << ADR_DEST_VALID_SD
+        sensitive   << ADR_DEST_VALID_SD
                     << dec2exe_full_sd 
-                    << IF2DEC_EMPTY_SD ;
+                    << IF2DEC_EMPTY_SD 
+                    << stall;
 
         SC_METHOD(if2dec_pop_method)
         sensitive   << ADR_DEST_VALID_SD 
-                    << R1_VALID_SD 
-                    << R2_VALID_SD 
                     << IF2DEC_EMPTY_SD 
                     << dec2exe_full_sd
-                    << add_offset_to_pc_sd ;
+                    << add_offset_to_pc_sd 
+                    << stall ;
+
+        SC_METHOD(stall_method) 
+        sensitive   << b_type_inst_sd
+                    << jalr_type_inst_sd
+                    << j_type_inst_sd
+                    << r1_valid_sd
+                    << r2_valid_sd;
 
         SC_METHOD(decoding_instruction_type)
         sensitive   << INSTR_SD 
@@ -281,8 +302,8 @@ SC_MODULE(decod)
         sensitive   << INSTR_SD
                     << rdata1_sd
                     << rdata2_sd
-                    << R1_VALID_SD
-                    << R2_VALID_SD
+                    << r1_valid_sd
+                    << r2_valid_sd
                     << IF2DEC_EMPTY_SD
                     << dec2if_push_sd
                     << r_type_inst_sd 
@@ -300,7 +321,8 @@ SC_MODULE(decod)
                     << bltu_i_sd
                     << bgeu_i_sd  
                     << dec2if_push_sd
-                    << READ_PC_SD ;
+                    << READ_PC_SD 
+                    << stall;
         SC_METHOD(affectation_calcul)
         sensitive   << add_i_sd
                     << slt_i_sd
@@ -349,6 +371,18 @@ SC_MODULE(decod)
                     << inc_pc_sd
                     << add_offset_to_pc_sd
                     << READ_PC_VALID_SD ;
+
+        SC_METHOD(bypasses);
+        sensitive   << IN_R1_VALID_SD
+                    << IN_R2_VALID_SD
+                    << IN_RDATA1_SD
+                    << IN_RDATA2_SD
+                    << BP_EXE_DEST_SD
+                    << BP_EXE_RES_SD
+                    << BP_MEM_DEST_SD
+                    << BP_MEM_RES_SD
+                    << RADR1_SD
+                    << RADR2_SD;
         reset_signal_is(RESET_N,false) ;
 
     }

@@ -11,8 +11,11 @@ all: core_tb
 core_tb: $(OBJECTS) core.h
 	$(CC) $^ -o $@ $(C_ARGS)
 
+%.o: %.cpp  %.h
+	$(CC) -c $< $(C_ARGS) -o $@
+
 %.o: %.cpp 
-	$(CC) -c $^ $(C_ARGS) -o $@
+	$(CC) -c $< $(C_ARGS) -o $@
 
 clean: 
 	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out

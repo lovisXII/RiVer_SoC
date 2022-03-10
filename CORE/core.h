@@ -46,7 +46,12 @@ SC_MODULE(core)
     sc_signal< bool >           EXE_SLTU ;
 
     sc_signal< bool >           DEC2EXE_POP ;
-    sc_signal< bool >           DEC2EXE_EMPTY ;                    
+    sc_signal< bool >           DEC2EXE_EMPTY ;   
+
+    sc_signal  < bool >         BP_R1_VALID ;
+    sc_signal  < bool >         BP_R2_VALID ;
+    sc_signal  < sc_uint<6> >   BP_RADR1 ;
+    sc_signal  < sc_uint<6> >   BP_RADR2 ;                 
 
     //DEC-REG interface
     sc_signal< sc_uint<32> >    RADR1_DATA ; 
@@ -189,10 +194,10 @@ SC_MODULE(core)
         dec_inst.INVAL_DEST_SD(INVAL_DEST);
         dec_inst.INVAL_ENABLE_SD(INVAL_ENABLE);
 
-        dec_inst.RDATA1_SD(RADR1_DATA);
-        dec_inst.RDATA2_SD(RADR2_DATA);
-        dec_inst.R1_VALID_SD(RADR1_VALID);
-        dec_inst.R2_VALID_SD(RADR2_VALID);
+        dec_inst.IN_RDATA1_SD(RADR1_DATA);
+        dec_inst.IN_RDATA2_SD(RADR2_DATA);
+        dec_inst.IN_R1_VALID_SD(RADR1_VALID);
+        dec_inst.IN_R2_VALID_SD(RADR2_VALID);
 
         dec_inst.ADR_DEST_VALID_SD(ADR_DEST_VALID) ;
         dec_inst.ADR_DEST_SD(ADR_DEST_DECOD) ;
@@ -207,11 +212,27 @@ SC_MODULE(core)
         dec_inst.WRITE_PC_SD(WRITE_PC);
         dec_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE);
 
+        dec_inst.BP_EXE_DEST_SD(MEM_DEST);
+        dec_inst.BP_EXE_RES_SD(MEM_EXE_RES);
+        dec_inst.BP_MEM_DEST_SD(WBK_DEST);
+        dec_inst.BP_MEM_RES_SD(WBK_DATA);
+
+        dec_inst.BP_R1_VALID_SD(BP_R1_VALID);
+        dec_inst.BP_R2_VALID_SD(BP_R2_VALID);
+        dec_inst.BP_RADR1_SD(BP_RADR1);
+        dec_inst.BP_RADR2_SD(BP_RADR2);
+
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
-        exec_inst.OP1_SE(EXE_OP1);
-        exec_inst.OP2_SE(EXE_OP2);
+        exec_inst.RADR1_SE(BP_RADR1);
+        exec_inst.RADR2_SE(BP_RADR2);
+        exec_inst.OP1_VALID_SE(BP_R1_VALID);
+        exec_inst.OP2_VALID_SE(BP_R2_VALID);
+        exec_inst.MEM_DEST_SE(WBK_DEST);
+        exec_inst.MEM_RES_SE(WBK_DATA);
+        exec_inst.IN_OP1_SE(EXE_OP1);
+        exec_inst.IN_OP2_SE(EXE_OP2);
         exec_inst.CMD_SE(EXE_CMD);
         exec_inst.IN_DEST_SE(EXE_DEST);
         exec_inst.NEG_OP2_SE(EXE_NEG_OP2);
