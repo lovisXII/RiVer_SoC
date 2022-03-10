@@ -113,7 +113,19 @@ SC_MODULE(exec)
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE << OP1_VALID_SE << OP2_VALID_SE << bypass;
+        SC_METHOD(bypasses);
+        sensitive   << OP1_VALID_SE
+                    << OP2_VALID_SE
+                    << MEM_DEST_SE
+                    << MEM_RES_SE
+                    << OUT_DEST_SE
+                    << EXE_RES_SE
+                    << RADR1_SE
+                    << RADR2_SE
+                    << IN_OP1_SE
+                    << IN_OP2_SE;
+
     }
 };
 

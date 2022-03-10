@@ -25,7 +25,7 @@ void decod::if2dec_pop_method()
         IF2DEC_POP_SD.write(1) ;
         IF2DEC_FLUSH_SD.write(1);
     }
-    else if(R1_VALID_SD.read() && R2_VALID_SD.read() && ADR_DEST_VALID_SD.read() && ! IF2DEC_EMPTY_SD.read() && !dec2exe_full_sd.read())
+    else if(!stall && ADR_DEST_VALID_SD.read() && ! IF2DEC_EMPTY_SD.read() && !dec2exe_full_sd.read())
     {
         IF2DEC_POP_SD.write(1) ;
         IF2DEC_FLUSH_SD.write(0);
@@ -40,7 +40,7 @@ void decod::if2dec_pop_method()
 
 void decod::dec2exe_push_method()
 {
-    if(! R1_VALID_SD.read() || ! R2_VALID_SD.read() || ! ADR_DEST_VALID_SD.read() || dec2exe_full_sd.read() || IF2DEC_EMPTY_SD.read())
+    if( stall || ! ADR_DEST_VALID_SD.read() || dec2exe_full_sd.read() || IF2DEC_EMPTY_SD.read())
     {
         dec2exe_push_sd.write(0) ; 
     }
@@ -53,7 +53,11 @@ void decod::dec2exe_push_method()
 
 void decod::concat_dec2exe()
 {
-    sc_bv<114> dec2exe_in_var ;
+    sc_bv<128> dec2exe_in_var ;
+    dec2exe_in_var[127] = r1_valid_sd.read();
+    dec2exe_in_var[126] = r2_valid_sd.read();
+    dec2exe_in_var.range(125, 120) = RADR1_SD.read();
+    dec2exe_in_var.range(119, 114) = RADR2_SD.read();
     dec2exe_in_var.range(113, 112) = exe_cmd_sd.read();
     dec2exe_in_var.range(111,80) = exe_op1_sd.read() ;
     dec2exe_in_var.range(79,48)  = exe_op2_sd.read() ;
@@ -79,10 +83,16 @@ void decod::concat_dec2exe()
 
 void decod::unconcat_dec2exe()
 {
-    sc_bv<114> dec2exe_out_var = DEC2EXE_OUT_SD.read() ;
+    sc_bv<128> dec2exe_out_var = DEC2EXE_OUT_SD.read() ;
+
+
+    BP_R1_VALID_SD.write((bool)dec2exe_out_var[127]) ;
+    BP_R2_VALID_SD.write((bool)dec2exe_out_var[126]) ;
+
+    BP_RADR1_SD.write((sc_bv_base) dec2exe_out_var.range(125, 120));
+    BP_RADR2_SD.write((sc_bv_base) dec2exe_out_var.range(119, 114));
 
     EXE_CMD_SD.write((sc_bv_base) dec2exe_out_var.range(113, 112));
-
     EXE_OP1_SD.write((sc_bv_base) dec2exe_out_var.range(111,80)) ;
     EXE_OP2_SD.write((sc_bv_base)dec2exe_out_var.range(79,48)) ;
     EXE_NEG_OP2_SD.write((bool)dec2exe_out_var[47]) ;
@@ -498,7 +508,7 @@ void decod::affectation_registres()
     exe_op2_sd.write(dec2exe_op2_var) ;
     mem_data_sd.write(mem_data_var) ;
     inc_pc_sd.write((inc_pc_var && dec2if_push_sd.read()) || invalid_instr) ;
-    add_offset_to_pc_sd.write(!inc_pc_var && dec2if_push_sd.read() && R1_VALID_SD.read() && R2_VALID_SD.read() && ! invalid_instr);
+    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() && ! invalid_instr);
 }
 
 
@@ -722,8 +732,41 @@ void decod::pc_inc()
     dec2if_in_sd.write(pc_out) ;
 }
 
-void bypasses() {
-    
+void decod::bypasses() {
+    if (IN_R1_VALID_SD.read()) {
+        r1_valid_sd.write(true);
+        rdata1_sd.write(IN_RDATA1_SD.read());
+    }
+    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read()) {
+        r1_valid_sd.write(true);
+        rdata1_sd.write(BP_EXE_RES_SD.read());
+    }
+    else if (RADR1_SD.read() == BP_MEM_DEST_SD.read()) {
+        r1_valid_sd.write(true);
+        rdata1_sd.write(BP_MEM_RES_SD.read());
+    }
+    else {
+        r1_valid_sd.write(false);
+    }
+    if (IN_R2_VALID_SD.read()) {
+        r2_valid_sd.write(true);
+        rdata2_sd.write(IN_RDATA2_SD.read());
+    }
+    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read()) {
+        r2_valid_sd.write(true);
+        rdata2_sd.write(BP_EXE_RES_SD.read());
+    }
+    else if (RADR2_SD.read() == BP_MEM_DEST_SD.read()) {
+        r2_valid_sd.write(true);
+        rdata2_sd.write(BP_MEM_RES_SD.read());
+    }
+    else {
+        r2_valid_sd.write(false);
+    }
+}
+
+void decod::stall_method() {
+    stall.write((!r1_valid_sd || !r2_valid_sd) && (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd));
 }
 
 
@@ -736,8 +779,8 @@ void decod::trace(sc_trace_file* tf)
     dec2exe.trace(tf); 
     sc_trace(tf,rdata1_sd,GET_NAME(rdata1_sd)); 
     sc_trace(tf,rdata2_sd,GET_NAME(rdata2_sd));
-    sc_trace(tf,R1_VALID_SD,GET_NAME(R1_VALID_SD)); 
-    sc_trace(tf,R2_VALID_SD,GET_NAME(R2_VALID_SD)); 
+    sc_trace(tf,r1_valid_sd,GET_NAME(r1_valid_sd)); 
+    sc_trace(tf,r2_valid_sd,GET_NAME(r2_valid_sd)); 
     sc_trace(tf,RADR1_SD,GET_NAME(RADR1_SD)); 
     sc_trace(tf,RADR2_SD,GET_NAME(RADR2_SD)); 
     sc_trace(tf,ADR_DEST_VALID_SD,GET_NAME(ADR_DEST_VALID_SD)); 
@@ -838,4 +881,5 @@ void decod::trace(sc_trace_file* tf)
     sc_trace(tf,INVAL_DEST_SD,GET_NAME(INVAL_DEST_SD));
     sc_trace(tf,add_offset_to_pc_sd,GET_NAME(add_offset_to_pc_sd));
     sc_trace(tf,IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
+    sc_trace(tf,stall, GET_NAME(stall));
 }
