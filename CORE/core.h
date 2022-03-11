@@ -221,6 +221,7 @@ SC_MODULE(core)
         dec_inst.BP_R2_VALID_SD(BP_R2_VALID);
         dec_inst.BP_RADR1_SD(BP_RADR1);
         dec_inst.BP_RADR2_SD(BP_RADR2);
+        dec_inst.BP_MEM_LOAD_SD(MEM_LOAD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);

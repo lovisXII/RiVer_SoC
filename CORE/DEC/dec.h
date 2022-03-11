@@ -67,6 +67,7 @@ SC_MODULE(decod)
     sc_in < sc_uint<6> >          BP_EXE_DEST_SD ;
     sc_in < sc_uint<32> >         BP_EXE_RES_SD ;
     sc_in < sc_uint<6> >          BP_MEM_DEST_SD ;
+    sc_in < bool >                BP_MEM_LOAD_SD ;
     sc_in < sc_uint<32> >         BP_MEM_RES_SD ;
 
 
