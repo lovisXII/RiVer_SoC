@@ -5,13 +5,13 @@
 
 //cache N-way associatif, write through et buffet
 // taille du cache 1024
-// 2-way => 1024/2 => 512 / 4mots => 128 => 7bits
 // buffer de taille 2
-// 4 mots => offset 2
-// tag: 23
 
-// index  = ligne    <= size est one hot
-// offset = column
+// 2-way => 1024/2 => 512 / 4mots => 128 lignes
+// index => 7 bits
+// offset => 4 mots => 2 bits
+// tag => 23 bits
+
 
 #define WAY_SIZE 128
 struct WAY_128
@@ -43,7 +43,7 @@ SC_MODULE(d_cache)
 
   sc_out<sc_uint<32>> DATA_C;
   sc_out<bool> BUFFER_FULL;       
-  sc_out<bool> HIT_C;             // 1 : HIT, 0 : MISS
+  sc_out<bool> MISS_C;             // 0 : HIT, 1 : MISS
   sc_out<bool> VALID_DATA_C;
 // interfaz bus
   sc_in<bool> PI_DATA_REQUEST;
@@ -80,14 +80,17 @@ SC_MODULE(d_cache)
   enum
   {
     IDLE,
-    COMPARE_TAG,
-    ALLOCATE
+    READ_INST,
+    WRITE_INST,
+    WRITE_INST_UPDATE,
+    WAIT_MEM,
+    UPDATE_CACHE
   };
 //fsm : finite state machine
   sc_register<int> fsm_current_state;
 
   void reset();
-  void write_bufffer();
+  void miss_detection();
   void transition();
   
   SC_CTOR(d_cache)
