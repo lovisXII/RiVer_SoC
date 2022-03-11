@@ -52,6 +52,7 @@ SC_MODULE(exec)
     sc_signal< sc_uint<32> > alu_in_op2_se;
     sc_signal< sc_uint<32> > alu_out_se;
     sc_signal< sc_uint<32> > shifter_out_se;
+    sc_signal< sc_uint<32> > bp_mem_data_sd;
     sc_signal< sc_uint<5> > shift_val_se;  
     sc_signal< bool > exe2mem_push_se, exe2mem_full_se;  
     sc_signal< bool > bypass;    
@@ -109,7 +110,7 @@ SC_MODULE(exec)
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);
-        sensitive << IN_MEM_DATA_SE << IN_DEST_SE << IN_MEM_SIZE_SE << IN_MEM_LOAD_SE << IN_MEM_SIGN_EXTEND_SE << IN_MEM_STORE_SE << IN_WB_SE << exe_res_se;
+        sensitive << bp_mem_data_sd << IN_DEST_SE << IN_MEM_SIZE_SE << IN_MEM_LOAD_SE << IN_MEM_SIGN_EXTEND_SE << IN_MEM_STORE_SE << IN_WB_SE << exe_res_se;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
@@ -124,7 +125,8 @@ SC_MODULE(exec)
                     << RADR1_SE
                     << RADR2_SE
                     << IN_OP1_SE
-                    << IN_OP2_SE;
+                    << IN_OP2_SE
+                    << IN_MEM_DATA_SE;
 
     }
 };

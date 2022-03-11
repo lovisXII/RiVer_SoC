@@ -51,7 +51,7 @@ void exec::select_exec_res() {
 void exec::fifo_concat() {
     sc_bv<76> ff_din;
     ff_din.range(31, 0) = exe_res_se.read();
-    ff_din.range(63, 32) = IN_MEM_DATA_SE.read();
+    ff_din.range(63, 32) = bp_mem_data_sd.read();
     ff_din.range(69, 64) = IN_DEST_SE.read();
     ff_din.range(71, 70) = IN_MEM_SIZE_SE.read();
     ff_din[72] = IN_WB_SE.read();
@@ -89,35 +89,51 @@ void exec::manage_fifo() {
 }
 
 void exec::bypasses() {
-    bool bypass_var = false;
-    if (OP1_VALID_SE.read()) { 
+    bool bypass_var = false; 
+    sc_uint <32> bp_mem_data_var = IN_MEM_DATA_SE.read();
+
+    if (RADR1_SE.read() == 0) {
         op1_se.write(IN_OP1_SE.read());
     }
-    else {
-        
-        if (OUT_DEST_SE.read() == RADR1_SE.read() && !OUT_MEM_LOAD_SE) {
-            op1_se.write(EXE_RES_SE.read());
-            bypass_var = true;
-        }
-        else if (MEM_DEST_SE.read() == RADR1_SE.read()) {
-            op1_se.write(MEM_RES_SE.read());
-            bypass_var = true;
-        }
-
+    else if (OUT_DEST_SE.read() == RADR1_SE.read() && !OUT_MEM_LOAD_SE) {
+        op1_se.write(EXE_RES_SE.read());
+        bypass_var = true;
     }
-    if (OP2_VALID_SE.read()) { 
+    else if (MEM_DEST_SE.read() == RADR1_SE.read()) {
+        op1_se.write(MEM_RES_SE.read());
+        bypass_var = true;
+    }
+    else if (OP1_VALID_SE.read() && OUT_DEST_SE.read() != RADR1_SE.read()) {
+        op1_se.write(IN_OP1_SE.read());
+    }
+
+    if (RADR2_SE.read() == 0 || IN_MEM_LOAD_SE.read()) {
         op2_se.write(IN_OP2_SE.read());
     }
-    else {
-        if (OUT_DEST_SE.read() == RADR2_SE.read() && !OUT_MEM_LOAD_SE) {
+    else if (OUT_DEST_SE.read() == RADR2_SE.read() && !OUT_MEM_LOAD_SE) {
+        if (IN_MEM_STORE_SE.read()) { //on stores we need to bypass to the data not adr
+            bp_mem_data_var = EXE_RES_SE.read();
+            op2_se.write(IN_OP2_SE.read());
+        }
+        else {
             op2_se.write(EXE_RES_SE.read());
-            bypass_var = true;
         }
-        else if (MEM_DEST_SE.read() == RADR2_SE.read()) {
-            op2_se.write(MEM_RES_SE.read());
-            bypass_var = true;
-        }
+        bypass_var = true;
     }
+    else if (MEM_DEST_SE.read() == RADR2_SE.read()) {
+        if (IN_MEM_STORE_SE.read()) {
+            bp_mem_data_var = MEM_RES_SE.read();
+            op2_se.write(IN_OP2_SE.read());
+        }
+        else {
+            op2_se.write(MEM_RES_SE.read());
+        }
+        bypass_var = true;
+    }
+    else if (OP2_VALID_SE.read() && OUT_DEST_SE.read() != RADR2_SE.read()) {
+        op2_se.write(IN_OP2_SE.read());
+    }
+    bp_mem_data_sd.write(bp_mem_data_var);
     bypass.write(bypass_var);
 }
 
@@ -163,6 +179,8 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, bypass, GET_NAME(bypass));
         sc_trace(tf, OP2_VALID_SE, GET_NAME(OP2_VALID_SE));
         sc_trace(tf, OP1_VALID_SE, GET_NAME(OP1_VALID_SE));
+        sc_trace(tf, IN_OP1_SE, GET_NAME(IN_OP1_SE));
+        sc_trace(tf, IN_OP2_SE, GET_NAME(IN_OP2_SE));
         alu_inst.trace(tf);
         shifter_inst.trace(tf);
         fifo_inst.trace(tf);
