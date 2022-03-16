@@ -1,39 +1,6 @@
 #include "wbk.h"
 
 void wbk::wbk_method() {
-    sc_uint<32> din = MEM_DATA_SW.read();
-    int size = MEM_SIZE_SW.read();
-    bool sign_extend = SIGN_EXTEND_SW.read();
-    sc_uint<32> dout;
-    int range_start; //The beginning of the range of din that should actually be written to the register
-    switch (size) {
-        case 2:
-            range_start = 7;
-            break;
-        case 1:
-            range_start = 15;
-            break;
-        case 0:
-            range_start = 31;
-            break;
-        default:
-            range_start = 31;
-            break;
-    }
-
-    if (sign_extend && din(range_start,range_start)) {
-        dout = 0xFFFFFFFF;
-    }
-    else {
-        dout = 0;
-    }
-    dout.range(range_start, 0) = din.range(range_start, 0);
-    if (LOAD_SW.read()) {
-        REG_DATA_SW.write(dout);
-    }
-    else {
-        REG_DATA_SW.write(din);
-    }
     REG_DEST_SW.write(MEM_DEST_SW);
     if(MEM_WB_SW.read() && !MEM2WBK_EMPTY_SW.read()) REG_WB_SW.write(1) ;
     else REG_WB_SW.write(0) ;

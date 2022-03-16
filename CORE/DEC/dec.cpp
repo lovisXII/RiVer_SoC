@@ -751,6 +751,9 @@ void decod::bypasses() {
         rdata1_sd.write(IN_RDATA1_SD.read());
         r1_valid_sd.write(true);
     }
+    else if (RADR1_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
+        r1_valid_sd.write(false);
+    }
     else if (RADR1_SD.read() == BP_EXE_DEST_SD.read() &&
                !BP_MEM_LOAD_SD.read()) { //dont bypass on exe if instr is mem access
         r1_valid_sd.write(true);
@@ -769,6 +772,9 @@ void decod::bypasses() {
     if (RADR2_SD.read() == 0) {
         rdata2_sd.write(IN_RDATA2_SD.read());
         r2_valid_sd.write(true);
+    }
+    else if (RADR2_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
+        r1_valid_sd.write(false);
     }
     else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() &&
                !BP_MEM_LOAD_SD.read()) {

@@ -1,0 +1,74 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Fri Mar 11 12:30:34 2022
+[*]
+[dumpfile] "/home/timo/Documents/Cours/Projet/RISC-V-project/CORE/tf.vcd"
+[dumpfile_mtime] "Fri Mar 11 12:19:16 2022"
+[dumpfile_size] 59266
+[savefile] "/home/timo/Documents/Cours/Projet/RISC-V-project/CORE/config.gtkw"
+[timestart] 7160
+[size] 1920 1015
+[pos] -1 -1
+*-10.000000 10324 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] SystemC.
+[treeopen] SystemC.core_inst.
+[treeopen] SystemC.core_inst.mem.
+[sst_width] 222
+[signals_width] 300
+[sst_expanded] 1
+[sst_vpaned_height] 293
+@28
+SystemC.core_inst.decod.CLK
+@22
+SystemC.core_inst.decod.INSTR_SD[31:0]
+SystemC.core_inst.decod.READ_PC_SD[31:0]
+@28
+SystemC.core_inst.decod.stall
+SystemC.core_inst.decod.IN_R1_VALID_SD
+SystemC.core_inst.decod.IN_R2_VALID_SD
+@22
+SystemC.core_inst.decod.RADR1_SD[5:0]
+SystemC.core_inst.decod.RADR2_SD[5:0]
+SystemC.core_inst.decod.rdata1_sd[31:0]
+SystemC.core_inst.decod.rdata2_sd[31:0]
+@200
+-
+@22
+SystemC.core_inst.exec.IN_DEST_SE[5:0]
+SystemC.core_inst.exec.RADR1_SE[5:0]
+@23
+SystemC.core_inst.exec.RADR2_SE[5:0]
+@22
+SystemC.core_inst.exec.IN_OP1_SE[31:0]
+SystemC.core_inst.exec.IN_OP2_SE[31:0]
+SystemC.core_inst.exec.op1_se[31:0]
+SystemC.core_inst.exec.op2_se[31:0]
+SystemC.core_inst.exec.exe_res_se[31:0]
+SystemC.core_inst.exec.IN_MEM_DATA_SE[31:0]
+@200
+-
+@22
+SystemC.core_inst.exec.OUT_MEM_DATA_SE[31:0]
+SystemC.core_inst.exec.EXE_RES_SE[31:0]
+SystemC.core_inst.exec.OUT_DEST_SE[5:0]
+SystemC.core_inst.mem.data_sm[31:0]
+SystemC.core_inst.mem.MCACHE_RESULT_SM[31:0]
+SystemC.core_inst.mem.MCACHE_ADR_SM[31:0]
+@28
+SystemC.core_inst.mem.MCACHE_LOAD_SM
+SystemC.core_inst.mem.MCACHE_STORE_SM
+@22
+SystemC.core_inst.mem.MCACHE_DATA_SM[31:0]
+@200
+-
+@22
+SystemC.core_inst.mem.WBK_DEST_SM[5:0]
+@28
+SystemC.core_inst.mem.WBK_WB_SM
+@22
+SystemC.core_inst.mem.WBK_DATA_SM[31:0]
+@28
+SystemC.core_inst.mem.EXE2MEM_POP_SM
+SystemC.core_inst.mem.mem2wbk_push_sm
+[pattern_trace] 1
+[pattern_trace] 0

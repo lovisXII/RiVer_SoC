@@ -75,6 +75,7 @@ SC_MODULE(mem)
     void mem2wbk_unconcat();
     void fifo_gestion();
     void mem_preprocess();
+    void sign_extend();
 
     void trace(sc_trace_file* tf);
 
@@ -98,5 +99,10 @@ SC_MODULE(mem)
         sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SM << wb_sm;
         SC_METHOD(mem_preprocess);
         sensitive << EXE_WB_SM << LOAD_SM << MCACHE_RESULT_SM << EXE_RES_SM << MEM_DATA_SM << STORE_SM << EXE2MEM_EMPTY_SM;
+        SC_METHOD(sign_extend);
+        sensitive   << EXE_MEM_SIZE_SM
+                    << SIGN_EXTEND_SM
+                    << MEM_DATA_SM
+                    << EXE_RES_SM;
     }
 };
