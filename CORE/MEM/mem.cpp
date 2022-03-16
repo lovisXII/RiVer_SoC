@@ -29,20 +29,53 @@ void mem::mem_preprocess() {
 
     //Whether the register bank shoudl actually write the data
     wb_sm.write(EXE_WB_SM.read() || LOAD_SM.read());
-
-    //Choose which data should be written to the register
-    if (LOAD_SM.read()) {
-        data_sm.write(MCACHE_RESULT_SM.read());
-    }
-    else {
-        data_sm.write(EXE_RES_SM.read());
-    }
+    
     //The data sent to the actual memory
     MCACHE_DATA_SM.write(MEM_DATA_SM.read());
     MCACHE_ADR_SM.write(EXE_RES_SM);
     MCACHE_LOAD_SM.write(LOAD_SM.read());
     MCACHE_STORE_SM.write(STORE_SM.read());
     MCACHE_ADR_VALID_SM.write(!EXE2MEM_EMPTY_SM.read());
+
+}
+
+void mem::sign_extend() {
+    // sign extend
+    int size = EXE_MEM_SIZE_SM.read();
+    bool sign_extend = SIGN_EXTEND_SM.read();
+    sc_uint<32> din = MEM_DATA_SM.read();
+    sc_uint<32> dout;
+    int range_start; //The beginning of the range of din that should actually be written to the register
+    switch (size) {
+        case 2:
+            range_start = 7;
+            break;
+        case 1:
+            range_start = 15;
+            break;
+        case 0:
+            range_start = 31;
+            break;
+        default:
+            range_start = 31;
+            break;
+    }
+
+    if (sign_extend && din(range_start,range_start)) {
+        dout = 0xFFFFFFFF;
+    }
+    else {
+        dout = 0;
+    }
+    dout.range(range_start, 0) = din.range(range_start, 0);
+
+    //Choose which data should be written to the register
+    if (LOAD_SM.read()) {
+        data_sm.write(dout);
+    }
+    else {
+        data_sm.write(EXE_RES_SM.read());
+    }
 }
 
 void mem::trace(sc_trace_file* tf) {
