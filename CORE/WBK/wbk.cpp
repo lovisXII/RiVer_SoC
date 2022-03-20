@@ -55,3 +55,4 @@ void wbk::trace(sc_trace_file* tf) {
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
 }
+
