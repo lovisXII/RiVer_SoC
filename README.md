@@ -25,14 +25,18 @@ __example__ :
 ## B. Stage : 
 Our signals are name according to the following convention :  
 
-__**From_to_description_stage**__  
+__**Description_XY**__  
 
-- **From** : designate the stage where the signal is coming from,  
-- **to** : designate the stage into the one the signal goes,  
-- **description** : a quick description of what the signal means,  
-- **stage** : designate to which pipeline the signal belongs  
-
-For the name of signals two case can occure :  
+- **Description** : a quick description of what the signal means,  
+- **X** : Signal type, can be a register or just a pure signal :
+    * S for signal,
+    * R for register
+- **Y** : The initial of the stage it is coming from :
+    * I : IFETCH,
+    * D : DECOD,
+    * E : EXEC,
+    * M : MEM,
+    * W : WBK
 
 - **Upper case** : designate the input/ output of an entity
 - **Lower case** : internal signals of an entity  

@@ -21,8 +21,8 @@ int main()
     int nbr1, nbr2 ;
     int pgcd, i;
 	
-	nbr1 = 1 ;
-    nbr2 = 10 ;
+	nbr1 = 85;
+    nbr2 = 54 ;
     
     for(i=1; i <= nbr1 && i <= nbr2; ++i)
     {
