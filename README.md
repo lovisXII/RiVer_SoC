@@ -13,11 +13,11 @@ This project is design as follow :
 
 # I. Convention we took to name signals
 ## A. Entity :
-Signals of pure entity such as arithemitcal logic unit, shifter, fifo ...etc. are named according to the following rule :  
+Signals of pure entity such as arithemitcal logic unit, shifter, fifo ...etc. It is named according to the following rules :  
  - **Upper case** : designate the input/ output of an entity
 - **Lower case** : internal signals of an entity  
 
-The name of the signal will be just a quick description of what the signal do.  We didn't use the same convention as the Stage because "pure entity" can be instantiated at different stages so it would not make sens to name it according to a stage.  
+The name of the signal will be just a quick description of what the signal do.  We don't use the same conventions as the Stage because "pure entity" can be instantiated at different stages so it would not make sens to name it according to a stage.  
 __example__ :  
 - DIN : alu's data input  
 - RES : alu's result  
@@ -31,7 +31,7 @@ __**Description_XY**__
 - **X** : Signal type, can be a register or just a pure signal :
     * S for signal,
     * R for register
-- **Y** : The initial of the stage it is coming from :
+- **Y** : The initial letter of the stage it is coming from :
     * I : IFETCH,
     * D : DECOD,
     * E : EXEC,

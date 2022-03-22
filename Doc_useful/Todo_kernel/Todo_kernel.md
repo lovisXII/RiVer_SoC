@@ -45,6 +45,8 @@ Ils sont encodés sur 12 bits, donc il y en a 4096 de possible. On va pas du tou
 
 ## Type de Csr
 
+
+Ce qui est appelé une valeur légale cest une valeur en accord avec la documentation. Par exemple dans le cas de `misa` on doit donner le nombre de bits de notre architecture il faut donc donner une valeur dite **légale**.
 - WPRI, Writes Preserve Value, Read Ignore Values : le registre fait rien, on peut pas écrire dedans et on lis toujours des 0
 - WLRL, Write/ Read Only Legal Values : On part du principe que seule des valeurs "légales" sont écrites dans le registre. Si on écrit autre chose, on peut retourner n'importe quoi, ou lever une exception. 
 - WARL, Write Any Values, Read Legal Values : On peut écrire n'importe quoi, un read dans le registre doit quand même toujours renvoyer une valeur légale. 
@@ -58,6 +60,17 @@ Registre de type WARL, il donne quel partie de la spec on implémente.
 - Extensions : extensions supportées, 1 bit par extension. Pour nous : `00000000100000000000100000` (les bits à un c'est : extension de base I, bit 8, et mode user qu'on doit implémenter, bit 20)
 - Pour nous écrire dans `misa` ne fait rien.
 
+### Registre `mvendorid`
+
+Donne le numéro du vendeur, 0 pour une implémentation scolaire ou ID UPMC ?
+
+![Registre mstatus](mvendorid.png)
+
+### Registre `marchid` & `mimpid`
+
+Pas implémenté donc on met 0 dedans
+
+
 ### Registre `mstatus`
 Registre qui sert à contrôler tout un tas de trucs. 
 ![Registre mstatus](mstatus.png)
@@ -66,7 +79,7 @@ Registre qui sert à contrôler tout un tas de trucs.
 - MPIE : valeur précédente de MIE
 - MPP : mode de privilère précédent (en mode M)
 - TW : En mode user, active un timeout pour l'instruction "WFI", wait for interrupt (qui gèle le processeur en attente d'une interruption).
-- le reste : pas utile pour nous
+- le reste : pas utile pour nous (doc p.21 si besoin de + de détail)
 
 ### Registre `mtvec`
 Registre WARL qui contient l'adresse de base des fonctions des trap.
@@ -86,7 +99,7 @@ En gros, une interruption numéro i (voir [mcause](#registre-mcause)) doit être
 
 Le registre `mie` c'est un truc qu'on configure depuis le programme pour activer ou désactiver des interruptions. 
 
-Le registre `mip` c'est un truc qui va être écrit par des d'autres source piur dire qu'une interuption doit se produire. 
+Le registre `mip` c'est un truc qui va être écrit par des d'autres source pour dire qu'une interuption doit se produire. 
 
 16 premiers bits de ces regitres :
 
@@ -98,6 +111,13 @@ Le registre `mip` c'est un truc qui va être écrit par des d'autres source piur
 
 Les autres bits sont pas standards
 
+### Registre `mcycle`
+
+Compte le nombre de cycle exécuté par le core. Registre 64 bits.
+
+### Registre `minstret`
+
+Comtpe le nombre d'instructions exécutée, 64 bits.
 
 ### Registre `mepc`
 Registre qui stock l'adresse de l'instruction qui a causé l'interruption / le trap.
