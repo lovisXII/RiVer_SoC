@@ -1,5 +1,12 @@
 #include "systemc.h"
+
+//CORE 5 stages
 #include "core.h"
+
+//CACHES
+#include "CACHES/dcache.h"
+//#include "CACHES/icache.h"
+
 #include <unordered_map>
 #include "elfio/elfio.hpp"
 #include <string>
@@ -99,11 +106,12 @@ int sc_main(int argc, char* argv[]) {
     }
 
     core core_inst("core_inst");
+    dcache dcache_inst("dcache");
 
     sc_trace_file *tf;
     tf=sc_create_vcd_trace_file("tf");
     
-
+    //Dcache interface
     sc_signal< sc_uint<32> >        MEM_ADR ;
     sc_signal< sc_uint<32> >        MEM_DATA ;
     sc_signal< bool>                MEM_ADR_VALID,
@@ -125,6 +133,14 @@ int sc_main(int argc, char* argv[]) {
     sc_clock                        CLK("clk",1,SC_NS);  
     sc_signal<bool>                 RESET;
 
+    //MP interface
+    sc_signal<bool> LOAD_MP, STORE_MP;
+    sc_signal<bool> DTA_VALID_MP;
+    sc_signal<sc_uint<32>> DT_MP;
+    sc_signal<sc_uint<32>> A_MP;
+    sc_signal<bool> ACK_MP;
+
+    // CORE map
     core_inst.MCACHE_MEM_ADR(MEM_ADR);
     core_inst.MCACHE_MEM_DATA(MEM_DATA);
     core_inst.MCACHE_MEM_ADR_VALID(MEM_ADR_VALID);
@@ -144,6 +160,23 @@ int sc_main(int argc, char* argv[]) {
     core_inst.DEBUG_PC_RESET(PC_RESET);
     core_inst.trace(tf);
 
+    //Dcache map
+    //processor side
+    dcache_inst.DATA_ADR_M(MEM_ADR);
+    dcache_inst.DATA_M(MEM_DATA);
+    dcache_inst.LOAD_M(MEM_LOAD);
+    dcache_inst.STORE_M(MEM_STORE);
+    dcache_inst.VALID_ADR_M(MEM_ADR_VALID);
+    dcache_inst.DATA_C(MEM_RESULT);
+    dcache_inst.STALL_C(MEM_STALL);
+    //MP side
+    dcache_inst.DTA_VALID_C(DTA_VALID_MP);
+    dcache_inst.READ_C(LOAD_MP);
+    dcache_inst.WRITE_C(STORE_MP);
+    dcache_inst.DT(DT_MP);
+    dcache_inst.A(A_MP);
+    dcache_inst.SLAVE_ACK_P(ACK_MP);
+
     cout << "Reseting...";
 
     RESET.write(false) ; // reset 
@@ -153,14 +186,7 @@ int sc_main(int argc, char* argv[]) {
     cerr << "done." << endl ;
 
     while (1) {
-
-        int mem_adr = MEM_ADR.read();
-        bool mem_adr_valid = MEM_ADR_VALID.read();
-        int mem_data = MEM_DATA.read();
-        bool mem_store = MEM_STORE.read();
-        bool mem_load = MEM_LOAD.read();
-        int mem_result;
-
+        // icache simulation
         int if_adr = IF_ADR.read() ; 
         bool if_afr_valid = IF_ADR_VALID.read() ; 
         int if_result;
@@ -177,16 +203,31 @@ int sc_main(int argc, char* argv[]) {
             exit(0);
         }
 
-        if (mem_store && mem_adr_valid) {
-            ram[mem_adr] = mem_data;
-        }
-        mem_result = ram[mem_adr];
         if_result = ram[if_adr];
-        MEM_RESULT.write(mem_result);
-        MEM_STALL.write(false);
         IC_INST.write(if_result);
         IC_STALL.write(false);
+        
+        // dcache simulation
+        bool dta_valid = DTA_VALID_MP.read();
+        if(dta_valid)
+        {
+            bool read = LOAD_MP.read();
+            bool write = STORE_MP.read();
+            int mem_adr = A_MP.read();
+            if(read)
+            {
+                DT_MP = ram[mem_adr];
+                ACK_MP = true;
+            }
+            else
+                ACK_MP = false;
 
+            if(write)
+            {
+                int data = MEM_DATA.read();
+                ram[mem_adr] = data;
+            }
+        }
         sc_start(500, SC_PS);
     }
     return 0;

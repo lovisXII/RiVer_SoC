@@ -15,6 +15,8 @@
 
 //communication direct avec la MP (pas de bus ni BCU) 
 
+// C: cache   M: memory  P: MP
+//acronym_X
 
 #define WAY_SIZE 128
 
@@ -40,22 +42,24 @@ SC_MODULE(dcache)
   sc_in<bool> RESET;
 
 // interface processeur
-  sc_in<sc_uint<32>> DATA_ADDRESS_M;
+  sc_in<sc_uint<32>> DATA_ADR_M;
   sc_in<sc_uint<32>> DATA_M;
   sc_in<bool> LOAD_M;
   sc_in<bool> STORE_M;
-  sc_in<bool> VALID_ADDRESS_M;
+  sc_in<bool> VALID_ADR_M;
 
   sc_out<sc_uint<32>> DATA_C;
-  sc_out<bool> STALL;       
-  sc_out<bool> MISS_C;             // 0 : HIT, 1 : MISS
-  sc_out<bool> VALID_DATA_C;
+  sc_out<bool> STALL_C;               // if stall donc miss else hit
 // interface MP
-  sc_out<bool> DTA_VALID;         // data or/and adresse valid
-  sc_out<bool> READ, WRITE;
+  sc_out<bool> DTA_VALID_C;         // data or/and adresse valid
+  sc_out<bool> READ_C, WRITE_C;
+
+  // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
+  // la MP ou du CACHE
   sc_inout<sc_uint<32>> DT;
   sc_inout<sc_uint<32>> A;
-  sc_in<bool> SLAVE_ACK;          // slave answer (slave dt valid)
+
+  sc_in<bool> SLAVE_ACK_P;          // slave answer (slave dt valid)
 
 //signals
   sc_signal<sc_uint<23>> address_tag;
@@ -88,14 +92,14 @@ SC_MODULE(dcache)
 // buffers
 //buff0
   sc_signal<sc_uint<32>> buff0_DATA;
-  sc_signal<sc_uint<32>> buff0_DATA_ADDRESS;
+  sc_signal<sc_uint<32>> buff0_DATA_ADR;
   sc_signal<bool> buff0_LOAD;
   sc_signal<bool> buff0_STORE;
   sc_signal<bool> buff0_VALIDATE;  // data valid on buffer
 
 //buff1
   sc_signal<sc_uint<32>> buff1_DATA;
-  sc_signal<sc_uint<32>> buff1_DATA_ADDRESS;
+  sc_signal<sc_uint<32>> buff1_DATA_ADR;
   sc_signal<bool> buff1_LOAD;
   sc_signal<bool> buff1_STORE;
   sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
@@ -113,7 +117,7 @@ SC_MODULE(dcache)
   SC_CTOR(dcache)
   { 
     SC_METHOD(miss_detection);
-    sensitive << VALID_ADDRESS_M.pos();
+    sensitive << VALID_ADR_M.pos();
     
     SC_METHOD(transition_clk);
     sensitive << CK.pos();
