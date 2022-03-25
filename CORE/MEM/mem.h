@@ -102,7 +102,8 @@ SC_MODULE(mem)
         SC_METHOD(sign_extend);
         sensitive   << EXE_MEM_SIZE_SM
                     << SIGN_EXTEND_SM
-                    << MEM_DATA_SM
-                    << EXE_RES_SM;
+                    << MCACHE_RESULT_SM
+                    << EXE_RES_SM
+                    << LOAD_SM;
     }
 };

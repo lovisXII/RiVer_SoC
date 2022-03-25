@@ -43,7 +43,7 @@ void mem::sign_extend() {
     // sign extend
     int size = EXE_MEM_SIZE_SM.read();
     bool sign_extend = SIGN_EXTEND_SM.read();
-    sc_uint<32> din = MEM_DATA_SM.read();
+    sc_uint<32> din = MCACHE_RESULT_SM.read();
     sc_uint<32> dout;
     int range_start; //The beginning of the range of din that should actually be written to the register
     switch (size) {

@@ -5,6 +5,7 @@ void wbk::wbk_method() {
     if(MEM_WB_SW.read() && !MEM2WBK_EMPTY_SW.read()) REG_WB_SW.write(1) ;
     else REG_WB_SW.write(0) ;
     MEM2WBK_POP_SW.write(!MEM2WBK_EMPTY_SW.read());
+    REG_DATA_SW.write(MEM_DATA_SW.read());
 }
 
 void wbk::trace(sc_trace_file* tf) {

@@ -216,6 +216,7 @@ SC_MODULE(core)
         dec_inst.BP_EXE_RES_SD(MEM_EXE_RES);
         dec_inst.BP_MEM_DEST_SD(WBK_DEST);
         dec_inst.BP_MEM_RES_SD(WBK_DATA);
+        dec_inst.BP_EXE2MEM_EMPTY_SD(EXE2MEM_EMPTY);
 
         dec_inst.BP_R1_VALID_SD(BP_R1_VALID);
         dec_inst.BP_R2_VALID_SD(BP_R2_VALID);
