@@ -55,7 +55,7 @@ SC_MODULE(exec)
     sc_signal< sc_uint<32> > bp_mem_data_sd;
     sc_signal< sc_uint<5> > shift_val_se;  
     sc_signal< bool > exe2mem_push_se, exe2mem_full_se;  
-    sc_signal< bool > bypass;    
+    sc_signal< bool > blocked;    
 
     //bypasses
 
@@ -114,7 +114,7 @@ SC_MODULE(exec)
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE << OP1_VALID_SE << OP2_VALID_SE << bypass;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE << OP1_VALID_SE << OP2_VALID_SE << blocked;
         SC_METHOD(bypasses);
         sensitive   << OP1_VALID_SE
                     << OP2_VALID_SE

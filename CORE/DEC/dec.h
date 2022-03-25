@@ -69,6 +69,7 @@ SC_MODULE(decod)
     sc_in < sc_uint<6> >          BP_MEM_DEST_SD ;
     sc_in < bool >                BP_MEM_LOAD_SD ;
     sc_in < sc_uint<32> >         BP_MEM_RES_SD ;
+    sc_in  < bool >               BP_EXE2MEM_EMPTY_SD ;
 
 
     sc_out  < bool >             BP_R1_VALID_SD ;
@@ -93,6 +94,7 @@ SC_MODULE(decod)
     sc_signal   < bool >           r1_valid_sd ;
     sc_signal   < bool >           r2_valid_sd ; 
     sc_signal   < bool >           stall ; 
+    sc_signal   < bool >           block_in_dec ; 
 
     //fifo dec2if :
     
@@ -292,7 +294,8 @@ SC_MODULE(decod)
                     << jalr_type_inst_sd
                     << j_type_inst_sd
                     << r1_valid_sd
-                    << r2_valid_sd;
+                    << r2_valid_sd
+                    << block_in_dec;
 
         SC_METHOD(decoding_instruction_type)
         sensitive   << INSTR_SD 
@@ -374,16 +377,15 @@ SC_MODULE(decod)
                     << READ_PC_VALID_SD ;
 
         SC_METHOD(bypasses);
-        sensitive   << IN_R1_VALID_SD
-                    << IN_R2_VALID_SD
-                    << IN_RDATA1_SD
+        sensitive   << IN_RDATA1_SD
                     << IN_RDATA2_SD
                     << BP_EXE_DEST_SD
                     << BP_EXE_RES_SD
                     << BP_MEM_DEST_SD
                     << BP_MEM_RES_SD
                     << RADR1_SD
-                    << RADR2_SD;
+                    << RADR2_SD
+                    << BP_EXE2MEM_EMPTY_SD;
         reset_signal_is(RESET_N,false) ;
 
     }

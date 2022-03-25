@@ -747,53 +747,57 @@ void decod::pc_inc() {
 }
 
 void decod::bypasses() {
-    if (RADR1_SD.read() == 0) {
+    if (RADR1_SD.read() == 0) { //ignore r0
         rdata1_sd.write(IN_RDATA1_SD.read());
         r1_valid_sd.write(true);
     }
     else if (RADR1_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
         r1_valid_sd.write(false);
     }
-    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read() &&
-               !BP_MEM_LOAD_SD.read()) { //dont bypass on exe if instr is mem access
+    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read() && BP_MEM_LOAD_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //dont bypass if load instr is currently in mem
+        r1_valid_sd.write(false);
+    }
+    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read()  && !BP_EXE2MEM_EMPTY_SD) { //bypass E->D
         r1_valid_sd.write(true);
         rdata1_sd.write(BP_EXE_RES_SD.read());
-    } else if (RADR1_SD.read() == BP_MEM_DEST_SD.read()) {
+    } else if (RADR1_SD.read() == BP_MEM_DEST_SD.read()) { //bypass M->D
         r1_valid_sd.write(true);
         rdata1_sd.write(BP_MEM_RES_SD.read());
-    } else if (IN_R1_VALID_SD.read() && (RADR1_SD.read() != BP_EXE_DEST_SD.read() || BP_EXE_DEST_SD.read() == 0)) { //dont continue if mem access for reg is ongoing
+    } else { // no bypass
         r1_valid_sd.write(true);
         rdata1_sd.write(IN_RDATA1_SD.read());
-    } else {
-        r1_valid_sd.write(false);
     }
 
 
-    if (RADR2_SD.read() == 0) {
+    if (RADR2_SD.read() == 0) { //ignore r0
         rdata2_sd.write(IN_RDATA2_SD.read());
         r2_valid_sd.write(true);
     }
     else if (RADR2_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
-        r1_valid_sd.write(false);
-    }
-    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() &&
-               !BP_MEM_LOAD_SD.read()) {
-        r2_valid_sd.write(true);
-        rdata2_sd.write(BP_EXE_RES_SD.read());
-    } else if (RADR2_SD.read() == BP_MEM_DEST_SD.read()) {
-        r2_valid_sd.write(true);
-        rdata2_sd.write(BP_MEM_RES_SD.read());
-    } else if (IN_R2_VALID_SD.read() && (RADR2_SD.read() != BP_EXE_DEST_SD.read() || BP_EXE_DEST_SD.read() == 0)) {
-        r2_valid_sd.write(true);
-        rdata2_sd.write(IN_RDATA2_SD.read());
-    } else {
         r2_valid_sd.write(false);
     }
+    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() && BP_MEM_LOAD_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //dont bypass if load instr is currently in mem
+        r2_valid_sd.write(false);
+    }
+    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //bypass E->D
+        r2_valid_sd.write(true);
+        rdata2_sd.write(BP_EXE_RES_SD.read());
+    } else if (RADR2_SD.read() == BP_MEM_DEST_SD.read()) { //bypass M->D
+        r2_valid_sd.write(true);
+        rdata2_sd.write(BP_MEM_RES_SD.read());
+    } else { // no bypass
+        r2_valid_sd.write(true);
+        rdata2_sd.write(IN_RDATA2_SD.read());
+    }
+    //When a load is in exe, we can block the pipeline now
+    //Avoid an issue with load - load - add sequence
+    block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_SD && !DEC2EXE_EMPTY_SD.read())
+                ||     (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_SD && !DEC2EXE_EMPTY_SD.read()) );
 }
 
 void decod::stall_method() {
     stall.write((!r1_valid_sd || !r2_valid_sd) &&
-                (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd));
+                (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec));
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS
@@ -914,6 +918,4 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BP_MEM_LOAD_SD, GET_NAME (BP_MEM_LOAD_SD));
     sc_trace(tf, IN_RDATA1_SD, GET_NAME (IN_RDATA1_SD));
     sc_trace(tf, IN_RDATA2_SD, GET_NAME (IN_RDATA2_SD));
-    sc_trace(tf, IN_R1_VALID_SD, GET_NAME (IN_R1_VALID_SD));
-    sc_trace(tf, IN_R2_VALID_SD, GET_NAME (IN_R2_VALID_SD));
 }

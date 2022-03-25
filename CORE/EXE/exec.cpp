@@ -74,11 +74,10 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool blocked = exe2mem_full_se.read() 
+    bool blocked_var = exe2mem_full_se.read() 
                 || DEC2EXE_EMPTY_SE.read() 
-                || (!OP1_VALID_SE.read() && !bypass) 
-                || (!OP2_VALID_SE.read() && !bypass);
-    if (blocked) {
+                || blocked.read();
+    if (blocked_var) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
     }
@@ -89,7 +88,7 @@ void exec::manage_fifo() {
 }
 
 void exec::bypasses() {
-    bool bypass_var = false; 
+    bool blocked_var = false;
     sc_uint <32> bp_mem_data_var = IN_MEM_DATA_SE.read();
 
     if (RADR1_SE.read() == 0) {
@@ -97,13 +96,14 @@ void exec::bypasses() {
     }
     else if (OUT_DEST_SE.read() == RADR1_SE.read() && !OUT_MEM_LOAD_SE) {
         op1_se.write(EXE_RES_SE.read());
-        bypass_var = true;
     }
     else if (MEM_DEST_SE.read() == RADR1_SE.read()) {
         op1_se.write(MEM_RES_SE.read());
-        bypass_var = true;
     }
-    else if (OP1_VALID_SE.read() && OUT_DEST_SE.read() != RADR1_SE.read()) {
+    else if (OUT_DEST_SE.read() == RADR1_SE.read() && OUT_MEM_LOAD_SE && !EXE2MEM_EMPTY_SE) {
+        blocked_var = true;
+    }
+    else {
         op1_se.write(IN_OP1_SE.read());
     }
 
@@ -118,7 +118,6 @@ void exec::bypasses() {
         else {
             op2_se.write(EXE_RES_SE.read());
         }
-        bypass_var = true;
     }
     else if (MEM_DEST_SE.read() == RADR2_SE.read()) {
         if (IN_MEM_STORE_SE.read()) {
@@ -128,13 +127,15 @@ void exec::bypasses() {
         else {
             op2_se.write(MEM_RES_SE.read());
         }
-        bypass_var = true;
     }
-    else if (OP2_VALID_SE.read() && OUT_DEST_SE.read() != RADR2_SE.read()) {
+    else if (OUT_DEST_SE.read() == RADR2_SE.read() && OUT_MEM_LOAD_SE && !EXE2MEM_EMPTY_SE) {
+        blocked_var = true;
+    }
+    else {
         op2_se.write(IN_OP2_SE.read());
     }
     bp_mem_data_sd.write(bp_mem_data_var);
-    bypass.write(bypass_var);
+    blocked.write(blocked_var);
 }
 
 void exec::trace(sc_trace_file* tf) {
@@ -176,9 +177,7 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, RADR2_SE, GET_NAME(RADR2_SE));
         sc_trace(tf, MEM_DEST_SE, GET_NAME(MEM_DEST_SE));
         sc_trace(tf, MEM_RES_SE, GET_NAME(MEM_RES_SE));
-        sc_trace(tf, bypass, GET_NAME(bypass));
-        sc_trace(tf, OP2_VALID_SE, GET_NAME(OP2_VALID_SE));
-        sc_trace(tf, OP1_VALID_SE, GET_NAME(OP1_VALID_SE));
+        sc_trace(tf, blocked, GET_NAME(blocked));
         sc_trace(tf, IN_OP1_SE, GET_NAME(IN_OP1_SE));
         sc_trace(tf, IN_OP2_SE, GET_NAME(IN_OP2_SE));
         alu_inst.trace(tf);
