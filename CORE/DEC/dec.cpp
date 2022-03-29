@@ -4,11 +4,7 @@
 // :---------------------------------------------
 
 void decod::dec2if_gestion() {
-    if (READ_PC_VALID_SD.read() && !dec2if_full_sd.read()) {
-        dec2if_push_sd.write(1);
-    } else {
-        dec2if_push_sd.write(0);
-    }
+    dec2if_push_sd.write(!dec2if_full_sd);
     DEC2IF_EMPTY_SD.write(dec2if_empty_sd.read());
 }
 
@@ -316,7 +312,6 @@ void decod::affectation_registres() {
     sc_uint<32> dec2exe_op2_var;
     sc_uint<32> offset_branch_var;
     sc_uint<32> mem_data_var;
-    bool inval_adr_dest;
     bool inc_pc_var;
     bool invalid_instr = false;
 
@@ -333,7 +328,6 @@ void decod::affectation_registres() {
         offset_branch_var = 0;
         mem_data_var = 0;
         inc_pc_var = 1;
-        inval_adr_dest = true;
     }
 
     // I-type Instruction :
@@ -356,7 +350,6 @@ void decod::affectation_registres() {
         offset_branch_var = 0;
         mem_data_var = 0;
         inc_pc_var = 1;
-        inval_adr_dest = true;
 
     }
 
@@ -385,7 +378,6 @@ void decod::affectation_registres() {
 
         mem_data_var = rdata2_sd.read();
         inc_pc_var = 1;
-        inval_adr_dest = false;
 
     }
 
@@ -413,7 +405,6 @@ void decod::affectation_registres() {
         offset_branch_var.range(4, 1) = if_ir.range(11, 8);
         offset_branch_var.range(0, 0) = 0;
         mem_data_var = 0;
-        inval_adr_dest = false;
 
         /*BRANCH CONDITION GESTION : */
 
@@ -473,7 +464,6 @@ void decod::affectation_registres() {
         }
         mem_data_var = 0;
         inc_pc_var = 1;
-        inval_adr_dest = true;
     }
 
     // J-type Instruction :
@@ -498,7 +488,6 @@ void decod::affectation_registres() {
         offset_branch_var.range(0, 0) = 0;
         mem_data_var = 0;
         inc_pc_var = 0;
-        inval_adr_dest = true;
 
     }
 
@@ -523,7 +512,6 @@ void decod::affectation_registres() {
         offset_branch_var.range(0, 0) = 0;
         mem_data_var = 0;
         inc_pc_var = 0;
-        inval_adr_dest = true;
 
     }
     // Default case :
@@ -536,7 +524,6 @@ void decod::affectation_registres() {
         offset_branch_var = 0;
         mem_data_var = 0;
         inc_pc_var = 0;
-        inval_adr_dest = false;
         invalid_instr = false;
     }
 
@@ -546,7 +533,6 @@ void decod::affectation_registres() {
     RADR2_SD.write(radr2_var);
     ADR_DEST_SD.write(adr_dest_var);
     adr_dest_sd.write(adr_dest_var);
-    INVAL_DEST_SD.write(adr_dest_var);
     offset_branch_sd.write(offset_branch_var);
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
@@ -719,7 +705,6 @@ void decod::affectation_calcul() {
         mem_size_sd.write(0);
         select_shift_sd.write(0);
     }
-    INVAL_ENABLE_SD.write(dec2exe_wb_var && dec2exe_push_sd);
     exe_wb_sd.write(dec2exe_wb_var);
 }
 
@@ -731,11 +716,11 @@ void decod::pc_inc() {
     sc_uint<32> pc_out = pc;
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
 
-    if (inc_pc_sd && READ_PC_VALID_SD.read()) {
+    if (inc_pc_sd) {
         pc_out = pc + 4;
         WRITE_PC_SD.write(pc_out);
         WRITE_PC_ENABLE_SD.write(1);
-    } else if (!inc_pc_sd && READ_PC_VALID_SD.read() &&
+    } else if (!inc_pc_sd &&
                add_offset_to_pc_sd.read()) {
         pc_out = pc + offset_branch_var - 4;
         WRITE_PC_SD.write(pc_out);
@@ -812,11 +797,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, r2_valid_sd, GET_NAME(r2_valid_sd));
     sc_trace(tf, RADR1_SD, GET_NAME(RADR1_SD));
     sc_trace(tf, RADR2_SD, GET_NAME(RADR2_SD));
-    sc_trace(tf, ADR_DEST_VALID_SD, GET_NAME(ADR_DEST_VALID_SD));
     sc_trace(tf, ADR_DEST_SD, GET_NAME(ADR_DEST_SD));
     sc_trace(tf, EXE_DEST_SD, GET_NAME(EXE_DEST_SD));
     sc_trace(tf, READ_PC_SD, GET_NAME(READ_PC_SD));
-    sc_trace(tf, READ_PC_VALID_SD, GET_NAME(READ_PC_VALID_SD));
     sc_trace(tf, EXE_OP1_SD, GET_NAME(EXE_OP1_SD));
     sc_trace(tf, EXE_OP2_SD, GET_NAME(EXE_OP2_SD));
     sc_trace(tf, EXE_CMD_SD, GET_NAME(EXE_CMD_SD));
@@ -906,8 +889,6 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, mem_sign_extend_sd, GET_NAME(mem_sign_extend_sd));
     sc_trace(tf, WRITE_PC_SD, GET_NAME(WRITE_PC_SD));
     sc_trace(tf, WRITE_PC_ENABLE_SD, GET_NAME(WRITE_PC_ENABLE_SD));
-    sc_trace(tf, INVAL_ENABLE_SD, GET_NAME(INVAL_ENABLE_SD));
-    sc_trace(tf, INVAL_DEST_SD, GET_NAME(INVAL_DEST_SD));
     sc_trace(tf, add_offset_to_pc_sd, GET_NAME(add_offset_to_pc_sd));
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     sc_trace(tf, stall, GET_NAME(stall));

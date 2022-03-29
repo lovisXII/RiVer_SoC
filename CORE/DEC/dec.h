@@ -1,5 +1,5 @@
 #include <systemc.h>
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 SC_MODULE(decod)
 {
     
@@ -7,23 +7,16 @@ SC_MODULE(decod)
 
     sc_in   < sc_uint<32> >       IN_RDATA1_SD ; 
     sc_in   < sc_uint<32> >       IN_RDATA2_SD ;
-    sc_in   < bool >              IN_R1_VALID_SD ;
-    sc_in   < bool >              IN_R2_VALID_SD ; // same but for rt
 
-    sc_in   < bool >              ADR_DEST_VALID_SD ;
     sc_out  <sc_uint<6>>          ADR_DEST_SD ;
 
     sc_out  < sc_uint<6> >       RADR1_SD ; // adress of rs
     sc_out  < sc_uint<6> >       RADR2_SD ; // adress of rt
 
-    sc_out  < sc_uint<6> >       INVAL_DEST_SD ; // rd
-    sc_out  < bool >             INVAL_ENABLE_SD ;
-        
     sc_out  < sc_uint<32> >      WRITE_PC_SD ;
     sc_out  < bool >             WRITE_PC_ENABLE_SD ;
 
     sc_in   < sc_uint<32> >      READ_PC_SD ; // value of r32 which is pc coming from REG
-    sc_in   < bool >             READ_PC_VALID_SD ; // say if pc is valid or no, signal coming from REG
 
     //Interface with EXE :
 
@@ -84,8 +77,8 @@ SC_MODULE(decod)
 
     //Instance used :
     
-    fifo_generic<32> dec2if ;
-    fifo_generic<128> dec2exe ;
+    fifo<32> dec2if ;
+    fifo<128> dec2exe ;
 
     // Signals :
 
@@ -248,7 +241,6 @@ SC_MODULE(decod)
 
         SC_METHOD(dec2if_gestion)
         sensitive   << dec2if_empty_sd 
-                    << READ_PC_VALID_SD
                     << dec2if_full_sd 
                     << stall;
 
@@ -277,14 +269,12 @@ SC_MODULE(decod)
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)
-        sensitive   << ADR_DEST_VALID_SD
-                    << dec2exe_full_sd 
+        sensitive   << dec2exe_full_sd 
                     << IF2DEC_EMPTY_SD 
                     << stall;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive   << ADR_DEST_VALID_SD 
-                    << IF2DEC_EMPTY_SD 
+        sensitive   << IF2DEC_EMPTY_SD 
                     << dec2exe_full_sd
                     << add_offset_to_pc_sd 
                     << stall ;
@@ -373,8 +363,7 @@ SC_MODULE(decod)
                     << READ_PC_SD
                     << offset_branch_sd
                     << inc_pc_sd
-                    << add_offset_to_pc_sd
-                    << READ_PC_VALID_SD ;
+                    << add_offset_to_pc_sd;
 
         SC_METHOD(bypasses);
         sensitive   << IN_RDATA1_SD

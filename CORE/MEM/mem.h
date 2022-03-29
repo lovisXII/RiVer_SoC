@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 #include "../UTIL/debug_util.h"
 
 /*
@@ -69,7 +69,7 @@ SC_MODULE(mem)
     sc_in_clk                   RESET;
 
     // FIFO
-    fifo_generic<42>    fifo_inst;
+    fifo<42>    fifo_inst;
 
     void mem2wbk_concat();
     void mem2wbk_unconcat();

@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 #include "../UTIL/debug_util.h"
 SC_MODULE(ifetch)
 {
@@ -38,7 +38,7 @@ SC_MODULE(ifetch)
     sc_in_clk RESET;
 
     // FIFO
-    fifo_generic<32>    fifo_inst;
+    fifo<32>    fifo_inst;
 
     void fetch_method();
     void trace(sc_trace_file* tf);
@@ -55,7 +55,12 @@ SC_MODULE(ifetch)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_SI << IF2DEC_FLUSH_SI << IC_STALL_SI << RESET; 
+        sensitive   << DEC2IF_EMPTY_SI 
+                    << IF2DEC_FULL_SI 
+                    << PC_SI 
+                    << IF2DEC_FLUSH_SI 
+                    << IC_STALL_SI 
+                    << RESET; 
     }
 
 };

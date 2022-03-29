@@ -74,10 +74,10 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool blocked_var = exe2mem_full_se.read() 
+    bool stall = exe2mem_full_se.read() 
                 || DEC2EXE_EMPTY_SE.read() 
                 || blocked.read();
-    if (blocked_var) {
+    if (stall) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
     }

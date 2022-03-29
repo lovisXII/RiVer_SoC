@@ -4,7 +4,7 @@
 #include <string>
 #include "alu.h"
 #include "shifter.h"
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 #include "../UTIL/debug_util.h"
 SC_MODULE(exec)
 {
@@ -52,7 +52,7 @@ SC_MODULE(exec)
 
     alu         alu_inst;
     shifter     shifter_inst;
-    fifo_generic<76>    fifo_inst;
+    fifo<76>    fifo_inst;
     
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT

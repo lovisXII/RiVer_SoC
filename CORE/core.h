@@ -56,10 +56,7 @@ SC_MODULE(core)
     //DEC-REG interface
     sc_signal< sc_uint<32> >    RADR1_DATA ; 
     sc_signal< sc_uint<32> >    RADR2_DATA ;
-    sc_signal< bool >           RADR1_VALID ;
-    sc_signal< bool >           RADR2_VALID ;
     
-    sc_signal <bool>            ADR_DEST_VALID ;
     sc_signal< sc_uint<6>>      ADR_DEST_DECOD ;
 
 
@@ -67,11 +64,8 @@ SC_MODULE(core)
     sc_signal< sc_uint<6> >     RADR2 ;
 
     sc_signal< sc_uint<6> >     EXE_DEST ;
-    sc_signal< sc_uint<6> >     INVAL_DEST ;
-    sc_signal< bool >           INVAL_ENABLE ;
 
     sc_signal< sc_uint<32> >    READ_PC ;
-    sc_signal< bool >           READ_PC_VALID ;
     sc_signal< sc_uint<32> >    WRITE_PC ;
     sc_signal< bool >           WRITE_PC_ENABLE ;
 
@@ -191,15 +185,10 @@ SC_MODULE(core)
         dec_inst.DEC2EXE_POP_SD(DEC2EXE_POP);
         dec_inst.DEC2EXE_EMPTY_SD(DEC2EXE_EMPTY);
 
-        dec_inst.INVAL_DEST_SD(INVAL_DEST);
-        dec_inst.INVAL_ENABLE_SD(INVAL_ENABLE);
 
         dec_inst.IN_RDATA1_SD(RADR1_DATA);
         dec_inst.IN_RDATA2_SD(RADR2_DATA);
-        dec_inst.IN_R1_VALID_SD(RADR1_VALID);
-        dec_inst.IN_R2_VALID_SD(RADR2_VALID);
 
-        dec_inst.ADR_DEST_VALID_SD(ADR_DEST_VALID) ;
         dec_inst.ADR_DEST_SD(ADR_DEST_DECOD) ;
 
         dec_inst.RADR1_SD(RADR1);
@@ -208,7 +197,6 @@ SC_MODULE(core)
         dec_inst.EXE_DEST_SD(EXE_DEST);
 
         dec_inst.READ_PC_SD(READ_PC);
-        dec_inst.READ_PC_VALID_SD(READ_PC_VALID);
         dec_inst.WRITE_PC_SD(WRITE_PC);
         dec_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE);
 
@@ -302,10 +290,6 @@ SC_MODULE(core)
 
         reg_inst.RADR1_SD(RADR1) ;
         reg_inst.RADR2_SD(RADR2) ;
-        reg_inst.R1_VALID_SD(RADR1_VALID) ;
-        reg_inst.R2_VALID_SD(RADR2_VALID) ;
-        reg_inst.RDEST_VALID_SD(ADR_DEST_VALID) ;
-        reg_inst.RDEST_SD(ADR_DEST_DECOD) ;
         reg_inst.RDATA1_SD(RADR1_DATA) ;
         reg_inst.RDATA2_SD(RADR2_DATA) ;
 
@@ -313,11 +297,8 @@ SC_MODULE(core)
         reg_inst.WENABLE_SD(REG_WB) ;
         reg_inst.WDATA_SD(REG_DATA) ;
 
-        reg_inst.INVAL_ADR_SD(INVAL_DEST) ;
-        reg_inst.INVAL_ENABLE_SD(INVAL_ENABLE) ;
 
         reg_inst.READ_PC_SD(READ_PC) ;
-        reg_inst.READ_PC_VALID_SD(READ_PC_VALID) ;
         reg_inst.WRITE_PC_SD(WRITE_PC);
         reg_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE);
         reg_inst.PC_INIT(DEBUG_PC_RESET);

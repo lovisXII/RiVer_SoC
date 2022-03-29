@@ -4,7 +4,7 @@
 #include <string>
 #include "alu.h"
 #include "shifter.h"
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 #include "../UTIL/debug_util.h"
 SC_MODULE(exec)
 {
@@ -66,7 +66,7 @@ SC_MODULE(exec)
 
     alu         alu_inst;
     shifter     shifter_inst;
-    fifo_generic<76>    fifo_inst;
+    fifo<76>    fifo_inst;
     
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT
@@ -95,6 +95,8 @@ SC_MODULE(exec)
         shifter_inst.SHIFT_VAL_SE(shift_val_se);
         shifter_inst.CMD_SE(CMD_SE);
         shifter_inst.DOUT_SE(shifter_out_se);
+
+        //fifo port map
         
         fifo_inst.DIN(exe2mem_din_se);
         fifo_inst.DOUT(exe2mem_dout_se);
@@ -106,15 +108,30 @@ SC_MODULE(exec)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << op1_se << NEG_OP2_SE << op2_se;
+        sensitive   << op1_se 
+                    << NEG_OP2_SE 
+                    << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
+        sensitive   << alu_out_se 
+                    << shifter_out_se 
+                    << SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd << IN_DEST_SE << IN_MEM_SIZE_SE << IN_MEM_LOAD_SE << IN_MEM_SIGN_EXTEND_SE << IN_MEM_STORE_SE << IN_WB_SE << exe_res_se;
+        sensitive   << bp_mem_data_sd 
+                    << IN_DEST_SE 
+                    << IN_MEM_SIZE_SE 
+                    << IN_MEM_LOAD_SE 
+                    << IN_MEM_SIGN_EXTEND_SE 
+                    << IN_MEM_STORE_SE 
+                    << IN_WB_SE 
+                    << exe_res_se;
         SC_METHOD(fifo_unconcat);
-        sensitive << exe2mem_dout_se;
+        sensitive   << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE << OP1_VALID_SE << OP2_VALID_SE << blocked;
+        sensitive   << exe2mem_full_se 
+                    << DEC2EXE_EMPTY_SE 
+                    << OP1_VALID_SE 
+                    << OP2_VALID_SE 
+                    << blocked;
         SC_METHOD(bypasses);
         sensitive   << OP1_VALID_SE
                     << OP2_VALID_SE

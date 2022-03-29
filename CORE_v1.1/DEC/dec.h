@@ -1,5 +1,5 @@
 #include <systemc.h>
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 SC_MODULE(decod)
 {
     
@@ -69,8 +69,8 @@ SC_MODULE(decod)
 
     //Instance used :
     
-    fifo_generic<32> dec2if ;
-    fifo_generic<114> dec2exe ;
+    fifo<32> dec2if ;
+    fifo<114> dec2exe ;
 
     // Signals :
 
