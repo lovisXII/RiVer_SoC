@@ -177,3 +177,52 @@ On set `pc` à `mepc`, on revient au mode de privilège précédent et au interr
 ![wfi](wfi.png)
 "The purpose of the WFI instruction is to provide a hint to the implementation, and so a legal
 implementation is to simply implement WFI as a NOP." bah ok alors
+
+# How to implement it and what to add ?
+
+## Exceptions :
+
+* instruction address misaligned
+* instruction address fault -> no instruction at this address ?
+* Illegal instruction
+* breakoint ?
+
+## IFETCH :
+
+* flush pipeline case of exception
+
+## DECOD :
+
+* add the propagation of the curent PC
+* ``signal for new pc unaligned``
+* ``signal for new illegal instruction``
+* ``environment call from U-mode``
+* ``saving address of the last branch in case exception interrupt a branch``
+* flush pipeline case of exception
+
+## EXEC :
+
+* add the propagation of the curent PC
+* signal d'arrive d'une execption en provenance de l'ICU
+* ``load address misaligned``
+* ``load access fault``
+* ``same with store``
+* cancel the wbk in case of load detected
+* cancel the load in case of exception detected
+* flush pipeline case of exception
+
+## MEM :
+
+* add the propagation of the curent PC
+* flush pipeline case of exception
+
+
+## WBK :
+
+* add the propagation of the curent PC
+* flush pipeline case of exception
+
+## KREG :
+
+* equivalent CP0 en MIPS
+* implémenter tous les registres nécessaire
