@@ -4,9 +4,13 @@
   - [Type de Csr](#type-de-csr)
   - [Registres machine](#registres-machine)
     - [Registre `misa`](#registre-misa)
+    - [Registre `mvendorid`](#registre-mvendorid)
+    - [Registre `marchid` & `mimpid`](#registre-marchid--mimpid)
     - [Registre `mstatus`](#registre-mstatus)
     - [Registre `mtvec`](#registre-mtvec)
     - [Registres `mie` et `mip`](#registres-mie-et-mip)
+    - [Registre `mcycle`](#registre-mcycle)
+    - [Registre `minstret`](#registre-minstret)
     - [Registre `mepc`](#registre-mepc)
     - [Registre `mcause`](#registre-mcause)
     - [Registre `mtval`](#registre-mtval)
@@ -164,7 +168,12 @@ L'adresse dans `mepc` devient l'adresse de ecall ou ebreak, pas la suivante.
 ## `MRET`
 
 ![mret](mret.png)
+On set `pc` à `mepc`, on revient au mode de privilège précédent et au interrupt enable précédent. 
+
+`mpp` est set au mode de privilège le plus bas possible après un `mret`. 
 
 ## `WFI`
 
 ![wfi](wfi.png)
+"The purpose of the WFI instruction is to provide a hint to the implementation, and so a legal
+implementation is to simply implement WFI as a NOP." bah ok alors
