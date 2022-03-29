@@ -98,38 +98,37 @@ __example__ :
 
 ### 1. IFETCH 
 
-```c
-    // Icache Interface :
+```txt
 
-    ADR_SI ; 
-    ADR_VALID_SI ; 
+    // Interface with ICACHE :
 
-    IC_INST_SI ;
-    IC_STALL_SI ;
+    ADR_SI              : address sent to the ICACHE
+    ADR_VALID_SI        : say if the adress is valid or no
+
+    IC_INST_SI          : Instruction coming from the Cache
+    IC_STALL_SI         : Signal saying if we need to stall the stage or no
     
-    //Dec Interface :
-
 
     //dec2if interface :
     
-    DEC2IF_EMPTY_SI ; 
-    DEC2IF_POP_SI ;
+    DEC2IF_EMPTY_SI     : Indicate if the fifo is empty or no 
+    DEC2IF_POP_SI       : Signal going to decod and allowing it to pop the fifo to get the instruction
 
     //if2dec interface
     
-    IF2DEC_FLUSH_SD ; // allow to flush if2dec in case of a branch
-    IF2DEC_POP_SD ;
-    IF2DEC_PUSH_SI ;
-    IF2DEC_FULL_SI ;
-    IF2DEC_EMPTY_SI ;
+    IF2DEC_FLUSH_SD     :
+    IF2DEC_POP_SD       :
+    IF2DEC_PUSH_SI      :
+    IF2DEC_FULL_SI      :
+    IF2DEC_EMPTY_SI     :
     
-    PC_RD ; // PC coming to fetch an instruction
-    INSTR_RI ; // instruction sent to if2dec 
+	PC_RD 		        :
+	INSTR_RI 		    :
     
     //Global Interface :
 
-    CLK;
-    RESET;
+	CLK 		        :
+	RESET 		        :
 ```
 
 ### 2. DECOD 
@@ -137,201 +136,201 @@ __example__ :
 ```C
    //Interface with REG :
 
-    RDATA1_SR ; 
-    RDATA2_SR ;
+	RDATA1_SR 		    :
+	RDATA2_SR 		    :
 
-    RADR1_SD ; // adress of rs
-    RADR2_SD ; // adress of rt
+	RADR1_SD 		    :
+	RADR2_SD 		    :
 
-    WRITE_PC_SD ;
-    WRITE_PC_ENABLE_SD ;
+	WRITE_PC_SD 		:
+	WRITE_PC_ENABLE_SD 	:
 
-    READ_PC_SR ; // value of r32 which is pc coming from REG
+	READ_PC_SR 		    :
 
     //Interface with EXE :
 
-    OP1_RD ; // value of op1
-    OP2_RD ; // value of op2
-    EXE_CMD_RD ; // value of the command sent to exe
-    NEG_OP2_RD ; // say if we take the opposite of the op1 to do a substraction for example
-    WB_RD ; // say if we plan to wbk the value of rd or no
-    EXE_DEST_SD;    //the destination register
-    SELECT_SHIFT_RD ; //taille fifo entrée : 110
-    SLT_RD ;
-    SLTU_RD ;
+	OP1_RD 		        :
+	OP2_RD 		        :
+	EXE_CMD_RD 		    :
+	NEG_OP2_RD 		    :
+	WB_RD 		        :
+	EXE_DEST_SD 		:    //the destination register
+	SELECT_SHIFT_RD 	:
+	SLT_RD 		        :
+	SLTU_RD 		    :
 
-    MEM_DATA_RD ; // data sent to mem for storage
-    MEM_LOAD_RD ; // say to mem if we do a load
-    MEM_STORE_RD ; // say to mem if we do a store
-    MEM_SIGN_EXTEND_RD ; 
-    MEM_SIZE_RD ; // tells to mem if we do an acces in word, hw or byte
+	MEM_DATA_RD 		:
+	MEM_LOAD_RD 		:
+	MEM_STORE_RD 		:
+	MEM_SIGN_EXTEND_RD 	:
+	MEM_SIZE_RD 		:
 
     
     // Interface with DEC2IF : 
 
-    DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
-    DEC2IF_EMPTY_SD ;
-    PC_RD ; // this value must also be sent to REG
+	DEC2IF_POP_SI 		:
+	DEC2IF_EMPTY_SD 	:
+	PC_RD 		        :
 
     //Interface with IF2DEC :
 
-    INSTR_RI ;
-    IF2DEC_EMPTY_SI ;
-    IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
-    IF2DEC_FLUSH_SD ;
+	INSTR_RI 		    :
+	IF2DEC_EMPTY_SI 	:
+	IF2DEC_POP_SD 		:
+	IF2DEC_FLUSH_SD 	:
 
     //Interface with DEC2EXE
 
-    DEC2EXE_POP_SE ;
-    DEC2EXE_EMPTY_SD ;                    
-    DEC2EXE_OUT_SD ;
+	DEC2EXE_POP_SE 		:
+	DEC2EXE_EMPTY_SD 	:
+	DEC2EXE_OUT_SD 		:
 
     //Bypasses
-    BP_DEST_RE ;
-    BP_EXE_RES_RE ;
-    BP_MEM_LOAD_RE ;
-    BP_EXE2MEM_EMPTY_SE ;
-    BP_DEST_RM ;
-    BP_MEM_RES_RM ;
+	BP_DEST_RE 		    :
+	BP_EXE_RES_RE 		:
+	BP_MEM_LOAD_RE 		:
+	BP_EXE2MEM_EMPTY_SE :
+	BP_DEST_RM 		    :
+	BP_MEM_RES_RM 		:
 
 
-    BP_R1_VALID_RD ;
-    BP_R2_VALID_RD ;
-    BP_RADR1_RD ;
-    BP_RADR2_RD ;
+	BP_R1_VALID_RD 		:
+	BP_R2_VALID_RD 		:
+	BP_RADR1_RD 		:
+	BP_RADR2_RD 		:
 
     //General Interface :
-    CLK ;
-    RESET_N ;
+	CLK 		        :
+	RESET_N 		    :
 
 
     //Instance used :
     
-    fifodec2if ;
-    fifodec2exe ;
+	fifodec2if 		    :
+	fifodec2exe 		:
 
     // Signals :
 
-    rdata1_sd ; 
-    rdata2_sd ;
-    r1_valid_sd ;
-    r2_valid_sd ; 
-    stall ; 
-    block_in_dec ; 
+	rdata1_sd 		    :
+	rdata2_sd 		    :
+	r1_valid_sd 		:
+	r2_valid_sd 		:
+	stall 		        :
+	block_in_dec 	    :
 
     //fifo dec2if :
     
-    dec2if_in_sd ; // pc sent to fifo
-    dec2if_push_sd ;
-    dec2if_empty_sd ;
-    dec2if_full_sd ;
-    dec2if_out_sd ;
+	dec2if_in_sd 		:
+	dec2if_push_sd 		:
+	dec2if_empty_sd 	:
+	dec2if_full_sd 		:
+	dec2if_out_sd 		:
 
     //fifo dec2exe :
 
-    dec2exe_in_sd ;
-    dec2exe_push_sd ;
-    dec2exe_full_sd ;
+	dec2exe_in_sd 		:
+	dec2exe_push_sd 	:
+	dec2exe_full_sd 	:
 
     // Instruction format type :
 
-    r_type_inst_sd ; // R type format
-    i_type_inst_sd ; // I type format
-    s_type_inst_sd ; // S type format
-    b_type_inst_sd ; // B type format
-    u_type_inst_sd ; // U type format
-    j_type_inst_sd ; // J type format
-    jalr_type_inst_sd ; //JALR has a specific opcode
+	r_type_inst_sd 		:
+	i_type_inst_sd 		:
+	s_type_inst_sd 		:
+	b_type_inst_sd 		:
+	u_type_inst_sd 		:
+	j_type_inst_sd 		:
+	jalr_type_inst_sd 	:
 
     //R-type Instructions :
 
 
-    add_i_sd ;
-    slt_i_sd ;
-    sltu_i_sd ;
-    and_i_sd ;
-    or_i_sd ;
-    xor_i_sd ;
-    sll_i_sd ;
-    srl_i_sd ;
-    sub_i_sd ;
-    sra_i_sd ;
+	add_i_sd 		    :
+	slt_i_sd 		    :
+	sltu_i_sd 		    :
+	and_i_sd 		    :
+	or_i_sd 		    :
+	xor_i_sd 		    :
+	sll_i_sd 		    :
+	srl_i_sd 		    :
+	sub_i_sd 		    :
+	sra_i_sd 		    :
 
     //I-type Instructions :
 
-    addi_i_sd ;
-    slti_i_sd ;
-    sltiu_i_sd ;
-    andi_i_sd ;
-    ori_i_sd ;
-    xori_i_sd ;
+	addi_i_sd 		    :
+	slti_i_sd 		    :
+	sltiu_i_sd 		    :
+	andi_i_sd 		    :
+	ori_i_sd 		    :
+	xori_i_sd 		    :
 
-    jalr_i_sd ;
+	jalr_i_sd 		    :
 
     // I-type shift instructions :
 
-    slli_i_sd ;
-    srli_i_sd ;
-    srai_i_sd ;
+	slli_i_sd 		    :
+	srli_i_sd 		    :
+	srai_i_sd 		    :
 
    // I-type load instructions :
 
-   lw_i_sd ;
-   lh_i_sd ;
-   lhu_i_sd ;
-   lb_i_sd ;
-   lbu_i_sd ;
+	lw_i_sd 		    :
+	lh_i_sd 		    :
+	lhu_i_sd 		    :
+	lb_i_sd 		    :
+	lbu_i_sd 		    :
 
     //B-type Instruction :
 
-    beq_i_sd ;
-    bne_i_sd ;
-    blt_i_sd ;
-    bge_i_sd ;
-    bltu_i_sd ;
-    bgeu_i_sd ;
+	beq_i_sd 		    :
+	bne_i_sd 		    :
+	blt_i_sd 		    :
+	bge_i_sd 		    :
+	bltu_i_sd 		    :
+	bgeu_i_sd 		    :
 
     //U-type Instruction :
 
-    lui_i_sd ;
-    auipc_i_sd ;
+	lui_i_sd 		    :
+	auipc_i_sd 		    :
 
     //J-type Instruction :  
 
-    jal_i_sd ;
+	jal_i_sd 		    :
 
     //S-type Instructions :
 
-    sw_i_sd ;
-    sh_i_sd ;
-    sb_i_sd ;
+	sw_i_sd 		    :
+	sh_i_sd 		    :
+	sb_i_sd 		    :
 
     //Offset for branch :
 
-    offset_branch_sd ;
+	offset_branch_sd 	:
 
     //PC gestion :
 
-    inc_pc_sd ;
-    add_offset_to_pc_sd ;
+	inc_pc_sd 		    :
+	add_offset_to_pc_sd :
 
 
     //Internal signals :
 
-    adr_dest_sd;
-    exe_op1_sd;
-    exe_op2_sd;
-    mem_data_sd ;
+	adr_dest_sd 		:
+	exe_op1_sd 		    :
+	exe_op2_sd 		    :
+	mem_data_sd 		:
     
-    mem_size_sd ;
-    mem_load_sd ;
-    mem_store_sd ;
+	mem_size_sd 		:
+	mem_load_sd 		:
+	mem_store_sd 		:
 
-    exe_cmd_sd ;
-    select_shift_sd ;
-    exe_neg_op2_sd ;
-    exe_wb_sd ;
-    mem_sign_extend_sd ;
+	exe_cmd_sd 		    :
+	select_shift_sd 	:
+	exe_neg_op2_sd 		:
+	exe_wb_sd 		    :
+	mem_sign_extend_sd 	:
 ```
 
 ### 3. EXE 
@@ -339,58 +338,66 @@ __example__ :
 ```c
      // Input/Output of EXE : 
 
-    OP1_RD ;
-    OP2_RD ;
-    OP1_VALID_RD ;
-    OP2_VALID_RD ;
-    RADR1_RD ;
-    RADR2_RD ;
+	OP1_RD 		        :
+	OP2_RD 		        :
+	OP1_VALID_RD 		:
+	OP2_VALID_RD 		:
+	RADR1_RD 		    :
+	RADR2_RD 		    :
 
-    MEM_DATA_RD;
-    DEST_RD;
-    CMD_RD ;
-    MEM_SIZE_RD ;
-    NEG_OP2_RD, WB_RD, MEM_SIGN_EXTEND_RD, SELECT_SHIFT_RD ; //taille fifo entrée : 110
-    MEM_LOAD_RD, MEM_STORE_RD ; 
-    EXE2MEM_POP_SM, DEC2EXE_EMPTY_SD;
-    SLT_RD, SLTU_RD;
-    CLK;
-    RESET;
+	MEM_DATA_RD 		:
+	DEST_RD 		    :
+	CMD_RD 		        :
+	MEM_SIZE_RD 		:
+    NEG_OP2_RD, WB_RD   :
+    MEM_SIGN_EXTEND_RD  :
+    SELECT_SHIFT_RD 	:
+    MEM_LOAD_RD         :
+    MEM_STORE_RD 		:
+    EXE2MEM_POP_SM      :
+    DEC2EXE_EMPTY_SD 	:
+    SLT_RD,	SLTU_RD 	:
+	CLK 		        :
+	RESET 		        :
     
     //Fifo exe2mem interface :
 
-    EXE_RES_RE ;
-    MEM_DATA_RE;
-    DEST_RE;
-    MEM_SIZE_RE ;
+	EXE_RES_RE 		    :
+	MEM_DATA_RE 		:
+	DEST_RE 		    :
+	MEM_SIZE_RE 		:
 
-    WB_RE,  MEM_SIGN_EXTEND_RE ; //taille fifo sortie : 7
-    MEM_LOAD_RE, MEM_STORE_RE ; 
-    EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
+    WB_RE               :
+    MEM_SIGN_EXTEND_RE 	:
+    MEM_LOAD_RE         :
+    MEM_STORE_RE 		:
+    EXE2MEM_EMPTY_SE    :
+    DEC2EXE_POP_SE 		:
     
 
     //Internals signals :
     
-    exe_res_se ;
+	exe_res_se 		    :
 
-    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
-    exe2mem_dout_se;
+	exe2mem_din_se 		: // concatenation of exe_res, mem_data...etc
+	exe2mem_dout_se 	:
 
-    op1_se;
-    op2_se;
-    alu_in_op2_se;
-    alu_out_se;
-    shifter_out_se;
-    bp_mem_data_sd;
-    shift_val_se;  
+	op1_se 		        :
+	op2_se 		        :
+	alu_in_op2_se 		:
+	alu_out_se 		    :
+	shifter_out_se 		:
+	bp_mem_data_sd 		:
+	shift_val_se 		:  
     
-    exe2mem_push_se, exe2mem_full_se;  
-    blocked;    
+    exe2mem_push_se     :
+    exe2mem_full_se 	:  
+	blocked 		    :    
 
     //bypasses
 
-    MEM_DEST_RM;
-    MEM_RES_RM;
+	MEM_DEST_RM 		:
+	MEM_RES_RM 		    :
 ```
 
 ### 3. MEM
@@ -398,54 +405,54 @@ __example__ :
 ```c
     // Mcache Interface :
 
-    MCACHE_ADR_SM ; // adress in memory
-    MCACHE_DATA_SM ;
-    MCACHE_ADR_VALID_SM,
-                                MCACHE_STORE_SM,
-                                MCACHE_LOAD_SM ; 
+	MCACHE_ADR_SM 		:
+	MCACHE_DATA_SM 		:
+    MCACHE_ADR_VALID_SM :
+    MCACHE_STORE_SM     :
+	MCACHE_LOAD_SM 		:
 
-    MCACHE_RESULT_SM ;
-    MCACHE_STALL_SM ;
+	MCACHE_RESULT_SM 	:
+	MCACHE_STALL_SM 	:
     
     //Exe Interface :
 
-    EXE_RES_RE ;
-    MEM_DATA_RE;
-    DEST_RE;
-    MEM_SIZE_RE ;
+	EXE_RES_RE 		    :
+	MEM_DATA_RE 		:
+	DEST_RE 		    :
+	MEM_SIZE_RE 		:
 
-    WB_RE,  
-                                SIGN_EXTEND_RE ; //taille fifo entrée : 74
-    LOAD_RE, 
-                                STORE_RE ; 
+    WB_RE               :
+	SIGN_EXTEND_RE 		:
+    LOAD_RE             :
+	STORE_RE 		    :
 
     //exe2mem interface :
     
-    EXE2MEM_EMPTY_SE ; 
-    EXE2MEM_POP_SM ;
+	EXE2MEM_EMPTY_SE 	:
+	EXE2MEM_POP_SM 		:
 
     //mem2wbk interface
 
-    MEM2WBK_POP_SW ;
-    mem2wbk_push_sm ;
-    mem2wbk_full_sm ;
-    MEM2WBK_EMPTY_SM ;
+	MEM2WBK_POP_SW 		:
+	mem2wbk_push_sm 	:
+	mem2wbk_full_sm 	:
+	MEM2WBK_EMPTY_SM 	:
     
 
     //WBK interface 
-    MEM_RES_RM;
-    DEST_RM;
-    WB_RM;
+	MEM_RES_RM 		    :
+	DEST_RM 		    :
+	WB_RM 		        :
     
     //Internal signals
-    mem2wbk_din_sm;
-    mem2wbk_dout_sm;
-    data_sm;
-    wb_sm;
+	mem2wbk_din_sm 		:
+	mem2wbk_dout_sm 	:
+	data_sm 		    :
+	wb_sm 		        :
     //Global Interface :
 
-    CLK;
-    RESET;
+	CLK 		        :
+	RESET 		        :
 ```
 
 ### 4. WBK
@@ -453,26 +460,26 @@ __example__ :
 ```c
      // Reg Interface :
 
-    WADR_SW ;
-    WDATA_SW ;
-    WENABLE_SW ;
+	WADR_SW 		    :
+	WDATA_SW 		    :
+	WENABLE_SW 		    :
     
     //Mem Interface :
 
-    MEM_RES_RM;
-    DEST_RM;
-    WB_RM;
+	MEM_RES_RM 		    :
+	DEST_RM 		    :
+	WB_RM 		        :
     //Mem2wbk interface
 
-    MEM2WBK_EMPTY_SM;
-    MEM2WBK_POP_SW;
+	MEM2WBK_EMPTY_SM 	:
+	MEM2WBK_POP_SW 		:
 
     //Internal signals
 
     //Global Interface :
 
-    CLK;
-    RESET;
+	CLK 		        :
+	RESET 		        :
 ```
 
 ### 5. REG
@@ -480,32 +487,32 @@ __example__ :
 ```c
     // Reading Port :
 
-    RADR1_SD ;
-    RADR2_SD ;
+	RADR1_SD 		    :
+	RADR2_SD 		    :
 
-    RDATA1_SR ; //data output read from register
-    RDATA2_SR ;
+	RDATA1_SR 		    :
+	RDATA2_SR 		    :
 
     // Writing Port :
 
-    WADR_SW ;
-    WENABLE_SW ;
-    WDATA_SW ;
+	WADR_SW 		    :
+	WENABLE_SW 		    :
+	WDATA_SW 		    :
 
-    WRITE_PC_SD ;
-    WRITE_PC_ENABLE_SD ;
+	WRITE_PC_SD 		:
+	WRITE_PC_ENABLE_SD 	:
 
 
     //PC Gestion :
 
-    READ_PC_SR ;
+	READ_PC_SR 		    :
 
     //Global Interface :
 
-    CLK ;
-    RESET_N ;
-    PC_INIT;
+	CLK 		        :
+	RESET_N 		    :
+	PC_INIT 		    :
 
     //Registres :
-    REG_RR[33] ;
+    REG_RR[33]          :
 ```
