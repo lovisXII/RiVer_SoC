@@ -302,8 +302,8 @@ void decod::decoding_instruction() {
 
 //---------------------------------------------REGISTRE & OPERAND DETECTION
 //:---------------------------------------------
-
-void decod::affectation_registres() {
+//this needs to be done in two steps : 
+void decod::pre_reg_read_decoding() {
     sc_uint<32> if_ir = INSTR_RI.read();
     sc_uint<6> radr1_var;
     sc_uint<6> radr2_var;
@@ -544,7 +544,7 @@ void decod::affectation_registres() {
 //---------------------------------------------EXE & MEM SIGNAL DETECTION
 //:---------------------------------------------
 
-void decod::affectation_calcul() {
+void decod::post_reg_read_decoding() {
     // We are going to setup commands sent to EXE here, so each if will be
     // execute for one type of command :
 

@@ -208,8 +208,8 @@ SC_MODULE(decod)
     void if2dec_pop_method() ;
     void decoding_instruction_type() ;
     void decoding_instruction() ;
-    void affectation_registres() ;
-    void affectation_calcul() ;
+    void pre_reg_read_decoding() ;
+    void post_reg_read_decoding() ;
     void pc_inc() ;
     void bypasses() ;
     void stall_method() ;
@@ -290,7 +290,7 @@ SC_MODULE(decod)
                     << READ_PC_SR ;
         SC_METHOD(decoding_instruction)
         sensitive   << INSTR_RI ;
-        SC_METHOD(affectation_registres)
+        SC_METHOD(pre_reg_read_decoding)
         sensitive   << INSTR_RI
                     << rdata1_sd
                     << rdata2_sd
@@ -315,7 +315,7 @@ SC_MODULE(decod)
                     << dec2if_push_sd
                     << READ_PC_SR 
                     << stall;
-        SC_METHOD(affectation_calcul)
+        SC_METHOD(post_reg_read_decoding)
         sensitive   << add_i_sd
                     << slt_i_sd
                     << sltu_i_sd
