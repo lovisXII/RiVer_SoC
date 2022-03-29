@@ -61,27 +61,27 @@ int sc_main(int argc, char* argv[])
     
     unit_exec.OP1_SE(op1);
     unit_exec.OP2_SE(op2);
-    unit_exec.IN_MEM_DATA_SE(mem_data);
-    unit_exec.IN_DEST_SE(dest);
-    unit_exec.CMD_SE(cmd);
-    unit_exec.IN_MEM_SIZE_SE(mem_size);
-    unit_exec.NEG_OP2_SE(neg_op1);
-    unit_exec.IN_WB_SE(wb);
-    unit_exec.IN_MEM_LOAD_SE(mem_load);
-    unit_exec.IN_MEM_STORE_SE(mem_store);
-    unit_exec.IN_MEM_SIGN_EXTEND_SE(mem_sign_extend);
-    unit_exec.SELECT_SHIFT_SE(select_shift); //taille fifo entrée : 110
-    unit_exec.EXE2MEM_POP_SE(exe2mem_pop);
-    unit_exec.DEC2EXE_EMPTY_SE(dec2exe_empty);
+    unit_exec.MEM_DATA_RD(mem_data);
+    unit_exec.DEST_RD(dest);
+    unit_exec.CMD_RD(cmd);
+    unit_exec.MEM_SIZE_RD(mem_size);
+    unit_exec.NEG_OP2_RD(neg_op1);
+    unit_exec.WB_RD(wb);
+    unit_exec.MEM_LOAD_RD(mem_load);
+    unit_exec.MEM_STORE_RD(mem_store);
+    unit_exec.MEM_SIGN_EXTEND_RD(mem_sign_extend);
+    unit_exec.SELECT_SHIFT_RD(select_shift); //taille fifo entrée : 110
+    unit_exec.EXE2MEM_POP_SM(exe2mem_pop);
+    unit_exec.DEC2EXE_EMPTY_SD(dec2exe_empty);
 
-    unit_exec.EXE_RES_SE(ffout_exe_res);
-    unit_exec.OUT_MEM_DATA_SE(ffout_mem_data);
-    unit_exec.OUT_DEST_SE(ffout_dest);
-    unit_exec.OUT_MEM_SIZE_SE(ffout_mem_size);
-    unit_exec.OUT_WB_SE(ffout_wb);
-    unit_exec.OUT_MEM_LOAD_SE(ffout_mem_load);
-    unit_exec.OUT_MEM_STORE_SE(ffout_mem_store);
-    unit_exec.OUT_MEM_SIGN_EXTEND_SE(ffout_mem_sign_extend); //taille fifo sortie : 76
+    unit_exec.EXE_RES_RE(ffout_exe_res);
+    unit_exec.MEM_DATA_RE(ffout_mem_data);
+    unit_exec.DEST_RE(ffout_dest);
+    unit_exec.MEM_SIZE_RE(ffout_mem_size);
+    unit_exec.WB_RE(ffout_wb);
+    unit_exec.MEM_LOAD_RE(ffout_mem_load);
+    unit_exec.MEM_STORE_RE(ffout_mem_store);
+    unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend); //taille fifo sortie : 76
     unit_exec.EXE2MEM_EMPTY_SE(exe2mem_empty);
     unit_exec.DEC2EXE_POP_SE(dec2exe_pop);
 
@@ -200,7 +200,7 @@ int sc_main(int argc, char* argv[])
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD_SE.read() == 0)
+        if(select_shift_ && unit_exec.CMD_RD.read() == 0)
         {
             if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ << unit_exec.shift_val_se.read())))
             {
@@ -208,7 +208,7 @@ int sc_main(int argc, char* argv[])
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD_SE.read() == 1)
+        if(select_shift_ && unit_exec.CMD_RD.read() == 1)
         {
             if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((((unsigned int)op1_) >> unit_exec.shift_val_se.read())))
             {
@@ -216,7 +216,7 @@ int sc_main(int argc, char* argv[])
                 test_passed = false ;
             }
         }
-        if(select_shift_ && unit_exec.CMD_SE.read() == 2)
+        if(select_shift_ && unit_exec.CMD_RD.read() == 2)
         {
 
             if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ >> unit_exec.shift_val_se.read())))

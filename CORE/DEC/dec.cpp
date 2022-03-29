@@ -15,7 +15,7 @@ void decod::if2dec_pop_method() {
     if (add_offset_to_pc_sd.read()) {
         IF2DEC_POP_SD.write(1);
         IF2DEC_FLUSH_SD.write(1);
-    } else if (!stall && !IF2DEC_EMPTY_SD.read() &&
+    } else if (!stall && !IF2DEC_EMPTY_SI.read() &&
                !dec2exe_full_sd.read()) {
         IF2DEC_POP_SD.write(1);
         IF2DEC_FLUSH_SD.write(0);
@@ -30,7 +30,7 @@ void decod::if2dec_pop_method() {
 
 void decod::dec2exe_push_method() {
     if (stall || dec2exe_full_sd.read() ||
-        IF2DEC_EMPTY_SD.read()) {
+        IF2DEC_EMPTY_SI.read()) {
         dec2exe_push_sd.write(0);
     } else {
         dec2exe_push_sd.write(1);
@@ -67,36 +67,36 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<128> dec2exe_out_var = DEC2EXE_OUT_SD.read();
 
-    BP_R1_VALID_SD.write((bool)dec2exe_out_var[127]);
-    BP_R2_VALID_SD.write((bool)dec2exe_out_var[126]);
+    BP_R1_VALID_RD.write((bool)dec2exe_out_var[127]);
+    BP_R2_VALID_RD.write((bool)dec2exe_out_var[126]);
 
-    BP_RADR1_SD.write((sc_bv_base)dec2exe_out_var.range(125, 120));
-    BP_RADR2_SD.write((sc_bv_base)dec2exe_out_var.range(119, 114));
+    BP_RADR1_RD.write((sc_bv_base)dec2exe_out_var.range(125, 120));
+    BP_RADR2_RD.write((sc_bv_base)dec2exe_out_var.range(119, 114));
 
-    EXE_CMD_SD.write((sc_bv_base)dec2exe_out_var.range(113, 112));
-    EXE_OP1_SD.write((sc_bv_base)dec2exe_out_var.range(111, 80));
-    EXE_OP2_SD.write((sc_bv_base)dec2exe_out_var.range(79, 48));
-    EXE_NEG_OP2_SD.write((bool)dec2exe_out_var[47]);
-    EXE_WB_SD.write((bool)dec2exe_out_var[46]);
+    EXE_CMD_RD.write((sc_bv_base)dec2exe_out_var.range(113, 112));
+    OP1_RD.write((sc_bv_base)dec2exe_out_var.range(111, 80));
+    OP2_RD.write((sc_bv_base)dec2exe_out_var.range(79, 48));
+    NEG_OP2_RD.write((bool)dec2exe_out_var[47]);
+    WB_RD.write((bool)dec2exe_out_var[46]);
 
-    MEM_DATA_SD.write((sc_bv_base)dec2exe_out_var.range(45, 14));
+    MEM_DATA_RD.write((sc_bv_base)dec2exe_out_var.range(45, 14));
 
-    MEM_LOAD_SD.write((bool)dec2exe_out_var[13]);
-    MEM_STORE_SD.write((bool)dec2exe_out_var[12]);
+    MEM_LOAD_RD.write((bool)dec2exe_out_var[13]);
+    MEM_STORE_RD.write((bool)dec2exe_out_var[12]);
 
-    MEM_SIGN_EXTEND_SD.write((bool)dec2exe_out_var[11]);
-    MEM_SIZE_SD.write((sc_bv_base)dec2exe_out_var.range(10, 9));
-    EXE_SELECT_SHIFT_SD.write((bool)dec2exe_out_var[8]);
+    MEM_SIGN_EXTEND_RD.write((bool)dec2exe_out_var[11]);
+    MEM_SIZE_RD.write((sc_bv_base)dec2exe_out_var.range(10, 9));
+    SELECT_SHIFT_RD.write((bool)dec2exe_out_var[8]);
     EXE_DEST_SD.write((sc_bv_base)dec2exe_out_var.range(7, 2));
-    EXE_SLT_SD.write((bool)dec2exe_out_var[1]);
-    EXE_SLTU_SD.write((bool)dec2exe_out_var[0]);
+    SLT_RD.write((bool)dec2exe_out_var[1]);
+    SLTU_RD.write((bool)dec2exe_out_var[0]);
 }
 
 //---------------------------------------------INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
 void decod::decoding_instruction_type() {
-    sc_uint<32> if_ir = INSTR_SD.read();
+    sc_uint<32> if_ir = INSTR_RI.read();
     r_type_inst_sd = if_ir.range(6, 0) == 0b0110011 ? 1 : 0;
     i_type_inst_sd =
         (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1
@@ -112,7 +112,7 @@ void decod::decoding_instruction_type() {
 //:---------------------------------------------
 
 void decod::decoding_instruction() {
-    sc_uint<32> if_ir = INSTR_SD.read();
+    sc_uint<32> if_ir = INSTR_RI.read();
 
     // R-type Instruction :
 
@@ -304,7 +304,7 @@ void decod::decoding_instruction() {
 //:---------------------------------------------
 
 void decod::affectation_registres() {
-    sc_uint<32> if_ir = INSTR_SD.read();
+    sc_uint<32> if_ir = INSTR_RI.read();
     sc_uint<6> radr1_var;
     sc_uint<6> radr2_var;
     sc_uint<6> adr_dest_var;
@@ -473,7 +473,7 @@ void decod::affectation_registres() {
         radr2_var = 0;
         adr_dest_var = if_ir.range(11, 7);
 
-        dec2exe_op1_var = READ_PC_SD.read();
+        dec2exe_op1_var = READ_PC_SR.read();
         dec2exe_op2_var = 0x0;  // on va envoyer l'adresse de retour
 
         if (if_ir.range(31, 31) == 1) {
@@ -499,7 +499,7 @@ void decod::affectation_registres() {
 
         adr_dest_var = if_ir.range(11, 7);
 
-        dec2exe_op1_var = READ_PC_SD.read();
+        dec2exe_op1_var = READ_PC_SR.read();
         dec2exe_op2_var = 0x0;
 
         if (if_ir.range(31, 31) == 1) {
@@ -508,7 +508,7 @@ void decod::affectation_registres() {
             offset_branch_var.range(31, 12) = 0b00000000000000000000;
         }
         offset_branch_var.range(11, 0) = if_ir.range(31, 20);
-        offset_branch_var += rdata1_sd.read() - READ_PC_SD.read() + 4;
+        offset_branch_var += rdata1_sd.read() - READ_PC_SR.read() + 4;
         offset_branch_var.range(0, 0) = 0;
         mem_data_var = 0;
         inc_pc_var = 0;
@@ -527,11 +527,10 @@ void decod::affectation_registres() {
         invalid_instr = false;
     }
 
-    invalid_instr = invalid_instr || IF2DEC_EMPTY_SD.read();
+    invalid_instr = invalid_instr || IF2DEC_EMPTY_SI.read();
 
     RADR1_SD.write(radr1_var);
     RADR2_SD.write(radr2_var);
-    ADR_DEST_SD.write(adr_dest_var);
     adr_dest_sd.write(adr_dest_var);
     offset_branch_sd.write(offset_branch_var);
     exe_op1_sd.write(dec2exe_op1_var);
@@ -712,7 +711,7 @@ void decod::affectation_calcul() {
 //:---------------------------------------------
 
 void decod::pc_inc() {
-    sc_uint<32> pc = READ_PC_SD.read();
+    sc_uint<32> pc = READ_PC_SR.read();
     sc_uint<32> pc_out = pc;
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
 
@@ -733,51 +732,51 @@ void decod::pc_inc() {
 
 void decod::bypasses() {
     if (RADR1_SD.read() == 0) { //ignore r0
-        rdata1_sd.write(IN_RDATA1_SD.read());
+        rdata1_sd.write(RDATA1_SR.read());
         r1_valid_sd.write(true);
     }
     else if (RADR1_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
         r1_valid_sd.write(false);
     }
-    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read() && BP_MEM_LOAD_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //dont bypass if load instr is currently in mem
+    else if (RADR1_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) { //dont bypass if load instr is currently in mem
         r1_valid_sd.write(false);
     }
-    else if (RADR1_SD.read() == BP_EXE_DEST_SD.read()  && !BP_EXE2MEM_EMPTY_SD) { //bypass E->D
+    else if (RADR1_SD.read() == BP_DEST_RE.read()  && !BP_EXE2MEM_EMPTY_SE) { //bypass E->D
         r1_valid_sd.write(true);
-        rdata1_sd.write(BP_EXE_RES_SD.read());
-    } else if (RADR1_SD.read() == BP_MEM_DEST_SD.read()) { //bypass M->D
+        rdata1_sd.write(BP_EXE_RES_RE.read());
+    } else if (RADR1_SD.read() == BP_DEST_RM.read()) { //bypass M->D
         r1_valid_sd.write(true);
-        rdata1_sd.write(BP_MEM_RES_SD.read());
+        rdata1_sd.write(BP_MEM_RES_RM.read());
     } else { // no bypass
         r1_valid_sd.write(true);
-        rdata1_sd.write(IN_RDATA1_SD.read());
+        rdata1_sd.write(RDATA1_SR.read());
     }
 
 
     if (RADR2_SD.read() == 0) { //ignore r0
-        rdata2_sd.write(IN_RDATA2_SD.read());
+        rdata2_sd.write(RDATA2_SR.read());
         r2_valid_sd.write(true);
     }
     else if (RADR2_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) { //dont bypass if instr is currently in exe
         r2_valid_sd.write(false);
     }
-    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() && BP_MEM_LOAD_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //dont bypass if load instr is currently in mem
+    else if (RADR2_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) { //dont bypass if load instr is currently in mem
         r2_valid_sd.write(false);
     }
-    else if (RADR2_SD.read() == BP_EXE_DEST_SD.read() && !BP_EXE2MEM_EMPTY_SD) { //bypass E->D
+    else if (RADR2_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) { //bypass E->D
         r2_valid_sd.write(true);
-        rdata2_sd.write(BP_EXE_RES_SD.read());
-    } else if (RADR2_SD.read() == BP_MEM_DEST_SD.read()) { //bypass M->D
+        rdata2_sd.write(BP_EXE_RES_RE.read());
+    } else if (RADR2_SD.read() == BP_DEST_RM.read()) { //bypass M->D
         r2_valid_sd.write(true);
-        rdata2_sd.write(BP_MEM_RES_SD.read());
+        rdata2_sd.write(BP_MEM_RES_RM.read());
     } else { // no bypass
         r2_valid_sd.write(true);
-        rdata2_sd.write(IN_RDATA2_SD.read());
+        rdata2_sd.write(RDATA2_SR.read());
     }
     //When a load is in exe, we can block the pipeline now
     //Avoid an issue with load - load - add sequence
-    block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_SD && !DEC2EXE_EMPTY_SD.read())
-                ||     (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_SD && !DEC2EXE_EMPTY_SD.read()) );
+    block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read())
+                ||     (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read()) );
 }
 
 void decod::stall_method() {
@@ -797,27 +796,26 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, r2_valid_sd, GET_NAME(r2_valid_sd));
     sc_trace(tf, RADR1_SD, GET_NAME(RADR1_SD));
     sc_trace(tf, RADR2_SD, GET_NAME(RADR2_SD));
-    sc_trace(tf, ADR_DEST_SD, GET_NAME(ADR_DEST_SD));
     sc_trace(tf, EXE_DEST_SD, GET_NAME(EXE_DEST_SD));
-    sc_trace(tf, READ_PC_SD, GET_NAME(READ_PC_SD));
-    sc_trace(tf, EXE_OP1_SD, GET_NAME(EXE_OP1_SD));
-    sc_trace(tf, EXE_OP2_SD, GET_NAME(EXE_OP2_SD));
-    sc_trace(tf, EXE_CMD_SD, GET_NAME(EXE_CMD_SD));
-    sc_trace(tf, EXE_NEG_OP2_SD, GET_NAME(EXE_NEG_OP2_SD));
-    sc_trace(tf, EXE_WB_SD, GET_NAME(EXE_WB_SD));
-    sc_trace(tf, MEM_DATA_SD, GET_NAME(MEM_DATA_SD));
-    sc_trace(tf, MEM_LOAD_SD, GET_NAME(MEM_LOAD_SD));
-    sc_trace(tf, MEM_STORE_SD, GET_NAME(MEM_STORE_SD));
-    sc_trace(tf, MEM_SIGN_EXTEND_SD, GET_NAME(MEM_SIGN_EXTEND_SD));
-    sc_trace(tf, MEM_SIZE_SD, GET_NAME(MEM_SIZE_SD));
-    sc_trace(tf, EXE_SELECT_SHIFT_SD, GET_NAME(EXE_SELECT_SHIFT_SD));
-    sc_trace(tf, DEC2IF_POP_SD, GET_NAME(DEC2IF_POP_SD));
+    sc_trace(tf, READ_PC_SR, GET_NAME(READ_PC_SR));
+    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
+    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
+    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));
+    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));
+    sc_trace(tf, WB_RD, GET_NAME(WB_RD));
+    sc_trace(tf, MEM_DATA_RD, GET_NAME(MEM_DATA_RD));
+    sc_trace(tf, MEM_LOAD_RD, GET_NAME(MEM_LOAD_RD));
+    sc_trace(tf, MEM_STORE_RD, GET_NAME(MEM_STORE_RD));
+    sc_trace(tf, MEM_SIGN_EXTEND_RD, GET_NAME(MEM_SIGN_EXTEND_RD));
+    sc_trace(tf, MEM_SIZE_RD, GET_NAME(MEM_SIZE_RD));
+    sc_trace(tf, SELECT_SHIFT_RD, GET_NAME(SELECT_SHIFT_RD));
+    sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));
     sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
-    sc_trace(tf, IF_PC_SD, GET_NAME(IF_PC_SD));
-    sc_trace(tf, INSTR_SD, GET_NAME(INSTR_SD));
-    sc_trace(tf, IF2DEC_EMPTY_SD, GET_NAME(IF2DEC_EMPTY_SD));
+    sc_trace(tf, PC_RD, GET_NAME(PC_RD));
+    sc_trace(tf, INSTR_RI, GET_NAME(INSTR_RI));
+    sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
     sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));
-    sc_trace(tf, DEC2EXE_POP_SD, GET_NAME(DEC2EXE_POP_SD));
+    sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
     sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
     sc_trace(tf, DEC2EXE_OUT_SD, GET_NAME(DEC2EXE_OUT_SD));
     sc_trace(tf, CLK, GET_NAME(CLK));
@@ -892,11 +890,11 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, add_offset_to_pc_sd, GET_NAME(add_offset_to_pc_sd));
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     sc_trace(tf, stall, GET_NAME(stall));
-    sc_trace(tf, BP_EXE_DEST_SD, GET_NAME(BP_EXE_DEST_SD));
-    sc_trace(tf, BP_EXE_RES_SD, GET_NAME(BP_EXE_RES_SD));
-    sc_trace(tf, BP_MEM_DEST_SD, GET_NAME(BP_MEM_DEST_SD));
-    sc_trace(tf, BP_MEM_RES_SD, GET_NAME(BP_MEM_RES_SD));
-    sc_trace(tf, BP_MEM_LOAD_SD, GET_NAME (BP_MEM_LOAD_SD));
-    sc_trace(tf, IN_RDATA1_SD, GET_NAME (IN_RDATA1_SD));
-    sc_trace(tf, IN_RDATA2_SD, GET_NAME (IN_RDATA2_SD));
+    sc_trace(tf, BP_DEST_RE, GET_NAME(BP_DEST_RE));
+    sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
+    sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
+    sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
+    sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME (BP_MEM_LOAD_RE));
+    sc_trace(tf, RDATA1_SR, GET_NAME (RDATA1_SR));
+    sc_trace(tf, RDATA2_SR, GET_NAME (RDATA2_SR));
 }

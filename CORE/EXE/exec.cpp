@@ -6,7 +6,7 @@
 void exec::preprocess_op() {
     sc_uint<32> op1 = op1_se.read();
     sc_uint<32> op2 = op2_se.read() ;
-    if (NEG_OP2_SE.read()) {
+    if (NEG_OP2_RD.read()) {
         alu_in_op2_se.write(~op2);
     }
     else {
@@ -18,10 +18,10 @@ void exec::preprocess_op() {
 void exec::select_exec_res() {
     sc_uint<32> alu_out = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
-    if (SELECT_SHIFT_SE.read()) {
+    if (SELECT_SHIFT_RD.read()) {
         exe_res_se.write(shifter_out_se);
     }
-    else if (SLT_SE.read()) {
+    else if (SLT_RD.read()) {
         if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
             exe_res_se.write(0);
         }
@@ -32,7 +32,7 @@ void exec::select_exec_res() {
             exe_res_se.write(!(bool) alu_out_se.read()[31]);
         }
     }
-    else if (SLTU_SE.read()) {
+    else if (SLTU_RD.read()) {
         if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
             exe_res_se.write(1);
         }
@@ -52,30 +52,30 @@ void exec::fifo_concat() {
     sc_bv<76> ff_din;
     ff_din.range(31, 0) = exe_res_se.read();
     ff_din.range(63, 32) = bp_mem_data_sd.read();
-    ff_din.range(69, 64) = IN_DEST_SE.read();
-    ff_din.range(71, 70) = IN_MEM_SIZE_SE.read();
-    ff_din[72] = IN_WB_SE.read();
-    ff_din[73] = IN_MEM_LOAD_SE.read();
-    ff_din[74] = IN_MEM_STORE_SE.read();
-    ff_din[75] = IN_MEM_SIGN_EXTEND_SE.read();
+    ff_din.range(69, 64) = DEST_RD.read();
+    ff_din.range(71, 70) = MEM_SIZE_RD.read();
+    ff_din[72] = WB_RD.read();
+    ff_din[73] = MEM_LOAD_RD.read();
+    ff_din[74] = MEM_STORE_RD.read();
+    ff_din[75] = MEM_SIGN_EXTEND_RD.read();
     exe2mem_din_se.write(ff_din);
     
 }
 void exec::fifo_unconcat() {
     sc_bv<76> ff_dout = exe2mem_dout_se.read();
-    EXE_RES_SE.write((sc_bv_base) ff_dout.range(31, 0));
-    OUT_MEM_DATA_SE.write((sc_bv_base) ff_dout.range(63, 32));
-    OUT_DEST_SE.write((sc_bv_base) ff_dout.range(69, 64));
-    OUT_MEM_SIZE_SE.write((sc_bv_base) ff_dout.range(71, 70));
-    OUT_WB_SE.write((bool) ff_dout[72]);
-    OUT_MEM_LOAD_SE.write((bool) ff_dout[73]);
-    OUT_MEM_STORE_SE.write((bool) ff_dout[74]);
-    OUT_MEM_SIGN_EXTEND_SE.write((bool) ff_dout[75]);
+    EXE_RES_RE.write((sc_bv_base) ff_dout.range(31, 0));
+    MEM_DATA_RE.write((sc_bv_base) ff_dout.range(63, 32));
+    DEST_RE.write((sc_bv_base) ff_dout.range(69, 64));
+    MEM_SIZE_RE.write((sc_bv_base) ff_dout.range(71, 70));
+    WB_RE.write((bool) ff_dout[72]);
+    MEM_LOAD_RE.write((bool) ff_dout[73]);
+    MEM_STORE_RE.write((bool) ff_dout[74]);
+    MEM_SIGN_EXTEND_RE.write((bool) ff_dout[75]);
 }
 
 void exec::manage_fifo() {
     bool stall = exe2mem_full_se.read() 
-                || DEC2EXE_EMPTY_SE.read() 
+                || DEC2EXE_EMPTY_SD.read() 
                 || blocked.read();
     if (stall) {
         exe2mem_push_se.write(false);
@@ -89,50 +89,50 @@ void exec::manage_fifo() {
 
 void exec::bypasses() {
     bool blocked_var = false;
-    sc_uint <32> bp_mem_data_var = IN_MEM_DATA_SE.read();
+    sc_uint <32> bp_mem_data_var = MEM_DATA_RD.read();
 
-    if (RADR1_SE.read() == 0) {
-        op1_se.write(IN_OP1_SE.read());
+    if (RADR1_RD.read() == 0) {
+        op1_se.write(OP1_RD.read());
     }
-    else if (OUT_DEST_SE.read() == RADR1_SE.read() && !OUT_MEM_LOAD_SE) {
-        op1_se.write(EXE_RES_SE.read());
+    else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) {
+        op1_se.write(EXE_RES_RE.read());
     }
-    else if (MEM_DEST_SE.read() == RADR1_SE.read()) {
-        op1_se.write(MEM_RES_SE.read());
+    else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
+        op1_se.write(MEM_RES_RM.read());
     }
-    else if (OUT_DEST_SE.read() == RADR1_SE.read() && OUT_MEM_LOAD_SE && !EXE2MEM_EMPTY_SE) {
+    else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
     }
     else {
-        op1_se.write(IN_OP1_SE.read());
+        op1_se.write(OP1_RD.read());
     }
 
-    if (RADR2_SE.read() == 0 || IN_MEM_LOAD_SE.read()) {
-        op2_se.write(IN_OP2_SE.read());
+    if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read()) {
+        op2_se.write(OP2_RD.read());
     }
-    else if (OUT_DEST_SE.read() == RADR2_SE.read() && !OUT_MEM_LOAD_SE) {
-        if (IN_MEM_STORE_SE.read()) { //on stores we need to bypass to the data not adr
-            bp_mem_data_var = EXE_RES_SE.read();
-            op2_se.write(IN_OP2_SE.read());
+    else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
+        if (MEM_STORE_RD.read()) { //on stores we need to bypass to the data not adr
+            bp_mem_data_var = EXE_RES_RE.read();
+            op2_se.write(OP2_RD.read());
         }
         else {
-            op2_se.write(EXE_RES_SE.read());
+            op2_se.write(EXE_RES_RE.read());
         }
     }
-    else if (MEM_DEST_SE.read() == RADR2_SE.read()) {
-        if (IN_MEM_STORE_SE.read()) {
-            bp_mem_data_var = MEM_RES_SE.read();
-            op2_se.write(IN_OP2_SE.read());
+    else if (MEM_DEST_RM.read() == RADR2_RD.read()) {
+        if (MEM_STORE_RD.read()) {
+            bp_mem_data_var = MEM_RES_RM.read();
+            op2_se.write(OP2_RD.read());
         }
         else {
-            op2_se.write(MEM_RES_SE.read());
+            op2_se.write(MEM_RES_RM.read());
         }
     }
-    else if (OUT_DEST_SE.read() == RADR2_SE.read() && OUT_MEM_LOAD_SE && !EXE2MEM_EMPTY_SE) {
+    else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
     }
     else {
-        op2_se.write(IN_OP2_SE.read());
+        op2_se.write(OP2_RD.read());
     }
     bp_mem_data_sd.write(bp_mem_data_var);
     blocked.write(blocked_var);
@@ -141,28 +141,28 @@ void exec::bypasses() {
 void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, op1_se, GET_NAME(op1_se));
         sc_trace(tf, op2_se, GET_NAME(op2_se));
-        sc_trace(tf, IN_MEM_DATA_SE, GET_NAME(IN_MEM_DATA_SE));
-        sc_trace(tf, IN_DEST_SE, GET_NAME(IN_DEST_SE));
-        sc_trace(tf, CMD_SE, GET_NAME(CMD_SE));
-        sc_trace(tf, IN_MEM_SIZE_SE, GET_NAME(IN_MEM_SIZE_SE));
-        sc_trace(tf, SELECT_SHIFT_SE, GET_NAME(SELECT_SHIFT_SE));
-        sc_trace(tf, IN_MEM_SIGN_EXTEND_SE, GET_NAME(IN_MEM_SIGN_EXTEND_SE));
-        sc_trace(tf, IN_WB_SE, GET_NAME(IN_WB_SE));
-        sc_trace(tf, NEG_OP2_SE, GET_NAME(NEG_OP2_SE));
-        sc_trace(tf, IN_MEM_LOAD_SE, GET_NAME(IN_MEM_LOAD_SE));
-        sc_trace(tf, IN_MEM_STORE_SE, GET_NAME(IN_MEM_STORE_SE));
-        sc_trace(tf, EXE2MEM_POP_SE, GET_NAME(EXE2MEM_POP_SE));
-        sc_trace(tf, DEC2EXE_EMPTY_SE, GET_NAME(DEC2EXE_EMPTY_SE));
+        sc_trace(tf, MEM_DATA_RD, GET_NAME(MEM_DATA_RD));
+        sc_trace(tf, DEST_RD, GET_NAME(DEST_RD));
+        sc_trace(tf, CMD_RD, GET_NAME(CMD_RD));
+        sc_trace(tf, MEM_SIZE_RD, GET_NAME(MEM_SIZE_RD));
+        sc_trace(tf, SELECT_SHIFT_RD, GET_NAME(SELECT_SHIFT_RD));
+        sc_trace(tf, MEM_SIGN_EXTEND_RD, GET_NAME(MEM_SIGN_EXTEND_RD));
+        sc_trace(tf, WB_RD, GET_NAME(WB_RD));
+        sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));
+        sc_trace(tf, MEM_LOAD_RD, GET_NAME(MEM_LOAD_RD));
+        sc_trace(tf, MEM_STORE_RD, GET_NAME(MEM_STORE_RD));
+        sc_trace(tf, EXE2MEM_POP_SM, GET_NAME(EXE2MEM_POP_SM));
+        sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
-        sc_trace(tf, EXE_RES_SE, GET_NAME(EXE_RES_SE));
-        sc_trace(tf, OUT_MEM_DATA_SE, GET_NAME(OUT_MEM_DATA_SE));
-        sc_trace(tf, OUT_DEST_SE, GET_NAME(OUT_DEST_SE));
-        sc_trace(tf, OUT_MEM_SIZE_SE, GET_NAME(OUT_MEM_SIZE_SE));
-        sc_trace(tf, OUT_WB_SE, GET_NAME(OUT_WB_SE));
-        sc_trace(tf, OUT_MEM_SIGN_EXTEND_SE, GET_NAME(OUT_MEM_SIGN_EXTEND_SE));
-        sc_trace(tf, OUT_MEM_LOAD_SE, GET_NAME(OUT_MEM_LOAD_SE));
-        sc_trace(tf, OUT_MEM_STORE_SE, GET_NAME(OUT_MEM_STORE_SE));
+        sc_trace(tf, EXE_RES_RE, GET_NAME(EXE_RES_RE));
+        sc_trace(tf, MEM_DATA_RE, GET_NAME(MEM_DATA_RE));
+        sc_trace(tf, DEST_RE, GET_NAME(DEST_RE));
+        sc_trace(tf, MEM_SIZE_RE, GET_NAME(MEM_SIZE_RE));
+        sc_trace(tf, WB_RE, GET_NAME(WB_RE));
+        sc_trace(tf, MEM_SIGN_EXTEND_RE, GET_NAME(MEM_SIGN_EXTEND_RE));
+        sc_trace(tf, MEM_LOAD_RE, GET_NAME(MEM_LOAD_RE));
+        sc_trace(tf, MEM_STORE_RE, GET_NAME(MEM_STORE_RE));
         sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
         sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
         sc_trace(tf, exe_res_se, GET_NAME(exe_res_se));
@@ -173,13 +173,13 @@ void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, shifter_out_se, GET_NAME(shifter_out_se));
         sc_trace(tf, shift_val_se, GET_NAME(shift_val_se));
         sc_trace(tf, exe2mem_push_se, GET_NAME(exe2mem_push_se));
-        sc_trace(tf, RADR1_SE, GET_NAME(RADR1_SE));
-        sc_trace(tf, RADR2_SE, GET_NAME(RADR2_SE));
-        sc_trace(tf, MEM_DEST_SE, GET_NAME(MEM_DEST_SE));
-        sc_trace(tf, MEM_RES_SE, GET_NAME(MEM_RES_SE));
+        sc_trace(tf, RADR1_RD, GET_NAME(RADR1_RD));
+        sc_trace(tf, RADR2_RD, GET_NAME(RADR2_RD));
+        sc_trace(tf, MEM_DEST_RM, GET_NAME(MEM_DEST_RM));
+        sc_trace(tf, MEM_RES_RM, GET_NAME(MEM_RES_RM));
         sc_trace(tf, blocked, GET_NAME(blocked));
-        sc_trace(tf, IN_OP1_SE, GET_NAME(IN_OP1_SE));
-        sc_trace(tf, IN_OP2_SE, GET_NAME(IN_OP2_SE));
+        sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
+        sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
         alu_inst.trace(tf);
         shifter_inst.trace(tf);
         fifo_inst.trace(tf);

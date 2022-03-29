@@ -125,35 +125,35 @@ int sc_main(int argc, char* argv[])
     dec.RADR2_SD(radr2) ; 
 
 
-    dec.READ_PC_SD(read_pc) ; 
+    dec.READ_PC_SR(read_pc) ; 
     dec.READ_PC_VALID_SD(read_pc_valid) ; 
 
     
 
-    dec.EXE_OP1_SD(dec2exe_op1) ; 
-    dec.EXE_OP2_SD(dec2exe_op2) ; 
-    dec.EXE_CMD_SD(dec2exe_cmd) ; 
-    dec.EXE_NEG_OP2_SD(dec2exe_neg_op1) ; 
-    dec.EXE_WB_SD(dec2exe_wb) ; 
+    dec.OP1_RD(dec2exe_op1) ; 
+    dec.OP2_RD(dec2exe_op2) ; 
+    dec.EXE_CMD_RD(dec2exe_cmd) ; 
+    dec.NEG_OP2_RD(dec2exe_neg_op1) ; 
+    dec.WB_RD(dec2exe_wb) ; 
     
-    dec.MEM_DATA_SD(mem_data) ; 
-    dec.MEM_LOAD_SD(mem_load) ; 
-    dec.MEM_STORE_SD(mem_store) ; 
-    dec.MEM_SIGN_EXTEND_SD(mem_sign_extend) ; 
-    dec.MEM_SIZE_SD(mem_size) ; 
-    dec.EXE_SELECT_SHIFT_SD(select_shift) ; 
+    dec.MEM_DATA_RD(mem_data) ; 
+    dec.MEM_LOAD_RD(mem_load) ; 
+    dec.MEM_STORE_RD(mem_store) ; 
+    dec.MEM_SIGN_EXTEND_RD(mem_sign_extend) ; 
+    dec.MEM_SIZE_RD(mem_size) ; 
+    dec.SELECT_SHIFT_RD(select_shift) ; 
     
     
 
-    dec.DEC2IF_POP_SD(dec2if_pop) ;
+    dec.DEC2IF_POP_SI(dec2if_pop) ;
     dec.DEC2IF_EMPTY_SD(dec2if_empty) ;
-    dec.IF_PC_SD(dec2if_pc) ;
+    dec.PC_RD(dec2if_pc) ;
 
-    dec.INSTR_SD(if_ir) ;
-    dec.IF2DEC_EMPTY_SD(if2dec_empty) ;
+    dec.INSTR_RI(if_ir) ;
+    dec.IF2DEC_EMPTY_SI(if2dec_empty) ;
     dec.IF2DEC_POP_SD(if2dec_pop) ;
 
-    dec.DEC2EXE_POP_SD(dec2exe_pop) ;
+    dec.DEC2EXE_POP_SE(dec2exe_pop) ;
     dec.DEC2EXE_EMPTY_SD(dec2exe_empty) ;
     
     dec.CLK(clk) ;
@@ -206,7 +206,7 @@ int sc_main(int argc, char* argv[])
 
         read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[32].write(dec.IF_PC_SD.read()) ;
+        REG[32].write(dec.PC_RD.read()) ;
 
         if2dec_empty.write(1) ;
 
@@ -240,7 +240,7 @@ int sc_main(int argc, char* argv[])
 
         read_pc.write(REG[32].read()) ;
         read_pc_valid.write(1) ;
-        REG[32].write(dec.IF_PC_SD.read()) ;
+        REG[32].write(dec.PC_RD.read()) ;
 
 
         dec2if_pop.write(1) ;

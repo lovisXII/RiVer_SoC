@@ -23,14 +23,14 @@ SC_MODULE(ifetch)
 
     //if2dec interface
     
-    sc_in<bool> IF2DEC_FLUSH_SI ; // allow to flush if2dec in case of a branch
-    sc_in<bool> IF2DEC_POP_SI ;
+    sc_in<bool> IF2DEC_FLUSH_SD ; // allow to flush if2dec in case of a branch
+    sc_in<bool> IF2DEC_POP_SD ;
     sc_signal<bool> IF2DEC_PUSH_SI ;
     sc_signal<bool> IF2DEC_FULL_SI ;
     sc_out<bool> IF2DEC_EMPTY_SI ;
     
-    sc_in<sc_bv<32>  > PC_SI ; // PC coming to fetch an instruction
-    sc_out<sc_bv<32> > INSTR_SI ; // instruction sent to if2dec 
+    sc_in<sc_bv<32>  > PC_RD ; // PC coming to fetch an instruction
+    sc_out<sc_bv<32> > INSTR_RI ; // instruction sent to if2dec 
     
     //Global Interface :
 
@@ -45,20 +45,20 @@ SC_MODULE(ifetch)
     SC_CTOR(ifetch) : 
     fifo_inst("if2dec")
     {
-        fifo_inst.DIN(IC_INST_SI);
-        fifo_inst.DOUT(INSTR_SI);
-        fifo_inst.EMPTY(IF2DEC_EMPTY_SI);
-        fifo_inst.FULL(IF2DEC_FULL_SI);
-        fifo_inst.PUSH(IF2DEC_PUSH_SI);
-        fifo_inst.POP(IF2DEC_POP_SI);
+        fifo_inst.DIN_S(IC_INST_SI);
+        fifo_inst.DOUT_R(INSTR_RI);
+        fifo_inst.EMPTY_S(IF2DEC_EMPTY_SI);
+        fifo_inst.FULL_S(IF2DEC_FULL_SI);
+        fifo_inst.PUSH_S(IF2DEC_PUSH_SI);
+        fifo_inst.POP_S(IF2DEC_POP_SD);
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
         sensitive   << DEC2IF_EMPTY_SI 
                     << IF2DEC_FULL_SI 
-                    << PC_SI 
-                    << IF2DEC_FLUSH_SI 
+                    << PC_RD 
+                    << IF2DEC_FLUSH_SD 
                     << IC_STALL_SI 
                     << RESET; 
     }
