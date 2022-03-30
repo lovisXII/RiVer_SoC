@@ -161,12 +161,15 @@ int sc_main(int argc, char* argv[]) {
     core_inst.trace(tf);
 
     //Dcache map
+    dcache_inst.CLK(CLK);
+    dcache_inst.RESET_N(RESET);
+    dcache_inst.trace(tf);
     //processor side
-    dcache_inst.DATA_ADR_M(MEM_ADR);
-    dcache_inst.DATA_M(MEM_DATA);
-    dcache_inst.LOAD_M(MEM_LOAD);
-    dcache_inst.STORE_M(MEM_STORE);
-    dcache_inst.VALID_ADR_M(MEM_ADR_VALID);
+    dcache_inst.DATA_ADR_SM(MEM_ADR);
+    dcache_inst.DATA_SM(MEM_DATA);
+    dcache_inst.LOAD_SM(MEM_LOAD);
+    dcache_inst.STORE_SM(MEM_STORE);
+    dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
     dcache_inst.DATA_C(MEM_RESULT);
     dcache_inst.STALL_C(MEM_STALL);
     //MP side
@@ -185,7 +188,9 @@ int sc_main(int argc, char* argv[]) {
     RESET.write(true) ; // end of reset
     cerr << "done." << endl ;
 
-    while (1) {
+    int cpt = 0;
+    while (cpt < 100) {
+        cpt++;
         // icache simulation
         int if_adr = IF_ADR.read() ; 
         bool if_afr_valid = IF_ADR_VALID.read() ; 
@@ -204,6 +209,9 @@ int sc_main(int argc, char* argv[]) {
         }
 
         if_result = ram[if_adr];
+
+        cout << "new IFC adr : "<<std::hex << if_adr 
+            <<"    data on : "<<if_result<< std::endl;
         IC_INST.write(if_result);
         IC_STALL.write(false);
         
@@ -216,11 +224,11 @@ int sc_main(int argc, char* argv[]) {
             int mem_adr = A_MP.read();
             if(read)
             {
-                DT_MP = ram[mem_adr];
-                ACK_MP = true;
+                DT_MP.write(ram[mem_adr]);
+                ACK_MP.write(true);
             }
             else
-                ACK_MP = false;
+                ACK_MP.write(false);
 
             if(write)
             {

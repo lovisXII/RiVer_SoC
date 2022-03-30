@@ -2,6 +2,7 @@
 #define D_CACHE
 
 #include <systemc.h>
+#include "buffercache.h"
 #include "../UTIL/debug_util.h"
 
 //cache N-way associatif, write through et buffet
@@ -21,32 +22,26 @@
 #define WAY_SIZE 128
 
 
-//ACKNOWLEDGE
+//ACLKNOWLEDGE
 #define A_READY 0x00
 #define A_WAIT 0x01
 #define A_RETRACT 0x10
 
 
 
-enum STATE // MAE STATES
-{
-  IDLE,
-  WAIT_BUFF_READ,
-  WAIT_MEM,
-  WAIT_BUFF_WRITE
-};
+
 
 SC_MODULE(dcache)
 {
-  sc_in<bool> CK;
-  sc_in<bool> RESET;
+  sc_in_clk CLK;
+  sc_in<bool> RESET_N;
 
 // interface processeur
-  sc_in<sc_uint<32>> DATA_ADR_M;
-  sc_in<sc_uint<32>> DATA_M;
-  sc_in<bool> LOAD_M;
-  sc_in<bool> STORE_M;
-  sc_in<bool> VALID_ADR_M;
+  sc_in<sc_uint<32>> DATA_ADR_SM;
+  sc_in<sc_uint<32>> DATA_SM;
+  sc_in<bool> LOAD_SM;
+  sc_in<bool> STORE_SM;
+  sc_in<bool> VALID_ADR_SM;
 
   sc_out<sc_uint<32>> DATA_C;
   sc_out<bool> STALL_C;               // if stall donc miss else hit
@@ -65,15 +60,12 @@ SC_MODULE(dcache)
   sc_signal<sc_uint<23>> address_tag;
   sc_signal<sc_uint<7>> address_index;
   sc_signal<sc_uint<2>> address_offset;
-  sc_signal<sc_uint<32>> data;
-  sc_signal<bool> store, load;
   
   sc_signal<bool> way0_hit;
   sc_signal<bool> way1_hit;
   
   sc_signal<sc_uint<32>> selected_data;
 
-  sc_signal<bool> full;
   sc_signal<bool> current_LRU; // false: 0, true: 1
 
 // WAYS 128 lines
@@ -89,43 +81,54 @@ SC_MODULE(dcache)
   sc_signal<sc_uint<23>> w1_TAG[128];
   sc_signal<bool> w1_LINE_VALIDATE[128];
 
-// buffers
-//buff0
-  sc_signal<sc_uint<32>> buff0_DATA;
-  sc_signal<sc_uint<32>> buff0_DATA_ADR;
-  sc_signal<bool> buff0_LOAD;
-  sc_signal<bool> buff0_STORE;
-  sc_signal<bool> buff0_VALIDATE;  // data valid on buffer
+//buffer
+  sc_signal<bool> read_buff, write_buff;
+  sc_signal<bool> full, empty;
+  sc_signal<bool> store_bmp;
+  sc_signal<bool> load_bmp;
+  sc_signal<bool> dta_valid;
 
-//buff1
-  sc_signal<sc_uint<32>> buff1_DATA;
-  sc_signal<sc_uint<32>> buff1_DATA_ADR;
-  sc_signal<bool> buff1_LOAD;
-  sc_signal<bool> buff1_STORE;
-  sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
+//FMS signal debug
+  sc_signal<sc_uint<3>> fsm_state;
 
-//fsm : finite state machine
-  sc_signal<STATE> fsm_current_state;
-  sc_signal<STATE> fsm_future_state;
-
+  void adresse_parcer();
   void miss_detection();
   void transition();
-  void transition_clk();
+
+  void buffer_manager();
 
   void trace(sc_trace_file*);
 
-  SC_CTOR(dcache)
-  { 
+  buffercache buffcache_inst;
+
+  SC_CTOR(dcache) :
+  buffcache_inst("buffercache")
+  {     
+    SC_METHOD(adresse_parcer);
+    sensitive << DATA_ADR_SM;
+
     SC_METHOD(miss_detection);
-    sensitive << VALID_ADR_M.pos();
-    
-    SC_METHOD(transition_clk);
-    sensitive << CK.pos();
+    sensitive << DATA_ADR_SM 
+              << DATA_SM;
+      
+    SC_THREAD(transition);
+    sensitive << CLK.pos();
 
-    SC_METHOD(transition);
-    sensitive << CK.neg();
+    reset_signal_is(RESET_N,false);
 
-    reset_signal_is(RESET, true);
+
+    buffcache_inst.RESET_N(RESET_N);
+    buffcache_inst.CLK(CLK);
+    buffcache_inst.WRITE(write_buff);
+    buffcache_inst.DATA_C(DATA_SM);
+    buffcache_inst.ADR_C(DATA_ADR_SM);
+    buffcache_inst.STORE_C(STORE_SM);
+    buffcache_inst.FULL(full);
+    buffcache_inst.EMPTY(empty);
+    buffcache_inst.DATA_MP(DT);
+    buffcache_inst.ADR_MP(A);
+    buffcache_inst.STORE_MP(store_bmp);
+    buffcache_inst.LOAD_MP(load_bmp);
   }
 };
 

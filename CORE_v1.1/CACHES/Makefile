@@ -7,7 +7,9 @@ C_ARGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 
 
 all: dcache_tb 
-
+dcache: dcache.o
+	$(CC) $^ -o $@ $(C_ARGS)
+	
 dcache_tb: dcache.o dcache_tb.o
 	$(CC) $^ -o $@ $(C_ARGS)
 	
