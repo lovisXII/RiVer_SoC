@@ -231,6 +231,8 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 
 * add the propagation of the curent PC
 * flush pipeline case of exception
+* This register is access thanks to an address on 12 bits and not a register number like for REG
+* Register and address p.8 spec book 2
 
 ## KREG :
 
