@@ -132,23 +132,23 @@ int sc_main(int argc, char* argv[]) {
     sc_clock                        CLK("clk",1,SC_NS);  
     sc_signal<bool>                 RESET;
 
-    core_inst.MCACHE_MEM_ADR(MEM_ADR);
-    core_inst.MCACHE_MEM_DATA(MEM_DATA);
-    core_inst.MCACHE_MEM_ADR_VALID(MEM_ADR_VALID);
-    core_inst.MCACHE_MEM_STORE(MEM_STORE);
-    core_inst.MCACHE_MEM_LOAD(MEM_LOAD);
-    core_inst.MCACHE_MEM_RESULT(MEM_RESULT);
-    core_inst.MCACHE_MEM_STALL(MEM_STALL);
+    core_inst.MCACHE_ADR_SM(MEM_ADR);
+    core_inst.MCACHE_DATA_SM(MEM_DATA);
+    core_inst.MCACHE_ADR_VALID_SM(MEM_ADR_VALID);
+    core_inst.MCACHE_STORE_SM(MEM_STORE);
+    core_inst.MCACHE_LOAD_SM(MEM_LOAD);
+    core_inst.MCACHE_RESULT_SM(MEM_RESULT);
+    core_inst.MCACHE_STALL_SM(MEM_STALL);
 
-    core_inst.IF_ADR(IF_ADR);
-    core_inst.IF_ADR_VALID(IF_ADR_VALID);
-    core_inst.IC_INST(IC_INST);
-    core_inst.IC_STALL(IC_STALL);
+    core_inst.ADR_SI(IF_ADR);
+    core_inst.ADR_VALID_SI(IF_ADR_VALID);
+    core_inst.IC_INST_SI(IC_INST);
+    core_inst.IC_STALL_SI(IC_STALL);
     core_inst.CLK(CLK);
     core_inst.RESET(RESET);
 
     core_inst.DEBUG_PC_READ(PC_VALUE);
-    core_inst.DEBUG_PC_RESET(PC_RESET);
+    core_inst.PC_INIT(PC_RESET);
     core_inst.trace(tf);
 
     cout << "Reseting...";

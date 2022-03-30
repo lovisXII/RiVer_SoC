@@ -51,21 +51,16 @@ int sc_main(int argc, char* argv[])
     reg_inst.RADR1_SD(radr1) ;
     reg_inst.RADR2_SD(radr2) ;
     
-    reg_inst.R1_VALID_SD(radr1_valid) ;
-    reg_inst.R2_VALID_SD(radr2_valid) ;
 
-    reg_inst.RDATA1_SD(radr1_data) ;
-    reg_inst.RDATA2_SD(radr2_data) ;
-    reg_inst.WADR_SD(wadr1) ;
-    reg_inst.WENABLE_SD(wadr1_valid) ;
-    reg_inst.WDATA_SD(wadr1_data) ;
-    reg_inst.INVAL_ADR_SD(inval_adr);
-    reg_inst.INVAL_ENABLE_SD(inval_enable);
+    reg_inst.RDATA1_SR(radr1_data) ;
+    reg_inst.RDATA2_SR(radr2_data) ;
+    reg_inst.WADR_SW(wadr1) ;
+    reg_inst.WENABLE_SW(wadr1_valid) ;
+    reg_inst.WDATA_SW(wadr1_data) ;
 
     //PC Gestion :
 
-    reg_inst.READ_PC_SD(read_pc) ;
-    reg_inst.READ_PC_VALID_SD(read_pc_valid) ;
+    reg_inst.READ_PC_SR(read_pc) ;
 
     //Global Interface :
 

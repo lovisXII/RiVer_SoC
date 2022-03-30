@@ -10,5 +10,5 @@ void core::trace(sc_trace_file* tf) {
 }
 
 void core::core_method() {
-    DEBUG_PC_READ.write(READ_PC.read());
+    DEBUG_PC_READ.write(READ_PC_SR.read());
 }

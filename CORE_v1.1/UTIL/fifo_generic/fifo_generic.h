@@ -2,7 +2,7 @@
 #include <systemc.h>
 #include "../debug_util.h"
 template <int T>
-SC_MODULE(fifo_generic)
+SC_MODULE(fifo)
 {
     sc_in< sc_bv<T> > DIN ;
     sc_in_clk CLK ;
@@ -18,9 +18,9 @@ SC_MODULE(fifo_generic)
     void function() ;
     void flags_update() ;
     void trace(sc_trace_file* tf);
-    SC_CTOR(fifo_generic)
+    SC_CTOR(fifo)
     {
-        SC_CTHREAD(function,fifo_generic::CLK.pos()) ;
+        SC_CTHREAD(function,fifo::CLK.pos()) ;
         SC_METHOD(flags_update);
         sensitive << PUSH << POP << fifo_v << data_inside;
 
@@ -28,7 +28,7 @@ SC_MODULE(fifo_generic)
     }
 };
 template <int T>
-void fifo_generic<T>::flags_update() {
+void fifo<T>::flags_update() {
     bool push = PUSH.read() ;
     bool pop = POP.read() ;
     if( fifo_v ) // if the data in the fifo is valide
@@ -55,7 +55,7 @@ void fifo_generic<T>::flags_update() {
     DOUT.write(data_inside) ;
 }
 template <int T>
-void fifo_generic<T>::function()
+void fifo<T>::function()
 {
     fifo_v.write(false) ;
     data_inside.write(0) ;
@@ -94,7 +94,7 @@ void fifo_generic<T>::function()
     } 
 }
 template <int T>
-void fifo_generic<T>::trace(sc_trace_file* tf) {
+void fifo<T>::trace(sc_trace_file* tf) {
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET_N, GET_NAME(RESET_N));
         sc_trace(tf, DIN, GET_NAME(DIN));

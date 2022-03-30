@@ -1,81 +1,72 @@
 #include <systemc.h>
-#include "../UTIL/fifo_generic/fifo_generic.h"
+#include "../UTIL/fifo.h"
 SC_MODULE(decod)
 {
     
     //Interface with REG :
 
-    sc_in   < sc_uint<32> >       IN_RDATA1_SD ; 
-    sc_in   < sc_uint<32> >       IN_RDATA2_SD ;
-    sc_in   < bool >              IN_R1_VALID_SD ;
-    sc_in   < bool >              IN_R2_VALID_SD ; // same but for rt
-
-    sc_in   < bool >              ADR_DEST_VALID_SD ;
-    sc_out  <sc_uint<6>>          ADR_DEST_SD ;
+    sc_in   < sc_uint<32> >       RDATA1_SR ; 
+    sc_in   < sc_uint<32> >       RDATA2_SR ;
 
     sc_out  < sc_uint<6> >       RADR1_SD ; // adress of rs
     sc_out  < sc_uint<6> >       RADR2_SD ; // adress of rt
 
-    sc_out  < sc_uint<6> >       INVAL_DEST_SD ; // rd
-    sc_out  < bool >             INVAL_ENABLE_SD ;
-        
     sc_out  < sc_uint<32> >      WRITE_PC_SD ;
     sc_out  < bool >             WRITE_PC_ENABLE_SD ;
 
-    sc_in   < sc_uint<32> >      READ_PC_SD ; // value of r32 which is pc coming from REG
-    sc_in   < bool >             READ_PC_VALID_SD ; // say if pc is valid or no, signal coming from REG
+    sc_in   < sc_uint<32> >      READ_PC_SR ; // value of r32 which is pc coming from REG
 
     //Interface with EXE :
 
-    sc_out  < sc_uint<32> >      EXE_OP1_SD ; // value of op1
-    sc_out  < sc_uint<32> >      EXE_OP2_SD ; // value of op2
-    sc_out  < sc_uint<2> >       EXE_CMD_SD ; // value of the command sent to exe
-    sc_out  < bool >             EXE_NEG_OP2_SD ; // say if we take the opposite of the op1 to do a substraction for example
-    sc_out  < bool >             EXE_WB_SD ; // say if we plan to wbk the value of rd or no
+    sc_out  < sc_uint<32> >      OP1_RD ; // value of op1
+    sc_out  < sc_uint<32> >      OP2_RD ; // value of op2
+    sc_out  < sc_uint<2> >       EXE_CMD_RD ; // value of the command sent to exe
+    sc_out  < bool >             NEG_OP2_RD ; // say if we take the opposite of the op1 to do a substraction for example
+    sc_out  < bool >             WB_RD ; // say if we plan to wbk the value of rd or no
     sc_out  < sc_uint<6> >       EXE_DEST_SD;    //the destination register
-    sc_out  < bool >             EXE_SELECT_SHIFT_SD ; //taille fifo entrée : 110
-    sc_out  < bool >             EXE_SLT_SD ;
-    sc_out  < bool >             EXE_SLTU_SD ;
+    sc_out  < bool >             SELECT_SHIFT_RD ; //taille fifo entrée : 110
+    sc_out  < bool >             SLT_RD ;
+    sc_out  < bool >             SLTU_RD ;
 
-    sc_out  < sc_uint<32> >      MEM_DATA_SD ; // data sent to mem for storage
-    sc_out  < bool>              MEM_LOAD_SD ; // say to mem if we do a load
-    sc_out  < bool >             MEM_STORE_SD ; // say to mem if we do a store
-    sc_out  < bool >             MEM_SIGN_EXTEND_SD ; 
-    sc_out  < sc_uint<2> >       MEM_SIZE_SD ; // tells to mem if we do an acces in word, hw or byte
+    sc_out  < sc_uint<32> >      MEM_DATA_RD ; // data sent to mem for storage
+    sc_out  < bool>              MEM_LOAD_RD ; // say to mem if we do a load
+    sc_out  < bool >             MEM_STORE_RD ; // say to mem if we do a store
+    sc_out  < bool >             MEM_SIGN_EXTEND_RD ; 
+    sc_out  < sc_uint<2> >       MEM_SIZE_RD ; // tells to mem if we do an acces in word, hw or byte
 
     
     // Interface with DEC2IF : 
 
-    sc_in   < bool >              DEC2IF_POP_SD ; // Ifecth say to decod if it wants a pop or no
+    sc_in   < bool >              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
     sc_out  < bool >              DEC2IF_EMPTY_SD ;
-    sc_out  < sc_bv<32> >         IF_PC_SD ; // this value must also be sent to REG
+    sc_out  < sc_bv<32> >         PC_RD ; // this value must also be sent to REG
 
     //Interface with IF2DEC :
 
-    sc_in   < sc_bv<32> >         INSTR_SD ;
-    sc_in   < bool >              IF2DEC_EMPTY_SD ;
+    sc_in   < sc_bv<32> >         INSTR_RI ;
+    sc_in   < bool >              IF2DEC_EMPTY_SI ;
     sc_out  < bool >              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
     sc_out  < bool >              IF2DEC_FLUSH_SD ;
 
     //Interface with DEC2EXE
 
-    sc_in< bool >                 DEC2EXE_POP_SD ;
+    sc_in< bool >                 DEC2EXE_POP_SE ;
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
     sc_signal< sc_bv<128> >       DEC2EXE_OUT_SD ;
 
     //Bypasses
-    sc_in < sc_uint<6> >          BP_EXE_DEST_SD ;
-    sc_in < sc_uint<32> >         BP_EXE_RES_SD ;
-    sc_in < sc_uint<6> >          BP_MEM_DEST_SD ;
-    sc_in < bool >                BP_MEM_LOAD_SD ;
-    sc_in < sc_uint<32> >         BP_MEM_RES_SD ;
-    sc_in  < bool >               BP_EXE2MEM_EMPTY_SD ;
+    sc_in < sc_uint<6> >          BP_DEST_RE ;
+    sc_in < sc_uint<32> >         BP_EXE_RES_RE ;
+    sc_in < bool >                BP_MEM_LOAD_RE ;
+    sc_in  < bool >               BP_EXE2MEM_EMPTY_SE ;
+    sc_in < sc_uint<6> >          BP_DEST_RM ;
+    sc_in < sc_uint<32> >         BP_MEM_RES_RM ;
 
 
-    sc_out  < bool >             BP_R1_VALID_SD ;
-    sc_out  < bool >             BP_R2_VALID_SD ;
-    sc_out  < sc_uint<6> >       BP_RADR1_SD ;
-    sc_out  < sc_uint<6> >       BP_RADR2_SD ;
+    sc_out  < bool >             BP_R1_VALID_RD ;
+    sc_out  < bool >             BP_R2_VALID_RD ;
+    sc_out  < sc_uint<6> >       BP_RADR1_RD ;
+    sc_out  < sc_uint<6> >       BP_RADR2_RD ;
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -84,8 +75,8 @@ SC_MODULE(decod)
 
     //Instance used :
     
-    fifo_generic<32> dec2if ;
-    fifo_generic<128> dec2exe ;
+    fifo<32> dec2if ;
+    fifo<128> dec2exe ;
 
     // Signals :
 
@@ -217,8 +208,8 @@ SC_MODULE(decod)
     void if2dec_pop_method() ;
     void decoding_instruction_type() ;
     void decoding_instruction() ;
-    void affectation_registres() ;
-    void affectation_calcul() ;
+    void pre_reg_read_decoding() ;
+    void post_reg_read_decoding() ;
     void pc_inc() ;
     void bypasses() ;
     void stall_method() ;
@@ -228,27 +219,26 @@ SC_MODULE(decod)
     dec2if("dec2if"),
     dec2exe("dec2exe")    
     {
-        dec2if.DIN(dec2if_in_sd) ;
-        dec2if.DOUT(IF_PC_SD) ;
-        dec2if.EMPTY(dec2if_empty_sd) ;
-        dec2if.FULL(dec2if_full_sd) ;
-        dec2if.PUSH(dec2if_push_sd) ;
-        dec2if.POP(DEC2IF_POP_SD) ;
+        dec2if.DIN_S(dec2if_in_sd) ;
+        dec2if.DOUT_R(PC_RD) ;
+        dec2if.EMPTY_S(dec2if_empty_sd) ;
+        dec2if.FULL_S(dec2if_full_sd) ;
+        dec2if.PUSH_S(dec2if_push_sd) ;
+        dec2if.POP_S(DEC2IF_POP_SI) ;
         dec2if.CLK(CLK) ;
         dec2if.RESET_N(RESET_N) ;
     
-        dec2exe.DIN(dec2exe_in_sd) ;
-        dec2exe.DOUT(DEC2EXE_OUT_SD) ;
-        dec2exe.EMPTY(DEC2EXE_EMPTY_SD) ;
-        dec2exe.FULL(dec2exe_full_sd) ;
-        dec2exe.PUSH(dec2exe_push_sd) ;
-        dec2exe.POP(DEC2EXE_POP_SD) ;
+        dec2exe.DIN_S(dec2exe_in_sd) ;
+        dec2exe.DOUT_R(DEC2EXE_OUT_SD) ;
+        dec2exe.EMPTY_S(DEC2EXE_EMPTY_SD) ;
+        dec2exe.FULL_S(dec2exe_full_sd) ;
+        dec2exe.PUSH_S(dec2exe_push_sd) ;
+        dec2exe.POP_S(DEC2EXE_POP_SE) ;
         dec2exe.CLK(CLK) ;
         dec2exe.RESET_N(RESET_N) ;
 
         SC_METHOD(dec2if_gestion)
         sensitive   << dec2if_empty_sd 
-                    << READ_PC_VALID_SD
                     << dec2if_full_sd 
                     << stall;
 
@@ -277,14 +267,12 @@ SC_MODULE(decod)
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)
-        sensitive   << ADR_DEST_VALID_SD
-                    << dec2exe_full_sd 
-                    << IF2DEC_EMPTY_SD 
+        sensitive   << dec2exe_full_sd 
+                    << IF2DEC_EMPTY_SI 
                     << stall;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive   << ADR_DEST_VALID_SD 
-                    << IF2DEC_EMPTY_SD 
+        sensitive   << IF2DEC_EMPTY_SI 
                     << dec2exe_full_sd
                     << add_offset_to_pc_sd 
                     << stall ;
@@ -298,17 +286,17 @@ SC_MODULE(decod)
                     << block_in_dec;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive   << INSTR_SD 
-                    << READ_PC_SD ;
+        sensitive   << INSTR_RI 
+                    << READ_PC_SR ;
         SC_METHOD(decoding_instruction)
-        sensitive   << INSTR_SD ;
-        SC_METHOD(affectation_registres)
-        sensitive   << INSTR_SD
+        sensitive   << INSTR_RI ;
+        SC_METHOD(pre_reg_read_decoding)
+        sensitive   << INSTR_RI
                     << rdata1_sd
                     << rdata2_sd
                     << r1_valid_sd
                     << r2_valid_sd
-                    << IF2DEC_EMPTY_SD
+                    << IF2DEC_EMPTY_SI
                     << dec2if_push_sd
                     << r_type_inst_sd 
                     << i_type_inst_sd 
@@ -325,9 +313,9 @@ SC_MODULE(decod)
                     << bltu_i_sd
                     << bgeu_i_sd  
                     << dec2if_push_sd
-                    << READ_PC_SD 
+                    << READ_PC_SR 
                     << stall;
-        SC_METHOD(affectation_calcul)
+        SC_METHOD(post_reg_read_decoding)
         sensitive   << add_i_sd
                     << slt_i_sd
                     << sltu_i_sd
@@ -370,22 +358,21 @@ SC_MODULE(decod)
                     << dec2exe_push_sd;
         SC_METHOD(pc_inc)
         sensitive   << CLK.pos()
-                    << READ_PC_SD
+                    << READ_PC_SR
                     << offset_branch_sd
                     << inc_pc_sd
-                    << add_offset_to_pc_sd
-                    << READ_PC_VALID_SD ;
+                    << add_offset_to_pc_sd;
 
         SC_METHOD(bypasses);
-        sensitive   << IN_RDATA1_SD
-                    << IN_RDATA2_SD
-                    << BP_EXE_DEST_SD
-                    << BP_EXE_RES_SD
-                    << BP_MEM_DEST_SD
-                    << BP_MEM_RES_SD
+        sensitive   << RDATA1_SR
+                    << RDATA2_SR
+                    << BP_DEST_RE
+                    << BP_EXE_RES_RE
+                    << BP_DEST_RM
+                    << BP_MEM_RES_RM
                     << RADR1_SD
                     << RADR2_SD
-                    << BP_EXE2MEM_EMPTY_SD;
+                    << BP_EXE2MEM_EMPTY_SE;
         reset_signal_is(RESET_N,false) ;
 
     }
