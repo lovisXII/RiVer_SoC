@@ -182,10 +182,20 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 
 ## Exceptions :
 
-* instruction address misaligned
-* instruction address fault -> no instruction at this address ?
-* Illegal instruction
-* breakoint ?
+* Instruction address misaligned  -> 
+* Instruction access fault        -> no instruction at this address ?
+* Illegal instruction             -> instruction doesnt exist, ``DEC``
+* Breakpoint                      -> not implemented  
+* Load address misaligned         -> ``EXE``
+* Load access fault               ->  
+* Store/AMO address misaligned    ->
+* Store/AMO access fault          ->
+* Environment call from U-mode    ->
+* Environment call from S-mode    -> not implemented
+* Environment call from M-mode    ->
+* Instruction page fault          ->
+* Load page fault                 ->
+* Store/AMO page fault            ->
 
 ## IFETCH :
 
