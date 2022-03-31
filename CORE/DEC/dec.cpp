@@ -38,7 +38,8 @@ void decod::dec2exe_push_method() {
 }
 
 void decod::concat_dec2exe() {
-    sc_bv<128> dec2exe_in_var;
+    sc_bv<160> dec2exe_in_var;
+    dec2exe_in_var.range(128,159) = PC_CURRENT_INST_RI.read() ;
     dec2exe_in_var[127] = r1_valid_sd.read();
     dec2exe_in_var[126] = r2_valid_sd.read();
     dec2exe_in_var.range(125, 120) = RADR1_SD.read();
@@ -65,8 +66,9 @@ void decod::concat_dec2exe() {
 }
 
 void decod::unconcat_dec2exe() {
-    sc_bv<128> dec2exe_out_var = DEC2EXE_OUT_SD.read();
+    sc_bv<160> dec2exe_out_var = DEC2EXE_OUT_SD.read();
 
+    PC_OUT_SD.write((sc_bv_base)dec2exe_out_var.range(128,159)) ;
     BP_R1_VALID_RD.write((bool)dec2exe_out_var[127]);
     BP_R2_VALID_RD.write((bool)dec2exe_out_var[126]);
 
@@ -897,4 +899,6 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME (BP_MEM_LOAD_RE));
     sc_trace(tf, RDATA1_SR, GET_NAME (RDATA1_SR));
     sc_trace(tf, RDATA2_SR, GET_NAME (RDATA2_SR));
+    sc_trace(tf, PC_CURRENT_INST_RI, GET_NAME (PC_CURRENT_INST_RI));
+    sc_trace(tf, PC_CURRENT_INST_RI, GET_NAME (PC_CURRENT_INST_RI));
 }

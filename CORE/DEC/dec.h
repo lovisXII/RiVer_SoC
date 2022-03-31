@@ -40,9 +40,10 @@ SC_MODULE(decod)
     sc_in   < bool >              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
     sc_out  < bool >              DEC2IF_EMPTY_SD ;
     sc_out  < sc_bv<32> >         PC_RD ; // this value must also be sent to REG
-
+    sc_out  < sc_bv<32> >         PC_OUT_SD ; // PC link to the current decoded instruction
     //Interface with IF2DEC :
 
+    sc_in   <sc_bv<32>  >         PC_CURRENT_INST_RI ;
     sc_in   < sc_bv<32> >         INSTR_RI ;
     sc_in   < bool >              IF2DEC_EMPTY_SI ;
     sc_out  < bool >              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
@@ -52,7 +53,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP_SE ;
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
-    sc_signal< sc_bv<128> >       DEC2EXE_OUT_SD ;
+    sc_signal< sc_bv<160> >       DEC2EXE_OUT_SD ;
 
     //Bypasses
     sc_in < sc_uint<6> >          BP_DEST_RE ;
@@ -76,7 +77,7 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo<32> dec2if ;
-    fifo<128> dec2exe ;
+    fifo<160> dec2exe ;
 
     // Signals :
 
@@ -97,7 +98,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <128> >   dec2exe_in_sd ;
+    sc_signal < sc_bv <160> >   dec2exe_in_sd ;
     sc_signal < bool >          dec2exe_push_sd ;
     sc_signal < bool >          dec2exe_full_sd ;
 
@@ -263,7 +264,8 @@ SC_MODULE(decod)
                     << RADR1_SD
                     << RADR2_SD
                     << r1_valid_sd
-                    << r2_valid_sd;
+                    << r2_valid_sd
+                    << PC_CURRENT_INST_RI;
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)

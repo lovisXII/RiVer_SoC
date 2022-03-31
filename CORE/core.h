@@ -30,6 +30,7 @@ SC_MODULE(core)
     sc_signal<sc_bv<32>>           PC_OUT_RI ;
     //DEC-EXE interface
     
+    sc_signal< sc_bv<32> >    PC_OUT_SD ;
     sc_signal< sc_uint<32> >    OP1_RD ;
     sc_signal< sc_uint<32> >    OP2_RD ;
     sc_signal< sc_uint<2> >     EXE_CMD_RD ;
@@ -161,6 +162,8 @@ SC_MODULE(core)
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
         dec_inst.PC_RD(PC_RD);
+        dec_inst.PC_OUT_SD(PC_OUT_SD);
+        dec_inst.PC_CURRENT_INST_RI(PC_OUT_RI);
         dec_inst.INSTR_RI(INSTR_RI);
         dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
