@@ -20,14 +20,14 @@ SC_MODULE(core)
     sc_signal< bool >           DEC2IF_POP_SI ; 
     sc_signal< bool >           DEC2IF_EMPTY_SI ;
     sc_signal< sc_bv<32> >      PC_RD ;
-
+    
         // IF2DEC :
     
     sc_signal< sc_bv<32> >      INSTR_RI ;
     sc_signal< bool >           IF2DEC_EMPTY_SI ;
     sc_signal< bool >           IF2DEC_POP_SD ; 
     sc_signal< bool >           IF2DEC_FLUSH_SD ; 
-
+    sc_signal<sc_bv<32>>           PC_OUT_RI ;
     //DEC-EXE interface
     
     sc_signal< sc_uint<32> >    OP1_RD ;
@@ -150,6 +150,9 @@ SC_MODULE(core)
 
         ifetch_inst.IC_INST_SI(IC_INST_SI);
         ifetch_inst.IC_STALL_SI(IC_STALL_SI);
+
+
+        ifetch_inst.PC_OUT_RI(PC_OUT_RI);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
