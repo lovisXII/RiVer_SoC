@@ -9,10 +9,9 @@ void ifetch::fetch_method()
 
     // data sent in if2dec
 
-    if2dec_in_var.range(63,32) = IC_INST_SI.read() ;
-    if2dec_in_var.range(31,0) = PC_RD.read() ;
-
-    if2dec_in.write(if2dec_in_var) ;
+    if2dec_in_var.range(63,32) = (sc_bv_base)IC_INST_SI.read() ;
+    if2dec_in_var.range(31,0) = (sc_bv_base)PC_RD.read() ;
+    if2dec_in_si.write(if2dec_in_var) ;
     //data coming out from if2dec :
 
     INSTR_RI.write((sc_bv_base)instr_ri_var.range(63,32)) ;
@@ -45,10 +44,10 @@ void ifetch::trace(sc_trace_file* tf) {
         sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
         sc_trace(tf, PC_RD, GET_NAME(PC_RD)); 
         sc_trace(tf, INSTR_RI, GET_NAME(INSTR_RI));
-        sc_trace(tf, CLK, GET_NAME(PC_OUT_RI));
+        sc_trace(tf, PC_OUT_RI, GET_NAME(PC_OUT_RI));
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
-        sc_trace(tf, RESET, GET_NAME(if2dec_in));
-        sc_trace(tf, RESET, GET_NAME(instr_ri));
+        sc_trace(tf, if2dec_in_si, GET_NAME(if2dec_in_si));
+        sc_trace(tf, instr_ri, GET_NAME(instr_ri));
         fifo_inst.trace(tf);
 }

@@ -42,7 +42,7 @@ SC_MODULE(ifetch)
 
     // Internals signals :
 
-    sc_signal<sc_bv<64>>  if2dec_in ; 
+    sc_signal<sc_bv<64>>  if2dec_in_si ; 
     sc_signal<sc_bv<64> > instr_ri ; // instruction sent to if2dec 
 
     void fetch_method();
@@ -50,7 +50,7 @@ SC_MODULE(ifetch)
     SC_CTOR(ifetch) : 
     fifo_inst("if2dec")
     {
-        fifo_inst.DIN_S(if2dec_in);
+        fifo_inst.DIN_S(if2dec_in_si);
         fifo_inst.DOUT_R(instr_ri);
         fifo_inst.EMPTY_S(IF2DEC_EMPTY_SI);
         fifo_inst.FULL_S(IF2DEC_FULL_SI);
