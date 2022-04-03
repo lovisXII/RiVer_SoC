@@ -15,7 +15,7 @@ void ifetch::fetch_method()
     //data coming out from if2dec :
 
     INSTR_RI.write((sc_bv_base)instr_ri_var.range(63,32)) ;
-    PC_OUT_RI.write((sc_bv_base)instr_ri_var.range(31,0)) ;
+    PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31,0)) ;
     
     if (IF2DEC_FLUSH_SD.read()) {
         IF2DEC_PUSH_SI.write(false);
@@ -44,7 +44,7 @@ void ifetch::trace(sc_trace_file* tf) {
         sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
         sc_trace(tf, PC_RD, GET_NAME(PC_RD)); 
         sc_trace(tf, INSTR_RI, GET_NAME(INSTR_RI));
-        sc_trace(tf, PC_OUT_RI, GET_NAME(PC_OUT_RI));
+        sc_trace(tf, PC_IF2DEC_RI, GET_NAME(PC_IF2DEC_RI));
         sc_trace(tf, CLK, GET_NAME(CLK));
         sc_trace(tf, RESET, GET_NAME(RESET));
         sc_trace(tf, if2dec_in_si, GET_NAME(if2dec_in_si));

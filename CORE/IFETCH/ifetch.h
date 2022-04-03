@@ -31,7 +31,7 @@ SC_MODULE(ifetch)
     
     sc_in<sc_bv<32>  > PC_RD ; // PC coming to fetch an instruction
     sc_out<sc_bv<32>> INSTR_RI ; // instruction sent to if2dec 
-    sc_out<sc_bv<32>> PC_OUT_RI ; // pc sent to if2decs
+    sc_out<sc_uint<32>> PC_IF2DEC_RI ; // pc sent to if2dec
     //Global Interface :
 
     sc_in_clk CLK;

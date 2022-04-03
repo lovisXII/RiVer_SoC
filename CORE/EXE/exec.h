@@ -17,6 +17,7 @@ SC_MODULE(exec)
     sc_in< sc_uint<6> >     RADR1_RD ;
     sc_in< sc_uint<6> >     RADR2_RD ;
 
+    sc_in<sc_uint<32> >      PC_DEC2EXE_RD ;
     sc_in< sc_uint<32> >    MEM_DATA_RD;
     sc_in< sc_uint<6> >     DEST_RD;
     sc_in< sc_uint<2> >     CMD_RD ;
@@ -34,6 +35,8 @@ SC_MODULE(exec)
     sc_out< sc_uint<32> >  MEM_DATA_RE;
     sc_out< sc_uint<6> >   DEST_RE;
     sc_out< sc_uint<2> >   MEM_SIZE_RE ;
+    sc_out< sc_uint<32>>   PC_EXE2MEM_RE  ; 
+
 
     sc_out< bool >   WB_RE,  MEM_SIGN_EXTEND_RE ; //taille fifo sortie : 7
     sc_out< bool > MEM_LOAD_RE, MEM_STORE_RE ; 
@@ -44,8 +47,8 @@ SC_MODULE(exec)
     
     sc_signal< sc_uint<32> >  exe_res_se ;
 
-    sc_signal< sc_bv<76> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
-    sc_signal< sc_bv<76> >    exe2mem_dout_se;
+    sc_signal< sc_bv<108> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
+    sc_signal< sc_bv<108> >    exe2mem_dout_se;
 
     sc_signal< sc_uint<32> > op1_se;
     sc_signal< sc_uint<32> > op2_se;
@@ -67,7 +70,7 @@ SC_MODULE(exec)
 
     alu         alu_inst;
     shifter     shifter_inst;
-    fifo<76>    fifo_inst;
+    fifo<108>    fifo_inst;
     
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT

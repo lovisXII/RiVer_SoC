@@ -27,7 +27,8 @@ SC_MODULE(decod)
     sc_out  < bool >             SELECT_SHIFT_RD ; //taille fifo entrée : 110
     sc_out  < bool >             SLT_RD ;
     sc_out  < bool >             SLTU_RD ;
-
+    sc_out  < sc_uint<32> >        PC_DEC2EXE_RD ; // PC link to the current decoded instruction
+    
     sc_out  < sc_uint<32> >      MEM_DATA_RD ; // data sent to mem for storage
     sc_out  < bool>              MEM_LOAD_RD ; // say to mem if we do a load
     sc_out  < bool >             MEM_STORE_RD ; // say to mem if we do a store
@@ -40,10 +41,10 @@ SC_MODULE(decod)
     sc_in   < bool >              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
     sc_out  < bool >              DEC2IF_EMPTY_SD ;
     sc_out  < sc_bv<32> >         PC_RD ; // this value must also be sent to REG
-    sc_out  < sc_bv<32> >         PC_OUT_SD ; // PC link to the current decoded instruction
+
     //Interface with IF2DEC :
 
-    sc_in   <sc_bv<32>  >         PC_CURRENT_INST_RI ;
+    sc_in   <sc_uint<32>  >         PC_IF2DEC_RI ;
     sc_in   < sc_bv<32> >         INSTR_RI ;
     sc_in   < bool >              IF2DEC_EMPTY_SI ;
     sc_out  < bool >              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
@@ -265,7 +266,7 @@ SC_MODULE(decod)
                     << RADR2_SD
                     << r1_valid_sd
                     << r2_valid_sd
-                    << PC_CURRENT_INST_RI;
+                    << PC_IF2DEC_RI;
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)
