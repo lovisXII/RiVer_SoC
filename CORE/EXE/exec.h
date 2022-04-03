@@ -31,7 +31,8 @@ SC_MODULE(exec)
 
     // Interruption :
 
-    sc_in<bool>            INTERRUPTION_SM ;    
+    sc_in<bool>            INTERRUPTION_SE ;    
+    sc_out<bool>           INTERRUPTION_SX ; // asynchrone Interruption from outside
     //Fifo exe2mem interface :
 
     sc_out< sc_uint<32> >  EXE_RES_RE ;
@@ -82,6 +83,8 @@ SC_MODULE(exec)
     void manage_fifo(); // allow the push/pop of fifo exe2mem
 
     void bypasses(); // allow the push/pop of fifo exe2mem
+    void interruption() ;
+
     void trace(sc_trace_file* tf);
     SC_CTOR(exec) :
         alu_inst("alu"), 
@@ -151,6 +154,8 @@ SC_MODULE(exec)
                     << OP1_RD
                     << OP2_RD
                     << MEM_DATA_RD;
+        SC_METHOD(interruption) ;
+        sensitive << INTERRUPTION_SX ;
 
     }
 };

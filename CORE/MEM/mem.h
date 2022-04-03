@@ -67,9 +67,8 @@ SC_MODULE(mem)
     sc_in_clk                   RESET;
 
     // Interruption :
-
-    sc_in<bool>            INTERRUPTION_SX ;   
-    sc_out<bool>           INTERRUPTION_SM ;
+ 
+    sc_in<bool>           INTERRUPTION_SE ;
 
     // FIFO
     fifo<74>    fifo_inst;

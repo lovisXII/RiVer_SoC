@@ -76,7 +76,7 @@ SC_MODULE(decod)
 
     // Interruption :
 
-    sc_in<bool>            INTERRUPTION_SM ;   
+    sc_in<bool>            INTERRUPTION_SE ;   
 
     //Instance used :
     
@@ -115,7 +115,7 @@ SC_MODULE(decod)
     sc_signal < bool >          u_type_inst_sd ; // U type format
     sc_signal < bool >          j_type_inst_sd ; // J type format
     sc_signal < bool >          jalr_type_inst_sd ; //JALR has a specific opcode
-
+    sc_signal < bool >          system_type_inst_sd ; //System instruction
     //R-type Instructions :
 
 
@@ -182,7 +182,13 @@ SC_MODULE(decod)
     // Kernel instruction :
 
     sc_signal < bool > ecall_i_sd ;
-    sc_signal < bool > ebreak_i_sd ; 
+    sc_signal < bool > ebreak_i_sd ;
+    sc_signal < bool > csrrw_i_sd ; 
+    sc_signal < bool > csrrs_i_sd ; 
+    sc_signal < bool > csrrc_i_sd ; 
+    sc_signal < bool > csrrc_i_sd ; 
+    sc_signal < bool > csrrsi_i_sd ; 
+    sc_signal < bool > csrrci_i_sd ; 
 
     //Offset for branch :
 

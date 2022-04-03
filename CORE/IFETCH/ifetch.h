@@ -39,7 +39,7 @@ SC_MODULE(ifetch)
     
     // Interruption :
 
-    sc_in<bool>            INTERRUPTION_SM ;   
+    sc_in<bool>            INTERRUPTION_SE ;   
 
     // FIFO
     fifo<64>    fifo_inst;

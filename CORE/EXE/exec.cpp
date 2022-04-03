@@ -140,6 +140,14 @@ void exec::bypasses() {
     blocked.write(blocked_var);
 }
 
+void interruption()
+{
+    if(INTERRUPTION_SX.read())
+    {
+        INTERRUPTION_SE.write(1) ;
+    }
+}
+
 void exec::trace(sc_trace_file* tf) {
         sc_trace(tf, op1_se, GET_NAME(op1_se));
         sc_trace(tf, op2_se, GET_NAME(op2_se));

@@ -77,13 +77,7 @@ void mem::sign_extend() {
     }
 }
 
-void interruption()
-{
-    if(INTERRUPTION_SX.read())
-    {
-        INTERRUPTION_SM.write(1) ;
-    }
-}
+
 
 void mem::trace(sc_trace_file* tf) {
         sc_trace(tf, MCACHE_ADR_SM, GET_NAME(MCACHE_ADR_SM)); // adress in memory
