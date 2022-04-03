@@ -74,6 +74,9 @@ SC_MODULE(decod)
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
 
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SM ;   
 
     //Instance used :
     
@@ -175,6 +178,11 @@ SC_MODULE(decod)
     sc_signal < bool > sw_i_sd ;
     sc_signal < bool > sh_i_sd ;
     sc_signal < bool > sb_i_sd ;
+
+    // Kernel instruction :
+
+    sc_signal < bool > ecall_i_sd ;
+    sc_signal < bool > ebreak_i_sd ; 
 
     //Offset for branch :
 

@@ -36,6 +36,10 @@ SC_MODULE(ifetch)
 
     sc_in_clk CLK;
     sc_in_clk RESET;
+    
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SM ;   
 
     // FIFO
     fifo<64>    fifo_inst;

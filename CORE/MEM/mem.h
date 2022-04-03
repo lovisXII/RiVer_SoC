@@ -66,6 +66,11 @@ SC_MODULE(mem)
     sc_in_clk                   CLK;
     sc_in_clk                   RESET;
 
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SX ;   
+    sc_out<bool>           INTERRUPTION_SM ;
+
     // FIFO
     fifo<74>    fifo_inst;
 
@@ -74,7 +79,8 @@ SC_MODULE(mem)
     void fifo_gestion();
     void mem_preprocess();
     void sign_extend();
-
+    void interruption() ;
+    
     void trace(sc_trace_file* tf);
 
     SC_CTOR(mem) : 

@@ -28,7 +28,10 @@ SC_MODULE(exec)
     sc_in< bool >           SLT_RD, SLTU_RD;
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
-    
+
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SM ;    
     //Fifo exe2mem interface :
 
     sc_out< sc_uint<32> >  EXE_RES_RE ;

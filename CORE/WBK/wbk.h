@@ -36,6 +36,10 @@ SC_MODULE(wbk)
     sc_in_clk                   CLK;
     sc_in_clk                   RESET;
 
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SM ;   
+
     // FIFO
 
     void wbk_method();
