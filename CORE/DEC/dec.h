@@ -27,7 +27,8 @@ SC_MODULE(decod)
     sc_out  < bool >             SELECT_SHIFT_RD ; //taille fifo entrée : 110
     sc_out  < bool >             SLT_RD ;
     sc_out  < bool >             SLTU_RD ;
-
+    sc_out  < sc_uint<32> >        PC_DEC2EXE_RD ; // PC link to the current decoded instruction
+    
     sc_out  < sc_uint<32> >      MEM_DATA_RD ; // data sent to mem for storage
     sc_out  < bool>              MEM_LOAD_RD ; // say to mem if we do a load
     sc_out  < bool >             MEM_STORE_RD ; // say to mem if we do a store
@@ -43,6 +44,7 @@ SC_MODULE(decod)
 
     //Interface with IF2DEC :
 
+    sc_in   <sc_uint<32>  >         PC_IF2DEC_RI ;
     sc_in   < sc_bv<32> >         INSTR_RI ;
     sc_in   < bool >              IF2DEC_EMPTY_SI ;
     sc_out  < bool >              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
@@ -52,7 +54,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP_SE ;
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
-    sc_signal< sc_bv<128> >       DEC2EXE_OUT_SD ;
+    sc_signal< sc_bv<160> >       DEC2EXE_OUT_SD ;
 
     //Bypasses
     sc_in < sc_uint<6> >          BP_DEST_RE ;
@@ -77,11 +79,14 @@ SC_MODULE(decod)
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
 
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SE ;   
 
     //Instance used :
     
     fifo<32> dec2if ;
-    fifo<128> dec2exe ;
+    fifo<160> dec2exe ;
 
     // Signals :
 
@@ -102,7 +107,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <128> >   dec2exe_in_sd ;
+    sc_signal < sc_bv <160> >   dec2exe_in_sd ;
     sc_signal < bool >          dec2exe_push_sd ;
     sc_signal < bool >          dec2exe_full_sd ;
 
@@ -115,7 +120,7 @@ SC_MODULE(decod)
     sc_signal < bool >          u_type_inst_sd ; // U type format
     sc_signal < bool >          j_type_inst_sd ; // J type format
     sc_signal < bool >          jalr_type_inst_sd ; //JALR has a specific opcode
-
+    sc_signal < bool >          system_type_inst_sd ; //System instruction
     //R-type Instructions :
 
 
@@ -178,6 +183,17 @@ SC_MODULE(decod)
     sc_signal < bool > sw_i_sd ;
     sc_signal < bool > sh_i_sd ;
     sc_signal < bool > sb_i_sd ;
+
+    // Kernel instruction :
+
+    sc_signal < bool > ecall_i_sd ;
+    sc_signal < bool > ebreak_i_sd ;
+    sc_signal < bool > csrrw_i_sd ; 
+    sc_signal < bool > csrrs_i_sd ; 
+    sc_signal < bool > csrrc_i_sd ; 
+    sc_signal < bool > csrrc_i_sd ; 
+    sc_signal < bool > csrrsi_i_sd ; 
+    sc_signal < bool > csrrci_i_sd ; 
 
     //Offset for branch :
 
@@ -268,7 +284,8 @@ SC_MODULE(decod)
                     << RADR1_SD
                     << RADR2_SD
                     << r1_valid_sd
-                    << r2_valid_sd;
+                    << r2_valid_sd
+                    << PC_IF2DEC_RI;
         SC_METHOD(unconcat_dec2exe)
         sensitive << DEC2EXE_OUT_SD ;       
         SC_METHOD(dec2exe_push_method)

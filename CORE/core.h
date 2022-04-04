@@ -27,9 +27,10 @@ SC_MODULE(core)
     sc_signal< bool >           IF2DEC_EMPTY_SI ;
     sc_signal< bool >           IF2DEC_POP_SD ; 
     sc_signal< bool >           IF2DEC_FLUSH_SD ; 
-    sc_signal<sc_bv<32>>           PC_OUT_RI ;
+    sc_signal<sc_uint<32>>        PC_IF2DEC_RI ;
     //DEC-EXE interface
     
+    sc_signal< sc_uint<32> >    PC_DEC2EXE_RD ;
     sc_signal< sc_uint<32> >    OP1_RD ;
     sc_signal< sc_uint<32> >    OP2_RD ;
     sc_signal< sc_uint<2> >     EXE_CMD_RD ;
@@ -71,7 +72,7 @@ SC_MODULE(core)
     sc_signal< sc_uint<32> >    MEM_DATA_RE;
     sc_signal< sc_uint<6> >     DEST_RE;
     sc_signal< sc_uint<2> >     MEM_SIZE_RE ;
-
+    sc_signal<sc_uint<32>>      PC_EXE2MEM_RE;
     sc_signal< bool >           MEM_WB,  
                                 MEM_SIGN_EXTEND_RE ;
     sc_signal< bool >           MEM_LOAD_RE, 
@@ -87,7 +88,7 @@ SC_MODULE(core)
     sc_signal< bool >           MEM2WBK_EMPTY_SM;
     sc_signal< bool >           MEM2WBK_POP_SW;
     sc_signal< bool >           WBK_MEM_LOAD;
-
+    sc_signal<sc_uint<32>>      PC_MEM2WBK_RM ;
     //WBK-REG interface
     sc_signal< sc_uint<6> >     WADR_SW ;
     sc_signal< sc_uint<32> >    WDATA_SW ;
@@ -152,7 +153,7 @@ SC_MODULE(core)
         ifetch_inst.IC_STALL_SI(IC_STALL_SI);
 
 
-        ifetch_inst.PC_OUT_RI(PC_OUT_RI);
+        ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -161,6 +162,8 @@ SC_MODULE(core)
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
         dec_inst.PC_RD(PC_RD);
+        dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
+        dec_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
         dec_inst.INSTR_RI(INSTR_RI);
         dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
@@ -227,6 +230,9 @@ SC_MODULE(core)
         exec_inst.WB_RD(WB_RD);
         exec_inst.SELECT_SHIFT_RD(SELECT_SHIFT_RD);
         
+        exec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
+        exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
+
         exec_inst.MEM_DATA_RD(MEM_DATA_RD);
         exec_inst.MEM_LOAD_RD(MEM_LOAD_RD);
         exec_inst.MEM_STORE_RD(MEM_STORE_RD);
@@ -280,6 +286,9 @@ SC_MODULE(core)
         mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
         mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);
 
+        mem_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
+        mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
+
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
 
@@ -310,6 +319,8 @@ SC_MODULE(core)
         wbk_inst.WADR_SW(WADR_SW);
         wbk_inst.WDATA_SW(WDATA_SW);
         wbk_inst.WENABLE_SW(WENABLE_SW);
+
+        wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);

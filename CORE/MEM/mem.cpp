@@ -1,17 +1,22 @@
 #include "mem.h"
 
 void mem::mem2wbk_concat() {
-    sc_uint<38> ff_din;
+    sc_bv<74> ff_din;
+    
     ff_din.range(31, 0) = data_sm.read();
     ff_din.range(36, 32) = DEST_RE.read();
     ff_din[37] = wb_sm.read();
+    ff_din.range(73, 38) = PC_EXE2MEM_RE.read() ;
+
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
-    sc_uint<38> ff_dout = mem2wbk_dout_sm.read();
-    MEM_RES_RM.write(ff_dout.range(31, 0));
-    DEST_RM.write(ff_dout.range(36, 32));
-    WB_RM.write(ff_dout[37]);
+    sc_bv<74> ff_dout = mem2wbk_dout_sm.read();
+
+    MEM_RES_RM.write((sc_bv_base) ff_dout.range(31, 0));
+    DEST_RM.write((sc_bv_base) ff_dout.range(36, 32));
+    WB_RM.write((bool)ff_dout[37]);
+    PC_MEM2WBK_RM.write((sc_bv_base) ff_dout.range(73,38)) ;
 }
 
 void mem::fifo_gestion() {
@@ -71,6 +76,8 @@ void mem::sign_extend() {
         data_sm.write(EXE_RES_RE.read());
     }
 }
+
+
 
 void mem::trace(sc_trace_file* tf) {
         sc_trace(tf, MCACHE_ADR_SM, GET_NAME(MCACHE_ADR_SM)); // adress in memory

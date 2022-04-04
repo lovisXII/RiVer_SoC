@@ -31,7 +31,7 @@ SC_MODULE(mem)
     sc_in< sc_uint<32> >        MEM_DATA_RE;
     sc_in< sc_uint<6> >         DEST_RE;
     sc_in< sc_uint<2> >         MEM_SIZE_RE ;
-
+    sc_in<sc_uint<32>>          PC_EXE2MEM_RE ;
     sc_in< bool >               WB_RE,  
                                 SIGN_EXTEND_RE ; //taille fifo entrée : 74
     sc_in< bool >               LOAD_RE, 
@@ -48,7 +48,7 @@ SC_MODULE(mem)
     sc_signal<bool>             mem2wbk_push_sm ;
     sc_signal<bool>             mem2wbk_full_sm ;
     sc_out<bool>                MEM2WBK_EMPTY_SM ;
-    
+    sc_out<sc_uint<32>>         PC_MEM2WBK_RM ;
 
     //WBK interface 
     sc_out< sc_uint<32> >       MEM_RES_RM;
@@ -56,8 +56,9 @@ SC_MODULE(mem)
     sc_out< bool >              WB_RM;
     
     //Internal signals
-    sc_signal< sc_bv<42> >      mem2wbk_din_sm;
-    sc_signal< sc_bv<42> >      mem2wbk_dout_sm;
+    sc_signal< sc_bv<74> >      mem2wbk_din_sm;
+    sc_signal< sc_bv<74> >      mem2wbk_dout_sm;
+    
     sc_signal< sc_uint<32> >    data_sm;
     sc_signal< bool >           wb_sm;
     //Global Interface :
@@ -65,15 +66,20 @@ SC_MODULE(mem)
     sc_in_clk                   CLK;
     sc_in_clk                   RESET;
 
+    // Interruption :
+ 
+    sc_in<bool>           INTERRUPTION_SE ;
+
     // FIFO
-    fifo<42>    fifo_inst;
+    fifo<74>    fifo_inst;
 
     void mem2wbk_concat();
     void mem2wbk_unconcat();
     void fifo_gestion();
     void mem_preprocess();
     void sign_extend();
-
+    void interruption() ;
+    
     void trace(sc_trace_file* tf);
 
     SC_CTOR(mem) : 

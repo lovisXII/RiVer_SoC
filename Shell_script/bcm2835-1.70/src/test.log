@@ -1,0 +1,2 @@
+bcm2835_init: gpio mmap failed: Invalid argument
+FAIL test (exit status: 1)

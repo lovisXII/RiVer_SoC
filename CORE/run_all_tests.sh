@@ -3,7 +3,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOC='\033[0m'
 
-make -j 10
+make -j
 for file in $(ls tests); do 
     printf "Test ${file} non opt..." 
     ./core_tb tests/$file >/dev/null 2>&1

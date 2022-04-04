@@ -23,6 +23,7 @@ SC_MODULE(wbk)
     sc_in< sc_uint<32> >        MEM_RES_RM;
     sc_in< sc_uint<6> >         DEST_RM;
     sc_in< bool >               WB_RM;
+    sc_in<sc_uint<32>>          PC_MEM2WBK_RM ;
     //Mem2wbk interface
 
     sc_in<bool>                 MEM2WBK_EMPTY_SM;
@@ -34,6 +35,10 @@ SC_MODULE(wbk)
 
     sc_in_clk                   CLK;
     sc_in_clk                   RESET;
+
+    // Interruption :
+
+    sc_in<bool>            INTERRUPTION_SE ;   
 
     // FIFO
 
