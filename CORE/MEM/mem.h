@@ -35,7 +35,11 @@ SC_MODULE(mem)
     sc_in< bool >               WB_RE,  
                                 SIGN_EXTEND_RE ; //taille fifo entrée : 74
     sc_in< bool >               LOAD_RE, 
-                                STORE_RE ; 
+                                STORE_RE ;
+
+    sc_in< bool >               CSR_type_operation_RE ;
+    sc_in<sc_uint<12>>          ADR_CSR_SE ;
+    sc_in<sc_uint<32>>          OP1_CSR_RE ;
 
     //exe2mem interface :
     
@@ -49,6 +53,8 @@ SC_MODULE(mem)
     sc_signal<bool>             mem2wbk_full_sm ;
     sc_out<bool>                MEM2WBK_EMPTY_SM ;
     sc_out<sc_uint<32>>         PC_MEM2WBK_RM ;
+    sc_out< bool >              CSR_type_operation_RM ; 
+    sc_out<sc_uint<32>>         OP1_CSR_RM ;
 
     //WBK interface 
     sc_out< sc_uint<32> >       MEM_RES_RM;
@@ -56,8 +62,8 @@ SC_MODULE(mem)
     sc_out< bool >              WB_RM;
     
     //Internal signals
-    sc_signal< sc_bv<74> >      mem2wbk_din_sm;
-    sc_signal< sc_bv<74> >      mem2wbk_dout_sm;
+    sc_signal< sc_bv<107> >      mem2wbk_din_sm;
+    sc_signal< sc_bv<107> >      mem2wbk_dout_sm;
     
     sc_signal< sc_uint<32> >    data_sm;
     sc_signal< bool >           wb_sm;
@@ -70,8 +76,14 @@ SC_MODULE(mem)
  
     sc_in<bool>           INTERRUPTION_SE ;
 
+    // KREG Interface :
+
+    sc_out<sc_uint<12>>     ADR_CSR_SM ;
+    sc_out<sc_uint<32>>     KREG_DATA_WRITE_SM ;
+
+
     // FIFO
-    fifo<74>    fifo_inst;
+    fifo<107>    fifo_inst;
 
     void mem2wbk_concat();
     void mem2wbk_unconcat();
@@ -79,6 +91,7 @@ SC_MODULE(mem)
     void mem_preprocess();
     void sign_extend();
     void interruption() ;
+    void csr() ;
     
     void trace(sc_trace_file* tf);
 

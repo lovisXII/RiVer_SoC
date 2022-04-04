@@ -35,7 +35,9 @@ SC_MODULE(decod)
     sc_out  < bool >             MEM_SIGN_EXTEND_RD ; 
     sc_out  < sc_uint<2> >       MEM_SIZE_RD ; // tells to mem if we do an acces in word, hw or byte
 
-    
+    sc_out < bool >              CSR_type_operation_RD ; // indicate if we do a csr operation, if so need to WBK CSR in rd 
+    sc_out < sc_uint<12> >       ADR_CSR_SD ; // CSR adress sent to EXE, will allow to wbk csr in MEM
+     
     // Interface with DEC2IF : 
 
     sc_in   < bool >              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
@@ -54,7 +56,7 @@ SC_MODULE(decod)
 
     sc_in< bool >                 DEC2EXE_POP_SE ;
     sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
-    sc_signal< sc_bv<160> >       DEC2EXE_OUT_SD ;
+    sc_signal< sc_bv<172> >       dec2exe_out_sd ;
 
     //Bypasses
     sc_in < sc_uint<6> >          BP_DEST_RE ;
@@ -72,8 +74,8 @@ SC_MODULE(decod)
 
     // Interface with KREG :
 
-    sc_out < sc_uint<12> >      ADR_CSR_SD ;
-    sc_out < sc_uint<32> >      DATA_WRITE_SD ;
+    sc_out < sc_uint<12> >      ADR_CSR_KREG_SD ; // CSR adress sent to KREG to get data 
+    sc_in  < sc_uint<32> >      DATA_READ_CSR_SK ; // data read from KREG
 
     //General Interface :
     sc_in_clk                     CLK ;
@@ -86,7 +88,7 @@ SC_MODULE(decod)
     //Instance used :
     
     fifo<32> dec2if ;
-    fifo<160> dec2exe ;
+    fifo<172> dec2exe ;
 
     // Signals :
 
@@ -107,7 +109,7 @@ SC_MODULE(decod)
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <160> >   dec2exe_in_sd ;
+    sc_signal < sc_bv <172> >   dec2exe_in_sd ;
     sc_signal < bool >          dec2exe_push_sd ;
     sc_signal < bool >          dec2exe_full_sd ;
 
@@ -191,10 +193,14 @@ SC_MODULE(decod)
     sc_signal < bool > csrrw_i_sd ; 
     sc_signal < bool > csrrs_i_sd ; 
     sc_signal < bool > csrrc_i_sd ; 
-    sc_signal < bool > csrrc_i_sd ; 
+    sc_signal < bool > csrrwi_i_sd ; 
     sc_signal < bool > csrrsi_i_sd ; 
     sc_signal < bool > csrrci_i_sd ; 
 
+    // Signal for Kernel usage
+
+    sc_signal < bool > csr_type_operation_rd ;
+    sc_signal <sc_uint<12>> adr_csr_sd ;
     //Offset for branch :
 
     sc_signal < sc_uint<32> > offset_branch_sd ;
@@ -250,7 +256,7 @@ SC_MODULE(decod)
         dec2if.RESET_N(RESET_N) ;
     
         dec2exe.DIN_S(dec2exe_in_sd) ;
-        dec2exe.DOUT_R(DEC2EXE_OUT_SD) ;
+        dec2exe.DOUT_R(dec2exe_out_sd) ;
         dec2exe.EMPTY_S(DEC2EXE_EMPTY_SD) ;
         dec2exe.FULL_S(dec2exe_full_sd) ;
         dec2exe.PUSH_S(dec2exe_push_sd) ;
@@ -287,7 +293,7 @@ SC_MODULE(decod)
                     << r2_valid_sd
                     << PC_IF2DEC_RI;
         SC_METHOD(unconcat_dec2exe)
-        sensitive << DEC2EXE_OUT_SD ;       
+        sensitive << dec2exe_out_sd ;       
         SC_METHOD(dec2exe_push_method)
         sensitive   << dec2exe_full_sd 
                     << IF2DEC_EMPTY_SI 

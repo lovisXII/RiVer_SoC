@@ -38,8 +38,11 @@ void decod::dec2exe_push_method() {
 }
 
 void decod::concat_dec2exe() {
-    sc_bv<160> dec2exe_in_var;
-    dec2exe_in_var.range(128,159) = PC_IF2DEC_RI.read() ;
+    sc_bv<173> dec2exe_in_var;
+
+    dec2exe_in_var[172] = csr_type_operation_rd.read();
+    dec2exe_in_var.range(171,160) = adr_csr_sd.read() ;
+    dec2exe_in_var.range(159,128) = PC_IF2DEC_RI.read() ;
     dec2exe_in_var[127] = r1_valid_sd.read();
     dec2exe_in_var[126] = r2_valid_sd.read();
     dec2exe_in_var.range(125, 120) = RADR1_SD.read();
@@ -66,9 +69,12 @@ void decod::concat_dec2exe() {
 }
 
 void decod::unconcat_dec2exe() {
-    sc_bv<160> dec2exe_out_var = DEC2EXE_OUT_SD.read();
+    sc_bv<172> dec2exe_out_var = dec2exe_out_sd.read();
 
-    PC_DEC2EXE_RD.write((sc_bv_base)dec2exe_out_var.range(128,159)) ;
+
+    CSR_type_operation_RD.write((bool)dec2exe_out_var[172]);
+    ADR_CSR_SD.write((sc_bv_base)dec2exe_out_var.range(171,160)) ;
+    PC_DEC2EXE_RD.write((sc_bv_base)dec2exe_out_var.range(159,128)) ;
     BP_R1_VALID_RD.write((bool)dec2exe_out_var[127]);
     BP_R2_VALID_RD.write((bool)dec2exe_out_var[126]);
 
@@ -332,12 +338,11 @@ void decod::decoding_instruction() {
         csrrsi_i_sd.write(1);
     else
         csrrsi_i_sd.write(0);
-}
     if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b111)
         csrrci_i_sd.write(1);
     else
         csrrci_i_sd.write(0);
-}
+
 }
 
 //---------------------------------------------REGISTRE & OPERAND DETECTION
@@ -554,6 +559,44 @@ void decod::pre_reg_read_decoding() {
         inc_pc_var = 0;
 
     }
+    else if (system_type_inst_sd == 1)
+    {
+        // in CSR operation we always have :
+        // rd = CSR
+        // CSR = (rs1 | 0) operation CSR
+        // So CSR must be wbk in rd
+        if(csrrw_i_sd | csrrs_i_sd | csrrc_i_sd | csrrw_i_sd | csrrsi_i_sd | csrrci_i_sd )
+        {
+            sc_uint<32> rdata1_signal_sd  = rdata1_sd;
+            adr_csr_sd = if_ir.range(31,20) ;
+            radr1_var = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19,15) : 0;
+            radr2_var = 0;
+
+            adr_dest_var = if_ir.range(11, 7);
+
+            dec2exe_op1_var = DATA_READ_CSR_SK.read();
+
+            if(csrrwi_i_sd | csrrs_i_sd)
+                dec2exe_op2_var = rdata1_signal_sd ;
+            else if(csrrc_i_sd)
+                dec2exe_op2_var = ~rdata1_signal_sd ;
+            else if(csrrwi_i_sd | csrrsi_i_sd) 
+                dec2exe_op2_var = if_ir.range(19,15) ;
+            else if(csrrci_i_sd)
+                dec2exe_op2_var = ~if_ir.range(19,15) ;  
+                    
+            offset_branch_var = 0 ;
+            mem_data_var = 0;
+            inc_pc_var = 0;
+
+            csr_type_operation_rd = 1 ;
+            ADR_CSR_KREG_SD.write(adr_csr_sd) ;
+        }
+        else if( ecall_i_sd || ebreak_i_sd)
+        {
+
+        }
+    }
     // Default case :
     else {
         radr1_var = 0;
@@ -656,7 +699,7 @@ void decod::post_reg_read_decoding() {
     }
 
     // CMD : &
-    else if (and_i_sd || andi_i_sd) {
+    else if (and_i_sd || andi_i_sd || csrrc_i_sd || csrrc_i_sd) {
         exe_cmd_sd.write(1);
         exe_neg_op2_sd.write(0);
         dec2exe_wb_var = 1;
@@ -669,7 +712,7 @@ void decod::post_reg_read_decoding() {
 
     }
     // CMD : |
-    else if (or_i_sd || ori_i_sd) {
+    else if (or_i_sd || ori_i_sd || csrrs_i_sd || csrrsi_i_sd) {
         exe_cmd_sd.write(2);
         exe_neg_op2_sd.write(0);
         dec2exe_wb_var = 1;
@@ -857,7 +900,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));
     sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
     sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
-    sc_trace(tf, DEC2EXE_OUT_SD, GET_NAME(DEC2EXE_OUT_SD));
+    sc_trace(tf, dec2exe_out_sd, GET_NAME(dec2exe_out_sd));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
     sc_trace(tf, dec2if_in_sd, GET_NAME(dec2if_in_sd));

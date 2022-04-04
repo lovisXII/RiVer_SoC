@@ -7,12 +7,12 @@ SC_MODULE(kreg)
 
     // Input :
 
-    sc_in<sc_uint<12>>        ADR_CSR_SD ;
-    sc_in<sc_uint<32>>        DATA_WRITE_SD ;
+    sc_in<sc_uint<12>>        ADR_CSR_SM ;
+    sc_in<sc_uint<32>>        KREG_DATA_WRITE_SM ;
 
     //Output :
 
-    sc_out<sc_uint<32>>       DATA_READ_CSR_SD ;
+    sc_out<sc_uint<32>>       DATA_READ_CSR_SK ;
 
     // General Interface :
 
@@ -28,8 +28,8 @@ SC_MODULE(kreg)
     SC_CTOR(kreg)
     {
         SC_CTHREAD(writing_csr, CLK.pos()) ;
-        sensitive << DATA_WRITE_SD << RESET_N;
+        sensitive << KREG_DATA_WRITE_SM << RESET_N;
         SC_METHOD(reading_csr) ;
-        sensitive << ADR_CSR_SD ;
+        sensitive << ADR_CSR_SM ;
     }
 };

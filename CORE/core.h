@@ -52,7 +52,14 @@ SC_MODULE(core)
     sc_signal  < bool >         BP_R1_VALID_RD ;
     sc_signal  < bool >         BP_R2_VALID_RD ;
     sc_signal  < sc_uint<6> >   BP_RADR1_RD ;
-    sc_signal  < sc_uint<6> >   BP_RADR2_RD ;                 
+    sc_signal  < sc_uint<6> >   BP_RADR2_RD ;     
+
+    sc_signal<bool>             CSR_type_operation_RD ;
+    sc_signal<sc_uint<12>>      ADR_CSR_SD ;
+    sc_signal<sc_uint<12>>      ADR_CSR_KREG_SD ;
+    sc_signal<sc_uint<32>>      DATA_READ_CSR_SK ;
+    sc_signal<bool>             INTERRUPTION_SE ;
+
 
     //DEC-REG interface
     sc_signal< sc_uint<32> >    RDATA1_SR ; 
@@ -80,6 +87,12 @@ SC_MODULE(core)
     sc_signal< bool >           EXE2MEM_EMPTY_SE, 
                                 EXE2MEM_POP_SM;
 
+    sc_signal<bool>             CSR_type_operation_RE ;
+    sc_signal<bool>             INTERRUPTION_SX ;
+    sc_signal<sc_uint<12>>      ADR_CSR_SE;
+    sc_signal<sc_uint<32>>      OP1_CSR_RE;
+
+
     //MEM-WBK interface
     sc_signal< sc_uint<32> >    MEM_RES_RM;
     sc_signal< sc_uint<6> >     DEST_RM;
@@ -89,7 +102,16 @@ SC_MODULE(core)
     sc_signal< bool >           MEM2WBK_POP_SW;
     sc_signal< bool >           WBK_MEM_LOAD;
     sc_signal<sc_uint<32>>      PC_MEM2WBK_RM ;
+    sc_signal< bool >           CSR_type_operation_RM ;
+    sc_signal<sc_uint<32>>      OP1_CSR_RM ;
+
+    // MEM-KREG interface
+
+    sc_signal<sc_uint<12>>     ADR_CSR_SM ;
+    sc_signal<sc_uint<32>>     KREG_DATA_WRITE_SM ;
+
     //WBK-REG interface
+
     sc_signal< sc_uint<6> >     WADR_SW ;
     sc_signal< sc_uint<32> >    WDATA_SW ;
     sc_signal< bool >           WENABLE_SW ;
@@ -154,6 +176,7 @@ SC_MODULE(core)
 
 
         ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
+        ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -213,6 +236,13 @@ SC_MODULE(core)
         dec_inst.BP_RADR2_RD(BP_RADR2_RD);
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
 
+
+        dec_inst.CSR_type_operation_RD(CSR_type_operation_RD);
+        dec_inst.ADR_CSR_SD(ADR_CSR_SD);
+        dec_inst.ADR_CSR_KREG_SD(ADR_CSR_KREG_SD);
+        dec_inst.DATA_READ_CSR_SK(DATA_READ_CSR_SK);
+        dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
@@ -256,6 +286,15 @@ SC_MODULE(core)
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
 
+        exec_inst.CSR_type_operation_RD(CSR_type_operation_RD);
+        exec_inst.ADR_CSR_SD(ADR_CSR_SD);
+        exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+        exec_inst.INTERRUPTION_SX(INTERRUPTION_SX);
+        exec_inst.CSR_type_operation_RE(CSR_type_operation_RE);
+        exec_inst.ADR_CSR_SE(ADR_CSR_SE);
+        exec_inst.OP1_CSR_RE(OP1_CSR_RE);
+
+
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
@@ -289,6 +328,17 @@ SC_MODULE(core)
         mem_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
         mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
+        mem_inst.CSR_type_operation_RE(CSR_type_operation_RE);
+        mem_inst.ADR_CSR_SE(ADR_CSR_SE);
+        mem_inst.OP1_CSR_RE(OP1_CSR_RE);
+        mem_inst.CSR_type_operation_RM(CSR_type_operation_RM);
+        mem_inst.OP1_CSR_RM(OP1_CSR_RM);
+        mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+
+        mem_inst.ADR_CSR_SM(ADR_CSR_SM);
+        mem_inst.KREG_DATA_WRITE_SM(KREG_DATA_WRITE_SM);
+
+
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
 
@@ -321,6 +371,10 @@ SC_MODULE(core)
         wbk_inst.WENABLE_SW(WENABLE_SW);
 
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
+
+        wbk_inst.CSR_type_operation_RM(CSR_type_operation_RM);
+        wbk_inst.OP1_CSR_RM(OP1_CSR_RM);
+        wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);

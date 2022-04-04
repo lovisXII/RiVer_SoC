@@ -10,7 +10,7 @@ SC_MODULE(exec)
 {
     // Input/Output of EXE : 
 
-    sc_in< sc_uint<32> >    OP1_RD ;
+    sc_in< sc_uint<32> >    OP1_RD ; // can contains CSR if CSR_type_operation_RD == 1
     sc_in< sc_uint<32> >    OP2_RD ;
     sc_in< bool >           OP1_VALID_RD ;
     sc_in< bool >           OP2_VALID_RD ;
@@ -26,13 +26,17 @@ SC_MODULE(exec)
     sc_in< bool >           MEM_LOAD_RD, MEM_STORE_RD ; 
     sc_in< bool >           EXE2MEM_POP_SM, DEC2EXE_EMPTY_SD;
     sc_in< bool >           SLT_RD, SLTU_RD;
+
+    sc_in< bool >          CSR_type_operation_RD ;
+    sc_in < sc_uint<12> >  ADR_CSR_SD ; 
+
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
 
     // Interruption :
 
-    sc_in<bool>            INTERRUPTION_SE ;    
-    sc_out<bool>           INTERRUPTION_SX ; // asynchrone Interruption from outside
+    sc_out<bool>            INTERRUPTION_SE ;    
+    sc_in<bool>             INTERRUPTION_SX ; // asynchrone Interruption from outside
     //Fifo exe2mem interface :
 
     sc_out< sc_uint<32> >  EXE_RES_RE ;
@@ -43,16 +47,19 @@ SC_MODULE(exec)
 
 
     sc_out< bool >   WB_RE,  MEM_SIGN_EXTEND_RE ; //taille fifo sortie : 7
-    sc_out< bool > MEM_LOAD_RE, MEM_STORE_RE ; 
+    sc_out< bool >          MEM_LOAD_RE, MEM_STORE_RE ; 
     sc_out< bool >   EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
-    
+
+    sc_out< bool >          CSR_type_operation_RE ;
+    sc_out < sc_uint<12> >  ADR_CSR_SE ;
+    sc_out<sc_uint<32>>     OP1_CSR_RE ;
 
     //Internals signals :
     
     sc_signal< sc_uint<32> >  exe_res_se ;
 
-    sc_signal< sc_bv<108> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
-    sc_signal< sc_bv<108> >    exe2mem_dout_se;
+    sc_signal< sc_bv<153> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
+    sc_signal< sc_bv<153> >    exe2mem_dout_se;
 
     sc_signal< sc_uint<32> > op1_se;
     sc_signal< sc_uint<32> > op2_se;
@@ -74,7 +81,7 @@ SC_MODULE(exec)
 
     alu         alu_inst;
     shifter     shifter_inst;
-    fifo<108>    fifo_inst;
+    fifo<153>    fifo_inst;
     
     void preprocess_op();   // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res(); // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT

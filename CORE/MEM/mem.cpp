@@ -1,22 +1,26 @@
 #include "mem.h"
 
 void mem::mem2wbk_concat() {
-    sc_bv<74> ff_din;
+    sc_bv<107> ff_din;
     
     ff_din.range(31, 0) = data_sm.read();
     ff_din.range(36, 32) = DEST_RE.read();
     ff_din[37] = wb_sm.read();
     ff_din.range(73, 38) = PC_EXE2MEM_RE.read() ;
+    ff_din[74] = CSR_type_operation_RE.read();
+    ff_din.range(106, 75) = OP1_CSR_RE.read() ;
 
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
-    sc_bv<74> ff_dout = mem2wbk_dout_sm.read();
+    sc_bv<107> ff_dout = mem2wbk_dout_sm.read();
 
     MEM_RES_RM.write((sc_bv_base) ff_dout.range(31, 0));
     DEST_RM.write((sc_bv_base) ff_dout.range(36, 32));
     WB_RM.write((bool)ff_dout[37]);
     PC_MEM2WBK_RM.write((sc_bv_base) ff_dout.range(73,38)) ;
+    CSR_type_operation_RM.write((bool)ff_dout[74]);
+    OP1_CSR_RM.write((sc_bv_base) ff_dout.range(106,75)) ;
 }
 
 void mem::fifo_gestion() {
@@ -77,6 +81,20 @@ void mem::sign_extend() {
     }
 }
 
+void mem::csr()
+{
+    if(CSR_type_operation_RE.read())
+    {
+        ADR_CSR_SM.write(ADR_CSR_SE.read()) ;
+        KREG_DATA_WRITE_SM.write(EXE_RES_RE.read()) ;
+    }
+    else
+    {
+        ADR_CSR_SM.write(0) ;
+        KREG_DATA_WRITE_SM.write(0) ;
+    }
+
+}
 
 
 void mem::trace(sc_trace_file* tf) {

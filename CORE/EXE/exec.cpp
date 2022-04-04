@@ -49,7 +49,8 @@ void exec::select_exec_res() {
     
 }
 void exec::fifo_concat() {
-    sc_bv<108> ff_din;
+    sc_bv<153> ff_din;
+
     ff_din.range(31, 0) = exe_res_se.read();
     ff_din.range(63, 32) = bp_mem_data_sd.read();
     ff_din.range(69, 64) = DEST_RD.read();
@@ -59,11 +60,15 @@ void exec::fifo_concat() {
     ff_din[74] = MEM_STORE_RD.read();
     ff_din[75] = MEM_SIGN_EXTEND_RD.read();
     ff_din.range(107, 76) = PC_DEC2EXE_RD.read() ;
+    ff_din[108] = CSR_type_operation_RD.read() ;
+    ff_din.range(120, 109) = ADR_CSR_SD.read() ;
+    ff_din.range(152, 121) = OP1_RD.read() ; // sending OP1, can contains CSR
+    
     exe2mem_din_se.write(ff_din);
     
 }
 void exec::fifo_unconcat() {
-    sc_bv<108> ff_dout = exe2mem_dout_se.read();
+    sc_bv<153> ff_dout = exe2mem_dout_se.read();
     EXE_RES_RE.write((sc_bv_base) ff_dout.range(31, 0));
     MEM_DATA_RE.write((sc_bv_base) ff_dout.range(63, 32));
     DEST_RE.write((sc_bv_base) ff_dout.range(69, 64));
@@ -73,6 +78,9 @@ void exec::fifo_unconcat() {
     MEM_STORE_RE.write((bool) ff_dout[74]);
     MEM_SIGN_EXTEND_RE.write((bool) ff_dout[75]);
     PC_EXE2MEM_RE .write((sc_bv_base) ff_dout.range(107, 76)) ;
+    CSR_type_operation_RE.write((bool) ff_dout[108]);
+    ADR_CSR_SE.write((sc_bv_base) ff_dout.range(120, 109)) ;
+    OP1_CSR_RE.write((sc_bv_base) ff_dout.range(152, 121)) ;
 }
 
 void exec::manage_fifo() {
@@ -140,7 +148,7 @@ void exec::bypasses() {
     blocked.write(blocked_var);
 }
 
-void interruption()
+void exec::interruption()
 {
     if(INTERRUPTION_SX.read())
     {
