@@ -82,7 +82,7 @@ SC_MODULE(decod)
     //General Interface :
 
     sc_in_clk                     CLK ;
-    sc_in<bool>			;
+    sc_in<bool>			          RESET_N ;
 
     // Interruption :
 
