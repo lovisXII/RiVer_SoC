@@ -51,7 +51,7 @@ int sc_main(int argc, char* argv[])
 
     decod dec("decode") ;
 
-    //Interface with REG :
+    // Interface with REG :
 
     sc_signal     < sc_uint<32> >       radr1_data ; 
     sc_signal     < sc_uint<32> >       radr2_data ;

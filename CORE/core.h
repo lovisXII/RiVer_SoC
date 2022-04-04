@@ -49,10 +49,10 @@ SC_MODULE(core)
     sc_signal< bool >           DEC2EXE_POP_SE ;
     sc_signal< bool >           DEC2EXE_EMPTY_SD ;   
 
-    sc_signal  < bool >         BP_R1_VALID_RD ;
-    sc_signal  < bool >         BP_R2_VALID_RD ;
-    sc_signal  < sc_uint<6> >   BP_RADR1_RD ;
-    sc_signal  < sc_uint<6> >   BP_RADR2_RD ;     
+    sc_signal< bool >         BP_R1_VALID_RD ;
+    sc_signal< bool >         BP_R2_VALID_RD ;
+    sc_signal< sc_uint<6> >   BP_RADR1_RD ;
+    sc_signal< sc_uint<6> >   BP_RADR2_RD ;     
 
     sc_signal<bool>             CSR_type_operation_RD ;
     sc_signal<sc_uint<12>>      ADR_CSR_SD ;

@@ -5,85 +5,88 @@ SC_MODULE(decod)
     
     //Interface with REG :
 
-    sc_in   < sc_uint<32> >       RDATA1_SR ; 
-    sc_in   < sc_uint<32> >       RDATA2_SR ;
+    sc_in<sc_uint<32>>       RDATA1_SR ; 
+    sc_in<sc_uint<32>>       RDATA2_SR ;
 
-    sc_out  < sc_uint<6> >       RADR1_SD ; // adress of rs
-    sc_out  < sc_uint<6> >       RADR2_SD ; // adress of rt
+    sc_out<sc_uint<6>>       RADR1_SD ; // adress of rs
+    sc_out<sc_uint<6>>       RADR2_SD ; // adress of rt
 
-    sc_out  < sc_uint<32> >      WRITE_PC_SD ;
-    sc_out  < bool >             WRITE_PC_ENABLE_SD ;
+    sc_out<sc_uint<32>>      WRITE_PC_SD ;
+    sc_out<bool>             WRITE_PC_ENABLE_SD ;
 
-    sc_in   < sc_uint<32> >      READ_PC_SR ; // value of r32 which is pc coming from REG
+    sc_in<sc_uint<32>>      READ_PC_SR ; // value of r32 which is pc coming from REG
 
     //Interface with EXE :
 
-    sc_out  < sc_uint<32> >      OP1_RD ; // value of op1
-    sc_out  < sc_uint<32> >      OP2_RD ; // value of op2
-    sc_out  < sc_uint<2> >       EXE_CMD_RD ; // value of the command sent to exe
-    sc_out  < bool >             NEG_OP2_RD ; // say if we take the opposite of the op1 to do a substraction for example
-    sc_out  < bool >             WB_RD ; // say if we plan to wbk the value of rd or no
-    sc_out  < sc_uint<6> >       EXE_DEST_SD;    //the destination register
-    sc_out  < bool >             SELECT_SHIFT_RD ; //taille fifo entrée : 110
-    sc_out  < bool >             SLT_RD ;
-    sc_out  < bool >             SLTU_RD ;
-    sc_out  < sc_uint<32> >        PC_DEC2EXE_RD ; // PC link to the current decoded instruction
+    sc_out<sc_uint<32>>      OP1_RD ; // value of op1
+    sc_out<sc_uint<32>>      OP2_RD ; // value of op2
+    sc_out<sc_uint<2>>       EXE_CMD_RD ; // value of the command sent to exe
+    sc_out<bool>             NEG_OP2_RD ; // say if we take the opposite of the op1 to do a substraction for example
+    sc_out<bool>             WB_RD ; // say if we plan to wbk the value of rd or no
+    sc_out<sc_uint<6>>       EXE_DEST_SD;    //the destination register
+    sc_out<bool>             SELECT_SHIFT_RD ; //taille fifo entrée : 110
+    sc_out<bool>             SLT_RD ;
+    sc_out<bool>             SLTU_RD ;
+    sc_out<sc_uint<32>>        PC_DEC2EXE_RD ; // PC link to the current decoded instruction
     
-    sc_out  < sc_uint<32> >      MEM_DATA_RD ; // data sent to mem for storage
-    sc_out  < bool>              MEM_LOAD_RD ; // say to mem if we do a load
-    sc_out  < bool >             MEM_STORE_RD ; // say to mem if we do a store
-    sc_out  < bool >             MEM_SIGN_EXTEND_RD ; 
-    sc_out  < sc_uint<2> >       MEM_SIZE_RD ; // tells to mem if we do an acces in word, hw or byte
+    sc_out<sc_uint<32>>      MEM_DATA_RD ; // data sent to mem for storage
+    sc_out<bool>              MEM_LOAD_RD ; // say to mem if we do a load
+    sc_out<bool>             MEM_STORE_RD ; // say to mem if we do a store
+    sc_out<bool>             MEM_SIGN_EXTEND_RD ; 
+    sc_out<sc_uint<2>>       MEM_SIZE_RD ; // tells to mem if we do an acces in word, hw or byte
 
-    sc_out < bool >              CSR_type_operation_RD ; // indicate if we do a csr operation, if so need to WBK CSR in rd 
-    sc_out < sc_uint<12> >       ADR_CSR_SD ; // CSR adress sent to EXE, will allow to wbk csr in MEM
+    sc_out<bool>              CSR_type_operation_RD ; // indicate if we do a csr operation, if so need to WBK CSR in rd 
+    sc_out<sc_uint<12>>       ADR_CSR_SD ; // CSR adress sent to EXE, will allow to wbk csr in MEM
      
     // Interface with DEC2IF : 
 
-    sc_in   < bool >              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
-    sc_out  < bool >              DEC2IF_EMPTY_SD ;
-    sc_out  < sc_bv<32> >         PC_RD ; // this value must also be sent to REG
+    sc_in<bool>              DEC2IF_POP_SI ; // Ifecth say to decod if it wants a pop or no
+    sc_out<bool>              DEC2IF_EMPTY_SD ;
+    sc_out<sc_bv<32>>         PC_RD ; // this value must also be sent to REG
 
     //Interface with IF2DEC :
 
-    sc_in   <sc_uint<32>  >         PC_IF2DEC_RI ;
-    sc_in   < sc_bv<32> >         INSTR_RI ;
-    sc_in   < bool >              IF2DEC_EMPTY_SI ;
-    sc_out  < bool >              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
-    sc_out  < bool >              IF2DEC_FLUSH_SD ;
+    sc_in<sc_uint<32>>         PC_IF2DEC_RI ;
+    sc_in<sc_bv<32>>         INSTR_RI ;
+    sc_in<bool>              IF2DEC_EMPTY_SI ;
+    sc_out<bool>              IF2DEC_POP_SD ; //Decod says to IFETCH if it wants a pop or no
+    sc_out<bool>              IF2DEC_FLUSH_SD ;
 
     //Interface with DEC2EXE
 
-    sc_in< bool >                 DEC2EXE_POP_SE ;
-    sc_out< bool >                DEC2EXE_EMPTY_SD ;                    
-    sc_signal< sc_bv<172> >       dec2exe_out_sd ;
-
-    //Bypasses
-    sc_in < sc_uint<6> >          BP_DEST_RE ;
-    sc_in < sc_uint<32> >         BP_EXE_RES_RE ;
-    sc_in < bool >                BP_MEM_LOAD_RE ;
-    sc_in  < bool >               BP_EXE2MEM_EMPTY_SE ;
-    sc_in < sc_uint<6> >          BP_DEST_RM ;
-    sc_in < sc_uint<32> >         BP_MEM_RES_RM ;
-
-
-    sc_out  < bool >             BP_R1_VALID_RD ;
-    sc_out  < bool >             BP_R2_VALID_RD ;
-    sc_out  < sc_uint<6> >       BP_RADR1_RD ;
-    sc_out  < sc_uint<6> >       BP_RADR2_RD ;
+    sc_in<bool>                 DEC2EXE_POP_SE ;
+    sc_out<bool>                DEC2EXE_EMPTY_SD ;                    
+    sc_signal<sc_bv<172>>       dec2exe_out_sd ;
 
     // Interface with KREG :
 
-    sc_out < sc_uint<12> >      ADR_CSR_KREG_SD ; // CSR adress sent to KREG to get data 
-    sc_in  < sc_uint<32> >      DATA_READ_CSR_SK ; // data read from KREG
+    sc_out<sc_uint<12>>      ADR_CSR_KREG_SD ; // CSR adress sent to KREG to get data 
+    sc_in<sc_uint<32>>      DATA_READ_CSR_SK ; // data read from KREG
+
+    //Bypasses
+    
+    sc_in<sc_uint<6>>          BP_DEST_RE ;
+    sc_in<sc_uint<32>>         BP_EXE_RES_RE ;
+    sc_in<bool>                BP_MEM_LOAD_RE ;
+    sc_in<bool>               BP_EXE2MEM_EMPTY_SE ;
+    sc_in<sc_uint<6>>          BP_DEST_RM ;
+    sc_in<sc_uint<32>>         BP_MEM_RES_RM ;
+
+
+    sc_out<bool>             BP_R1_VALID_RD ;
+    sc_out<bool>             BP_R2_VALID_RD ;
+    sc_out<sc_uint<6>>       BP_RADR1_RD ;
+    sc_out<sc_uint<6>>       BP_RADR2_RD ;
+
 
     //General Interface :
+
     sc_in_clk                     CLK ;
-    sc_in  <bool>                 RESET_N ;
+    sc_in<bool>			;
 
     // Interruption :
 
-    sc_in<bool>            INTERRUPTION_SE ;   
+    sc_in<bool>			INTERRUPTION_SE;   
 
     //Instance used :
     
@@ -92,131 +95,131 @@ SC_MODULE(decod)
 
     // Signals :
 
-    sc_signal   < sc_uint<32> >    rdata1_sd ; 
-    sc_signal   < sc_uint<32> >    rdata2_sd ;
-    sc_signal   < bool >           r1_valid_sd ;
-    sc_signal   < bool >           r2_valid_sd ; 
-    sc_signal   < bool >           stall ; 
-    sc_signal   < bool >           block_in_dec ; 
+    sc_signal<sc_uint<32>>    rdata1_sd ; 
+    sc_signal<sc_uint<32>>    rdata2_sd ;
+    sc_signal<bool>           r1_valid_sd ;
+    sc_signal<bool>           r2_valid_sd ; 
+    sc_signal<bool>           stall ; 
+    sc_signal<bool>           block_in_dec ; 
 
     //fifo dec2if :
     
-    sc_signal < sc_bv<32> >     dec2if_in_sd ; // pc sent to fifo
-    sc_signal < bool >          dec2if_push_sd ;
-    sc_signal < bool >          dec2if_empty_sd ;
-    sc_signal < bool >          dec2if_full_sd ;
-    sc_signal < sc_bv<32> >     dec2if_out_sd ;
+    sc_signal<sc_bv<32>>     dec2if_in_sd ; // pc sent to fifo
+    sc_signal<bool>          dec2if_push_sd ;
+    sc_signal<bool>          dec2if_empty_sd ;
+    sc_signal<bool>          dec2if_full_sd ;
+    sc_signal<sc_bv<32>>     dec2if_out_sd ;
 
     //fifo dec2exe :
 
-    sc_signal < sc_bv <172> >   dec2exe_in_sd ;
-    sc_signal < bool >          dec2exe_push_sd ;
-    sc_signal < bool >          dec2exe_full_sd ;
+    sc_signal<sc_bv<172>>   dec2exe_in_sd ;
+    sc_signal<bool>          dec2exe_push_sd ;
+    sc_signal<bool>          dec2exe_full_sd ;
 
     // Instruction format type :
 
-    sc_signal < bool >          r_type_inst_sd ; // R type format
-    sc_signal < bool >          i_type_inst_sd ; // I type format
-    sc_signal < bool >          s_type_inst_sd ; // S type format
-    sc_signal < bool >          b_type_inst_sd ; // B type format
-    sc_signal < bool >          u_type_inst_sd ; // U type format
-    sc_signal < bool >          j_type_inst_sd ; // J type format
-    sc_signal < bool >          jalr_type_inst_sd ; //JALR has a specific opcode
-    sc_signal < bool >          system_type_inst_sd ; //System instruction
+    sc_signal<bool>          r_type_inst_sd ; // R type format
+    sc_signal<bool>          i_type_inst_sd ; // I type format
+    sc_signal<bool>          s_type_inst_sd ; // S type format
+    sc_signal<bool>          b_type_inst_sd ; // B type format
+    sc_signal<bool>          u_type_inst_sd ; // U type format
+    sc_signal<bool>          j_type_inst_sd ; // J type format
+    sc_signal<bool>          jalr_type_inst_sd ; //JALR has a specific opcode
+    sc_signal<bool>          system_type_inst_sd ; //System instruction
     //R-type Instructions :
 
 
-    sc_signal < bool > add_i_sd ;
-    sc_signal < bool > slt_i_sd ;
-    sc_signal < bool > sltu_i_sd ;
-    sc_signal < bool > and_i_sd ;
-    sc_signal < bool > or_i_sd ;
-    sc_signal < bool > xor_i_sd ;
-    sc_signal < bool > sll_i_sd ;
-    sc_signal < bool > srl_i_sd ;
-    sc_signal < bool > sub_i_sd ;
-    sc_signal < bool > sra_i_sd ;
+    sc_signal<bool> add_i_sd ;
+    sc_signal<bool> slt_i_sd ;
+    sc_signal<bool> sltu_i_sd ;
+    sc_signal<bool> and_i_sd ;
+    sc_signal<bool> or_i_sd ;
+    sc_signal<bool> xor_i_sd ;
+    sc_signal<bool> sll_i_sd ;
+    sc_signal<bool> srl_i_sd ;
+    sc_signal<bool> sub_i_sd ;
+    sc_signal<bool> sra_i_sd ;
 
     //I-type Instructions :
 
-    sc_signal < bool > addi_i_sd ;
-    sc_signal < bool > slti_i_sd ;
-    sc_signal < bool > sltiu_i_sd ;
-    sc_signal < bool > andi_i_sd ;
-    sc_signal < bool > ori_i_sd ;
-    sc_signal < bool > xori_i_sd ;
+    sc_signal<bool> addi_i_sd ;
+    sc_signal<bool> slti_i_sd ;
+    sc_signal<bool> sltiu_i_sd ;
+    sc_signal<bool> andi_i_sd ;
+    sc_signal<bool> ori_i_sd ;
+    sc_signal<bool> xori_i_sd ;
 
-    sc_signal < bool > jalr_i_sd ;
+    sc_signal<bool> jalr_i_sd ;
 
     // I-type shift instructions :
 
-    sc_signal < bool > slli_i_sd ;
-    sc_signal < bool > srli_i_sd ;
-    sc_signal < bool > srai_i_sd ;
+    sc_signal<bool> slli_i_sd ;
+    sc_signal<bool> srli_i_sd ;
+    sc_signal<bool> srai_i_sd ;
 
    // I-type load instructions :
 
-   sc_signal < bool > lw_i_sd ;
-   sc_signal < bool > lh_i_sd ;
-   sc_signal < bool > lhu_i_sd ;
-   sc_signal < bool > lb_i_sd ;
-   sc_signal < bool > lbu_i_sd ;
+   sc_signal<bool> lw_i_sd ;
+   sc_signal<bool> lh_i_sd ;
+   sc_signal<bool> lhu_i_sd ;
+   sc_signal<bool> lb_i_sd ;
+   sc_signal<bool> lbu_i_sd ;
 
     //B-type Instruction :
 
-    sc_signal < bool > beq_i_sd ;
-    sc_signal < bool > bne_i_sd ;
-    sc_signal < bool > blt_i_sd ;
-    sc_signal < bool > bge_i_sd ;
-    sc_signal < bool > bltu_i_sd ;
-    sc_signal < bool > bgeu_i_sd ;
+    sc_signal<bool> beq_i_sd ;
+    sc_signal<bool> bne_i_sd ;
+    sc_signal<bool> blt_i_sd ;
+    sc_signal<bool> bge_i_sd ;
+    sc_signal<bool> bltu_i_sd ;
+    sc_signal<bool> bgeu_i_sd ;
 
     //U-type Instruction :
 
-    sc_signal < bool > lui_i_sd ;
-    sc_signal < bool > auipc_i_sd ;
+    sc_signal<bool> lui_i_sd ;
+    sc_signal<bool> auipc_i_sd ;
 
     //J-type Instruction :  
 
-    sc_signal < bool > jal_i_sd ;
+    sc_signal<bool> jal_i_sd ;
 
     //S-type Instructions :
 
-    sc_signal < bool > sw_i_sd ;
-    sc_signal < bool > sh_i_sd ;
-    sc_signal < bool > sb_i_sd ;
+    sc_signal<bool> sw_i_sd ;
+    sc_signal<bool> sh_i_sd ;
+    sc_signal<bool> sb_i_sd ;
 
     // Kernel instruction :
 
-    sc_signal < bool > ecall_i_sd ;
-    sc_signal < bool > ebreak_i_sd ;
-    sc_signal < bool > csrrw_i_sd ; 
-    sc_signal < bool > csrrs_i_sd ; 
-    sc_signal < bool > csrrc_i_sd ; 
-    sc_signal < bool > csrrwi_i_sd ; 
-    sc_signal < bool > csrrsi_i_sd ; 
-    sc_signal < bool > csrrci_i_sd ; 
+    sc_signal<bool> ecall_i_sd ;
+    sc_signal<bool> ebreak_i_sd ;
+    sc_signal<bool> csrrw_i_sd ; 
+    sc_signal<bool> csrrs_i_sd ; 
+    sc_signal<bool> csrrc_i_sd ; 
+    sc_signal<bool> csrrwi_i_sd ; 
+    sc_signal<bool> csrrsi_i_sd ; 
+    sc_signal<bool> csrrci_i_sd ; 
 
     // Signal for Kernel usage
 
-    sc_signal < bool > csr_type_operation_rd ;
-    sc_signal <sc_uint<12>> adr_csr_sd ;
+    sc_signal<bool> csr_type_operation_rd ;
+    sc_signal<sc_uint<12>> adr_csr_sd ;
     //Offset for branch :
 
-    sc_signal < sc_uint<32> > offset_branch_sd ;
+    sc_signal<sc_uint<32>> offset_branch_sd ;
 
     //PC gestion :
 
-    sc_signal <bool> inc_pc_sd ;
-    sc_signal <bool> add_offset_to_pc_sd ;
+    sc_signal<bool> inc_pc_sd ;
+    sc_signal<bool> add_offset_to_pc_sd ;
 
 
     //Internal signals :
 
-    sc_signal< sc_uint<6>>  adr_dest_sd;
-    sc_signal< sc_uint<32>> exe_op1_sd;
-    sc_signal< sc_uint<32>> exe_op2_sd;
-    sc_signal< sc_uint<32>> mem_data_sd ;
+    sc_signal<sc_uint<6>>  adr_dest_sd;
+    sc_signal<sc_uint<32>> exe_op1_sd;
+    sc_signal<sc_uint<32>> exe_op2_sd;
+    sc_signal<sc_uint<32>> mem_data_sd ;
     
     sc_signal<sc_uint<2>>   mem_size_sd ;
     sc_signal<bool>   mem_load_sd ;

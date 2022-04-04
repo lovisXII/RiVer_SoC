@@ -28,7 +28,7 @@ SC_MODULE(exec)
     sc_in< bool >           SLT_RD, SLTU_RD;
 
     sc_in< bool >          CSR_type_operation_RD ;
-    sc_in < sc_uint<12> >  ADR_CSR_SD ; 
+    sc_in< sc_uint<12> >  ADR_CSR_SD ; 
 
     sc_in_clk               CLK;
     sc_in< bool >           RESET;
@@ -51,7 +51,7 @@ SC_MODULE(exec)
     sc_out< bool >   EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
 
     sc_out< bool >          CSR_type_operation_RE ;
-    sc_out < sc_uint<12> >  ADR_CSR_SE ;
+    sc_out< sc_uint<12> >  ADR_CSR_SE ;
     sc_out<sc_uint<32>>     OP1_CSR_RE ;
 
     //Internals signals :
