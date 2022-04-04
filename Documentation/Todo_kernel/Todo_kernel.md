@@ -247,3 +247,50 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 
 * equivalent CP0 en MIPS
 * implémenter tous les registres nécessaire
+
+# Actually done :
+
+## DECOD :
+
+- Decoding CSR instruction
+- CSR_type_operation_RD indicate that we are currently decoding an instruction. It must be sent to Wbk to inform him what to Wbk.\
+Indeed with CSR :\
+rd = CSR\
+CSR = f(CSR, rs1)\
+So we need to take CSR and to sent it to Wbk. I put CSR inside rs1 and rs1 in rs2 (yeah not logic just notice it...).\
+So to EXE we must send :
+- ADR_CSR_SD (to wbk CSR in MEM)
+- ADR_CSR_KREG_SD -> output to KREG, allow to read KREG
+
+2 signals for the ADRESS :
+- 1 for EXE : ADR_CSR_SD
+- 1 for KREG : ADR_CSR_KREG_SD
+
+Get DATA_READ_CSR_SK, allow to put it in rs1.
+
+Increasing every fifo.
+
+## MEM :
+
+We must write exe_res to KREG.
+
+
+```c
+if(CSR_type_operation_RE.read())
+{
+    ADR_CSR_SM.write(ADR_CSR_SE.read()) ;
+    KREG_DATA_WRITE_SM.write(EXE_RES_RE.read()) ;
+}
+else
+{
+    ADR_CSR_SM.write(0) ;
+    KREG_DATA_WRITE_SM.write(0) ;
+}
+```
+
+## WBK :
+
+If CSR instruction, we wbk CSR, otherwise we wbk EXE_RES
+```c
+WDATA_SW.write(CSR_type_operation_RM.read() ? OP1_CSR_RM : MEM_RES_RM);
+```
