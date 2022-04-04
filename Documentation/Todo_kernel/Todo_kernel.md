@@ -79,7 +79,16 @@ Pas implémenté donc on met 0 dedans
 Registre qui sert à contrôler tout un tas de trucs. 
 ![Registre mstatus](mstatus.png)
 
-- MIE : active les interruptions en mode machine  
+```
+00 User
+01 Superviseur
+10 Reserved
+11 Machine
+```
+- WPRI : reserved for future use
+- SIE : Superviseur enable interrupt
+- MIE : active les interruptions en mode machine 
+- SPIE :  à 0
 - MPIE : valeur précédente de MIE
 - MPP : mode de privilère précédent (en mode M)
 - TW : En mode user, active un timeout pour l'instruction "WFI", wait for interrupt (qui gèle le processeur en attente d'une interruption).

@@ -68,6 +68,11 @@ SC_MODULE(decod)
     sc_out  < sc_uint<6> >       BP_RADR1_RD ;
     sc_out  < sc_uint<6> >       BP_RADR2_RD ;
 
+    // Interface with KREG :
+
+    sc_out < sc_uint<12> >      ADR_CSR_SD ;
+    sc_out < sc_uint<32> >      DATA_WRITE_SD ;
+
     //General Interface :
     sc_in_clk                     CLK ;
     sc_in  <bool>                 RESET_N ;
