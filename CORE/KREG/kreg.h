@@ -2,9 +2,7 @@
 #include <systemc.h>
 #include <iostream>
 
-SC_MODULE(kreg)
-{
-
+SC_MODULE(kreg) {
     // Input :
 
     sc_in<sc_uint<12>> ADR_CSR_SM;
@@ -16,7 +14,7 @@ SC_MODULE(kreg)
 
     // General Interface :
 
-    sc_in_clk CLK;
+    sc_in_clk   CLK;
     sc_in<bool> RESET_N;
 
     // Internal signals :
@@ -25,8 +23,7 @@ SC_MODULE(kreg)
 
     void writing_csr();
     void reading_csr();
-    SC_CTOR(kreg)
-    {
+    SC_CTOR(kreg) {
         SC_CTHREAD(writing_csr, CLK.pos());
         sensitive << KREG_DATA_WRITE_SM << RESET_N;
         SC_METHOD(reading_csr);
