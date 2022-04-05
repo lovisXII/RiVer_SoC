@@ -19,7 +19,11 @@ SC_MODULE(ram)
   SC_CTOR(ram)
   {
     SC_METHOD(memAccess);
-    sensitive << ADR << DAT << E << W_N;
+    sensitive 
+			<< ADR 
+			<< DAT 
+			<< E 
+			<< W_N;
   }
 
   void memAccess();

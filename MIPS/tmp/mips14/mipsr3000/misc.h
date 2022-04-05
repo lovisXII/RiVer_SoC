@@ -127,51 +127,95 @@ SC_MODULE(misc)
 		*/
 	{
 		SC_METHOD(processCK_SX);
-		sensitive << CK;
+		sensitive 
+			<< CK;
 		SC_METHOD(processIT_XX);
-		sensitive << IT_N;
+		sensitive 
+			<< IT_N;
 		SC_METHOD(processCAUSE_XX);
-		sensitive << CAUSE_RX << BDSLOT_RD << COPERR_XM << IT_XX << SWINT_XM << EXCCODE_XM;
+		sensitive 
+			<< CAUSE_RX 
+			<< BDSLOT_RD 
+			<< COPERR_XM 
+			<< IT_XX 
+			<< SWINT_XM 
+			<< EXCCODE_XM;
 		SC_METHOD(processCAUSE_SX);
-		sensitive << RES_RE << CAUSE_RX << IT_XX;
+		sensitive 
+			<< RES_RE 
+			<< CAUSE_RX 
+			<< IT_XX;
 		SC_METHOD(processBOOTEV_XX);
-		sensitive << NEXTSR_RX;
+		sensitive 
+			<< NEXTSR_RX;
 		SC_METHOD(processNEXTPC_XX);
-		sensitive << NEXTSR_RX << BOOTEV_XX;
+		sensitive 
+			<< NEXTSR_RX 
+			<< BOOTEV_XX;
 		SC_METHOD(processNEXTSR_XX);
-		sensitive << NEXTSR_RX << RESET_RX;
+		sensitive 
+			<< NEXTSR_RX 
+			<< RESET_RX;
 		SC_METHOD(processWSR_XX);
-		sensitive << EXCRQ_XM << INTRQ_XX << RESET_RX;
+		sensitive 
+			<< EXCRQ_XM 
+			<< INTRQ_XX 
+			<< RESET_RX;
 		SC_METHOD(processEPC_XX);
-		sensitive << BDSLOT_RD << PC_RD << REDOPC_RE;
+		sensitive 
+			<< BDSLOT_RD 
+			<< PC_RD 
+			<< REDOPC_RE;
 		SC_METHOD(processWEPC_XX);
-		sensitive << INTRQ_XX << RESET_RX;
+		sensitive 
+			<< INTRQ_XX 
+			<< RESET_RX;
 		SC_METHOD(processHWINTRQ_XX);
-		sensitive << CAUSE_RX;
+		sensitive 
+			<< CAUSE_RX;
 		SC_METHOD(processGLBMSK_XX);
-		sensitive << NEXTSR_RX;
+		sensitive 
+			<< NEXTSR_RX;
 		SC_METHOD(processITMASK_XX);
-		sensitive << NEXTSR_RX;
+		sensitive 
+			<< NEXTSR_RX;
 		SC_METHOD(processINTRQ_XX);
-		sensitive << ITMASK_XX << HWINTRQ_XX << GLBMSK_XX;
+		sensitive 
+			<< ITMASK_XX 
+			<< HWINTRQ_XX 
+			<< GLBMSK_XX;
 		SC_METHOD(processD_A);
-		sensitive << RES_RE;
+		sensitive 
+			<< RES_RE;
 		SC_METHOD(processI_A);
-		sensitive << NEXTPC_RD;
+		sensitive 
+			<< NEXTPC_RD;
 		SC_METHOD(processD_OUT);
-		sensitive << WDATA_RE;
+		sensitive 
+			<< WDATA_RE;
 		SC_METHOD(processD_ACK);
-		sensitive << DATARED_RM;
+		sensitive 
+			<< DATARED_RM;
 		SC_METHOD(processI_FTCH);
-		sensitive << OPCOD_RE;
+		sensitive 
+			<< OPCOD_RE;
 		SC_METHOD(processI_ACK);
-		sensitive << INSTRED_RI;
+		sensitive 
+			<< INSTRED_RI;
 		SC_METHOD(processD_ATYPE);
-		sensitive << I_WORD_SM << WRITE_SM << I_HALF_SM << I_BYTE_SM;
+		sensitive 
+			<< I_WORD_SM 
+			<< WRITE_SM 
+			<< I_HALF_SM 
+			<< I_BYTE_SM;
 		SC_METHOD(processD_RQ);
-		sensitive << EARLYEX_XM << RESET_RX << DACCESS_SM;
+		sensitive 
+			<< EARLYEX_XM 
+			<< RESET_RX 
+			<< DACCESS_SM;
 		SC_METHOD(processD_LOCK);
-		sensitive << DLOCK_SM;
+		sensitive 
+			<< DLOCK_SM;
 	}
 
 	void processCK_SX()
@@ -210,7 +254,9 @@ SC_MODULE(misc)
 		sc_uint<32> res_re=RES_RE.read();
 		sc_uint<32> cause_rx=CAUSE_RX.read();
 
-		CAUSE_SX.write(cause_rx.range(31,16) << 16 | IT_XX.read() << 10 | cause_rx.range(9,0));
+		CAUSE_SX.write(cause_rx.range(31,16) 
+			<< 16 | IT_XX.read() 
+			<< 10 | cause_rx.range(9,0));
 	}
 
 		// ### ----------------------------------------------------// ###

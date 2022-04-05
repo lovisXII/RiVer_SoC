@@ -95,19 +95,46 @@ SC_MODULE(mux_memory)
 
 	{
 		SC_METHOD(processMUX_IR_SM);
-		sensitive << IR_RM << IR_RE << BUBBLE_SM << HOLD_SM ;
+		sensitive 
+			<< IR_RM 
+			<< IR_RE 
+			<< BUBBLE_SM 
+			<< HOLD_SM ;
 		SC_METHOD(processMUX_DATARED_SM);
-		sensitive << DATARED_SM << BUBBLE_SM << HOLD_SM ;
+		sensitive 
+			<< DATARED_SM 
+			<< BUBBLE_SM 
+			<< HOLD_SM ;
 		SC_METHOD(processMUX_I_TYPE_SM);
-		sensitive << I_TYPE_RM << I_TYPE_RE << BUBBLE_SM << HOLD_SM ;
+		sensitive 
+			<< I_TYPE_RM 
+			<< I_TYPE_RE 
+			<< BUBBLE_SM 
+			<< HOLD_SM ;
 		SC_METHOD(processMUX_RD_SM);
-		sensitive << RD_RM << RD_SM  << BUBBLE_SM << HOLD_SM ;
+		sensitive 
+			<< RD_RM 
+			<< RD_SM  
+			<< BUBBLE_SM 
+			<< HOLD_SM ;
 		SC_METHOD(processMUX_OPCOD_SM);
-		sensitive << OPCOD_RM << OPCOD_RE << BUBBLE_SM << HOLD_SM ;
+		sensitive 
+			<< OPCOD_RM 
+			<< OPCOD_RE 
+			<< BUBBLE_SM 
+			<< HOLD_SM ;
 		SC_METHOD(processMUX_DATA_SM);
-		sensitive << DATA_RM << DATA_SM << KEEP_SM ;
+		sensitive 
+			<< DATA_RM 
+			<< DATA_SM 
+			<< KEEP_SM ;
 		SC_METHOD(processMUX_BADVADR_SM);
-		sensitive << RES_RE << NEXTPC_RE << BADVADR_RM << BADDA_XM << BADIA_XM ;
+		sensitive 
+			<< RES_RE 
+			<< NEXTPC_RE 
+			<< BADVADR_RM 
+			<< BADDA_XM 
+			<< BADIA_XM ;
 	}
 
 	void processMUX_IR_SM()

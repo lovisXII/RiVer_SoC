@@ -148,39 +148,84 @@ SC_MODULE(pipeunit)
 		COPYCAP_RE("COPYCAP_RE")
 	{
 		SC_METHOD(processKILL_SI);
-		sensitive << EXCRQ_XM << INTRQ_XX << RESET_RX << SLEEP_SD;
+		sensitive 
+			<< EXCRQ_XM 
+			<< INTRQ_XX 
+			<< RESET_RX 
+			<< SLEEP_SD;
 		SC_METHOD(processSTALL_SI);
-		sensitive << KILL_SI << COPY_SD << STALL_SD << I_FRZ;
+		sensitive 
+			<< KILL_SI 
+			<< COPY_SD 
+			<< STALL_SD 
+			<< I_FRZ;
 		SC_METHOD(processCOPY_SI);
 
 		SC_METHOD(processEXEC_SI);
-		sensitive << KILL_SI << STALL_SI << COPY_SI;
+		sensitive 
+			<< KILL_SI 
+			<< STALL_SI 
+			<< COPY_SI;
 
 		SC_METHOD(processKILL_SD);
-		sensitive << EXCRQ_XM << INTRQ_XX << RESET_RX;
+		sensitive 
+			<< EXCRQ_XM 
+			<< INTRQ_XX 
+			<< RESET_RX;
 		SC_METHOD(processSTALL_SD);
-		sensitive << KILL_SD << COPY_SE << STALL_SE << HAZARDS_SD << I_FRZ;
+		sensitive 
+			<< KILL_SD 
+			<< COPY_SE 
+			<< STALL_SE 
+			<< HAZARDS_SD 
+			<< I_FRZ;
 		SC_METHOD(processCOPY_SD);
-		sensitive << KILL_SD << STALL_SD << SLEEP_SD;
+		sensitive 
+			<< KILL_SD 
+			<< STALL_SD 
+			<< SLEEP_SD;
 		SC_METHOD(processEXEC_SD);
-		sensitive << KILL_SD << STALL_SD << COPY_SD;
+		sensitive 
+			<< KILL_SD 
+			<< STALL_SD 
+			<< COPY_SD;
 		SC_METHOD(processKILL_SE);
-		sensitive << EXCRQ_XM << INTRQ_XX << RESET_RX;
+		sensitive 
+			<< EXCRQ_XM 
+			<< INTRQ_XX 
+			<< RESET_RX;
 		SC_METHOD(processSTALL_SE);
-		sensitive << KILL_SE << COPY_SM << STALL_SM << HAZARDS_SE;
+		sensitive 
+			<< KILL_SE 
+			<< COPY_SM 
+			<< STALL_SM 
+			<< HAZARDS_SE;
 		SC_METHOD(processCOPY_SE);
 
 		SC_METHOD(processEXEC_SE);
-		sensitive << KILL_SE << STALL_SE << COPY_SE;
+		sensitive 
+			<< KILL_SE 
+			<< STALL_SE 
+			<< COPY_SE;
 
 		SC_METHOD(processKILL_SM);
-		sensitive << EXCRQ_XM << RESET_RX;
+		sensitive 
+			<< EXCRQ_XM 
+			<< RESET_RX;
 		SC_METHOD(processSTALL_SM);
-		sensitive << KILL_SM << D_FRZ;
+		sensitive 
+			<< KILL_SM 
+			<< D_FRZ;
 		SC_METHOD(processCOPY_SM);
-		sensitive << KILL_SM << STALL_SM << COPYCAP_RE;
+		sensitive 
+			<< KILL_SM 
+			<< STALL_SM 
+			<< COPYCAP_RE;
 		SC_METHOD(processEXEC_SM);
-		sensitive << KILL_SM << STALL_SM << COPY_SM;
+		sensitive 
+			<< KILL_SM 
+			<< STALL_SM 
+			<< COPY_SM;
 
 		SC_METHOD(processKILL_SW);
 
@@ -191,49 +236,101 @@ SC_MODULE(pipeunit)
 		SC_METHOD(processEXEC_SW);
 
 		SC_METHOD(processBUBBLE_SI);
-		sensitive << STALL_SI << EXEC_SD << KILL_SI << EXEC_SD << KILL_SD;
+		sensitive 
+			<< STALL_SI 
+			<< EXEC_SD 
+			<< KILL_SI 
+			<< EXEC_SD 
+			<< KILL_SD;
 		SC_METHOD(processHOLD_SI);
-		sensitive << STALL_SD << COPY_SD;
+		sensitive 
+			<< STALL_SD 
+			<< COPY_SD;
 		SC_METHOD(processSHIFT_SI);
-		sensitive << EXEC_SI << COPY_SI;
+		sensitive 
+			<< EXEC_SI 
+			<< COPY_SI;
 
 		SC_METHOD(processBUBBLE_SD);
-		sensitive << STALL_SD << EXEC_SE << KILL_SD << EXEC_SE << KILL_SE;
+		sensitive 
+			<< STALL_SD 
+			<< EXEC_SE 
+			<< KILL_SD 
+			<< EXEC_SE 
+			<< KILL_SE;
 		SC_METHOD(processHOLD_SD);
-		sensitive << STALL_SE << COPY_SE;
+		sensitive 
+			<< STALL_SE 
+			<< COPY_SE;
 		SC_METHOD(processSHIFT_SD);
-		sensitive << EXEC_SD << COPY_SD;
+		sensitive 
+			<< EXEC_SD 
+			<< COPY_SD;
 
 		SC_METHOD(processBUBBLE_SE);
-		sensitive << STALL_SE << EXEC_SM << KILL_SE << EXEC_SM << KILL_SM;
+		sensitive 
+			<< STALL_SE 
+			<< EXEC_SM 
+			<< KILL_SE 
+			<< EXEC_SM 
+			<< KILL_SM;
 		SC_METHOD(processHOLD_SE);
-		sensitive << STALL_SM << COPY_SM;
+		sensitive 
+			<< STALL_SM 
+			<< COPY_SM;
 		SC_METHOD(processSHIFT_SE);
-		sensitive << EXEC_SE << COPY_SE;
+		sensitive 
+			<< EXEC_SE 
+			<< COPY_SE;
 
 		SC_METHOD(processBUBBLE_SM);
-		sensitive << STALL_SM << EXEC_SW << KILL_SM << EXEC_SW << KILL_SW;
+		sensitive 
+			<< STALL_SM 
+			<< EXEC_SW 
+			<< KILL_SM 
+			<< EXEC_SW 
+			<< KILL_SW;
 		SC_METHOD(processHOLD_SM);
-		sensitive << STALL_SW << COPY_SW;
+		sensitive 
+			<< STALL_SW 
+			<< COPY_SW;
 		SC_METHOD(processSHIFT_SM);
-		sensitive << EXEC_SM << COPY_SM;
+		sensitive 
+			<< EXEC_SM 
+			<< COPY_SM;
 
 		SC_METHOD(processLOAD_SI);
-		sensitive << COPY_SI << EXEC_SI;
+		sensitive 
+			<< COPY_SI 
+			<< EXEC_SI;
 		SC_METHOD(processKEEP_SI);
-		sensitive << KILL_SI << STALL_SI;
+		sensitive 
+			<< KILL_SI 
+			<< STALL_SI;
 		SC_METHOD(processLOAD_SD);
-		sensitive << COPY_SD << EXEC_SD;
+		sensitive 
+			<< COPY_SD 
+			<< EXEC_SD;
 		SC_METHOD(processKEEP_SD);
-		sensitive << KILL_SD << STALL_SD;
+		sensitive 
+			<< KILL_SD 
+			<< STALL_SD;
 		SC_METHOD(processLOAD_SE);
-		sensitive << COPY_SE << EXEC_SE;
+		sensitive 
+			<< COPY_SE 
+			<< EXEC_SE;
 		SC_METHOD(processKEEP_SE);
-		sensitive << KILL_SE << STALL_SE;
+		sensitive 
+			<< KILL_SE 
+			<< STALL_SE;
 		SC_METHOD(processLOAD_SM);
-		sensitive << COPY_SM << EXEC_SM;
+		sensitive 
+			<< COPY_SM 
+			<< EXEC_SM;
 		SC_METHOD(processKEEP_SM);
-		sensitive << KILL_SM << STALL_SM;
+		sensitive 
+			<< KILL_SM 
+			<< STALL_SM;
 	}
 
   // ### ---------------------------------------------------- ###

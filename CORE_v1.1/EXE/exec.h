@@ -90,15 +90,32 @@ SC_MODULE(exec)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << OP1_SE << NEG_OP2_SE << OP2_SE;
+        sensitive 
+			<< OP1_SE 
+			<< NEG_OP2_SE 
+			<< OP2_SE;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_SE;
+        sensitive 
+			<< alu_out_se 
+			<< shifter_out_se 
+			<< SELECT_SHIFT_SE;
         SC_METHOD(fifo_concat);
-        sensitive << IN_MEM_DATA_SE << IN_DEST_SE << IN_MEM_SIZE_SE << IN_MEM_LOAD_SE << IN_MEM_SIGN_EXTEND_SE << IN_MEM_STORE_SE << IN_WB_SE << exe_res_se;
+        sensitive 
+			<< IN_MEM_DATA_SE 
+			<< IN_DEST_SE 
+			<< IN_MEM_SIZE_SE 
+			<< IN_MEM_LOAD_SE 
+			<< IN_MEM_SIGN_EXTEND_SE 
+			<< IN_MEM_STORE_SE 
+			<< IN_WB_SE 
+			<< exe_res_se;
         SC_METHOD(fifo_unconcat);
-        sensitive << exe2mem_dout_se;
+        sensitive 
+			<< exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SE;
+        sensitive 
+			<< exe2mem_full_se 
+			<< DEC2EXE_EMPTY_SE;
     }
 };
 

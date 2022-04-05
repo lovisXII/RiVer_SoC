@@ -53,17 +53,32 @@ int sc_main(int argc, char* argv[])
         {
             if(dout.read() != din.read())
             {
-                cerr << "probleme transmission data" << endl ;
+                cerr << "probleme transmission data" 
+			<< endl ;
 
             }
         }
-        cerr   << "din : " << din.read() << endl ;   
-        cerr   << "push : " << push.read()<<" "<<rand1 << endl ;   
-        cerr   << "pop : " << pop.read()<<" "<<rand2 << endl ;   
-        cerr   << "full : " << full.read() << endl ;
-        cerr   << "empty : " << empty.read() << endl ;
-        cerr   << "dout : " << dout.read() << endl ;
-        cerr   << "fifo_v : "<< fifo_110b0.fifo_v.read() << endl ;
+        cerr   << "din : " 
+			<< din.read() 
+			<< endl ;   
+        cerr   << "push : " 
+			<< push.read()<<" "<<rand1 
+			<< endl ;   
+        cerr   << "pop : " 
+			<< pop.read()<<" "<<rand2 
+			<< endl ;   
+        cerr   << "full : " 
+			<< full.read() 
+			<< endl ;
+        cerr   << "empty : " 
+			<< empty.read() 
+			<< endl ;
+        cerr   << "dout : " 
+			<< dout.read() 
+			<< endl ;
+        cerr   << "fifo_v : "
+			<< fifo_110b0.fifo_v.read() 
+			<< endl ;
 
     }
     return 0 ;

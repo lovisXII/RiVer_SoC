@@ -517,7 +517,10 @@ void i_cache::processP_NXTS_SX()
 
 void i_cache::processDEFLTEN_SX()
 {
-// cout << name() << " lit " << PI_GNT.read() << " sur PI_GNT" << endl;
+// cout 
+			<< name() << " lit " 
+			<< PI_GNT.read() << " sur PI_GNT" 
+			<< endl;
   DEFLTEN_SX.write(PI_GNT.read());
 }
 
@@ -718,7 +721,10 @@ void i_cache::processPI_LINES()
 
   if ((PILINEN_SX.read()==1)&&(CK_SX.read()==0)) //hack FPX fondamental pour que ca marche
     {
-    //cout << name() << " ecrit " << ADRCNT_RX.read() << " sur PI_A" << endl;
+    //cout 
+			<< name() << " ecrit " 
+			<< ADRCNT_RX.read() << " sur PI_A" 
+			<< endl;
     //PI_A.write(adrcnt_rx); // hack FP
       PI_A.write(adrcnt_rx.range(31,2)); // hack FP
       PI_READ.write(p_red_red);
@@ -748,7 +754,10 @@ void i_cache::processCLOCK()
 // #   address and access counters				#
 // ### ------------------------------------------------------ ###
 
-//cout << "processCLOCK " << RQSADR_SX.read() << "," << ADRCNT_SX.read() << endl; 
+//cout << "processCLOCK " 
+			<< RQSADR_SX.read() << "," 
+			<< ADRCNT_SX.read() 
+			<< endl; 
   ADRCNT_RX.write((INITACS_SX.read()==1)?RQSADR_SX.read():ADRCNT_SX.read());
   ACSCNT_RX.write((INITACS_SX.read()==1)?RQSACSC_SX.read():ACSCNT_SX.read());
 

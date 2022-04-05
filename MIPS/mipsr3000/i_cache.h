@@ -260,145 +260,300 @@ SC_MODULE(i_cache)
 		u0_msk=0x0;
 
 		SC_METHOD(processCK_SX);
-		sensitive << CK;
+		sensitive 
+			<< CK;
 		SC_METHOD(processADRTAG_SX);
-		sensitive << I_A;
+		sensitive 
+			<< I_A;
 		SC_METHOD(processBLCNBR_SX);
-		sensitive << I_A;
+		sensitive 
+			<< I_A;
 		SC_METHOD(processBLCOFS_SX);
-		sensitive << I_A;
+		sensitive 
+			<< I_A;
 		SC_METHOD(processTAG_SX);
-		sensitive << BLCNBR_SX << TAG0_RX << TAG1_RX << TAG2_RX << TAG3_RX;
+		sensitive 
+			<< BLCNBR_SX 
+			<< TAG0_RX 
+			<< TAG1_RX 
+			<< TAG2_RX 
+			<< TAG3_RX;
 		SC_METHOD(processPRES_SX);
-		sensitive << BLCNBR_SX << PRES0_RX << PRES1_RX << PRES2_RX << PRES3_RX;
+		sensitive 
+			<< BLCNBR_SX 
+			<< PRES0_RX 
+			<< PRES1_RX 
+			<< PRES2_RX 
+			<< PRES3_RX;
 		SC_METHOD(processBLOC_SX);
-		sensitive << BLCNBR_SX << BLOC0_RX << BLOC1_RX << BLOC2_RX << BLOC3_RX;
+		sensitive 
+			<< BLCNBR_SX 
+			<< BLOC0_RX 
+			<< BLOC1_RX 
+			<< BLOC2_RX 
+			<< BLOC3_RX;
 		SC_METHOD(processDATA_SX);
-		sensitive << BLCOFS_SX << BLOC_SX;
+		sensitive 
+			<< BLCOFS_SX 
+			<< BLOC_SX;
 		SC_METHOD(processCMPTAGS_SX);
-		sensitive << ADRTAG_SX << TAG_SX;
+		sensitive 
+			<< ADRTAG_SX 
+			<< TAG_SX;
 		SC_METHOD(processEQLTAGS_SX);
-		sensitive << CMPTAGS_SX;
+		sensitive 
+			<< CMPTAGS_SX;
 		SC_METHOD(processDIRMISS_SX);
-		sensitive << PRES_SX << EQLTAGS_SX << I_FTCH;
+		sensitive 
+			<< PRES_SX 
+			<< EQLTAGS_SX 
+			<< I_FTCH;
 		SC_METHOD(processCMPUADR_SX);
-		sensitive << I_A << UCACADR_RX;
+		sensitive 
+			<< I_A 
+			<< UCACADR_RX;
 		SC_METHOD(processEQLUADR_SX);
-		sensitive << CMPUADR_SX << UCACVLD_RX;
+		sensitive 
+			<< CMPUADR_SX 
+			<< UCACVLD_RX;
 		SC_METHOD(processMSK0ADR_SX);
-		sensitive << I_A;
+		sensitive 
+			<< I_A;
 		SC_METHOD(processUNCMISS_SX);
-		sensitive << MSK0ADR_SX << EQLUADR_SX << I_FTCH;
+		sensitive 
+			<< MSK0ADR_SX 
+			<< EQLUADR_SX 
+			<< I_FTCH;
 		SC_METHOD(processMISS_SX);
-		sensitive << UNCMISS_SX << DIRMISS_SX;
+		sensitive 
+			<< UNCMISS_SX 
+			<< DIRMISS_SX;
 		SC_METHOD(processRSTCNT_SX);
-		sensitive << RSTCNT_RX << RSTCRY_SX;
+		sensitive 
+			<< RSTCNT_RX 
+			<< RSTCRY_SX;
 		SC_METHOD(processRSTCRY_SX);
-		sensitive << RSTCNT_RX << RSTCRY_SX;
+		sensitive 
+			<< RSTCNT_RX 
+			<< RSTCRY_SX;
 		SC_METHOD(processENDRST_SX);
-		sensitive << RSTCRY_SX;
+		sensitive 
+			<< RSTCRY_SX;
 		SC_METHOD(processRSTPRS);
-		sensitive << C_STAT_RX << RSTCNT_RX;
+		sensitive 
+			<< C_STAT_RX 
+			<< RSTCNT_RX;
 		SC_METHOD(processC_NXTS_SX);
-		sensitive << RESET_RX << C_STAT_RX << ENDRST_SX << MISS_SX << ANSEMTY_SX << UNCMISS_SX << DIRMISS_SX
+		sensitive 
+			<< RESET_RX 
+			<< C_STAT_RX 
+			<< ENDRST_SX 
+			<< MISS_SX 
+			<< ANSEMTY_SX 
+			<< UNCMISS_SX 
+			<< DIRMISS_SX
+			
 			<< ANSFLAG_SX;
 		SC_METHOD(processANSPOP_SX);
-		sensitive << C_STAT_RX << ANSEMTY_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< ANSEMTY_SX;
 		SC_METHOD(processWRTUCAC_SX);
-		sensitive << C_STAT_RX << ANSEMTY_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< ANSEMTY_SX;
 		SC_METHOD(processWRTDATA_SX);
-		sensitive << C_STAT_RX << ANSEMTY_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< ANSEMTY_SX;
 		SC_METHOD(processWRTDAT_SX);
-		sensitive << ANSADR_SX << WRTDATA_SX;
+		sensitive 
+			<< ANSADR_SX 
+			<< WRTDATA_SX;
 		SC_METHOD(processWRTADR_SX);
-		sensitive << C_STAT_RX << ANSEMTY_SX << ANSFLAG_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< ANSEMTY_SX 
+			<< ANSFLAG_SX;
 		SC_METHOD(processWRTBLOC_SX);
-		sensitive << C_STAT_RX;
+		sensitive 
+			<< C_STAT_RX;
 		SC_METHOD(processWRTBNBR_SX);
-		sensitive << RBLOCAD_RX;
+		sensitive 
+			<< RBLOCAD_RX;
 		SC_METHOD(processWRTBTAG_SX);
-		sensitive << RBLOCAD_RX;
+		sensitive 
+			<< RBLOCAD_RX;
 		SC_METHOD(processBLOCDIN_SX);
-		sensitive << REDBLC0_RX << REDBLC1_RX << REDBLC2_RX << REDBLC3_RX;
+		sensitive 
+			<< REDBLC0_RX 
+			<< REDBLC1_RX 
+			<< REDBLC2_RX 
+			<< REDBLC3_RX;
 		SC_METHOD(processRQSPSH_SX);
-		sensitive << C_STAT_RX << MISS_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< MISS_SX;
 		SC_METHOD(processRQSDIN_SX);
-		sensitive << I_A << UNCMISS_SX;
+		sensitive 
+			<< I_A 
+			<< UNCMISS_SX;
 		SC_METHOD(processR_NXTS_SX);
-		sensitive << RESET_RX << R_STAT_RX << RQSPSH_SX << RQSPOP_SX;
+		sensitive 
+			<< RESET_RX 
+			<< R_STAT_RX 
+			<< RQSPSH_SX 
+			<< RQSPOP_SX;
 		SC_METHOD(processRQSEMTY_SX);
-		sensitive << R_STAT_RX;
+		sensitive 
+			<< R_STAT_RX;
 		SC_METHOD(processRQSFULL_SX);
-		sensitive << R_STAT_RX;
+		sensitive 
+			<< R_STAT_RX;
 		SC_METHOD(processRQSADR_SX);
-		sensitive << RQSREG0_RX;
+		sensitive 
+			<< RQSREG0_RX;
 		SC_METHOD(processRQSACSC_SX);
-		sensitive << RQSREG0_RX;
+		sensitive 
+			<< RQSREG0_RX;
 		SC_METHOD(processWRTRQS0_SX);
-		sensitive << R_STAT_RX << RQSPSH_SX;
+		sensitive 
+			<< R_STAT_RX 
+			<< RQSPSH_SX;
 		SC_METHOD(processA_NXTS_SX);
-		sensitive << RESET_RX << A_STAT_RX << ANSPSH_SX << ANSPOP_SX;
+		sensitive 
+			<< RESET_RX 
+			<< A_STAT_RX 
+			<< ANSPSH_SX 
+			<< ANSPOP_SX;
 		SC_METHOD(processANSEMTY_SX);
-		sensitive << A_STAT_RX;
+		sensitive 
+			<< A_STAT_RX;
 		SC_METHOD(processANSFULL_SX);
-		sensitive << A_STAT_RX;
+		sensitive 
+			<< A_STAT_RX;
 		SC_METHOD(processANSDATA_SX);
-		sensitive << ANSREG0_RX;
+		sensitive 
+			<< ANSREG0_RX;
 		SC_METHOD(processANSADR_SX);
-		sensitive << ANSREG0_RX;
+		sensitive 
+			<< ANSREG0_RX;
 		SC_METHOD(processANSFLAG_SX);
-		sensitive << ANSREG0_RX;
+		sensitive 
+			<< ANSREG0_RX;
 		SC_METHOD(processWRTANS0_SX);
-		sensitive << A_STAT_RX << ANSPSH_SX << ANSPOP_SX;
+		sensitive 
+			<< A_STAT_RX 
+			<< ANSPSH_SX 
+			<< ANSPOP_SX;
 		SC_METHOD(processWRTANS1_SX);
-		sensitive << A_STAT_RX << ANSPSH_SX;
+		sensitive 
+			<< A_STAT_RX 
+			<< ANSPSH_SX;
 		SC_METHOD(processSELANS0_SX);
-		sensitive << A_STAT_RX << ANSPOP_SX;
+		sensitive 
+			<< A_STAT_RX 
+			<< ANSPOP_SX;
 		SC_METHOD(processP_NXTS_SX);
-		sensitive << RESET_RX << P_STAT_RX << RQSEMTY_SX << DATARDY_SX << PI_GNT << MOREADR_SX;
+		sensitive 
+			<< RESET_RX 
+			<< P_STAT_RX 
+			<< RQSEMTY_SX 
+			<< DATARDY_SX 
+			<< PI_GNT 
+			<< MOREADR_SX;
 		SC_METHOD(processDEFLTEN_SX);
-		sensitive << PI_GNT;
+		sensitive 
+			<< PI_GNT;
 		SC_METHOD(processPILINEN_SX);
-		sensitive << P_STAT_RX << DEFLTEN_SX;
+		sensitive 
+			<< P_STAT_RX 
+			<< DEFLTEN_SX;
 		SC_METHOD(processANSPSH_SX);
-		sensitive << P_STAT_RX << DATARDY_SX;
+		sensitive 
+			<< P_STAT_RX 
+			<< DATARDY_SX;
 		SC_METHOD(processANSDIN_SX);
-		sensitive << PI_D << SENDADR_RX << P_STAT_RX;
+		sensitive 
+			<< PI_D 
+			<< SENDADR_RX 
+			<< P_STAT_RX;
 		SC_METHOD(processINITACS_SX);
-		sensitive << P_STAT_RX << PI_GNT << P_STAT_RX;
+		sensitive 
+			<< P_STAT_RX 
+			<< PI_GNT 
+			<< P_STAT_RX;
 		SC_METHOD(processRQSPOP_SX);
-		sensitive << INITACS_SX;
+		sensitive 
+			<< INITACS_SX;
 		SC_METHOD(processADRCNT_SX);
-		sensitive << ADRCNT_RX << ADRCRY_SX;
+		sensitive 
+			<< ADRCNT_RX 
+			<< ADRCRY_SX;
 		SC_METHOD(processADRCRY_SX);
-		sensitive << ADRCNT_RX << DATARDY_SX << ANSFULL_SX;
+		sensitive 
+			<< ADRCNT_RX 
+			<< DATARDY_SX 
+			<< ANSFULL_SX;
 		SC_METHOD(processMOREADR_SX);
-		sensitive << ACSCNT_RX;
+		sensitive 
+			<< ACSCNT_RX;
 		SC_METHOD(processDATARDY_SX);
-		sensitive << PI_ACK;
+		sensitive 
+			<< PI_ACK;
 		SC_METHOD(processSNPBLC_SX);
-		sensitive << PI_A;
+		sensitive 
+			<< PI_A;
 		SC_METHOD(processSNPBTAG_SX);
-		sensitive << SNPBLC_SX << TAG0_RX << TAG1_RX << TAG2_RX << TAG3_RX;
+		sensitive 
+			<< SNPBLC_SX 
+			<< TAG0_RX 
+			<< TAG1_RX 
+			<< TAG2_RX 
+			<< TAG3_RX;
 		SC_METHOD(processSNPCMPT_SX);
-		sensitive << PI_A << SNPBTAG_SX;
+		sensitive 
+			<< PI_A 
+			<< SNPBTAG_SX;
 		SC_METHOD(processSNPINVL_SX);
-		sensitive << SNPCMPT_SX << PI_READ;
+		sensitive 
+			<< SNPCMPT_SX 
+			<< PI_READ;
 		SC_METHOD(processINVPRS_SX);
-		sensitive << SNPBLC_SX << SNPINVL_SX;
+		sensitive 
+			<< SNPBLC_SX 
+			<< SNPINVL_SX;
 		SC_METHOD(processI_FRZ);
-		sensitive << C_STAT_RX << MISS_SX;
+		sensitive 
+			<< C_STAT_RX 
+			<< MISS_SX;
 		SC_METHOD(processI);
-		sensitive << UCACVLD_RX << UCACDAT_RX << DATA_SX;
+		sensitive 
+			<< UCACVLD_RX 
+			<< UCACDAT_RX 
+			<< DATA_SX;
 		SC_METHOD(processPI_IREQ);
-		sensitive << P_STAT_RX;
+		sensitive 
+			<< P_STAT_RX;
 		SC_METHOD(processPI_LINES);
-		sensitive << CK.pos() << ADRCNT_RX << PILINEN_SX << DEFLTEN_SX << P_STAT_RX << MOREADR_SX << ANSFULL_SX;
+		sensitive 
+			<< CK.pos() 
+			<< ADRCNT_RX 
+			<< PILINEN_SX 
+			<< DEFLTEN_SX 
+			<< P_STAT_RX 
+			<< MOREADR_SX 
+			<< ANSFULL_SX;
 		SC_METHOD(processCLOCK);
-		sensitive << CK.pos();
+		sensitive 
+			<< CK.pos();
 		SC_METHOD(processI_BERR_N);
 		SC_METHOD(processACSCNT_SX);
-		sensitive << ACSCNT_RX << P_STAT_RX << DATARDY_SX << ANSFULL_SX;
+		sensitive 
+			<< ACSCNT_RX 
+			<< P_STAT_RX 
+			<< DATARDY_SX 
+			<< ANSFULL_SX;
 	}
 
 	// ### ------------------------------------------------------ ###

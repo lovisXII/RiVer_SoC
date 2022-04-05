@@ -46,6 +46,12 @@ SC_MODULE(wbk)
     SC_CTOR(wbk)
     {
         SC_METHOD(wbk_method);
-        sensitive << MEM_DATA_SW << MEM_DEST_SW << MEM_SIZE_SW << MEM_WB_SW << SIGN_EXTEND_SW << MEM2WBK_EMPTY_SW;
+        sensitive 
+			<< MEM_DATA_SW 
+			<< MEM_DEST_SW 
+			<< MEM_SIZE_SW 
+			<< MEM_WB_SW 
+			<< SIGN_EXTEND_SW 
+			<< MEM2WBK_EMPTY_SW;
     }
 };

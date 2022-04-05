@@ -56,7 +56,8 @@ SC_MODULE(ff_ifetch)
 		SR_RI("SR_RI")
 	{
 		SC_METHOD(processClock);
-		sensitive_pos << CK_SX;
+		sensitive_pos 
+			<< CK_SX;
 	}
 
 	void processClock()

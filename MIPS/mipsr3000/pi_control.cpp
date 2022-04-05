@@ -150,7 +150,8 @@ void pi_control::processDFLTRQS_SX()
 void pi_control::processSELECT_SX()
 {
   sc_uint<32> pi_a=PI_A.read();
-  sc_uint<32> pi_a_shft=pi_a << 2;
+  sc_uint<32> pi_a_shft=pi_a 
+			<< 2;
 
   if (pi_a_shft.range(31,12)==0x0)
     SELECT_SX.write(0x1);

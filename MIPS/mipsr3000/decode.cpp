@@ -5,9 +5,12 @@ void decode::processCOP0_SD()
   sc_uint<32> ir_ri = IR_RI.read();
 
   if (ir_ri[25]==0)
-    COP0_SD.write((cop0_g << 6) | (ir_ri.range(22,21) << 3) | (ir_ri.range(24,23))) ;
+    COP0_SD.write((cop0_g 
+			<< 6) | (ir_ri.range(22,21) 
+			<< 3) | (ir_ri.range(24,23))) ;
   else
-    COP0_SD.write((cop0_g << 6) | 0x20 | ir_ri.range(4,0));
+    COP0_SD.write((cop0_g 
+			<< 6) | 0x20 | ir_ri.range(4,0));
 }
 
 void decode::processOPCOD_SD()
@@ -15,13 +18,16 @@ void decode::processOPCOD_SD()
   sc_uint<32> ir_ri = IR_RI.read();
 
   if (ir_ri.range(31,26)==special_i)
-    OPCOD_SD.write((special_g << 6) | ir_ri.range(5,0));
+    OPCOD_SD.write((special_g 
+			<< 6) | ir_ri.range(5,0));
   else if (ir_ri.range(31,26)==bcond_i)
-    OPCOD_SD.write((bcond_g << 5) | ir_ri.range(20,16));
+    OPCOD_SD.write((bcond_g 
+			<< 5) | ir_ri.range(20,16));
   else if (ir_ri.range(31,26)==cop0_i)
     OPCOD_SD.write(COP0_SD.read());
   else
-    OPCOD_SD.write((others_g << 6) | ir_ri.range(31,26));
+    OPCOD_SD.write((others_g 
+			<< 6) | ir_ri.range(31,26));
 }
 
 void decode::processI_ILLG_SD()
@@ -194,7 +200,8 @@ void decode::processIOPER_SD()
   else if ((int)OPCOD_SD.read() == mfhi_i)
     IOPER_SD.write(HI_RW.read());
   else
-    IOPER_SD.write(IMDSEX_SD.read() << 16 | ir_ri.range(15,0));
+    IOPER_SD.write(IMDSEX_SD.read() 
+			<< 16 | ir_ri.range(15,0));
 }
 
 void decode::processOFFSET_SD()
@@ -202,7 +209,9 @@ void decode::processOFFSET_SD()
   sc_uint<32> imdsex_sd=IMDSEX_SD.read();
   sc_uint<32> ir_ri=IR_RI.read();
 
-  OFFSET_SD.write(imdsex_sd.range(13,0) << 18 | ir_ri.range(15,0) << 2);
+  OFFSET_SD.write(imdsex_sd.range(13,0) 
+			<< 18 | ir_ri.range(15,0) 
+			<< 2);
 }
 
 void decode::processS_CMP_T_SD()

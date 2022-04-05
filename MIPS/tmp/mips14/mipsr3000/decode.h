@@ -137,73 +137,134 @@ SC_MODULE(decode)
 	*/
 	{
 		SC_METHOD(processCOP0_SD);
-		sensitive << IR_RI;
+		sensitive 
+			<< IR_RI;
 		SC_METHOD(processOPCOD_SD);
-		sensitive << IR_RI << COP0_SD;
+		sensitive 
+			<< IR_RI 
+			<< COP0_SD;
 		SC_METHOD(processI_ILLG_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_JFMT_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_IFMT_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_RFMT_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_DUSE_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_READS_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_READT_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_OSGND_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_WRT31_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_WRITE_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processI_BRNCH_SD);
-		sensitive << I_TYPE_SD;
+		sensitive 
+			<< I_TYPE_SD;
 		SC_METHOD(processSWAP_SD);
-		sensitive << OPCOD_SD;
+		sensitive 
+			<< OPCOD_SD;
 		SC_METHOD(processCOP0D_SD);
-		sensitive << COP0D_SD;
+		sensitive 
+			<< COP0D_SD;
 		SC_METHOD(processRS_SD);
-		sensitive << IR_RI;
+		sensitive 
+			<< IR_RI;
 		SC_METHOD(processRT_SD);
-		sensitive << IR_RI;
+		sensitive 
+			<< IR_RI;
 		SC_METHOD(processRD_SD);
-		sensitive << IR_RI << I_WRT31_SD << I_WRITE_SD << I_RFMT_SD << I_IFMT_SD;
+		sensitive 
+			<< IR_RI 
+			<< I_WRT31_SD 
+			<< I_WRITE_SD 
+			<< I_RFMT_SD 
+			<< I_IFMT_SD;
 		SC_METHOD(processCOP0OP_SD);
-		sensitive << IR_RI << BADVADR_RM << NEXTSR_RX << EPC_RX << CAUSE_RX;
+		sensitive 
+			<< IR_RI 
+			<< BADVADR_RM 
+			<< NEXTSR_RX 
+			<< EPC_RX 
+			<< CAUSE_RX;
 		SC_METHOD(processIMDSGN_SD);
-		sensitive << IR_RI;
+		sensitive 
+			<< IR_RI;
 		SC_METHOD(processIMDSEX_SD);
-		sensitive << IR_RI << IMDSGN_SD << I_OSGND_SD;
+		sensitive 
+			<< IR_RI 
+			<< IMDSGN_SD 
+			<< I_OSGND_SD;
 		SC_METHOD(processIOPER_SD);
-		sensitive << IR_RI << OPCOD_SD << SEQADR_SD << LO_RW << HI_RW << IMDSEX_SD;
+		sensitive 
+			<< IR_RI 
+			<< OPCOD_SD 
+			<< SEQADR_SD 
+			<< LO_RW 
+			<< HI_RW 
+			<< IMDSEX_SD;
 		SC_METHOD(processOFFSET_SD);
-		sensitive << IR_RI << IMDSEX_SD;
+		sensitive 
+			<< IR_RI 
+			<< IMDSEX_SD;
 		SC_METHOD(processS_CMP_T_SD);
-		sensitive << SOPER_SD << TOPER_SD;
+		sensitive 
+			<< SOPER_SD 
+			<< TOPER_SD;
 		SC_METHOD(processS_EQ_T_SD);
-		sensitive << S_CMP_T_SD;
+		sensitive 
+			<< S_CMP_T_SD;
 		SC_METHOD(processS_LT_Z_SD);
-		sensitive << SOPER_SD;
+		sensitive 
+			<< SOPER_SD;
 		SC_METHOD(processS_LE_Z_SD);
-		sensitive << SOPER_SD;
+		sensitive 
+			<< SOPER_SD;
 		SC_METHOD(processSLEEP_SD);
-		sensitive << OPCOD_SD;
+		sensitive 
+			<< OPCOD_SD;
 		SC_METHOD(processNEXTPC_SD);
-		sensitive << SOPER_SD << JMPADR_SD << S_EQ_T_SD << S_LT_Z_SD << S_LE_Z_SD << BRAADR_SD << SEQADR_SD;
+		sensitive 
+			<< SOPER_SD 
+			<< JMPADR_SD 
+			<< S_EQ_T_SD 
+			<< S_LT_Z_SD 
+			<< S_LE_Z_SD 
+			<< BRAADR_SD 
+			<< SEQADR_SD;
 		SC_METHOD(processILLGINS_XD);
-		sensitive << I_ILLG_SD;
+		sensitive 
+			<< I_ILLG_SD;
 		SC_METHOD(processC0UNUSE_XD);
-		sensitive << SR_RI << OPCOD_SD;
+		sensitive 
+			<< SR_RI 
+			<< OPCOD_SD;
 		SC_METHOD(processJMPADR_SD);
-		sensitive << NEXTPC_RD << IR_RI;
+		sensitive 
+			<< NEXTPC_RD 
+			<< IR_RI;
 		SC_METHOD(processBRAADR_SD);
-		sensitive << NEXTPC_RD << OFFSET_SD;
+		sensitive 
+			<< NEXTPC_RD 
+			<< OFFSET_SD;
 		SC_METHOD(processSEQADR_SD);
-		sensitive << NEXTPC_RD;
+		sensitive 
+			<< NEXTPC_RD;
 	}
 
 	// ### ------------------------------------------------------ ###
@@ -215,9 +276,12 @@ SC_MODULE(decode)
 		sc_uint<32> ir_ri = IR_RI.read();
 
 		if (ir_ri[25]==0)
-			COP0_SD.write((cop0_g << 6) | (ir_ri.range(22,21) << 3) | (ir_ri.range(24,23))) ;
+			COP0_SD.write((cop0_g 
+			<< 6) | (ir_ri.range(22,21) 
+			<< 3) | (ir_ri.range(24,23))) ;
 		else
-			COP0_SD.write((cop0_g << 6) | 0x20 | ir_ri.range(4,0));
+			COP0_SD.write((cop0_g 
+			<< 6) | 0x20 | ir_ri.range(4,0));
 	}
 
 		// ### -------------------------------------------------- ###
@@ -240,13 +304,16 @@ SC_MODULE(decode)
 		sc_uint<32> ir_ri = IR_RI.read();
 
 		if (ir_ri.range(31,26)==special_i)
-			OPCOD_SD.write((special_g << 6) | ir_ri.range(5,0));
+			OPCOD_SD.write((special_g 
+			<< 6) | ir_ri.range(5,0));
 		else if (ir_ri.range(31,26)==bcond_i)
-			OPCOD_SD.write((bcond_g << 5) | ir_ri.range(20,16));
+			OPCOD_SD.write((bcond_g 
+			<< 5) | ir_ri.range(20,16));
 		else if (ir_ri.range(31,26)==cop0_i)
 			OPCOD_SD.write(COP0_SD.read());
 		else
-			OPCOD_SD.write((others_g << 6) | ir_ri.range(31,26));
+			OPCOD_SD.write((others_g 
+			<< 6) | ir_ri.range(31,26));
 	}
 
 	void processI_ILLG_SD()
@@ -442,7 +509,8 @@ SC_MODULE(decode)
 		else if ((int)OPCOD_SD.read() == mfhi_i)
 			IOPER_SD.write(HI_RW.read());
 		else
-			IOPER_SD.write(IMDSEX_SD.read() << 16 | ir_ri.range(15,0));
+			IOPER_SD.write(IMDSEX_SD.read() 
+			<< 16 | ir_ri.range(15,0));
 	}
 
 		// ### ------------------------------------------------------ ###
@@ -456,7 +524,9 @@ SC_MODULE(decode)
 		sc_uint<32> imdsex_sd=IMDSEX_SD.read();
 		sc_uint<32> ir_ri=IR_RI.read();
 
-		OFFSET_SD.write(imdsex_sd.range(13,0) << 18 | ir_ri.range(15,0) << 2);
+		OFFSET_SD.write(imdsex_sd.range(13,0) 
+			<< 18 | ir_ri.range(15,0) 
+			<< 2);
 	}
 
 		// ### ------------------------------------------------------ ###

@@ -28,7 +28,9 @@ void misc::processCAUSE_SX()
   sc_uint<32> res_re=RES_RE.read();
   sc_uint<32> cause_rx=CAUSE_RX.read();
 
-  CAUSE_SX.write(cause_rx.range(31,16) << 16 | IT_XX.read() << 10 | cause_rx.range(9,0));
+  CAUSE_SX.write(cause_rx.range(31,16) 
+			<< 16 | IT_XX.read() 
+			<< 10 | cause_rx.range(9,0));
 }
 
 void misc::processBOOTEV_XX()

@@ -17,7 +17,8 @@ SC_MODULE(rom)
 	SC_CTOR(rom)
 	{
 		SC_METHOD(memAccess);
-		sensitive << ADR;
+		sensitive 
+			<< ADR;
 	}
 
 	void memAccess()
@@ -79,9 +80,11 @@ SC_MODULE(rom)
                                         if ((red_c >= 'A') && (red_c <= 'F'))
                                                 red_val = red_c - 'A' + 10;
                                         if (state == ROM_READ_ADR)
-                                                cur_adr = (cur_adr << 4) + red_val;
+                                                cur_adr = (cur_adr 
+			<< 4) + red_val;
                                         else
-                                                cur_val = (cur_val << 4) + red_val;
+                                                cur_val = (cur_val 
+			<< 4) + red_val;
 					//printf("cur_adr=%x cur_val=%x\n",cur_adr,cur_val);
                         }
                 }

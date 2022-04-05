@@ -10,10 +10,13 @@ int main()
     {
         for(int j = 0; j < 3; ++j)
         {
-            ram_file << i << " ";
+            ram_file 
+			<< i << " ";
             ++i;
         }
-        ram_file << i << std::endl;
+        ram_file 
+			<< i 
+			<< std::endl;
     }
     ram_file.close();
     

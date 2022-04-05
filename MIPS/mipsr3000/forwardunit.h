@@ -141,67 +141,167 @@ SC_MODULE(forwardunit)
 
 	{
 		SC_METHOD(processCMP_SDE_SD);
-		sensitive << RS_SD << RD_RD;
+		sensitive 
+			<< RS_SD 
+			<< RD_RD;
 		SC_METHOD(processCMP_SDM_SD);
-		sensitive << RS_SD << RD_RE;
+		sensitive 
+			<< RS_SD 
+			<< RD_RE;
 		SC_METHOD(processCMP_SDW_SD);
-		sensitive << RS_SD << RD_RM;
+		sensitive 
+			<< RS_SD 
+			<< RD_RM;
 		SC_METHOD(processCMP_TDE_SD);
-		sensitive << RT_SD << RD_RD;
+		sensitive 
+			<< RT_SD 
+			<< RD_RD;
 		SC_METHOD(processCMP_TDM_SD);
-		sensitive << RT_SD << RD_RD;
+		sensitive 
+			<< RT_SD 
+			<< RD_RD;
 		SC_METHOD(processCMP_TDW_SD);
-		sensitive << RT_SD << RD_RD;
+		sensitive 
+			<< RT_SD 
+			<< RD_RD;
 		SC_METHOD(processSREADR0_SD);
-		sensitive << RS_SD;
+		sensitive 
+			<< RS_SD;
 		SC_METHOD(processTREADR0_SD);
-		sensitive << RT_SD;
+		sensitive 
+			<< RT_SD;
 		SC_METHOD(processHZD_SDE_SD);
-		sensitive << CMP_SDE_SD << SREADR0_SD << I_READS_SD << I_WRITE_SE;
+		sensitive 
+			<< CMP_SDE_SD 
+			<< SREADR0_SD 
+			<< I_READS_SD 
+			<< I_WRITE_SE;
 		SC_METHOD(processHZD_SDM_SD);
-		sensitive << CMP_SDM_SD << SREADR0_SD << I_READS_SD << I_WRITE_SM;
+		sensitive 
+			<< CMP_SDM_SD 
+			<< SREADR0_SD 
+			<< I_READS_SD 
+			<< I_WRITE_SM;
 		SC_METHOD(processHZD_SDW_SD);
-		sensitive << CMP_SDW_SD << SREADR0_SD << I_READS_SD << I_WRITE_SW;
+		sensitive 
+			<< CMP_SDW_SD 
+			<< SREADR0_SD 
+			<< I_READS_SD 
+			<< I_WRITE_SW;
 		SC_METHOD(processHZD_TDE_SD);
-		sensitive << CMP_TDE_SD << TREADR0_SD << I_READT_SD << I_WRITE_SE;
+		sensitive 
+			<< CMP_TDE_SD 
+			<< TREADR0_SD 
+			<< I_READT_SD 
+			<< I_WRITE_SE;
 		SC_METHOD(processHZD_TDM_SD);
-		sensitive << CMP_TDM_SD << TREADR0_SD << I_READT_SD << I_WRITE_SM;
+		sensitive 
+			<< CMP_TDM_SD 
+			<< TREADR0_SD 
+			<< I_READT_SD 
+			<< I_WRITE_SM;
 		SC_METHOD(processHZD_TDW_SD);
-		sensitive << CMP_TDW_SD << TREADR0_SD << I_READT_SD << I_WRITE_SW;
+		sensitive 
+			<< CMP_TDW_SD 
+			<< TREADR0_SD 
+			<< I_READT_SD 
+			<< I_WRITE_SW;
 		SC_METHOD(processHAZARDS_SD);
-		sensitive << HZD_SDE_SD << HZD_TDE_SD << I_DUSE_SD << I_EPDC_SE
-		<< HZD_SDE_SD << HZD_TDE_SD << I_DUSE_SD << I_MPDC_SE
-		<< HZD_SDM_SD << HZD_TDM_SD << I_DUSE_SD << I_MPDC_SM ;
+		sensitive 
+			<< HZD_SDE_SD 
+			<< HZD_TDE_SD 
+			<< I_DUSE_SD 
+			<< I_EPDC_SE
+		
+			<< HZD_SDE_SD 
+			<< HZD_TDE_SD 
+			<< I_DUSE_SD 
+			<< I_MPDC_SE
+		
+			<< HZD_SDM_SD 
+			<< HZD_TDM_SD 
+			<< I_DUSE_SD 
+			<< I_MPDC_SM ;
 		SC_METHOD(processSOPER_SD);
-		sensitive << HZD_SDM_SD << RES_RE << HZD_SDW_SD << DATA_RM << S_SD;
+		sensitive 
+			<< HZD_SDM_SD 
+			<< RES_RE 
+			<< HZD_SDW_SD 
+			<< DATA_RM 
+			<< S_SD;
 		SC_METHOD(processTOPER_SD);
-		sensitive << HZD_TDM_SD << RES_RE << HZD_TDW_SD << DATA_RM << T_SD;
+		sensitive 
+			<< HZD_TDM_SD 
+			<< RES_RE 
+			<< HZD_TDW_SD 
+			<< DATA_RM 
+			<< T_SD;
 		SC_METHOD(processCMP_SDM_SE);
-		sensitive << RS_RD << RD_RE;
+		sensitive 
+			<< RS_RD 
+			<< RD_RE;
 		SC_METHOD(processCMP_SDW_SE);
-		sensitive << RS_RD << RD_RM;
+		sensitive 
+			<< RS_RD 
+			<< RD_RM;
 		SC_METHOD(processCMP_TDM_SE);
-		sensitive << RT_RD << RD_RE;
+		sensitive 
+			<< RT_RD 
+			<< RD_RE;
 		SC_METHOD(processCMP_TDW_SE);
-		sensitive << RT_RD << RD_RM;
+		sensitive 
+			<< RT_RD 
+			<< RD_RM;
 		SC_METHOD(processSREADR0_SE);
-		sensitive << RS_RD;
+		sensitive 
+			<< RS_RD;
 		SC_METHOD(processTREADR0_SE);
-		sensitive << RT_RD;
+		sensitive 
+			<< RT_RD;
 		SC_METHOD(processHZD_SDM_SE);
-		sensitive << CMP_SDM_SE << SREADR0_SE << I_READS_SE << I_WRITE_SM;
+		sensitive 
+			<< CMP_SDM_SE 
+			<< SREADR0_SE 
+			<< I_READS_SE 
+			<< I_WRITE_SM;
 		SC_METHOD(processHZD_SDW_SE);
-		sensitive << CMP_SDW_SE << SREADR0_SE << I_READS_SE << I_WRITE_SW;
+		sensitive 
+			<< CMP_SDW_SE 
+			<< SREADR0_SE 
+			<< I_READS_SE 
+			<< I_WRITE_SW;
 		SC_METHOD(processHZD_TDM_SE);
-		sensitive << CMP_TDM_SE << TREADR0_SE << I_READT_SE << I_WRITE_SM;
+		sensitive 
+			<< CMP_TDM_SE 
+			<< TREADR0_SE 
+			<< I_READT_SE 
+			<< I_WRITE_SM;
 		SC_METHOD(processHZD_TDW_SE);
-		sensitive << CMP_TDW_SE << TREADR0_SE << I_READT_SE << I_WRITE_SW;
+		sensitive 
+			<< CMP_TDW_SE 
+			<< TREADR0_SE 
+			<< I_READT_SE 
+			<< I_WRITE_SW;
 		SC_METHOD(processHAZARDS_SE);
-		sensitive << HZD_SDM_SE << HZD_TDM_SE << I_EUSE_SE << I_MPDC_SM;
+		sensitive 
+			<< HZD_SDM_SE 
+			<< HZD_TDM_SE 
+			<< I_EUSE_SE 
+			<< I_MPDC_SM;
 		SC_METHOD(processX_SE);
-		sensitive << HZD_SDM_SE << RES_RE << HZD_SDW_SE << DATA_RM << SOPER_RD;
+		sensitive 
+			<< HZD_SDM_SE 
+			<< RES_RE 
+			<< HZD_SDW_SE 
+			<< DATA_RM 
+			<< SOPER_RD;
 		SC_METHOD(processY_SE);
-		sensitive << HZD_TDM_SE << RES_RE << HZD_TDW_SE << DATA_RM << TOPER_RD;
+		sensitive 
+			<< HZD_TDM_SE 
+			<< RES_RE 
+			<< HZD_TDW_SE 
+			<< DATA_RM 
+			<< TOPER_RD;
 	}
 
   // ### ------------------------------------------------------ ###

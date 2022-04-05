@@ -441,7 +441,8 @@ case "${UNAME_MACHINE}:${UNAME_SYSTEM}:${UNAME_RELEASE}:${UNAME_VERSION}" in
 	exit ;;
     mips:*:*:UMIPS | mips:*:*:RISCos)
 	eval $set_cc_for_build
-	sed 's/^	//' << EOF >$dummy.c
+	sed 's/^	//' 
+			<< EOF >$dummy.c
 #ifdef __cplusplus
 #include <stdio.h>  /* for printf() prototype */
 	int main (int argc, char *argv[]) {
@@ -538,7 +539,8 @@ EOF
     *:AIX:2:3)
 	if grep bos325 /usr/include/stdio.h >/dev/null 2>&1; then
 		eval $set_cc_for_build
-		sed 's/^		//' << EOF >$dummy.c
+		sed 's/^		//' 
+			<< EOF >$dummy.c
 		#include <sys/systemcfg.h>
 
 		main()
@@ -618,7 +620,8 @@ EOF
 		fi
 		if [ "${HP_ARCH}" = "" ]; then
 		    eval $set_cc_for_build
-		    sed 's/^              //' << EOF >$dummy.c
+		    sed 's/^              //' 
+			<< EOF >$dummy.c
 
               #define _HPUX_SOURCE
               #include <stdlib.h>
@@ -684,7 +687,8 @@ EOF
 	exit ;;
     3050*:HI-UX:*:*)
 	eval $set_cc_for_build
-	sed 's/^	//' << EOF >$dummy.c
+	sed 's/^	//' 
+			<< EOF >$dummy.c
 	#include <unistd.h>
 	int
 	main ()
@@ -906,7 +910,8 @@ EOF
     i*86:Linux:*:*)
 	LIBC=gnu
 	eval $set_cc_for_build
-	sed 's/^	//' << EOF >$dummy.c
+	sed 's/^	//' 
+			<< EOF >$dummy.c
 	#ifdef __dietlibc__
 	LIBC=dietlibc
 	#endif
@@ -925,7 +930,8 @@ EOF
 	exit ;;
     mips:Linux:*:* | mips64:Linux:*:*)
 	eval $set_cc_for_build
-	sed 's/^	//' << EOF >$dummy.c
+	sed 's/^	//' 
+			<< EOF >$dummy.c
 	#undef CPU
 	#undef ${UNAME_MACHINE}
 	#undef ${UNAME_MACHINE}el

@@ -43,9 +43,15 @@ SC_MODULE(mux_writeback)
 		MUX_HI_SW("MUX_HI_SW")
 	{
 		SC_METHOD(processMUX_LO_SW);
-		sensitive << WLO_SW << DATA_RM << LO_RW;
+		sensitive 
+			<< WLO_SW 
+			<< DATA_RM 
+			<< LO_RW;
 		SC_METHOD(processMUX_HI_SW);
-		sensitive << WHI_SW << DATA_RM << HI_RW;
+		sensitive 
+			<< WHI_SW 
+			<< DATA_RM 
+			<< HI_RW;
 	}
 
 	void processMUX_LO_SW()

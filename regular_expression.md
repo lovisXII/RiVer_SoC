@@ -52,3 +52,12 @@ sc_in<sc_uint<32>>      BP_MEM_RES_RM
 (sc_[\w]+<[\w]+(|<[\w]+>)>)[\s]+([\w]+)[\s]+;
 $1\t\t\t$3;
 ```
+
+6. 
+To align sensitivity list :
+```
+(<< [\w]+)
+
+\n
+\t\t\t$1
+```

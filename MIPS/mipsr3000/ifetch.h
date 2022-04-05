@@ -47,9 +47,14 @@ SC_MODULE(ifetch)
 		BDSLOT_XI("BDSLOT_XI")
 	{
 		SC_METHOD(processBDSLOT_XI);
-		sensitive << I_BRNCH_SD;
+		sensitive 
+			<< I_BRNCH_SD;
 		SC_METHOD(processSR_SI);
-		sensitive << NEXTSR_RX << OPCOD_SD << OPCOD_RD << OPCOD_RE;
+		sensitive 
+			<< NEXTSR_RX 
+			<< OPCOD_SD 
+			<< OPCOD_RD 
+			<< OPCOD_RE;
 	}
 
   // ### ------------------------------------------------------ ###

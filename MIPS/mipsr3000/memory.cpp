@@ -82,7 +82,10 @@ void memory::processRD_SM()
 void memory::processBYTSEL_SM()
 {
   sc_uint<32> res_re=RES_RE.read();
-  sc_uint<5> temp=(I_BYTE_SM.read() << 4) | (I_HALF_SM.read() << 3) | (I_WORD_SM.read() << 2) | res_re.range(1,0);
+  sc_uint<5> temp=(I_BYTE_SM.read() 
+			<< 4) | (I_HALF_SM.read() 
+			<< 3) | (I_WORD_SM.read() 
+			<< 2) | res_re.range(1,0);
 
   if ((int)temp==0x10)
     BYTSEL_SM.write(0x1);
@@ -146,10 +149,12 @@ void memory::processDATA_SM()
     DATA_SM.write(REDDAT_SM.read());
   else if ((OPCOD_RE.read()==lb_i)||
           (OPCOD_RE.read()==lbu_i))
-    DATA_SM.write(BSEXT_SM.read() << 8 | reddat_sm.range(7,0));
+    DATA_SM.write(BSEXT_SM.read() 
+			<< 8 | reddat_sm.range(7,0));
   else if ((OPCOD_RE.read()==lh_i)||
           (OPCOD_RE.read()==lhu_i))
-    DATA_SM.write(HSEXT_SM.read() << 16 | reddat_sm.range(15,0));
+    DATA_SM.write(HSEXT_SM.read() 
+			<< 16 | reddat_sm.range(15,0));
   else
     DATA_SM.write(RES_RE.read());
 }
@@ -281,14 +286,18 @@ void memory::processCAUSE_SM()
   sc_uint<32> res_re=RES_RE.read();
   sc_uint<32> cause_rx=CAUSE_RX.read();
 
-  CAUSE_SM.write(cause_rx.range(31,16) << 16 | IT_XX.read() << 10 | res_re.range(9,8) << 8 | cause_rx.range(7,0));
+  CAUSE_SM.write(cause_rx.range(31,16) 
+			<< 16 | IT_XX.read() 
+			<< 10 | res_re.range(9,8) 
+			<< 8 | cause_rx.range(7,0));
 }
 
 void memory::processRSTORSR_SM()
 {
   sc_uint<32> nextsr_rx=CAUSE_RX.read();
 
-  RSTORSR_SM.write(nextsr_rx.range(31,4) << 4 | nextsr_rx.range(5,2));
+  RSTORSR_SM.write(nextsr_rx.range(31,4) 
+			<< 4 | nextsr_rx.range(5,2));
 }
 
 void memory::processNEXTSR_SM()

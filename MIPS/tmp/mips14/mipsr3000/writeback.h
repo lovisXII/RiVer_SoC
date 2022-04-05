@@ -34,11 +34,14 @@ SC_MODULE(writeback)
 		I_WRITE_SW("I_WRITE_SW")
 	{
 		SC_METHOD(processI_WRITE_SW);
-		sensitive << I_TYPE_RM;
+		sensitive 
+			<< I_TYPE_RM;
 		SC_METHOD(processWLO_SW);
-		sensitive << OPCOD_RM;
+		sensitive 
+			<< OPCOD_RM;
 		SC_METHOD(processWHI_SW);
-		sensitive << OPCOD_RM;
+		sensitive 
+			<< OPCOD_RM;
 	}
 
 	void processI_WRITE_SW()

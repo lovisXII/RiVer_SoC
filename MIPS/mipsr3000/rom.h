@@ -17,7 +17,8 @@ SC_MODULE(rom)
   SC_CTOR(rom)
   {
     SC_METHOD(memAccess);
-    sensitive << ADR;
+    sensitive 
+			<< ADR;
   }
 
   void memAccess();

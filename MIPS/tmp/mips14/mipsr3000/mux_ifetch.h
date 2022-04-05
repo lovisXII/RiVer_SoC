@@ -67,15 +67,31 @@ SC_MODULE(mux_ifetch)
 
 	{
 		SC_METHOD(processMUX_IR_SI);
-		sensitive << BUBBLE_SI << HOLD_SI << IR_RI << I ;
+		sensitive 
+			<< BUBBLE_SI 
+			<< HOLD_SI 
+			<< IR_RI 
+			<< I ;
 		SC_METHOD(processMUX_INSTRED_SI);
-		sensitive << BUBBLE_SI << HOLD_SI ;
+		sensitive 
+			<< BUBBLE_SI 
+			<< HOLD_SI ;
 		SC_METHOD(processMUX_BDSLOT_SI);
-		sensitive << BUBBLE_SI << HOLD_SI << BDSLOT_XI << BDSLOT_RI ;
+		sensitive 
+			<< BUBBLE_SI 
+			<< HOLD_SI 
+			<< BDSLOT_XI 
+			<< BDSLOT_RI ;
 		SC_METHOD(processMUX_PC_SI);
-		sensitive << KEEP_SI << PC_RI << NEXTPC_RD ;
+		sensitive 
+			<< KEEP_SI 
+			<< PC_RI 
+			<< NEXTPC_RD ;
 		SC_METHOD(processMUX_SR_SI);
-		sensitive << KEEP_SI << SR_RI << SR_SI ;
+		sensitive 
+			<< KEEP_SI 
+			<< SR_RI 
+			<< SR_SI ;
 	}
 
 	void processMUX_IR_SI()

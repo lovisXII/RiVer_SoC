@@ -162,22 +162,30 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 			  | else 0
 
 	 (cop0_g ?)
-	 COP0 = | (cop0_g << 6) | (IR_RI[22,21] << 3) | IR_RI[24,23]  if IR_RI[25] == 0
-			| else (cop0_g << 6) | 0x20 | IR_RI[4,0]
+	 COP0 = | (cop0_g 
+			<< 6) | (IR_RI[22,21] 
+			<< 3) | IR_RI[24,23]  if IR_RI[25] == 0
+			| else (cop0_g 
+			<< 6) | 0x20 | IR_RI[4,0]
 >
 			 (special_g, special_i, bcond_i, cop0_i)
 
-             | (special_g << 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
-	 OPCOD = | (special_g << 5) | IR_RI[20,16]  if IR_RI[31,26] == bcond_i
+             | (special_g 
+			<< 6) | IR_RI[5,0]    if IR_RI[31,26] == special_i
+	 OPCOD = | (special_g 
+			<< 5) | IR_RI[20,16]  if IR_RI[31,26] == bcond_i
 		     | COP0                             if IR_RI[31,26] == cop0_i
-		     | else (others_g << 6) | IR_RI[31,26]
+		     | else (others_g 
+			<< 6) | IR_RI[31,26]
 
 
 
 #### 5.2.3 PC AND BRANCH
 
 	IMDSEX = 0xFFFF if IMDSGN && I_OSGND else 0x0
-	OFFSET = IMDSEX[13,0] << 18 | IR_RI[15,0] << 2
+	OFFSET = IMDSEX[13,0] 
+			<< 18 | IR_RI[15,0] 
+			<< 2
 
 			 | SOPER_SD  	if OPCOD == (jr_i or jalr_i)
 	NEXTPC = | JMPADR_SD 	if OPCOD == (j_i or jal_i)
@@ -197,10 +205,12 @@ IR_RI ou "instruction register" c'est une signal a 32 bits
 >
 		   	| SEQADR 	  		if OPCOD == bltzal_i or jalr_i or jal_i or bgezal_i
 			| IR_RI[13,6] 		if OPCOD == sra_i or srl_i or sll_i
-	IOPER = | IR_RI[15,0] << 16 if OPCOD == lui_i
+	IOPER = | IR_RI[15,0] 
+			<< 16 if OPCOD == lui_i
 			| LO_RW             if OPCOD == mflo_i
 			| HI_RW             if OPCOD == mfhi_i
-			| else IMDSEX_SD << 16 | IR_RI[15,0] 
+			| else IMDSEX_SD 
+			<< 16 | IR_RI[15,0] 
 >
 	Decode manage 4 branch condition:
 		1. S_CMP_T = SOPER xor TOPER    				compare condition
@@ -300,8 +310,11 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 				| 0x1 if temp == 0x10        BYTSEL(byte select for read and write)
 				| 0x2 if temp == 0x11
 				| 0x4 if temp == 0x12
-	BYTSEL_SM = | 0x8 if temp == 0x13        temp = (I_BYTE_SM << 4) or (I_HALF_SM << 3) or
-				| 0x3 if temp == 0x08              	(I_WORD_SM << 2) or RES_SE[1,0]
+	BYTSEL_SM = | 0x8 if temp == 0x13        temp = (I_BYTE_SM 
+			<< 4) or (I_HALF_SM 
+			<< 3) or
+				| 0x3 if temp == 0x08              	(I_WORD_SM 
+			<< 2) or RES_SE[1,0]
 				| 0xC if temp == 0x0A
 				| 0xF if temp == 0x04
 				| else 0x0
@@ -318,8 +331,10 @@ I_TYPE_RE ou "instruction type" c'est une signal sortant du pipeline a 25 bits
 	DATA_SM is the result of the bus data
 
 			  | REDDAT_SM 					if (OPCOD == lw_i) or (OPCOD == swap_i)
-	DATA_SM = | BSEXT << 8 | REDDAT[7,0]    if (OPCOD == lb_i) or (OPCOD == lbu_i)
-			  | HSEXT << 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
+	DATA_SM = | BSEXT 
+			<< 8 | REDDAT[7,0]    if (OPCOD == lb_i) or (OPCOD == lbu_i)
+			  | HSEXT 
+			<< 8 | REDDAT[15,0]   if (OPCOD == lh_i) or (OPCOD == lhu_i)
 			  | else RES_RE 
 >
 #### 5.4.3 MEMORY ERRORS, EXCEPTIONS AND INTERRUPTIONS MANAGEMENT

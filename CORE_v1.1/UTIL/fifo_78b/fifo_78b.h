@@ -23,6 +23,9 @@ SC_MODULE(fifo_78b)
         SC_CTHREAD(function,fifo_78b::CLK.pos()) ;
         reset_signal_is(RESET_N, false) ;
         SC_METHOD(flags_update);
-        sensitive << PUSH << POP << fifo_v;
+        sensitive 
+			<< PUSH 
+			<< POP 
+			<< fifo_v;
     }
 };

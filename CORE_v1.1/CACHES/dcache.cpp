@@ -143,7 +143,8 @@ void dcache::transition()
         }
         break;
         case ERROR:
-          std::cout << "WTF" << std::endl;
+          std::cout << "WTF" 
+			<< std::endl;
         break;
     }
     dta_valid.write(dta_v);

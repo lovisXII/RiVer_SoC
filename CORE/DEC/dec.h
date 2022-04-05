@@ -201,6 +201,13 @@ SC_MODULE(decod) {
 
     sc_signal<bool>        csr_type_operation_rd;
     sc_signal<sc_uint<12>> adr_csr_sd;
+
+    // Exception :
+
+    sc_signal<bool>        illegal_instruction_rd ;
+    sc_signal<bool>        adress_missaligned ;
+    
+
     // Offset for branch :
 
     sc_signal<sc_uint<32>> offset_branch_sd;

@@ -83,35 +83,76 @@ SC_MODULE(alu)
 		RLOGIC_SE("RLOGIC_SE")
 	{
 		SC_METHOD(processXARITH_SE);
-		sensitive << XOPER_SE;
+		sensitive 
+			<< XOPER_SE;
 		SC_METHOD(processYARITH_SE);
-		sensitive << YOPER_SE << I_SUB_SE;
+		sensitive 
+			<< YOPER_SE 
+			<< I_SUB_SE;
 		SC_METHOD(processRARITH_SE);
-		sensitive << CARITH_SE << XARITH_SE << YARITH_SE;
+		sensitive 
+			<< CARITH_SE 
+			<< XARITH_SE 
+			<< YARITH_SE;
 		SC_METHOD(processCARITH_SE);
-		sensitive << CARITH_SE << XARITH_SE << YARITH_SE << I_SUB_SE;
+		sensitive 
+			<< CARITH_SE 
+			<< XARITH_SE 
+			<< YARITH_SE 
+			<< I_SUB_SE;
 		SC_METHOD(processOVERFLW_SE);
-		sensitive << CARITH_SE;
+		sensitive 
+			<< CARITH_SE;
 		SC_METHOD(processS_LT_T_SE);
-		sensitive << RARITH_SE << OVERFLW_SE;
+		sensitive 
+			<< RARITH_SE 
+			<< OVERFLW_SE;
 		SC_METHOD(processS_LTU_T_SE);
-		sensitive << CARITH_SE;
+		sensitive 
+			<< CARITH_SE;
 		SC_METHOD(processSETBIT_SE);
-		sensitive << OPCOD_RD << S_LT_T_SE << S_LTU_T_SE;
+		sensitive 
+			<< OPCOD_RD 
+			<< S_LT_T_SE 
+			<< S_LTU_T_SE;
 		SC_METHOD(processRTEST_SE);
-		sensitive << SETBIT_SE;
+		sensitive 
+			<< SETBIT_SE;
 		SC_METHOD(processSHIFTIN_SE);
-		sensitive << YOPER_SE << I_RSGND_SE << I_RIGHT_SE;
+		sensitive 
+			<< YOPER_SE 
+			<< I_RSGND_SE 
+			<< I_RIGHT_SE;
 		SC_METHOD(processSHLEFT_SE);
-		sensitive << XOPER_SE << SHIFTIN_SE << YOPER_SE;
+		sensitive 
+			<< XOPER_SE 
+			<< SHIFTIN_SE 
+			<< YOPER_SE;
 		SC_METHOD(processSHRIGHT_SE);
-		sensitive << XOPER_SE << SHIFTIN_SE << YOPER_SE;
+		sensitive 
+			<< XOPER_SE 
+			<< SHIFTIN_SE 
+			<< YOPER_SE;
 		SC_METHOD(processRSHIFT_SE);
-		sensitive << I_RIGHT_SE << SHRIGHT_SE << SHLEFT_SE;
+		sensitive 
+			<< I_RIGHT_SE 
+			<< SHRIGHT_SE 
+			<< SHLEFT_SE;
 		SC_METHOD(processRLOGIC_SE);
-		sensitive << I_LOGIC_SE << XOPER_SE << YOPER_SE;
+		sensitive 
+			<< I_LOGIC_SE 
+			<< XOPER_SE 
+			<< YOPER_SE;
 		SC_METHOD(processRES_SE);
-		sensitive << I_OPER_SE << RARITH_SE << RLOGIC_SE << RSHIFT_SE << RTEST_SE << Y_SE << X_SE << IOPER_RD;
+		sensitive 
+			<< I_OPER_SE 
+			<< RARITH_SE 
+			<< RLOGIC_SE 
+			<< RSHIFT_SE 
+			<< RTEST_SE 
+			<< Y_SE 
+			<< X_SE 
+			<< IOPER_RD;
 	}
 
 	// ### ------------------------------------------------------ ###

@@ -47,7 +47,8 @@ SC_MODULE(decode_rom)
 		I_TYPE_SD("I_TYPE_SD")
 	{
 		SC_METHOD(processROM);
-		sensitive << OPCOD_SD;
+		sensitive 
+			<< OPCOD_SD;
 	}
 
 	void processROM()

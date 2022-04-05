@@ -145,7 +145,8 @@ SC_MODULE(ff_execute)
     REDOPC_RE("REDOPC_RE")
       {
 		SC_METHOD(processClock);
-		sensitive << CK_SX.pos();
+		sensitive 
+			<< CK_SX.pos();
       }
 
   void processClock();

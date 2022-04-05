@@ -139,75 +139,163 @@ SC_MODULE(memory)
 		WEPC_XM("WEPC_XM")
 	{
 		SC_METHOD(processI_MPDC_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_WRITE_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_LOAD_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_STOR_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_BYTE_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_HALF_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processI_WORD_SM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processFSTSWAP_SM);
-		sensitive << SWAP_RE << COPYCAP_RE;
+		sensitive 
+			<< SWAP_RE 
+			<< COPYCAP_RE;
 		SC_METHOD(processDACCESS_SM);
-		sensitive << I_STOR_SM << I_LOAD_SM;
+		sensitive 
+			<< I_STOR_SM 
+			<< I_LOAD_SM;
 		SC_METHOD(processWRITE_SM);
-		sensitive << I_STOR_SM << FSTSWAP_SM;
+		sensitive 
+			<< I_STOR_SM 
+			<< FSTSWAP_SM;
 		SC_METHOD(processDLOCK_SM);
-		sensitive << FSTSWAP_SM;
+		sensitive 
+			<< FSTSWAP_SM;
 		SC_METHOD(processDATARED_SM);
-		sensitive << DACCESS_SM << WRITE_SM;
+		sensitive 
+			<< DACCESS_SM 
+			<< WRITE_SM;
 		SC_METHOD(processRD_SM);
-		sensitive << SWAP_RE << COPYCAP_RE << RD_RE;
+		sensitive 
+			<< SWAP_RE 
+			<< COPYCAP_RE 
+			<< RD_RE;
 		SC_METHOD(processBYTSEL_SM);
-		sensitive << RES_RE << I_BYTE_SM << I_HALF_SM << I_WORD_SM;
+		sensitive 
+			<< RES_RE 
+			<< I_BYTE_SM 
+			<< I_HALF_SM 
+			<< I_WORD_SM;
 		SC_METHOD(processREDDAT_SM);
-		sensitive << D_IN << BYTSEL_SM;
+		sensitive 
+			<< D_IN 
+			<< BYTSEL_SM;
 		SC_METHOD(processBSEXT_SM);
-		sensitive << REDDAT_SM << OPCOD_RE;
+		sensitive 
+			<< REDDAT_SM 
+			<< OPCOD_RE;
 		SC_METHOD(processHSEXT_SM);
-		sensitive << REDDAT_SM << OPCOD_RE;
+		sensitive 
+			<< REDDAT_SM 
+			<< OPCOD_RE;
 		SC_METHOD(processDATA_SM);
-		sensitive << REDDAT_SM << OPCOD_RE << BSEXT_SM << HSEXT_SM << RES_RE;
+		sensitive 
+			<< REDDAT_SM 
+			<< OPCOD_RE 
+			<< BSEXT_SM 
+			<< HSEXT_SM 
+			<< RES_RE;
 		SC_METHOD(processDABUSER_XM);
-		sensitive << D_BERR_N;
+		sensitive 
+			<< D_BERR_N;
 		SC_METHOD(processLAMALGN_XM);
-		sensitive << RES_RE << I_WORD_SM << I_LOAD_SM << I_HALF_SM << I_LOAD_SM;
+		sensitive 
+			<< RES_RE 
+			<< I_WORD_SM 
+			<< I_LOAD_SM 
+			<< I_HALF_SM 
+			<< I_LOAD_SM;
 		SC_METHOD(processSAMALGN_XM);
-		sensitive << RES_RE << I_WORD_SM << I_STOR_SM << I_HALF_SM;
+		sensitive 
+			<< RES_RE 
+			<< I_WORD_SM 
+			<< I_STOR_SM 
+			<< I_HALF_SM;
 		SC_METHOD(processLASVIOL_XM);
-		sensitive << RES_RE << SR_RE;
+		sensitive 
+			<< RES_RE 
+			<< SR_RE;
 		SC_METHOD(processSASVIOL_XM);
-		sensitive << RES_RE << SR_RE;
+		sensitive 
+			<< RES_RE 
+			<< SR_RE;
 		SC_METHOD(processBADDA_XM);
-		sensitive << SASVIOL_XM << LASVIOL_XM << LAMALGN_XM << SAMALGN_XM;
+		sensitive 
+			<< SASVIOL_XM 
+			<< LASVIOL_XM 
+			<< LAMALGN_XM 
+			<< SAMALGN_XM;
 		SC_METHOD(processBADIA_XM);
-		sensitive << IASVIOL_RE << IAMALGN_RE;
+		sensitive 
+			<< IASVIOL_RE 
+			<< IAMALGN_RE;
 		SC_METHOD(processCOPERR_XM);
-		sensitive << I_TYPE_RE;
+		sensitive 
+			<< I_TYPE_RE;
 		SC_METHOD(processEXCCODE_XM);
-		sensitive << INTRQ_XX << LAMALGN_XM << LASVIOL_XM << IAMALGN_RE
-		  << IASVIOL_RE << SAMALGN_XM << SASVIOL_XM << IABUSER_RE << DABUSER_XM << SYSCALL_RE
-		  << BREAK_RE << ILLGINS_RE << C0UNUSE_RE;
+		sensitive 
+			<< INTRQ_XX 
+			<< LAMALGN_XM 
+			<< LASVIOL_XM 
+			<< IAMALGN_RE
+		  
+			<< IASVIOL_RE 
+			<< SAMALGN_XM 
+			<< SASVIOL_XM 
+			<< IABUSER_RE 
+			<< DABUSER_XM 
+			<< SYSCALL_RE
+		  
+			<< BREAK_RE 
+			<< ILLGINS_RE 
+			<< C0UNUSE_RE;
 		SC_METHOD(processCAUSE_XM);
-		sensitive << BDSLOT_RE << COPERR_XM << IT_XX << CAUSE_RX << EXCCODE_XM;
+		sensitive 
+			<< BDSLOT_RE 
+			<< COPERR_XM 
+			<< IT_XX 
+			<< CAUSE_RX 
+			<< EXCCODE_XM;
 		SC_METHOD(processSWINT_XM);
-		sensitive << RES_RE << CAUSE_RX << OPCOD_RE << COP0D_RE << KEEP_SM;
+		sensitive 
+			<< RES_RE 
+			<< CAUSE_RX 
+			<< OPCOD_RE 
+			<< COP0D_RE 
+			<< KEEP_SM;
 		SC_METHOD(processWCAUSE_SM);
-		sensitive << OPCOD_RE << COP0D_RE;
+		sensitive 
+			<< OPCOD_RE 
+			<< COP0D_RE;
 		SC_METHOD(processCAUSE_SM);
-		sensitive << RES_RE << CAUSE_RX;
+		sensitive 
+			<< RES_RE 
+			<< CAUSE_RX;
 		SC_METHOD(processRSTORSR_SM);
-		sensitive << CAUSE_RX;
+		sensitive 
+			<< CAUSE_RX;
 		SC_METHOD(processNEXTSR_SM);
-		sensitive << OPCOD_RE << RSTORSR_SM << RES_RE;
+		sensitive 
+			<< OPCOD_RE 
+			<< RSTORSR_SM 
+			<< RES_RE;
 		SC_METHOD(processWSR_SM);
-		sensitive << OPCOD_RE << COP0D_RE;
+		sensitive 
+			<< OPCOD_RE 
+			<< COP0D_RE;
 	}
 
 	void processI_MPDC_SM()
@@ -325,7 +413,10 @@ SC_MODULE(memory)
 	void processBYTSEL_SM()
 	{
 		sc_uint<32> res_re=RES_RE.read();
-		sc_uint<5> temp=(I_BYTE_SM.read() << 4) | (I_HALF_SM.read() << 3) | (I_WORD_SM.read() << 2) | res_re.range(1,0);
+		sc_uint<5> temp=(I_BYTE_SM.read() 
+			<< 4) | (I_HALF_SM.read() 
+			<< 3) | (I_WORD_SM.read() 
+			<< 2) | res_re.range(1,0);
 
 		if ((int)temp==0x10)
 			BYTSEL_SM.write(0x1);
@@ -397,10 +488,12 @@ SC_MODULE(memory)
 			DATA_SM.write(REDDAT_SM.read());
 		else if ((OPCOD_RE.read()==lb_i)||
 			(OPCOD_RE.read()==lbu_i))
-			DATA_SM.write(BSEXT_SM.read() << 8 | reddat_sm.range(7,0));
+			DATA_SM.write(BSEXT_SM.read() 
+			<< 8 | reddat_sm.range(7,0));
 		else if ((OPCOD_RE.read()==lh_i)||
 			(OPCOD_RE.read()==lhu_i))
-			DATA_SM.write(HSEXT_SM.read() << 16 | reddat_sm.range(15,0));
+			DATA_SM.write(HSEXT_SM.read() 
+			<< 16 | reddat_sm.range(15,0));
 		else
 			DATA_SM.write(RES_RE.read());
 	}
@@ -614,7 +707,10 @@ SC_MODULE(memory)
 		sc_uint<32> res_re=RES_RE.read();
 		sc_uint<32> cause_rx=CAUSE_RX.read();
 
-		CAUSE_SM.write(cause_rx.range(31,16) << 16 | IT_XX.read() << 10 | res_re.range(9,8) << 8 | cause_rx.range(7,0));
+		CAUSE_SM.write(cause_rx.range(31,16) 
+			<< 16 | IT_XX.read() 
+			<< 10 | res_re.range(9,8) 
+			<< 8 | cause_rx.range(7,0));
 	}
 
 		// ### ---------------------------------------------------- ###
@@ -635,7 +731,8 @@ SC_MODULE(memory)
 	{
 		sc_uint<32> nextsr_rx=CAUSE_RX.read();
 
-		RSTORSR_SM.write(nextsr_rx.range(31,4) << 4 | nextsr_rx.range(5,2));
+		RSTORSR_SM.write(nextsr_rx.range(31,4) 
+			<< 4 | nextsr_rx.range(5,2));
 	}
 
 	void processNEXTSR_SM()

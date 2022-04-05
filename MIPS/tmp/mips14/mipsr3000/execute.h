@@ -113,53 +113,85 @@ SC_MODULE(execute)
 	COPYCAP_SE("COPYCAP_SE")
 	{
 		SC_METHOD(processI_EUSE_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_IFMT_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_READS_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_READT_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_OPER_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_LOGIC_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_SUB_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_RIGHT_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_RSGND_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_OVRF_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_MPDC_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_EPDC_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_WRITE_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processI_BRNCH_SE);
-		sensitive << I_TYPE_RD;
+		sensitive 
+			<< I_TYPE_RD;
 		SC_METHOD(processXOPER_SE);
-		sensitive << SR_RI << OPCOD_RD << IOPER_RD << X_SE;
+		sensitive 
+			<< SR_RI 
+			<< OPCOD_RD 
+			<< IOPER_RD 
+			<< X_SE;
 		SC_METHOD(processYOPER_SE);
-		sensitive << I_IFMT_SE << IOPER_RD << Y_SE;
+		sensitive 
+			<< I_IFMT_SE 
+			<< IOPER_RD 
+			<< Y_SE;
 		SC_METHOD(processWREDOPC_SE);
-		sensitive << I_BRNCH_SE;
+		sensitive 
+			<< I_BRNCH_SE;
 		SC_METHOD(processIABUSER_XE);
-		sensitive << I_BERR_N;
+		sensitive 
+			<< I_BERR_N;
 		SC_METHOD(processBREAK_XE);
-		sensitive << OPCOD_RD;
+		sensitive 
+			<< OPCOD_RD;
 		SC_METHOD(processSYSCALL_XE);
-		sensitive << OPCOD_RD;
+		sensitive 
+			<< OPCOD_RD;
 		SC_METHOD(processOVF_XE);
-		sensitive << OVERFLW_SE << I_OVRF_SE;
+		sensitive 
+			<< OVERFLW_SE 
+			<< I_OVRF_SE;
 		SC_METHOD(processIAMALGN_XE);
-		sensitive << NEXTPC_RD;
+		sensitive 
+			<< NEXTPC_RD;
 		SC_METHOD(processIASVIOL_XE);
-		sensitive << NEXTPC_RD << NEXTSR_RX << OPCOD_RD;
+		sensitive 
+			<< NEXTPC_RD 
+			<< NEXTSR_RX 
+			<< OPCOD_RD;
 		SC_METHOD(processCOPYCAP_SE);
-		sensitive << SWAP_RD;
+		sensitive 
+			<< SWAP_RD;
 	}
 
 	void processI_EUSE_SE()

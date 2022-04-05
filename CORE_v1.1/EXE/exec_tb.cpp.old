@@ -21,12 +21,14 @@ void print_bits(T ptr) {
             cout << (int) byte;
         }
     }
-    cout << endl;
+    cout 
+			<< endl;
 }
 
 int sc_main(int argc, char* argv[])
 {
-    cout << "Testing component \"Exec\"..." << endl;
+    cout << "Testing component \"Exec\"..." 
+			<< endl;
 
     exec unit_exec("exec") ;
 
@@ -92,14 +94,16 @@ int sc_main(int argc, char* argv[])
     sc_start(1, SC_PS);
     reset.write(false);
     sc_start(2, SC_NS);
-    cout << "reset is done " << endl ;
+    cout << "reset is done " 
+			<< endl ;
     int i;
     bool should_be_full = false;
     
     //test fifo
     
     for (i = 0; i < NB_TEST; i++) {
-        cout << "." << flush;
+        cout << "." 
+			<< flush;
         
         int op1_ = rand();
         int mem_data_ = rand();
@@ -127,30 +131,66 @@ int sc_main(int argc, char* argv[])
 
         sc_start(1, SC_NS);
 
-        cout << "------------------------------------------" << endl ;
-        cout << "Interface avec decode : " << endl ;
-        cout << "dec2exe_empty "<< unit_exec.DEC2EXE_EMPTY.read() << endl ;
-        cout << "Calcul interne à EXE :" << endl ;
-        cout << "op1 :" << unit_exec.OP1.read() << endl ;
-        cout << "cmd :" << unit_exec.CMD.read() << endl ;
-        cout << "alu_res : " << unit_exec.FFIN_EXE_RES.read() << endl ;
-        cout << "Interface avec exe2mem : " << endl ;
+        cout << "------------------------------------------" 
+			<< endl ;
+        cout << "Interface avec decode : " 
+			<< endl ;
+        cout << "dec2exe_empty "
+			<< unit_exec.DEC2EXE_EMPTY.read() 
+			<< endl ;
+        cout << "Calcul interne à EXE :" 
+			<< endl ;
+        cout << "op1 :" 
+			<< unit_exec.OP1.read() 
+			<< endl ;
+        cout << "cmd :" 
+			<< unit_exec.CMD.read() 
+			<< endl ;
+        cout << "alu_res : " 
+			<< unit_exec.FFIN_EXE_RES.read() 
+			<< endl ;
+        cout << "Interface avec exe2mem : " 
+			<< endl ;
 
-        cout << "Fifo input : " << unit_exec.FF_DIN.read() << endl ;
-        cout << "Push :" << unit_exec.EXE2MEM_PUSH.read() << endl ;
-        cout << "Pop :" << unit_exec.EXE2MEM_POP.read() << endl ;
-        cout << "empty : " << unit_exec.EXE2MEM_EMPTY.read() << endl ;
-        cout << "FF_OUT :" << unit_exec.FF_DOUT.read() << endl ;
-        cout << "fifo valid bit :" << unit_exec.fifo_inst.fifo_v.read() << endl ;
-        cout << "fifo push interne :" << unit_exec.fifo_inst.PUSH.read() << endl ;
-        cout << "fifo pop interne :" << unit_exec.fifo_inst.POP.read() << endl ;
-         cout << "fifo din interne :" << unit_exec.fifo_inst.DIN.read() << endl ;
-          cout << "fifo dout interne :" << unit_exec.fifo_inst.DOUT.read() << endl ;
+        cout << "Fifo input : " 
+			<< unit_exec.FF_DIN.read() 
+			<< endl ;
+        cout << "Push :" 
+			<< unit_exec.EXE2MEM_PUSH.read() 
+			<< endl ;
+        cout << "Pop :" 
+			<< unit_exec.EXE2MEM_POP.read() 
+			<< endl ;
+        cout << "empty : " 
+			<< unit_exec.EXE2MEM_EMPTY.read() 
+			<< endl ;
+        cout << "FF_OUT :" 
+			<< unit_exec.FF_DOUT.read() 
+			<< endl ;
+        cout << "fifo valid bit :" 
+			<< unit_exec.fifo_inst.fifo_v.read() 
+			<< endl ;
+        cout << "fifo push interne :" 
+			<< unit_exec.fifo_inst.PUSH.read() 
+			<< endl ;
+        cout << "fifo pop interne :" 
+			<< unit_exec.fifo_inst.POP.read() 
+			<< endl ;
+         cout << "fifo din interne :" 
+			<< unit_exec.fifo_inst.DIN.read() 
+			<< endl ;
+          cout << "fifo dout interne :" 
+			<< unit_exec.fifo_inst.DOUT.read() 
+			<< endl ;
           
-          cout << "fifo dout interne :" << unit_exec.fifo_inst.data_inside.read() << endl ;
+          cout << "fifo dout interne :" 
+			<< unit_exec.fifo_inst.data_inside.read() 
+			<< endl ;
 
        /*  cout << "------------------------------------------"<<endl ;
-        cout << "op1 :" << unit_exec.OP1.read() << endl ;
+        cout << "op1 :" 
+			<< unit_exec.OP1.read() 
+			<< endl ;
 
         cout << "EXE2MEM_PUSH : " ;
         print_bits((bool)unit_exec.EXE2MEM_PUSH.read());
@@ -165,7 +205,8 @@ int sc_main(int argc, char* argv[])
         print_bits((int) (sc_uint<32>) (sc_bv_base) unit_exec.FF_DOUT.read().range(31, 0));
 
         
-        cerr << "avant if" << endl ;
+        cerr << "avant if" 
+			<< endl ;
         
         if (i > 0) {
             should_be_full = should_be_full && !exe2mem_pop_;
@@ -180,30 +221,40 @@ int sc_main(int argc, char* argv[])
                     ffout_mem_sign_extend.read() != mem_sign_extend_ ||
                     ffout_mem_store.read() != mem_store_
                 ) {
-                    cout << "1ere position : ce que l'on a \n2eme position : ce que l'on devrait avoir" << endl ;
-                    cout << "error : mismatch in fifo" << endl;
-                    cout << "ffout_exe_res" << endl;
+                    cout << "1ere position : ce que l'on a \n2eme position : ce que l'on devrait avoir" 
+			<< endl ;
+                    cout << "error : mismatch in fifo" 
+			<< endl;
+                    cout << "ffout_exe_res" 
+			<< endl;
                     print_bits((int) ffout_exe_res.read());
                     print_bits(op1_);
-                    cout << "ffout_mem_data" << endl;
+                    cout << "ffout_mem_data" 
+			<< endl;
                     print_bits((int) ffout_mem_data.read());
                     print_bits(mem_data_);
-                    cout << "ffout_dest" << endl;
+                    cout << "ffout_dest" 
+			<< endl;
                     print_bits((int) ffout_dest.read());
                     print_bits(dest_);
-                    cout << "ffout_mem_size" << endl;
+                    cout << "ffout_mem_size" 
+			<< endl;
                     print_bits((int) ffout_mem_size.read());
                     print_bits(mem_size_);
-                    cout << "ffout_wb" << endl;
+                    cout << "ffout_wb" 
+			<< endl;
                     print_bits((int) ffout_wb.read());
                     print_bits(wb_);
-                    cout << "ffout_mem_load" << endl;
+                    cout << "ffout_mem_load" 
+			<< endl;
                     print_bits((int) ffout_mem_load.read());
                     print_bits(mem_load_);
-                    cout << "ffout_mem_sign_extend" << endl;
+                    cout << "ffout_mem_sign_extend" 
+			<< endl;
                     print_bits((int) ffout_mem_sign_extend.read());
                     print_bits(mem_sign_extend_);
-                    cout << "ffout_mem_store" << endl;
+                    cout << "ffout_mem_store" 
+			<< endl;
                     print_bits((int) ffout_mem_store.read());
                     print_bits(mem_store_);
                 }
@@ -211,7 +262,9 @@ int sc_main(int argc, char* argv[])
         }
         should_be_full = !dec2exe_empty_;*/
     } 
-    //cout << i << " tests successfully ran on FIFO" << endl;
+    //cout 
+			<< i << " tests successfully ran on FIFO" 
+			<< endl;
 
     
     return 0 ;

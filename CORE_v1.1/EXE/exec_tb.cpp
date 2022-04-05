@@ -21,14 +21,16 @@ void print_bits(T ptr) {
             cout << (int) byte;
         }
     }
-    cout << endl;
+    cout 
+			<< endl;
 }
 
 int sc_main(int argc, char* argv[])
 {
     sc_trace_file *tf;
     tf=sc_create_vcd_trace_file("tf");
-    cout << "Testing component \"Exec\"..." << endl;
+    cout << "Testing component \"Exec\"..." 
+			<< endl;
 
     exec unit_exec("exec") ;
 
@@ -132,7 +134,8 @@ int sc_main(int argc, char* argv[])
     sc_start(1, SC_PS);
     reset.write(true);
     sc_start(2, SC_NS);
-    cout << "reset is done " << endl ;
+    cout << "reset is done " 
+			<< endl ;
     int i;
     bool should_be_full = false;
     
@@ -202,7 +205,8 @@ int sc_main(int argc, char* argv[])
         }
         if(select_shift_ && unit_exec.CMD_SE.read() == 0)
         {
-            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ << unit_exec.shift_val_se.read())))
+            if(unit_exec.exe_res_se.read() != (sc_uint<32>) ((op1_ 
+			<< unit_exec.shift_val_se.read())))
             {
                 cerr << "error sur sll" <<endl ;
                 test_passed = false ;
@@ -227,7 +231,8 @@ int sc_main(int argc, char* argv[])
         }    
 
     }
-    if(test_passed) cout << "All test passed successfully !" << endl ;
+    if(test_passed) cout << "All test passed successfully !" 
+			<< endl ;
     sc_close_vcd_trace_file(tf);
     return 0 ;
 }

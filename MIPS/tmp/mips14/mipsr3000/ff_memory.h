@@ -51,7 +51,8 @@ SC_MODULE(ff_memory)
 	SC_CTOR(ff_memory)
 	{
 		SC_METHOD(processClock);
-		sensitive_pos << CK_SX;
+		sensitive_pos 
+			<< CK_SX;
 	}
 
 	void processClock()

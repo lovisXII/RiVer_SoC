@@ -56,13 +56,33 @@ SC_MODULE(mux_misc)
 	SC_CTOR(mux_misc)
 	{
 		SC_METHOD(processMUX_CAUSE_SX);
-		sensitive << CAUSE_XM << EXCRQ_XM << INTRQ_XX << CAUSE_XX << WCAUSE_SM << KEEP_SM << CAUSE_SM << CAUSE_SX;
+		sensitive 
+			<< CAUSE_XM 
+			<< EXCRQ_XM 
+			<< INTRQ_XX 
+			<< CAUSE_XX 
+			<< WCAUSE_SM 
+			<< KEEP_SM 
+			<< CAUSE_SM 
+			<< CAUSE_SX;
 		SC_METHOD(processMUX_EPC_SX);
-		sensitive << WEPC_XM << EPC_XM << WEPC_XX << EPC_XX << EPC_RX;
+		sensitive 
+			<< WEPC_XM 
+			<< EPC_XM 
+			<< WEPC_XX 
+			<< EPC_XX 
+			<< EPC_RX;
 		SC_METHOD(processMUX_NEXTSR_SX);
-		sensitive << WSR_XX << NEXTSR_XX << WSR_SM << KEEP_SM << NEXTSR_SM << NEXTSR_RX;
+		sensitive 
+			<< WSR_XX 
+			<< NEXTSR_XX 
+			<< WSR_SM 
+			<< KEEP_SM 
+			<< NEXTSR_SM 
+			<< NEXTSR_RX;
 		SC_METHOD(processMUX_RESET_SX);
-		sensitive << RESET_N;
+		sensitive 
+			<< RESET_N;
 	}
 
 	// ### ----------------------------------------------------// ###

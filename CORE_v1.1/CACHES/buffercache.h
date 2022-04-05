@@ -49,13 +49,17 @@ SC_MODULE(buffercache)
     SC_CTOR(buffercache)
     {
         SC_METHOD(write);
-        sensitive << WRITE;
+        sensitive 
+			<< WRITE;
 
         SC_METHOD(read);
-        sensitive << CLK.pos();
+        sensitive 
+			<< CLK.pos();
 
         SC_METHOD(bufferfull);
-        sensitive << buff0_VALIDATE << buff1_VALIDATE;
+        sensitive 
+			<< buff0_VALIDATE 
+			<< buff1_VALIDATE;
 
         reset_signal_is(RESET_N, false);
     }

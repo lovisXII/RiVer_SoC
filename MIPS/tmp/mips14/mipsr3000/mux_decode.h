@@ -180,37 +180,99 @@ SC_MODULE(mux_decode)
 
 	{
 		SC_METHOD(processMUX_IR_SD);
-		sensitive << IR_RI << IR_RD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< IR_RI 
+			<< IR_RD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_I_TYPE_SD);
-		sensitive << I_TYPE_RD << I_TYPE_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< I_TYPE_RD 
+			<< I_TYPE_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_OPCOD_SD);
-		sensitive << OPCOD_RD << OPCOD_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< OPCOD_RD 
+			<< OPCOD_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_BDSLOT_SD);
-		sensitive << BDSLOT_RD << BDSLOT_RI << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< BDSLOT_RD 
+			<< BDSLOT_RI 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_SWAP_SD);
-		sensitive << SWAP_RD << SWAP_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< SWAP_RD 
+			<< SWAP_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_RS_SD);
-		sensitive << RS_RD << RS_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< RS_RD 
+			<< RS_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_RT_SD);
-		sensitive << RT_RD << RT_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< RT_RD 
+			<< RT_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_RD_SD);
-		sensitive << RD_RD << RD_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< RD_RD 
+			<< RD_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_COP0D_SD);
-		sensitive << COP0D_RD << COP0D_SD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< COP0D_RD 
+			<< COP0D_SD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_ILLGINS_SD);
-		sensitive << ILLGINS_RD << ILLGINS_XD << BUBBLE_SD << HOLD_SD ;
+		sensitive 
+			<< ILLGINS_RD 
+			<< ILLGINS_XD 
+			<< BUBBLE_SD 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_NEXTPC_SD);
-		sensitive << INTRQ_XX << EXCRQ_XM << RESET_RX << NEXTPC_XX << NEXTPC_RD << NEXTPC_SD << KEEP_SD ;
+		sensitive 
+			<< INTRQ_XX 
+			<< EXCRQ_XM 
+			<< RESET_RX 
+			<< NEXTPC_XX 
+			<< NEXTPC_RD 
+			<< NEXTPC_SD 
+			<< KEEP_SD ;
 		SC_METHOD(processMUX_PC_SD);
-		sensitive << PC_RD << PC_RI << HOLD_SD ;
+		sensitive 
+			<< PC_RD 
+			<< PC_RI 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_SR_SD);
-		sensitive << SR_RD << SR_RI << HOLD_SD ;
+		sensitive 
+			<< SR_RD 
+			<< SR_RI 
+			<< HOLD_SD ;
 		SC_METHOD(processMUX_SOPER_SD);
-		sensitive << X_SE << SOPER_SD << KEEP_SD ;
+		sensitive 
+			<< X_SE 
+			<< SOPER_SD 
+			<< KEEP_SD ;
 		SC_METHOD(processMUX_TOPER_SD);
-		sensitive << Y_SE << TOPER_SD << KEEP_SD ;
+		sensitive 
+			<< Y_SE 
+			<< TOPER_SD 
+			<< KEEP_SD ;
 		SC_METHOD(processMUX_IOPER_SD);
-		sensitive << IOPER_RD << IOPER_SD << KEEP_SD ;
+		sensitive 
+			<< IOPER_RD 
+			<< IOPER_SD 
+			<< KEEP_SD ;
 	}
 
 	void processMUX_IR_SD()

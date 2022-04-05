@@ -53,47 +53,103 @@ SC_MODULE(mips_dec)
   SC_CTOR(mips_dec)
   {
     SC_METHOD(processWRITE);
-    sensitive << D_ATYPE;
+    sensitive 
+			<< D_ATYPE;
     SC_METHOD(processW_N);
-    sensitive << D_ATYPE;
+    sensitive 
+			<< D_ATYPE;
     SC_METHOD(processDAT);
-    sensitive << CK << WRITE << D_RQ << D_OUT << D_ATYPE;
+    sensitive 
+			<< CK 
+			<< WRITE 
+			<< D_RQ 
+			<< D_OUT 
+			<< D_ATYPE;
     SC_METHOD(processBYTE_SEL);
-    sensitive << D_A << D_ATYPE;
+    sensitive 
+			<< D_A 
+			<< D_ATYPE;
     SC_METHOD(processBYTE);
-    sensitive << D_RQ << BYTE_SEL;
+    sensitive 
+			<< D_RQ 
+			<< BYTE_SEL;
     SC_METHOD(processROMU);
-    sensitive << I_ADR;
+    sensitive 
+			<< I_ADR;
     SC_METHOD(processROMX);
-    sensitive << I_ADR;
+    sensitive 
+			<< I_ADR;
     SC_METHOD(processROMR);
-    sensitive << I_ADR;
+    sensitive 
+			<< I_ADR;
     SC_METHOD(processRAMU);
-    sensitive << D_A;
+    sensitive 
+			<< D_A;
     SC_METHOD(processRAMS);
-    sensitive << D_A;
+    sensitive 
+			<< D_A;
     SC_METHOD(processSEL_ROMU);
-    sensitive << ROMU << CK << I_FTCH << I_FRZ;
+    sensitive 
+			<< ROMU 
+			<< CK 
+			<< I_FTCH 
+			<< I_FRZ;
     SC_METHOD(processSEL_ROMX);
-    sensitive << ROMU << CK << I_FTCH << I_FRZ;
+    sensitive 
+			<< ROMU 
+			<< CK 
+			<< I_FTCH 
+			<< I_FRZ;
     SC_METHOD(processSEL_ROMR);
-    sensitive << ROMU << CK << I_FTCH << I_FRZ;
+    sensitive 
+			<< ROMU 
+			<< CK 
+			<< I_FTCH 
+			<< I_FRZ;
     SC_METHOD(processE_RAMU);
-    sensitive << RAMU << CK << BYTE << D_FRZ;
+    sensitive 
+			<< RAMU 
+			<< CK 
+			<< BYTE 
+			<< D_FRZ;
     SC_METHOD(processE_RAMS);
-    sensitive << RAMS << CK << BYTE << D_FRZ;
+    sensitive 
+			<< RAMS 
+			<< CK 
+			<< BYTE 
+			<< D_FRZ;
     SC_METHOD(processI_BERR_N);
-    sensitive << ROMU << ROMR << ROMX << CK << I_FTCH << I_FRZ;
+    sensitive 
+			<< ROMU 
+			<< ROMR 
+			<< ROMX 
+			<< CK 
+			<< I_FTCH 
+			<< I_FRZ;
     SC_METHOD(processD_BERR_N);
-    sensitive << RAMU << RAMS << CK << D_RQ << D_FRZ;
+    sensitive 
+			<< RAMU 
+			<< RAMS 
+			<< CK 
+			<< D_RQ 
+			<< D_FRZ;
     SC_METHOD(processI_A_11_2);
-    sensitive << I_ADR;
+    sensitive 
+			<< I_ADR;
     SC_METHOD(processD_A_11_2);
-    sensitive << D_A;
+    sensitive 
+			<< D_A;
     SC_METHOD(processDATA_TO_MIPS);
-    sensitive << SEL_ROMU << DAT_ROMU << SEL_ROMR << DAT_ROMR << SEL_ROMX << DAT_ROMX;
+    sensitive 
+			<< SEL_ROMU 
+			<< DAT_ROMU 
+			<< SEL_ROMR 
+			<< DAT_ROMR 
+			<< SEL_ROMX 
+			<< DAT_ROMX;
     SC_METHOD(processD_IN);
-    sensitive << DAT;
+    sensitive 
+			<< DAT;
   }
 
 // ### ------------------------------------------------------ ###

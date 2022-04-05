@@ -217,49 +217,133 @@ SC_MODULE(mux_execute)
 
 	{
 		SC_METHOD(processMUX_IR_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << IR_RE << IR_RD ;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< IR_RE 
+			<< IR_RD ;
 		SC_METHOD(processMUX_I_TYPE_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << I_TYPE_RE << I_TYPE_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< I_TYPE_RE 
+			<< I_TYPE_RD;
 		SC_METHOD(processMUX_OPCOD_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << OPCOD_RE << OPCOD_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< OPCOD_RE 
+			<< OPCOD_RD;
 		SC_METHOD(processMUX_BDSLOT_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << BDSLOT_RE << BDSLOT_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< BDSLOT_RE 
+			<< BDSLOT_RD;
 		SC_METHOD(processMUX_RD_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << RD_RE << RD_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< RD_RE 
+			<< RD_RD;
 		SC_METHOD(processMUX_COP0D_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << COP0D_RE << COP0D_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< COP0D_RE 
+			<< COP0D_RD;
 		SC_METHOD(processMUX_OVF_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << OVF_RE << OVF_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< OVF_RE 
+			<< OVF_XE;
 		SC_METHOD(processMUX_IALMALGN_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << IAMALGN_RE << IAMALGN_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< IAMALGN_RE 
+			<< IAMALGN_XE;
 		SC_METHOD(processMUX_IASVIOL_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << IASVIOL_RE << IASVIOL_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< IASVIOL_RE 
+			<< IASVIOL_XE;
 		SC_METHOD(processMUX_IABUSER_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << IABUSER_RE << IABUSER_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< IABUSER_RE 
+			<< IABUSER_XE;
 		SC_METHOD(processMUX_BREAK_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << BREAK_RE << BREAK_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< BREAK_RE 
+			<< BREAK_XE;
 		SC_METHOD(processMUX_SYSCALL_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << SYSCALL_RE << SYSCALL_XE;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< SYSCALL_RE 
+			<< SYSCALL_XE;
 		SC_METHOD(processMUX_ILLGINS_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << ILLGINS_RE << ILLGINS_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< ILLGINS_RE 
+			<< ILLGINS_RD;
 		SC_METHOD(processMUX_C0UNUSE_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << C0UNUSE_RE << C0UNUSE_RD;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< C0UNUSE_RE 
+			<< C0UNUSE_RD;
 		SC_METHOD(processMUX_SWAP_SE);
-		sensitive << BUBBLE_SE << HOLD_SE << SWAP_RE << SWAP_RD ;
+		sensitive 
+			<< BUBBLE_SE 
+			<< HOLD_SE 
+			<< SWAP_RE 
+			<< SWAP_RD ;
 		SC_METHOD(processMUX_PC_SE);
-		sensitive << HOLD_SE << PC_RE << PC_RD ;
+		sensitive 
+			<< HOLD_SE 
+			<< PC_RE 
+			<< PC_RD ;
 		SC_METHOD(processMUX_SR_SE);
-		sensitive << HOLD_SE << SR_RE << SR_RD ;
+		sensitive 
+			<< HOLD_SE 
+			<< SR_RE 
+			<< SR_RD ;
 		SC_METHOD(processMUX_NEXTPC_SE);
-		sensitive << KEEP_SE << NEXTPC_RE << NEXTPC_RD ;
+		sensitive 
+			<< KEEP_SE 
+			<< NEXTPC_RE 
+			<< NEXTPC_RD ;
 		SC_METHOD(processMUX_RES_SE);
-		sensitive << KEEP_SE << RES_RE << RES_SE ;
+		sensitive 
+			<< KEEP_SE 
+			<< RES_RE 
+			<< RES_SE ;
 		SC_METHOD(processMUX_WDATA_SE);
-		sensitive << KEEP_SE << WDATA_RE << Y_SE ;
+		sensitive 
+			<< KEEP_SE 
+			<< WDATA_RE 
+			<< Y_SE ;
 		SC_METHOD(processMUX_COPYCAP_SE);
-		sensitive << BUBBLE_SE << STALL_SM << COPY_SM << COPYCAP_RE << COPYCAP_SE ;
+		sensitive 
+			<< BUBBLE_SE 
+			<< STALL_SM 
+			<< COPY_SM 
+			<< COPYCAP_RE 
+			<< COPYCAP_SE ;
 		SC_METHOD(processMUX_REDOPC_SE);
-		sensitive << KEEP_SE << WREDOPC_SE << REDOPC_RE << PC_RD ;
+		sensitive 
+			<< KEEP_SE 
+			<< WREDOPC_SE 
+			<< REDOPC_RE 
+			<< PC_RD ;
 	}
 
 	void processMUX_IR_SE()

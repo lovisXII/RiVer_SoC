@@ -105,14 +105,18 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM;
+    sensitive 
+			<< DATA_ADR_SM;
 
     SC_METHOD(miss_detection);
-    sensitive << DATA_ADR_SM 
-              << DATA_SM;
+    sensitive 
+			<< DATA_ADR_SM 
+              
+			<< DATA_SM;
       
     SC_THREAD(transition);
-    sensitive << CLK.pos();
+    sensitive 
+			<< CLK.pos();
 
     reset_signal_is(RESET_N,false);
 

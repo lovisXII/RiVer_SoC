@@ -59,15 +59,24 @@ int sc_main(int argc, char* argv[])
         sc_start(1,SC_NS);
         if(sc_uint<32>(result) == res)
         {
-            std::cout << "test passed" << " "<< i << std::endl ;
+            std::cout << "test passed" << " "
+			<< i 
+			<< std::endl ;
         }
         else {
-            std::cout << "oh non gargamel" << i << std::endl ;
-            cout << "operand1    "; print_bits(operand1); cout << endl;
-            cout << "operand2    "; print_bits(operand2); cout << endl;
-            cout << "command     "; print_bits(command); cout << endl;
-            cout << "result_code "; print_bits(result); cout << endl;
-            cout << "result_alu  "; print_bits((int)res.read()); cout << endl;
+            std::cout << "oh non gargamel" 
+			<< i 
+			<< std::endl ;
+            cout << "operand1    "; print_bits(operand1); cout 
+			<< endl;
+            cout << "operand2    "; print_bits(operand2); cout 
+			<< endl;
+            cout << "command     "; print_bits(command); cout 
+			<< endl;
+            cout << "result_code "; print_bits(result); cout 
+			<< endl;
+            cout << "result_alu  "; print_bits((int)res.read()); cout 
+			<< endl;
         }
     
     }

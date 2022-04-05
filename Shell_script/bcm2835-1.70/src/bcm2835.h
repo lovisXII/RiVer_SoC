@@ -870,7 +870,8 @@ typedef enum
 #define BCM2835_PADS_GPIO_46_53              0x0034 /*!< Pad control register for pads 46 to 53 */
 
 /*! Pad Control masks */
-#define BCM2835_PAD_PASSWRD                  (0x5A << 24)  /*!< Password to enable setting pad mask */
+#define BCM2835_PAD_PASSWRD                  (0x5A 
+			<< 24)  /*!< Password to enable setting pad mask */
 #define BCM2835_PAD_SLEW_RATE_UNLIMITED      0x10 /*!< Slew rate unlimited */
 #define BCM2835_PAD_HYSTERESIS_ENABLED       0x08 /*!< Hysteresis enabled */
 #define BCM2835_PAD_DRIVE_2mA                0x00 /*!< 2mA drive current */
@@ -1241,7 +1242,8 @@ typedef enum
 /* Defines for PWM Clock, word offsets (ie 4 byte multiples) */
 #define BCM2835_PWMCLK_CNTL     40
 #define BCM2835_PWMCLK_DIV      41
-#define BCM2835_PWM_PASSWRD     (0x5A << 24)  /*!< Password to enable setting PWM clock */
+#define BCM2835_PWM_PASSWRD     (0x5A 
+			<< 24)  /*!< Password to enable setting PWM clock */
 
 #define BCM2835_PWM1_MS_MODE    0x8000  /*!< Run in Mark/Space mode */
 #define BCM2835_PWM1_USEFIFO    0x2000  /*!< Data from FIFO */
@@ -1442,14 +1444,18 @@ extern "C" {
 
     /*! Sets any of the first 32 GPIO output pins specified in the mask to 
       HIGH.
-      \param[in] mask Mask of pins to affect. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to affect. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
       \sa bcm2835_gpio_write_multi()
     */
     extern void bcm2835_gpio_set_multi(uint32_t mask);
 
     /*! Sets any of the first 32 GPIO output pins specified in the mask to 
       LOW.
-      \param[in] mask Mask of pins to affect. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to affect. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
       \sa bcm2835_gpio_write_multi()
     */
     extern void bcm2835_gpio_clr_multi(uint32_t mask);
@@ -1474,7 +1480,9 @@ extern "C" {
 
     /*! Same as bcm2835_gpio_eds() but checks if any of the pins specified in
       the mask have detected a level or edge.
-      \param[in] mask Mask of pins to check. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to check. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
       \return Mask of pins HIGH if the event detect status for the given pin is true.
     */
     extern uint32_t bcm2835_gpio_eds_multi(uint32_t mask);
@@ -1488,7 +1496,9 @@ extern "C" {
 
     /*! Same as bcm2835_gpio_set_eds() but clears the flag for any pin which
       is set in the mask.
-      \param[in] mask Mask of pins to clear. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to clear. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
     */
     extern void bcm2835_gpio_set_eds_multi(uint32_t mask);
     
@@ -1642,14 +1652,20 @@ extern "C" {
     extern void bcm2835_gpio_write(uint8_t pin, uint8_t on);
 
     /*! Sets any of the first 32 GPIO output pins specified in the mask to the state given by on
-      \param[in] mask Mask of pins to affect. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to affect. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
       \param[in] on HIGH sets the output to HIGH and LOW to LOW.
     */
     extern void bcm2835_gpio_write_multi(uint32_t mask, uint8_t on);
 
     /*! Sets the first 32 GPIO output pins specified in the mask to the value given by value
-      \param[in] value values required for each bit masked in by mask, eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
-      \param[in] mask Mask of pins to affect. Use eg: (1 << RPI_GPIO_P1_03) | (1 << RPI_GPIO_P1_05)
+      \param[in] value values required for each bit masked in by mask, eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
+      \param[in] mask Mask of pins to affect. Use eg: (1 
+			<< RPI_GPIO_P1_03) | (1 
+			<< RPI_GPIO_P1_05)
     */
     extern void bcm2835_gpio_write_mask(uint32_t value, uint32_t mask);
 

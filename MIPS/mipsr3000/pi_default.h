@@ -36,16 +36,26 @@ SC_MODULE(pi_default)
 	SC_CTOR(pi_default)
 	{
 		SC_METHOD(processCK_SX);
-		sensitive << CK;
+		sensitive 
+			<< CK;
 		SC_METHOD(processPI_IREQ);
 		SC_METHOD(processDEFLTEN_SX);
-		sensitive << PI_GNT;
+		sensitive 
+			<< PI_GNT;
 		SC_METHOD(processPI_LINES);
-		sensitive << DEFLTEN_SX;
+		sensitive 
+			<< DEFLTEN_SX;
 		SC_METHOD(processPI_GNT);
-		sensitive << PI_GNT0 << PI_GNT1 << PI_GNT2 << PI_GNT3 << PI_GNT4 << PI_GNT5;
+		sensitive 
+			<< PI_GNT0 
+			<< PI_GNT1 
+			<< PI_GNT2 
+			<< PI_GNT3 
+			<< PI_GNT4 
+			<< PI_GNT5;
 		SC_METHOD(processPI_IREQS);
-		sensitive << PI_IREQ;
+		sensitive 
+			<< PI_IREQ;
 	}
 
 	void processPI_GNT();

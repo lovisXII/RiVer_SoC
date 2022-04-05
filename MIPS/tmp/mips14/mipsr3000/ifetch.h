@@ -44,9 +44,14 @@ SC_MODULE(ifetch)
 		BDSLOT_XI("BDSLOT_XI")
 	{
 		SC_METHOD(processBDSLOT_XI);
-		sensitive << I_BRNCH_SD;
+		sensitive 
+			<< I_BRNCH_SD;
 		SC_METHOD(processSR_SI);
-		sensitive << NEXTSR_RX << OPCOD_SD << OPCOD_RD << OPCOD_RE;
+		sensitive 
+			<< NEXTSR_RX 
+			<< OPCOD_SD 
+			<< OPCOD_RD 
+			<< OPCOD_RE;
 	}
 
 		// ### ------------------------------------------------------ ###
@@ -71,7 +76,8 @@ SC_MODULE(ifetch)
 		if (((int)OPCOD_SD.read()==rfe_i)||
 			((int)OPCOD_RD.read()==rfe_i)||
 			((int)OPCOD_RE.read()==rfe_i))
-			SR_SI.write(nextsr_rx.range(31,4) << 4 | nextsr_rx.range(5,2));
+			SR_SI.write(nextsr_rx.range(31,4) 
+			<< 4 | nextsr_rx.range(5,2));
 		else
 			SR_SI.write(nextsr_rx);
 	}

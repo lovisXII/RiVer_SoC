@@ -140,7 +140,8 @@ SC_MODULE(core)
         wbk_inst("wbk")
     {
         SC_METHOD(core_method);
-        sensitive << READ_PC;
+        sensitive 
+			<< READ_PC;
             
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY);

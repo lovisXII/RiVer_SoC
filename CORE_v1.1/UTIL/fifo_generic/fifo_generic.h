@@ -22,7 +22,11 @@ SC_MODULE(fifo)
     {
         SC_CTHREAD(function,fifo::CLK.pos()) ;
         SC_METHOD(flags_update);
-        sensitive << PUSH << POP << fifo_v << data_inside;
+        sensitive 
+			<< PUSH 
+			<< POP 
+			<< fifo_v 
+			<< data_inside;
 
         reset_signal_is(RESET_N, false) ;
     }

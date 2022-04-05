@@ -18,7 +18,11 @@ SC_MODULE(ram)
 	SC_CTOR(ram)
 	{
 		SC_METHOD(memAccess);
-		sensitive << ADR << DAT << E << W_N;
+		sensitive 
+			<< ADR 
+			<< DAT 
+			<< E 
+			<< W_N;
 	}
 
 	void memAccess()
@@ -114,9 +118,11 @@ SC_MODULE(ram)
         				if ((red_c >= 'A') && (red_c <= 'F'))
           					red_val = red_c - 'A' + 10;
         				if (state == READ_ADR)
-          					cur_adr = (cur_adr << 4) + red_val;
+          					cur_adr = (cur_adr 
+			<< 4) + red_val;
         				else
-          					cur_val = (cur_val << 4) + red_val;
+          					cur_val = (cur_val 
+			<< 4) + red_val;
       			}
     		}
   		fclose (fp);

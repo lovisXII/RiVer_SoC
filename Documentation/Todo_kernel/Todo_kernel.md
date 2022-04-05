@@ -191,17 +191,17 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 
 ## Exceptions :
 
-* Instruction address misaligned  -> 
-* Instruction access fault        -> no instruction at this address ?
+* Instruction address misaligned  -> ``DEC``
+* Instruction access fault        -> Trying to access memory with wrong mode. For example trying to access S-Mode adress space in U-mode ``EXE``
 * Illegal instruction             -> instruction doesnt exist, ``DEC``
 * Breakpoint                      -> not implemented  
 * Load address misaligned         -> ``EXE``
 * Load access fault               ->  
 * Store/AMO address misaligned    ->
 * Store/AMO access fault          ->
-* Environment call from U-mode    ->
-* Environment call from S-mode    -> not implemented
-* Environment call from M-mode    ->
+* Environment call from U-mode    -> ``DEC``
+* Environment call from S-mode    -> ``DEC``
+* Environment call from M-mode    -> ``DEC``
 * Instruction page fault          ->
 * Load page fault                 ->
 * Store/AMO page fault            ->
@@ -247,6 +247,13 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 
 * equivalent CP0 en MIPS
 * implémenter tous les registres nécessaire
+
+## Sycall :
+
+* cause an exception for calling service
+* have to flush the pipeline
+* have to switch mod user -> kernel
+* Jump to proper @
 
 # Actually done :
 

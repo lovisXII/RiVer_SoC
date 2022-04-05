@@ -34,28 +34,46 @@ SC_MODULE(ram_control)
   SC_CTOR(ram_control)
   {
     SC_METHOD(processCK_SX);
-    sensitive << CK;
+    sensitive 
+			<< CK;
     SC_METHOD(processMODE_SX);
-    sensitive << OPCODE_RX;
+    sensitive 
+			<< OPCODE_RX;
     SC_METHOD(processBYTE_SX);
-    sensitive << OPCODE_RX;
+    sensitive 
+			<< OPCODE_RX;
     SC_METHOD(processRAM_ADR);
-    sensitive << ADDRESS_RX;
+    sensitive 
+			<< ADDRESS_RX;
     SC_METHOD(processRAM_W_N);
-    sensitive << READ_RX;
+    sensitive 
+			<< READ_RX;
     SC_METHOD(processRAM_E);
-    sensitive << BYTE_SX << SELECT_RX << CK.pos();
+    sensitive 
+			<< BYTE_SX 
+			<< SELECT_RX 
+			<< CK.pos();
     SC_METHOD(processRAM_D);
-    sensitive << READ_RX << CK_SX << MODE_SX << PI_D;
+    sensitive 
+			<< READ_RX 
+			<< CK_SX 
+			<< MODE_SX 
+			<< PI_D;
     SC_METHOD(processPI_ACK);
-    sensitive << SELECT_RX;
+    sensitive 
+			<< SELECT_RX;
     SC_METHOD(processPI_D);
-    sensitive << SELECT_RX << READ_RX << RAM_D;
+    sensitive 
+			<< SELECT_RX 
+			<< READ_RX 
+			<< RAM_D;
     
     SC_METHOD(processTRANSFER);
-    sensitive << CK.pos();
+    sensitive 
+			<< CK.pos();
     SC_METHOD(processRESET);
-    sensitive << CK.pos();
+    sensitive 
+			<< CK.pos();
   }
 
 // ### ------------------------------------------------------ ###

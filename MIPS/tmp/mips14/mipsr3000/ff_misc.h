@@ -38,7 +38,8 @@ SC_MODULE(ff_misc)
 	SC_CTOR(ff_misc)
 	{
 		SC_METHOD(processClock);
-		sensitive_pos << CK_SX;
+		sensitive_pos 
+			<< CK_SX;
 	}
 
 	void processClock()
