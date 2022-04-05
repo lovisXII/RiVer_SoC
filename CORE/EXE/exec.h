@@ -32,6 +32,9 @@ SC_MODULE(exec) {
     sc_in<bool>        CSR_type_operation_RD;
     sc_in<sc_uint<12>> ADR_CSR_SD;
 
+    sc_in<bool>        EXCEPTION_RD ; // tells if an instruction have been made in DEC
+
+
     sc_in_clk   CLK;
     sc_in<bool> RESET;
 
@@ -55,6 +58,7 @@ SC_MODULE(exec) {
     sc_out<sc_uint<12>> ADR_CSR_SE;
     sc_out<sc_uint<32>> OP1_CSR_RE;
 
+
     // Internals signals :
 
     sc_signal<sc_uint<32>> exe_res_se;
@@ -73,6 +77,11 @@ SC_MODULE(exec) {
     sc_signal<bool> exe2mem_push_se, exe2mem_full_se;
     sc_signal<bool> blocked;
 
+
+    sc_signal<bool>        wb_re ;
+    sc_signal<bool>        mem_load_re ;
+    sc_signal<bool>        mem_store_re ;
+    
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM;
@@ -91,7 +100,7 @@ SC_MODULE(exec) {
     void manage_fifo();      // allow the push/pop of fifo exe2mem
 
     void bypasses();  // allow the push/pop of fifo exe2mem
-    void interruption();
+    void exception();
 
     void trace(sc_trace_file * tf);
     SC_CTOR(exec) : alu_inst("alu"), shifter_inst("shifter"), fifo_inst("exe2mem") {

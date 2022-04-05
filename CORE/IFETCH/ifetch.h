@@ -27,6 +27,9 @@ SC_MODULE(ifetch) {
     sc_out<sc_bv<32>>   INSTR_RI;      // instruction sent to if2dec
     sc_out<sc_uint<32>> PC_IF2DEC_RI;  // pc sent to if2dec
 
+    sc_out<bool>        EXCEPTION_RI ; // tells if an instruction have been made in IFETCH
+
+
     // Interruption :
 
     sc_in<bool> INTERRUPTION_SE;

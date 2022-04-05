@@ -45,9 +45,9 @@ void exec::fifo_concat() {
     ff_din.range(63, 32)   = bp_mem_data_sd.read();
     ff_din.range(69, 64)   = DEST_RD.read();
     ff_din.range(71, 70)   = MEM_SIZE_RD.read();
-    ff_din[72]             = WB_RD.read();
-    ff_din[73]             = MEM_LOAD_RD.read();
-    ff_din[74]             = MEM_STORE_RD.read();
+    ff_din[72]             = wb_re.read();
+    ff_din[73]             = mem_load_re.read();
+    ff_din[74]             = mem_store_re.read();
     ff_din[75]             = MEM_SIGN_EXTEND_RD.read();
     ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
     ff_din[108]            = CSR_type_operation_RD.read();
@@ -124,8 +124,23 @@ void exec::bypasses() {
     blocked.write(blocked_var);
 }
 
-void exec::interruption() {
-    if (INTERRUPTION_SX.read()) { INTERRUPTION_SE.write(1); }
+void exec::exception() {
+    if (INTERRUPTION_SX.read() || EXCEPTION_RD.read()) 
+    // in case of interrupt or exception have to inform other stage
+    { 
+        INTERRUPTION_SE.write(1); 
+    }
+    
+    if(EXCEPTION_RD.read()){
+        wb_re.write(0) ;
+        mem_load_re.write(0) ;
+        mem_store_re.write(0) ;
+    }
+    else{
+        wb_re.write(WB_RD.read()) ;
+        mem_load_re.write(MEM_LOAD_RD.read()) ;
+        mem_store_re.write(MEM_STORE_RD.read()) ;   
+    }
 }
 
 void exec::trace(sc_trace_file* tf) {

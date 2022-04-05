@@ -38,6 +38,8 @@ SC_MODULE(decod) {
                                          // if so need to WBK CSR in rd
     sc_out<sc_uint<12>> ADR_CSR_SD;      // CSR adress sent to EXE, will allow to wbk csr in MEM
 
+
+    sc_out<bool>        EXCEPTION_RD ; // tells if an instruction have been made in DEC
     // Interface with DEC2IF :
 
     sc_in<bool>       DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
@@ -48,6 +50,8 @@ SC_MODULE(decod) {
 
     sc_in<sc_uint<32>> PC_IF2DEC_RI;
     sc_in<sc_bv<32>>   INSTR_RI;
+    sc_in<bool>        EXCEPTION_RI ;
+
     sc_in<bool>        IF2DEC_EMPTY_SI;
     sc_out<bool>       IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>       IF2DEC_FLUSH_SD;
@@ -204,9 +208,8 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_signal<bool>        illegal_instruction_rd ;
-    sc_signal<bool>        adress_missaligned ;
-    
+    sc_signal<bool>        illegal_instruction_rd ; // accessing stuff in wrong mode
+    sc_signal<bool>        adress_missaligned ;     // branch offset is misaligned 
 
     // Offset for branch :
 
