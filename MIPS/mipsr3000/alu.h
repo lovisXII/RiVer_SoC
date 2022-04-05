@@ -45,25 +45,25 @@ SC_MODULE(alu)
   sc_in<sc_uint<8>>	  OPCOD_RD;    //check for slt/i et sltu/i
 
 //OUT
-  sc_out<sc_uint<32> >	RES_SE;      //Result
+  sc_out<sc_uint<32>>	RES_SE;      //Result
 
 //SIGNAL
-  sc_signal<sc_uint<32> >	XARITH_SE;  //xoper for arithmetique operation 
-  sc_signal<sc_uint<32> >	YARITH_SE;  //yoper for arithmetique operation 
-  sc_signal<sc_uint<32> >	RARITH_SE;  //result arithmetique
-  sc_signal<sc_uint<33> >	CARITH_SE;  //carry for arithmetique operation
+  sc_signal<sc_uint<32>>	XARITH_SE;  //xoper for arithmetique operation 
+  sc_signal<sc_uint<32>>	YARITH_SE;  //yoper for arithmetique operation 
+  sc_signal<sc_uint<32>>	RARITH_SE;  //result arithmetique
+  sc_signal<sc_uint<33>>	CARITH_SE;  //carry for arithmetique operation
   sc_signal<bool>		OVERFLW_SE;       //overlow flag
   sc_signal<bool>		S_LT_T_SE;        //slt/i flag
   sc_signal<bool>		S_LTU_T_SE;       //sltu/i flag
   sc_signal<bool>		SETBIT_SE;        //result of slt check
-  sc_signal<sc_uint<32> >	RTEST_SE;   //result if it is "test"
-  sc_signal<sc_uint<32> >	RSHIFT_SE;  //result of shift
-  sc_signal<sc_uint<32> >	SHIFTIN_SE; //shift buffer
+  sc_signal<sc_uint<32>>	RTEST_SE;   //result if it is "test"
+  sc_signal<sc_uint<32>>	RSHIFT_SE;  //result of shift
+  sc_signal<sc_uint<32>>	SHIFTIN_SE; //shift buffer
     
-  sc_signal<sc_uint<32> >	SHLEFT_SE;  //shift left
-  sc_signal<sc_uint<32> >	SHRIGHT_SE; //shift right
+  sc_signal<sc_uint<32>>	SHLEFT_SE;  //shift left
+  sc_signal<sc_uint<32>>	SHRIGHT_SE; //shift right
     
-  sc_signal<sc_uint<32> >	RLOGIC_SE;  //result of logical operation
+  sc_signal<sc_uint<32>>	RLOGIC_SE;  //result of logical operation
 
   SC_CTOR(alu):
     XOPER_SE("XOPER_SE"),

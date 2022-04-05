@@ -11,35 +11,35 @@ int sc_main(int argc, char* argv[])
     tf=sc_create_vcd_trace_file("tf");
     // Reading Port :
 
-    sc_signal < sc_uint<6> >        radr1 ;
-    sc_signal < sc_uint<6> >        radr2 ;
+    sc_signal<sc_uint<6>>        radr1 ;
+    sc_signal<sc_uint<6>>        radr2 ;
     
-    sc_signal <bool>               radr1_valid ;
-    sc_signal <bool>               radr2_valid ;
+    sc_signal<bool>               radr1_valid ;
+    sc_signal<bool>               radr2_valid ;
 
-    sc_signal < sc_uint<32> >      radr1_data ;
-    sc_signal < sc_uint<32> >      radr2_data ;
+    sc_signal<sc_uint<32>>      radr1_data ;
+    sc_signal<sc_uint<32>>      radr2_data ;
 
     // Writing Port :
 
-    sc_signal < sc_uint<6> >        wadr1 ;
-    sc_signal <bool>                wadr1_valid ;
-    sc_signal < sc_uint<32> >       wadr1_data ;
+    sc_signal<sc_uint<6>>        wadr1 ;
+    sc_signal<bool>                wadr1_valid ;
+    sc_signal<sc_uint<32>>       wadr1_data ;
 
     // Inval Port :
 
-    sc_signal < sc_uint<6> >        inval_adr ;
-    sc_signal <bool>                inval_enable ;
+    sc_signal<sc_uint<6>>        inval_adr ;
+    sc_signal<bool>                inval_enable ;
 
     //PC Gestion :
 
-    sc_signal < sc_uint<32> >      read_pc ;
-    sc_signal < bool >             read_pc_valid ;
+    sc_signal<sc_uint<32>>      read_pc ;
+    sc_signal<bool>             read_pc_valid ;
 
     //Global Interface :
 
     sc_clock clk("clk",1,SC_NS) ;
-    sc_signal <bool> reset_n ;
+    sc_signal<bool> reset_n ;
 
     //Instance declaration :
 

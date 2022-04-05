@@ -26,12 +26,12 @@
 SC_MODULE(ifetch)
 {
 	sc_in<bool> 		I_BRNCH_SD;
-	sc_in<sc_uint<32> > 	NEXTSR_RX;
-	sc_in<sc_uint<8> > 	OPCOD_SD;
-	sc_in<sc_uint<8> > 	OPCOD_RD;
-	sc_in<sc_uint<8> > 	OPCOD_RE;
+	sc_in<sc_uint<32>> 	NEXTSR_RX;
+	sc_in<sc_uint<8>> 	OPCOD_SD;
+	sc_in<sc_uint<8>> 	OPCOD_RD;
+	sc_in<sc_uint<8>> 	OPCOD_RE;
 
-	sc_out<sc_uint<32> > 	SR_SI;
+	sc_out<sc_uint<32>> 	SR_SI;
 	sc_out<bool>		BDSLOT_XI;
 
 	SC_CTOR(ifetch):

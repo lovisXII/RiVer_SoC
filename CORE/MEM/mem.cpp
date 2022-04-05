@@ -24,8 +24,7 @@ void mem::mem2wbk_unconcat() {
 }
 
 void mem::fifo_gestion() {
-    bool stall = MCACHE_STALL_SM.read() || mem2wbk_full_sm.read() ||
-                 EXE2MEM_EMPTY_SE.read();
+    bool stall = MCACHE_STALL_SM.read() || mem2wbk_full_sm.read() || EXE2MEM_EMPTY_SE.read();
     mem2wbk_push_sm.write(!stall && wb_sm.read());
     EXE2MEM_POP_SM.write(!stall);
 }
@@ -48,7 +47,7 @@ void mem::sign_extend() {
     sc_uint<32> din         = MCACHE_RESULT_SM.read();
     sc_uint<32> dout;
     int         range_start;  // The beginning of the range of din that should actually
-                      // be written to the register
+                              // be written to the register
     switch (size) {
         case 2: range_start = 7; break;
         case 1: range_start = 15; break;

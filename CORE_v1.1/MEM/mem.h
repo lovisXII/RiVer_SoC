@@ -16,25 +16,25 @@ SC_MODULE(mem)
 {
     // Mcache Interface :
 
-    sc_out<sc_uint<32> >        MCACHE_ADR_SM ; // adress in memory
-    sc_out<sc_uint<32> >        MCACHE_DATA_SM ;
+    sc_out<sc_uint<32>>        MCACHE_ADR_SM ; // adress in memory
+    sc_out<sc_uint<32>>        MCACHE_DATA_SM ;
     sc_out<bool>                MCACHE_ADR_VALID_SM,
                                 MCACHE_STORE_SM,
                                 MCACHE_LOAD_SM ; 
 
-    sc_in<sc_uint<32> >         MCACHE_RESULT_SM ;
+    sc_in<sc_uint<32>>         MCACHE_RESULT_SM ;
     sc_in<bool>                 MCACHE_STALL_SM ;
     
     //Exe Interface :
 
-    sc_in< sc_uint<32> >        EXE_RES_SM ;
-    sc_in< sc_uint<32> >        MEM_DATA_SM;
-    sc_in< sc_uint<6> >         EXE_DEST_SM;
-    sc_in< sc_uint<2> >         EXE_MEM_SIZE_SM ;
+    sc_in<sc_uint<32>>        EXE_RES_SM ;
+    sc_in<sc_uint<32>>        MEM_DATA_SM;
+    sc_in<sc_uint<6>>         EXE_DEST_SM;
+    sc_in<sc_uint<2>>         EXE_MEM_SIZE_SM ;
 
-    sc_in< bool >               EXE_WB_SM,  
+    sc_in<bool>               EXE_WB_SM,  
                                 SIGN_EXTEND_SM ; //taille fifo entrée : 74
-    sc_in< bool >               LOAD_SM, 
+    sc_in<bool>               LOAD_SM, 
                                 STORE_SM ; 
 
     //exe2mem interface :
@@ -51,18 +51,18 @@ SC_MODULE(mem)
     
 
     //WBK interface 
-    sc_out< sc_uint<32> >       WBK_DATA_SM;
-    sc_out< sc_uint<6> >        WBK_DEST_SM;
-    sc_out< sc_uint<2> >        WBK_MEM_SIZE_SM ;
-    sc_out< bool >              WBK_WB_SM;
-    sc_out< bool >              WBK_SIGN_EXTEND_SM;
-    sc_out< bool >              WBK_LOAD_SM;
+    sc_out<sc_uint<32>>       WBK_DATA_SM;
+    sc_out<sc_uint<6>>        WBK_DEST_SM;
+    sc_out<sc_uint<2>>        WBK_MEM_SIZE_SM ;
+    sc_out<bool>              WBK_WB_SM;
+    sc_out<bool>              WBK_SIGN_EXTEND_SM;
+    sc_out<bool>              WBK_LOAD_SM;
 
     //Internal signals
-    sc_signal< sc_bv<42> >      mem2wbk_din_sm;
-    sc_signal< sc_bv<42> >      mem2wbk_dout_sm;
-    sc_signal< sc_uint<32> >    data_sm;
-    sc_signal< bool >           wb_sm;
+    sc_signal<sc_bv<42>>      mem2wbk_din_sm;
+    sc_signal<sc_bv<42>>      mem2wbk_dout_sm;
+    sc_signal<sc_uint<32>>    data_sm;
+    sc_signal<bool>           wb_sm;
     //Global Interface :
 
     sc_in_clk                   CLK;

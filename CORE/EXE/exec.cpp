@@ -73,8 +73,7 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool stall =
-        exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read();
+    bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read();
     if (stall) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
@@ -94,8 +93,7 @@ void exec::bypasses() {
         op1_se.write(EXE_RES_RE.read());
     } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
         op1_se.write(MEM_RES_RM.read());
-    } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE &&
-               !EXE2MEM_EMPTY_SE) {
+    } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
     } else {
         op1_se.write(OP1_RD.read());
@@ -104,8 +102,7 @@ void exec::bypasses() {
     if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read()) {
         op2_se.write(OP2_RD.read());
     } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
-        if (MEM_STORE_RD
-                .read()) {  // on stores we need to bypass to the data not adr
+        if (MEM_STORE_RD.read()) {  // on stores we need to bypass to the data not adr
             bp_mem_data_var = EXE_RES_RE.read();
             op2_se.write(OP2_RD.read());
         } else {
@@ -118,8 +115,7 @@ void exec::bypasses() {
         } else {
             op2_se.write(MEM_RES_RM.read());
         }
-    } else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE &&
-               !EXE2MEM_EMPTY_SE) {
+    } else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
     } else {
         op2_se.write(OP2_RD.read());

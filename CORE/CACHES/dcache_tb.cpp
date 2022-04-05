@@ -40,8 +40,7 @@ int stringtoint(string integer) {
 }
 int sc_main(int argc, char** argv) {
     if (argc != 2) {
-        printf(
-            "Error : number of argument are incorrect, send only the ram path");
+        printf("Error : number of argument are incorrect, send only the ram path");
         return 2;
     }
     // MP(RAM) DEFINITION
@@ -57,8 +56,7 @@ int sc_main(int argc, char** argv) {
     if (ram_file.is_open()) {
         while (getline(ram_file, line)) {
             if (RAM_block == RAM_NB_BLOCK || check_line_size(line)) {
-                printf(
-                    "ERROR : RAM file sizes didnt respect RAM Architecture\n");
+                printf("ERROR : RAM file sizes didnt respect RAM Architecture\n");
                 printf("\t\tNB BLOCK : %d\n", RAM_NB_BLOCK);
                 printf("\t\tNB WORDS PER BLOCK : %d\n", RAM_NB_WORDS);
                 return 1;
@@ -66,8 +64,8 @@ int sc_main(int argc, char** argv) {
             RAM_block_offset = 0;
             start            = 0;
             for (int i = 0; i < 4; ++i) {
-                end        = line.find_first_of(' ', start);
-                block_word = stringtoint(line.substr(start, end - start));
+                end                              = line.find_first_of(' ', start);
+                block_word                       = stringtoint(line.substr(start, end - start));
                 RAM[RAM_block][RAM_block_offset] = block_word;
                 RAM_block_offset++;
                 start = end + 1;

@@ -5,18 +5,41 @@ a.out:     file format elf32-littleriscv
 Disassembly of section .text:
 
 00010054 <_start>:
-   10054:	00800313          	li	t1,8
-   10058:	00c00393          	li	t2,12
-   1005c:	01000493          	li	s1,16
+   10054:	08100137          	lui	sp,0x8100
+   10058:	10000113          	li	sp,256
+   1005c:	00408093          	addi	ra,ra,4
+   10060:	40208133          	sub	sp,ra,sp
+   10064:	004002ef          	jal	t0,10068 <main>
 
-00010060 <_loop>:
-   10060:	00240413          	addi	s0,s0,2
-   10064:	fe941ee3          	bne	s0,s1,10060 <_loop>
-   10068:	00940663          	beq	s0,s1,10074 <_good>
-   1006c:	00000013          	nop
+00010068 <main>:
+   10068:	fe010113          	addi	sp,sp,-32 # 80fffe0 <__global_pointer$+0x80ee70c>
+   1006c:	00112e23          	sw	ra,28(sp)
+   10070:	00812c23          	sw	s0,24(sp)
+   10074:	02010413          	addi	s0,sp,32
+   10078:	00100793          	li	a5,1
+   1007c:	fef42623          	sw	a5,-20(s0)
+   10080:	00a00793          	li	a5,10
+   10084:	fef42423          	sw	a5,-24(s0)
+   10088:	fe842703          	lw	a4,-24(s0)
+   1008c:	fec42783          	lw	a5,-20(s0)
+   10090:	40f707b3          	sub	a5,a4,a5
+   10094:	fef42423          	sw	a5,-24(s0)
+   10098:	fe842703          	lw	a4,-24(s0)
+   1009c:	00900793          	li	a5,9
+   100a0:	00f71663          	bne	a4,a5,100ac <main+0x44>
+   100a4:	02c000ef          	jal	ra,100d0 <_good>
+   100a8:	0080006f          	j	100b0 <main+0x48>
+   100ac:	020000ef          	jal	ra,100cc <_bad>
+   100b0:	00000793          	li	a5,0
+   100b4:	00078513          	mv	a0,a5
+   100b8:	01c12083          	lw	ra,28(sp)
+   100bc:	01812403          	lw	s0,24(sp)
+   100c0:	02010113          	addi	sp,sp,32
+   100c4:	00008067          	ret
+   100c8:	00000013          	nop
 
-00010070 <_bad>:
-   10070:	00000013          	nop
+000100cc <_bad>:
+   100cc:	00000033          	add	zero,zero,zero
 
-00010074 <_good>:
-   10074:	00000013          	nop
+000100d0 <_good>:
+   100d0:	001080b3          	add	ra,ra,ra

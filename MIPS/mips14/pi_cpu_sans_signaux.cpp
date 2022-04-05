@@ -23,60 +23,60 @@ int sc_main(int ac, char *av[])
 	sc_signal<bool> 	CK;// external clock
 	sc_signal<bool> 	RESET_N;// external reset
 
-    sc_signal<sc_uint<6> >          IT_N;           // external interrupts
+    sc_signal<sc_uint<6>>          IT_N;           // external interrupts
 
-	sc_signal<sc_uint<32> >	I_A; // instruction address
+	sc_signal<sc_uint<32>>	I_A; // instruction address
 	sc_signal<bool> 	I_FRZ; // instruction fetch freezed
 	sc_signal<bool> 	I_BERR_N; // instruction bus error
 	sc_signal<bool> 	I_FTCH; // instruction fetch
 	sc_signal<bool> 	I_ACK; // instruction fetch acknow.
-	sc_signal<sc_uint<32> >	I; // instruction bus
+	sc_signal<sc_uint<32>>	I; // instruction bus
 
-    sc_signal<sc_uint<32> >        D_A;            // data address
+    sc_signal<sc_uint<32>>        D_A;            // data address
     sc_signal<bool>                D_RQ;           // data access request
     sc_signal<bool>                D_LOCK;         // lock memory access
-    sc_signal<sc_uint<2> >         D_ATYPE;        // data access type
+    sc_signal<sc_uint<2>>         D_ATYPE;        // data access type
     sc_signal<bool>                D_ACK;          // data fetch acknow.
     sc_signal<bool>                 D_BERR_N;       // data bus error
     sc_signal<bool>                 D_FRZ;          // data access pending
-    sc_signal<sc_uint<32> >         D_IN;           // data bus (input )
-    sc_signal<sc_uint<32> >        D_OUT;          // data bus (output)
+    sc_signal<sc_uint<32>>         D_IN;           // data bus (input )
+    sc_signal<sc_uint<32>>        D_OUT;          // data bus (output)
 
-	sc_signal<sc_uint<32> >	PI_A; // Pi address
-	sc_signal<sc_uint<4> >	PI_OPC; // Pi operation code
+	sc_signal<sc_uint<32>>	PI_A; // Pi address
+	sc_signal<sc_uint<4>>	PI_OPC; // Pi operation code
 	sc_signal<bool> 	PI_READ; // Pi read/write
 	sc_signal<bool> 	PI_LOCK; // Pi access locked
 	sc_signal<bool>		PI_IREQ[8]; // Pi requests
 	sc_signal<bool>		PI_GNT[8]; // Pi master grants
 	sc_signal<bool>		PI_SEL[8]; // Pi slave selection
-	sc_signal<sc_uint<3> >	PI_ACK; // Pi acknowledge
-	sc_signal<sc_uint<32> >	PI_D; // Pi data bus
+	sc_signal<sc_uint<3>>	PI_ACK; // Pi acknowledge
+	sc_signal<sc_uint<32>>	PI_D; // Pi data bus
 	sc_signal<bool> 	PI_TOUT; // Pi time out
 
-	sc_signal<sc_uint<4> >	RSTI_E; // reset memory enable
+	sc_signal<sc_uint<4>>	RSTI_E; // reset memory enable
 	sc_signal<bool> 	RSTI_W_N; // reset memory r/w
-	sc_signal<sc_uint<10> >	RSTI_ADR; // reset memory address
-	sc_signal<sc_uint<32> >	RSTI_D; // reset memory data
+	sc_signal<sc_uint<10>>	RSTI_ADR; // reset memory address
+	sc_signal<sc_uint<32>>	RSTI_D; // reset memory data
 
-	sc_signal<sc_uint<4> >	EXCI_E; // exception memory enable
+	sc_signal<sc_uint<4>>	EXCI_E; // exception memory enable
 	sc_signal<bool> 	EXCI_W_N; // exception memory r/w
-	sc_signal<sc_uint<10> >	EXCI_ADR; // exception memory address
-	sc_signal<sc_uint<32> >	EXCI_D; // exception memory data
+	sc_signal<sc_uint<10>>	EXCI_ADR; // exception memory address
+	sc_signal<sc_uint<32>>	EXCI_D; // exception memory data
 
-	sc_signal<sc_uint<4> >	SYSD_E; // syst data memory enable
+	sc_signal<sc_uint<4>>	SYSD_E; // syst data memory enable
 	sc_signal<bool> 	SYSD_W_N; // syst data memory r/w
-	sc_signal<sc_uint<10> >	SYSD_ADR; // syst data memory address
-	sc_signal<sc_uint<32> >	SYSD_D; // syst data memory data
+	sc_signal<sc_uint<10>>	SYSD_ADR; // syst data memory address
+	sc_signal<sc_uint<32>>	SYSD_D; // syst data memory data
 
-	sc_signal<sc_uint<4> >	USRI_E; // user instr memory enable
+	sc_signal<sc_uint<4>>	USRI_E; // user instr memory enable
 	sc_signal<bool> 	USRI_W_N; // user instr memory r/w
-	sc_signal<sc_uint<10> >	USRI_ADR; // user instr memory address
-	sc_signal<sc_uint<32> >	USRI_D; // user instr memory data
+	sc_signal<sc_uint<10>>	USRI_ADR; // user instr memory address
+	sc_signal<sc_uint<32>>	USRI_D; // user instr memory data
 
-	sc_signal<sc_uint<4> >	USRD_E; // user data  memory enable
+	sc_signal<sc_uint<4>>	USRD_E; // user data  memory enable
 	sc_signal<bool> 	USRD_W_N; // user data  memory r/w
-	sc_signal<sc_uint<10> >	USRD_ADR; // user data  memory address
-	sc_signal<sc_uint<32> >	USRD_D; // user data  memory data
+	sc_signal<sc_uint<10>>	USRD_ADR; // user data  memory address
+	sc_signal<sc_uint<32>>	USRD_D; // user data  memory data
 
         mipsr3000 *mips1=new mipsr3000("mips1");
 

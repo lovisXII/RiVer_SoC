@@ -1,6 +1,6 @@
 1. 
 ```c
-sc_out  <sc_uint
+sc_out <sc_uint
 //devient :
 sc_out<
 ``` 

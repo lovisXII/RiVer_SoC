@@ -27,8 +27,8 @@ SC_MODULE(ff_ifetch)
 {
 	sc_in<bool> CK_SX;
 
-	sc_in<sc_uint<32> > MUX_IR_SI;
-	sc_out<sc_uint<32> > IR_RI;
+	sc_in<sc_uint<32>> MUX_IR_SI;
+	sc_out<sc_uint<32>> IR_RI;
 
 	sc_in<bool> MUX_INSTRED_SI;
 	sc_out<bool> INSTRED_RI;
@@ -36,11 +36,11 @@ SC_MODULE(ff_ifetch)
 	sc_in<bool> MUX_BDSLOT_SI;
 	sc_out<bool> BDSLOT_RI;
 
-	sc_in<sc_uint<32> > MUX_PC_SI;
-	sc_out<sc_uint<32> > PC_RI;
+	sc_in<sc_uint<32>> MUX_PC_SI;
+	sc_out<sc_uint<32>> PC_RI;
 
-	sc_in<sc_uint<32> > MUX_SR_SI;
-	sc_out<sc_uint<32> > SR_RI;
+	sc_in<sc_uint<32>> MUX_SR_SI;
+	sc_out<sc_uint<32>> SR_RI;
 
 	SC_CTOR(ff_ifetch):
 		CK_SX("CK_SX"),

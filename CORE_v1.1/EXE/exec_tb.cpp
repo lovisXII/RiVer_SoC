@@ -36,25 +36,25 @@ int sc_main(int argc, char* argv[])
     
 
     //declare signals 
-    sc_signal< sc_uint<32> >  op1;
-    sc_signal< sc_uint<32> >  op2;
-    sc_signal< sc_uint<32> >  mem_data;
-    sc_signal< sc_uint<6> >   dest;
-    sc_signal< sc_uint<2> >   cmd ;
-    sc_signal< sc_uint<2> >   mem_size ;
-    sc_signal< bool >   neg_op1, wb, mem_sign_extend, select_shift ; //taille fifo entrée : 110
-    sc_signal< bool > mem_load, mem_store;
-    sc_signal< bool >   exe2mem_pop, dec2exe_empty;
+    sc_signal<sc_uint<32>>  op1;
+    sc_signal<sc_uint<32>>  op2;
+    sc_signal<sc_uint<32>>  mem_data;
+    sc_signal<sc_uint<6>>   dest;
+    sc_signal<sc_uint<2>>   cmd ;
+    sc_signal<sc_uint<2>>   mem_size ;
+    sc_signal<bool>   neg_op1, wb, mem_sign_extend, select_shift ; //taille fifo entrée : 110
+    sc_signal<bool> mem_load, mem_store;
+    sc_signal<bool>   exe2mem_pop, dec2exe_empty;
 
-    sc_signal< sc_uint<32> >  ffout_exe_res ;
-    sc_signal< sc_uint<32> >  ffout_mem_data;
-    sc_signal< sc_uint<6> >   ffout_dest;
-    sc_signal< sc_uint<2> >   ffout_mem_size ;
-    sc_signal< bool >   ffout_wb, ffout_mem_sign_extend ; //taille fifo sortie : 76
-    sc_signal< bool >     ffout_mem_load, ffout_mem_store ; 
-    sc_signal< bool >   exe2mem_empty, dec2exe_pop;
+    sc_signal<sc_uint<32>>  ffout_exe_res ;
+    sc_signal<sc_uint<32>>  ffout_mem_data;
+    sc_signal<sc_uint<6>>   ffout_dest;
+    sc_signal<sc_uint<2>>   ffout_mem_size ;
+    sc_signal<bool>   ffout_wb, ffout_mem_sign_extend ; //taille fifo sortie : 76
+    sc_signal<bool>     ffout_mem_load, ffout_mem_store ; 
+    sc_signal<bool>   exe2mem_empty, dec2exe_pop;
 
-    sc_signal< bool > reset;
+    sc_signal<bool> reset;
     sc_clock clk("clk",1,SC_NS);    
     
     //Port Map :

@@ -28,13 +28,13 @@
 
 SC_MODULE(execute)
 {
-	sc_in<sc_uint<32> > 	SR_RI;			// status register
-	sc_in<sc_uint<25> > 	I_TYPE_RD;		// instruction type
-	sc_in<sc_uint<8> > 		OPCOD_RD;		// operation code
-	sc_in<sc_uint<32> > 	IOPER_RD;		// effective immediat operator
+	sc_in<sc_uint<32>> 	SR_RI;			// status register
+	sc_in<sc_uint<25>> 	I_TYPE_RD;		// instruction type
+	sc_in<sc_uint<8>> 		OPCOD_RD;		// operation code
+	sc_in<sc_uint<32>> 	IOPER_RD;		// effective immediat operator
 
-	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction status
-	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next inst. @
+	sc_in<sc_uint<32>> 	NEXTSR_RX;		// next instruction status
+	sc_in<sc_uint<32>> 	NEXTPC_RD;		// next inst. @
 
 	// ################################### deprecated ##########
 	sc_in<bool> 			SWAP_RD;		
@@ -48,8 +48,8 @@ SC_MODULE(execute)
 	sc_out<bool> 			I_READS_SE;		// instruction uses s operands
 	sc_out<bool> 			I_READT_SE;		// instruction uses t operands
 
-	sc_out<sc_uint<3> >		I_OPER_SE;		// alu operation
-	sc_out<sc_uint<2> >		I_LOGIC_SE;		// logic operation
+	sc_out<sc_uint<3>>		I_OPER_SE;		// alu operation
+	sc_out<sc_uint<2>>		I_LOGIC_SE;		// logic operation
 	sc_out<bool>			I_SUB_SE;		// substraction operation
 	sc_out<bool>			I_RIGHT_SE;		// shift right operation
 	sc_out<bool>			I_RSGND_SE;		// signed result
@@ -60,12 +60,12 @@ SC_MODULE(execute)
 
 	sc_signal<bool>			I_BRNCH_SE;		// branch instruction
 
-	sc_in<sc_uint<32> >	X_SE;				// X operand
-	sc_in<sc_uint<32> >	Y_SE;				// Y operand
+	sc_in<sc_uint<32>>	X_SE;				// X operand
+	sc_in<sc_uint<32>>	Y_SE;				// Y operand
 	sc_in<bool>		OVERFLW_SE;				// overflow out of alu
 
-	sc_out<sc_uint<32> >	XOPER_SE;		// effective x operand
-	sc_out<sc_uint<32> >	YOPER_SE;		// effective y operand
+	sc_out<sc_uint<32>>	XOPER_SE;		// effective x operand
+	sc_out<sc_uint<32>>	YOPER_SE;		// effective y operand
 
 	sc_out<bool>		WREDOPC_SE;			// redopc write enable
 	sc_out<bool>		IABUSER_XE;			// instruction @ bus error

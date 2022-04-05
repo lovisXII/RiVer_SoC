@@ -31,39 +31,39 @@ SC_MODULE(mux_memory)
 	sc_in<bool> HOLD_SM;				// hold the instruction
 	sc_in<bool> KEEP_SM;				// keep the data
 	
-	sc_in<sc_uint<32> > IR_RE;			// instruction register from exec
-	sc_in<sc_uint<32> > IR_RM;			// instruction register from memory
-	sc_out<sc_uint<32> > MUX_IR_SM;		// res instruction register
+	sc_in<sc_uint<32>> IR_RE;			// instruction register from exec
+	sc_in<sc_uint<32>> IR_RM;			// instruction register from memory
+	sc_out<sc_uint<32>> MUX_IR_SM;		// res instruction register
 
 	sc_in<bool> DATARED_SM;				// read acces
 	sc_out<bool> MUX_DATARED_SM;		// res between - read access and 0 -
 
-	sc_in<sc_uint<25> > I_TYPE_RM;		// instruction type from memory
-	sc_in<sc_uint<25> > I_TYPE_RE;		// instruction type from exec
-	sc_out<sc_uint<25> > MUX_I_TYPE_SM;	// res instruction type
+	sc_in<sc_uint<25>> I_TYPE_RM;		// instruction type from memory
+	sc_in<sc_uint<25>> I_TYPE_RE;		// instruction type from exec
+	sc_out<sc_uint<25>> MUX_I_TYPE_SM;	// res instruction type
 
-	sc_in<sc_uint<5> > RD_RM;			// destination register number from memory
-	sc_in<sc_uint<5> > RD_SM;			// destination register number from exec
-	sc_out<sc_uint<5> > MUX_RD_SM;		// res destination register number
+	sc_in<sc_uint<5>> RD_RM;			// destination register number from memory
+	sc_in<sc_uint<5>> RD_SM;			// destination register number from exec
+	sc_out<sc_uint<5>> MUX_RD_SM;		// res destination register number
 
-	sc_in<sc_uint<8> > OPCOD_RM;		// operation code from memory
-	sc_in<sc_uint<8> > OPCOD_RE;		// operation code from exec
-	sc_out<sc_uint<8> > MUX_OPCOD_SM;	// res operation code
+	sc_in<sc_uint<8>> OPCOD_RM;		// operation code from memory
+	sc_in<sc_uint<8>> OPCOD_RE;		// operation code from exec
+	sc_out<sc_uint<8>> MUX_OPCOD_SM;	// res operation code
 
-	sc_in<sc_uint<32> > DATA_RM;		// data bus input register
-	sc_in<sc_uint<32> > DATA_SM;		// data bus input register
-	sc_out<sc_uint<32> > MUX_DATA_SM;	// res data bus input register
+	sc_in<sc_uint<32>> DATA_RM;		// data bus input register
+	sc_in<sc_uint<32>> DATA_SM;		// data bus input register
+	sc_out<sc_uint<32>> MUX_DATA_SM;	// res data bus input register
 
-	sc_in<sc_uint<32> > RES_RE;			// result of alu from exec
-	sc_in<sc_uint<32> > NEXTPC_RE;		// next instruction @ from exec
+	sc_in<sc_uint<32>> RES_RE;			// result of alu from exec
+	sc_in<sc_uint<32>> NEXTPC_RE;		// next instruction @ from exec
 	
-	sc_in<sc_uint<32> > BADVADR_RM;		// bad virtual @ register
+	sc_in<sc_uint<32>> BADVADR_RM;		// bad virtual @ register
 	sc_in<bool> BADDA_XM;				// bad data @
 	sc_in<bool> BADIA_XM;				// bad instruction @
 
 	// result of BAD register and signal between 
 	// (virtual @, badata data @ and bad instruction @)
-	sc_out<sc_uint<32> > MUX_BADVADR_SM;
+	sc_out<sc_uint<32>> MUX_BADVADR_SM;
 
 	SC_CTOR(mux_memory):
 	BUBBLE_SM("BUBBLE_SM"),

@@ -42,13 +42,13 @@ SC_MODULE(mux_ifetch)
 	sc_in<bool> BDSLOT_RI;				// delayed slot register ifetch
 	sc_out<bool> MUX_BDSLOT_SI;			// res delayed slot
 
-	sc_in<sc_uint<32> > PC_RI;          // actual PC
-	sc_in<sc_uint<32> > NEXTPC_RD;		// next pc
-	sc_out<sc_uint<32> > MUX_PC_SI;		// res pc
+	sc_in<sc_uint<32>> PC_RI;          // actual PC
+	sc_in<sc_uint<32>> NEXTPC_RD;		// next pc
+	sc_out<sc_uint<32>> MUX_PC_SI;		// res pc
 
-	sc_in<sc_uint<32> > SR_RI;			// status register register ifetch
-	sc_in<sc_uint<32> > SR_SI;			// status register signal ifetch
-	sc_out<sc_uint<32> > MUX_SR_SI;		// res status register
+	sc_in<sc_uint<32>> SR_RI;			// status register register ifetch
+	sc_in<sc_uint<32>> SR_SI;			// status register signal ifetch
+	sc_out<sc_uint<32>> MUX_SR_SI;		// res status register
 
 	SC_CTOR(mux_ifetch):
 		BUBBLE_SI("BUBBLE_SI"),

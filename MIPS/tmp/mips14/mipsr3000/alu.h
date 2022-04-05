@@ -25,33 +25,33 @@
 SC_MODULE(alu)
 {
 
-	sc_in<sc_uint<32> > 	XOPER_SE;
-	sc_in<sc_uint<32> > 	YOPER_SE;
+	sc_in<sc_uint<32>> 	XOPER_SE;
+	sc_in<sc_uint<32>> 	YOPER_SE;
 	sc_in<bool>		I_SUB_SE;
-	sc_in<sc_uint<3> >	I_OPER_SE;
+	sc_in<sc_uint<3>>	I_OPER_SE;
 	sc_in<bool>		I_RSGND_SE;
 	sc_in<bool>		I_RIGHT_SE;
-	sc_in<sc_uint<2> >	I_LOGIC_SE;
-	sc_in<sc_uint<32> >	IOPER_RD;
-	sc_in<sc_uint<32> >	Y_SE;
-	sc_in<sc_uint<32> >	X_SE;
-	sc_in<sc_uint<8> >	OPCOD_RD;
-	sc_out<sc_uint<32> >	RES_SE;
+	sc_in<sc_uint<2>>	I_LOGIC_SE;
+	sc_in<sc_uint<32>>	IOPER_RD;
+	sc_in<sc_uint<32>>	Y_SE;
+	sc_in<sc_uint<32>>	X_SE;
+	sc_in<sc_uint<8>>	OPCOD_RD;
+	sc_out<sc_uint<32>>	RES_SE;
 
-	sc_signal<sc_uint<32> >	XARITH_SE;
-	sc_signal<sc_uint<32> >	YARITH_SE;
-	sc_signal<sc_uint<32> >	RARITH_SE;
-	sc_signal<sc_uint<33> >	CARITH_SE;
+	sc_signal<sc_uint<32>>	XARITH_SE;
+	sc_signal<sc_uint<32>>	YARITH_SE;
+	sc_signal<sc_uint<32>>	RARITH_SE;
+	sc_signal<sc_uint<33>>	CARITH_SE;
 	sc_signal<bool>			OVERFLW_SE;
 	sc_signal<bool>			S_LT_T_SE;
 	sc_signal<bool>			S_LTU_T_SE;
 	sc_signal<bool>			SETBIT_SE;
-	sc_signal<sc_uint<32> >	RTEST_SE;
-	sc_signal<sc_uint<32> >	RSHIFT_SE;
-	sc_signal<sc_uint<32> >	SHIFTIN_SE;
-	sc_signal<sc_uint<32> >	SHLEFT_SE;
-	sc_signal<sc_uint<32> >	SHRIGHT_SE;
-	sc_signal<sc_uint<32> >	RLOGIC_SE;
+	sc_signal<sc_uint<32>>	RTEST_SE;
+	sc_signal<sc_uint<32>>	RSHIFT_SE;
+	sc_signal<sc_uint<32>>	SHIFTIN_SE;
+	sc_signal<sc_uint<32>>	SHLEFT_SE;
+	sc_signal<sc_uint<32>>	SHRIGHT_SE;
+	sc_signal<sc_uint<32>>	RLOGIC_SE;
 
 	SC_CTOR(alu):
 		XOPER_SE("XOPER_SE"),

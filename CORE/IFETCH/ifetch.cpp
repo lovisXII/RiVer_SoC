@@ -23,8 +23,7 @@ void ifetch::fetch_method() {
     } else {
         // stall if the memory stalls, if we can't push to dec, or have no value
         // of pc to pop from dec
-        bool stall = IC_STALL_SI.read() || IF2DEC_FULL_SI.read() ||
-                     DEC2IF_EMPTY_SI.read();
+        bool stall = IC_STALL_SI.read() || IF2DEC_FULL_SI.read() || DEC2IF_EMPTY_SI.read();
         IF2DEC_PUSH_SI.write(!stall);
         DEC2IF_POP_SI.write(!stall);
         ADR_VALID_SI.write(!DEC2IF_EMPTY_SI.read());

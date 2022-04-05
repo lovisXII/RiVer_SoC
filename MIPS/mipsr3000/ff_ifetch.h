@@ -31,8 +31,8 @@ SC_MODULE(ff_ifetch)
 {
   sc_in_clk CK_SX;                  // external clock
 
-  sc_in<sc_uint<32> > MUX_IR_SI;    // IN (mux IR output)
-  sc_out<sc_uint<32> > IR_RI;       // OUT (mux IR output)
+  sc_in<sc_uint<32>> MUX_IR_SI;    // IN (mux IR output)
+  sc_out<sc_uint<32>> IR_RI;       // OUT (mux IR output)
 
   sc_in<bool> MUX_INSTRED_SI;       // IN (mux INSTRED output)
   sc_out<bool> INSTRED_RI;          // OUT (mux INSTRED output)
@@ -40,11 +40,11 @@ SC_MODULE(ff_ifetch)
   sc_in<bool> MUX_BDSLOT_SI;        // IN (mux delayed slot output)
   sc_out<bool> BDSLOT_RI;           // OUT (mux delayed slot output)
 
-  sc_in<sc_uint<32> > MUX_PC_SI;    // IN (mux PC output)
-  sc_out<sc_uint<32> > PC_RI;       // OUT (mux PC output)
+  sc_in<sc_uint<32>> MUX_PC_SI;    // IN (mux PC output)
+  sc_out<sc_uint<32>> PC_RI;       // OUT (mux PC output)
 
-  sc_in<sc_uint<32> > MUX_SR_SI;    // IN (mux status register output)
-  sc_out<sc_uint<32> > SR_RI;       // OUT (mux status register output)
+  sc_in<sc_uint<32>> MUX_SR_SI;    // IN (mux status register output)
+  sc_out<sc_uint<32>> SR_RI;       // OUT (mux status register output)
 
   SC_CTOR(ff_ifetch):
     CK_SX("CK_SX"),

@@ -4,13 +4,13 @@
 template <int T>
 SC_MODULE(fifo)
 {
-    sc_in< sc_bv<T> > DIN_S ;
+    sc_in<sc_bv<T>> DIN_S ;
     sc_in_clk CLK ;
     sc_in<bool> PUSH_S, POP_S ;
     sc_in<bool> RESET_N ;
     
     sc_out<bool> FULL_S, EMPTY_S ;
-    sc_out< sc_bv<T> > DOUT_R ;
+    sc_out<sc_bv<T>> DOUT_R ;
 
     sc_signal<bool> fifo_v ;
     

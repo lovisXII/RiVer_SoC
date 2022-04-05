@@ -32,17 +32,17 @@ SC_MODULE(mux_decode)
 	sc_in<bool> EXCRQ_XM;
 	sc_in<bool> RESET_RX;
 
-	sc_in<sc_uint<32> > IR_RI;
-	sc_in<sc_uint<32> > IR_RD;
-	sc_out<sc_uint<32> > MUX_IR_SD;
+	sc_in<sc_uint<32>> IR_RI;
+	sc_in<sc_uint<32>> IR_RD;
+	sc_out<sc_uint<32>> MUX_IR_SD;
 
-	sc_in<sc_uint<25> > I_TYPE_SD;
-	sc_in<sc_uint<25> > I_TYPE_RD;
-	sc_out<sc_uint<25> > MUX_I_TYPE_SD;
+	sc_in<sc_uint<25>> I_TYPE_SD;
+	sc_in<sc_uint<25>> I_TYPE_RD;
+	sc_out<sc_uint<25>> MUX_I_TYPE_SD;
 
-	sc_in<sc_uint<8> > OPCOD_SD;
-	sc_in<sc_uint<8> > OPCOD_RD;
-	sc_out<sc_uint<8> > MUX_OPCOD_SD;
+	sc_in<sc_uint<8>> OPCOD_SD;
+	sc_in<sc_uint<8>> OPCOD_RD;
+	sc_out<sc_uint<8>> MUX_OPCOD_SD;
 
 	sc_in<bool> BDSLOT_RI;
 	sc_in<bool> BDSLOT_RD;
@@ -52,21 +52,21 @@ SC_MODULE(mux_decode)
 	sc_in<bool> SWAP_RD;
 	sc_out<bool> MUX_SWAP_SD;
 
-	sc_in<sc_uint<5> > RS_SD;
-	sc_in<sc_uint<5> > RS_RD;
-	sc_out<sc_uint<5> > MUX_RS_SD;
+	sc_in<sc_uint<5>> RS_SD;
+	sc_in<sc_uint<5>> RS_RD;
+	sc_out<sc_uint<5>> MUX_RS_SD;
 
-	sc_in<sc_uint<5> > RT_SD;
-	sc_in<sc_uint<5> > RT_RD;
-	sc_out<sc_uint<5> > MUX_RT_SD;
+	sc_in<sc_uint<5>> RT_SD;
+	sc_in<sc_uint<5>> RT_RD;
+	sc_out<sc_uint<5>> MUX_RT_SD;
 
-	sc_in<sc_uint<5> > RD_SD;
-	sc_in<sc_uint<5> > RD_RD;
-	sc_out<sc_uint<5> > MUX_RD_SD;
+	sc_in<sc_uint<5>> RD_SD;
+	sc_in<sc_uint<5>> RD_RD;
+	sc_out<sc_uint<5>> MUX_RD_SD;
 
-	sc_in<sc_uint<5> > COP0D_SD;
-	sc_in<sc_uint<5> > COP0D_RD;
-	sc_out<sc_uint<5> > MUX_COP0D_SD;
+	sc_in<sc_uint<5>> COP0D_SD;
+	sc_in<sc_uint<5>> COP0D_RD;
+	sc_out<sc_uint<5>> MUX_COP0D_SD;
 
 	sc_in<bool> ILLGINS_XD;
 	sc_in<bool> ILLGINS_RD;
@@ -76,30 +76,30 @@ SC_MODULE(mux_decode)
 	sc_in<bool> C0UNUSE_RD;
 	sc_out<bool> MUX_C0UNUSE_SD;
 
-	sc_in<sc_uint<32> > NEXTPC_XX;
-	sc_in<sc_uint<32> > NEXTPC_SD;
-	sc_in<sc_uint<32> > NEXTPC_RD;
-	sc_out<sc_uint<32> > MUX_NEXTPC_SD;
+	sc_in<sc_uint<32>> NEXTPC_XX;
+	sc_in<sc_uint<32>> NEXTPC_SD;
+	sc_in<sc_uint<32>> NEXTPC_RD;
+	sc_out<sc_uint<32>> MUX_NEXTPC_SD;
 
-	sc_in<sc_uint<32> > PC_RI;
-	sc_in<sc_uint<32> > PC_RD;
-	sc_out<sc_uint<32> > MUX_PC_SD;
+	sc_in<sc_uint<32>> PC_RI;
+	sc_in<sc_uint<32>> PC_RD;
+	sc_out<sc_uint<32>> MUX_PC_SD;
 
-	sc_in<sc_uint<32> > SR_RI;
-	sc_in<sc_uint<32> > SR_RD;
-	sc_out<sc_uint<32> > MUX_SR_SD;
+	sc_in<sc_uint<32>> SR_RI;
+	sc_in<sc_uint<32>> SR_RD;
+	sc_out<sc_uint<32>> MUX_SR_SD;
 
-	sc_in<sc_uint<32> > X_SE;
-	sc_in<sc_uint<32> > SOPER_SD;
-	sc_out<sc_uint<32> > MUX_SOPER_SD;
+	sc_in<sc_uint<32>> X_SE;
+	sc_in<sc_uint<32>> SOPER_SD;
+	sc_out<sc_uint<32>> MUX_SOPER_SD;
 
-	sc_in<sc_uint<32> > Y_SE;
-	sc_in<sc_uint<32> > TOPER_SD;
-	sc_out<sc_uint<32> > MUX_TOPER_SD;
+	sc_in<sc_uint<32>> Y_SE;
+	sc_in<sc_uint<32>> TOPER_SD;
+	sc_out<sc_uint<32>> MUX_TOPER_SD;
 
-	sc_in<sc_uint<32> > IOPER_SD;
-	sc_in<sc_uint<32> > IOPER_RD;
-	sc_out<sc_uint<32> > MUX_IOPER_SD;
+	sc_in<sc_uint<32>> IOPER_SD;
+	sc_in<sc_uint<32>> IOPER_RD;
+	sc_out<sc_uint<32>> MUX_IOPER_SD;
 
 	SC_CTOR(mux_decode):
 	BUBBLE_SD("BUBBLE_SD"),

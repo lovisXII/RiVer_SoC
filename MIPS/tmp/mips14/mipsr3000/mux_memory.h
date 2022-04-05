@@ -28,35 +28,35 @@ SC_MODULE(mux_memory)
 	sc_in<bool> HOLD_SM;
 	sc_in<bool> KEEP_SM;
 
-	sc_in<sc_uint<32> > IR_RE;
-	sc_in<sc_uint<32> > IR_RM;
-	sc_out<sc_uint<32> > MUX_IR_SM;
+	sc_in<sc_uint<32>> IR_RE;
+	sc_in<sc_uint<32>> IR_RM;
+	sc_out<sc_uint<32>> MUX_IR_SM;
 
 	sc_in<bool> DATARED_SM;
 	sc_out<bool> MUX_DATARED_SM;
 
-	sc_in<sc_uint<25> > I_TYPE_RM;
-	sc_in<sc_uint<25> > I_TYPE_RE;
-	sc_out<sc_uint<25> > MUX_I_TYPE_SM;
+	sc_in<sc_uint<25>> I_TYPE_RM;
+	sc_in<sc_uint<25>> I_TYPE_RE;
+	sc_out<sc_uint<25>> MUX_I_TYPE_SM;
 
-	sc_in<sc_uint<5> > RD_RM;
-	sc_in<sc_uint<5> > RD_SM;
-	sc_out<sc_uint<5> > MUX_RD_SM;
+	sc_in<sc_uint<5>> RD_RM;
+	sc_in<sc_uint<5>> RD_SM;
+	sc_out<sc_uint<5>> MUX_RD_SM;
 
-	sc_in<sc_uint<8> > OPCOD_RM;
-	sc_in<sc_uint<8> > OPCOD_RE;
-	sc_out<sc_uint<8> > MUX_OPCOD_SM;
+	sc_in<sc_uint<8>> OPCOD_RM;
+	sc_in<sc_uint<8>> OPCOD_RE;
+	sc_out<sc_uint<8>> MUX_OPCOD_SM;
 
-	sc_in<sc_uint<32> > DATA_RM;
-	sc_in<sc_uint<32> > DATA_SM;
-	sc_out<sc_uint<32> > MUX_DATA_SM;
+	sc_in<sc_uint<32>> DATA_RM;
+	sc_in<sc_uint<32>> DATA_SM;
+	sc_out<sc_uint<32>> MUX_DATA_SM;
 
-	sc_in<sc_uint<32> > RES_RE;
-	sc_in<sc_uint<32> > NEXTPC_RE;
-	sc_in<sc_uint<32> > BADVADR_RM;
+	sc_in<sc_uint<32>> RES_RE;
+	sc_in<sc_uint<32>> NEXTPC_RE;
+	sc_in<sc_uint<32>> BADVADR_RM;
 	sc_in<bool> BADDA_XM;
 	sc_in<bool> BADIA_XM;
-	sc_out<sc_uint<32> > MUX_BADVADR_SM;
+	sc_out<sc_uint<32>> MUX_BADVADR_SM;
 
 	SC_CTOR(mux_memory):
 	BUBBLE_SM("BUBBLE_SM"),

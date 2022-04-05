@@ -63,35 +63,35 @@ SC_MODULE(mipsr3000)
 {
     sc_in<bool>			CK;		// external clock
     sc_in<bool>			RESET_N;	// external reset
-    sc_in<sc_uint<6> >		IT_N;		// external interrupts
+    sc_in<sc_uint<6>>		IT_N;		// external interrupts
 
-    sc_out<sc_uint<32> >	I_A;		// instruction address
+    sc_out<sc_uint<32>>	I_A;		// instruction address
     sc_out<bool>		I_FTCH;		// instruction fetch
     sc_out<bool>		I_ACK;		// inst. fetch acknow.
     sc_in<bool>			I_BERR_N;	// inst. bus error
     sc_in<bool>			I_FRZ;		// inst. fetch pending
-    sc_in<sc_uint<32> >		I;			// instruction bus
+    sc_in<sc_uint<32>>		I;			// instruction bus
 
-    sc_out<sc_uint<32> >	D_A;		// data address
+    sc_out<sc_uint<32>>	D_A;		// data address
     sc_out<bool>		D_RQ;		// data access request
     sc_out<bool>		D_LOCK;		// lock memory access
-    sc_out<sc_uint<2> >		D_ATYPE;	// data access type
+    sc_out<sc_uint<2>>		D_ATYPE;	// data access type
     sc_out<bool>		D_ACK;		// data fetch acknow.
     sc_in<bool>			D_BERR_N;	// data bus error
     sc_in<bool>			D_FRZ;		// data access pending
-    sc_in<sc_uint<32> >		D_IN;		// data bus (input )
-    sc_out<sc_uint<32> >	D_OUT;		// data bus (output)
+    sc_in<sc_uint<32>>		D_IN;		// data bus (input )
+    sc_out<sc_uint<32>>	D_OUT;		// data bus (output)
 
 	// list of signals
 
 	sc_signal<bool> CK_SX;  				// internal clock
-	sc_signal<sc_uint<25> > I_TYPE_SD;  	// instruction type
-	sc_signal<sc_uint<25> > MUX_I_TYPE_SD;  	// instruction type
-	sc_signal<sc_uint<25> > I_TYPE_RD;  	// instruction type
-	sc_signal<sc_uint<25> > MUX_I_TYPE_SE;  	// instruction type
-	sc_signal<sc_uint<25> > I_TYPE_RE;  	// instruction type
-	sc_signal<sc_uint<25> > MUX_I_TYPE_SM;  	// instruction type
-	sc_signal<sc_uint<25> > I_TYPE_RM;  	// instruction type
+	sc_signal<sc_uint<25>> I_TYPE_SD;  	// instruction type
+	sc_signal<sc_uint<25>> MUX_I_TYPE_SD;  	// instruction type
+	sc_signal<sc_uint<25>> I_TYPE_RD;  	// instruction type
+	sc_signal<sc_uint<25>> MUX_I_TYPE_SE;  	// instruction type
+	sc_signal<sc_uint<25>> I_TYPE_RE;  	// instruction type
+	sc_signal<sc_uint<25>> MUX_I_TYPE_SM;  	// instruction type
+	sc_signal<sc_uint<25>> I_TYPE_RM;  	// instruction type
 	sc_signal<bool> I_RFMT_SD;  			// r format
 	sc_signal<bool> I_IFMT_SD; 				// i format
 	sc_signal<bool> I_JFMT_SD;  			// j format
@@ -108,8 +108,8 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> I_MPDC_SM;  			// mem produces res
 	sc_signal<bool> I_OSGND_SD; 	 		// signed operands
 	sc_signal<bool> I_RSGND_SE;  			// signed result
-	sc_signal<sc_uint<3> > I_OPER_SE;  		// alu operation
-	sc_signal<sc_uint<2> > I_LOGIC_SE;  	// logic operation
+	sc_signal<sc_uint<3>> I_OPER_SE;  		// alu operation
+	sc_signal<sc_uint<2>> I_LOGIC_SE;  	// logic operation
 	sc_signal<bool> I_SUB_SE;  				// subtract
 	sc_signal<bool> I_RIGHT_SE;  			// shift right
 	sc_signal<bool> I_OVRF_SE;  			// detect overflow
@@ -125,14 +125,14 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> I_WRITE_SE;  			// write into reg.
 	sc_signal<bool> I_WRITE_SM;  			// write into reg.
 	sc_signal<bool> I_WRITE_SW;  			// write into reg.
-	sc_signal<sc_uint<8> > COP0_SD;  		// cop0 extension
-	sc_signal<sc_uint<8> > OPCOD_SD;  		// operation code
-	sc_signal<sc_uint<8> > MUX_OPCOD_SD;  		// operation code
-	sc_signal<sc_uint<8> > OPCOD_RD;  		// operation code
-	sc_signal<sc_uint<8> > MUX_OPCOD_SE;  		// operation code
-	sc_signal<sc_uint<8> > OPCOD_RE;  		// operation code
-	sc_signal<sc_uint<8> > MUX_OPCOD_SM;  		// operation code
-	sc_signal<sc_uint<8> > OPCOD_RM;  		// operation code
+	sc_signal<sc_uint<8>> COP0_SD;  		// cop0 extension
+	sc_signal<sc_uint<8>> OPCOD_SD;  		// operation code
+	sc_signal<sc_uint<8>> MUX_OPCOD_SD;  		// operation code
+	sc_signal<sc_uint<8>> OPCOD_RD;  		// operation code
+	sc_signal<sc_uint<8>> MUX_OPCOD_SE;  		// operation code
+	sc_signal<sc_uint<8>> OPCOD_RE;  		// operation code
+	sc_signal<sc_uint<8>> MUX_OPCOD_SM;  		// operation code
+	sc_signal<sc_uint<8>> OPCOD_RM;  		// operation code
 	sc_signal<bool> SWAP_SD;  				// swap instruction
 	sc_signal<bool> MUX_SWAP_SD;  				// swap instruction
 	sc_signal<bool> SWAP_RD;  				// swap instruction
@@ -142,79 +142,79 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> MUX_COPYCAP_SE;  			// copying capability
 	sc_signal<bool> COPYCAP_RE;  			// copying capability
 	sc_signal<bool> FSTSWAP_SM;  			// first swap access
-	sc_signal<sc_uint<5> > RS_SD;  			// source reg nbr
-	sc_signal<sc_uint<5> > RT_SD;  			// source reg nbr
-	sc_signal<sc_uint<5> > MUX_RT_SD;  			// source reg nbr reg.
-	sc_signal<sc_uint<5> > RT_RD;  			// source reg nbr reg.
-	sc_signal<sc_uint<5> > MUX_RS_SD;  			// source reg nbr reg.
-	sc_signal<sc_uint<5> > RS_RD;  			// source reg nbr reg.
-	sc_signal<sc_uint<32> > MUX_IR_SI;  		// instruction register
-	sc_signal<sc_uint<32> > IR_RI;  		// instruction register
-	sc_signal<sc_uint<32> > MUX_IR_SD;  		// instruction register
-	sc_signal<sc_uint<32> > IR_RD;  		// instruction register
-	sc_signal<sc_uint<32> > MUX_IR_SE;  		// instruction register
-	sc_signal<sc_uint<32> > IR_RE;  		// instruction register
-	sc_signal<sc_uint<32> > MUX_IR_SM;  		// instruction register
-	sc_signal<sc_uint<32> > IR_RM;  		// instruction register
+	sc_signal<sc_uint<5>> RS_SD;  			// source reg nbr
+	sc_signal<sc_uint<5>> RT_SD;  			// source reg nbr
+	sc_signal<sc_uint<5>> MUX_RT_SD;  			// source reg nbr reg.
+	sc_signal<sc_uint<5>> RT_RD;  			// source reg nbr reg.
+	sc_signal<sc_uint<5>> MUX_RS_SD;  			// source reg nbr reg.
+	sc_signal<sc_uint<5>> RS_RD;  			// source reg nbr reg.
+	sc_signal<sc_uint<32>> MUX_IR_SI;  		// instruction register
+	sc_signal<sc_uint<32>> IR_RI;  		// instruction register
+	sc_signal<sc_uint<32>> MUX_IR_SD;  		// instruction register
+	sc_signal<sc_uint<32>> IR_RD;  		// instruction register
+	sc_signal<sc_uint<32>> MUX_IR_SE;  		// instruction register
+	sc_signal<sc_uint<32>> IR_RE;  		// instruction register
+	sc_signal<sc_uint<32>> MUX_IR_SM;  		// instruction register
+	sc_signal<sc_uint<32>> IR_RM;  		// instruction register
 	sc_signal<bool> INSTRED_RI;  			// new inst. fetched
 	sc_signal<bool> MUX_INSTRED_SI;  			// new inst. fetched
-	sc_signal<sc_uint<32> > NEXTPC_SD;  	// next instr. address
-	sc_signal<sc_uint<32> > NEXTPC_XX;  	// next instr. adr (hw)
-	sc_signal<sc_uint<32> > MUX_NEXTPC_SD;  	// next instr. address
-	sc_signal<sc_uint<32> > NEXTPC_RD;  	// next instr. address
-	sc_signal<sc_uint<32> > MUX_NEXTPC_SE;  	// next instr. address
-	sc_signal<sc_uint<32> > NEXTPC_RE;  	// next instr. address
-	sc_signal<sc_uint<32> > MUX_PC_SI;  		// instruction address
-	sc_signal<sc_uint<32> > PC_RI;  		// instruction address
-	sc_signal<sc_uint<32> > MUX_PC_SD;  		// instruction address
-	sc_signal<sc_uint<32> > PC_RD;  		// instruction address
-	sc_signal<sc_uint<32> > MUX_PC_SE;  		// instruction address
-	sc_signal<sc_uint<32> > PC_RE;  		// instruction address
-	sc_signal<sc_uint<32> > MUX_REDOPC_SE;  	// old inst. address
-	sc_signal<sc_uint<32> > REDOPC_RE;  	// old inst. address
+	sc_signal<sc_uint<32>> NEXTPC_SD;  	// next instr. address
+	sc_signal<sc_uint<32>> NEXTPC_XX;  	// next instr. adr (hw)
+	sc_signal<sc_uint<32>> MUX_NEXTPC_SD;  	// next instr. address
+	sc_signal<sc_uint<32>> NEXTPC_RD;  	// next instr. address
+	sc_signal<sc_uint<32>> MUX_NEXTPC_SE;  	// next instr. address
+	sc_signal<sc_uint<32>> NEXTPC_RE;  	// next instr. address
+	sc_signal<sc_uint<32>> MUX_PC_SI;  		// instruction address
+	sc_signal<sc_uint<32>> PC_RI;  		// instruction address
+	sc_signal<sc_uint<32>> MUX_PC_SD;  		// instruction address
+	sc_signal<sc_uint<32>> PC_RD;  		// instruction address
+	sc_signal<sc_uint<32>> MUX_PC_SE;  		// instruction address
+	sc_signal<sc_uint<32>> PC_RE;  		// instruction address
+	sc_signal<sc_uint<32>> MUX_REDOPC_SE;  	// old inst. address
+	sc_signal<sc_uint<32>> REDOPC_RE;  	// old inst. address
 	sc_signal<bool> EXCRQ_XM;  		// exception request 
-	sc_signal<sc_uint<2> > COPERR_XM;  		// coprocessor's #
-	sc_signal<sc_uint<4> > EXCCODE_XM;  	// exception code
-	sc_signal<sc_uint<32> > CAUSE_XM;  		// exception cause (exp)
-	sc_signal<sc_uint<32> > CAUSE_XX;  		// exception cause (int)
-	sc_signal<sc_uint<32> > CAUSE_SM;  		// exception cause (sw)
-	sc_signal<sc_uint<32> > CAUSE_SX;  		// exception cause (hw)
-	sc_signal<sc_uint<32> > CAUSE_RX;  		// cause register
+	sc_signal<sc_uint<2>> COPERR_XM;  		// coprocessor's #
+	sc_signal<sc_uint<4>> EXCCODE_XM;  	// exception code
+	sc_signal<sc_uint<32>> CAUSE_XM;  		// exception cause (exp)
+	sc_signal<sc_uint<32>> CAUSE_XX;  		// exception cause (int)
+	sc_signal<sc_uint<32>> CAUSE_SM;  		// exception cause (sw)
+	sc_signal<sc_uint<32>> CAUSE_SX;  		// exception cause (hw)
+	sc_signal<sc_uint<32>> CAUSE_RX;  		// cause register
 	sc_signal<bool> WCAUSE_SM;  			// excp cause wen (sw)
-	sc_signal<sc_uint<32> > RSTORSR_SM;  	// next ins sts (rfe)
-	sc_signal<sc_uint<32> > NEXTSR_SM;  	// next ins sts (sw)
-	sc_signal<sc_uint<32> > NEXTSR_XX;  	// next ins sts (hw it)
-	sc_signal<sc_uint<32> > NEXTSR_RX;  	// next ins sts reg.
-	sc_signal<sc_uint<32> > SR_SI;  		// status register
-	sc_signal<sc_uint<32> > MUX_SR_SI; 			// status register
-	sc_signal<sc_uint<32> > SR_RI; 			// status register
-	sc_signal<sc_uint<32> > MUX_SR_SD;  		// status register
-	sc_signal<sc_uint<32> > SR_RD;  		// status register
-	sc_signal<sc_uint<32> > MUX_SR_SE;  		// status register
-	sc_signal<sc_uint<32> > SR_RE;  		// status register
+	sc_signal<sc_uint<32>> RSTORSR_SM;  	// next ins sts (rfe)
+	sc_signal<sc_uint<32>> NEXTSR_SM;  	// next ins sts (sw)
+	sc_signal<sc_uint<32>> NEXTSR_XX;  	// next ins sts (hw it)
+	sc_signal<sc_uint<32>> NEXTSR_RX;  	// next ins sts reg.
+	sc_signal<sc_uint<32>> SR_SI;  		// status register
+	sc_signal<sc_uint<32>> MUX_SR_SI; 			// status register
+	sc_signal<sc_uint<32>> SR_RI; 			// status register
+	sc_signal<sc_uint<32>> MUX_SR_SD;  		// status register
+	sc_signal<sc_uint<32>> SR_RD;  		// status register
+	sc_signal<sc_uint<32>> MUX_SR_SE;  		// status register
+	sc_signal<sc_uint<32>> SR_RE;  		// status register
 	sc_signal<bool> WSR_SM;  				// nextsr's write en.
 	sc_signal<bool> WSR_XX;  				// nextsr's write en.
-	sc_signal<sc_uint<32> > S_SD;  			// s from reg. bank
-	sc_signal<sc_uint<32> > SOPER_SD;  		// effective s oper.
-	sc_signal<sc_uint<32> > MUX_SOPER_SD;  		// eff. s oper. reg.
-	sc_signal<sc_uint<32> > SOPER_RD;  		// eff. s oper. reg.
-	sc_signal<sc_uint<32> > X_SE;  			// x operand
-	sc_signal<sc_uint<32> > XARITH_SE;  	// x oper. for arithm.
-	sc_signal<sc_uint<32> > T_SD;  			// t from reg. bank
-	sc_signal<sc_uint<32> > TOPER_SD;  		// effective t oper.
-	sc_signal<sc_uint<32> > MUX_TOPER_SD;  		// eff. t oper. reg.
-	sc_signal<sc_uint<32> > TOPER_RD;  		// eff. t oper. reg.
-	sc_signal<sc_uint<32> > Y_SE;  			// y operand
-	sc_signal<sc_uint<32> > YARITH_SE;  	// y oper. for arithm.
-	sc_signal<sc_uint<32> > COP0OP_SD;  	// cop 0 source opr.
-	sc_signal<sc_uint<5> > COP0D_SD;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<5> > MUX_COP0D_SD;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<5> > COP0D_RD;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<5> > MUX_COP0D_SE;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<5> > COP0D_RE;  		// cop 0 dest. reg. nbr
-	sc_signal<sc_uint<32> > IOPER_SD;  		// eff. immediate oper.
-	sc_signal<sc_uint<32> > MUX_IOPER_SD;  		// eff. immediate oper.
-	sc_signal<sc_uint<32> > IOPER_RD;  		// eff. immediate oper.
+	sc_signal<sc_uint<32>> S_SD;  			// s from reg. bank
+	sc_signal<sc_uint<32>> SOPER_SD;  		// effective s oper.
+	sc_signal<sc_uint<32>> MUX_SOPER_SD;  		// eff. s oper. reg.
+	sc_signal<sc_uint<32>> SOPER_RD;  		// eff. s oper. reg.
+	sc_signal<sc_uint<32>> X_SE;  			// x operand
+	sc_signal<sc_uint<32>> XARITH_SE;  	// x oper. for arithm.
+	sc_signal<sc_uint<32>> T_SD;  			// t from reg. bank
+	sc_signal<sc_uint<32>> TOPER_SD;  		// effective t oper.
+	sc_signal<sc_uint<32>> MUX_TOPER_SD;  		// eff. t oper. reg.
+	sc_signal<sc_uint<32>> TOPER_RD;  		// eff. t oper. reg.
+	sc_signal<sc_uint<32>> Y_SE;  			// y operand
+	sc_signal<sc_uint<32>> YARITH_SE;  	// y oper. for arithm.
+	sc_signal<sc_uint<32>> COP0OP_SD;  	// cop 0 source opr.
+	sc_signal<sc_uint<5>> COP0D_SD;  		// cop 0 dest. reg. nbr
+	sc_signal<sc_uint<5>> MUX_COP0D_SD;  		// cop 0 dest. reg. nbr
+	sc_signal<sc_uint<5>> COP0D_RD;  		// cop 0 dest. reg. nbr
+	sc_signal<sc_uint<5>> MUX_COP0D_SE;  		// cop 0 dest. reg. nbr
+	sc_signal<sc_uint<5>> COP0D_RE;  		// cop 0 dest. reg. nbr
+	sc_signal<sc_uint<32>> IOPER_SD;  		// eff. immediate oper.
+	sc_signal<sc_uint<32>> MUX_IOPER_SD;  		// eff. immediate oper.
+	sc_signal<sc_uint<32>> IOPER_RD;  		// eff. immediate oper.
 	sc_signal<bool> SLEEP_SD;  				// sleep inst. stall
 	sc_signal<bool> HAZARDS_SD;  			// hazards
 	sc_signal<bool> HAZARDS_SE;  			// hazards
@@ -263,54 +263,54 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> SHIFT_SW;  				// shift new inst 
 	sc_signal<bool> LOAD_SW;  				// load a new data 
 	sc_signal<bool> KEEP_SW;  				// keep the data 
-	sc_signal<sc_uint<32> > WREG_SW;  		// integer reg wen
+	sc_signal<sc_uint<32>> WREG_SW;  		// integer reg wen
 	sc_signal<bool> WLO_SW;  				// low reg's write en
-	sc_signal<sc_uint<32> > MUX_LO_SW;  		// low register
-	sc_signal<sc_uint<32> > LO_RW;  		// low register
+	sc_signal<sc_uint<32>> MUX_LO_SW;  		// low register
+	sc_signal<sc_uint<32>> LO_RW;  		// low register
 	sc_signal<bool> WHI_SW;  				// high reg's write en
-	sc_signal<sc_uint<32> > MUX_HI_SW;  		// high register
-	sc_signal<sc_uint<32> > HI_RW;  		// high register
-	sc_signal<sc_uint<5> > RD_SD;  			// destination reg #
-	sc_signal<sc_uint<5> > MUX_RD_SD;  			// destination reg #
-	sc_signal<sc_uint<5> > RD_RD;  			// destination reg #
-	sc_signal<sc_uint<5> > MUX_RD_SE;  			// destination reg #
-	sc_signal<sc_uint<5> > RD_RE;  			// destination reg #
-	sc_signal<sc_uint<5> > RD_SM;  			// destination reg #
-	sc_signal<sc_uint<5> > MUX_RD_SM;  			// destination reg #
-	sc_signal<sc_uint<5> > RD_RM;  			// destination reg #
+	sc_signal<sc_uint<32>> MUX_HI_SW;  		// high register
+	sc_signal<sc_uint<32>> HI_RW;  		// high register
+	sc_signal<sc_uint<5>> RD_SD;  			// destination reg #
+	sc_signal<sc_uint<5>> MUX_RD_SD;  			// destination reg #
+	sc_signal<sc_uint<5>> RD_RD;  			// destination reg #
+	sc_signal<sc_uint<5>> MUX_RD_SE;  			// destination reg #
+	sc_signal<sc_uint<5>> RD_RE;  			// destination reg #
+	sc_signal<sc_uint<5>> RD_SM;  			// destination reg #
+	sc_signal<sc_uint<5>> MUX_RD_SM;  			// destination reg #
+	sc_signal<sc_uint<5>> RD_RM;  			// destination reg #
 
-	sc_signal<sc_uint<32> > XOPER_SE;  		// effective x operand
-	sc_signal<sc_uint<32> > YOPER_SE;  		// effective y operand
+	sc_signal<sc_uint<32>> XOPER_SE;  		// effective x operand
+	sc_signal<sc_uint<32>> YOPER_SE;  		// effective y operand
 
-	sc_signal<sc_uint<32> > RES_SE;  		// result out of alu 
-	sc_signal<sc_uint<32> > MUX_RES_SE;  		// result out of alu 
-	sc_signal<sc_uint<32> > RES_RE;  		// result out of alu 
+	sc_signal<sc_uint<32>> RES_SE;  		// result out of alu 
+	sc_signal<sc_uint<32>> MUX_RES_SE;  		// result out of alu 
+	sc_signal<sc_uint<32>> RES_RE;  		// result out of alu 
 	sc_signal<bool> OVERFLW_SE;  			// overflow out of alu
-	sc_signal<sc_uint<32> > MUX_WDATA_SE;  		// data bus output reg.
-	sc_signal<sc_uint<32> > WDATA_RE;  		// data bus output reg.
+	sc_signal<sc_uint<32>> MUX_WDATA_SE;  		// data bus output reg.
+	sc_signal<sc_uint<32>> WDATA_RE;  		// data bus output reg.
 	sc_signal<bool> DACCESS_SM;  			// data memory access
 	sc_signal<bool> DATARED_SM;  			// read access
 	sc_signal<bool> MUX_DATARED_SM;  			// read access
 	sc_signal<bool> DATARED_RM;  			// read access
 	sc_signal<bool> WRITE_SM;  				// write into storage
 	sc_signal<bool> DLOCK_SM;  				// lock data access
-	sc_signal<sc_uint<4> > BYTSEL_SM;  		// byte select for rw
-	sc_signal<sc_uint<24> > BSEXT_SM;  		// data sign ext byte
-	sc_signal<sc_uint<16> > HSEXT_SM;  		// data sign ext half w
-	sc_signal<sc_uint<32> > REDDAT_SM;  	// aligned data
-	sc_signal<sc_uint<32> > DATA_SM;  		// data bus / res
-	sc_signal<sc_uint<32> > MUX_DATA_SM;  		// data bus input reg.
-	sc_signal<sc_uint<32> > DATA_RM;  		// data bus input reg.
-	sc_signal<sc_uint<32> > MUX_BADVADR_SM;  	// bad virtual adr reg
-	sc_signal<sc_uint<32> > BADVADR_RM;  	// bad virtual adr reg
+	sc_signal<sc_uint<4>> BYTSEL_SM;  		// byte select for rw
+	sc_signal<sc_uint<24>> BSEXT_SM;  		// data sign ext byte
+	sc_signal<sc_uint<16>> HSEXT_SM;  		// data sign ext half w
+	sc_signal<sc_uint<32>> REDDAT_SM;  	// aligned data
+	sc_signal<sc_uint<32>> DATA_SM;  		// data bus / res
+	sc_signal<sc_uint<32>> MUX_DATA_SM;  		// data bus input reg.
+	sc_signal<sc_uint<32>> DATA_RM;  		// data bus input reg.
+	sc_signal<sc_uint<32>> MUX_BADVADR_SM;  	// bad virtual adr reg
+	sc_signal<sc_uint<32>> BADVADR_RM;  	// bad virtual adr reg
 	sc_signal<bool> BADIA_XM;  				// bad inst adr
 	sc_signal<bool> BADDA_XM;  				// bad data adr
 	sc_signal<bool> GLBMSK_XX;  			// global    it mask
-	sc_signal<sc_uint<8> > ITMASK_XX;  		// individual it mask
-	sc_signal<sc_uint<2> > SWINT_XM;  		// sw interrupt (mtc0)
-	sc_signal<sc_uint<2> > SWINTRQ_XM;  	// sw interrupt request
-	sc_signal<sc_uint<6> > IT_XX;  			// external interrupts
-	sc_signal<sc_uint<6> > HWINTRQ_XX;  	// hw interrupt request
+	sc_signal<sc_uint<8>> ITMASK_XX;  		// individual it mask
+	sc_signal<sc_uint<2>> SWINT_XM;  		// sw interrupt (mtc0)
+	sc_signal<sc_uint<2>> SWINTRQ_XM;  	// sw interrupt request
+	sc_signal<sc_uint<6>> IT_XX;  			// external interrupts
+	sc_signal<sc_uint<6>> HWINTRQ_XX;  	// hw interrupt request
 	sc_signal<bool> INTRQ_XX;  				// interrupt request
 	sc_signal<bool> BDSLOT_XI;  			// branch delayed slot
 	sc_signal<bool> MUX_BDSLOT_SI;  			// branch delayed slot
@@ -356,16 +356,16 @@ SC_MODULE(mipsr3000)
 	sc_signal<bool> EARLYEX_XM;  			// early exceptions
 	sc_signal<bool> LATEEX_XM;  			// late  exceptions
 
-	sc_signal<sc_uint<32> > MUX_CAUSE_SX;  		//
-	sc_signal<sc_uint<32> > MUX_EPC_SX;  		//
-	sc_signal<sc_uint<32> > MUX_NEXTSR_SX;  		//
+	sc_signal<sc_uint<32>> MUX_CAUSE_SX;  		//
+	sc_signal<sc_uint<32>> MUX_EPC_SX;  		//
+	sc_signal<sc_uint<32>> MUX_NEXTSR_SX;  		//
 	sc_signal<bool> MUX_RESET_SX;  		//
 	sc_signal<bool> BOOTEV_XX;  			// bootstrap exc vect
-	sc_signal<sc_uint<32> > EPC_XX;  		// exc pg counter
-	sc_signal<sc_uint<32> > EPC_XM;  		// exc pg counter
+	sc_signal<sc_uint<32>> EPC_XX;  		// exc pg counter
+	sc_signal<sc_uint<32>> EPC_XM;  		// exc pg counter
 	sc_signal<bool> WEPC_XX;  				// exc pg cntr write en
 	sc_signal<bool> WEPC_XM;  				// exc pg cntr write en
-	sc_signal<sc_uint<32> > EPC_RX;  		// exc pg counter reg
+	sc_signal<sc_uint<32>> EPC_RX;  		// exc pg counter reg
 	sc_signal<bool> RESET_RX;  				// synchronize
 
 	ifetch *ifetch1;

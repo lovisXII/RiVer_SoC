@@ -17,107 +17,107 @@ SC_MODULE(core)
     //IFETCH-DEC interface
         // DEC2IF : 
 
-    sc_signal< bool >           DEC2IF_POP ; 
-    sc_signal< bool >           DEC2IF_EMPTY ;
-    sc_signal< sc_bv<32> >      DEC2IF_PC ;
+    sc_signal<bool>           DEC2IF_POP ; 
+    sc_signal<bool>           DEC2IF_EMPTY ;
+    sc_signal<sc_bv<32>>      DEC2IF_PC ;
 
         // IF2DEC :
     
-    sc_signal< sc_bv<32> >      IF_IR ;
-    sc_signal< bool >           IF2DEC_EMPTY ;
-    sc_signal< bool >           IF2DEC_POP ; 
-    sc_signal< bool >           IF2DEC_FLUSH ; 
+    sc_signal<sc_bv<32>>      IF_IR ;
+    sc_signal<bool>           IF2DEC_EMPTY ;
+    sc_signal<bool>           IF2DEC_POP ; 
+    sc_signal<bool>           IF2DEC_FLUSH ; 
 
     //DEC-EXE interface
     
-    sc_signal< sc_uint<32> >    EXE_OP1 ;
-    sc_signal< sc_uint<32> >    EXE_OP2 ;
-    sc_signal< sc_uint<2> >     EXE_CMD ;
-    sc_signal< bool >           EXE_NEG_OP2 ;
-    sc_signal< bool >           EXE_WB ;
-    sc_signal< bool >           EXE_SELECT_SHIFT ;
+    sc_signal<sc_uint<32>>    EXE_OP1 ;
+    sc_signal<sc_uint<32>>    EXE_OP2 ;
+    sc_signal<sc_uint<2>>     EXE_CMD ;
+    sc_signal<bool>           EXE_NEG_OP2 ;
+    sc_signal<bool>           EXE_WB ;
+    sc_signal<bool>           EXE_SELECT_SHIFT ;
     
-    sc_signal< sc_uint<32> >    EXE_MEM_DATA ;
-    sc_signal< bool>            EXE_MEM_LOAD ;
-    sc_signal< bool >           EXE_MEM_STORE ;
-    sc_signal< bool >           EXE_MEM_SIGN_EXTEND ; 
-    sc_signal< sc_uint<2> >     EXE_MEM_SIZE ;
-    sc_signal< bool >           EXE_SLT ;
-    sc_signal< bool >           EXE_SLTU ;
+    sc_signal<sc_uint<32>>    EXE_MEM_DATA ;
+    sc_signal<bool>            EXE_MEM_LOAD ;
+    sc_signal<bool>           EXE_MEM_STORE ;
+    sc_signal<bool>           EXE_MEM_SIGN_EXTEND ; 
+    sc_signal<sc_uint<2>>     EXE_MEM_SIZE ;
+    sc_signal<bool>           EXE_SLT ;
+    sc_signal<bool>           EXE_SLTU ;
 
-    sc_signal< bool >           DEC2EXE_POP ;
-    sc_signal< bool >           DEC2EXE_EMPTY ;                    
+    sc_signal<bool>           DEC2EXE_POP ;
+    sc_signal<bool>           DEC2EXE_EMPTY ;                    
 
     //DEC-REG interface
-    sc_signal< sc_uint<32> >    RADR1_DATA ; 
-    sc_signal< sc_uint<32> >    RADR2_DATA ;
-    sc_signal< bool >           RADR1_VALID ;
-    sc_signal< bool >           RADR2_VALID ;
+    sc_signal<sc_uint<32>>    RADR1_DATA ; 
+    sc_signal<sc_uint<32>>    RADR2_DATA ;
+    sc_signal<bool>           RADR1_VALID ;
+    sc_signal<bool>           RADR2_VALID ;
     
-    sc_signal <bool>            ADR_DEST_VALID ;
-    sc_signal< sc_uint<6>>      ADR_DEST_DECOD ;
+    sc_signal<bool>            ADR_DEST_VALID ;
+    sc_signal<sc_uint<6>>      ADR_DEST_DECOD ;
 
 
-    sc_signal< sc_uint<6> >     RADR1 ;
-    sc_signal< sc_uint<6> >     RADR2 ;
+    sc_signal<sc_uint<6>>     RADR1 ;
+    sc_signal<sc_uint<6>>     RADR2 ;
 
-    sc_signal< sc_uint<6> >     EXE_DEST ;
-    sc_signal< sc_uint<6> >     INVAL_DEST ;
-    sc_signal< bool >           INVAL_ENABLE ;
+    sc_signal<sc_uint<6>>     EXE_DEST ;
+    sc_signal<sc_uint<6>>     INVAL_DEST ;
+    sc_signal<bool>           INVAL_ENABLE ;
 
-    sc_signal< sc_uint<32> >    READ_PC ;
-    sc_signal< bool >           READ_PC_VALID ;
-    sc_signal< sc_uint<32> >    WRITE_PC ;
-    sc_signal< bool >           WRITE_PC_ENABLE ;
+    sc_signal<sc_uint<32>>    READ_PC ;
+    sc_signal<bool>           READ_PC_VALID ;
+    sc_signal<sc_uint<32>>    WRITE_PC ;
+    sc_signal<bool>           WRITE_PC_ENABLE ;
 
     //EXE-MEM interface
-    sc_signal< sc_uint<32> >    MEM_EXE_RES ;
-    sc_signal< sc_uint<32> >    MEM_DATA;
-    sc_signal< sc_uint<6> >     MEM_DEST;
-    sc_signal< sc_uint<2> >     MEM_SIZE ;
+    sc_signal<sc_uint<32>>    MEM_EXE_RES ;
+    sc_signal<sc_uint<32>>    MEM_DATA;
+    sc_signal<sc_uint<6>>     MEM_DEST;
+    sc_signal<sc_uint<2>>     MEM_SIZE ;
 
-    sc_signal< bool >           MEM_WB,  
+    sc_signal<bool>           MEM_WB,  
                                 MEM_SIGN_EXTEND ;
-    sc_signal< bool >           MEM_LOAD, 
+    sc_signal<bool>           MEM_LOAD, 
                                 MEM_STORE ; 
-    sc_signal< bool >           EXE2MEM_EMPTY, 
+    sc_signal<bool>           EXE2MEM_EMPTY, 
                                 EXE2MEM_POP;
 
     //MEM-WBK interface
-    sc_signal< sc_uint<32> >    WBK_DATA;
-    sc_signal< sc_uint<6> >     WBK_DEST;
-    sc_signal< sc_uint<2> >     WBK_MEM_SIZE ;
-    sc_signal< bool >           WBK_WB;
-    sc_signal< bool >           WBK_MEM_SIGN_EXTEND;
-    sc_signal< bool >           MEM2WBK_EMPTY;
-    sc_signal< bool >           MEM2WBK_POP;
-    sc_signal< bool >           WBK_MEM_LOAD;
+    sc_signal<sc_uint<32>>    WBK_DATA;
+    sc_signal<sc_uint<6>>     WBK_DEST;
+    sc_signal<sc_uint<2>>     WBK_MEM_SIZE ;
+    sc_signal<bool>           WBK_WB;
+    sc_signal<bool>           WBK_MEM_SIGN_EXTEND;
+    sc_signal<bool>           MEM2WBK_EMPTY;
+    sc_signal<bool>           MEM2WBK_POP;
+    sc_signal<bool>           WBK_MEM_LOAD;
 
     //WBK-REG interface
-    sc_signal< sc_uint<6> >     REG_DEST ;
-    sc_signal< sc_uint<32> >    REG_DATA ;
-    sc_signal< bool >           REG_WB ;
+    sc_signal<sc_uint<6>>     REG_DEST ;
+    sc_signal<sc_uint<32>>    REG_DATA ;
+    sc_signal<bool>           REG_WB ;
 
     //Mcache interface
-    sc_out< sc_uint<32> >       MCACHE_MEM_ADR ;
-    sc_out< sc_uint<32> >       MCACHE_MEM_DATA ;
-    sc_out< bool>               MCACHE_MEM_ADR_VALID,
+    sc_out<sc_uint<32>>       MCACHE_MEM_ADR ;
+    sc_out<sc_uint<32>>       MCACHE_MEM_DATA ;
+    sc_out<bool>               MCACHE_MEM_ADR_VALID,
                                 MCACHE_MEM_STORE,
                                 MCACHE_MEM_LOAD ; 
 
-    sc_in< sc_uint<32> >        MCACHE_MEM_RESULT ;
-    sc_in< bool>                MCACHE_MEM_STALL ;
+    sc_in<sc_uint<32>>        MCACHE_MEM_RESULT ;
+    sc_in<bool>                MCACHE_MEM_STALL ;
 
     //Icache interface
-    sc_out< sc_uint<32> >       IF_ADR ; 
-    sc_out< bool >              IF_ADR_VALID ; 
+    sc_out<sc_uint<32>>       IF_ADR ; 
+    sc_out<bool>              IF_ADR_VALID ; 
 
-    sc_in< sc_bv<32> >          IC_INST ;
-    sc_in< bool >               IC_STALL ;
+    sc_in<sc_bv<32>>          IC_INST ;
+    sc_in<bool>               IC_STALL ;
 
     //Debug
-    sc_in< sc_uint<32> >       DEBUG_PC_RESET;
-    sc_out< sc_uint<32> >      DEBUG_PC_READ;
+    sc_in<sc_uint<32>>       DEBUG_PC_RESET;
+    sc_out<sc_uint<32>>      DEBUG_PC_READ;
 
 
     //Stage instanciation

@@ -27,23 +27,23 @@ SC_MODULE(ff_execute)
 {
 	sc_in<bool> CK_SX;
 
-	sc_in<sc_uint<32> > MUX_IR_SE;
-	sc_out<sc_uint<32> > IR_RE;
+	sc_in<sc_uint<32>> MUX_IR_SE;
+	sc_out<sc_uint<32>> IR_RE;
 
-	sc_in<sc_uint<25> > MUX_I_TYPE_SE;
-	sc_out<sc_uint<25> > I_TYPE_RE;
+	sc_in<sc_uint<25>> MUX_I_TYPE_SE;
+	sc_out<sc_uint<25>> I_TYPE_RE;
 
-	sc_in<sc_uint<8> > MUX_OPCOD_SE;
-	sc_out<sc_uint<8> > OPCOD_RE;
+	sc_in<sc_uint<8>> MUX_OPCOD_SE;
+	sc_out<sc_uint<8>> OPCOD_RE;
 
 	sc_in<bool> MUX_BDSLOT_SE;
 	sc_out<bool> BDSLOT_RE;
 
-	sc_in<sc_uint<5> > MUX_RD_SE;
-	sc_out<sc_uint<5> > RD_RE;
+	sc_in<sc_uint<5>> MUX_RD_SE;
+	sc_out<sc_uint<5>> RD_RE;
 
-	sc_in<sc_uint<5> > MUX_COP0D_SE;
-	sc_out<sc_uint<5> > COP0D_RE;
+	sc_in<sc_uint<5>> MUX_COP0D_SE;
+	sc_out<sc_uint<5>> COP0D_RE;
 
 	sc_in<bool> MUX_OVF_SE;
 	sc_out<bool> OVF_RE;
@@ -72,26 +72,26 @@ SC_MODULE(ff_execute)
 	sc_in<bool> MUX_SWAP_SE;
 	sc_out<bool> SWAP_RE;
 
-	sc_in<sc_uint<32> > MUX_PC_SE;
-	sc_out<sc_uint<32> > PC_RE;
+	sc_in<sc_uint<32>> MUX_PC_SE;
+	sc_out<sc_uint<32>> PC_RE;
 
-	sc_in<sc_uint<32> > MUX_SR_SE;
-	sc_out<sc_uint<32> > SR_RE;
+	sc_in<sc_uint<32>> MUX_SR_SE;
+	sc_out<sc_uint<32>> SR_RE;
 
-	sc_in<sc_uint<32> > MUX_NEXTPC_SE;
-	sc_out<sc_uint<32> > NEXTPC_RE;
+	sc_in<sc_uint<32>> MUX_NEXTPC_SE;
+	sc_out<sc_uint<32>> NEXTPC_RE;
 
-	sc_in<sc_uint<32> > MUX_RES_SE;
-	sc_out<sc_uint<32> > RES_RE;
+	sc_in<sc_uint<32>> MUX_RES_SE;
+	sc_out<sc_uint<32>> RES_RE;
 
-	sc_in<sc_uint<32> > MUX_WDATA_SE;
-	sc_out<sc_uint<32> > WDATA_RE;
+	sc_in<sc_uint<32>> MUX_WDATA_SE;
+	sc_out<sc_uint<32>> WDATA_RE;
 
 	sc_in<bool> MUX_COPYCAP_SE;
 	sc_out<bool> COPYCAP_RE;
 
-	sc_in<sc_uint<32> > MUX_REDOPC_SE;
-	sc_out<sc_uint<32> > REDOPC_RE;
+	sc_in<sc_uint<32>> MUX_REDOPC_SE;
+	sc_out<sc_uint<32>> REDOPC_RE;
 
 	SC_CTOR(ff_execute):
 		MUX_IR_SE("MUX_IR_SE"),

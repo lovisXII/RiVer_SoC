@@ -19,8 +19,8 @@ SC_MODULE(ifetch) {
 
     // if2dec interface
 
-    sc_in<bool> IF2DEC_FLUSH_SD;  // allow to flush if2dec in case of a branch
-    sc_in<bool> IF2DEC_POP_SD;
+    sc_in<bool>      IF2DEC_FLUSH_SD;  // allow to flush if2dec in case of a branch
+    sc_in<bool>      IF2DEC_POP_SD;
     sc_in<sc_bv<32>> PC_RD;  // PC coming to fetch an instruction
 
     sc_out<bool>        IF2DEC_EMPTY_SI;
@@ -60,7 +60,6 @@ SC_MODULE(ifetch) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD
-                  << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET;
+        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET;
     }
 };

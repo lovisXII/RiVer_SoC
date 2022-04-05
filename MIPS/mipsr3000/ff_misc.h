@@ -28,12 +28,12 @@ SC_MODULE(ff_misc)
 {
 	sc_in<bool> CK_SX;
 
-	sc_in<sc_uint<32> > 	MUX_CAUSE_SX;
-	sc_out<sc_uint<32> > 	CAUSE_RX;
-	sc_in<sc_uint<32> >	MUX_EPC_SX;
-	sc_out<sc_uint<32> >	EPC_RX;
-	sc_in<sc_uint<32> >	MUX_NEXTSR_SX;
-	sc_out<sc_uint<32> >	NEXTSR_RX;
+	sc_in<sc_uint<32>> 	MUX_CAUSE_SX;
+	sc_out<sc_uint<32>> 	CAUSE_RX;
+	sc_in<sc_uint<32>>	MUX_EPC_SX;
+	sc_out<sc_uint<32>>	EPC_RX;
+	sc_in<sc_uint<32>>	MUX_NEXTSR_SX;
+	sc_out<sc_uint<32>>	NEXTSR_RX;
 	sc_in<bool>		MUX_RESET_SX;
 	sc_out<bool>		RESET_RX;
 

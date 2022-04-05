@@ -27,10 +27,10 @@ SC_MODULE(ff_writeback)
 {
 	sc_in<bool> CK_SX;
 
-	sc_in<sc_uint<32> > MUX_LO_SW;
-	sc_out<sc_uint<32> > LO_RW;
-	sc_in<sc_uint<32> > MUX_HI_SW;
-	sc_out<sc_uint<32> > HI_RW;
+	sc_in<sc_uint<32>> MUX_LO_SW;
+	sc_out<sc_uint<32>> LO_RW;
+	sc_in<sc_uint<32>> MUX_HI_SW;
+	sc_out<sc_uint<32>> HI_RW;
 
 	SC_CTOR(ff_writeback)
 	{

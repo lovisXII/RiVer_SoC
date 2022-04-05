@@ -8,8 +8,8 @@ SC_MODULE(pi_default)
 {
 	sc_in<bool> CK;
 
-	sc_inout<sc_uint<32> > 	PI_A;		// Pi Address
-	sc_inout<sc_uint<4> > 	PI_OPC;		// Pi Opcode
+	sc_inout<sc_uint<32>> 	PI_A;		// Pi Address
+	sc_inout<sc_uint<4>> 	PI_OPC;		// Pi Opcode
 	sc_inout<bool> 		PI_READ;	// Pi r/w 
 	sc_inout<bool> 		PI_LOCK;	// Pi lock 
 
@@ -27,8 +27,8 @@ SC_MODULE(pi_default)
 	sc_in<bool> 		PI_GNT4;		// Pi grant 
 	sc_in<bool> 		PI_GNT5;		// Pi grant 
 
-	sc_signal<sc_uint<6> > 	PI_IREQ;	// Pi requests 
-	sc_signal<sc_uint<6> > 	PI_GNT;		// Pi grant 
+	sc_signal<sc_uint<6>> 	PI_IREQ;	// Pi requests 
+	sc_signal<sc_uint<6>> 	PI_GNT;		// Pi grant 
 	sc_signal<bool>		CK_SX;
 	sc_signal<bool>		DEFLTEN_SX;
 

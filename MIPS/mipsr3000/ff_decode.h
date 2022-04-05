@@ -30,14 +30,14 @@ SC_MODULE(ff_decode)
 {
   sc_in<bool> CK_SX;                  // internal clock
 
-  sc_in<sc_uint<32> > MUX_IR_SD;      // instruction register
-  sc_out<sc_uint<32> > IR_RD;         // res instruction register
+  sc_in<sc_uint<32>> MUX_IR_SD;      // instruction register
+  sc_out<sc_uint<32>> IR_RD;         // res instruction register
 
-  sc_in<sc_uint<25> > MUX_I_TYPE_SD;  // instruction type
-  sc_out<sc_uint<25> > I_TYPE_RD;     // res instruction type
+  sc_in<sc_uint<25>> MUX_I_TYPE_SD;  // instruction type
+  sc_out<sc_uint<25>> I_TYPE_RD;     // res instruction type
 
-  sc_in<sc_uint<8> > MUX_OPCOD_SD;    // operation code
-  sc_out<sc_uint<8> > OPCOD_RD;       // res operation code
+  sc_in<sc_uint<8>> MUX_OPCOD_SD;    // operation code
+  sc_out<sc_uint<8>> OPCOD_RD;       // res operation code
 
   sc_in<bool> MUX_BDSLOT_SD;          // branch delayed slot
   sc_out<bool> BDSLOT_RD;             // res branch delayed slot
@@ -47,17 +47,17 @@ SC_MODULE(ff_decode)
   sc_out<bool> SWAP_RD;
 // ########################## deprecated ##########
 
-  sc_in<sc_uint<5> > MUX_RS_SD;       // source reg number reg.
-  sc_out<sc_uint<5> > RS_RD;          // res source reg number reg.
+  sc_in<sc_uint<5>> MUX_RS_SD;       // source reg number reg.
+  sc_out<sc_uint<5>> RS_RD;          // res source reg number reg.
 
-  sc_in<sc_uint<5> > MUX_RT_SD;       // source reg number reg.
-  sc_out<sc_uint<5> > RT_RD;          // res source reg number reg.
+  sc_in<sc_uint<5>> MUX_RT_SD;       // source reg number reg.
+  sc_out<sc_uint<5>> RT_RD;          // res source reg number reg.
 
-  sc_in<sc_uint<5> > MUX_RD_SD;       // source reg number reg.
-  sc_out<sc_uint<5> > RD_RD;          // res source reg number reg.
+  sc_in<sc_uint<5>> MUX_RD_SD;       // source reg number reg.
+  sc_out<sc_uint<5>> RD_RD;          // res source reg number reg.
 
-  sc_in<sc_uint<5> > MUX_COP0D_SD;    // coprocessor 0 destination reg. number
-  sc_out<sc_uint<5> > COP0D_RD;       // res coprocessor 0 destination reg. number
+  sc_in<sc_uint<5>> MUX_COP0D_SD;    // coprocessor 0 destination reg. number
+  sc_out<sc_uint<5>> COP0D_RD;       // res coprocessor 0 destination reg. number
 
   sc_in<bool> MUX_ILLGINS_SD;         // unknown instruction
   sc_out<bool> ILLGINS_RD;            // res unknown instruction
@@ -65,23 +65,23 @@ SC_MODULE(ff_decode)
   sc_in<bool> MUX_C0UNUSE_SD;         // coprocessor 0 unusable
   sc_out<bool> C0UNUSE_RD;            // res coprocessor 0 unusable
 
-  sc_in<sc_uint<32> > MUX_NEXTPC_SD;  // next instruction @
-  sc_out<sc_uint<32> > NEXTPC_RD;     // res next instruction @
+  sc_in<sc_uint<32>> MUX_NEXTPC_SD;  // next instruction @
+  sc_out<sc_uint<32>> NEXTPC_RD;     // res next instruction @
 
-  sc_in<sc_uint<32> > MUX_PC_SD;      // instruction @
-  sc_out<sc_uint<32> > PC_RD;         // res instruction @
+  sc_in<sc_uint<32>> MUX_PC_SD;      // instruction @
+  sc_out<sc_uint<32>> PC_RD;         // res instruction @
 
-  sc_in<sc_uint<32> > MUX_SR_SD;      // status register
-  sc_out<sc_uint<32> > SR_RD;         // res status register
+  sc_in<sc_uint<32>> MUX_SR_SD;      // status register
+  sc_out<sc_uint<32>> SR_RD;         // res status register
 
-  sc_in<sc_uint<32> > MUX_SOPER_SD;   // effective s operand register
-  sc_out<sc_uint<32> > SOPER_RD;      // res effective s operand register
+  sc_in<sc_uint<32>> MUX_SOPER_SD;   // effective s operand register
+  sc_out<sc_uint<32>> SOPER_RD;      // res effective s operand register
 
-  sc_in<sc_uint<32> > MUX_TOPER_SD;   // effective t operand register
-  sc_out<sc_uint<32> > TOPER_RD;      // res effective t operand register
+  sc_in<sc_uint<32>> MUX_TOPER_SD;   // effective t operand register
+  sc_out<sc_uint<32>> TOPER_RD;      // res effective t operand register
 
-  sc_in<sc_uint<32> > MUX_IOPER_SD;   // effective immediate operand
-  sc_out<sc_uint<32> > IOPER_RD;      // res effective immediate operand
+  sc_in<sc_uint<32>> MUX_IOPER_SD;   // effective immediate operand
+  sc_out<sc_uint<32>> IOPER_RD;      // res effective immediate operand
 
   SC_CTOR(ff_decode):
     CK_SX("CK_SX"),

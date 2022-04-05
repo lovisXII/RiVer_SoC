@@ -27,26 +27,26 @@ SC_MODULE(ff_memory)
 {
 	sc_in<bool> CK_SX;
 
-	sc_in<sc_uint<32> > MUX_IR_SM;
-	sc_out<sc_uint<32> > IR_RM;
+	sc_in<sc_uint<32>> MUX_IR_SM;
+	sc_out<sc_uint<32>> IR_RM;
 
 	sc_in<bool> MUX_DATARED_SM;
 	sc_out<bool> DATARED_RM;
 
-	sc_in<sc_uint<25> > MUX_I_TYPE_SM;
-	sc_out<sc_uint<25> > I_TYPE_RM;
+	sc_in<sc_uint<25>> MUX_I_TYPE_SM;
+	sc_out<sc_uint<25>> I_TYPE_RM;
 
-	sc_in<sc_uint<5> > MUX_RD_SM;
-	sc_out<sc_uint<5> > RD_RM;
+	sc_in<sc_uint<5>> MUX_RD_SM;
+	sc_out<sc_uint<5>> RD_RM;
 
-	sc_in<sc_uint<8> > MUX_OPCOD_SM;
-	sc_out<sc_uint<8> > OPCOD_RM;
+	sc_in<sc_uint<8>> MUX_OPCOD_SM;
+	sc_out<sc_uint<8>> OPCOD_RM;
 
-	sc_in<sc_uint<32> > MUX_DATA_SM;
-	sc_out<sc_uint<32> > DATA_RM;
+	sc_in<sc_uint<32>> MUX_DATA_SM;
+	sc_out<sc_uint<32>> DATA_RM;
 
-	sc_in<sc_uint<32> > MUX_BADVADR_SM;
-	sc_out<sc_uint<32> > BADVADR_RM;
+	sc_in<sc_uint<32>> MUX_BADVADR_SM;
+	sc_out<sc_uint<32>> BADVADR_RM;
 
 	SC_CTOR(ff_memory)
 	{

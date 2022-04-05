@@ -10,30 +10,30 @@ int sc_main(int argc, char* argv[]) {
     tf = sc_create_vcd_trace_file("tf");
     // Reading Port :
 
-    sc_signal<sc_uint<6> > radr1;
-    sc_signal<sc_uint<6> > radr2;
+    sc_signal<sc_uint<6>> radr1;
+    sc_signal<sc_uint<6>> radr2;
 
     sc_signal<bool> radr1_valid;
     sc_signal<bool> radr2_valid;
 
-    sc_signal<sc_uint<32> > radr1_data;
-    sc_signal<sc_uint<32> > radr2_data;
+    sc_signal<sc_uint<32>> radr1_data;
+    sc_signal<sc_uint<32>> radr2_data;
 
     // Writing Port :
 
-    sc_signal<sc_uint<6> >  wadr1;
-    sc_signal<bool>         wadr1_valid;
-    sc_signal<sc_uint<32> > wadr1_data;
+    sc_signal<sc_uint<6>>  wadr1;
+    sc_signal<bool>        wadr1_valid;
+    sc_signal<sc_uint<32>> wadr1_data;
 
     // Inval Port :
 
-    sc_signal<sc_uint<6> > inval_adr;
-    sc_signal<bool>        inval_enable;
+    sc_signal<sc_uint<6>> inval_adr;
+    sc_signal<bool>       inval_enable;
 
     // PC Gestion :
 
-    sc_signal<sc_uint<32> > read_pc;
-    sc_signal<bool>         read_pc_valid;
+    sc_signal<sc_uint<32>> read_pc;
+    sc_signal<bool>        read_pc_valid;
 
     // Global Interface :
 
@@ -143,31 +143,26 @@ int sc_main(int argc, char* argv[]) {
             valid[0]          = true;
         }
         if (registers[radr1_] != (int)radr1_data.read()) {
-            cerr << "Error : register mismatch in register " << radr1_
-                 << "from port 1, expected " << registers[radr1_] << " got "
-                 << (int)radr1_data.read() << endl;
+            cerr << "Error : register mismatch in register " << radr1_ << "from port 1, expected " << registers[radr1_] << " got " << (int)radr1_data.read()
+                 << endl;
             exit(1);
         }
         if (registers[radr2_] != (int)radr2_data.read()) {
-            cerr << "Error : register mismatch in register " << radr2_
-                 << " from port 2, expected " << registers[radr2_] << " got "
-                 << (int)radr2_data.read() << endl;
+            cerr << "Error : register mismatch in register " << radr2_ << " from port 2, expected " << registers[radr2_] << " got " << (int)radr2_data.read()
+                 << endl;
             exit(1);
         }
         if (registers[32] != (int)read_pc.read()) {
-            cerr << "Error : register mismatch in register pc, expected "
-                 << registers[32] << " got " << (int)read_pc.read() << endl;
+            cerr << "Error : register mismatch in register pc, expected " << registers[32] << " got " << (int)read_pc.read() << endl;
             exit(1);
         }
         if (valid[radr1_] != (int)radr1_valid.read()) {
-            cerr << "Error : register validity mismatch in register " << radr1_
-                 << " from port 1, expected " << valid[radr1_] << " got "
+            cerr << "Error : register validity mismatch in register " << radr1_ << " from port 1, expected " << valid[radr1_] << " got "
                  << (int)radr1_valid.read() << endl;
             exit(1);
         }
         if (valid[radr2_] != (int)radr2_valid.read()) {
-            cerr << "Error : register validity mismatch in register " << radr2_
-                 << " from port 2, expected " << valid[radr2_] << " got "
+            cerr << "Error : register validity mismatch in register " << radr2_ << " from port 2, expected " << valid[radr2_] << " got "
                  << (int)radr2_valid.read() << endl;
             exit(1);
         }

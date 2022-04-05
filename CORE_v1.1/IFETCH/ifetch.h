@@ -7,10 +7,10 @@ SC_MODULE(ifetch)
 {
     // Icache Interface :
 
-    sc_out<sc_uint<32> > ADR_SI ; // @ which we search a data block from memory
+    sc_out<sc_uint<32>> ADR_SI ; // @ which we search a data block from memory
     sc_out<bool> ADR_VALID_SI ; 
 
-    sc_in<sc_bv<32> > IC_INST_SI ;
+    sc_in<sc_bv<32>> IC_INST_SI ;
     sc_in<bool> IC_STALL_SI ;
     
     //Dec Interface :
@@ -29,8 +29,8 @@ SC_MODULE(ifetch)
     sc_signal<bool> IF2DEC_FULL_SI ;
     sc_out<bool> IF2DEC_EMPTY_SI ;
     
-    sc_in<sc_bv<32>  > PC_SI ; // PC coming to fetch an instruction
-    sc_out<sc_bv<32> > INSTR_SI ; // instruction sent to if2dec 
+    sc_in<sc_bv<32>> PC_SI ; // PC coming to fetch an instruction
+    sc_out<sc_bv<32>> INSTR_SI ; // instruction sent to if2dec 
     
     //Global Interface :
 

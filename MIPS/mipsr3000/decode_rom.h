@@ -42,8 +42,8 @@ typedef struct
 
 SC_MODULE(decode_rom)
 {
-	sc_in<sc_uint<8> > OPCOD_SD;
-	sc_out<sc_uint<25> > I_TYPE_SD;
+	sc_in<sc_uint<8>> OPCOD_SD;
+	sc_out<sc_uint<25>> I_TYPE_SD;
 
 	SC_CTOR(decode_rom):
 		OPCOD_SD("OPCOD_SD"),

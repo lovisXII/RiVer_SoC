@@ -7,33 +7,33 @@
 SC_MODULE(mips_dec)
 {
 	sc_in<bool>				CK;			// external clock
-    sc_in<sc_uint<32> > 	I_ADR; 		// instruction address
+    sc_in<sc_uint<32>> 	I_ADR; 		// instruction address
     sc_in<bool>   			I_FTCH;		// fetch new instruction
     sc_in<bool>   			I_FRZ;		// inst. not available
     sc_out<bool>			I_BERR_N;	// inst. bus error
 
-    sc_in<sc_uint<32> >		DAT_ROMU;
-    sc_in<sc_uint<32> >		DAT_ROMR;
-    sc_in<sc_uint<32> >		DAT_ROMX;
+    sc_in<sc_uint<32>>		DAT_ROMU;
+    sc_in<sc_uint<32>>		DAT_ROMR;
+    sc_in<sc_uint<32>>		DAT_ROMX;
 
-    sc_out<sc_uint<32> >	DATA_TO_MIPS;
-    sc_out<sc_uint<10> >	I_A_11_2;
-    sc_out<sc_uint<10> >	D_A_11_2;
+    sc_out<sc_uint<32>>	DATA_TO_MIPS;
+    sc_out<sc_uint<10>>	I_A_11_2;
+    sc_out<sc_uint<10>>	D_A_11_2;
 
-    sc_in<sc_uint<32> >		D_A;
+    sc_in<sc_uint<32>>		D_A;
     sc_in<bool>			D_RQ;
     sc_in<bool>			D_LOCK;
-    sc_in<sc_uint<2> >		D_ATYPE;
+    sc_in<sc_uint<2>>		D_ATYPE;
     sc_in<bool>			D_ACK;
     sc_out<bool>		D_BERR_N;
     sc_out<bool>		W_N;
     sc_in<bool>			D_FRZ;
-    sc_out<sc_uint<32> >	D_IN;
-    sc_in<sc_uint<32> >		D_OUT;
+    sc_out<sc_uint<32>>	D_IN;
+    sc_in<sc_uint<32>>		D_OUT;
 
-    sc_out<sc_uint<4> >		E_RAMU;
-    sc_out<sc_uint<4> >		E_RAMS;
-    sc_inout<sc_uint<32> >	DAT;
+    sc_out<sc_uint<4>>		E_RAMU;
+    sc_out<sc_uint<4>>		E_RAMS;
+    sc_inout<sc_uint<32>>	DAT;
 
     sc_signal<bool>		WRITE;	//
     sc_signal<bool>		D_RW;	//
@@ -48,8 +48,8 @@ SC_MODULE(mips_dec)
     sc_signal<bool>		SEL_ROMX;	// exception rom
     sc_signal<bool>		SEL_RAMU;	// ram user 
     sc_signal<bool>		SEL_RAMS;	// ram supervisor
-    sc_signal<sc_uint<4> >	BYTE_SEL;
-    sc_signal<sc_uint<4> >	BYTE;
+    sc_signal<sc_uint<4>>	BYTE_SEL;
+    sc_signal<sc_uint<4>>	BYTE;
 
 	SC_CTOR(mips_dec)
 	{

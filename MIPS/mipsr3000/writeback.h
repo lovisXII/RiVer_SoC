@@ -27,8 +27,8 @@
 
 SC_MODULE(writeback)
 {
-	sc_in<sc_uint<25> > 	I_TYPE_RM;		// instruction type
-	sc_in<sc_uint<8> > 		OPCOD_RM;		// operation code
+	sc_in<sc_uint<25>> 	I_TYPE_RM;		// instruction type
+	sc_in<sc_uint<8>> 		OPCOD_RM;		// operation code
 	sc_out<bool>			I_WRITE_SW;		// write into register
 	sc_out<bool>			WLO_SW;			// low registers write enable
 	sc_out<bool>			WHI_SW;			// high registers write enable

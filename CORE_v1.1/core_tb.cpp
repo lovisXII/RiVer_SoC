@@ -112,24 +112,24 @@ int sc_main(int argc, char* argv[]) {
     tf=sc_create_vcd_trace_file("tf");
     
     //Dcache interface
-    sc_signal< sc_uint<32> >        MEM_ADR ;
-    sc_signal< sc_uint<32> >        MEM_DATA ;
-    sc_signal< bool>                MEM_ADR_VALID,
+    sc_signal<sc_uint<32>>        MEM_ADR ;
+    sc_signal<sc_uint<32>>        MEM_DATA ;
+    sc_signal<bool>                MEM_ADR_VALID,
                                     MEM_STORE,
                                     MEM_LOAD ; 
 
-    sc_signal< sc_uint<32> >        MEM_RESULT ;
-    sc_signal< bool>                MEM_STALL ;
+    sc_signal<sc_uint<32>>        MEM_RESULT ;
+    sc_signal<bool>                MEM_STALL ;
 
     //Icache interface
-    sc_signal< sc_uint<32> >        IF_ADR ; 
-    sc_signal< bool >               IF_ADR_VALID ; 
+    sc_signal<sc_uint<32>>        IF_ADR ; 
+    sc_signal<bool>               IF_ADR_VALID ; 
 
-    sc_signal< sc_bv<32> >          IC_INST ;
-    sc_signal< bool >               IC_STALL ;
+    sc_signal<sc_bv<32>>          IC_INST ;
+    sc_signal<bool>               IC_STALL ;
 
-    sc_signal< sc_uint<32> >        PC_RESET;
-    sc_signal< sc_uint<32> >        PC_VALUE; 
+    sc_signal<sc_uint<32>>        PC_RESET;
+    sc_signal<sc_uint<32>>        PC_VALUE; 
     sc_clock                        CLK("clk",1,SC_NS);  
     sc_signal<bool>                 RESET;
 

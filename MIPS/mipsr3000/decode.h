@@ -28,11 +28,11 @@
 
 SC_MODULE(decode)
 {
-	sc_in<sc_uint<32> > 	IR_RI;			// instruction register
-	sc_out<sc_uint<8> > 	OPCOD_SD;		// operation code
-	sc_in<sc_uint<25> > 	I_TYPE_SD;		// instruction type
+	sc_in<sc_uint<32>> 	IR_RI;			// instruction register
+	sc_out<sc_uint<8>> 	OPCOD_SD;		// operation code
+	sc_in<sc_uint<25>> 	I_TYPE_SD;		// instruction type
 
-	sc_signal<sc_uint<8> > 	COP0_SD;		// coprocesseur 0 signal
+	sc_signal<sc_uint<8>> 	COP0_SD;		// coprocesseur 0 signal
 	sc_signal<bool> 		I_ILLG_SD;		// illegal instruction signal
 	sc_signal<bool> 		I_JFMT_SD;		// instruction J format
 	sc_signal<bool> 		I_IFMT_SD;		// instruction I format
@@ -50,19 +50,19 @@ SC_MODULE(decode)
 // #
 	sc_out<bool> 			SWAP_SD;		//  <========= # deprecated #
 // #
-	sc_out<sc_uint<5> > 	COP0D_SD;		// coprocessor  destination register number
-	sc_out<sc_uint<5> > 	RS_SD;			// source register number
-	sc_out<sc_uint<5> > 	RT_SD;			// source register number
-	sc_out<sc_uint<5> > 	RD_SD;			// destination register number
+	sc_out<sc_uint<5>> 	COP0D_SD;		// coprocessor  destination register number
+	sc_out<sc_uint<5>> 	RS_SD;			// source register number
+	sc_out<sc_uint<5>> 	RT_SD;			// source register number
+	sc_out<sc_uint<5>> 	RD_SD;			// destination register number
 
-	sc_signal<sc_uint<32> > COP0OP_SD;		// coprocessesor 0 source operator
+	sc_signal<sc_uint<32>> COP0OP_SD;		// coprocessesor 0 source operator
 	sc_signal<bool> 		IMDSGN_SD;		// ?
-	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
-	sc_out<sc_uint<32> >	IOPER_SD;		// effective immediate operand
-	sc_signal<sc_uint<32> >	OFFSET_SD;		// pc offset
+	sc_signal<sc_uint<16>>	IMDSEX_SD;		// ?
+	sc_out<sc_uint<32>>	IOPER_SD;		// effective immediate operand
+	sc_signal<sc_uint<32>>	OFFSET_SD;		// pc offset
 
 	//branch condition
-	sc_signal<sc_uint<5> >	S_CMP_T_SD;		// compare condition
+	sc_signal<sc_uint<5>>	S_CMP_T_SD;		// compare condition
 	sc_signal<bool>			S_EQ_T_SD;		// equal condition
 	sc_signal<bool>			S_LT_Z_SD;		// less than condition
 	sc_signal<bool>			S_LE_Z_SD;		// less or equal condition
@@ -72,23 +72,23 @@ SC_MODULE(decode)
 	sc_out<bool> 			ILLGINS_XD;		// unknown instruction
 	sc_out<bool> 			C0UNUSE_XD;		// comprocesor 0 unusable
 
-	sc_signal<sc_uint<32> > JMPADR_SD;		// jump @ 
-	sc_signal<sc_uint<32> > BRAADR_SD;		// branch @  
-	sc_signal<sc_uint<32> > SEQADR_SD;		// seq @ ?
+	sc_signal<sc_uint<32>> JMPADR_SD;		// jump @ 
+	sc_signal<sc_uint<32>> BRAADR_SD;		// branch @  
+	sc_signal<sc_uint<32>> SEQADR_SD;		// seq @ ?
 
-	sc_in<sc_uint<32> > 	BADVADR_RM;		// bad virtual @ register
-	sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts register (sts)?
+	sc_in<sc_uint<32>> 	BADVADR_RM;		// bad virtual @ register
+	sc_in<sc_uint<32>> 	NEXTSR_RX;		// next instruction sts register (sts)?
 
 	// @ of d'instrution to return when jump for example to kernel code
-	sc_in<sc_uint<32> > 	EPC_RX;		
+	sc_in<sc_uint<32>> 	EPC_RX;		
 		
-	sc_in<sc_uint<32> > 	CAUSE_RX;		// cause(exception) register
-	sc_in<sc_uint<32> > 	LO_RW;			// low register
-	sc_in<sc_uint<32> > 	HI_RW;			// high register
-	sc_in<sc_uint<32> > 	SOPER_SD;		// effective s operator
-	sc_in<sc_uint<32> > 	TOPER_SD;		// effective t operator
-	sc_in<sc_uint<32> > 	SR_RI;			// status register
-	sc_in<sc_uint<32> > 	NEXTPC_RD;		// next PC input
+	sc_in<sc_uint<32>> 	CAUSE_RX;		// cause(exception) register
+	sc_in<sc_uint<32>> 	LO_RW;			// low register
+	sc_in<sc_uint<32>> 	HI_RW;			// high register
+	sc_in<sc_uint<32>> 	SOPER_SD;		// effective s operator
+	sc_in<sc_uint<32>> 	TOPER_SD;		// effective t operator
+	sc_in<sc_uint<32>> 	SR_RI;			// status register
+	sc_in<sc_uint<32>> 	NEXTPC_RD;		// next PC input
 
 	SC_CTOR(decode):
 	IR_RI("IR_RI"),

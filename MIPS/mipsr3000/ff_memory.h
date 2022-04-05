@@ -29,26 +29,26 @@ SC_MODULE(ff_memory)
 {
   sc_in<bool> CK_SX;                  // internal clock
 
-  sc_in<sc_uint<32> > MUX_IR_SM;      // instruction register
-  sc_out<sc_uint<32> > IR_RM;         // res instruction register
+  sc_in<sc_uint<32>> MUX_IR_SM;      // instruction register
+  sc_out<sc_uint<32>> IR_RM;         // res instruction register
 
   sc_in<bool> MUX_DATARED_SM;         // read access
   sc_out<bool> DATARED_RM;            // res read access
 
-  sc_in<sc_uint<25> > MUX_I_TYPE_SM;  // instruction type
-  sc_out<sc_uint<25> > I_TYPE_RM;     // res instruction type
+  sc_in<sc_uint<25>> MUX_I_TYPE_SM;  // instruction type
+  sc_out<sc_uint<25>> I_TYPE_RM;     // res instruction type
 
-  sc_in<sc_uint<5> > MUX_RD_SM;       // destination register #
-  sc_out<sc_uint<5> > RD_RM;          // res destination register #
+  sc_in<sc_uint<5>> MUX_RD_SM;       // destination register #
+  sc_out<sc_uint<5>> RD_RM;          // res destination register #
 
-  sc_in<sc_uint<8> > MUX_OPCOD_SM;    // operation code
-  sc_out<sc_uint<8> > OPCOD_RM;       // res operation code
+  sc_in<sc_uint<8>> MUX_OPCOD_SM;    // operation code
+  sc_out<sc_uint<8>> OPCOD_RM;       // res operation code
 
-  sc_in<sc_uint<32> > MUX_DATA_SM;    // data bus input register
-  sc_out<sc_uint<32> > DATA_RM;       // res data bus input register
+  sc_in<sc_uint<32>> MUX_DATA_SM;    // data bus input register
+  sc_out<sc_uint<32>> DATA_RM;       // res data bus input register
 
-  sc_in<sc_uint<32> > MUX_BADVADR_SM; // bad virtual @ 
-  sc_out<sc_uint<32> > BADVADR_RM;    // res bad virtual @ 
+  sc_in<sc_uint<32>> MUX_BADVADR_SM; // bad virtual @ 
+  sc_out<sc_uint<32>> BADVADR_RM;    // res bad virtual @ 
 
   SC_CTOR(ff_memory)
   {

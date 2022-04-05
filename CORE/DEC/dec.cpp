@@ -101,11 +101,9 @@ void decod::unconcat_dec2exe() {
 //:---------------------------------------------
 
 void decod::decoding_instruction_type() {
-    sc_uint<32> if_ir = INSTR_RI.read();
-    r_type_inst_sd    = if_ir.range(6, 0) == 0b0110011 ? 1 : 0;
-    i_type_inst_sd =
-        (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1
-                                                                          : 0;
+    sc_uint<32> if_ir   = INSTR_RI.read();
+    r_type_inst_sd      = if_ir.range(6, 0) == 0b0110011 ? 1 : 0;
+    i_type_inst_sd      = (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1 : 0;
     s_type_inst_sd      = if_ir.range(6, 0) == 0b0100011 ? 1 : 0;
     b_type_inst_sd      = if_ir.range(6, 0) == 0b1100011 ? 1 : 0;
     u_type_inst_sd      = if_ir.range(6, 0) == 0b0110111 ? 1 : 0;
@@ -122,53 +120,43 @@ void decod::decoding_instruction() {
 
     // R-type Instruction :
 
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b000)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b000)
         add_i_sd.write(1);
     else
         add_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b010)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b010)
         slt_i_sd.write(1);
     else
         slt_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b011)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b011)
         sltu_i_sd.write(1);
     else
         sltu_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b111)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b111)
         and_i_sd.write(1);
     else
         and_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b110)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b110)
         or_i_sd.write(1);
     else
         or_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b100)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b100)
         xor_i_sd.write(1);
     else
         xor_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b001)
         sll_i_sd.write(1);
     else
         sll_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b101)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b101)
         srl_i_sd.write(1);
     else
         srl_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0100000 &&
-        if_ir.range(14, 12) == 0b000)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0100000 && if_ir.range(14, 12) == 0b000)
         sub_i_sd.write(1);
     else
         sub_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0100000 &&
-        if_ir.range(14, 12) == 0b101)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0100000 && if_ir.range(14, 12) == 0b101)
         sra_i_sd.write(1);
     else
         sra_i_sd.write(0);
@@ -202,18 +190,15 @@ void decod::decoding_instruction() {
 
     // I-type shift instructions :
 
-    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b001)
+    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b001)
         slli_i_sd.write(1);
     else
         slli_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0000000 &&
-        if_ir.range(14, 12) == 0b101)
+    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0000000 && if_ir.range(14, 12) == 0b101)
         srli_i_sd.write(1);
     else
         srli_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0100000 &&
-        if_ir.range(14, 12) == 0b101)
+    if (if_ir.range(6, 0) == 0b0010011 && if_ir.range(31, 25) == 0b0100000 && if_ir.range(14, 12) == 0b101)
         srai_i_sd.write(1);
     else
         srai_i_sd.write(0);
@@ -307,13 +292,11 @@ void decod::decoding_instruction() {
 
     // System-type Instructions :
 
-    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b000 &&
-        if_ir.range(31, 20) == 0b000000000000)
+    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 20) == 0b000000000000)
         ecall_i_sd.write(1);
     else
         ecall_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b000 &&
-        if_ir.range(31, 20) == 0b000000000001)
+    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 20) == 0b000000000001)
         ebreak_i_sd.write(1);
     else
         ebreak_i_sd.write(0);
@@ -460,25 +443,13 @@ void decod::pre_reg_read_decoding() {
         } else if (beq_i_sd.read()) {
             inc_pc_var = ((res == 0x0 ? 0 : 1));
         } else if (blt_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 1 |
-                           res_comparaison.range(31, 31) == 1)
-                              ? 0
-                              : 1);  // if bit 31 == 1, it means rs1 < rs2
+            inc_pc_var = ((res_comparaison.range(32, 32) == 1 | res_comparaison.range(31, 31) == 1) ? 0 : 1);  // if bit 31 == 1, it means rs1 < rs2
         } else if (bltu_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 1 |
-                           res_comparaison.range(31, 31) == 1)
-                              ? 1
-                              : 0);
+            inc_pc_var = ((res_comparaison.range(32, 32) == 1 | res_comparaison.range(31, 31) == 1) ? 1 : 0);
         } else if (bge_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 0 &&
-                           res_comparaison.range(31, 31) == 0)
-                              ? 0
-                              : 1);  // if bit 31 == 1, it means rs1 < rs2
+            inc_pc_var = ((res_comparaison.range(32, 32) == 0 && res_comparaison.range(31, 31) == 0) ? 0 : 1);  // if bit 31 == 1, it means rs1 < rs2
         } else if (bgeu_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 0 &&
-                           res_comparaison.range(31, 31) == 0)
-                              ? 1
-                              : 0);
+            inc_pc_var = ((res_comparaison.range(32, 32) == 0 && res_comparaison.range(31, 31) == 0) ? 1 : 0);
         }
 
     }
@@ -494,9 +465,8 @@ void decod::pre_reg_read_decoding() {
 
         offset_branch_var = 0;
 
-        if (auipc_i_sd ==
-            1)  // on case of an auipc instruction we need to send PC+imm to rd
-                // so we need to get the value from r33
+        if (auipc_i_sd == 1)  // on case of an auipc instruction we need to send PC+imm to rd
+                              // so we need to get the value from r33
         {
             radr2_var       = 0x2F;
             dec2exe_op2_var = rdata2_sd.read();
@@ -561,14 +531,11 @@ void decod::pre_reg_read_decoding() {
         // rd = CSR
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
-        if (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd | csrrw_i_sd | csrrsi_i_sd |
-            csrrci_i_sd) {
+        if (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd | csrrw_i_sd | csrrsi_i_sd | csrrci_i_sd) {
             sc_uint<32> rdata1_signal_sd = rdata1_sd;
             adr_csr_sd                   = if_ir.range(31, 20);
-            radr1_var = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd)
-                            ? if_ir.range(19, 15)
-                            : 0;
-            radr2_var = 0;
+            radr1_var                    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
+            radr2_var                    = 0;
 
             adr_dest_var = if_ir.range(11, 7);
 
@@ -615,8 +582,7 @@ void decod::pre_reg_read_decoding() {
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
     inc_pc_sd.write((inc_pc_var && dec2if_push_sd.read()) || invalid_instr);
-    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() &&
-                              !invalid_instr);
+    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() && !invalid_instr);
 }
 
 //---------------------------------------------EXE & MEM SIGNAL DETECTION
@@ -628,9 +594,8 @@ void decod::post_reg_read_decoding() {
 
     // CMD : +
     int dec2exe_wb_var;
-    if (add_i_sd || sub_i_sd || addi_i_sd || lw_i_sd || lh_i_sd | lhu_i_sd ||
-        lb_i_sd || lbu_i_sd || sw_i_sd || sh_i_sd || sb_i_sd || auipc_i_sd ||
-        lui_i_sd || slti_i_sd || slt_i_sd || sltiu_i_sd || sltu_i_sd) {
+    if (add_i_sd || sub_i_sd || addi_i_sd || lw_i_sd || lh_i_sd | lhu_i_sd || lb_i_sd || lbu_i_sd || sw_i_sd || sh_i_sd || sb_i_sd || auipc_i_sd || lui_i_sd ||
+        slti_i_sd || slt_i_sd || sltiu_i_sd || sltu_i_sd) {
         exe_cmd_sd.write(0);
         select_shift_sd.write(0);
 
@@ -811,16 +776,12 @@ void decod::bypasses() {
     if (RADR1_SD.read() == 0) {  // ignore r0
         rdata1_sd.write(RDATA1_SR.read());
         r1_valid_sd.write(true);
-    } else if (RADR1_SD.read() == EXE_DEST_SD.read() &&
-               !DEC2EXE_EMPTY_SD
-                    .read()) {  // dont bypass if instr is currently in exe
+    } else if (RADR1_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) {  // dont bypass if instr is currently in exe
         r1_valid_sd.write(false);
-    } else if (RADR1_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
-                                        // currently in mem
+    } else if (RADR1_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
+                                                                                                         // currently in mem
         r1_valid_sd.write(false);
-    } else if (RADR1_SD.read() == BP_DEST_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
+    } else if (RADR1_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r1_valid_sd.write(true);
         rdata1_sd.write(BP_EXE_RES_RE.read());
     } else if (RADR1_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
@@ -834,16 +795,12 @@ void decod::bypasses() {
     if (RADR2_SD.read() == 0) {  // ignore r0
         rdata2_sd.write(RDATA2_SR.read());
         r2_valid_sd.write(true);
-    } else if (RADR2_SD.read() == EXE_DEST_SD.read() &&
-               !DEC2EXE_EMPTY_SD
-                    .read()) {  // dont bypass if instr is currently in exe
+    } else if (RADR2_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) {  // dont bypass if instr is currently in exe
         r2_valid_sd.write(false);
-    } else if (RADR2_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
-                                        // currently in mem
+    } else if (RADR2_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
+                                                                                                         // currently in mem
         r2_valid_sd.write(false);
-    } else if (RADR2_SD.read() == BP_DEST_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
+    } else if (RADR2_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r2_valid_sd.write(true);
         rdata2_sd.write(BP_EXE_RES_RE.read());
     } else if (RADR2_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
@@ -855,16 +812,12 @@ void decod::bypasses() {
     }
     // When a load is in exe, we can block the pipeline now
     // Avoid an issue with load - load - add sequence
-    block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD &&
-                        !DEC2EXE_EMPTY_SD.read()) ||
-                       (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD &&
-                        !DEC2EXE_EMPTY_SD.read()));
+    block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read()) ||
+                       (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read()));
 }
 
 void decod::stall_method() {
-    stall.write((!r1_valid_sd || !r2_valid_sd) &&
-                (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd ||
-                 block_in_dec));
+    stall.write((!r1_valid_sd || !r2_valid_sd) && (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec));
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS

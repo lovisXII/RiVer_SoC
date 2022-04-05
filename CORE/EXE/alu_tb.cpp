@@ -17,10 +17,10 @@ void print_bits(T ptr) {
 }
 
 int sc_main(int argc, char* argv[]) {
-    sc_signal<sc_uint<32> > op1, op2, res;
-    sc_signal<sc_uint<2> >  cmd;
-    sc_signal<bool>         cin;
-    alu                     unit_alu("alu");
+    sc_signal<sc_uint<32>> op1, op2, res;
+    sc_signal<sc_uint<2>>  cmd;
+    sc_signal<bool>        cin;
+    alu                    unit_alu("alu");
     unit_alu.OP1_SE(op1);
     unit_alu.OP2_SE(op2);
     unit_alu.CMD_SE(cmd);

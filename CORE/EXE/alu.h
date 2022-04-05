@@ -3,10 +3,10 @@
 #include "../UTIL/debug_util.h"
 
 SC_MODULE(alu) {
-    sc_in<sc_uint<32> >  OP1_SE, OP2_SE;
-    sc_in<bool>          CIN_SE;
-    sc_in<sc_uint<2> >   CMD_SE;
-    sc_out<sc_uint<32> > RES_SE;
+    sc_in<sc_uint<32>>  OP1_SE, OP2_SE;
+    sc_in<bool>         CIN_SE;
+    sc_in<sc_uint<2>>   CMD_SE;
+    sc_out<sc_uint<32>> RES_SE;
 
     void operation();
     void trace(sc_trace_file * tf);

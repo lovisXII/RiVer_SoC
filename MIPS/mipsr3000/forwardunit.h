@@ -26,13 +26,13 @@
 
 SC_MODULE(forwardunit)
 {
-	sc_in<sc_uint<5> > 		RS_SD;
-	sc_in<sc_uint<5> > 		RS_RD;
-	sc_in<sc_uint<5> > 		RT_SD;
-	sc_in<sc_uint<5> > 		RT_RD;
-	sc_in<sc_uint<5> > 		RD_RD;
-	sc_in<sc_uint<5> > 		RD_RE;
-	sc_in<sc_uint<5> > 		RD_RM;
+	sc_in<sc_uint<5>> 		RS_SD;
+	sc_in<sc_uint<5>> 		RS_RD;
+	sc_in<sc_uint<5>> 		RT_SD;
+	sc_in<sc_uint<5>> 		RT_RD;
+	sc_in<sc_uint<5>> 		RD_RD;
+	sc_in<sc_uint<5>> 		RD_RE;
+	sc_in<sc_uint<5>> 		RD_RM;
 	sc_in<bool> 			I_READS_SD;
 	sc_in<bool> 			I_READS_SE;
 	sc_in<bool> 			I_READT_SD;
@@ -45,25 +45,25 @@ SC_MODULE(forwardunit)
 	sc_in<bool> 			I_MPDC_SE;
 	sc_in<bool> 			I_MPDC_SM;
 	sc_in<bool> 			I_EUSE_SE;
-	sc_in<sc_uint<32> > 	RES_RE;
-	sc_in<sc_uint<32> > 	DATA_RM;
-	sc_in<sc_uint<32> > 	S_SD;
-	sc_in<sc_uint<32> > 	T_SD;
-	sc_in<sc_uint<32> > 	SOPER_RD;
-	sc_in<sc_uint<32> >	TOPER_RD;
+	sc_in<sc_uint<32>> 	RES_RE;
+	sc_in<sc_uint<32>> 	DATA_RM;
+	sc_in<sc_uint<32>> 	S_SD;
+	sc_in<sc_uint<32>> 	T_SD;
+	sc_in<sc_uint<32>> 	SOPER_RD;
+	sc_in<sc_uint<32>>	TOPER_RD;
 	sc_out<bool> 			HAZARDS_SD;
 	sc_out<bool> 			HAZARDS_SE;
-	sc_out<sc_uint<32> >	SOPER_SD;
-	sc_out<sc_uint<32> >	TOPER_SD;
-	sc_out<sc_uint<32> >	X_SE;
-	sc_out<sc_uint<32> >	Y_SE;
+	sc_out<sc_uint<32>>	SOPER_SD;
+	sc_out<sc_uint<32>>	TOPER_SD;
+	sc_out<sc_uint<32>>	X_SE;
+	sc_out<sc_uint<32>>	Y_SE;
 
-	sc_signal<sc_uint<5> > 	CMP_SDE_SD;
-	sc_signal<sc_uint<5> > 	CMP_SDM_SD;
-	sc_signal<sc_uint<5> > 	CMP_SDW_SD;
-	sc_signal<sc_uint<5> > 	CMP_TDE_SD;
-	sc_signal<sc_uint<5> > 	CMP_TDM_SD;
-	sc_signal<sc_uint<5> > 	CMP_TDW_SD;
+	sc_signal<sc_uint<5>> 	CMP_SDE_SD;
+	sc_signal<sc_uint<5>> 	CMP_SDM_SD;
+	sc_signal<sc_uint<5>> 	CMP_SDW_SD;
+	sc_signal<sc_uint<5>> 	CMP_TDE_SD;
+	sc_signal<sc_uint<5>> 	CMP_TDM_SD;
+	sc_signal<sc_uint<5>> 	CMP_TDW_SD;
 	sc_signal<bool> 		SREADR0_SD;
 	sc_signal<bool> 		TREADR0_SD;
 	sc_signal<bool> 		HZD_SDE_SD;
@@ -72,10 +72,10 @@ SC_MODULE(forwardunit)
 	sc_signal<bool> 		HZD_TDE_SD;
 	sc_signal<bool> 		HZD_TDM_SD;
 	sc_signal<bool> 		HZD_TDW_SD;
-	sc_signal<sc_uint<5> > 	CMP_SDM_SE;
-	sc_signal<sc_uint<5> > 	CMP_SDW_SE;
-	sc_signal<sc_uint<5> > 	CMP_TDM_SE;
-	sc_signal<sc_uint<5> > 	CMP_TDW_SE;
+	sc_signal<sc_uint<5>> 	CMP_SDM_SE;
+	sc_signal<sc_uint<5>> 	CMP_SDW_SE;
+	sc_signal<sc_uint<5>> 	CMP_TDM_SE;
+	sc_signal<sc_uint<5>> 	CMP_TDW_SE;
 	sc_signal<bool> 		SREADR0_SE;
 	sc_signal<bool> 		TREADR0_SE;
 	sc_signal<bool> 		HZD_SDM_SE;

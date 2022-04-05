@@ -139,13 +139,7 @@ SC_MODULE(core) {
     void core_method();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(core)
-        : dec_inst("decod"),
-          exec_inst("exec"),
-          ifetch_inst("ifetch"),
-          mem_inst("mem"),
-          reg_inst("reg"),
-          wbk_inst("wbk") {
+    SC_CTOR(core) : dec_inst("decod"), exec_inst("exec"), ifetch_inst("ifetch"), mem_inst("mem"), reg_inst("reg"), wbk_inst("wbk") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
 

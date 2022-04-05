@@ -53,57 +53,57 @@ int sc_main(int argc, char* argv[])
 
     //Interface with REG :
 
-    sc_signal     < sc_uint<32> >       radr1_data ; 
-    sc_signal     < sc_uint<32> >       radr2_data ;
-    sc_signal     < bool >              radr1_valid ; // tells if the data read is valid or no
-    sc_signal     < bool >              radr2_valid ; // same but for rt
+    sc_signal<sc_uint<32>>       radr1_data ; 
+    sc_signal<sc_uint<32>>       radr2_data ;
+    sc_signal<bool>              radr1_valid ; // tells if the data read is valid or no
+    sc_signal<bool>              radr2_valid ; // same but for rt
 
-    sc_signal    < sc_uint<6> >       radr1 ; // adress of rs
-    sc_signal    < sc_uint<6> >       radr2 ; // adress of rt
+    sc_signal<sc_uint<6>>       radr1 ; // adress of rs
+    sc_signal<sc_uint<6>>       radr2 ; // adress of rt
 
-    sc_signal    < sc_uint<6> >       adr_dest ; // rd
+    sc_signal<sc_uint<6>>       adr_dest ; // rd
 
-    sc_signal     < sc_uint<32> >      read_pc ; // value of r32 which is pc
-    sc_signal    < bool >             inc_pc ; // tells to reg if he does pc+4 or no
-    sc_signal    < bool >             read_pc_valid ; // say if pc is valid or no
+    sc_signal<sc_uint<32>>      read_pc ; // value of r32 which is pc
+    sc_signal<bool>             inc_pc ; // tells to reg if he does pc+4 or no
+    sc_signal<bool>             read_pc_valid ; // say if pc is valid or no
 
     //Interface with EXE :
 
-    sc_signal   < sc_uint<32> >      dec2exe_op1 ; // value of op1
-    sc_signal   < sc_uint<32> >      dec2exe_op2 ; // value of op2
-    sc_signal   < sc_uint<2> >       dec2exe_cmd ; // value of the command sent to exe
-    sc_signal   < bool >             dec2exe_neg_op1 ; // say if we take the opposite of the op1 to do a substraction for example
-    sc_signal   < bool >             dec2exe_wb ; // say if we plan to wbk the value of rd or no
+    sc_signal<sc_uint<32>>      dec2exe_op1 ; // value of op1
+    sc_signal<sc_uint<32>>      dec2exe_op2 ; // value of op2
+    sc_signal<sc_uint<2>>       dec2exe_cmd ; // value of the command sent to exe
+    sc_signal<bool>             dec2exe_neg_op1 ; // say if we take the opposite of the op1 to do a substraction for example
+    sc_signal<bool>             dec2exe_wb ; // say if we plan to wbk the value of rd or no
     
-    sc_signal   < sc_uint<32> >      mem_data ; // data sent to mem for storage
-    sc_signal   < bool >             mem_load ; // say to mem if we do a load
-    sc_signal   < bool >             mem_store ; // say to mem if we do a store
-    sc_signal   < bool >             mem_sign_extend ; 
-    sc_signal   < sc_uint<2> >       mem_size ; // tells to mem if we do an acces in word, hw or byte
-    sc_signal   < bool >             select_shift ; //taille fifo entrée : 110
+    sc_signal<sc_uint<32>>      mem_data ; // data sent to mem for storage
+    sc_signal<bool>             mem_load ; // say to mem if we do a load
+    sc_signal<bool>             mem_store ; // say to mem if we do a store
+    sc_signal<bool>             mem_sign_extend ; 
+    sc_signal<sc_uint<2>>       mem_size ; // tells to mem if we do an acces in word, hw or byte
+    sc_signal<bool>             select_shift ; //taille fifo entrée : 110
     
     // Interface with DEC2IF : 
 
-    sc_signal    < bool >              dec2if_pop ;
-    sc_signal    < bool >              dec2if_empty ;
-    sc_signal   < sc_bv<32> >        dec2if_pc ;
+    sc_signal<bool>              dec2if_pop ;
+    sc_signal<bool>              dec2if_empty ;
+    sc_signal<sc_bv<32>>        dec2if_pc ;
 
 
-    sc_signal   < sc_bv<32> >        if_ir ;
-    sc_signal   < bool >               if2dec_empty ;
-    sc_signal   < bool >               if2dec_pop ;
+    sc_signal<sc_bv<32>>        if_ir ;
+    sc_signal<bool>               if2dec_empty ;
+    sc_signal<bool>               if2dec_pop ;
 
 
     //Interface with IF2DEC :
 
-    sc_signal   < bool >              dec2exe_pop ;
-    sc_signal    < bool >             dec2exe_empty ;
-    sc_signal    < sc_bv<114> >       dec2exe_out ;
+    sc_signal<bool>              dec2exe_pop ;
+    sc_signal<bool>             dec2exe_empty ;
+    sc_signal<sc_bv<114>>       dec2exe_out ;
 
 
     //General Interface :
     sc_clock                          clk ;
-    sc_signal  <bool>                 reset_n ;
+    sc_signal<bool>                 reset_n ;
     
 
     //Signals for tb :

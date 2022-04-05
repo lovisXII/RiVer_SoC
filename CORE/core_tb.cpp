@@ -23,8 +23,7 @@ int sc_main(int argc, char* argv[]) {
         opt = "";
     }
 
-    if (path.substr(path.find_last_of(".") + 1) ==
-        "s") {  // checking if the argument is a assembly file
+    if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
         char temp[512];
         char temp_text[512];
 
@@ -40,14 +39,10 @@ int sc_main(int argc, char* argv[]) {
         strcat(temp_text, test);
         system((char*)temp_text);
     }
-    if (path.substr(path.find_last_of(".") + 1) ==
-        "c") {  // do the same but for .c file
+    if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
         char temp[512];
         char temp_text[512];
-        sprintf(temp,
-                "riscv32-unknown-elf-gcc -nostdlib %s %s",
-                opt.c_str(),
-                path.c_str());
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s %s", opt.c_str(), path.c_str());
         system((char*)temp);
         path = "a.out";
 
@@ -72,8 +67,7 @@ int sc_main(int argc, char* argv[]) {
     int n_sec = reader.sections.size();  // get the total amount of sectionss
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
-        cout << "Section " << sec->get_name() << " at address 0x" << std::hex
-             << sec->get_address() << endl;
+        cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;
         int  adr  = sec->get_address();
         int  size = sec->get_size();
         int* data = (int*)sec->get_data();
@@ -81,8 +75,7 @@ int sc_main(int argc, char* argv[]) {
             cout << "Loading data";
             for (int j = 0; j < size; j += 4) {
                 cout << ".";
-                ram[adr + j] =
-                    data[j / 4];  // put every adress segment in the ram
+                ram[adr + j] = data[j / 4];  // put every adress segment in the ram
             }
             cout << endl;
         }
@@ -99,8 +92,7 @@ int sc_main(int argc, char* argv[]) {
                 Elf_Half      section_index;
                 unsigned char other;
 
-                symbols.get_symbol(
-                    j, name, value, size, bind, type, section_index, other);
+                symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
                 if (name == "_start") {
                     cout << "Found start" << endl;
                     start_adr = value - 4;  // minus 4 to acount for init inc_pc
@@ -122,24 +114,24 @@ int sc_main(int argc, char* argv[]) {
     sc_trace_file* tf;
     tf = sc_create_vcd_trace_file("tf");
 
-    sc_signal<sc_uint<32> > MEM_ADR;
-    sc_signal<sc_uint<32> > MEM_DATA;
-    sc_signal<bool>         MEM_ADR_VALID, MEM_STORE, MEM_LOAD;
+    sc_signal<sc_uint<32>> MEM_ADR;
+    sc_signal<sc_uint<32>> MEM_DATA;
+    sc_signal<bool>        MEM_ADR_VALID, MEM_STORE, MEM_LOAD;
 
-    sc_signal<sc_uint<32> > MEM_RESULT;
-    sc_signal<bool>         MEM_STALL;
+    sc_signal<sc_uint<32>> MEM_RESULT;
+    sc_signal<bool>        MEM_STALL;
 
     // Icache interface
-    sc_signal<sc_uint<32> > IF_ADR;
-    sc_signal<bool>         IF_ADR_VALID;
+    sc_signal<sc_uint<32>> IF_ADR;
+    sc_signal<bool>        IF_ADR_VALID;
 
-    sc_signal<sc_bv<32> > IC_INST;
-    sc_signal<bool>       IC_STALL;
+    sc_signal<sc_bv<32>> IC_INST;
+    sc_signal<bool>      IC_STALL;
 
-    sc_signal<sc_uint<32> > PC_RESET;
-    sc_signal<sc_uint<32> > PC_VALUE;
-    sc_clock                CLK("clk", 1, SC_NS);
-    sc_signal<bool>         RESET;
+    sc_signal<sc_uint<32>> PC_RESET;
+    sc_signal<sc_uint<32>> PC_VALUE;
+    sc_clock               CLK("clk", 1, SC_NS);
+    sc_signal<bool>        RESET;
 
     core_inst.MCACHE_ADR_SM(MEM_ADR);
     core_inst.MCACHE_DATA_SM(MEM_DATA);
@@ -182,13 +174,11 @@ int sc_main(int argc, char* argv[]) {
 
         int pc_adr = PC_VALUE.read();
         if (pc_adr == bad_adr) {
-            cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex
-                 << pc_adr << endl;
+            cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
         } else if (pc_adr == good_adr) {
-            cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex
-                 << pc_adr << endl;
+            cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(0);
         }

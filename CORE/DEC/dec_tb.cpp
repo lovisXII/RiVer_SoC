@@ -48,8 +48,8 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> radr1_data;
     sc_signal<sc_uint<32>> radr2_data;
-    sc_signal<bool> radr1_valid;  // tells if the data read is valid or no
-    sc_signal<bool> radr2_valid;  // same but for rt
+    sc_signal<bool>        radr1_valid;  // tells if the data read is valid or no
+    sc_signal<bool>        radr2_valid;  // same but for rt
 
     sc_signal<sc_uint<6>> radr1;  // adress of rs
     sc_signal<sc_uint<6>> radr2;  // adress of rt
@@ -62,20 +62,19 @@ int sc_main(int argc, char* argv[]) {
 
     // Interface with EXE :
 
-    sc_signal<sc_uint<32>> dec2exe_op1;  // value of op1
-    sc_signal<sc_uint<32>> dec2exe_op2;  // value of op2
-    sc_signal<sc_uint<2>>  dec2exe_cmd;  // value of the command sent to exe
-    sc_signal<bool> dec2exe_neg_op1;  // say if we take the opposite of the op1
-                                      // to do a substraction for example
-    sc_signal<bool> dec2exe_wb;  // say if we plan to wbk the value of rd or no
+    sc_signal<sc_uint<32>> dec2exe_op1;      // value of op1
+    sc_signal<sc_uint<32>> dec2exe_op2;      // value of op2
+    sc_signal<sc_uint<2>>  dec2exe_cmd;      // value of the command sent to exe
+    sc_signal<bool>        dec2exe_neg_op1;  // say if we take the opposite of the op1
+                                             // to do a substraction for example
+    sc_signal<bool> dec2exe_wb;              // say if we plan to wbk the value of rd or no
 
     sc_signal<sc_uint<32>> mem_data;   // data sent to mem for storage
     sc_signal<bool>        mem_load;   // say to mem if we do a load
     sc_signal<bool>        mem_store;  // say to mem if we do a store
     sc_signal<bool>        mem_sign_extend;
-    sc_signal<sc_uint<2>>
-                    mem_size;  // tells to mem if we do an acces in word, hw or byte
-    sc_signal<bool> select_shift;  // taille fifo entrée : 110
+    sc_signal<sc_uint<2>>  mem_size;      // tells to mem if we do an acces in word, hw or byte
+    sc_signal<bool>        select_shift;  // taille fifo entrée : 110
 
     // Interface with DEC2IF :
 

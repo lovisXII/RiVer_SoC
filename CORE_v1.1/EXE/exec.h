@@ -10,43 +10,43 @@ SC_MODULE(exec)
 {
     // Input/Output of EXE : 
 
-    sc_in< sc_uint<32> >    OP1_SE ;
-    sc_in< sc_uint<32> >    OP2_SE ;
-    sc_in< sc_uint<32> >    IN_MEM_DATA_SE;
-    sc_in< sc_uint<6> >     IN_DEST_SE;
-    sc_in< sc_uint<2> >     CMD_SE ;
-    sc_in< sc_uint<2> >     IN_MEM_SIZE_SE ;
-    sc_in< bool >           NEG_OP2_SE, IN_WB_SE, IN_MEM_SIGN_EXTEND_SE, SELECT_SHIFT_SE ; //taille fifo entrée : 110
-    sc_in< bool >           IN_MEM_LOAD_SE, IN_MEM_STORE_SE ; 
-    sc_in< bool >           EXE2MEM_POP_SE, DEC2EXE_EMPTY_SE;
-    sc_in< bool >           SLT_SE, SLTU_SE;
+    sc_in<sc_uint<32>>    OP1_SE ;
+    sc_in<sc_uint<32>>    OP2_SE ;
+    sc_in<sc_uint<32>>    IN_MEM_DATA_SE;
+    sc_in<sc_uint<6>>     IN_DEST_SE;
+    sc_in<sc_uint<2>>     CMD_SE ;
+    sc_in<sc_uint<2>>     IN_MEM_SIZE_SE ;
+    sc_in<bool>           NEG_OP2_SE, IN_WB_SE, IN_MEM_SIGN_EXTEND_SE, SELECT_SHIFT_SE ; //taille fifo entrée : 110
+    sc_in<bool>           IN_MEM_LOAD_SE, IN_MEM_STORE_SE ; 
+    sc_in<bool>           EXE2MEM_POP_SE, DEC2EXE_EMPTY_SE;
+    sc_in<bool>           SLT_SE, SLTU_SE;
     sc_in_clk               CLK;
-    sc_in< bool >           RESET;
+    sc_in<bool>           RESET;
     
     //Fifo exe2mem interface :
 
-    sc_out< sc_uint<32> >  EXE_RES_SE ;
-    sc_out< sc_uint<32> >  OUT_MEM_DATA_SE;
-    sc_out< sc_uint<6> >   OUT_DEST_SE;
-    sc_out< sc_uint<2> >   OUT_MEM_SIZE_SE ;
+    sc_out<sc_uint<32>>  EXE_RES_SE ;
+    sc_out<sc_uint<32>>  OUT_MEM_DATA_SE;
+    sc_out<sc_uint<6>>   OUT_DEST_SE;
+    sc_out<sc_uint<2>>   OUT_MEM_SIZE_SE ;
 
-    sc_out< bool >   OUT_WB_SE,  OUT_MEM_SIGN_EXTEND_SE ; //taille fifo sortie : 7
-    sc_out< bool > OUT_MEM_LOAD_SE, OUT_MEM_STORE_SE ; 
-    sc_out< bool >   EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
+    sc_out<bool>   OUT_WB_SE,  OUT_MEM_SIGN_EXTEND_SE ; //taille fifo sortie : 7
+    sc_out<bool> OUT_MEM_LOAD_SE, OUT_MEM_STORE_SE ; 
+    sc_out<bool>   EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
     
 
     //Internals signals :
     
-    sc_signal< sc_uint<32> >  exe_res_se ;
+    sc_signal<sc_uint<32>>  exe_res_se ;
 
-    sc_signal< sc_bv<76> >    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
-    sc_signal< sc_bv<76> >    exe2mem_dout_se;
+    sc_signal<sc_bv<76>>    exe2mem_din_se; // concatenation of exe_res, mem_data...etc
+    sc_signal<sc_bv<76>>    exe2mem_dout_se;
 
-    sc_signal< sc_uint<32> > alu_in_op2_se;
-    sc_signal< sc_uint<32> > alu_out_se;
-    sc_signal< sc_uint<32> > shifter_out_se;
-    sc_signal< sc_uint<5> > shift_val_se;  
-    sc_signal< bool > exe2mem_push_se, exe2mem_full_se;  
+    sc_signal<sc_uint<32>> alu_in_op2_se;
+    sc_signal<sc_uint<32>> alu_out_se;
+    sc_signal<sc_uint<32>> shifter_out_se;
+    sc_signal<sc_uint<5>> shift_val_se;  
+    sc_signal<bool> exe2mem_push_se, exe2mem_full_se;  
 
     //Instance used :
 

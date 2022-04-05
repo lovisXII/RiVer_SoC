@@ -3,13 +3,13 @@
 #include "debug_util.h"
 template <int T>
 SC_MODULE(fifo) {
-    sc_in<sc_bv<T> > DIN_S;
-    sc_in_clk        CLK;
-    sc_in<bool>      PUSH_S, POP_S;
-    sc_in<bool>      RESET_N;
+    sc_in<sc_bv<T>> DIN_S;
+    sc_in_clk       CLK;
+    sc_in<bool>     PUSH_S, POP_S;
+    sc_in<bool>     RESET_N;
 
-    sc_out<bool>      FULL_S, EMPTY_S;
-    sc_out<sc_bv<T> > DOUT_R;
+    sc_out<bool>     FULL_S, EMPTY_S;
+    sc_out<sc_bv<T>> DOUT_R;
 
     sc_signal<bool> fifo_v;
 
@@ -56,8 +56,7 @@ void fifo<T>::function() {
     while (1) {
         bool push = PUSH_S.read();
         bool pop  = POP_S.read();
-        if (fifo_v && !push &&
-            pop)  // when data is valid and pop is able we sent data
+        if (fifo_v && !push && pop)  // when data is valid and pop is able we sent data
         {
             fifo_v.write(0);
         } else if (push && (pop || !fifo_v)) {

@@ -6,13 +6,13 @@ using namespace std ;
 int sc_main(int argc, char* argv[])
 {
     //testbench signals :
-    sc_signal< sc_bv<110> > din ;
+    sc_signal<sc_bv<110>> din ;
     sc_clock clk("clk",1,SC_NS) ;
     sc_signal<bool> push, pop ;
     sc_signal<bool> reset_n ;
 
-    sc_signal <bool> full, empty ;
-    sc_signal< sc_bv<110> > dout ;
+    sc_signal<bool> full, empty ;
+    sc_signal<sc_bv<110>> dout ;
 
     //entity declaration :
     fifo_110b fifo_110b0("fifo_110b0") ;

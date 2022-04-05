@@ -24,31 +24,31 @@ int sc_main(int ac, char *av[])
 {
     sc_signal<bool>                 CK;             // external clock
     sc_signal<bool>                 RESET_N;        // external reset
-    sc_signal<sc_uint<6> >          IT_N;           // external interrupts
-    sc_signal<sc_uint<32> >        I_A;            // instruction address
+    sc_signal<sc_uint<6>>          IT_N;           // external interrupts
+    sc_signal<sc_uint<32>>        I_A;            // instruction address
     sc_signal<bool>                I_FTCH;         // instruction fetch
     sc_signal<bool>                I_ACK;          // inst. fetch acknow.
     sc_signal<bool>                 I_BERR_N;       // inst. bus error
     sc_signal<bool>                 I_FRZ;          // inst. fetch pending
-    sc_signal<sc_uint<32> >         I;                      // instruction bus
-    sc_signal<sc_uint<32> >        D_A;            // data address
+    sc_signal<sc_uint<32>>         I;                      // instruction bus
+    sc_signal<sc_uint<32>>        D_A;            // data address
     sc_signal<bool>                D_RQ;           // data access request
     sc_signal<bool>                D_LOCK;         // lock memory access
-    sc_signal<sc_uint<2> >         D_ATYPE;        // data access type
+    sc_signal<sc_uint<2>>         D_ATYPE;        // data access type
     sc_signal<bool>                D_ACK;          // data fetch acknow.
     sc_signal<bool>                 D_BERR_N;       // data bus error
     sc_signal<bool>                 D_FRZ;          // data access pending
-    sc_signal<sc_uint<32> >         D_IN;           // data bus (input )
-    sc_signal<sc_uint<32> >        D_OUT;          // data bus (output)
+    sc_signal<sc_uint<32>>         D_IN;           // data bus (input )
+    sc_signal<sc_uint<32>>        D_OUT;          // data bus (output)
 
-    sc_signal<sc_uint<32> >        DAT_ROMU;
-    sc_signal<sc_uint<32> >        DAT_ROMR;
-    sc_signal<sc_uint<32> >        DAT_ROMX;
-    sc_signal<sc_uint<10> >        I_A_11_2;
-    sc_signal<sc_uint<10> >        D_A_11_2;
-    sc_signal<sc_uint<4> >        E_RAMU;
-    sc_signal<sc_uint<4> >        E_RAMS;
-    sc_signal<sc_uint<32> >        DAT;
+    sc_signal<sc_uint<32>>        DAT_ROMU;
+    sc_signal<sc_uint<32>>        DAT_ROMR;
+    sc_signal<sc_uint<32>>        DAT_ROMX;
+    sc_signal<sc_uint<10>>        I_A_11_2;
+    sc_signal<sc_uint<10>>        D_A_11_2;
+    sc_signal<sc_uint<4>>        E_RAMU;
+    sc_signal<sc_uint<4>>        E_RAMS;
+    sc_signal<sc_uint<32>>        DAT;
     sc_signal<bool>                 W_N;          // data access pending
 
     	mipsr3000 *mips1=new mipsr3000("mips1");

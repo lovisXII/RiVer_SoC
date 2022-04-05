@@ -20,9 +20,7 @@ void dcache::miss_detection() {
             DATA_C.write(w0_word[address_index.read()][address_offset.read()]);
             VALID_DATA_C = true;
         }
-        if (store) {
-            w0_word[address_index.read()][address_offset.read()] = DATA_M;
-        }
+        if (store) { w0_word[address_index.read()][address_offset.read()] = DATA_M; }
     } else
         way0_hit = false;
 
@@ -34,9 +32,7 @@ void dcache::miss_detection() {
             DATA_C.write(w1_word[address_index.read()][address_offset.read()]);
             VALID_DATA_C = true;
         }
-        if (store) {
-            w1_word[address_index.read()][address_offset.read()] = DATA_M;
-        }
+        if (store) { w1_word[address_index.read()][address_offset.read()] = DATA_M; }
     } else
         way1_hit = false;
 
@@ -110,19 +106,16 @@ void dcache::transition() {
         case WAIT_MEM:
             if (SLAVE_ACK.read()) {
                 if (LRU_bit_check[address_index.read()]) {
-                    w0_word[address_index.read()][address_offset.read()] =
-                        DT.read();
-                    w0_TAG[address_index.read()]           = address_tag.read();
-                    w0_LINE_VALIDATE[address_index.read()] = true;
+                    w0_word[address_index.read()][address_offset.read()] = DT.read();
+                    w0_TAG[address_index.read()]                         = address_tag.read();
+                    w0_LINE_VALIDATE[address_index.read()]               = true;
                 } else {
-                    w1_word[address_index.read()][address_offset.read()] =
-                        DT.read();
-                    w1_TAG[address_index.read()]           = address_tag.read();
-                    w1_LINE_VALIDATE[address_index.read()] = true;
+                    w1_word[address_index.read()][address_offset.read()] = DT.read();
+                    w1_TAG[address_index.read()]                         = address_tag.read();
+                    w1_LINE_VALIDATE[address_index.read()]               = true;
                 }
-                LRU_bit_check[address_index.read()] =
-                    !LRU_bit_check[address_index.read()];
-                fsm_future_state = IDLE;
+                LRU_bit_check[address_index.read()] = !LRU_bit_check[address_index.read()];
+                fsm_future_state                    = IDLE;
             }
             break;
         case WAIT_BUFF_WRITE:

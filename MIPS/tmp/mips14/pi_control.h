@@ -18,8 +18,8 @@ SC_MODULE(pi_control)
     sc_in<bool> 		CK;			// external clock
     sc_in<bool> 		RESET_N;	// reset
 
-    sc_in<sc_uint<32> > 	PI_A;		// address
-    sc_in<sc_uint<4> > 		PI_OPC;		// operation code
+    sc_in<sc_uint<32>> 	PI_A;		// address
+    sc_in<sc_uint<4>> 		PI_OPC;		// operation code
     sc_in<bool> 		PI_READ;	// read operation
     sc_in<bool> 		PI_LOCK;	// lock
 
@@ -50,16 +50,16 @@ SC_MODULE(pi_control)
     sc_out<bool> 		PI_SEL6;		// slave selection
     sc_out<bool> 		PI_SEL7;		// slave selection
 
-    sc_in<sc_uint<3> > 		PI_ACK;		// transfer acknow
+    sc_in<sc_uint<3>> 		PI_ACK;		// transfer acknow
     sc_out<bool> 		PI_TOUT;	// timeout
 
-    sc_signal<sc_uint<8> > 	PI_IREQ;	// master's request
-    sc_signal<sc_uint<8> > 	PI_GNT;		// master's grant
-    sc_signal<sc_uint<8> > 	PI_SEL;		// slave selection
+    sc_signal<sc_uint<8>> 	PI_IREQ;	// master's request
+    sc_signal<sc_uint<8>> 	PI_GNT;		// master's grant
+    sc_signal<sc_uint<8>> 	PI_SEL;		// slave selection
 
   	sc_signal<bool> 	CK_SX;		// internal clk
 
-  	sc_signal<sc_uint<8> >	PRIOR_RX;	// priority reg.
+  	sc_signal<sc_uint<8>>	PRIOR_RX;	// priority reg.
   	sc_signal<bool> 	WRTPRIO_SX;	// Priority reg. wen.
 
   	sc_signal<bool>		CURPRIO_SX0;	// current priority msk
@@ -70,18 +70,18 @@ SC_MODULE(pi_control)
   	sc_signal<bool>		CURPRIO_SX5;	// current priority msk
   	sc_signal<bool>		CURPRIO_SX6;	// current priority msk
   	sc_signal<bool>		CURPRIO_SX7;	// current priority msk
-  	sc_signal<sc_uint<8> >	CURPRIO_SX;	// current priority msk
+  	sc_signal<sc_uint<8>>	CURPRIO_SX;	// current priority msk
 
-  	sc_signal<sc_uint<8> >	REQUEST_SX;	// requests
-  	sc_signal<sc_uint<8> >	GRANT_SX;	// internal grants
-  	sc_signal<sc_uint<8> >	DFLMSTR_SX;	// int. default master
-  	sc_signal<sc_uint<8> >	CMPDFLT_SX;	// def. master request
+  	sc_signal<sc_uint<8>>	REQUEST_SX;	// requests
+  	sc_signal<sc_uint<8>>	GRANT_SX;	// internal grants
+  	sc_signal<sc_uint<8>>	DFLMSTR_SX;	// int. default master
+  	sc_signal<sc_uint<8>>	CMPDFLT_SX;	// def. master request
   	sc_signal<bool> 	DFLTRQS_SX;	// def. master request
 
-  	sc_signal<sc_uint<8> >	SELECT_SX;	// int. device select
+  	sc_signal<sc_uint<8>>	SELECT_SX;	// int. device select
 
-  	sc_signal<sc_uint<2> >	C_STAT_RX;	// state register
-  	sc_signal<sc_uint<8> >	C_NXTS_SX;	// next state
+  	sc_signal<sc_uint<2>>	C_STAT_RX;	// state register
+  	sc_signal<sc_uint<8>>	C_NXTS_SX;	// next state
 
   	sc_signal<bool> 	TRANRQS_SX;	// effective transfer
   	sc_signal<bool> 	DATARDY_SX;	// data ready

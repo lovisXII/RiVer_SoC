@@ -24,11 +24,11 @@
 
 SC_MODULE(memory)
 {
-	sc_in<sc_uint<32> > 	RES_RE;
-	sc_in<sc_uint<32> > 	D_IN;
-	sc_in<sc_uint<8> > 	OPCOD_RE;
+	sc_in<sc_uint<32>> 	RES_RE;
+	sc_in<sc_uint<32>> 	D_IN;
+	sc_in<sc_uint<8>> 	OPCOD_RE;
 	sc_in<bool> 		D_BERR_N;
-	sc_in<sc_uint<32> > 	SR_RE;
+	sc_in<sc_uint<32>> 	SR_RE;
 	sc_in<bool> 		IASVIOL_RE;
 	sc_in<bool> 		IAMALGN_RE;
 	sc_in<bool> 		INTRQ_XX;
@@ -38,18 +38,18 @@ SC_MODULE(memory)
 	sc_in<bool> 		ILLGINS_RE;
 	sc_in<bool> 		C0UNUSE_RE;
 	sc_in<bool> 		BDSLOT_RE;
-	sc_in<sc_uint<6> > 	IT_XX;
-	sc_in<sc_uint<32> > 	CAUSE_RX;
-	sc_in<sc_uint<5> > 	COP0D_RE;
+	sc_in<sc_uint<6>> 	IT_XX;
+	sc_in<sc_uint<32>> 	CAUSE_RX;
+	sc_in<sc_uint<5>> 	COP0D_RE;
 	sc_in<bool> 		KEEP_SM;
-	sc_in<sc_uint<32> > 	PC_RE;
-	sc_in<sc_uint<32> > 	REDOPC_RE;
+	sc_in<sc_uint<32>> 	PC_RE;
+	sc_in<sc_uint<32>> 	REDOPC_RE;
 	sc_in<bool> 		OVF_RE;
 
-	sc_in<sc_uint<25> > I_TYPE_RE;
+	sc_in<sc_uint<25>> I_TYPE_RE;
 	sc_in<bool> SWAP_RE;
 	sc_in<bool> COPYCAP_RE;
-	sc_in<sc_uint<5> > RD_RE;
+	sc_in<sc_uint<5>> RD_RE;
 
 	sc_out<bool> 	I_MPDC_SM;
 	sc_out<bool> 	I_WRITE_SM;
@@ -63,12 +63,12 @@ SC_MODULE(memory)
 	sc_out<bool> 	WRITE_SM;
 	sc_out<bool> 		DLOCK_SM;
 	sc_out<bool> 	DATARED_SM;
-	sc_out<sc_uint<5> > 	RD_SM;
-	sc_out<sc_uint<4> > 	BYTSEL_SM;
-	sc_out<sc_uint<32> > 	REDDAT_SM;
-	sc_signal<sc_uint<24> > BSEXT_SM;
-	sc_signal<sc_uint<16> > HSEXT_SM;
-	sc_out<sc_uint<32> > 	DATA_SM;
+	sc_out<sc_uint<5>> 	RD_SM;
+	sc_out<sc_uint<4>> 	BYTSEL_SM;
+	sc_out<sc_uint<32>> 	REDDAT_SM;
+	sc_signal<sc_uint<24>> BSEXT_SM;
+	sc_signal<sc_uint<16>> HSEXT_SM;
+	sc_out<sc_uint<32>> 	DATA_SM;
 	sc_signal<bool> 	DABUSER_XM;
 	sc_signal<bool> 	LAMALGN_XM;
 	sc_signal<bool> 	SAMALGN_XM;
@@ -76,20 +76,20 @@ SC_MODULE(memory)
 	sc_signal<bool> 	SASVIOL_XM;
 	sc_signal<bool> 	BADDA_XM;
 	sc_signal<bool> 	BADIA_XM;
-	sc_out<sc_uint<2> > 		COPERR_XM;
-	sc_out<sc_uint<4> > 	EXCCODE_XM;
-	sc_out<sc_uint<32> > 	CAUSE_XM;
-	sc_out<sc_uint<2> > 	SWINT_XM;
+	sc_out<sc_uint<2>> 		COPERR_XM;
+	sc_out<sc_uint<4>> 	EXCCODE_XM;
+	sc_out<sc_uint<32>> 	CAUSE_XM;
+	sc_out<sc_uint<2>> 	SWINT_XM;
 	sc_out<bool> 		WCAUSE_SM;
-	sc_out<sc_uint<32> > 	CAUSE_SM;
-	sc_signal<sc_uint<32> > RSTORSR_SM;
-	sc_out<sc_uint<32> > 	NEXTSR_SM;
+	sc_out<sc_uint<32>> 	CAUSE_SM;
+	sc_signal<sc_uint<32>> RSTORSR_SM;
+	sc_out<sc_uint<32>> 	NEXTSR_SM;
 	sc_out<bool> 		WSR_SM;
-	sc_out<sc_uint<32> > 	EPC_XM;
+	sc_out<sc_uint<32>> 	EPC_XM;
 	sc_out<bool> 		LATEEX_XM;
 	sc_out<bool> 		EARLYEX_XM;
 	sc_out<bool> 		EXCRQ_XM;
-	sc_out<sc_uint<2> > 	SWINTRQ_XM;
+	sc_out<sc_uint<2>> 	SWINTRQ_XM;
 	sc_out<bool> 		WEPC_XM;
 
 	SC_CTOR(memory):

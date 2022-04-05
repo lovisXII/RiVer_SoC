@@ -28,11 +28,11 @@
 
 SC_MODULE(memory)
 {
-	sc_in<sc_uint<32> > 	RES_RE;		// result out of alu
-	sc_in<sc_uint<32> > 	D_IN;		// data bus (input)
-	sc_in<sc_uint<8> > 	OPCOD_RE;		// operation code
+	sc_in<sc_uint<32>> 	RES_RE;		// result out of alu
+	sc_in<sc_uint<32>> 	D_IN;		// data bus (input)
+	sc_in<sc_uint<8>> 	OPCOD_RE;		// operation code
 	sc_in<bool> 		D_BERR_N;		// data bus error
-	sc_in<sc_uint<32> > 	SR_RE;		// status register
+	sc_in<sc_uint<32>> 	SR_RE;		// status register
 	sc_in<bool> 		IASVIOL_RE;		// instruction @ segmentation violation
 	sc_in<bool> 		IAMALGN_RE;		// instruction @ miss alignment
 	sc_in<bool> 		INTRQ_XX;		// interrupt request
@@ -42,22 +42,22 @@ SC_MODULE(memory)
 	sc_in<bool> 		ILLGINS_RE;		// unknown instruction
 	sc_in<bool> 		C0UNUSE_RE;		// coprocessor 0 unusable
 	sc_in<bool> 		BDSLOT_RE;		// branch delayed slot
-	sc_in<sc_uint<6> > 	IT_XX;			// external interrupts
-	sc_in<sc_uint<32> > 	CAUSE_RX;	// cause register
-	sc_in<sc_uint<5> > 	COP0D_RE;		// coprocessor 0 destination register number
+	sc_in<sc_uint<6>> 	IT_XX;			// external interrupts
+	sc_in<sc_uint<32>> 	CAUSE_RX;	// cause register
+	sc_in<sc_uint<5>> 	COP0D_RE;		// coprocessor 0 destination register number
 	sc_in<bool> 		KEEP_SM;		// keep data signal
-	sc_in<sc_uint<32> > 	PC_RE;		// instruction @
-	sc_in<sc_uint<32> > 	REDOPC_RE;	// old instruction @
+	sc_in<sc_uint<32>> 	PC_RE;		// instruction @
+	sc_in<sc_uint<32>> 	REDOPC_RE;	// old instruction @
 	sc_in<bool> 		OVF_RE;			// arithmetique overflow
 
-	sc_in<sc_uint<25> > I_TYPE_RE;		// instruction type
+	sc_in<sc_uint<25>> I_TYPE_RE;		// instruction type
 
 	// ############### deprecated #################
 	sc_in<bool> SWAP_RE;
 	// ############### deprecated #################
 
 	sc_in<bool> COPYCAP_RE;				// copying capability
-	sc_in<sc_uint<5> > RD_RE;			// destination register number
+	sc_in<sc_uint<5>> RD_RE;			// destination register number
 
 	sc_out<bool> 			I_MPDC_SM;	// mem produces res
 	sc_out<bool> 			I_WRITE_SM;	// write into register
@@ -71,12 +71,12 @@ SC_MODULE(memory)
 	sc_out<bool> 			WRITE_SM;	// write into storage
 	sc_out<bool> 			DLOCK_SM;	// lock data access
 	sc_out<bool> 			DATARED_SM;	// read access
-	sc_out<sc_uint<5> > 	RD_SM;		// destination register
-	sc_out<sc_uint<4> > 	BYTSEL_SM;	// byte select for rw
-	sc_out<sc_uint<32> > 	REDDAT_SM;	// aligned data
-	sc_signal<sc_uint<24> > BSEXT_SM;	// data sign ext byte
-	sc_signal<sc_uint<16> > HSEXT_SM;	// data sign ext half word
-	sc_out<sc_uint<32> > 	DATA_SM;	// data bus / res
+	sc_out<sc_uint<5>> 	RD_SM;		// destination register
+	sc_out<sc_uint<4>> 	BYTSEL_SM;	// byte select for rw
+	sc_out<sc_uint<32>> 	REDDAT_SM;	// aligned data
+	sc_signal<sc_uint<24>> BSEXT_SM;	// data sign ext byte
+	sc_signal<sc_uint<16>> HSEXT_SM;	// data sign ext half word
+	sc_out<sc_uint<32>> 	DATA_SM;	// data bus / res
 	sc_signal<bool> 		DABUSER_XM;	// data @ bus error
 	sc_signal<bool> 		LAMALGN_XM;	// load @ miss alignment
 	sc_signal<bool> 		SAMALGN_XM;	// store @ miss alignment
@@ -84,20 +84,20 @@ SC_MODULE(memory)
 	sc_signal<bool> 		SASVIOL_XM;	// store @ segmentation violation
 	sc_signal<bool> 		BADDA_XM;	// bad data @
 	sc_signal<bool> 		BADIA_XM;	// bad instruction @
-	sc_out<sc_uint<2> > 	COPERR_XM;	// coprocessor number
-	sc_out<sc_uint<4> > 	EXCCODE_XM;	// exception code
-	sc_out<sc_uint<32> > 	CAUSE_XM;	// exception cause (exp)
-	sc_out<sc_uint<2> > 	SWINT_XM;	// sw interrupt (mtc0)
+	sc_out<sc_uint<2>> 	COPERR_XM;	// coprocessor number
+	sc_out<sc_uint<4>> 	EXCCODE_XM;	// exception code
+	sc_out<sc_uint<32>> 	CAUSE_XM;	// exception cause (exp)
+	sc_out<sc_uint<2>> 	SWINT_XM;	// sw interrupt (mtc0)
 	sc_out<bool> 			WCAUSE_SM;	// excp cause wen (sw)
-	sc_out<sc_uint<32> > 	CAUSE_SM;	// exception cause (sw)
-	sc_signal<sc_uint<32> > RSTORSR_SM;	// next instruction sts (rfe)
-	sc_out<sc_uint<32> > 	NEXTSR_SM;	// next instruction sts (sw)
+	sc_out<sc_uint<32>> 	CAUSE_SM;	// exception cause (sw)
+	sc_signal<sc_uint<32>> RSTORSR_SM;	// next instruction sts (rfe)
+	sc_out<sc_uint<32>> 	NEXTSR_SM;	// next instruction sts (sw)
 	sc_out<bool> 			WSR_SM;		// next st write enable 
-	sc_out<sc_uint<32> > 	EPC_XM;		// exc pg counter
+	sc_out<sc_uint<32>> 	EPC_XM;		// exc pg counter
 	sc_out<bool> 			LATEEX_XM;	// late exceptions
 	sc_out<bool> 			EARLYEX_XM;	// early exceptions
 	sc_out<bool> 			EXCRQ_XM;	// exception request
-	sc_out<sc_uint<2> > 	SWINTRQ_XM;	// sw interrupt request
+	sc_out<sc_uint<2>> 	SWINTRQ_XM;	// sw interrupt request
 	sc_out<bool> 			WEPC_XM;	// exc pg cntr write enable
 
 	SC_CTOR(memory):

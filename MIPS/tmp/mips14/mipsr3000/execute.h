@@ -24,13 +24,13 @@
 
 SC_MODULE(execute)
 {
-	sc_in<sc_uint<32> > 	SR_RI;
-	sc_in<sc_uint<25> > 	I_TYPE_RD;
-	sc_in<sc_uint<8> > 	OPCOD_RD;
-	sc_in<sc_uint<32> > 	IOPER_RD;
+	sc_in<sc_uint<32>> 	SR_RI;
+	sc_in<sc_uint<25>> 	I_TYPE_RD;
+	sc_in<sc_uint<8>> 	OPCOD_RD;
+	sc_in<sc_uint<32>> 	IOPER_RD;
 
-	sc_in<sc_uint<32> > 	NEXTSR_RX;
-	sc_in<sc_uint<32> > 	NEXTPC_RD;
+	sc_in<sc_uint<32>> 	NEXTSR_RX;
+	sc_in<sc_uint<32>> 	NEXTPC_RD;
 	sc_in<bool> 		SWAP_RD;
 	sc_in<bool> 		I_BERR_N;
 	
@@ -40,8 +40,8 @@ SC_MODULE(execute)
 	sc_out<bool> 		I_READS_SE;
 	sc_out<bool> 		I_READT_SE;
 
-	sc_out<sc_uint<3> >	I_OPER_SE;
-	sc_out<sc_uint<2> >	I_LOGIC_SE;
+	sc_out<sc_uint<3>>	I_OPER_SE;
+	sc_out<sc_uint<2>>	I_LOGIC_SE;
 	sc_out<bool>		I_SUB_SE;
 	sc_out<bool>		I_RIGHT_SE;
 	sc_out<bool>		I_RSGND_SE;
@@ -52,12 +52,12 @@ SC_MODULE(execute)
 
 	sc_signal<bool>		I_BRNCH_SE;
 
-	sc_in<sc_uint<32> >	X_SE;
-	sc_in<sc_uint<32> >	Y_SE;
+	sc_in<sc_uint<32>>	X_SE;
+	sc_in<sc_uint<32>>	Y_SE;
 	sc_in<bool>		OVERFLW_SE;
 
-	sc_out<sc_uint<32> >	XOPER_SE;
-	sc_out<sc_uint<32> >	YOPER_SE;
+	sc_out<sc_uint<32>>	XOPER_SE;
+	sc_out<sc_uint<32>>	YOPER_SE;
 
 	sc_out<bool>		WREDOPC_SE;
 	sc_out<bool>		IABUSER_XE;

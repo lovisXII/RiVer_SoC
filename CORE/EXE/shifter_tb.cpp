@@ -25,9 +25,9 @@ int sc_main(int argc, char* argv[]) {
     shifter unit_shifter("shifter");
 
     // declare signals
-    sc_signal<sc_uint<32> > shifter_din, shifter_dout;
-    sc_signal<sc_uint<5> >  shifter_shift_val;
-    sc_signal<sc_uint<2> >  shifter_shift_cmd;
+    sc_signal<sc_uint<32>> shifter_din, shifter_dout;
+    sc_signal<sc_uint<5>>  shifter_shift_val;
+    sc_signal<sc_uint<2>>  shifter_shift_cmd;
 
     // link shifter with signals
 

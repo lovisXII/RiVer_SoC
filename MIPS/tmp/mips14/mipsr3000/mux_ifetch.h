@@ -29,9 +29,9 @@ SC_MODULE(mux_ifetch)
 	sc_in<bool> HOLD_SI;
 	sc_in<bool> KEEP_SI;
 
-	sc_in<sc_uint<32> > IR_RI;
-	sc_in<sc_uint<32> > I;
-	sc_out<sc_uint<32> > MUX_IR_SI;
+	sc_in<sc_uint<32>> IR_RI;
+	sc_in<sc_uint<32>> I;
+	sc_out<sc_uint<32>> MUX_IR_SI;
 
 	sc_out<bool> MUX_INSTRED_SI;
 
@@ -39,13 +39,13 @@ SC_MODULE(mux_ifetch)
 	sc_in<bool> BDSLOT_RI;
 	sc_out<bool> MUX_BDSLOT_SI;
 
-	sc_in<sc_uint<32> > PC_RI;
-	sc_in<sc_uint<32> > NEXTPC_RD;
-	sc_out<sc_uint<32> > MUX_PC_SI;
+	sc_in<sc_uint<32>> PC_RI;
+	sc_in<sc_uint<32>> NEXTPC_RD;
+	sc_out<sc_uint<32>> MUX_PC_SI;
 
-	sc_in<sc_uint<32> > SR_RI;
-	sc_in<sc_uint<32> > SR_SI;
-	sc_out<sc_uint<32> > MUX_SR_SI;
+	sc_in<sc_uint<32>> SR_RI;
+	sc_in<sc_uint<32>> SR_SI;
+	sc_out<sc_uint<32>> MUX_SR_SI;
 
 	SC_CTOR(mux_ifetch):
 		BUBBLE_SI("BUBBLE_SI"),

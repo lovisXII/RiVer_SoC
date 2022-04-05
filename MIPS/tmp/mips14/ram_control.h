@@ -9,26 +9,26 @@ SC_MODULE(ram_control)
 	sc_in<bool> CK;
 	sc_in<bool> RESET_N;
 
-	sc_in<sc_uint<32> > 	PI_A;		// Pi Address
-	sc_inout<sc_uint<32> > 	PI_D;		// Pi Data
-	sc_in<sc_uint<4> > 	PI_OPC;		// Pi Opcode
+	sc_in<sc_uint<32>> 	PI_A;		// Pi Address
+	sc_inout<sc_uint<32>> 	PI_D;		// Pi Data
+	sc_in<sc_uint<4>> 	PI_OPC;		// Pi Opcode
 	sc_in<bool> 		PI_READ;	// Pi r/w 
 	sc_in<bool> 		PI_SEL;		// Pi slave sel 
-	sc_inout<sc_uint<3> > 	PI_ACK;		// Pi ack 
+	sc_inout<sc_uint<3>> 	PI_ACK;		// Pi ack 
 
-	sc_out<sc_uint<4> >	RAM_E;
+	sc_out<sc_uint<4>>	RAM_E;
 	sc_out<bool>		RAM_W_N;
-	sc_out<sc_uint<10> >	RAM_ADR;
-	sc_inout<sc_uint<32> >	RAM_D;
+	sc_out<sc_uint<10>>	RAM_ADR;
+	sc_inout<sc_uint<32>>	RAM_D;
 
 	sc_signal<bool>		RESET_RX;
 	sc_signal<bool>		CK_SX;
-	sc_signal<sc_uint<32> >	ADDRESS_RX;
+	sc_signal<sc_uint<32>>	ADDRESS_RX;
 	sc_signal<bool>		READ_RX;
 	sc_signal<bool>		SELECT_RX;
-	sc_signal<sc_uint<4> >	OPCODE_RX;
-	sc_signal<sc_uint<2> >	MODE_SX;
-	sc_signal<sc_uint<4> >	BYTE_SX;
+	sc_signal<sc_uint<4>>	OPCODE_RX;
+	sc_signal<sc_uint<2>>	MODE_SX;
+	sc_signal<sc_uint<4>>	BYTE_SX;
 
 	SC_CTOR(ram_control)
 	{

@@ -32,29 +32,29 @@ SC_MODULE(mux_execute)
 	sc_in<bool> STALL_SM;
 	sc_in<bool> COPY_SM;
 
-	sc_in<sc_uint<32> > IR_RD;
-	sc_in<sc_uint<32> > IR_RE;
-	sc_out<sc_uint<32> > MUX_IR_SE;
+	sc_in<sc_uint<32>> IR_RD;
+	sc_in<sc_uint<32>> IR_RE;
+	sc_out<sc_uint<32>> MUX_IR_SE;
 
-	sc_in<sc_uint<25> > I_TYPE_RD;
-	sc_in<sc_uint<25> > I_TYPE_RE;
-	sc_out<sc_uint<25> > MUX_I_TYPE_SE;
+	sc_in<sc_uint<25>> I_TYPE_RD;
+	sc_in<sc_uint<25>> I_TYPE_RE;
+	sc_out<sc_uint<25>> MUX_I_TYPE_SE;
 
-	sc_in<sc_uint<8> > OPCOD_RD;
-	sc_in<sc_uint<8> > OPCOD_RE;
-	sc_out<sc_uint<8> > MUX_OPCOD_SE;
+	sc_in<sc_uint<8>> OPCOD_RD;
+	sc_in<sc_uint<8>> OPCOD_RE;
+	sc_out<sc_uint<8>> MUX_OPCOD_SE;
 
 	sc_in<bool> BDSLOT_RD;
 	sc_in<bool> BDSLOT_RE;
 	sc_out<bool> MUX_BDSLOT_SE;
 
-	sc_in<sc_uint<5> > RD_RD;
-	sc_in<sc_uint<5> > RD_RE;
-	sc_out<sc_uint<5> > MUX_RD_SE;
+	sc_in<sc_uint<5>> RD_RD;
+	sc_in<sc_uint<5>> RD_RE;
+	sc_out<sc_uint<5>> MUX_RD_SE;
 
-	sc_in<sc_uint<5> > COP0D_RD;
-	sc_in<sc_uint<5> > COP0D_RE;
-	sc_out<sc_uint<5> > MUX_COP0D_SE;
+	sc_in<sc_uint<5>> COP0D_RD;
+	sc_in<sc_uint<5>> COP0D_RE;
+	sc_out<sc_uint<5>> MUX_COP0D_SE;
 
 	sc_in<bool> OVF_RE;
 	sc_in<bool> OVF_XE;
@@ -92,33 +92,33 @@ SC_MODULE(mux_execute)
 	sc_in<bool> SWAP_RD;
 	sc_out<bool> MUX_SWAP_SE;
 
-	sc_in<sc_uint<32> > PC_RD;
-	sc_in<sc_uint<32> > PC_RE;
-	sc_out<sc_uint<32> > MUX_PC_SE;
+	sc_in<sc_uint<32>> PC_RD;
+	sc_in<sc_uint<32>> PC_RE;
+	sc_out<sc_uint<32>> MUX_PC_SE;
 
-	sc_in<sc_uint<32> > SR_RD;
-	sc_in<sc_uint<32> > SR_RE;
-	sc_out<sc_uint<32> > MUX_SR_SE;
+	sc_in<sc_uint<32>> SR_RD;
+	sc_in<sc_uint<32>> SR_RE;
+	sc_out<sc_uint<32>> MUX_SR_SE;
 
-	sc_in<sc_uint<32> > NEXTPC_RD;
-	sc_in<sc_uint<32> > NEXTPC_RE;
-	sc_out<sc_uint<32> > MUX_NEXTPC_SE;
+	sc_in<sc_uint<32>> NEXTPC_RD;
+	sc_in<sc_uint<32>> NEXTPC_RE;
+	sc_out<sc_uint<32>> MUX_NEXTPC_SE;
 
-	sc_in<sc_uint<32> > RES_SE;
-	sc_in<sc_uint<32> > RES_RE;
-	sc_out<sc_uint<32> > MUX_RES_SE;
+	sc_in<sc_uint<32>> RES_SE;
+	sc_in<sc_uint<32>> RES_RE;
+	sc_out<sc_uint<32>> MUX_RES_SE;
 
-	sc_in<sc_uint<32> > Y_SE;
-	sc_in<sc_uint<32> > WDATA_RE;
-	sc_out<sc_uint<32> > MUX_WDATA_SE;
+	sc_in<sc_uint<32>> Y_SE;
+	sc_in<sc_uint<32>> WDATA_RE;
+	sc_out<sc_uint<32>> MUX_WDATA_SE;
 
 	sc_in<bool> COPYCAP_SE;
 	sc_in<bool> COPYCAP_RE;
 	sc_out<bool> MUX_COPYCAP_SE;
 
-	sc_in<sc_uint<32> > REDOPC_RE;
+	sc_in<sc_uint<32>> REDOPC_RE;
 	sc_in<bool> WREDOPC_SE;
-	sc_out<sc_uint<32> > MUX_REDOPC_SE;
+	sc_out<sc_uint<32>> MUX_REDOPC_SE;
 
 	SC_CTOR(mux_execute):
 	BUBBLE_SE("BUBBLE_SE"),

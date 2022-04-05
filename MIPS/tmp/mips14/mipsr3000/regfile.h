@@ -24,15 +24,15 @@
 
 SC_MODULE(regfile)
 {
-	sc_in<sc_uint<5> > RRA;
-	sc_in<sc_uint<5> > RRB;
-	sc_in<sc_uint<5> > WRC;
-	sc_in<sc_uint<32> > WDATA;
+	sc_in<sc_uint<5>> RRA;
+	sc_in<sc_uint<5>> RRB;
+	sc_in<sc_uint<5>> WRC;
+	sc_in<sc_uint<32>> WDATA;
 	sc_in<bool> CK_SX;
-	sc_out<sc_uint<32> > DA;
-	sc_out<sc_uint<32> > DB;
+	sc_out<sc_uint<32>> DA;
+	sc_out<sc_uint<32>> DB;
 
-	sc_signal<sc_uint<32> > registerFile[32];
+	sc_signal<sc_uint<32>> registerFile[32];
 
 	SC_CTOR(regfile)
 	{

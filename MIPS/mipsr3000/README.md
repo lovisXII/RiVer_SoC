@@ -535,36 +535,36 @@ Q:
 Q:
 - mipsr3000
     sc_signal<bool> BOOTEV_XX;  			// bootstrap exc vect
-	sc_signal<sc_uint<32> > EPC_XX;  		// exc pg counter
-	sc_signal<sc_uint<32> > EPC_XM;  		// exc pg counter
+	sc_signal<sc_uint<32>> EPC_XX;  		// exc pg counter
+	sc_signal<sc_uint<32>> EPC_XM;  		// exc pg counter
 	sc_signal<bool> WEPC_XX;  				// exc pg cntr write en
 	sc_signal<bool> WEPC_XM;  				// exc pg cntr write en
-	sc_signal<sc_uint<32> > EPC_RX;  		// exc pg counter reg, pg?
+	sc_signal<sc_uint<32>> EPC_RX;  		// exc pg counter reg, pg?
 
-    sc_in<sc_uint<32> > 	CAUSE_RX;
+    sc_in<sc_uint<32>> 	CAUSE_RX;
 
-	sc_signal<sc_uint<4> > BYTSEL_SM;  		// byte select for rw, rw?
-	sc_signal<sc_uint<24> > BSEXT_SM;  		// data sign ext byte, sign ext?
+	sc_signal<sc_uint<4>> BYTSEL_SM;  		// byte select for rw, rw?
+	sc_signal<sc_uint<24>> BSEXT_SM;  		// data sign ext byte, sign ext?
 							HSEXT
-	sc_signal<sc_uint<32> > DATA_SM;  		// data bus / res
+	sc_signal<sc_uint<32>> DATA_SM;  		// data bus / res
 - decode.h
 	sc_signal<bool> 		IMDSGN_SD;		// ?
-	sc_signal<sc_uint<16> >	IMDSEX_SD;		// ?
+	sc_signal<sc_uint<16>>	IMDSEX_SD;		// ?
 
 
-   	sc_signal<sc_uint<32> > SEQADR_SD;		// seq @ ?
+   	sc_signal<sc_uint<32>> SEQADR_SD;		// seq @ ?
 
 
 - execute.h
-    sc_in<sc_uint<32> > 	NEXTSR_RX;		// next instruction sts ?
+    sc_in<sc_uint<32>> 	NEXTSR_RX;		// next instruction sts ?
 	// la valeur qui s'ecrit dans le meme registre a la fin du cycle
 
 	processIASVIOL 
 - mux_memory.h
 	// little explication about bus data 
-	sc_in<sc_uint<32> > DATA_RM;  // data bus input register
-	sc_in<sc_uint<32> > DATA_SM;  // data bus input register (from bypass ?)
-	sc_out<sc_uint<32> > MUX_DATA_SM;	// res data bus input register
+	sc_in<sc_uint<32>> DATA_RM;  // data bus input register
+	sc_in<sc_uint<32>> DATA_SM;  // data bus input register (from bypass ?)
+	sc_out<sc_uint<32>> MUX_DATA_SM;	// res data bus input register
 
 - constants.h
 	_o ?

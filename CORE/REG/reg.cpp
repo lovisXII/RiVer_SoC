@@ -4,12 +4,10 @@
 // bool REG_VALID[33] ; //bit de validité des registres
 
 void reg::reading_adresses() {
-    RDATA1_SR.write(
-        REG_RR[RADR1_SD.read()]);  // on charge la donnée dans REG[index] dans
-                                   // le port de lecture 1
-    RDATA2_SR.write(
-        REG_RR[RADR2_SD.read()]);  // on charge la donnée dans REG[index] dans
-                                   // le port de lecture 2
+    RDATA1_SR.write(REG_RR[RADR1_SD.read()]);  // on charge la donnée dans REG[index] dans
+                                               // le port de lecture 1
+    RDATA2_SR.write(REG_RR[RADR2_SD.read()]);  // on charge la donnée dans REG[index] dans
+                                               // le port de lecture 2
     if (RESET_N.read()) {
         READ_PC_SR.write(REG_RR[32]);
     } else {
@@ -30,14 +28,12 @@ void reg::writing_adresse() {
                                             // register from the written adress
         }
         if (not(WADR_SW.read() == 32 && WRITE_PC_ENABLE_SD.read())) {
-            if (WADR_SW.read() !=
-                0)  // si on cherche à écrire dans le registre 0 on ne fait rien
+            if (WADR_SW.read() != 0)  // si on cherche à écrire dans le registre 0 on ne fait rien
             {
                 if (WENABLE_SW.read())  // if the register written is valid
                 {
-                    REG_RR[WADR_SW.read()].write(
-                        WDATA_SW);  // we write the data into the register from
-                                    // the written adress
+                    REG_RR[WADR_SW.read()].write(WDATA_SW);  // we write the data into the register from
+                                                             // the written adress
                 }
             }
         }
@@ -61,8 +57,7 @@ void reg::trace(sc_trace_file* tf) {
     for (int i = 0; i < 33; i++) {
         std::string regname = "REG_";
         regname += std::to_string(i);
-        sc_trace(
-            tf, REG_RR[i], signal_get_name(REG_RR[i].name(), regname.c_str()));
+        sc_trace(tf, REG_RR[i], signal_get_name(REG_RR[i].name(), regname.c_str()));
     }
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));

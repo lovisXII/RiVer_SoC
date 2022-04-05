@@ -33,24 +33,24 @@ int sc_main(int argc, char* argv[]) {
     // sc_trace_file* file = sc_create_vcd_trace_file("trace");
 
     // declare signals
-    sc_signal<sc_uint<32> > op1;
-    sc_signal<sc_uint<32> > op2;
-    sc_signal<sc_uint<32> > mem_data;
-    sc_signal<sc_uint<6> >  dest;
-    sc_signal<sc_uint<2> >  cmd;
-    sc_signal<sc_uint<2> >  mem_size;
-    sc_signal<bool>         neg_op1, wb, mem_sign_extend,
+    sc_signal<sc_uint<32>> op1;
+    sc_signal<sc_uint<32>> op2;
+    sc_signal<sc_uint<32>> mem_data;
+    sc_signal<sc_uint<6>>  dest;
+    sc_signal<sc_uint<2>>  cmd;
+    sc_signal<sc_uint<2>>  mem_size;
+    sc_signal<bool>        neg_op1, wb, mem_sign_extend,
         select_shift;  // taille fifo entrée : 110
     sc_signal<bool> mem_load, mem_store;
     sc_signal<bool> exe2mem_pop, dec2exe_empty;
 
-    sc_signal<sc_uint<32> > ffout_exe_res;
-    sc_signal<sc_uint<32> > ffout_mem_data;
-    sc_signal<sc_uint<6> >  ffout_dest;
-    sc_signal<sc_uint<2> >  ffout_mem_size;
-    sc_signal<bool>         ffout_wb, ffout_mem_sign_extend;  // taille fifo sortie : 76
-    sc_signal<bool>         ffout_mem_load, ffout_mem_store;
-    sc_signal<bool>         exe2mem_empty, dec2exe_pop;
+    sc_signal<sc_uint<32>> ffout_exe_res;
+    sc_signal<sc_uint<32>> ffout_mem_data;
+    sc_signal<sc_uint<6>>  ffout_dest;
+    sc_signal<sc_uint<2>>  ffout_mem_size;
+    sc_signal<bool>        ffout_wb, ffout_mem_sign_extend;  // taille fifo sortie : 76
+    sc_signal<bool>        ffout_mem_load, ffout_mem_store;
+    sc_signal<bool>        exe2mem_empty, dec2exe_pop;
 
     sc_signal<bool> reset;
     sc_clock        clk("clk", 1, SC_NS);
@@ -79,8 +79,7 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.WB_RE(ffout_wb);
     unit_exec.MEM_LOAD_RE(ffout_mem_load);
     unit_exec.MEM_STORE_RE(ffout_mem_store);
-    unit_exec.MEM_SIGN_EXTEND_RE(
-        ffout_mem_sign_extend);  // taille fifo sortie : 76
+    unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend);  // taille fifo sortie : 76
     unit_exec.EXE2MEM_EMPTY_SE(exe2mem_empty);
     unit_exec.DEC2EXE_POP_SE(dec2exe_pop);
 
@@ -193,23 +192,19 @@ int sc_main(int argc, char* argv[]) {
             }
         }
         if (select_shift_ && unit_exec.CMD_RD.read() == 0) {
-            if (unit_exec.exe_res_se.read() !=
-                (sc_uint<32>)((op1_ << unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ << unit_exec.shift_val_se.read()))) {
                 cerr << "error sur sll" << endl;
                 test_passed = false;
             }
         }
         if (select_shift_ && unit_exec.CMD_RD.read() == 1) {
-            if (unit_exec.exe_res_se.read() !=
-                (sc_uint<32>)((((unsigned int)op1_) >>
-                               unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((((unsigned int)op1_) >> unit_exec.shift_val_se.read()))) {
                 cerr << "error sra" << endl;
                 test_passed = false;
             }
         }
         if (select_shift_ && unit_exec.CMD_RD.read() == 2) {
-            if (unit_exec.exe_res_se.read() !=
-                (sc_uint<32>)((op1_ >> unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ >> unit_exec.shift_val_se.read()))) {
                 cerr << "error srl" << endl;
                 test_passed = false;
             }

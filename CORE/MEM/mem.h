@@ -101,18 +101,14 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << MEM_SIZE_RE << wb_sm
-                  << SIGN_EXTEND_RE;
+        sensitive << data_sm << DEST_RE << MEM_SIZE_RE << wb_sm << SIGN_EXTEND_RE;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
-        sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SE
-                  << wb_sm;
+        sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
         SC_METHOD(mem_preprocess);
-        sensitive << WB_RE << LOAD_RE << MCACHE_RESULT_SM << EXE_RES_RE
-                  << MEM_DATA_RE << STORE_RE << EXE2MEM_EMPTY_SE;
+        sensitive << WB_RE << LOAD_RE << MCACHE_RESULT_SM << EXE_RES_RE << MEM_DATA_RE << STORE_RE << EXE2MEM_EMPTY_SE;
         SC_METHOD(sign_extend);
-        sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM
-                  << EXE_RES_RE << LOAD_RE;
+        sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
     }
 };

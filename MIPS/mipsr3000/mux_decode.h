@@ -35,17 +35,17 @@ SC_MODULE(mux_decode)
   sc_in<bool> EXCRQ_XM;					// exception request
   sc_in<bool> RESET_RX;					// synchronize
 
-  sc_in<sc_uint<32> > IR_RI;			// instruction register
-  sc_in<sc_uint<32> > IR_RD;			// instruction register
-  sc_out<sc_uint<32> > MUX_IR_SD;		// res instruction register
+  sc_in<sc_uint<32>> IR_RI;			// instruction register
+  sc_in<sc_uint<32>> IR_RD;			// instruction register
+  sc_out<sc_uint<32>> MUX_IR_SD;		// res instruction register
 
-  sc_in<sc_uint<25> > I_TYPE_SD;		// instruction type
-  sc_in<sc_uint<25> > I_TYPE_RD;		// instruction type
-  sc_out<sc_uint<25> > MUX_I_TYPE_SD;	// res instruction type
+  sc_in<sc_uint<25>> I_TYPE_SD;		// instruction type
+  sc_in<sc_uint<25>> I_TYPE_RD;		// instruction type
+  sc_out<sc_uint<25>> MUX_I_TYPE_SD;	// res instruction type
 
-  sc_in<sc_uint<8> > OPCOD_SD;			// operation code
-  sc_in<sc_uint<8> > OPCOD_RD;			// operation code 
-  sc_out<sc_uint<8> > MUX_OPCOD_SD;		// res operation code
+  sc_in<sc_uint<8>> OPCOD_SD;			// operation code
+  sc_in<sc_uint<8>> OPCOD_RD;			// operation code 
+  sc_out<sc_uint<8>> MUX_OPCOD_SD;		// res operation code
 
   sc_in<bool> BDSLOT_RI;				// delayed slot from ifetch
   sc_in<bool> BDSLOT_RD;				// delayed slot from decod
@@ -57,21 +57,21 @@ SC_MODULE(mux_decode)
   sc_out<bool> MUX_SWAP_SD;
 // ####################### deprecated #########
 
-  sc_in<sc_uint<5> > RS_SD;				// source register number
-  sc_in<sc_uint<5> > RS_RD;				// source register number
-  sc_out<sc_uint<5> > MUX_RS_SD;		// res source register number
+  sc_in<sc_uint<5>> RS_SD;				// source register number
+  sc_in<sc_uint<5>> RS_RD;				// source register number
+  sc_out<sc_uint<5>> MUX_RS_SD;		// res source register number
 
-  sc_in<sc_uint<5> > RT_SD;				// source register number
-  sc_in<sc_uint<5> > RT_RD;				// source register number
-  sc_out<sc_uint<5> > MUX_RT_SD;		// res source register number
+  sc_in<sc_uint<5>> RT_SD;				// source register number
+  sc_in<sc_uint<5>> RT_RD;				// source register number
+  sc_out<sc_uint<5>> MUX_RT_SD;		// res source register number
 
-  sc_in<sc_uint<5> > RD_SD;				// destination register number
-  sc_in<sc_uint<5> > RD_RD;				// destination register number
-  sc_out<sc_uint<5> > MUX_RD_SD;		// res destination register number
+  sc_in<sc_uint<5>> RD_SD;				// destination register number
+  sc_in<sc_uint<5>> RD_RD;				// destination register number
+  sc_out<sc_uint<5>> MUX_RD_SD;		// res destination register number
 
-  sc_in<sc_uint<5> > COP0D_SD;			// comprocessor 0 destination resgiter number
-  sc_in<sc_uint<5> > COP0D_RD;			// comprocessor 0 destination resgiter number
-  sc_out<sc_uint<5> > MUX_COP0D_SD;		// res comprocessor 0 destination resgiter number
+  sc_in<sc_uint<5>> COP0D_SD;			// comprocessor 0 destination resgiter number
+  sc_in<sc_uint<5>> COP0D_RD;			// comprocessor 0 destination resgiter number
+  sc_out<sc_uint<5>> MUX_COP0D_SD;		// res comprocessor 0 destination resgiter number
 
   sc_in<bool> ILLGINS_XD;				// unknown instruction exception
   sc_in<bool> ILLGINS_RD;				// unknown instruction from register
@@ -81,30 +81,30 @@ SC_MODULE(mux_decode)
   sc_in<bool> C0UNUSE_RD;				// comprocessor 0 unusable from register
   sc_out<bool> MUX_C0UNUSE_SD;			// res comprocessor 0 unusable
 
-  sc_in<sc_uint<32> > NEXTPC_XX;		// next instruction @ (hardware)
-  sc_in<sc_uint<32> > NEXTPC_SD;		// next instruction @
-  sc_in<sc_uint<32> > NEXTPC_RD;		// next instruction @
-  sc_out<sc_uint<32> > MUX_NEXTPC_SD;	// res next instruction @
+  sc_in<sc_uint<32>> NEXTPC_XX;		// next instruction @ (hardware)
+  sc_in<sc_uint<32>> NEXTPC_SD;		// next instruction @
+  sc_in<sc_uint<32>> NEXTPC_RD;		// next instruction @
+  sc_out<sc_uint<32>> MUX_NEXTPC_SD;	// res next instruction @
 
-  sc_in<sc_uint<32> > PC_RI;			// instruction @
-  sc_in<sc_uint<32> > PC_RD;			// instruction @
-  sc_out<sc_uint<32> > MUX_PC_SD;		// res instruction @
+  sc_in<sc_uint<32>> PC_RI;			// instruction @
+  sc_in<sc_uint<32>> PC_RD;			// instruction @
+  sc_out<sc_uint<32>> MUX_PC_SD;		// res instruction @
 
-  sc_in<sc_uint<32> > SR_RI;			// status register
-  sc_in<sc_uint<32> > SR_RD;			// status register
-  sc_out<sc_uint<32> > MUX_SR_SD;		// res status register
+  sc_in<sc_uint<32>> SR_RI;			// status register
+  sc_in<sc_uint<32>> SR_RD;			// status register
+  sc_out<sc_uint<32>> MUX_SR_SD;		// res status register
 
-  sc_in<sc_uint<32> > X_SE;				// X operand
-  sc_in<sc_uint<32> > SOPER_SD;			// effective s operand
-  sc_out<sc_uint<32> > MUX_SOPER_SD;	// res operand between soper and X
+  sc_in<sc_uint<32>> X_SE;				// X operand
+  sc_in<sc_uint<32>> SOPER_SD;			// effective s operand
+  sc_out<sc_uint<32>> MUX_SOPER_SD;	// res operand between soper and X
 
-  sc_in<sc_uint<32> > Y_SE;				// Y operand
-  sc_in<sc_uint<32> > TOPER_SD;			// effective t operand
-  sc_out<sc_uint<32> > MUX_TOPER_SD;	// res operand between toper and Y
+  sc_in<sc_uint<32>> Y_SE;				// Y operand
+  sc_in<sc_uint<32>> TOPER_SD;			// effective t operand
+  sc_out<sc_uint<32>> MUX_TOPER_SD;	// res operand between toper and Y
 
-  sc_in<sc_uint<32> > IOPER_SD;			// effective immediate operand
-  sc_in<sc_uint<32> > IOPER_RD;			// effective immediate operand
-  sc_out<sc_uint<32> > MUX_IOPER_SD;	// res effective immediate operand
+  sc_in<sc_uint<32>> IOPER_SD;			// effective immediate operand
+  sc_in<sc_uint<32>> IOPER_RD;			// effective immediate operand
+  sc_out<sc_uint<32>> MUX_IOPER_SD;	// res effective immediate operand
 
   SC_CTOR(mux_decode):
 	BUBBLE_SD("BUBBLE_SD"),

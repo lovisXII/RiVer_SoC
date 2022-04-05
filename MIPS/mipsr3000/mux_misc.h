@@ -26,29 +26,29 @@
 
 SC_MODULE(mux_misc)
 {
-	sc_in<sc_uint<32> > CAUSE_XM;
+	sc_in<sc_uint<32>> CAUSE_XM;
 	sc_in<bool> EXCRQ_XM;
 	sc_in<bool> INTRQ_XX;
-	sc_in<sc_uint<32> > CAUSE_XX;
+	sc_in<sc_uint<32>> CAUSE_XX;
 	sc_in<bool> WCAUSE_SM;
 	sc_in<bool> KEEP_SM;
-	sc_in<sc_uint<32> > CAUSE_SM;
-	sc_in<sc_uint<32> > CAUSE_SX;
-	sc_out<sc_uint<32> > MUX_CAUSE_SX;
+	sc_in<sc_uint<32>> CAUSE_SM;
+	sc_in<sc_uint<32>> CAUSE_SX;
+	sc_out<sc_uint<32>> MUX_CAUSE_SX;
 
 	sc_in<bool> WEPC_XM;
-	sc_in<sc_uint<32> > EPC_XM;
+	sc_in<sc_uint<32>> EPC_XM;
 	sc_in<bool> WEPC_XX;
-	sc_in<sc_uint<32> > EPC_XX;
-	sc_in<sc_uint<32> > EPC_RX;
-	sc_out<sc_uint<32> > MUX_EPC_SX;
+	sc_in<sc_uint<32>> EPC_XX;
+	sc_in<sc_uint<32>> EPC_RX;
+	sc_out<sc_uint<32>> MUX_EPC_SX;
 
 	sc_in<bool> WSR_XX;
 	sc_in<bool> WSR_SM;
-	sc_in<sc_uint<32> > NEXTSR_SM;
-	sc_in<sc_uint<32> > NEXTSR_RX;
-	sc_in<sc_uint<32> > NEXTSR_XX;
-	sc_out<sc_uint<32> > MUX_NEXTSR_SX;
+	sc_in<sc_uint<32>> NEXTSR_SM;
+	sc_in<sc_uint<32>> NEXTSR_RX;
+	sc_in<sc_uint<32>> NEXTSR_XX;
+	sc_out<sc_uint<32>> MUX_NEXTSR_SX;
 
 	sc_in<bool> RESET_N;
 	sc_out<bool> MUX_RESET_SX;

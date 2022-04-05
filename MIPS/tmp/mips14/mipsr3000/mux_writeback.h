@@ -27,11 +27,11 @@ SC_MODULE(mux_writeback)
 {
 	sc_in<bool> 		WLO_SW;
 	sc_in<bool> 		WHI_SW;
-	sc_in<sc_uint<32> > 	DATA_RM;
-	sc_in<sc_uint<32> > 	LO_RW;
-	sc_out<sc_uint<32> >	MUX_LO_SW;
-	sc_in<sc_uint<32> > 	HI_RW;
-	sc_out<sc_uint<32> > 	MUX_HI_SW;
+	sc_in<sc_uint<32>> 	DATA_RM;
+	sc_in<sc_uint<32>> 	LO_RW;
+	sc_out<sc_uint<32>>	MUX_LO_SW;
+	sc_in<sc_uint<32>> 	HI_RW;
+	sc_out<sc_uint<32>> 	MUX_HI_SW;
 
 	SC_CTOR(mux_writeback):
 		WLO_SW("WLO_SW"),

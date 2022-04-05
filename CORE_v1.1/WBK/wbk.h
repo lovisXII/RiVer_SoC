@@ -14,18 +14,18 @@ SC_MODULE(wbk)
 {
     // Reg Interface :
 
-    sc_out<sc_uint<6> >         REG_DEST_SW ;
-    sc_out<sc_uint<32> >        REG_DATA_SW ;
+    sc_out<sc_uint<6>>         REG_DEST_SW ;
+    sc_out<sc_uint<32>>        REG_DATA_SW ;
     sc_out<bool>                REG_WB_SW ;
     
     //Mem Interface :
 
-    sc_in< sc_uint<32> >        MEM_DATA_SW;
-    sc_in< sc_uint<6> >         MEM_DEST_SW;
-    sc_in< sc_uint<2> >         MEM_SIZE_SW ;
-    sc_in< bool >               MEM_WB_SW;
-    sc_in< bool >               SIGN_EXTEND_SW;
-    sc_in< bool >               LOAD_SW;
+    sc_in<sc_uint<32>>        MEM_DATA_SW;
+    sc_in<sc_uint<6>>         MEM_DEST_SW;
+    sc_in<sc_uint<2>>         MEM_SIZE_SW ;
+    sc_in<bool>               MEM_WB_SW;
+    sc_in<bool>               SIGN_EXTEND_SW;
+    sc_in<bool>               LOAD_SW;
 
     //Mem2wbk interface
 
