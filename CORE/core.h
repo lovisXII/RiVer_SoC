@@ -54,8 +54,8 @@ SC_MODULE(core) {
 
     sc_signal<bool>        CSR_type_operation_RD;
     sc_signal<sc_uint<12>> ADR_CSR_SD;
-    sc_signal<sc_uint<12>> ADR_CSR_KREG_SD;
-    sc_signal<sc_uint<32>> DATA_READ_CSR_SK;
+    sc_signal<sc_uint<12>> ADR_CSR_CSR_SD;
+    sc_signal<sc_uint<32>> DATA_READ_CSR_SC;
     sc_signal<bool>        INTERRUPTION_SE;
 
     // DEC-REG interface
@@ -98,10 +98,10 @@ SC_MODULE(core) {
     sc_signal<bool>        CSR_type_operation_RM;
     sc_signal<sc_uint<32>> OP1_CSR_RM;
 
-    // MEM-KREG interface
+    // MEM-CSR interface
 
     sc_signal<sc_uint<12>> ADR_CSR_SM;
-    sc_signal<sc_uint<32>> KREG_DATA_WRITE_SM;
+    sc_signal<sc_uint<32>> CSR_DATA_WRITE_SM;
 
     // WBK-REG interface
 
@@ -139,10 +139,15 @@ SC_MODULE(core) {
     void core_method();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(core) : dec_inst("decod"), exec_inst("exec"), ifetch_inst("ifetch"), mem_inst("mem"), reg_inst("reg"), wbk_inst("wbk") {
+    SC_CTOR(core)
+        : dec_inst("decod"),
+          exec_inst("exec"),
+          ifetch_inst("ifetch"),
+          mem_inst("mem"),
+          reg_inst("reg"),
+          wbk_inst("wbk") {
         SC_METHOD(core_method);
-        sensitive 
-			<< READ_PC_SR;
+        sensitive << READ_PC_SR;
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
@@ -218,8 +223,8 @@ SC_MODULE(core) {
 
         dec_inst.CSR_type_operation_RD(CSR_type_operation_RD);
         dec_inst.ADR_CSR_SD(ADR_CSR_SD);
-        dec_inst.ADR_CSR_KREG_SD(ADR_CSR_KREG_SD);
-        dec_inst.DATA_READ_CSR_SK(DATA_READ_CSR_SK);
+        dec_inst.ADR_CSR_CSR_SD(ADR_CSR_CSR_SD);
+        dec_inst.DATA_READ_CSR_SC(DATA_READ_CSR_SC);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
 
         dec_inst.CLK(CLK);
@@ -313,7 +318,7 @@ SC_MODULE(core) {
         mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
 
         mem_inst.ADR_CSR_SM(ADR_CSR_SM);
-        mem_inst.KREG_DATA_WRITE_SM(KREG_DATA_WRITE_SM);
+        mem_inst.CSR_DATA_WRITE_SM(CSR_DATA_WRITE_SM);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);

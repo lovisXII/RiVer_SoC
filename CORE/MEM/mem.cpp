@@ -73,10 +73,10 @@ void mem::sign_extend() {
 void mem::csr() {
     if (CSR_type_operation_RE.read()) {
         ADR_CSR_SM.write(ADR_CSR_SE.read());
-        KREG_DATA_WRITE_SM.write(EXE_RES_RE.read());
+        CSR_DATA_WRITE_SM.write(EXE_RES_RE.read());
     } else {
         ADR_CSR_SM.write(0);
-        KREG_DATA_WRITE_SM.write(0);
+        CSR_DATA_WRITE_SM.write(0);
     }
 }
 

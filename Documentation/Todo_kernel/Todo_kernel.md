@@ -273,7 +273,7 @@ So to EXE we must send :
 - 1 for EXE : ADR_CSR_SD
 - 1 for KREG : ADR_CSR_KREG_SD
 
-Get DATA_READ_CSR_SK, allow to put it in rs1.
+Get DATA_READ_CSR_SC, allow to put it in rs1.
 
 Increasing every fifo.
 

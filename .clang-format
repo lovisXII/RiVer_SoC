@@ -12,5 +12,6 @@ BinPackArguments: 'false'
 BinPackParameters: 'false'
 SortIncludes: 'true'
 IndentWidth: 4
+ColumnLimit: '120' 
 
 ...

@@ -4,7 +4,7 @@ LINK_PATH=/usr/local/systemc-2.3.3/lib-linux64
 LINKER_ARGS=-rpath=/usr/local/systemc-2.3.3/lib-linux64
 LIBS=-lsystemc -lm
 C_ARGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
-COMPONENTS=kreg
+COMPONENTS=csr
 
 all: $(COMPONENTS)_tb 
 
