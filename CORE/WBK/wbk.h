@@ -47,6 +47,10 @@ SC_MODULE(wbk) {
     void trace(sc_trace_file * tf);
     SC_CTOR(wbk) {
         SC_METHOD(wbk_method);
-        sensitive << MEM_RES_RM << DEST_RM << WB_RM << MEM2WBK_EMPTY_SM;
+        sensitive 
+			<< MEM_RES_RM 
+			<< DEST_RM 
+			<< WB_RM 
+			<< MEM2WBK_EMPTY_SM;
     }
 };

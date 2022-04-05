@@ -25,8 +25,11 @@ SC_MODULE(kreg) {
     void reading_csr();
     SC_CTOR(kreg) {
         SC_CTHREAD(writing_csr, CLK.pos());
-        sensitive << KREG_DATA_WRITE_SM << RESET_N;
+        sensitive 
+			<< KREG_DATA_WRITE_SM 
+			<< RESET_N;
         SC_METHOD(reading_csr);
-        sensitive << ADR_CSR_SM;
+        sensitive 
+			<< ADR_CSR_SM;
     }
 };

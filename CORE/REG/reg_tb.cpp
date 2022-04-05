@@ -5,7 +5,8 @@
 using namespace std;
 
 int sc_main(int argc, char* argv[]) {
-    cerr << "start of main" << endl;
+    cerr << "start of main" 
+			<< endl;
     sc_trace_file* tf;
     tf = sc_create_vcd_trace_file("tf");
     // Reading Port :
@@ -94,7 +95,8 @@ int sc_main(int argc, char* argv[]) {
     //     s = "reg_inst.REG" + to_string(i)    ;
     //     sc_trace(tf,reg_inst.REG[i],s) ;
     // }
-    // cerr << "starting tracing SC_VALID Signals" << endl ;
+    // cerr << "starting tracing SC_VALID Signals" 
+			<< endl ;
     // for(int i = 0 ; i < 33 ; i++)
     // {
     //     string s ;
@@ -105,7 +107,8 @@ int sc_main(int argc, char* argv[]) {
     reset_n.write(false);  // reset
     sc_start(3, SC_NS);    // wait for 1 cycle
     reset_n.write(true);   // end of reset
-    cerr << "end of reset" << endl;
+    cerr << "end of reset" 
+			<< endl;
 
     int  registers[33] = {0};
     bool valid[33];
@@ -143,48 +146,87 @@ int sc_main(int argc, char* argv[]) {
             valid[0]          = true;
         }
         if (registers[radr1_] != (int)radr1_data.read()) {
-            cerr << "Error : register mismatch in register " << radr1_ << "from port 1, expected " << registers[radr1_] << " got " << (int)radr1_data.read()
-                 << endl;
+            cerr << "Error : register mismatch in register " 
+			<< radr1_ << "from port 1, expected " 
+			<< registers[radr1_] << " got " << (int)radr1_data.read()
+                 
+			<< endl;
             exit(1);
         }
         if (registers[radr2_] != (int)radr2_data.read()) {
-            cerr << "Error : register mismatch in register " << radr2_ << " from port 2, expected " << registers[radr2_] << " got " << (int)radr2_data.read()
-                 << endl;
+            cerr << "Error : register mismatch in register " 
+			<< radr2_ << " from port 2, expected " 
+			<< registers[radr2_] << " got " << (int)radr2_data.read()
+                 
+			<< endl;
             exit(1);
         }
         if (registers[32] != (int)read_pc.read()) {
-            cerr << "Error : register mismatch in register pc, expected " << registers[32] << " got " << (int)read_pc.read() << endl;
+            cerr << "Error : register mismatch in register pc, expected " 
+			<< registers[32] << " got " << (int)read_pc.read() 
+			<< endl;
             exit(1);
         }
         if (valid[radr1_] != (int)radr1_valid.read()) {
-            cerr << "Error : register validity mismatch in register " << radr1_ << " from port 1, expected " << valid[radr1_] << " got "
-                 << (int)radr1_valid.read() << endl;
+            cerr << "Error : register validity mismatch in register " 
+			<< radr1_ << " from port 1, expected " 
+			<< valid[radr1_] << " got "
+                 << (int)radr1_valid.read() 
+			<< endl;
             exit(1);
         }
         if (valid[radr2_] != (int)radr2_valid.read()) {
-            cerr << "Error : register validity mismatch in register " << radr2_ << " from port 2, expected " << valid[radr2_] << " got "
-                 << (int)radr2_valid.read() << endl;
+            cerr << "Error : register validity mismatch in register " 
+			<< radr2_ << " from port 2, expected " 
+			<< valid[radr2_] << " got "
+                 << (int)radr2_valid.read() 
+			<< endl;
             exit(1);
         }
-        // cout << "--------------------------------" << endl ;
-        // cout << "radr1_ : " << radr1_ << endl ;
-        // cout << "radr2_ : " << radr2_ << endl ;
-        // cout << "wadr1_ : " << wadr1_ << endl ;
-        // cout << "ward1_valid_ : " << ward1_valid_ << endl ;
-        // cout << "wadr1_data_ : " << wadr1_data_ << endl ;
-        // cout << "inc_pc_valid_ : " << inc_pc_valid_ << endl ;
-        // cout << "Data read 1 :" << radr1_data.read() << endl ;
-        // cout << "Data read 2 : " << radr2_data.read() << endl ;
-        // cout << "ADR_DEST :" << adr_dest_ << endl ;
-        // cout << "inval_dest : " << inval_dest_ << endl ;
+        // cout << "--------------------------------" 
+			<< endl ;
+        // cout << "radr1_ : " 
+			<< radr1_ 
+			<< endl ;
+        // cout << "radr2_ : " 
+			<< radr2_ 
+			<< endl ;
+        // cout << "wadr1_ : " 
+			<< wadr1_ 
+			<< endl ;
+        // cout << "ward1_valid_ : " 
+			<< ward1_valid_ 
+			<< endl ;
+        // cout << "wadr1_data_ : " 
+			<< wadr1_data_ 
+			<< endl ;
+        // cout << "inc_pc_valid_ : " 
+			<< inc_pc_valid_ 
+			<< endl ;
+        // cout << "Data read 1 :" 
+			<< radr1_data.read() 
+			<< endl ;
+        // cout << "Data read 2 : " 
+			<< radr2_data.read() 
+			<< endl ;
+        // cout << "ADR_DEST :" 
+			<< adr_dest_ 
+			<< endl ;
+        // cout << "inval_dest : " 
+			<< inval_dest_ 
+			<< endl ;
         // for(int i = 0 ; i < 33 ; i++)
         // {
         //     string s ;
         //     s = "r"+ to_string(i) ;
-        //     cout << s << " ,value : "<< reg_inst.REG[i].read() << endl ;
+        //     cout 
+			<< s << " ,value : "
+			<< reg_inst.REG[i].read() 
+			<< endl ;
         // }
     }
-    cout << "All tests passed sucessfully" << endl;
+    cout << "All tests passed sucessfully" 
+			<< endl;
     sc_close_vcd_trace_file(tf);
     return 0;
 }

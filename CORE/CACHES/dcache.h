@@ -105,13 +105,16 @@ SC_MODULE(dcache) {
 
     SC_CTOR(dcache) {
         SC_METHOD(miss_detection);
-        sensitive << VALID_ADDRESS_M.pos();
+        sensitive 
+			<< VALID_ADDRESS_M.pos();
 
         SC_METHOD(transition_clk);
-        sensitive << CK.pos();
+        sensitive 
+			<< CK.pos();
 
         SC_METHOD(transition);
-        sensitive << CK.neg();
+        sensitive 
+			<< CK.neg();
 
         reset_signal_is(RESET, true);
     }

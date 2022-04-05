@@ -5,9 +5,14 @@ using namespace std;
 int tab2[33];
 
 void print_reg(sc_signal<sc_uint<32>>* tab) {
-    cout << sc_time_stamp() << endl;
+    cout 
+			<< sc_time_stamp() 
+			<< endl;
     for (int i = 0; i < 33; i++) {
-        // cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ;
+        // cout << "REG_VALID[" 
+			<< i << "] = " 
+			<< tab[i].read() 
+			<< endl ;
     }
 }
 
@@ -30,10 +35,15 @@ At the end of those 3 cycle it has to be reset to valid
             tab[i]  = 1;
         }
     }
-    // cout << sc_time_stamp() << endl ;
+    // cout 
+			<< sc_time_stamp() 
+			<< endl ;
     // for(int i = 0 ; i < 33 ; i++)
     // {
-    //     cout << "REG_VALID[" << i << "] = " << tab[i].read() << endl ;
+    //     cout << "REG_VALID[" 
+			<< i << "] = " 
+			<< tab[i].read() 
+			<< endl ;
     // }
 }
 

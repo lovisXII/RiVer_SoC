@@ -20,7 +20,8 @@ void print_bits(T ptr) {
 }
 
 int sc_main(int argc, char* argv[]) {
-    cout << "Testing component \"Shifter\"..." << endl;
+    cout << "Testing component \"Shifter\"..." 
+			<< endl;
 
     shifter unit_shifter("shifter");
 
@@ -49,7 +50,8 @@ int sc_main(int argc, char* argv[]) {
         switch (cmd) {
             case 0:
                 // compute the result in C
-                dout = din << sv;
+                dout = din 
+			<< sv;
                 break;
             case 1:
                 // compute the result in C
@@ -72,29 +74,38 @@ int sc_main(int argc, char* argv[]) {
         // check is result is right
 
         if (sc_uint<32>(dout) != shifter_dout) {
-            cout << "Test failed !" << endl;
+            cout << "Test failed !" 
+			<< endl;
 
             cout << "din : ";
             print_bits(din);
-            cout << endl;
+            cout 
+			<< endl;
 
             cout << "shift_val : ";
             print_bits(sv);
-            cout << endl;
+            cout 
+			<< endl;
 
-            cout << "shifter command :" << cmd << endl;
+            cout << "shifter command :" 
+			<< cmd 
+			<< endl;
 
             cout << "shifter : ";
             print_bits((int)shifter_dout.read());
-            cout << endl;
+            cout 
+			<< endl;
 
             cout << "real : ";
             print_bits(dout);
-            cout << endl;
+            cout 
+			<< endl;
 
             exit(0);
         }
     }
-    cout << i << " random tests sucessfully passed !" << endl;
+    cout 
+			<< i << " random tests sucessfully passed !" 
+			<< endl;
     return 0;
 }

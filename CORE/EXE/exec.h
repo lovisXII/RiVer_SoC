@@ -122,19 +122,51 @@ SC_MODULE(exec) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << op1_se << NEG_OP2_RD << op2_se;
+        sensitive 
+			<< op1_se 
+			<< NEG_OP2_RD 
+			<< op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD;
+        sensitive 
+			<< alu_out_se 
+			<< shifter_out_se 
+			<< SELECT_SHIFT_RD;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD << WB_RD << exe_res_se;
+        sensitive 
+			<< bp_mem_data_sd 
+			<< DEST_RD 
+			<< MEM_SIZE_RD 
+			<< MEM_LOAD_RD 
+			<< MEM_SIGN_EXTEND_RD 
+			<< MEM_STORE_RD 
+			<< WB_RD 
+			<< exe_res_se;
         SC_METHOD(fifo_unconcat);
-        sensitive << exe2mem_dout_se;
+        sensitive 
+			<< exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << blocked;
+        sensitive 
+			<< exe2mem_full_se 
+			<< DEC2EXE_EMPTY_SD 
+			<< OP1_VALID_RD 
+			<< OP2_VALID_RD 
+			<< blocked;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD << RADR2_RD << OP1_RD << OP2_RD
-                  << MEM_DATA_RD;
+        sensitive 
+			<< OP1_VALID_RD 
+			<< OP2_VALID_RD 
+			<< MEM_DEST_RM 
+			<< MEM_RES_RM 
+			<< DEST_RE 
+			<< EXE_RES_RE 
+			<< RADR1_RD 
+			<< RADR2_RD 
+			<< OP1_RD 
+			<< OP2_RD
+                  
+			<< MEM_DATA_RD;
         SC_METHOD(interruption);
-        sensitive << INTERRUPTION_SX;
+        sensitive 
+			<< INTERRUPTION_SX;
     }
 };
