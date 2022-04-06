@@ -32,15 +32,27 @@ SC_MODULE(exec) {
     sc_in<bool>        CSR_WENABLE_RD;
     sc_in<sc_uint<12>> CSR_WADR_SD;
 
+    // Exception coming from Decod :
+
+    sc_in<bool> ECALL_I_SD;
+    sc_in<bool> EBREAK_I_SD;
+    sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
+    sc_in<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
+    sc_in<bool> SYSCALL_U_MODE_SD;
+    sc_in<bool> SYSCALL_S_MODE_SD;
+
     sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
-
-    sc_in_clk   CLK;
-    sc_in<bool> RESET;
-
+    
     // Interruption :
 
     sc_out<bool> INTERRUPTION_SE;
     sc_in<bool>  INTERRUPTION_SX;  // asynchrone Interruption from outside
+    
+    // Genral Interface :
+
+    sc_in_clk   CLK;
+    sc_in<bool> RESET;
+
     // Fifo exe2mem interface :
 
     sc_out<sc_uint<32>> EXE_RES_RE;
@@ -55,7 +67,7 @@ SC_MODULE(exec) {
 
     sc_out<bool>        CSR_WENABLE_RE;
     sc_out<sc_uint<12>> CSR_WADR_SE;
-    // sc_out<sc_uint<32>> OP1_CSR_RE;
+    sc_out<sc_uint<32>> OP1_CSR_RE;
 
     // Internals signals :
 

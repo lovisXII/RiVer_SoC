@@ -388,7 +388,7 @@ void decod::pre_reg_read_decoding() {
         // rd = CSR
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
-        if (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd | csrrw_i_sd | csrrsi_i_sd | csrrci_i_sd) {
+        if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrw_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_radr_sd    = if_ir.range(31, 20);
             radr1_var      = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
             radr2_var      = 0;
@@ -396,6 +396,14 @@ void decod::pre_reg_read_decoding() {
             csr_wenable_rd = 1;
             CSR_RADR_SD.write(csr_radr_sd);
         } else if (ecall_i_sd || ebreak_i_sd) {
+            radr1_var = 0 ;
+            radr2_var = 0;
+            adr_dest_var = 0;
+            
+            // Checking exception for current call mode :
+
+            // CSR_RADR_SD.write(0x300); // reading MSTATUS
+            // if(CSR_RDATA_SC[]
         }
     }
     // Default case :
@@ -648,13 +656,27 @@ void decod::post_reg_read_decoding() {
             offset_branch_var = 0;
             mem_data_var      = 0;
             inc_pc_var        = 0;
-
-            csr_wenable_rd = 1;
             CSR_RADR_SD.write(csr_radr_sd);
+
         } else if (ecall_i_sd || ebreak_i_sd) {
+            exe_cmd_sd.write(0);
+            dec2exe_op1_var = 0;
+            dec2exe_op2_var = 0;
+            exe_neg_op2_sd.write(0);
+            dec2exe_wb_var = 0;
+            mem_load_sd.write(0);
+            mem_store_sd.write(0);
+            mem_sign_extend_sd.write(0);
+            mem_size_sd.write(0);
+            select_shift_sd.write(0);
+            offset_branch_var = 0;
+            mem_data_var      = 0;
+            inc_pc_var        = 0;
         }
     } else {
         exe_cmd_sd.write(0);
+        dec2exe_op1_var = 0 ;
+        dec2exe_op2_var = 0 ;
         exe_neg_op2_sd.write(0);
         dec2exe_wb_var = 0;
         mem_load_sd.write(0);
@@ -665,7 +687,27 @@ void decod::post_reg_read_decoding() {
         invalid_instr = true;
     }
 
+    // Illegal instruction Gestion :
+
+    int invalid_inst2 = false ;
+    if(r_type_inst_sd)
+        if(if_ir.range(31,25)!= 0 || if_ir.range(31,25)!= 32)
+            invalid_inst2 = true ;
+    else if(b_type_inst_sd)
+        if(if_ir.range(14,12) == 2 || if_ir.range(14,12) == 3 )
+            invalid_inst2 = true ;
+    else if(s_type_inst_sd)
+        if(if_ir.range(14,12) > 2 )
+            invalid_inst2 = true ;
+    else if(system_type_inst_sd)
+        if(if_ir.range(14,12) == 4 )
+            invalid_inst2 = true ;
+
+    illegal_instruction_rd.write(invalid_instr || invalid_inst2) ;
+
     invalid_instr = invalid_instr || IF2DEC_EMPTY_SI.read();
+            
+
     exe_wb_sd.write(dec2exe_wb_var);
     offset_branch_sd.write(offset_branch_var);
     exe_op1_sd.write(dec2exe_op1_var);
@@ -694,6 +736,14 @@ void decod::pc_inc() {
     } else {
         WRITE_PC_ENABLE_SD.write(0);
     }
+
+    // Adress missaligned exception :
+
+    if(pc_out && 0b11 != 0)
+    {
+        adress_missaligned = true ;
+    }
+
     dec2if_in_sd.write(pc_out);
 }
 

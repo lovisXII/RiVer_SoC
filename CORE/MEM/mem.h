@@ -35,7 +35,7 @@ SC_MODULE(mem) {
 
     sc_in<bool>        CSR_WENABLE_RE;
     sc_in<sc_uint<12>> CSR_WADR_SE;
-    // sc_in<sc_uint<32>> OP1_CSR_RE;
+    sc_in<sc_uint<32>> OP1_CSR_RE;
 
     // exe2mem interface :
 
@@ -55,7 +55,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<32>> MEM_RES_RM;
     sc_out<sc_uint<6>>  DEST_RM;
     sc_out<bool>        WB_RM;
-
+    sc_out<sc_uint<32>> OP1_CSR_RM;
     // Internal signals
     sc_signal<sc_bv<107>> mem2wbk_din_sm;
     sc_signal<sc_bv<107>> mem2wbk_dout_sm;

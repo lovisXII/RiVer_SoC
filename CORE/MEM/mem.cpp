@@ -8,7 +8,7 @@ void mem::mem2wbk_concat() {
     ff_din[37]           = wb_sm.read();
     ff_din.range(73, 38) = PC_EXE2MEM_RE.read();
     ff_din[74]           = CSR_WENABLE_RE.read();
-    // ff_din.range(106, 75) = OP1_CSR_RE.read();
+    ff_din.range(106, 75) = OP1_CSR_RE.read();
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -20,7 +20,7 @@ void mem::mem2wbk_unconcat() {
     WB_RM.write((bool)ff_dout[37]);
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
-    // OP1_CSR_RM.write((sc_bv_base)ff_dout.range(106, 75));
+    OP1_CSR_RM.write((sc_bv_base)ff_dout.range(106, 75));
 }
 
 void mem::fifo_gestion() {
