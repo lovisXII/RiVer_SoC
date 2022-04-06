@@ -5,7 +5,7 @@ void wbk::wbk_method() {
     WENABLE_SW.write(WB_RM && !MEM2WBK_EMPTY_SM);
     MEM2WBK_POP_SW.write(!MEM2WBK_EMPTY_SM);
     // if CSR operation we WBK the value of CSR in rd
-    WDATA_SW.write(CSR_type_operation_RM.read() ? OP1_CSR_RM : MEM_RES_RM);
+    WDATA_SW.write(MEM_RES_RM);
 }
 
 void wbk::trace(sc_trace_file* tf) {

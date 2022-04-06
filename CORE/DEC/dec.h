@@ -34,9 +34,9 @@ SC_MODULE(decod) {
     sc_out<bool>        MEM_SIGN_EXTEND_RD;
     sc_out<sc_uint<2>>  MEM_SIZE_RD;  // tells to mem if we do an acces in word, hw or byte
 
-    sc_out<bool> CSR_type_operation_RD;  // indicate if we do a csr operation,
-                                         // if so need to WBK CSR in rd
-    sc_out<sc_uint<12>> ADR_CSR_SD;      // CSR adress sent to EXE, will allow to wbk csr in MEM
+    sc_out<bool> CSR_WENABLE_RD;      // indicate if we do a csr operation,
+                                      // if so need to WBK CSR in rd
+    sc_out<sc_uint<12>> CSR_WADR_SD;  // CSR adress sent to EXE, will allow to wbk csr in MEM
 
     sc_out<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
     // Interface with DEC2IF :
@@ -63,8 +63,8 @@ SC_MODULE(decod) {
 
     // Interface with CSR :
 
-    sc_out<sc_uint<12>> ADR_CSR_CSR_SD;    // CSR adress sent to CSR to get data
-    sc_in<sc_uint<32>>  DATA_READ_CSR_SC;  // data read from CSR
+    sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
+    sc_in<sc_uint<32>>  CSR_RDATA_SC;  // data read from CSR
 
     // Bypasses
 
@@ -213,8 +213,8 @@ SC_MODULE(decod) {
 
     // Signal for Kernel usage
 
-    sc_signal<bool>        csr_type_operation_rd;
-    sc_signal<sc_uint<12>> adr_csr_sd;
+    sc_signal<bool>        csr_wenable_rd;
+    sc_signal<sc_uint<12>> csr_radr_sd;
 
     // Offset for branch :
 
@@ -317,16 +317,19 @@ SC_MODULE(decod) {
         SC_METHOD(decoding_instruction)
         sensitive << INSTR_RI;
         SC_METHOD(pre_reg_read_decoding)
-        sensitive << INSTR_RI << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd << IF2DEC_EMPTY_SI
-                  << dec2if_push_sd << r_type_inst_sd << i_type_inst_sd
+        sensitive << INSTR_RI << r_type_inst_sd << i_type_inst_sd
 
                   << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
                   << jalr_type_inst_sd << beq_i_sd << bne_i_sd
 
-                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << dec2if_push_sd << READ_PC_SR << stall;
+                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd;
         SC_METHOD(post_reg_read_decoding)
-        sensitive << add_i_sd << slt_i_sd << sltu_i_sd << and_i_sd << or_i_sd << xor_i_sd << sll_i_sd << srl_i_sd
-                  << sub_i_sd << sra_i_sd << addi_i_sd
+        sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
+                  << jalr_type_inst_sd << beq_i_sd << bne_i_sd
+
+                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << IF2DEC_EMPTY_SI << dec2if_push_sd << READ_PC_SR
+                  << stall << dec2if_push_sd << add_i_sd << slt_i_sd << sltu_i_sd << and_i_sd << or_i_sd << xor_i_sd
+                  << sll_i_sd << srl_i_sd << sub_i_sd << sra_i_sd << addi_i_sd
 
                   << slti_i_sd << sltiu_i_sd << andi_i_sd << ori_i_sd << xori_i_sd << jalr_i_sd << slli_i_sd
                   << srli_i_sd << srai_i_sd << lw_i_sd << lh_i_sd
@@ -334,8 +337,8 @@ SC_MODULE(decod) {
                   << lhu_i_sd << lb_i_sd << lbu_i_sd << beq_i_sd << bne_i_sd << blt_i_sd << bge_i_sd << bltu_i_sd
                   << bgeu_i_sd << lui_i_sd << auipc_i_sd
 
-                  << jal_i_sd << sw_i_sd << sh_i_sd << sb_i_sd << j_type_inst_sd << jalr_type_inst_sd
-                  << dec2exe_push_sd;
+                  << jal_i_sd << sw_i_sd << sh_i_sd << sb_i_sd << j_type_inst_sd << jalr_type_inst_sd << dec2exe_push_sd
+                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd;
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd;
 

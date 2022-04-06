@@ -5,41 +5,68 @@ a.out:     file format elf32-littleriscv
 Disassembly of section .text:
 
 00010054 <_start>:
-   10054:	08100137          	lui	sp,0x8100
-   10058:	10000113          	li	sp,256
-   1005c:	00408093          	addi	ra,ra,4
-   10060:	40208133          	sub	sp,ra,sp
-   10064:	004002ef          	jal	t0,10068 <main>
+   10054:	10000113          	li	sp,256
+   10058:	00408093          	addi	ra,ra,4
+   1005c:	40110133          	sub	sp,sp,ra
+   10060:	084002ef          	jal	t0,100e4 <main>
 
-00010068 <main>:
-   10068:	fe010113          	addi	sp,sp,-32 # 80fffe0 <__global_pointer$+0x80ee70c>
-   1006c:	00112e23          	sw	ra,28(sp)
-   10070:	00812c23          	sw	s0,24(sp)
+00010064 <fib>:
+   10064:	fe010113          	addi	sp,sp,-32
+   10068:	00112e23          	sw	ra,28(sp)
+   1006c:	00812c23          	sw	s0,24(sp)
+   10070:	00912a23          	sw	s1,20(sp)
    10074:	02010413          	addi	s0,sp,32
-   10078:	00100793          	li	a5,1
-   1007c:	fef42623          	sw	a5,-20(s0)
-   10080:	00a00793          	li	a5,10
-   10084:	fef42423          	sw	a5,-24(s0)
-   10088:	fe842703          	lw	a4,-24(s0)
-   1008c:	fec42783          	lw	a5,-20(s0)
-   10090:	40f707b3          	sub	a5,a4,a5
-   10094:	fef42423          	sw	a5,-24(s0)
-   10098:	fe842703          	lw	a4,-24(s0)
-   1009c:	00900793          	li	a5,9
-   100a0:	00f71663          	bne	a4,a5,100ac <main+0x44>
-   100a4:	02c000ef          	jal	ra,100d0 <_good>
-   100a8:	0080006f          	j	100b0 <main+0x48>
-   100ac:	020000ef          	jal	ra,100cc <_bad>
-   100b0:	00000793          	li	a5,0
-   100b4:	00078513          	mv	a0,a5
-   100b8:	01c12083          	lw	ra,28(sp)
-   100bc:	01812403          	lw	s0,24(sp)
-   100c0:	02010113          	addi	sp,sp,32
-   100c4:	00008067          	ret
-   100c8:	00000013          	nop
+   10078:	fea42623          	sw	a0,-20(s0)
+   1007c:	fec42783          	lw	a5,-20(s0)
+   10080:	00079663          	bnez	a5,1008c <fib+0x28>
+   10084:	00000793          	li	a5,0
+   10088:	0440006f          	j	100cc <fib+0x68>
+   1008c:	fec42703          	lw	a4,-20(s0)
+   10090:	00100793          	li	a5,1
+   10094:	00f71663          	bne	a4,a5,100a0 <fib+0x3c>
+   10098:	00100793          	li	a5,1
+   1009c:	0300006f          	j	100cc <fib+0x68>
+   100a0:	fec42783          	lw	a5,-20(s0)
+   100a4:	fff78793          	addi	a5,a5,-1
+   100a8:	00078513          	mv	a0,a5
+   100ac:	fb9ff0ef          	jal	ra,10064 <fib>
+   100b0:	00050493          	mv	s1,a0
+   100b4:	fec42783          	lw	a5,-20(s0)
+   100b8:	ffe78793          	addi	a5,a5,-2
+   100bc:	00078513          	mv	a0,a5
+   100c0:	fa5ff0ef          	jal	ra,10064 <fib>
+   100c4:	00050793          	mv	a5,a0
+   100c8:	00f487b3          	add	a5,s1,a5
+   100cc:	00078513          	mv	a0,a5
+   100d0:	01c12083          	lw	ra,28(sp)
+   100d4:	01812403          	lw	s0,24(sp)
+   100d8:	01412483          	lw	s1,20(sp)
+   100dc:	02010113          	addi	sp,sp,32
+   100e0:	00008067          	ret
 
-000100cc <_bad>:
-   100cc:	00000033          	add	zero,zero,zero
+000100e4 <main>:
+   100e4:	ff010113          	addi	sp,sp,-16
+   100e8:	00112623          	sw	ra,12(sp)
+   100ec:	00812423          	sw	s0,8(sp)
+   100f0:	01010413          	addi	s0,sp,16
+   100f4:	00a00513          	li	a0,10
+   100f8:	f6dff0ef          	jal	ra,10064 <fib>
+   100fc:	00050713          	mv	a4,a0
+   10100:	03700793          	li	a5,55
+   10104:	00f71663          	bne	a4,a5,10110 <main+0x2c>
+   10108:	02c000ef          	jal	ra,10134 <_good>
+   1010c:	0080006f          	j	10114 <main+0x30>
+   10110:	020000ef          	jal	ra,10130 <_bad>
+   10114:	00000793          	li	a5,0
+   10118:	00078513          	mv	a0,a5
+   1011c:	00c12083          	lw	ra,12(sp)
+   10120:	00812403          	lw	s0,8(sp)
+   10124:	01010113          	addi	sp,sp,16
+   10128:	00008067          	ret
+   1012c:	00000013          	nop
 
-000100d0 <_good>:
-   100d0:	001080b3          	add	ra,ra,ra
+00010130 <_bad>:
+   10130:	00000033          	add	zero,zero,zero
+
+00010134 <_good>:
+   10134:	001080b3          	add	ra,ra,ra

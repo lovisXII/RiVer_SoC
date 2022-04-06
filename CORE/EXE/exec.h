@@ -29,11 +29,10 @@ SC_MODULE(exec) {
     sc_in<bool>        DEC2EXE_EMPTY_SD;
     sc_in<bool>        SLT_RD, SLTU_RD;
 
-    sc_in<bool>        CSR_type_operation_RD;
-    sc_in<sc_uint<12>> ADR_CSR_SD;
+    sc_in<bool>        CSR_WENABLE_RD;
+    sc_in<sc_uint<12>> CSR_WADR_SD;
 
-    sc_in<bool>        EXCEPTION_RD ; // tells if an instruction have been made in DEC
-
+    sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
@@ -54,10 +53,9 @@ SC_MODULE(exec) {
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
 
-    sc_out<bool>        CSR_type_operation_RE;
-    sc_out<sc_uint<12>> ADR_CSR_SE;
-    sc_out<sc_uint<32>> OP1_CSR_RE;
-
+    sc_out<bool>        CSR_WENABLE_RE;
+    sc_out<sc_uint<12>> CSR_WADR_SE;
+    // sc_out<sc_uint<32>> OP1_CSR_RE;
 
     // Internals signals :
 
@@ -77,11 +75,10 @@ SC_MODULE(exec) {
     sc_signal<bool> exe2mem_push_se, exe2mem_full_se;
     sc_signal<bool> blocked;
 
+    sc_signal<bool> wb_re;
+    sc_signal<bool> mem_load_re;
+    sc_signal<bool> mem_store_re;
 
-    sc_signal<bool>        wb_re ;
-    sc_signal<bool>        mem_load_re ;
-    sc_signal<bool>        mem_store_re ;
-    
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM;
@@ -131,51 +128,22 @@ SC_MODULE(exec) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive 
-			<< op1_se 
-			<< NEG_OP2_RD 
-			<< op2_se;
+        sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive 
-			<< alu_out_se 
-			<< shifter_out_se 
-			<< SELECT_SHIFT_RD;
+        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD;
         SC_METHOD(fifo_concat);
-        sensitive 
-			<< bp_mem_data_sd 
-			<< DEST_RD 
-			<< MEM_SIZE_RD 
-			<< MEM_LOAD_RD 
-			<< MEM_SIGN_EXTEND_RD 
-			<< MEM_STORE_RD 
-			<< WB_RD 
-			<< exe_res_se;
+        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
+                  << WB_RD << exe_res_se;
         SC_METHOD(fifo_unconcat);
-        sensitive 
-			<< exe2mem_dout_se;
+        sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive 
-			<< exe2mem_full_se 
-			<< DEC2EXE_EMPTY_SD 
-			<< OP1_VALID_RD 
-			<< OP2_VALID_RD 
-			<< blocked;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << blocked;
         SC_METHOD(bypasses);
-        sensitive 
-			<< OP1_VALID_RD 
-			<< OP2_VALID_RD 
-			<< MEM_DEST_RM 
-			<< MEM_RES_RM 
-			<< DEST_RE 
-			<< EXE_RES_RE 
-			<< RADR1_RD 
-			<< RADR2_RD 
-			<< OP1_RD 
-			<< OP2_RD
-                  
-			<< MEM_DATA_RD;
-        SC_METHOD(interruption);
-        sensitive 
-			<< INTERRUPTION_SX;
+        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
+                  << RADR2_RD << OP1_RD << OP2_RD
+
+                  << MEM_DATA_RD;
+        SC_METHOD(exception);
+        sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD;
     }
 };

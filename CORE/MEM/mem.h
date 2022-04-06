@@ -33,9 +33,9 @@ SC_MODULE(mem) {
         SIGN_EXTEND_RE;  // taille fifo entrée : 74
     sc_in<bool> LOAD_RE, STORE_RE;
 
-    sc_in<bool>        CSR_type_operation_RE;
-    sc_in<sc_uint<12>> ADR_CSR_SE;
-    sc_in<sc_uint<32>> OP1_CSR_RE;
+    sc_in<bool>        CSR_WENABLE_RE;
+    sc_in<sc_uint<12>> CSR_WADR_SE;
+    // sc_in<sc_uint<32>> OP1_CSR_RE;
 
     // exe2mem interface :
 
@@ -49,8 +49,7 @@ SC_MODULE(mem) {
     sc_signal<bool>     mem2wbk_full_sm;
     sc_out<bool>        MEM2WBK_EMPTY_SM;
     sc_out<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_out<bool>        CSR_type_operation_RM;
-    sc_out<sc_uint<32>> OP1_CSR_RM;
+    sc_out<bool>        CSR_WENABLE_RM;
 
     // WBK interface
     sc_out<sc_uint<32>> MEM_RES_RM;
@@ -74,8 +73,8 @@ SC_MODULE(mem) {
 
     // CSR Interface :
 
-    sc_out<sc_uint<12>> ADR_CSR_SM;
-    sc_out<sc_uint<32>> CSR_DATA_WRITE_SM;
+    sc_out<sc_uint<12>> CSR_WADR_SM;
+    sc_out<sc_uint<32>> CSR_WDATA_SM;
 
     // FIFO
     fifo<107> fifo_inst;

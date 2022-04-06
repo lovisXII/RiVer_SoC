@@ -5,14 +5,14 @@
 SC_MODULE(csr) {
     // Input :
 
-    sc_in<sc_uint<12>> WADR_CSR_SM;
-    sc_in<sc_uint<32>> CSR_DATA_WRITE_SM;
-    sc_in<bool>        CSR_WRITE_ENABLE_SM;
+    sc_in<sc_uint<12>> CSR_WADR_SM;
+    sc_in<sc_uint<32>> CSR_WDATA_SM;
+    sc_in<bool>        CSR_WENABLE_RM;
 
     // Output :
 
-    sc_in<sc_uint<12>>  RADR_CSR_SD;
-    sc_out<sc_uint<32>> DATA_READ_CSR_SC;
+    sc_in<sc_uint<12>>  CSR_RADR_SD;
+    sc_out<sc_uint<32>> CSR_RDATA_SC;
 
     // General Interface :
 
@@ -41,6 +41,6 @@ SC_MODULE(csr) {
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
-        sensitive << RADR_CSR_SD;
+        sensitive << CSR_RADR_SD;
     }
 };

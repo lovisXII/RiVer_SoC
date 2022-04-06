@@ -1,5 +1,9 @@
 {
     "files.associations": {
-        "*.tcc": "cpp"
+        "*.tmpl": "asm-collection",
+        "*.tcc": "cpp",
+        "*.ipp": "cpp",
+        "bitset": "cpp",
+        "ostream": "cpp"
     }
 }

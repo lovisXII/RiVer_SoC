@@ -1,0 +1,10 @@
+
+*.o
+*alu_tb
+*shifter_tb
+*a.out
+*core_tb
+*.vcd
+*.txt
+*.text
+bin

@@ -50,8 +50,8 @@ void exec::fifo_concat() {
     ff_din[74]             = mem_store_re.read();
     ff_din[75]             = MEM_SIGN_EXTEND_RD.read();
     ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
-    ff_din[108]            = CSR_type_operation_RD.read();
-    ff_din.range(120, 109) = ADR_CSR_SD.read();
+    ff_din[108]            = CSR_WENABLE_RD.read();
+    ff_din.range(120, 109) = CSR_WADR_SD.read();
     ff_din.range(152, 121) = OP1_RD.read();  // sending OP1, can contains CSR
 
     exe2mem_din_se.write(ff_din);
@@ -67,9 +67,9 @@ void exec::fifo_unconcat() {
     MEM_STORE_RE.write((bool)ff_dout[74]);
     MEM_SIGN_EXTEND_RE.write((bool)ff_dout[75]);
     PC_EXE2MEM_RE.write((sc_bv_base)ff_dout.range(107, 76));
-    CSR_type_operation_RE.write((bool)ff_dout[108]);
-    ADR_CSR_SE.write((sc_bv_base)ff_dout.range(120, 109));
-    OP1_CSR_RE.write((sc_bv_base)ff_dout.range(152, 121));
+    CSR_WENABLE_RE.write((bool)ff_dout[108]);
+    CSR_WADR_SE.write((sc_bv_base)ff_dout.range(120, 109));
+    // OP1_CSR_RE.write((sc_bv_base)ff_dout.range(152, 121));
 }
 
 void exec::manage_fifo() {
@@ -125,21 +125,20 @@ void exec::bypasses() {
 }
 
 void exec::exception() {
-    if (INTERRUPTION_SX.read() || EXCEPTION_RD.read()) 
+    if (INTERRUPTION_SX.read() || EXCEPTION_RD.read())
     // in case of interrupt or exception have to inform other stage
-    { 
-        INTERRUPTION_SE.write(1); 
+    {
+        INTERRUPTION_SE.write(1);
     }
-    
-    if(EXCEPTION_RD.read()){
-        wb_re.write(0) ;
-        mem_load_re.write(0) ;
-        mem_store_re.write(0) ;
-    }
-    else{
-        wb_re.write(WB_RD.read()) ;
-        mem_load_re.write(MEM_LOAD_RD.read()) ;
-        mem_store_re.write(MEM_STORE_RD.read()) ;   
+
+    if (EXCEPTION_RD.read()) {
+        wb_re.write(0);
+        mem_load_re.write(0);
+        mem_store_re.write(0);
+    } else {
+        wb_re.write(WB_RD.read());
+        mem_load_re.write(MEM_LOAD_RD.read());
+        mem_store_re.write(MEM_STORE_RD.read());
     }
 }
 
@@ -185,6 +184,7 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, blocked, GET_NAME(blocked));
     sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
     sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
+    sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

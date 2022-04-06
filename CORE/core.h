@@ -1,3 +1,4 @@
+#include "CSR/csr.h"
 #include "DEC/dec.h"
 #include "EXE/exec.h"
 #include "IFETCH/ifetch.h"
@@ -18,6 +19,7 @@ SC_MODULE(core) {
     sc_signal<bool>      DEC2IF_POP_SI;
     sc_signal<bool>      DEC2IF_EMPTY_SI;
     sc_signal<sc_bv<32>> PC_RD;
+    sc_signal<bool>      EXCEPTION_RI;
 
     // IF2DEC :
 
@@ -52,11 +54,12 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>> BP_RADR1_RD;
     sc_signal<sc_uint<6>> BP_RADR2_RD;
 
-    sc_signal<bool>        CSR_type_operation_RD;
-    sc_signal<sc_uint<12>> ADR_CSR_SD;
-    sc_signal<sc_uint<12>> ADR_CSR_CSR_SD;
-    sc_signal<sc_uint<32>> DATA_READ_CSR_SC;
+    sc_signal<bool>        CSR_WENABLE_RD;
+    sc_signal<sc_uint<12>> CSR_WADR_SD;
+    sc_signal<sc_uint<12>> CSR_RADR_SD;
+    sc_signal<sc_uint<32>> CSR_RDATA_SC;
     sc_signal<bool>        INTERRUPTION_SE;
+    sc_signal<bool>        EXCEPTION_RD;
 
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
@@ -81,9 +84,9 @@ SC_MODULE(core) {
     sc_signal<bool>        MEM_LOAD_RE, MEM_STORE_RE;
     sc_signal<bool>        EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
 
-    sc_signal<bool>        CSR_type_operation_RE;
+    sc_signal<bool>        CSR_WENABLE_RE;
     sc_signal<bool>        INTERRUPTION_SX;
-    sc_signal<sc_uint<12>> ADR_CSR_SE;
+    sc_signal<sc_uint<12>> CSR_WADR_SE;
     sc_signal<sc_uint<32>> OP1_CSR_RE;
 
     // MEM-WBK interface
@@ -95,13 +98,13 @@ SC_MODULE(core) {
     sc_signal<bool>        MEM2WBK_POP_SW;
     sc_signal<bool>        WBK_MEM_LOAD;
     sc_signal<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_signal<bool>        CSR_type_operation_RM;
+    sc_signal<bool>        CSR_WENABLE_RM;
     sc_signal<sc_uint<32>> OP1_CSR_RM;
 
     // MEM-CSR interface
 
-    sc_signal<sc_uint<12>> ADR_CSR_SM;
-    sc_signal<sc_uint<32>> CSR_DATA_WRITE_SM;
+    sc_signal<sc_uint<12>> CSR_WADR_SM;
+    sc_signal<sc_uint<32>> CSR_WDATA_SM;
 
     // WBK-REG interface
 
@@ -135,6 +138,7 @@ SC_MODULE(core) {
     mem    mem_inst;
     reg    reg_inst;
     wbk    wbk_inst;
+    csr    csr_inst;
 
     void core_method();
 
@@ -145,7 +149,8 @@ SC_MODULE(core) {
           ifetch_inst("ifetch"),
           mem_inst("mem"),
           reg_inst("reg"),
-          wbk_inst("wbk") {
+          wbk_inst("wbk"),
+          csr_inst("csr") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
 
@@ -165,6 +170,7 @@ SC_MODULE(core) {
 
         ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+        ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -221,11 +227,13 @@ SC_MODULE(core) {
         dec_inst.BP_RADR2_RD(BP_RADR2_RD);
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
 
-        dec_inst.CSR_type_operation_RD(CSR_type_operation_RD);
-        dec_inst.ADR_CSR_SD(ADR_CSR_SD);
-        dec_inst.ADR_CSR_CSR_SD(ADR_CSR_CSR_SD);
-        dec_inst.DATA_READ_CSR_SC(DATA_READ_CSR_SC);
+        dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
+        dec_inst.CSR_WADR_SD(CSR_WADR_SD);
+        dec_inst.CSR_RADR_SD(CSR_RADR_SD);
+        dec_inst.CSR_RDATA_SC(CSR_RDATA_SC);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+        dec_inst.EXCEPTION_RI(EXCEPTION_RI);
+        dec_inst.EXCEPTION_RD(EXCEPTION_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -270,13 +278,13 @@ SC_MODULE(core) {
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
 
-        exec_inst.CSR_type_operation_RD(CSR_type_operation_RD);
-        exec_inst.ADR_CSR_SD(ADR_CSR_SD);
         exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         exec_inst.INTERRUPTION_SX(INTERRUPTION_SX);
-        exec_inst.CSR_type_operation_RE(CSR_type_operation_RE);
-        exec_inst.ADR_CSR_SE(ADR_CSR_SE);
-        exec_inst.OP1_CSR_RE(OP1_CSR_RE);
+        exec_inst.EXCEPTION_RD(EXCEPTION_RD);
+        exec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
+        exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        exec_inst.CSR_WADR_SD(CSR_WADR_SD);
+        exec_inst.CSR_WADR_SE(CSR_WADR_SE);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -310,15 +318,12 @@ SC_MODULE(core) {
         mem_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
         mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
-        mem_inst.CSR_type_operation_RE(CSR_type_operation_RE);
-        mem_inst.ADR_CSR_SE(ADR_CSR_SE);
-        mem_inst.OP1_CSR_RE(OP1_CSR_RE);
-        mem_inst.CSR_type_operation_RM(CSR_type_operation_RM);
-        mem_inst.OP1_CSR_RM(OP1_CSR_RM);
         mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-
-        mem_inst.ADR_CSR_SM(ADR_CSR_SM);
-        mem_inst.CSR_DATA_WRITE_SM(CSR_DATA_WRITE_SM);
+        mem_inst.CSR_WADR_SE(CSR_WADR_SE);
+        mem_inst.CSR_WADR_SM(CSR_WADR_SM);
+        mem_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        mem_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        mem_inst.CSR_WDATA_SM(CSR_WDATA_SM);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
@@ -352,11 +357,19 @@ SC_MODULE(core) {
 
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
-        wbk_inst.CSR_type_operation_RM(CSR_type_operation_RM);
-        wbk_inst.OP1_CSR_RM(OP1_CSR_RM);
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);
+
+        csr_inst.CSR_WADR_SM(CSR_WADR_SM);
+        csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);
+        csr_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+
+        csr_inst.CSR_RADR_SD(CSR_RADR_SD);
+        csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+
+        csr_inst.CLK(CLK);
+        csr_inst.RESET_N(RESET);
     }
 };

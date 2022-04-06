@@ -24,9 +24,6 @@ SC_MODULE(wbk) {
     sc_in<bool>        WB_RM;
     sc_in<sc_uint<32>> PC_MEM2WBK_RM;
 
-    sc_in<bool>        CSR_type_operation_RM;
-    sc_in<sc_uint<32>> OP1_CSR_RM;
-
     // Mem2wbk interface
 
     sc_in<bool>  MEM2WBK_EMPTY_SM;
@@ -47,10 +44,6 @@ SC_MODULE(wbk) {
     void trace(sc_trace_file * tf);
     SC_CTOR(wbk) {
         SC_METHOD(wbk_method);
-        sensitive 
-			<< MEM_RES_RM 
-			<< DEST_RM 
-			<< WB_RM 
-			<< MEM2WBK_EMPTY_SM;
+        sensitive << MEM_RES_RM << DEST_RM << WB_RM << MEM2WBK_EMPTY_SM;
     }
 };
