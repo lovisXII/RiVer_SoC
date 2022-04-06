@@ -38,7 +38,6 @@ SC_MODULE(decod) {
                                       // if so need to WBK CSR in rd
     sc_out<sc_uint<12>> CSR_WADR_SD;  // CSR adress sent to EXE, will allow to wbk csr in MEM
 
-    sc_out<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
     // Interface with DEC2IF :
 
     sc_in<bool>       DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
@@ -49,11 +48,9 @@ SC_MODULE(decod) {
 
     sc_in<sc_uint<32>> PC_IF2DEC_RI;
     sc_in<sc_bv<32>>   INSTR_RI;
-    sc_in<bool>        EXCEPTION_RI;
-
-    sc_in<bool>  IF2DEC_EMPTY_SI;
-    sc_out<bool> IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
-    sc_out<bool> IF2DEC_FLUSH_SD;
+    sc_in<bool>        IF2DEC_EMPTY_SI;
+    sc_out<bool>       IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
+    sc_out<bool>       IF2DEC_FLUSH_SD;
 
     // Interface with DEC2EXE
 
@@ -82,15 +79,13 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_in<bool> EXCEPTION_RI ;
+    sc_in<bool> EXCEPTION_RI;
 
     sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_out<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
-    sc_out<bool> SYSCALL_U_MODE_SD ;
-    sc_out<bool> SYSCALL_S_MODE_SD ;
+    sc_out<bool> SYSCALL_U_MODE_SD;
+    sc_out<bool> SYSCALL_S_MODE_SD;
 
-    sc_out<bool> EXCEPTION_RD ;
-    
     // General Interface :
 
     sc_in_clk   CLK;
@@ -242,17 +237,16 @@ SC_MODULE(decod) {
     sc_signal<bool>       exe_wb_sd;
     sc_signal<bool>       mem_sign_extend_sd;
 
-
     // Exception :
 
-    sc_in<bool> exception_ri ;
+    sc_in<bool> exception_ri;
 
     sc_out<bool> illegal_instruction_rd;  // accessing stuff in wrong mode
     sc_out<bool> adress_missaligned;      // branch offset is misaligned
-    sc_out<bool> syscall_u_mode_sd ;
-    sc_out<bool> syscall_s_mode_sd ;
+    sc_out<bool> syscall_u_mode_sd;
+    sc_out<bool> syscall_s_mode_sd;
 
-    sc_out<bool> EXCEPTION_RD ;
+    sc_out<bool> EXCEPTION_RD;
 
     void dec2if_gestion();
     void concat_dec2exe();
