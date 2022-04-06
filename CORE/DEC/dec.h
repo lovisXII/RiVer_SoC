@@ -80,6 +80,17 @@ SC_MODULE(decod) {
     sc_out<sc_uint<6>> BP_RADR1_RD;
     sc_out<sc_uint<6>> BP_RADR2_RD;
 
+    // Exception :
+
+    sc_in<bool> EXCEPTION_RI ;
+
+    sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
+    sc_out<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
+    sc_out<bool> SYSCALL_U_MODE_SD ;
+    sc_out<bool> SYSCALL_S_MODE_SD ;
+
+    sc_out<bool> EXCEPTION_RD ;
+    
     // General Interface :
 
     sc_in_clk   CLK;
@@ -205,11 +216,6 @@ SC_MODULE(decod) {
     sc_signal<bool>        csr_type_operation_rd;
     sc_signal<sc_uint<12>> adr_csr_sd;
 
-    // Exception :
-
-    sc_signal<bool> illegal_instruction_rd;  // accessing stuff in wrong mode
-    sc_signal<bool> adress_missaligned;      // branch offset is misaligned
-
     // Offset for branch :
 
     sc_signal<sc_uint<32>> offset_branch_sd;
@@ -235,6 +241,18 @@ SC_MODULE(decod) {
     sc_signal<bool>       exe_neg_op2_sd;
     sc_signal<bool>       exe_wb_sd;
     sc_signal<bool>       mem_sign_extend_sd;
+
+
+    // Exception :
+
+    sc_in<bool> exception_ri ;
+
+    sc_out<bool> illegal_instruction_rd;  // accessing stuff in wrong mode
+    sc_out<bool> adress_missaligned;      // branch offset is misaligned
+    sc_out<bool> syscall_u_mode_sd ;
+    sc_out<bool> syscall_s_mode_sd ;
+
+    sc_out<bool> EXCEPTION_RD ;
 
     void dec2if_gestion();
     void concat_dec2exe();
