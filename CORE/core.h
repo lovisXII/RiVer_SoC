@@ -60,6 +60,12 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> CSR_RDATA_SC;
     sc_signal<bool>        INTERRUPTION_SE;
     sc_signal<bool>        EXCEPTION_RD;
+    sc_signal<bool>        ECALL_I_SD;
+    sc_signal<bool>        EBREAK_I_SD;
+    sc_signal<bool>        ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
+    sc_signal<bool>        ADRESS_MISSALIGNED;      // branch offset is misaligned
+    sc_signal<bool>        SYSCALL_U_MODE_SD;
+    sc_signal<bool>        SYSCALL_S_MODE_SD;
 
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
@@ -87,7 +93,7 @@ SC_MODULE(core) {
     sc_signal<bool>        CSR_WENABLE_RE;
     sc_signal<bool>        INTERRUPTION_SX;
     sc_signal<sc_uint<12>> CSR_WADR_SE;
-    sc_signal<sc_uint<32>> OP1_CSR_RE;
+    sc_signal<sc_uint<32>> CSR_OP1_RE;
 
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
@@ -99,7 +105,7 @@ SC_MODULE(core) {
     sc_signal<bool>        WBK_MEM_LOAD;
     sc_signal<sc_uint<32>> PC_MEM2WBK_RM;
     sc_signal<bool>        CSR_WENABLE_RM;
-    sc_signal<sc_uint<32>> OP1_CSR_RM;
+    sc_signal<sc_uint<32>> CSR_OP1_RM;
 
     // MEM-CSR interface
 
@@ -234,6 +240,12 @@ SC_MODULE(core) {
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);
         dec_inst.EXCEPTION_RD(EXCEPTION_RD);
+        dec_inst.ECALL_I_SD(ECALL_I_SD);
+        dec_inst.EBREAK_I_SD(EBREAK_I_SD);
+        dec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
+        dec_inst.ADRESS_MISSALIGNED(ADRESS_MISSALIGNED);          // branch offset is misaligned
+        dec_inst.SYSCALL_U_MODE_SD(SYSCALL_U_MODE_SD);
+        dec_inst.SYSCALL_S_MODE_SD(SYSCALL_S_MODE_SD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -285,6 +297,13 @@ SC_MODULE(core) {
         exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
         exec_inst.CSR_WADR_SD(CSR_WADR_SD);
         exec_inst.CSR_WADR_SE(CSR_WADR_SE);
+        exec_inst.CSR_OP1_RE(CSR_OP1_RE);
+        exec_inst.ECALL_I_SD(ECALL_I_SD);
+        exec_inst.EBREAK_I_SD(EBREAK_I_SD);
+        exec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
+        exec_inst.ADRESS_MISSALIGNED(ADRESS_MISSALIGNED);          // branch offset is misaligned
+        exec_inst.SYSCALL_U_MODE_SD(SYSCALL_U_MODE_SD);
+        exec_inst.SYSCALL_S_MODE_SD(SYSCALL_S_MODE_SD);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -324,6 +343,8 @@ SC_MODULE(core) {
         mem_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
         mem_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         mem_inst.CSR_WDATA_SM(CSR_WDATA_SM);
+        mem_inst.CSR_OP1_RM(CSR_OP1_RM);
+        mem_inst.CSR_OP1_RE(CSR_OP1_RE);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);

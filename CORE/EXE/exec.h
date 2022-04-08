@@ -42,12 +42,12 @@ SC_MODULE(exec) {
     sc_in<bool> SYSCALL_S_MODE_SD;
 
     sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
-    
+
     // Interruption :
 
     sc_out<bool> INTERRUPTION_SE;
     sc_in<bool>  INTERRUPTION_SX;  // asynchrone Interruption from outside
-    
+
     // Genral Interface :
 
     sc_in_clk   CLK;
@@ -67,7 +67,7 @@ SC_MODULE(exec) {
 
     sc_out<bool>        CSR_WENABLE_RE;
     sc_out<sc_uint<12>> CSR_WADR_SE;
-    sc_out<sc_uint<32>> OP1_CSR_RE;
+    sc_out<sc_uint<32>> CSR_OP1_RE;
 
     // Internals signals :
 
