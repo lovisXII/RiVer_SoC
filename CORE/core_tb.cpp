@@ -17,7 +17,7 @@ int sc_main(int argc, char* argv[]) {
     int                     bad_adr;
     char                    test[512] = "> a.out.txt";
     string                  opt;
-    if (argc >= 2 && argv[2] == "O") {
+    if (argc >= 3 && std::string(argv[2]) == "O") {
         opt = "-O2";
     } else {
         opt = "";
@@ -51,13 +51,10 @@ int sc_main(int argc, char* argv[]) {
         system((char*)temp_text);
     }
     if (!reader.load(path)) {  // verify if the path is correctly load
-        std::cout << "Can't find or process ELF file " 
-			<< argv[1] 
-			<< std::endl;
+        std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return 2;
     }
-    cout << "Loading ELF file..." 
-			<< endl;
+    cout << "Loading ELF file..." << endl;
 
     /*
     An Elf binary file consist of segments and sections. Each sections has its
@@ -70,11 +67,7 @@ int sc_main(int argc, char* argv[]) {
     int n_sec = reader.sections.size();  // get the total amount of sectionss
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
-        cout << "Section " 
-			<< sec->get_name() << " at address 0x" 
-			<< std::hex 
-			<< sec->get_address() 
-			<< endl;
+        cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;
         int  adr  = sec->get_address();
         int  size = sec->get_size();
         int* data = (int*)sec->get_data();
@@ -84,13 +77,11 @@ int sc_main(int argc, char* argv[]) {
                 cout << ".";
                 ram[adr + j] = data[j / 4];  // put every adress segment in the ram
             }
-            cout 
-			<< endl;
+            cout << endl;
         }
 
         if (sec->get_type() == SHT_SYMTAB) {
-            cout << "Reading symbols table..." 
-			<< endl;
+            cout << "Reading symbols table..." << endl;
             const symbol_section_accessor symbols(reader, sec);
             for (unsigned int j = 0; j < symbols.get_symbols_num(); ++j) {
                 std::string   name;
@@ -103,18 +94,15 @@ int sc_main(int argc, char* argv[]) {
 
                 symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
                 if (name == "_start") {
-                    cout << "Found start" 
-			<< endl;
+                    cout << "Found start" << endl;
                     start_adr = value - 4;  // minus 4 to acount for init inc_pc
                 }
                 if (name == "_bad") {
-                    cout << "Found bad" 
-			<< endl;
+                    cout << "Found bad" << endl;
                     bad_adr = value;
                 }
                 if (name == "_good") {
-                    cout << "Found good" 
-			<< endl;
+                    cout << "Found good" << endl;
                     good_adr = value;
                 }
             }
@@ -170,8 +158,7 @@ int sc_main(int argc, char* argv[]) {
     PC_RESET.write(start_adr);
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
-    cerr << "done." 
-			<< endl;
+    cerr << "done." << endl;
 
     while (1) {
         int  mem_adr       = MEM_ADR.read();
@@ -187,19 +174,11 @@ int sc_main(int argc, char* argv[]) {
 
         int pc_adr = PC_VALUE.read();
         if (pc_adr == bad_adr) {
-            cout 
-			<< FRED("Error ! ") << "Found bad at adr 0x" 
-			<< std::hex 
-			<< pc_adr 
-			<< endl;
+            cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
         } else if (pc_adr == good_adr) {
-            cout 
-			<< FGRN("Success ! ") << "Found good at adr 0x" 
-			<< std::hex 
-			<< pc_adr 
-			<< endl;
+            cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(0);
         }

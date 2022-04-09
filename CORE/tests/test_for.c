@@ -6,34 +6,27 @@ __asm__(".global _start") ;
 
 
 __asm__("_start:");
+__asm__("lui x2,0x8100") ;
 __asm__("addi x2,x0, 0x100");
 __asm__("addi x1,x1, 4");
 __asm__("sub x2, x1,x2 ");
 __asm__("jal x5, main");
 
-
-int somme(int a)
+int main()
 {
-    return a++ ;
-}
-
-int lala()
-{
-    return 8 ;
-}
-int main() {
-    int a = 3;
-    int b = 4;
-    for (;a >= 0; a--) {
-        somme(b);
+    int a, i;
+    a = 1;
+    for(i=1; i <= 1; ++i)
+    {
+            a = i;
     }
-    if (b == 3) {
-        b = lala() ;
+	if(a == 1)
+    {
+        _good() ;
     }
-    else {
-        _good();
+    else{
+        _bad() ;
     }
-    _bad();
 }
 
 __asm__("nop");

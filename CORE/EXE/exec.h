@@ -145,7 +145,7 @@ SC_MODULE(exec) {
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
-                  << WB_RD << exe_res_se;
+                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
@@ -156,6 +156,6 @@ SC_MODULE(exec) {
 
                   << MEM_DATA_RD;
         SC_METHOD(exception);
-        sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD;
+        sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD;
     }
 };
