@@ -12,62 +12,131 @@ void decod::dec2if_gestion() {
 // :---------------------------------------------
 
 void decod::if2dec_pop_method() {
-    if (add_offset_to_pc_sd.read()) {
+    if(EXCEPTION_RM.read() == 0)
+    {
+        if (add_offset_to_pc_sd.read()) {
+            IF2DEC_POP_SD.write(1);
+            IF2DEC_FLUSH_SD.write(1);
+        } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
+            IF2DEC_POP_SD.write(1);
+            IF2DEC_FLUSH_SD.write(0);
+        } else {
+            IF2DEC_POP_SD.write(0);
+            IF2DEC_FLUSH_SD.write(0);
+        }
+    }
+    else{
         IF2DEC_POP_SD.write(1);
         IF2DEC_FLUSH_SD.write(1);
-    } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
-        IF2DEC_POP_SD.write(1);
-        IF2DEC_FLUSH_SD.write(0);
-    } else {
-        IF2DEC_POP_SD.write(0);
-        IF2DEC_FLUSH_SD.write(0);
     }
+
 }
 
 // ---------------------------------------------METHODS FOR DEC2EXE GESTION
 // :---------------------------------------------
 
 void decod::dec2exe_push_method() {
-    if (stall || dec2exe_full_sd.read() || IF2DEC_EMPTY_SI.read()) {
-        dec2exe_push_sd.write(0);
-    } else {
-        dec2exe_push_sd.write(1);
+    if(EXCEPTION_RM.read() == 0)
+    {
+        if (stall || dec2exe_full_sd.read() || IF2DEC_EMPTY_SI.read()) {
+            dec2exe_push_sd.write(0);
+        } else {
+            dec2exe_push_sd.write(1);
+        }
     }
+    else{
+        dec2exe_push_sd.write(1) ;
+    }
+
 }
 
 void decod::concat_dec2exe() {
-    sc_bv<205> dec2exe_in_var;
-    dec2exe_in_var.range(204, 173) = CSR_RDATA_SC.read();
-    dec2exe_in_var[172]            = csr_wenable_rd.read();
-    dec2exe_in_var.range(171, 160) = csr_radr_sd.read();
-    dec2exe_in_var.range(159, 128) = PC_IF2DEC_RI.read();
-    dec2exe_in_var[127]            = r1_valid_sd.read();
-    dec2exe_in_var[126]            = r2_valid_sd.read();
-    dec2exe_in_var.range(125, 120) = RADR1_SD.read();
-    dec2exe_in_var.range(119, 114) = RADR2_SD.read();
-    dec2exe_in_var.range(113, 112) = exe_cmd_sd.read();
-    dec2exe_in_var.range(111, 80)  = exe_op1_sd.read();
-    dec2exe_in_var.range(79, 48)   = exe_op2_sd.read();
-    dec2exe_in_var[47]             = exe_neg_op2_sd.read();
-    dec2exe_in_var[46]             = exe_wb_sd.read();
+    sc_bv<dec2exe_size> dec2exe_in_var;
+    if(EXCEPTION_RM.read() == 0)
+    {
+        dec2exe_in_var[211]            = ecall_i_sd || ebreak_i_sd || illegal_instruction_rd 
+        || adress_missaligned_sd || syscall_u_mode_sd || syscall_s_mode_sd ; // tells if there is an exception
+        dec2exe_in_var[210]            = ecall_i_sd.read();
+        dec2exe_in_var[209]            = ebreak_i_sd.read();
+        dec2exe_in_var[208]            = illegal_instruction_rd.read();
+        dec2exe_in_var[207]            = adress_missaligned_sd.read();
+        dec2exe_in_var[206]            = syscall_u_mode_sd.read();
+        dec2exe_in_var[205]            = syscall_s_mode_sd.read();
+        dec2exe_in_var.range(204, 173) = CSR_RDATA_SC.read();
+        dec2exe_in_var[172]            = csr_wenable_rd.read();
+        dec2exe_in_var.range(171, 160) = csr_radr_sd.read();
+        dec2exe_in_var.range(159, 128) = PC_IF2DEC_RI.read();
+        dec2exe_in_var[127]            = r1_valid_sd.read();
+        dec2exe_in_var[126]            = r2_valid_sd.read();
+        dec2exe_in_var.range(125, 120) = RADR1_SD.read();
+        dec2exe_in_var.range(119, 114) = RADR2_SD.read();
+        dec2exe_in_var.range(113, 112) = exe_cmd_sd.read();
+        dec2exe_in_var.range(111, 80)  = exe_op1_sd.read();
+        dec2exe_in_var.range(79, 48)   = exe_op2_sd.read();
+        dec2exe_in_var[47]             = exe_neg_op2_sd.read();
+        dec2exe_in_var[46]             = exe_wb_sd.read();
 
-    dec2exe_in_var.range(45, 14) = mem_data_sd.read();
+        dec2exe_in_var.range(45, 14) = mem_data_sd.read();
 
-    dec2exe_in_var[13] = mem_load_sd.read();
-    dec2exe_in_var[12] = mem_store_sd.read();
+        dec2exe_in_var[13] = mem_load_sd.read();
+        dec2exe_in_var[12] = mem_store_sd.read();
 
-    dec2exe_in_var[11]          = mem_sign_extend_sd.read();
-    dec2exe_in_var.range(10, 9) = mem_size_sd.read();
-    dec2exe_in_var[8]           = select_shift_sd.read();
-    dec2exe_in_var.range(7, 2)  = adr_dest_sd.read();
-    dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
-    dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
+        dec2exe_in_var[11]          = mem_sign_extend_sd.read();
+        dec2exe_in_var.range(10, 9) = mem_size_sd.read();
+        dec2exe_in_var[8]           = select_shift_sd.read();
+        dec2exe_in_var.range(7, 2)  = adr_dest_sd.read();
+        dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
+        dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
+    }
+    else{
+        dec2exe_in_var[211]            = 0 ;
+        dec2exe_in_var[210]            = 0 ;
+        dec2exe_in_var[209]            = 0 ;
+        dec2exe_in_var[208]            = 0 ;
+        dec2exe_in_var[207]            = 0 ;
+        dec2exe_in_var[206]            = 0 ;
+        dec2exe_in_var[205]            = 0 ;
+        dec2exe_in_var.range(204, 173) = 0 ;
+        dec2exe_in_var[172]            = 0 ;
+        dec2exe_in_var.range(171, 160) = 0 ;
+        dec2exe_in_var.range(159, 128) = PC_IF2DEC_RI.read();
+        dec2exe_in_var[127]            = 0 ;
+        dec2exe_in_var[126]            = 0 ;
+        dec2exe_in_var.range(125, 120) = 0 ;
+        dec2exe_in_var.range(119, 114) = 0 ;
+        dec2exe_in_var.range(113, 112) = 0 ;
+        dec2exe_in_var.range(111, 80)  = 0 ;
+        dec2exe_in_var.range(79, 48)   = 0 ;
+        dec2exe_in_var[47]             = 0 ;
+        dec2exe_in_var[46]             = 1 ;
+
+        dec2exe_in_var.range(45, 14) = 0 ;
+
+        dec2exe_in_var[13] = 0 ;
+        dec2exe_in_var[12] = 0 ;
+
+        dec2exe_in_var[11]          = 0 ;
+        dec2exe_in_var.range(10, 9) = 0 ;
+        dec2exe_in_var[8]           = 0 ;
+        dec2exe_in_var.range(7, 2)  = 0 ;
+        dec2exe_in_var[1]           = 0 ;
+        dec2exe_in_var[0]           = 0 ;
+    }
+
 
     dec2exe_in_sd.write(dec2exe_in_var);
 }
 
 void decod::unconcat_dec2exe() {
-    sc_bv<205> dec2exe_out_var = dec2exe_out_sd.read();
+    sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
+    
+    EXCEPTION_RD.write((bool)dec2exe_out_var[211]);
+    ECALL_I_RD.write((bool)dec2exe_out_var[210]);
+    EBREAK_I_RD.write((bool)dec2exe_out_var[209]);
+    ILLEGAL_INSTRUCTION_RD.write((bool)dec2exe_out_var[208]);
+    ADRESS_MISSALIGNED_RD.write((bool)dec2exe_out_var[207]);
+    SYSCALL_U_MODE_RD.write((bool)dec2exe_out_var[206]);
+    SYSCALL_M_MODE_RD.write((bool)dec2exe_out_var[205]);
     CSR_RDATA_RD.write((sc_bv_base)dec2exe_out_var.range(204, 173));
     CSR_WENABLE_RD.write((bool)dec2exe_out_var[172]);
     CSR_WADR_RD.write((sc_bv_base)dec2exe_out_var.range(171, 160));
@@ -398,7 +467,6 @@ void decod::pre_reg_read_decoding() {
             radr1_var    = 0;
             radr2_var    = 0;
             adr_dest_var = 0;
-
             // Checking exception for current call mode :
 
             // CSR_RADR_SD.write(0x300); // reading MSTATUS
@@ -742,9 +810,14 @@ void decod::pc_inc() {
 
     // Adress missaligned exception :
 
-    if (pc_out && 0b11 != 0) { adress_missaligned = true; }
-
+    if (pc_out && 0b11 != 0) { adress_missaligned_sd = true; }
+    if(EXCEPTION_RM.read() == 0)
+    {
     dec2if_in_sd.write(pc_out);
+    }
+    else{
+    dec2if_in_sd.write(MTVEC_VALUE_RM.read());
+    }
 }
 
 void decod::bypasses() {
@@ -929,12 +1002,12 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_DEC2EXE_RD, GET_NAME(PC_DEC2EXE_RD));
     sc_trace(tf, PC_IF2DEC_RI, GET_NAME(PC_IF2DEC_RI));
     sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
-    sc_trace(tf, ECALL_I_SD, GET_NAME(ECALL_I_SD));
-    sc_trace(tf, EBREAK_I_SD, GET_NAME(EBREAK_I_SD));
+    sc_trace(tf, ECALL_I_RD, GET_NAME(ECALL_I_RD));
+    sc_trace(tf, EBREAK_I_RD, GET_NAME(EBREAK_I_RD));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
-    sc_trace(tf, ADRESS_MISSALIGNED, GET_NAME(ADRESS_MISSALIGNED));
-    sc_trace(tf, SYSCALL_U_MODE_SD, GET_NAME(SYSCALL_U_MODE_SD));
-    sc_trace(tf, SYSCALL_S_MODE_SD, GET_NAME(SYSCALL_S_MODE_SD));
+    sc_trace(tf, ADRESS_MISSALIGNED_RD, GET_NAME(ADRESS_MISSALIGNED_RD));
+    sc_trace(tf, SYSCALL_U_MODE_RD, GET_NAME(SYSCALL_U_MODE_RD));
+    sc_trace(tf, SYSCALL_M_MODE_RD, GET_NAME(SYSCALL_M_MODE_RD));
     sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
     sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
     sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));

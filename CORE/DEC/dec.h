@@ -1,5 +1,7 @@
 #include <systemc.h>
 #include "../UTIL/fifo.h"
+#define dec2exe_size 212
+
 SC_MODULE(decod) {
     // Interface with REG :
 
@@ -57,7 +59,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>           DEC2EXE_POP_SE;
     sc_out<bool>          DEC2EXE_EMPTY_SD;
-    sc_signal<sc_bv<205>> dec2exe_out_sd;
+    sc_signal<sc_bv<dec2exe_size>> dec2exe_out_sd;
 
     // Interface with CSR :
 
@@ -85,18 +87,20 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_in<bool> EXCEPTION_RI;
+    sc_in<bool> EXCEPTION_RI;           // this signal will be at 0 considering there is no exception in IFETCH
 
-    sc_out<bool> ECALL_I_SD;
-    sc_out<bool> EBREAK_I_SD;
-    sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
-    sc_out<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
-    sc_out<bool> SYSCALL_U_MODE_SD;
-    sc_out<bool> SYSCALL_S_MODE_SD;
+    sc_out<bool> ECALL_I_RD;
+    sc_out<bool> EBREAK_I_RD;
+    sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // instruction doesnt exist
+    sc_out<bool> ADRESS_MISSALIGNED_RD;      // branch offset is misaligned
+    sc_out<bool> SYSCALL_U_MODE_RD;
+    sc_out<bool> SYSCALL_M_MODE_RD;
 
     sc_out<bool> EXCEPTION_RD;
     // General Interface :
-
+ 
+    sc_in<bool> EXCEPTION_RM ;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RM ; 
     sc_in_clk   CLK;
     sc_in<bool> RESET_N;
 
@@ -107,7 +111,7 @@ SC_MODULE(decod) {
     // Instance used :
 
     fifo<32>  dec2if;
-    fifo<205> dec2exe;
+    fifo<dec2exe_size> dec2exe;
 
     // Signals :
 
@@ -128,7 +132,7 @@ SC_MODULE(decod) {
 
     // fifo dec2exe :
 
-    sc_signal<sc_bv<205>> dec2exe_in_sd;
+    sc_signal<sc_bv<dec2exe_size>> dec2exe_in_sd;
     sc_signal<bool>       dec2exe_push_sd;
     sc_signal<bool>       dec2exe_full_sd;
 
@@ -246,12 +250,10 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_signal<bool> exception_ri;
-
     sc_signal<bool> ecall_i_sd;
     sc_signal<bool> ebreak_i_sd;
-    sc_signal<bool> illegal_instruction_rd;  // accessing stuff in wrong mode
-    sc_signal<bool> adress_missaligned;      // branch offset is misaligned
+    sc_signal<bool> illegal_instruction_rd;  // instruction doesnt exist
+    sc_signal<bool> adress_missaligned_sd;      // branch offset is misaligned
     sc_signal<bool> syscall_u_mode_sd;
     sc_signal<bool> syscall_s_mode_sd;
 

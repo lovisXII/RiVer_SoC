@@ -3,6 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
+#define nop_encoding 0x0000013
 SC_MODULE(ifetch) {
     // Icache Interface :
 
@@ -36,6 +37,7 @@ SC_MODULE(ifetch) {
 
     // Global Interface :
 
+    sc_in<bool> EXCEPTION_RM ;
     sc_in_clk CLK;
     sc_in_clk RESET;
 
@@ -51,7 +53,7 @@ SC_MODULE(ifetch) {
 
     void fetch_method();
     void trace(sc_trace_file * tf);
-
+    void exception() ;
     SC_CTOR(ifetch) : fifo_inst("if2dec") {
         fifo_inst.DIN_S(if2dec_in_si);
         fifo_inst.DOUT_R(instr_ri);
@@ -71,5 +73,7 @@ SC_MODULE(ifetch) {
 			<< IF2DEC_FLUSH_SD 
 			<< IC_STALL_SI 
 			<< RESET;
+        SC_METHOD(exception)
+        sensitive << EXCEPTION_RI ;
     }
 };

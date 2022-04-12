@@ -35,29 +35,79 @@ void exec::select_exec_res() {
             exe_res_se.write(!(bool)alu_out_se.read()[31]);
         }
     } else {
+        if(MEM_LOAD_RD.read() || MEM_STORE_RD.read())
+        {
+            if(alu_out_se.read() && 0b11 != 0){ //if adress isn't aligned it creates an exception
+                load_adress_missaligned_se.write(1) ;
+            }
+            else{
+                load_adress_missaligned_se.write(0) ;
+            }
+            if(alu_out_se.read() > start_kernel_adress )
+            {
+                instruction_access_fault_se.write(1) ;
+            }
+            else{
+                instruction_access_fault_se.write(0) ;
+            }
+        }
         exe_res_se.write(alu_out_se);
     }
 }
 void exec::fifo_concat() {
-    sc_bv<153> ff_din;
+    sc_bv<exe2mem_size> ff_din;
+    if(EXCEPTION_RM.read() == 0){
+        ff_din.range(31, 0)    = exe_res_se.read();
+        ff_din.range(63, 32)   = bp_mem_data_sd.read();
+        ff_din.range(69, 64)   = DEST_RD.read();
+        ff_din.range(71, 70)   = MEM_SIZE_RD.read();
+        ff_din[72]             = wb_re.read();
+        ff_din[73]             = mem_load_re.read();
+        ff_din[74]             = mem_store_re.read();
+        ff_din[75]             = MEM_SIGN_EXTEND_RD.read();
+        ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
+        ff_din[108]            = CSR_WENABLE_RD.read();
+        ff_din.range(120, 109) = CSR_WADR_RD.read();
+        ff_din.range(152, 121) = CSR_RDATA_RD.read();  // sending Csr read to wb to register
+        ff_din[153]             = ECALL_I_RD.read();
+        ff_din[154]             = EBREAK_I_RD.read();
+        ff_din[155]             = ILLEGAL_INSTRUCTION_RD.read();
+        ff_din[156]             = ADRESS_MISSALIGNED_RD.read();
+        ff_din[157]             = SYSCALL_U_MODE_RD.read();
+        ff_din[158]             = SYSCALL_M_MODE_RD.read();
+        ff_din[159]             = exception_se.read();
+        ff_din[160]             = load_adress_missaligned_se.read();
+        ff_din[161]             = instruction_access_fault_se.read();
+    }
+    else{
+        ff_din.range(31, 0)    = 0 ;
+        ff_din.range(63, 32)   = 0 ;
+        ff_din.range(69, 64)   = 0 ;
+        ff_din.range(71, 70)   = 0 ;
+        ff_din[72]             = 1 ;
+        ff_din[73]             = 0 ;
+        ff_din[74]             = 0 ;
+        ff_din[75]             = 0 ;
+        ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
+        ff_din[108]            = 0 ;
+        ff_din.range(120, 109) = 0 ;
+        ff_din.range(152, 121) = 0 ;  // sending Csr read to wb to register
+        ff_din[153]             = 0 ;
+        ff_din[154]             = 0 ;
+        ff_din[155]             = 0 ;
+        ff_din[156]             = 0 ;
+        ff_din[157]             = 0 ;
+        ff_din[158]             = 0 ;
+        ff_din[159]             = 0 ;
+        ff_din[160]             = 0 ;
+        ff_din[161]             = 0 ;
+    }
 
-    ff_din.range(31, 0)    = exe_res_se.read();
-    ff_din.range(63, 32)   = bp_mem_data_sd.read();
-    ff_din.range(69, 64)   = DEST_RD.read();
-    ff_din.range(71, 70)   = MEM_SIZE_RD.read();
-    ff_din[72]             = wb_re.read();
-    ff_din[73]             = mem_load_re.read();
-    ff_din[74]             = mem_store_re.read();
-    ff_din[75]             = MEM_SIGN_EXTEND_RD.read();
-    ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
-    ff_din[108]            = CSR_WENABLE_RD.read();
-    ff_din.range(120, 109) = CSR_WADR_RD.read();
-    ff_din.range(152, 121) = CSR_RDATA_RD.read();  // sending Csr read to wb to register
 
     exe2mem_din_se.write(ff_din);
 }
 void exec::fifo_unconcat() {
-    sc_bv<153> ff_dout = exe2mem_dout_se.read();
+    sc_bv<exe2mem_size> ff_dout = exe2mem_dout_se.read();
     EXE_RES_RE.write((sc_bv_base)ff_dout.range(31, 0));
     MEM_DATA_RE.write((sc_bv_base)ff_dout.range(63, 32));
     DEST_RE.write((sc_bv_base)ff_dout.range(69, 64));
@@ -70,6 +120,15 @@ void exec::fifo_unconcat() {
     CSR_WENABLE_RE.write((bool)ff_dout[108]);
     CSR_WADR_RE.write((sc_bv_base)ff_dout.range(120, 109));
     CSR_RDATA_RE.write((sc_bv_base)ff_dout.range(152, 121));
+    ECALL_I_RE.write((bool)ff_dout[153]);
+    EBREAK_I_RE.write((bool)ff_dout[154]);
+    ILLEGAL_INSTRUCTION_RE.write((bool)ff_dout[155]);
+    ADRESS_MISSALIGNED_RE.write((bool)ff_dout[156]);
+    SYSCALL_U_MODE_RE.write((bool)ff_dout[157]);
+    SYSCALL_M_MODE_RE.write((bool)ff_dout[158]);
+    EXCEPTION_RE.write((bool)ff_dout[159]);
+    LOAD_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[160]);
+    INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[161]);
 }
 
 void exec::manage_fifo() {
@@ -139,13 +198,16 @@ void exec::bypasses() {
 }
 
 void exec::exception() {
+
+    exception_se = EXCEPTION_RD.read() || load_adress_missaligned_se || instruction_access_fault_se ;
+
     if (INTERRUPTION_SX.read() || EXCEPTION_RD.read())
     // in case of interrupt or exception have to inform other stage
     {
         INTERRUPTION_SE.write(1);
     }
 
-    if (EXCEPTION_RD.read()) {
+    if (exception_se.read()) {
         wb_re.write(0);
         mem_load_re.write(0);
         mem_store_re.write(0);
@@ -201,12 +263,12 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
     sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));
     sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));
-    sc_trace(tf, ECALL_I_SD, GET_NAME(ECALL_I_SD));
-    sc_trace(tf, EBREAK_I_SD, GET_NAME(EBREAK_I_SD));
+    sc_trace(tf, ECALL_I_RD, GET_NAME(ECALL_I_RD));
+    sc_trace(tf, EBREAK_I_RD, GET_NAME(EBREAK_I_RD));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
-    sc_trace(tf, ADRESS_MISSALIGNED, GET_NAME(ADRESS_MISSALIGNED));
-    sc_trace(tf, SYSCALL_U_MODE_SD, GET_NAME(SYSCALL_U_MODE_SD));
-    sc_trace(tf, SYSCALL_S_MODE_SD, GET_NAME(SYSCALL_S_MODE_SD));
+    sc_trace(tf, ADRESS_MISSALIGNED_RD, GET_NAME(ADRESS_MISSALIGNED_RD));
+    sc_trace(tf, SYSCALL_U_MODE_RD, GET_NAME(SYSCALL_U_MODE_RD));
+    sc_trace(tf, SYSCALL_M_MODE_RD, GET_NAME(SYSCALL_M_MODE_RD));
     sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, INTERRUPTION_SX, GET_NAME(INTERRUPTION_SX));

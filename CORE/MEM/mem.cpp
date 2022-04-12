@@ -1,7 +1,7 @@
 #include "mem.h"
 
 void mem::mem2wbk_concat() {
-    sc_bv<107> ff_din;
+    sc_bv<mem2wbk_size> ff_din;
 
     ff_din.range(31, 0)   = data_sm.read();
     ff_din.range(36, 32)  = DEST_RE.read();
@@ -9,11 +9,13 @@ void mem::mem2wbk_concat() {
     ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
+    ff_din[107]            = exception_sm.read();
+    ff_din.range(139, 108) = CSR_RDATA_SC.read(); // value of mtvec
 
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
-    sc_bv<107> ff_dout = mem2wbk_dout_sm.read();
+    sc_bv<mem2wbk_size> ff_dout = mem2wbk_dout_sm.read();
 
     MEM_RES_RM.write((sc_bv_base)ff_dout.range(31, 0));
     DEST_RM.write((sc_bv_base)ff_dout.range(36, 32));
@@ -21,6 +23,8 @@ void mem::mem2wbk_unconcat() {
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
+    EXCEPTION_RM.write((bool)ff_dout[107]);
+    MTVEC_VALUE_RM.write((sc_bv_base)ff_dout.range(139, 108));
 }
 
 void mem::fifo_gestion() {
@@ -70,14 +74,49 @@ void mem::sign_extend() {
     }
 }
 
-void mem::csr() {
-    if (CSR_WENABLE_RE.read()) {
-        CSR_WADR_SM.write(CSR_WADR_SE.read());
-        CSR_WDATA_SM.write(EXE_RES_RE.read());
-    } else {
-        CSR_WADR_SM.write(0);
-        CSR_WDATA_SM.write(0);
+void mem::csr_exception() {
+    exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read() ;
+    if(exception_sm == 0)
+    {
+        if (CSR_WENABLE_RE.read()) {
+            CSR_WADR_SM.write(CSR_WADR_SE.read());
+            CSR_WDATA_SM.write(EXE_RES_RE.read());
+        } else {
+            CSR_WADR_SM.write(0);
+            CSR_WDATA_SM.write(0);
+        }
     }
+    else{// Affectation of the cause
+        CSR_WADR_SM.write(0x342) ; //mcause
+        CSR_RADR_SM.write(0x305) ; // mtvec
+        if(LOAD_ADRESS_MISSALIGNED_RE){
+            CSR_WDATA_SM.write(4);        }
+        if(INSTRUCTION_ACCESS_FAULT_RE){
+            CSR_WDATA_SM.write(1);            
+        }
+        if(ECALL_I_RE){
+            CSR_WDATA_SM.write(0);            
+        }
+        if(EBREAK_I_RE){
+            CSR_WDATA_SM.write(0);            
+        }
+        if(ILLEGAL_INSTRUCTION_RE){
+            CSR_WDATA_SM.write(2);            
+        }
+        if(ADRESS_MISSALIGNED_RE){
+            CSR_WDATA_SM.write(0);            
+        }
+        if(SYSCALL_U_MODE_RE){
+            CSR_WDATA_SM.write(8);            
+        }
+        if(SYSCALL_M_MODE_RE){
+            CSR_WDATA_SM.write(11);            
+        }
+        if(BUS_ERROR_SX){// load access fault
+            CSR_WDATA_SM.write(5);            
+        }
+    }
+
 }
 
 void mem::trace(sc_trace_file* tf) {
