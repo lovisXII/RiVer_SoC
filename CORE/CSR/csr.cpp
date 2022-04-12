@@ -34,6 +34,12 @@ void csr::writing_csr() {
                 default: CSR_RDATA_SC.write(0); break;
             }
         }
+        if(EXCEPTION_RM.read()){
+            csr_rc[3] = MSTATUS_WDATA_RM.read() ;
+            csr_rc[11]= MIP_WDATA_RM.read() ;
+            csr_rc[8]= MEPC_WDATA_RM.read() ;
+            csr_rc[9]= MCAUSE_WDATA_RM.read() ;
+        }
 
         wait(1);
     }
@@ -54,5 +60,9 @@ void csr::reading_csr() {
         case 0x343: csr_rc[10].write(CSR_WDATA_SM); break;
         case 0x344: csr_rc[11].write(CSR_WDATA_SM); break;
         default: CSR_RDATA_SC.write(0); break;
+    if(EXCEPTION_RM.read()){
+        MTVEC_VALUE_RC.write(csr_rc[6]) ;
+        MIP_VALUE_RC.write(csr_rc[11]) ;
+    }
     }
 }

@@ -10,7 +10,7 @@ void mem::mem2wbk_concat() {
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
     ff_din[107]            = exception_sm.read();
-    ff_din.range(139, 108) = CSR_RDATA_SC.read(); // value of mtvec
+    ff_din.range(139, 108) = MTVEC_VALUE_RC.read(); // value of mtvec
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -87,33 +87,59 @@ void mem::csr_exception() {
         }
     }
     else{// Affectation of the cause
-        CSR_WADR_SM.write(0x342) ; //mcause
-        CSR_RADR_SM.write(0x305) ; // mtvec
         if(LOAD_ADRESS_MISSALIGNED_RE){
-            CSR_WDATA_SM.write(4);        }
+            MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);    
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());   
+            MCAUSE_WDATA_RM.write(4);        
+        }
         if(INSTRUCTION_ACCESS_FAULT_RE){
-            CSR_WDATA_SM.write(1);            
+            MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFD); 
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());    
+            MCAUSE_WDATA_RM.write(1);            
         }
         if(ECALL_I_RE){
-            CSR_WDATA_SM.write(0);            
+            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);   
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());     
+            // MCAUSE_WDATA_RM.write(0);            
         }
         if(EBREAK_I_RE){
-            CSR_WDATA_SM.write(0);            
+            // MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
+            // MIP_WDATA_RM.write(0x1800);   
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());    
+            // MCAUSE_WDATA_RM.write(0);            
         }
         if(ILLEGAL_INSTRUCTION_RE){
-            CSR_WDATA_SM.write(2);            
+            MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFB);   
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());    
+            MCAUSE_WDATA_RM.write(2);            
         }
         if(ADRESS_MISSALIGNED_RE){
-            CSR_WDATA_SM.write(0);            
+            MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE); 
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());      
+            MCAUSE_WDATA_RM.write(0);            
         }
         if(SYSCALL_U_MODE_RE){
-            CSR_WDATA_SM.write(8);            
+            MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFEFF);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());     
+            MCAUSE_WDATA_RM.write(8);            
         }
         if(SYSCALL_M_MODE_RE){
-            CSR_WDATA_SM.write(11);            
+            MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFBFF); 
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());    
+            MCAUSE_WDATA_RM.write(11);            
         }
         if(BUS_ERROR_SX){// load access fault
-            CSR_WDATA_SM.write(5);            
+            MSTATUS_WDATA_RM.write(0x1800); 
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF); 
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());    
+            MCAUSE_WDATA_RM.write(5);            
         }
     }
 

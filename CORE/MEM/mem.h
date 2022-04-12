@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-#define mem2wbk_size 108
+#define mem2wbk_size 140
 /*
 Assuming the following stuff :
 
@@ -94,8 +94,13 @@ SC_MODULE(mem) {
 
     sc_out<sc_uint<12>> CSR_WADR_SM;
     sc_out<sc_uint<32>> CSR_WDATA_SM;
-    sc_out<sc_uint<12>> CSR_RADR_SM;
-    sc_in<sc_uint<32>>  CSR_RDATA_SC ;
+
+    sc_out<sc_uint<32>> MSTATUS_WDATA_RM ;
+    sc_out<sc_uint<32>> MIP_WDATA_RM ;
+    sc_out<sc_uint<32>> MEPC_WDATA_RM ;
+    sc_out<sc_uint<32>> MCAUSE_WDATA_RM ;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RC ;
+    sc_in<sc_uint<32>> MIP_VALUE_RC ;
 
     // FIFO
     fifo<mem2wbk_size> fifo_inst;

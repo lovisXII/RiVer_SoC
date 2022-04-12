@@ -9,6 +9,14 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> CSR_WDATA_SM;
     sc_in<bool>        CSR_WENABLE_RM;
 
+    sc_in<bool>        EXCEPTION_RM;
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM ;
+    sc_in<sc_uint<32>> MIP_WDATA_RM ;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM ;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_RM ;
+    sc_out<sc_uint<32>> MTVEC_VALUE_RC ;
+    sc_out<sc_uint<32>> MIP_VALUE_RC ;
+
     // Output :
 
     sc_in<sc_uint<12>>  CSR_RADR_SD;

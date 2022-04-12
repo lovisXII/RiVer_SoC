@@ -98,6 +98,16 @@ SC_MODULE(core) {
     sc_signal<sc_uint<12>> CSR_WADR_RE;
     sc_signal<sc_uint<32>> CSR_RDATA_RE;
 
+    sc_signal<bool> EXCEPTION_RE ;
+    sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE ; // adress from store/load isn't aligned
+    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE ; // trying to access memory in wrong mode
+    sc_signal<bool> ECALL_I_RE;
+    sc_signal<bool> EBREAK_I_RE;
+    sc_signal<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
+    sc_signal<bool> ADRESS_MISSALIGNED_RE;      // branch offset is misaligned
+    sc_signal<bool> SYSCALL_U_MODE_RE;
+    sc_signal<bool> SYSCALL_M_MODE_RE;
+
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
     sc_signal<sc_uint<6>>  DEST_RM;
@@ -115,6 +125,19 @@ SC_MODULE(core) {
     sc_signal<sc_uint<12>> CSR_WADR_SM;
     sc_signal<sc_uint<32>> CSR_WDATA_SM;
 
+    sc_signal<sc_uint<32>> MSTATUS_WDATA_RM ;
+    sc_signal<sc_uint<32>> MIP_WDATA_RM ;
+    sc_signal<sc_uint<32>> MEPC_WDATA_RM ;
+    sc_signal<sc_uint<32>> MCAUSE_WDATA_RM ;
+    sc_signal<sc_uint<32>> MTVEC_VALUE_RC ;
+    sc_signal<sc_uint<32>> MIP_VALUE_RC ;
+
+
+    //MEM - Pipeline :
+
+    sc_signal<bool> EXCEPTION_RM ; 
+    sc_signal<sc_uint<32>> MTVEC_VALUE_RM ; 
+    sc_signal<bool> BUS_ERROR_SX ;
     // WBK-REG interface
 
     sc_signal<sc_uint<6>>  WADR_SW;
@@ -180,6 +203,7 @@ SC_MODULE(core) {
         ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
+        ifetch_inst.EXCEPTION_RM(EXCEPTION_RM);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -255,6 +279,8 @@ SC_MODULE(core) {
         dec_inst.ADRESS_MISSALIGNED_RD(ADRESS_MISSALIGNED_RD);          // branch offset is misaligned
         dec_inst.SYSCALL_U_MODE_RD(SYSCALL_U_MODE_RD);
         dec_inst.SYSCALL_M_MODE_RD(SYSCALL_M_MODE_RD);
+        dec_inst.EXCEPTION_RM(EXCEPTION_RM);
+        dec_inst.MTVEC_VALUE_RM(MTVEC_VALUE_RM);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -318,6 +344,17 @@ SC_MODULE(core) {
         exec_inst.SYSCALL_U_MODE_RD(SYSCALL_U_MODE_RD);
         exec_inst.SYSCALL_M_MODE_RD(SYSCALL_M_MODE_RD);
 
+        exec_inst.EXCEPTION_RE(EXCEPTION_RE);
+        exec_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
+        exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
+        exec_inst.ECALL_I_RE(ECALL_I_RE);
+        exec_inst.EBREAK_I_RE(EBREAK_I_RE);
+        exec_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
+        exec_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
+        exec_inst.SYSCALL_U_MODE_RE(SYSCALL_U_MODE_RE);
+        exec_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
+        exec_inst.EXCEPTION_RM(EXCEPTION_RM);
+
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
@@ -358,6 +395,27 @@ SC_MODULE(core) {
         mem_inst.CSR_WDATA_SM(CSR_WDATA_SM);
         mem_inst.CSR_RDATA_RM(CSR_RDATA_RM);
         mem_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        
+        mem_inst.EXCEPTION_RE(EXCEPTION_RE);
+        mem_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
+        mem_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
+        mem_inst.ECALL_I_RE(ECALL_I_RE);
+        mem_inst.EBREAK_I_RE(EBREAK_I_RE);
+        mem_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
+        mem_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
+        mem_inst.SYSCALL_U_MODE_RE(SYSCALL_U_MODE_RE);
+        mem_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
+
+        mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
+        
+        mem_inst.EXCEPTION_RM(EXCEPTION_RM);
+        mem_inst.MTVEC_VALUE_RM(MTVEC_VALUE_RM);
+        mem_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
+        mem_inst.MIP_WDATA_RM(MIP_WDATA_RM);
+        mem_inst.MEPC_WDATA_RM(MEPC_WDATA_RM);
+        mem_inst.MCAUSE_WDATA_RM(MCAUSE_WDATA_RM);
+        mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
+        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
@@ -404,6 +462,14 @@ SC_MODULE(core) {
 
         csr_inst.CSR_RADR_SD(CSR_RADR_SD);
         csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+        
+        csr_inst.EXCEPTION_RM(EXCEPTION_RM);
+        csr_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
+        csr_inst.MIP_WDATA_RM(MIP_WDATA_RM);
+        csr_inst.MEPC_WDATA_RM(MEPC_WDATA_RM);
+        csr_inst.MCAUSE_WDATA_RM(MCAUSE_WDATA_RM);
+        csr_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
+        csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
 
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
