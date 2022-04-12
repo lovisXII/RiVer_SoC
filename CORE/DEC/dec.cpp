@@ -760,10 +760,16 @@ void decod::bypasses() {
         r1_valid_sd.write(false);
     } else if (RADR1_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r1_valid_sd.write(true);
-        rdata1_sd.write(BP_EXE_RES_RE.read());
+        if (CSR_WENABLE_RE.read())
+            rdata1_sd.write(CSR_RDATA_RE.read());
+        else
+            rdata1_sd.write(BP_EXE_RES_RE.read());
     } else if (RADR1_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
         r1_valid_sd.write(true);
-        rdata1_sd.write(BP_MEM_RES_RM.read());
+        if (CSR_WENABLE_RM.read())
+            rdata1_sd.write(CSR_RDATA_RM.read());
+        else
+            rdata1_sd.write(BP_MEM_RES_RM.read());
     } else {  // no bypass
         r1_valid_sd.write(true);
         rdata1_sd.write(RDATA1_SR.read());
@@ -781,10 +787,16 @@ void decod::bypasses() {
         r2_valid_sd.write(false);
     } else if (RADR2_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r2_valid_sd.write(true);
-        rdata2_sd.write(BP_EXE_RES_RE.read());
+        if (CSR_WENABLE_RE.read())
+            rdata2_sd.write(CSR_RDATA_RE.read());
+        else
+            rdata2_sd.write(BP_EXE_RES_RE.read());
     } else if (RADR2_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
         r2_valid_sd.write(true);
-        rdata2_sd.write(BP_MEM_RES_RM.read());
+        if (CSR_WENABLE_RM.read())
+            rdata2_sd.write(CSR_RDATA_RM.read());
+        else
+            rdata2_sd.write(BP_MEM_RES_RM.read());
     } else {  // no bypass
         r2_valid_sd.write(true);
         rdata2_sd.write(RDATA2_SR.read());
@@ -796,8 +808,9 @@ void decod::bypasses() {
 }
 
 void decod::stall_method() {
-    stall.write((!r1_valid_sd || !r2_valid_sd) &&
-                (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec));
+    bool csr_in_progress = (CSR_WENABLE_RD && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
+    stall.write(csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
+                                    (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec)));
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS
