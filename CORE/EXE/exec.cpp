@@ -51,8 +51,8 @@ void exec::fifo_concat() {
     ff_din[75]             = MEM_SIGN_EXTEND_RD.read();
     ff_din.range(107, 76)  = PC_DEC2EXE_RD.read();
     ff_din[108]            = CSR_WENABLE_RD.read();
-    ff_din.range(120, 109) = CSR_WADR_SD.read();
-    ff_din.range(152, 121) = OP1_RD.read();  // sending OP1, can contains CSR
+    ff_din.range(120, 109) = CSR_WADR_RD.read();
+    ff_din.range(152, 121) = CSR_RDATA_RD.read();  // sending Csr read to wb to register
 
     exe2mem_din_se.write(ff_din);
 }
@@ -68,8 +68,8 @@ void exec::fifo_unconcat() {
     MEM_SIGN_EXTEND_RE.write((bool)ff_dout[75]);
     PC_EXE2MEM_RE.write((sc_bv_base)ff_dout.range(107, 76));
     CSR_WENABLE_RE.write((bool)ff_dout[108]);
-    CSR_WADR_SE.write((sc_bv_base)ff_dout.range(120, 109));
-    // OP1_CSR_RE.write((sc_bv_base)ff_dout.range(152, 121));
+    CSR_WADR_RE.write((sc_bv_base)ff_dout.range(120, 109));
+    CSR_RDATA_RE.write((sc_bv_base)ff_dout.range(152, 121));
 }
 
 void exec::manage_fifo() {
@@ -184,7 +184,18 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, blocked, GET_NAME(blocked));
     sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
     sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
+    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
+    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));
+    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));
+    sc_trace(tf, ECALL_I_SD, GET_NAME(ECALL_I_SD));
+    sc_trace(tf, EBREAK_I_SD, GET_NAME(EBREAK_I_SD));
+    sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
+    sc_trace(tf, ADRESS_MISSALIGNED, GET_NAME(ADRESS_MISSALIGNED));
+    sc_trace(tf, SYSCALL_U_MODE_SD, GET_NAME(SYSCALL_U_MODE_SD));
+    sc_trace(tf, SYSCALL_S_MODE_SD, GET_NAME(SYSCALL_S_MODE_SD));
     sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
+    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, INTERRUPTION_SX, GET_NAME(INTERRUPTION_SX));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

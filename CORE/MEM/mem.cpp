@@ -8,7 +8,7 @@ void mem::mem2wbk_concat() {
     ff_din[37]            = wb_sm.read();
     ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
     ff_din[74]            = CSR_WENABLE_RE.read();
-    ff_din.range(106, 75) = CSR_OP1_RE.read();
+    ff_din.range(106, 75) = CSR_RDATA_RE.read();
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -20,7 +20,7 @@ void mem::mem2wbk_unconcat() {
     WB_RM.write((bool)ff_dout[37]);
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
-    CSR_OP1_RM.write((sc_bv_base)ff_dout.range(106, 75));
+    CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
 }
 
 void mem::fifo_gestion() {
@@ -111,5 +111,13 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_sm, GET_NAME(wb_sm));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET, GET_NAME(RESET));
+    sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
+    sc_trace(tf, CSR_WADR_SE, GET_NAME(CSR_WADR_SE));
+    sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
+    sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
+    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
+    sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
     fifo_inst.trace(tf);
 }

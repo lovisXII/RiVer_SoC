@@ -55,9 +55,8 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>> BP_RADR2_RD;
 
     sc_signal<bool>        CSR_WENABLE_RD;
-    sc_signal<sc_uint<12>> CSR_WADR_SD;
-    sc_signal<sc_uint<12>> CSR_RADR_SD;
-    sc_signal<sc_uint<32>> CSR_RDATA_SC;
+    sc_signal<sc_uint<32>> CSR_RDATA_RD;
+    sc_signal<sc_uint<12>> CSR_WADR_RD;
     sc_signal<bool>        INTERRUPTION_SE;
     sc_signal<bool>        EXCEPTION_RD;
     sc_signal<bool>        ECALL_I_SD;
@@ -66,6 +65,10 @@ SC_MODULE(core) {
     sc_signal<bool>        ADRESS_MISSALIGNED;      // branch offset is misaligned
     sc_signal<bool>        SYSCALL_U_MODE_SD;
     sc_signal<bool>        SYSCALL_S_MODE_SD;
+
+    // DEC-CSR interface
+    sc_signal<sc_uint<12>> CSR_RADR_SD;
+    sc_signal<sc_uint<32>> CSR_RDATA_SC;
 
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
@@ -92,8 +95,8 @@ SC_MODULE(core) {
 
     sc_signal<bool>        CSR_WENABLE_RE;
     sc_signal<bool>        INTERRUPTION_SX;
-    sc_signal<sc_uint<12>> CSR_WADR_SE;
-    sc_signal<sc_uint<32>> CSR_OP1_RE;
+    sc_signal<sc_uint<12>> CSR_WADR_RE;
+    sc_signal<sc_uint<32>> CSR_RDATA_RE;
 
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
@@ -105,7 +108,7 @@ SC_MODULE(core) {
     sc_signal<bool>        WBK_MEM_LOAD;
     sc_signal<sc_uint<32>> PC_MEM2WBK_RM;
     sc_signal<bool>        CSR_WENABLE_RM;
-    sc_signal<sc_uint<32>> CSR_OP1_RM;
+    sc_signal<sc_uint<32>> CSR_RDATA_RM;
 
     // MEM-CSR interface
 
@@ -234,9 +237,10 @@ SC_MODULE(core) {
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
 
         dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
-        dec_inst.CSR_WADR_SD(CSR_WADR_SD);
+        dec_inst.CSR_WADR_RD(CSR_WADR_RD);
         dec_inst.CSR_RADR_SD(CSR_RADR_SD);
         dec_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+        dec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);
         dec_inst.EXCEPTION_RD(EXCEPTION_RD);
@@ -295,9 +299,10 @@ SC_MODULE(core) {
         exec_inst.EXCEPTION_RD(EXCEPTION_RD);
         exec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
         exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
-        exec_inst.CSR_WADR_SD(CSR_WADR_SD);
-        exec_inst.CSR_WADR_SE(CSR_WADR_SE);
-        exec_inst.CSR_OP1_RE(CSR_OP1_RE);
+        exec_inst.CSR_WADR_RD(CSR_WADR_RD);
+        exec_inst.CSR_WADR_RE(CSR_WADR_RE);
+        exec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        exec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
         exec_inst.ECALL_I_SD(ECALL_I_SD);
         exec_inst.EBREAK_I_SD(EBREAK_I_SD);
         exec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
@@ -338,13 +343,13 @@ SC_MODULE(core) {
         mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        mem_inst.CSR_WADR_SE(CSR_WADR_SE);
+        mem_inst.CSR_WADR_SE(CSR_WADR_RE);
         mem_inst.CSR_WADR_SM(CSR_WADR_SM);
         mem_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
         mem_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         mem_inst.CSR_WDATA_SM(CSR_WDATA_SM);
-        mem_inst.CSR_OP1_RM(CSR_OP1_RM);
-        mem_inst.CSR_OP1_RE(CSR_OP1_RE);
+        mem_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        mem_inst.CSR_RDATA_RE(CSR_RDATA_RE);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
@@ -375,6 +380,8 @@ SC_MODULE(core) {
         wbk_inst.WADR_SW(WADR_SW);
         wbk_inst.WDATA_SW(WDATA_SW);
         wbk_inst.WENABLE_SW(WENABLE_SW);
+        wbk_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        wbk_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
 
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 

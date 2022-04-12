@@ -30,7 +30,8 @@ SC_MODULE(exec) {
     sc_in<bool>        SLT_RD, SLTU_RD;
 
     sc_in<bool>        CSR_WENABLE_RD;
-    sc_in<sc_uint<12>> CSR_WADR_SD;
+    sc_in<sc_uint<12>> CSR_WADR_RD;
+    sc_in<sc_uint<32>> CSR_RDATA_RD;
 
     // Exception coming from Decod :
 
@@ -66,8 +67,8 @@ SC_MODULE(exec) {
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
 
     sc_out<bool>        CSR_WENABLE_RE;
-    sc_out<sc_uint<12>> CSR_WADR_SE;
-    sc_out<sc_uint<32>> CSR_OP1_RE;
+    sc_out<sc_uint<12>> CSR_WADR_RE;
+    sc_out<sc_uint<32>> CSR_RDATA_RE;
 
     // Internals signals :
 

@@ -34,9 +34,10 @@ SC_MODULE(decod) {
     sc_out<bool>        MEM_SIGN_EXTEND_RD;
     sc_out<sc_uint<2>>  MEM_SIZE_RD;  // tells to mem if we do an acces in word, hw or byte
 
-    sc_out<bool> CSR_WENABLE_RD;      // indicate if we do a csr operation,
-                                      // if so need to WBK CSR in rd
-    sc_out<sc_uint<12>> CSR_WADR_SD;  // CSR adress sent to EXE, will allow to wbk csr in MEM
+    sc_out<bool> CSR_WENABLE_RD;       // indicate if we do a csr operation,
+                                       // if so need to WBK CSR in rd
+    sc_out<sc_uint<12>> CSR_WADR_RD;   // CSR adress sent to EXE, will allow to wbk csr in MEM
+    sc_out<sc_uint<32>> CSR_RDATA_RD;  // CSR read data to be wb in register
 
     // Interface with DEC2IF :
 
@@ -56,7 +57,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>           DEC2EXE_POP_SE;
     sc_out<bool>          DEC2EXE_EMPTY_SD;
-    sc_signal<sc_bv<172>> dec2exe_out_sd;
+    sc_signal<sc_bv<205>> dec2exe_out_sd;
 
     // Interface with CSR :
 
@@ -80,7 +81,7 @@ SC_MODULE(decod) {
     // Exception :
 
     sc_in<bool> EXCEPTION_RI;
- 
+
     sc_out<bool> ECALL_I_SD;
     sc_out<bool> EBREAK_I_SD;
     sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
@@ -101,7 +102,7 @@ SC_MODULE(decod) {
     // Instance used :
 
     fifo<32>  dec2if;
-    fifo<172> dec2exe;
+    fifo<205> dec2exe;
 
     // Signals :
 
@@ -122,7 +123,7 @@ SC_MODULE(decod) {
 
     // fifo dec2exe :
 
-    sc_signal<sc_bv<172>> dec2exe_in_sd;
+    sc_signal<sc_bv<205>> dec2exe_in_sd;
     sc_signal<bool>       dec2exe_push_sd;
     sc_signal<bool>       dec2exe_full_sd;
 
@@ -241,7 +242,7 @@ SC_MODULE(decod) {
     // Exception :
 
     sc_signal<bool> exception_ri;
- 
+
     sc_signal<bool> ecall_i_sd;
     sc_signal<bool> ebreak_i_sd;
     sc_signal<bool> illegal_instruction_rd;  // accessing stuff in wrong mode

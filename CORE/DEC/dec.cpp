@@ -36,8 +36,8 @@ void decod::dec2exe_push_method() {
 }
 
 void decod::concat_dec2exe() {
-    sc_bv<173> dec2exe_in_var;
-
+    sc_bv<205> dec2exe_in_var;
+    dec2exe_in_var.range(204, 173) = CSR_RDATA_SC.read();
     dec2exe_in_var[172]            = csr_wenable_rd.read();
     dec2exe_in_var.range(171, 160) = csr_radr_sd.read();
     dec2exe_in_var.range(159, 128) = PC_IF2DEC_RI.read();
@@ -67,10 +67,10 @@ void decod::concat_dec2exe() {
 }
 
 void decod::unconcat_dec2exe() {
-    sc_bv<172> dec2exe_out_var = dec2exe_out_sd.read();
-
+    sc_bv<205> dec2exe_out_var = dec2exe_out_sd.read();
+    CSR_RDATA_RD.write((sc_bv_base)dec2exe_out_var.range(204, 173));
     CSR_WENABLE_RD.write((bool)dec2exe_out_var[172]);
-    CSR_WADR_SD.write((sc_bv_base)dec2exe_out_var.range(171, 160));
+    CSR_WADR_RD.write((sc_bv_base)dec2exe_out_var.range(171, 160));
     PC_DEC2EXE_RD.write((sc_bv_base)dec2exe_out_var.range(159, 128));
     BP_R1_VALID_RD.write((bool)dec2exe_out_var[127]);
     BP_R2_VALID_RD.write((bool)dec2exe_out_var[126]);
@@ -389,11 +389,10 @@ void decod::pre_reg_read_decoding() {
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrw_i_sd || csrrsi_i_sd || csrrci_i_sd) {
-            csr_radr_sd    = if_ir.range(31, 20);
-            radr1_var      = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
-            radr2_var      = 0;
-            adr_dest_var   = if_ir.range(11, 7);
-            csr_wenable_rd = 1;
+            csr_radr_sd  = if_ir.range(31, 20);
+            radr1_var    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
+            radr2_var    = 0;
+            adr_dest_var = if_ir.range(11, 7);
             CSR_RADR_SD.write(csr_radr_sd);
         } else if (ecall_i_sd || ebreak_i_sd) {
             radr1_var    = 0;
@@ -425,7 +424,7 @@ void decod::post_reg_read_decoding() {
     // execute for one type of command :
 
     // CMD : +
-    int         dec2exe_wb_var;
+    bool        dec2exe_wb_var;
     sc_uint<32> dec2exe_op1_var;
     sc_uint<32> dec2exe_op2_var;
     sc_uint<32> if_ir = INSTR_RI.read();
@@ -437,6 +436,7 @@ void decod::post_reg_read_decoding() {
     // R-type Instruction :
 
     if (r_type_inst_sd || i_type_inst_sd || u_type_inst_sd) {
+        csr_wenable_rd.write(0);
         if (i_type_inst_sd) {
             dec2exe_op1_var = (rdata1_sd.read());
             if (if_ir.range(31, 31) == 1) {
@@ -502,6 +502,7 @@ void decod::post_reg_read_decoding() {
     }
 
     else if (s_type_inst_sd) {
+        csr_wenable_rd.write(0);
         exe_cmd_sd.write(0);
         select_shift_sd.write(0);
         exe_neg_op2_sd.write(0);
@@ -539,6 +540,7 @@ void decod::post_reg_read_decoding() {
             mem_store_sd.write(0);
         }
     } else if (b_type_inst_sd == 1) {
+        csr_wenable_rd.write(0);
         mem_load_sd.write(0);
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
@@ -590,6 +592,7 @@ void decod::post_reg_read_decoding() {
     }
 
     else if (jalr_type_inst_sd.read() || j_type_inst_sd.read()) {
+        csr_wenable_rd.write(0);
         exe_cmd_sd.write(0);
         exe_neg_op2_sd.write(0);
         dec2exe_wb_var = 1;
@@ -641,6 +644,7 @@ void decod::post_reg_read_decoding() {
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrw_i_sd || csrrsi_i_sd || csrrci_i_sd) {
+            csr_wenable_rd.write(1);
             sc_uint<32> rdata1_signal_sd = rdata1_sd;
             dec2exe_op1_var              = CSR_RDATA_SC.read();
 
@@ -657,9 +661,9 @@ void decod::post_reg_read_decoding() {
             offset_branch_var = 0;
             mem_data_var      = 0;
             inc_pc_var        = 0;
-            CSR_RADR_SD.write(csr_radr_sd);
 
         } else if (ecall_i_sd || ebreak_i_sd) {
+            csr_wenable_rd.write(0);
             exe_cmd_sd.write(0);
             dec2exe_op1_var = 0;
             dec2exe_op2_var = 0;
@@ -911,4 +915,23 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, RDATA2_SR, GET_NAME(RDATA2_SR));
     sc_trace(tf, PC_DEC2EXE_RD, GET_NAME(PC_DEC2EXE_RD));
     sc_trace(tf, PC_IF2DEC_RI, GET_NAME(PC_IF2DEC_RI));
+    sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
+    sc_trace(tf, ECALL_I_SD, GET_NAME(ECALL_I_SD));
+    sc_trace(tf, EBREAK_I_SD, GET_NAME(EBREAK_I_SD));
+    sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
+    sc_trace(tf, ADRESS_MISSALIGNED, GET_NAME(ADRESS_MISSALIGNED));
+    sc_trace(tf, SYSCALL_U_MODE_SD, GET_NAME(SYSCALL_U_MODE_SD));
+    sc_trace(tf, SYSCALL_S_MODE_SD, GET_NAME(SYSCALL_S_MODE_SD));
+    sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
+    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
+    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));
+    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));
+    sc_trace(tf, csrrw_i_sd, GET_NAME(csrrw_i_sd));
+    sc_trace(tf, csrrs_i_sd, GET_NAME(csrrs_i_sd));
+    sc_trace(tf, csrrc_i_sd, GET_NAME(csrrc_i_sd));
+    sc_trace(tf, csrrwi_i_sd, GET_NAME(csrrwi_i_sd));
+    sc_trace(tf, csrrsi_i_sd, GET_NAME(csrrsi_i_sd));
+    sc_trace(tf, csrrci_i_sd, GET_NAME(csrrci_i_sd));
+    sc_trace(tf, csr_wenable_rd, GET_NAME(csr_wenable_rd));
+    sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
 }
