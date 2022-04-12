@@ -1,6 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
+#include "../UTIL/debug_util.h"
 #define N_CSR 12
 SC_MODULE(csr) {
     // Input :
@@ -46,6 +47,7 @@ SC_MODULE(csr) {
 
     void writing_csr();
     void reading_csr();
+    void trace(sc_trace_file * tf);
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);

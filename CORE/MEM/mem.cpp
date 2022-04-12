@@ -184,5 +184,24 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
     sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
+    sc_trace(tf,EXCEPTION_RE,GET_NAME(EXCEPTION_RE));
+    sc_trace(tf,LOAD_ADRESS_MISSALIGNED_RE,GET_NAME(LOAD_ADRESS_MISSALIGNED_RE)); // adress from store/load isn't aligned
+    sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RE,GET_NAME(INSTRUCTION_ACCESS_FAULT_RE)); // trying to access memory in wrong mode
+    sc_trace(tf,ECALL_I_RE,GET_NAME(ECALL_I_RE));
+    sc_trace(tf,EBREAK_I_RE,GET_NAME(EBREAK_I_RE));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RE,GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
+    sc_trace(tf,ADRESS_MISSALIGNED_RE,GET_NAME(ADRESS_MISSALIGNED_RE));      // branch offset is misaligned
+    sc_trace(tf,SYSCALL_U_MODE_RE,GET_NAME(SYSCALL_U_MODE_RE));
+    sc_trace(tf,SYSCALL_M_MODE_RE,GET_NAME(SYSCALL_M_MODE_RE));
+    sc_trace(tf,BUS_ERROR_SX,GET_NAME(BUS_ERROR_SX));
+    sc_trace(tf,EXCEPTION_RM,GET_NAME(EXCEPTION_RM)); 
+    sc_trace(tf,MTVEC_VALUE_RM,GET_NAME(MTVEC_VALUE_RM)); 
+    sc_trace(tf,MSTATUS_WDATA_RM,GET_NAME(MSTATUS_WDATA_RM));
+    sc_trace(tf,MIP_WDATA_RM,GET_NAME(MIP_WDATA_RM));
+    sc_trace(tf,MEPC_WDATA_RM,GET_NAME(MEPC_WDATA_RM));
+    sc_trace(tf,MCAUSE_WDATA_RM,GET_NAME(MCAUSE_WDATA_RM));
+    sc_trace(tf,MTVEC_VALUE_RC,GET_NAME(MTVEC_VALUE_RC));
+    sc_trace(tf,MIP_VALUE_RC,GET_NAME(MIP_VALUE_RC));
+    sc_trace(tf,exception_sm,GET_NAME(exception_sm));
     fifo_inst.trace(tf);
 }

@@ -66,3 +66,28 @@ void csr::reading_csr() {
     }
     }
 }
+
+void csr::trace(sc_trace_file *tf){
+    sc_trace(tf,CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
+    sc_trace(tf,CSR_WDATA_SM,GET_NAME(CSR_WDATA_SM));
+    sc_trace(tf,CSR_WENABLE_RM,GET_NAME(CSR_WENABLE_RM));
+
+    sc_trace(tf,EXCEPTION_RM,GET_NAME(EXCEPTION_RM));
+    sc_trace(tf,MSTATUS_WDATA_RM,GET_NAME(MSTATUS_WDATA_RM));
+    sc_trace(tf,MIP_WDATA_RM,GET_NAME(MIP_WDATA_RM));
+    sc_trace(tf,MEPC_WDATA_RM,GET_NAME(MEPC_WDATA_RM));
+    sc_trace(tf,MCAUSE_WDATA_RM,GET_NAME(MCAUSE_WDATA_RM));
+    sc_trace(tf,MTVEC_VALUE_RC,GET_NAME(MTVEC_VALUE_RC));
+    sc_trace(tf,MIP_VALUE_RC,GET_NAME(MIP_VALUE_RC));
+
+    // Output :
+
+    sc_trace(tf,CSR_RADR_SD,GET_NAME(CSR_RADR_SD));
+    sc_trace(tf,CSR_RDATA_SC,GET_NAME(CSR_RDATA_SC));
+
+    // General Interface :
+
+    
+    sc_trace(tf,CLK,GET_NAME(CLK));
+    sc_trace(tf,RESET_N,GET_NAME(RESET_N));
+}

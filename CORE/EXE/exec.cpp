@@ -219,59 +219,114 @@ void exec::exception() {
 }
 
 void exec::trace(sc_trace_file* tf) {
-    sc_trace(tf, op1_se, GET_NAME(op1_se));
-    sc_trace(tf, op2_se, GET_NAME(op2_se));
-    sc_trace(tf, MEM_DATA_RD, GET_NAME(MEM_DATA_RD));
-    sc_trace(tf, DEST_RD, GET_NAME(DEST_RD));
-    sc_trace(tf, CMD_RD, GET_NAME(CMD_RD));
-    sc_trace(tf, MEM_SIZE_RD, GET_NAME(MEM_SIZE_RD));
-    sc_trace(tf, SELECT_SHIFT_RD, GET_NAME(SELECT_SHIFT_RD));
-    sc_trace(tf, MEM_SIGN_EXTEND_RD, GET_NAME(MEM_SIGN_EXTEND_RD));
-    sc_trace(tf, WB_RD, GET_NAME(WB_RD));
-    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));
-    sc_trace(tf, MEM_LOAD_RD, GET_NAME(MEM_LOAD_RD));
-    sc_trace(tf, MEM_STORE_RD, GET_NAME(MEM_STORE_RD));
-    sc_trace(tf, EXE2MEM_POP_SM, GET_NAME(EXE2MEM_POP_SM));
-    sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
-    sc_trace(tf, CLK, GET_NAME(CLK));
-    sc_trace(tf, RESET, GET_NAME(RESET));
-    sc_trace(tf, EXE_RES_RE, GET_NAME(EXE_RES_RE));
-    sc_trace(tf, MEM_DATA_RE, GET_NAME(MEM_DATA_RE));
-    sc_trace(tf, DEST_RE, GET_NAME(DEST_RE));
-    sc_trace(tf, MEM_SIZE_RE, GET_NAME(MEM_SIZE_RE));
-    sc_trace(tf, WB_RE, GET_NAME(WB_RE));
-    sc_trace(tf, MEM_SIGN_EXTEND_RE, GET_NAME(MEM_SIGN_EXTEND_RE));
-    sc_trace(tf, MEM_LOAD_RE, GET_NAME(MEM_LOAD_RE));
-    sc_trace(tf, MEM_STORE_RE, GET_NAME(MEM_STORE_RE));
-    sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
-    sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
-    sc_trace(tf, exe_res_se, GET_NAME(exe_res_se));
-    sc_trace(tf, exe2mem_din_se, GET_NAME(exe2mem_din_se));
-    sc_trace(tf, exe2mem_dout_se, GET_NAME(exe2mem_dout_se));
-    sc_trace(tf, alu_in_op2_se, GET_NAME(alu_in_op2_se));
-    sc_trace(tf, alu_out_se, GET_NAME(alu_out_se));
-    sc_trace(tf, shifter_out_se, GET_NAME(shifter_out_se));
-    sc_trace(tf, shift_val_se, GET_NAME(shift_val_se));
-    sc_trace(tf, exe2mem_push_se, GET_NAME(exe2mem_push_se));
-    sc_trace(tf, RADR1_RD, GET_NAME(RADR1_RD));
-    sc_trace(tf, RADR2_RD, GET_NAME(RADR2_RD));
-    sc_trace(tf, MEM_DEST_RM, GET_NAME(MEM_DEST_RM));
-    sc_trace(tf, MEM_RES_RM, GET_NAME(MEM_RES_RM));
-    sc_trace(tf, blocked, GET_NAME(blocked));
-    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
-    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
-    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
-    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));
-    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));
-    sc_trace(tf, ECALL_I_RD, GET_NAME(ECALL_I_RD));
-    sc_trace(tf, EBREAK_I_RD, GET_NAME(EBREAK_I_RD));
-    sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
-    sc_trace(tf, ADRESS_MISSALIGNED_RD, GET_NAME(ADRESS_MISSALIGNED_RD));
-    sc_trace(tf, SYSCALL_U_MODE_RD, GET_NAME(SYSCALL_U_MODE_RD));
-    sc_trace(tf, SYSCALL_M_MODE_RD, GET_NAME(SYSCALL_M_MODE_RD));
-    sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
-    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
-    sc_trace(tf, INTERRUPTION_SX, GET_NAME(INTERRUPTION_SX));
+   sc_trace(tf,OP1_RD,GET_NAME(OP1_RD));  // can contains CSR if CSR_type_operation_RD == 1
+    sc_trace(tf,OP2_RD,GET_NAME(OP2_RD));
+    sc_trace(tf,OP1_VALID_RD,GET_NAME(OP1_VALID_RD));
+    sc_trace(tf,OP2_VALID_RD,GET_NAME(OP2_VALID_RD));
+    sc_trace(tf,RADR1_RD,GET_NAME(RADR1_RD));
+    sc_trace(tf,RADR2_RD,GET_NAME(RADR2_RD));
+
+    sc_trace(tf,PC_DEC2EXE_RD,GET_NAME(PC_DEC2EXE_RD));
+    sc_trace(tf,MEM_DATA_RD,GET_NAME(MEM_DATA_RD));
+    sc_trace(tf,DEST_RD,GET_NAME(DEST_RD));
+    sc_trace(tf,CMD_RD,GET_NAME(CMD_RD));
+    sc_trace(tf,MEM_SIZE_RD,GET_NAME(MEM_SIZE_RD));
+    sc_trace(tf,NEG_OP2_RD,GET_NAME(NEG_OP2_RD));
+    sc_trace(tf,WB_RD,GET_NAME(WB_RD));
+    sc_trace(tf,MEM_SIGN_EXTEND_RD,GET_NAME(MEM_SIGN_EXTEND_RD));
+    sc_trace(tf,SELECT_SHIFT_RD,GET_NAME(SELECT_SHIFT_RD));
+    sc_trace(tf,MEM_LOAD_RD,GET_NAME(MEM_LOAD_RD));
+    sc_trace(tf,MEM_STORE_RD,GET_NAME(MEM_STORE_RD));
+    sc_trace(tf,EXE2MEM_POP_SM,GET_NAME(EXE2MEM_POP_SM));
+    sc_trace(tf,DEC2EXE_EMPTY_SD,GET_NAME(DEC2EXE_EMPTY_SD));
+    sc_trace(tf,SLT_RD,GET_NAME(SLT_RD));
+    sc_trace(tf,SLTU_RD,GET_NAME(SLTU_RD));
+    sc_trace(tf,CSR_WENABLE_RD,GET_NAME(CSR_WENABLE_RD));
+    sc_trace(tf,CSR_WADR_RD,GET_NAME(CSR_WADR_RD));
+    sc_trace(tf,CSR_RDATA_RD,GET_NAME(CSR_RDATA_RD));
+    sc_trace(tf,EXCEPTION_RD,GET_NAME(EXCEPTION_RD));  // tells if an instruction have been made in DEC
+
+    sc_trace(tf,ECALL_I_RD,GET_NAME(ECALL_I_RD));
+    sc_trace(tf,EBREAK_I_RD,GET_NAME(EBREAK_I_RD));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RD,GET_NAME(ILLEGAL_INSTRUCTION_RD));  // accessing stuff in wrong mode
+    sc_trace(tf,ADRESS_MISSALIGNED_RD,GET_NAME(ADRESS_MISSALIGNED_RD));      // branch offset is misaligned
+    sc_trace(tf,SYSCALL_U_MODE_RD,GET_NAME(SYSCALL_U_MODE_RD));
+    sc_trace(tf,SYSCALL_M_MODE_RD,GET_NAME(SYSCALL_M_MODE_RD));
+
+    sc_trace(tf,EXCEPTION_RE,GET_NAME(EXCEPTION_RE));
+    sc_trace(tf,LOAD_ADRESS_MISSALIGNED_RE,GET_NAME(LOAD_ADRESS_MISSALIGNED_RE)); // adress from store/load isn't aligned
+    sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RE,GET_NAME(INSTRUCTION_ACCESS_FAULT_RE)); // trying to access memory in wrong mode
+    sc_trace(tf,ECALL_I_RE,GET_NAME(ECALL_I_RE));
+    sc_trace(tf,EBREAK_I_RE,GET_NAME(EBREAK_I_RE));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RE,GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
+    sc_trace(tf,ADRESS_MISSALIGNED_RE,GET_NAME(ADRESS_MISSALIGNED_RE));      // branch offset is misaligned
+    sc_trace(tf,SYSCALL_U_MODE_RE,GET_NAME(SYSCALL_U_MODE_RE));
+    sc_trace(tf,SYSCALL_M_MODE_RE,GET_NAME(SYSCALL_M_MODE_RE));
+
+    // Interruption :
+
+    sc_trace(tf,INTERRUPTION_SE,GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf,INTERRUPTION_SX,GET_NAME(INTERRUPTION_SX));  // asynchrone Interruption from outside
+
+    // bypasses
+
+    sc_trace(tf,MEM_DEST_RM,GET_NAME(MEM_DEST_RM));
+    sc_trace(tf,MEM_RES_RM,GET_NAME(MEM_RES_RM));
+    sc_trace(tf,CSR_WENABLE_RM,GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf,CSR_RDATA_RM,GET_NAME(CSR_RDATA_RM));
+
+    // Genral Interface :
+
+    sc_trace(tf,EXCEPTION_RM,GET_NAME(EXCEPTION_RM));
+    sc_trace(tf,CLK,GET_NAME(CLK));
+    sc_trace(tf,RESET,GET_NAME(RESET));
+
+    // Fifo exe2mem interface :
+
+    sc_trace(tf,EXE_RES_RE,GET_NAME(EXE_RES_RE));
+    sc_trace(tf,MEM_DATA_RE,GET_NAME(MEM_DATA_RE));
+    sc_trace(tf,DEST_RE,GET_NAME(DEST_RE));
+    sc_trace(tf,MEM_SIZE_RE,GET_NAME(MEM_SIZE_RE));
+    sc_trace(tf,PC_EXE2MEM_RE,GET_NAME(PC_EXE2MEM_RE));
+
+    sc_trace(tf,WB_RE,GET_NAME(WB_RE));
+    sc_trace(tf,MEM_SIGN_EXTEND_RE,GET_NAME(MEM_SIGN_EXTEND_RE));
+    sc_trace(tf,MEM_LOAD_RE,GET_NAME(MEM_LOAD_RE));
+    sc_trace(tf,MEM_STORE_RE,GET_NAME(MEM_STORE_RE));
+    sc_trace(tf,EXE2MEM_EMPTY_SE,GET_NAME(EXE2MEM_EMPTY_SE));
+    sc_trace(tf,DEC2EXE_POP_SE,GET_NAME(DEC2EXE_POP_SE));
+
+    sc_trace(tf,CSR_WENABLE_RE,GET_NAME(CSR_WENABLE_RE));
+    sc_trace(tf,CSR_WADR_RE,GET_NAME(CSR_WADR_RE));
+    sc_trace(tf,CSR_RDATA_RE,GET_NAME(CSR_RDATA_RE));
+
+    // Internals signals :
+
+    sc_trace(tf,exe_res_se,GET_NAME(exe_res_se));
+
+    sc_trace(tf,exe2mem_din_se,GET_NAME(exe2mem_din_se));  // concatenation of exe_res, mem_data...etc
+    sc_trace(tf,exe2mem_dout_se,GET_NAME(exe2mem_dout_se));
+
+    sc_trace(tf,op1_se,GET_NAME(op1_se));
+    sc_trace(tf,op2_se,GET_NAME(op2_se));
+    sc_trace(tf,alu_in_op2_se,GET_NAME(alu_in_op2_se));
+    sc_trace(tf,alu_out_se,GET_NAME(alu_out_se));
+    sc_trace(tf,shifter_out_se,GET_NAME(shifter_out_se));
+    sc_trace(tf,bp_mem_data_sd,GET_NAME(bp_mem_data_sd));
+    sc_trace(tf,shift_val_se,GET_NAME(shift_val_se));
+    sc_trace(tf,exe2mem_push_se,GET_NAME(exe2mem_push_se));
+    sc_trace(tf,exe2mem_full_se,GET_NAME(exe2mem_full_se));
+    sc_trace(tf,blocked,GET_NAME(blocked));
+
+    sc_trace(tf,wb_re,GET_NAME(wb_re));
+    sc_trace(tf,mem_load_re,GET_NAME(mem_load_re));
+    sc_trace(tf,mem_store_re,GET_NAME(mem_store_re));
+
+    // Exception :
+
+    sc_trace(tf,exception_se,GET_NAME(exception_se));
+    sc_trace(tf,load_adress_missaligned_se,GET_NAME(load_adress_missaligned_se)); // adress from store/load isn't aligned
+    sc_trace(tf,instruction_access_fault_se,GET_NAME(instruction_access_fault_se));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

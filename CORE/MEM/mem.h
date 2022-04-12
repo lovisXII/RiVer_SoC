@@ -135,6 +135,9 @@ SC_MODULE(mem) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
-        sensitive ;
+        sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE
+        << MIP_VALUE_RC << PC_EXE2MEM_RE << INSTRUCTION_ACCESS_FAULT_RE<< ECALL_I_RE << EBREAK_I_RE
+        << ILLEGAL_INSTRUCTION_RE << ADRESS_MISSALIGNED_RE << SYSCALL_U_MODE_RE << SYSCALL_M_MODE_RE
+        << BUS_ERROR_SX ;
     }
 };

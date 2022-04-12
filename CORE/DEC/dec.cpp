@@ -892,136 +892,202 @@ void decod::stall_method() {
 void decod::trace(sc_trace_file* tf) {
     dec2if.trace(tf);
     dec2exe.trace(tf);
-    sc_trace(tf, rdata1_sd, GET_NAME(rdata1_sd));
-    sc_trace(tf, rdata2_sd, GET_NAME(rdata2_sd));
-    sc_trace(tf, r1_valid_sd, GET_NAME(r1_valid_sd));
-    sc_trace(tf, r2_valid_sd, GET_NAME(r2_valid_sd));
-    sc_trace(tf, RADR1_SD, GET_NAME(RADR1_SD));
-    sc_trace(tf, RADR2_SD, GET_NAME(RADR2_SD));
-    sc_trace(tf, EXE_DEST_SD, GET_NAME(EXE_DEST_SD));
-    sc_trace(tf, READ_PC_SR, GET_NAME(READ_PC_SR));
-    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));
-    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
-    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));
-    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));
-    sc_trace(tf, WB_RD, GET_NAME(WB_RD));
-    sc_trace(tf, MEM_DATA_RD, GET_NAME(MEM_DATA_RD));
-    sc_trace(tf, MEM_LOAD_RD, GET_NAME(MEM_LOAD_RD));
-    sc_trace(tf, MEM_STORE_RD, GET_NAME(MEM_STORE_RD));
-    sc_trace(tf, MEM_SIGN_EXTEND_RD, GET_NAME(MEM_SIGN_EXTEND_RD));
-    sc_trace(tf, MEM_SIZE_RD, GET_NAME(MEM_SIZE_RD));
-    sc_trace(tf, SELECT_SHIFT_RD, GET_NAME(SELECT_SHIFT_RD));
-    sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));
-    sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
-    sc_trace(tf, PC_RD, GET_NAME(PC_RD));
-    sc_trace(tf, INSTR_RI, GET_NAME(INSTR_RI));
-    sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
-    sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));
-    sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
-    sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
-    sc_trace(tf, dec2exe_out_sd, GET_NAME(dec2exe_out_sd));
-    sc_trace(tf, CLK, GET_NAME(CLK));
-    sc_trace(tf, RESET_N, GET_NAME(RESET_N));
-    sc_trace(tf, dec2if_in_sd, GET_NAME(dec2if_in_sd));
-    sc_trace(tf, dec2if_push_sd, GET_NAME(dec2if_push_sd));
-    sc_trace(tf, dec2if_empty_sd, GET_NAME(dec2if_empty_sd));
-    sc_trace(tf, dec2if_full_sd, GET_NAME(dec2if_full_sd));
-    sc_trace(tf, dec2if_out_sd, GET_NAME(dec2if_out_sd));
-    sc_trace(tf, dec2exe_in_sd, GET_NAME(dec2exe_in_sd));
-    sc_trace(tf, dec2exe_push_sd, GET_NAME(dec2exe_push_sd));
-    sc_trace(tf, dec2exe_full_sd, GET_NAME(dec2exe_full_sd));
-    sc_trace(tf, r_type_inst_sd, GET_NAME(r_type_inst_sd));
-    sc_trace(tf, i_type_inst_sd, GET_NAME(i_type_inst_sd));
-    sc_trace(tf, s_type_inst_sd, GET_NAME(s_type_inst_sd));
-    sc_trace(tf, b_type_inst_sd, GET_NAME(b_type_inst_sd));
-    sc_trace(tf, u_type_inst_sd, GET_NAME(u_type_inst_sd));
-    sc_trace(tf, j_type_inst_sd, GET_NAME(j_type_inst_sd));
-    sc_trace(tf, jalr_type_inst_sd, GET_NAME(jalr_type_inst_sd));
-    sc_trace(tf, add_i_sd, GET_NAME(add_i_sd));
-    sc_trace(tf, slt_i_sd, GET_NAME(slt_i_sd));
-    sc_trace(tf, sltu_i_sd, GET_NAME(sltu_i_sd));
-    sc_trace(tf, and_i_sd, GET_NAME(and_i_sd));
-    sc_trace(tf, or_i_sd, GET_NAME(or_i_sd));
-    sc_trace(tf, xor_i_sd, GET_NAME(xor_i_sd));
-    sc_trace(tf, sll_i_sd, GET_NAME(sll_i_sd));
-    sc_trace(tf, srl_i_sd, GET_NAME(srl_i_sd));
-    sc_trace(tf, sub_i_sd, GET_NAME(sub_i_sd));
-    sc_trace(tf, sra_i_sd, GET_NAME(sra_i_sd));
-    sc_trace(tf, addi_i_sd, GET_NAME(addi_i_sd));
-    sc_trace(tf, slti_i_sd, GET_NAME(slti_i_sd));
-    sc_trace(tf, sltiu_i_sd, GET_NAME(sltiu_i_sd));
-    sc_trace(tf, andi_i_sd, GET_NAME(andi_i_sd));
-    sc_trace(tf, ori_i_sd, GET_NAME(ori_i_sd));
-    sc_trace(tf, xori_i_sd, GET_NAME(xori_i_sd));
-    sc_trace(tf, jalr_i_sd, GET_NAME(jalr_i_sd));
-    sc_trace(tf, slli_i_sd, GET_NAME(slli_i_sd));
-    sc_trace(tf, srli_i_sd, GET_NAME(srli_i_sd));
-    sc_trace(tf, srai_i_sd, GET_NAME(srai_i_sd));
-    sc_trace(tf, lw_i_sd, GET_NAME(lw_i_sd));
-    sc_trace(tf, lh_i_sd, GET_NAME(lh_i_sd));
-    sc_trace(tf, lhu_i_sd, GET_NAME(lhu_i_sd));
-    sc_trace(tf, lb_i_sd, GET_NAME(lb_i_sd));
-    sc_trace(tf, lbu_i_sd, GET_NAME(lbu_i_sd));
-    sc_trace(tf, beq_i_sd, GET_NAME(beq_i_sd));
-    sc_trace(tf, bne_i_sd, GET_NAME(bne_i_sd));
-    sc_trace(tf, blt_i_sd, GET_NAME(blt_i_sd));
-    sc_trace(tf, bge_i_sd, GET_NAME(bge_i_sd));
-    sc_trace(tf, bltu_i_sd, GET_NAME(bltu_i_sd));
-    sc_trace(tf, bgeu_i_sd, GET_NAME(bgeu_i_sd));
-    sc_trace(tf, lui_i_sd, GET_NAME(lui_i_sd));
-    sc_trace(tf, auipc_i_sd, GET_NAME(auipc_i_sd));
-    sc_trace(tf, jal_i_sd, GET_NAME(jal_i_sd));
-    sc_trace(tf, sw_i_sd, GET_NAME(sw_i_sd));
-    sc_trace(tf, sh_i_sd, GET_NAME(sh_i_sd));
-    sc_trace(tf, sb_i_sd, GET_NAME(sb_i_sd));
-    sc_trace(tf, offset_branch_sd, GET_NAME(offset_branch_sd));
-    sc_trace(tf, inc_pc_sd, GET_NAME(inc_pc_sd));
-    sc_trace(tf, adr_dest_sd, GET_NAME(adr_dest_sd));
-    sc_trace(tf, exe_op1_sd, GET_NAME(exe_op1_sd));
-    sc_trace(tf, exe_op2_sd, GET_NAME(exe_op2_sd));
-    sc_trace(tf, mem_size_sd, GET_NAME(mem_size_sd));
-    sc_trace(tf, mem_load_sd, GET_NAME(mem_load_sd));
-    sc_trace(tf, mem_store_sd, GET_NAME(mem_store_sd));
-    sc_trace(tf, exe_cmd_sd, GET_NAME(exe_cmd_sd));
-    sc_trace(tf, select_shift_sd, GET_NAME(select_shift_sd));
-    sc_trace(tf, exe_neg_op2_sd, GET_NAME(exe_neg_op2_sd));
-    sc_trace(tf, exe_wb_sd, GET_NAME(exe_wb_sd));
-    sc_trace(tf, mem_sign_extend_sd, GET_NAME(mem_sign_extend_sd));
-    sc_trace(tf, WRITE_PC_SD, GET_NAME(WRITE_PC_SD));
-    sc_trace(tf, WRITE_PC_ENABLE_SD, GET_NAME(WRITE_PC_ENABLE_SD));
-    sc_trace(tf, add_offset_to_pc_sd, GET_NAME(add_offset_to_pc_sd));
-    sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
-    sc_trace(tf, stall, GET_NAME(stall));
-    sc_trace(tf, BP_DEST_RE, GET_NAME(BP_DEST_RE));
-    sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
-    sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
-    sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
-    sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME(BP_MEM_LOAD_RE));
-    sc_trace(tf, RDATA1_SR, GET_NAME(RDATA1_SR));
-    sc_trace(tf, RDATA2_SR, GET_NAME(RDATA2_SR));
-    sc_trace(tf, PC_DEC2EXE_RD, GET_NAME(PC_DEC2EXE_RD));
-    sc_trace(tf, PC_IF2DEC_RI, GET_NAME(PC_IF2DEC_RI));
-    sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
-    sc_trace(tf, ECALL_I_RD, GET_NAME(ECALL_I_RD));
-    sc_trace(tf, EBREAK_I_RD, GET_NAME(EBREAK_I_RD));
-    sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));
-    sc_trace(tf, ADRESS_MISSALIGNED_RD, GET_NAME(ADRESS_MISSALIGNED_RD));
-    sc_trace(tf, SYSCALL_U_MODE_RD, GET_NAME(SYSCALL_U_MODE_RD));
-    sc_trace(tf, SYSCALL_M_MODE_RD, GET_NAME(SYSCALL_M_MODE_RD));
-    sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
-    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));
-    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));
-    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));
-    sc_trace(tf, csrrw_i_sd, GET_NAME(csrrw_i_sd));
-    sc_trace(tf, csrrs_i_sd, GET_NAME(csrrs_i_sd));
-    sc_trace(tf, csrrc_i_sd, GET_NAME(csrrc_i_sd));
-    sc_trace(tf, csrrwi_i_sd, GET_NAME(csrrwi_i_sd));
-    sc_trace(tf, csrrsi_i_sd, GET_NAME(csrrsi_i_sd));
-    sc_trace(tf, csrrci_i_sd, GET_NAME(csrrci_i_sd));
-    sc_trace(tf, csr_wenable_rd, GET_NAME(csr_wenable_rd));
-    sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
-    sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
-    sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
-    sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
-    sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
+    sc_trace(tf,RDATA1_SR,GET_NAME(RDATA1_SR));
+    sc_trace(tf,RDATA2_SR,GET_NAME(RDATA2_SR));
+
+    sc_trace(tf,READ_PC_SR,GET_NAME(READ_PC_SR));  // value of r32 which is pc coming from REG
+
+    sc_trace(tf,RADR1_SD,GET_NAME(RADR1_SD));  // adress of rs
+    sc_trace(tf,RADR2_SD,GET_NAME(RADR2_SD));  // adress of rt
+
+    sc_trace(tf,WRITE_PC_SD,GET_NAME(WRITE_PC_SD));
+    sc_trace(tf,WRITE_PC_ENABLE_SD,GET_NAME(WRITE_PC_ENABLE_SD));
+
+    // Interface with EXE :
+
+    sc_trace(tf,OP1_RD,GET_NAME(OP1_RD));           // value of op1
+    sc_trace(tf,OP2_RD,GET_NAME(OP2_RD));           // value of op2
+    sc_trace(tf,EXE_CMD_RD,GET_NAME(EXE_CMD_RD));       // value of the command sent to exe
+    sc_trace(tf,NEG_OP2_RD,GET_NAME(NEG_OP2_RD));       // say if we take the opposite of the op1 to do a
+                                          // substraction for example
+    sc_trace(tf,WB_RD,GET_NAME(WB_RD));            // say if we plan to wbk the value of rd or no
+    sc_trace(tf,EXE_DEST_SD,GET_NAME(EXE_DEST_SD));      // the destination register
+    sc_trace(tf,SELECT_SHIFT_RD,GET_NAME(SELECT_SHIFT_RD));  // taille fifo entrée : 110
+    sc_trace(tf,SLT_RD,GET_NAME(SLT_RD));
+    sc_trace(tf,SLTU_RD,GET_NAME(SLTU_RD));
+    sc_trace(tf,PC_DEC2EXE_RD,GET_NAME(PC_DEC2EXE_RD));  // PC link to the current decoded instruction
+
+    sc_trace(tf,MEM_DATA_RD,GET_NAME(MEM_DATA_RD));   // data sent to mem for storage
+    sc_trace(tf,MEM_LOAD_RD,GET_NAME(MEM_LOAD_RD));   // say to mem if we do a load
+    sc_trace(tf,MEM_STORE_RD,GET_NAME(MEM_STORE_RD));  // say to mem if we do a store
+    sc_trace(tf,MEM_SIGN_EXTEND_RD,GET_NAME(MEM_SIGN_EXTEND_RD));
+    sc_trace(tf,MEM_SIZE_RD,GET_NAME(MEM_SIZE_RD));  // tells to mem if we do an acces in word, hw or byte
+
+    sc_trace(tf,CSR_WENABLE_RD,GET_NAME(CSR_WENABLE_RD));       // indicate if we do a csr operation,
+                                       // if so need to WBK CSR in rd
+    sc_trace(tf,CSR_WADR_RD,GET_NAME(CSR_WADR_RD));   // CSR adress sent to EXE, will allow to wbk csr in MEM
+    sc_trace(tf,CSR_RDATA_RD,GET_NAME(CSR_RDATA_RD));  // CSR read data to be wb in register
+
+    // Interface with DEC2IF :
+
+    sc_trace(tf,DEC2IF_POP_SI,GET_NAME(DEC2IF_POP_SI));  // Ifecth say to decod if it wants a pop or no
+    sc_trace(tf,DEC2IF_EMPTY_SD,GET_NAME(DEC2IF_EMPTY_SD));
+    sc_trace(tf,PC_RD,GET_NAME(PC_RD));  // this value must also be sent to REG
+
+    // Interface with IF2DEC :
+
+    sc_trace(tf,PC_IF2DEC_RI,GET_NAME(PC_IF2DEC_RI));
+    sc_trace(tf,INSTR_RI,GET_NAME(INSTR_RI));
+    sc_trace(tf,IF2DEC_EMPTY_SI,GET_NAME(IF2DEC_EMPTY_SI));
+    sc_trace(tf,IF2DEC_POP_SD,GET_NAME(IF2DEC_POP_SD));  // Decod says to IFETCH if it wants a pop or no
+    sc_trace(tf,IF2DEC_FLUSH_SD,GET_NAME(IF2DEC_FLUSH_SD));
+
+    // Interface with DEC2EXE
+
+    sc_trace(tf,DEC2EXE_POP_SE,GET_NAME(DEC2EXE_POP_SE));
+    sc_trace(tf,DEC2EXE_EMPTY_SD,GET_NAME(DEC2EXE_EMPTY_SD));
+    sc_trace(tf,dec2exe_out_sd,GET_NAME(dec2exe_out_sd));
+
+    // Interface with CSR :
+
+    sc_trace(tf,CSR_RADR_SD,GET_NAME(CSR_RADR_SD));   // CSR adress sent to CSR to get data
+    sc_trace(tf,CSR_RDATA_SC,GET_NAME(CSR_RDATA_SC));  // data read from CSR
+
+    // Bypasses
+
+    sc_trace(tf,BP_DEST_RE,GET_NAME(BP_DEST_RE));
+    sc_trace(tf,BP_EXE_RES_RE,GET_NAME(BP_EXE_RES_RE));
+    sc_trace(tf,BP_MEM_LOAD_RE,GET_NAME(BP_MEM_LOAD_RE));
+    sc_trace(tf,BP_EXE2MEM_EMPTY_SE,GET_NAME(BP_EXE2MEM_EMPTY_SE));
+    sc_trace(tf,BP_DEST_RM,GET_NAME(BP_DEST_RM));
+    sc_trace(tf,BP_MEM_RES_RM,GET_NAME(BP_MEM_RES_RM));
+
+    sc_trace(tf,CSR_WENABLE_RE,GET_NAME(CSR_WENABLE_RE));
+    sc_trace(tf,CSR_RDATA_RE,GET_NAME(CSR_RDATA_RE));
+    sc_trace(tf,CSR_WENABLE_RM,GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf,CSR_RDATA_RM,GET_NAME(CSR_RDATA_RM));
+
+    sc_trace(tf,BP_R1_VALID_RD,GET_NAME(BP_R1_VALID_RD));
+    sc_trace(tf,BP_R2_VALID_RD,GET_NAME(BP_R2_VALID_RD));
+    sc_trace(tf,BP_RADR1_RD,GET_NAME(BP_RADR1_RD));
+    sc_trace(tf,BP_RADR2_RD,GET_NAME(BP_RADR2_RD));
+
+    // Exception :
+
+    sc_trace(tf,EXCEPTION_RI,GET_NAME(EXCEPTION_RI));           // this signal will be at 0 considering there is no exception in IFETCH
+
+    sc_trace(tf,ECALL_I_RD,GET_NAME(ECALL_I_RD));
+    sc_trace(tf,EBREAK_I_RD,GET_NAME(EBREAK_I_RD));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RD,GET_NAME(ILLEGAL_INSTRUCTION_RD));  // instruction doesnt exist
+    sc_trace(tf,ADRESS_MISSALIGNED_RD,GET_NAME(ADRESS_MISSALIGNED_RD));      // branch offset is misaligned
+    sc_trace(tf,SYSCALL_U_MODE_RD,GET_NAME(SYSCALL_U_MODE_RD));
+    sc_trace(tf,SYSCALL_M_MODE_RD,GET_NAME(SYSCALL_M_MODE_RD));
+
+    sc_trace(tf,EXCEPTION_RD,GET_NAME(EXCEPTION_RD));
+    // General Interface :
+ 
+    sc_trace(tf,EXCEPTION_RM,GET_NAME(EXCEPTION_RM));
+    sc_trace(tf,MTVEC_VALUE_RM,GET_NAME(MTVEC_VALUE_RM)); 
+    sc_trace(tf,CLK,GET_NAME(CLK)); 
+    sc_trace(tf,RESET_N,GET_NAME(RESET_N));
+    sc_trace(tf,INTERRUPTION_SE,GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf,rdata1_sd,GET_NAME(rdata1_sd));
+    sc_trace(tf,rdata2_sd,GET_NAME(rdata2_sd));
+    sc_trace(tf,r1_valid_sd,GET_NAME(r1_valid_sd));
+    sc_trace(tf,r2_valid_sd,GET_NAME(r2_valid_sd));
+    sc_trace(tf,stall,GET_NAME(stall));
+    sc_trace(tf,block_in_dec,GET_NAME(block_in_dec));
+    sc_trace(tf,dec2if_in_sd,GET_NAME(dec2if_in_sd));  
+    sc_trace(tf,dec2if_push_sd,GET_NAME(dec2if_push_sd));
+    sc_trace(tf,dec2if_empty_sd,GET_NAME(dec2if_empty_sd));
+    sc_trace(tf,dec2if_full_sd,GET_NAME(dec2if_full_sd));
+    sc_trace(tf,dec2if_out_sd,GET_NAME(dec2if_out_sd));
+    sc_trace(tf,dec2exe_in_sd,GET_NAME(dec2exe_in_sd));
+    sc_trace(tf,dec2exe_push_sd,GET_NAME(dec2exe_push_sd));
+    sc_trace(tf,dec2exe_full_sd,GET_NAME(dec2exe_full_sd));
+    sc_trace(tf,r_type_inst_sd,GET_NAME(r_type_inst_sd));       // R type format
+    sc_trace(tf,i_type_inst_sd,GET_NAME(i_type_inst_sd));       // I type format
+    sc_trace(tf,s_type_inst_sd,GET_NAME(s_type_inst_sd));       // S type format
+    sc_trace(tf,b_type_inst_sd,GET_NAME(b_type_inst_sd));       // B type format
+    sc_trace(tf,u_type_inst_sd,GET_NAME(u_type_inst_sd));       // U type format
+    sc_trace(tf,j_type_inst_sd,GET_NAME(j_type_inst_sd));       // J type format
+    sc_trace(tf,jalr_type_inst_sd,GET_NAME(jalr_type_inst_sd));    // JALR has a specific opcode
+    sc_trace(tf,system_type_inst_sd,GET_NAME(system_type_inst_sd));  
+    sc_trace(tf,add_i_sd,GET_NAME(add_i_sd));
+    sc_trace(tf,slt_i_sd,GET_NAME(slt_i_sd));
+    sc_trace(tf,sltu_i_sd,GET_NAME(sltu_i_sd));
+    sc_trace(tf,and_i_sd,GET_NAME(and_i_sd));
+    sc_trace(tf,or_i_sd,GET_NAME(or_i_sd));
+    sc_trace(tf,xor_i_sd,GET_NAME(xor_i_sd));
+    sc_trace(tf,sll_i_sd,GET_NAME(sll_i_sd));
+    sc_trace(tf,srl_i_sd,GET_NAME(srl_i_sd));
+    sc_trace(tf,sub_i_sd,GET_NAME(sub_i_sd));
+    sc_trace(tf,sra_i_sd,GET_NAME(sra_i_sd));
+    sc_trace(tf,addi_i_sd,GET_NAME(addi_i_sd));
+    sc_trace(tf,slti_i_sd,GET_NAME(slti_i_sd));
+    sc_trace(tf,sltiu_i_sd,GET_NAME(sltiu_i_sd));
+    sc_trace(tf,andi_i_sd,GET_NAME(andi_i_sd));
+    sc_trace(tf,ori_i_sd,GET_NAME(ori_i_sd));
+    sc_trace(tf,xori_i_sd,GET_NAME(xori_i_sd));
+    sc_trace(tf,jalr_i_sd,GET_NAME(jalr_i_sd));
+    sc_trace(tf,slli_i_sd,GET_NAME(slli_i_sd));
+    sc_trace(tf,srli_i_sd,GET_NAME(srli_i_sd));
+    sc_trace(tf,srai_i_sd,GET_NAME(srai_i_sd));
+    sc_trace(tf,lw_i_sd,GET_NAME(lw_i_sd));
+    sc_trace(tf,lh_i_sd,GET_NAME(lh_i_sd));
+    sc_trace(tf,lhu_i_sd,GET_NAME(lhu_i_sd));
+    sc_trace(tf,lb_i_sd,GET_NAME(lb_i_sd));
+    sc_trace(tf,lbu_i_sd,GET_NAME(lbu_i_sd));
+    sc_trace(tf,beq_i_sd,GET_NAME(beq_i_sd));
+    sc_trace(tf,bne_i_sd,GET_NAME(bne_i_sd));
+    sc_trace(tf,blt_i_sd,GET_NAME(blt_i_sd));
+    sc_trace(tf,bge_i_sd,GET_NAME(bge_i_sd));
+    sc_trace(tf,bltu_i_sd,GET_NAME(bltu_i_sd));
+    sc_trace(tf,bgeu_i_sd,GET_NAME(bgeu_i_sd));
+    sc_trace(tf,lui_i_sd,GET_NAME(lui_i_sd));
+    sc_trace(tf,auipc_i_sd,GET_NAME(auipc_i_sd));
+    sc_trace(tf,jal_i_sd,GET_NAME(jal_i_sd));
+    sc_trace(tf,sw_i_sd,GET_NAME(sw_i_sd));
+    sc_trace(tf,sh_i_sd,GET_NAME(sh_i_sd));
+    sc_trace(tf,sb_i_sd,GET_NAME(sb_i_sd));
+    sc_trace(tf,csrrw_i_sd,GET_NAME(csrrw_i_sd));
+    sc_trace(tf,csrrs_i_sd,GET_NAME(csrrs_i_sd));
+    sc_trace(tf,csrrc_i_sd,GET_NAME(csrrc_i_sd));
+    sc_trace(tf,csrrwi_i_sd,GET_NAME(csrrwi_i_sd));
+    sc_trace(tf,csrrsi_i_sd,GET_NAME(csrrsi_i_sd));
+    sc_trace(tf,csrrci_i_sd,GET_NAME(csrrci_i_sd));
+    sc_trace(tf,csr_wenable_rd,GET_NAME(csr_wenable_rd));
+    sc_trace(tf,csr_radr_sd,GET_NAME(csr_radr_sd));
+    sc_trace(tf,offset_branch_sd,GET_NAME(offset_branch_sd));
+
+    // PC gestion :
+
+    sc_trace(tf,inc_pc_sd,GET_NAME(inc_pc_sd));
+    sc_trace(tf,add_offset_to_pc_sd,GET_NAME(add_offset_to_pc_sd));
+
+    // Internal signals :
+
+    sc_trace(tf,adr_dest_sd,GET_NAME(adr_dest_sd));
+    sc_trace(tf,exe_op1_sd,GET_NAME(exe_op1_sd));
+    sc_trace(tf,exe_op2_sd,GET_NAME(exe_op2_sd));
+    sc_trace(tf,mem_data_sd,GET_NAME(mem_data_sd));
+
+    sc_trace(tf,mem_size_sd,GET_NAME(mem_size_sd));
+    sc_trace(tf,mem_load_sd,GET_NAME(mem_load_sd));
+    sc_trace(tf,mem_store_sd,GET_NAME(mem_store_sd));
+
+    sc_trace(tf,exe_cmd_sd,GET_NAME(exe_cmd_sd));
+    sc_trace(tf,select_shift_sd,GET_NAME(select_shift_sd));
+    sc_trace(tf,exe_neg_op2_sd,GET_NAME(exe_neg_op2_sd));
+    sc_trace(tf,exe_wb_sd,GET_NAME(exe_wb_sd));
+    sc_trace(tf,mem_sign_extend_sd,GET_NAME(mem_sign_extend_sd));
+
+    // Exception :
+
+    sc_trace(tf,ecall_i_sd,GET_NAME(ecall_i_sd));
+    sc_trace(tf,ebreak_i_sd,GET_NAME(ebreak_i_sd));
+    sc_trace(tf,illegal_instruction_rd,GET_NAME(illegal_instruction_rd));  // instruction doesnt exist
+    sc_trace(tf,adress_missaligned_sd,GET_NAME(adress_missaligned_sd));      // branch offset is misaligned
+    sc_trace(tf,syscall_u_mode_sd,GET_NAME(syscall_u_mode_sd));
+    sc_trace(tf,syscall_s_mode_sd,GET_NAME(syscall_s_mode_sd));
 }

@@ -293,7 +293,7 @@ SC_MODULE(decod) {
         SC_METHOD(dec2if_gestion)
         sensitive
 
-            << dec2if_empty_sd << dec2if_full_sd << stall;
+            << dec2if_empty_sd << dec2if_full_sd << stall << EXCEPTION_RM;
 
         SC_METHOD(concat_dec2exe)
         sensitive << dec2exe_in_sd << exe_op1_sd << exe_op2_sd << exe_cmd_sd << exe_neg_op2_sd << exe_wb_sd
@@ -306,10 +306,10 @@ SC_MODULE(decod) {
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
-        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall;
+        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall << EXCEPTION_RM;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall;
+        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall << EXCEPTION_RM;
 
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
