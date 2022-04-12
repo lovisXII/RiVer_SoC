@@ -764,16 +764,22 @@ void decod::post_reg_read_decoding() {
 
     int invalid_inst2 = false;
     if (r_type_inst_sd)
-        if (if_ir.range(31, 25) != 0 || if_ir.range(31, 25) != 32)
-            invalid_inst2 = true;
+        if (if_ir.range(31, 25) != 0 || if_ir.range(31, 25) != 0b0100000)
+            { invalid_inst2 = true;
+            std::cout << "test 1 "<< std::endl ;
+            std::cout << if_ir.range(31, 25)<< std::endl ;
+            std::cout << (if_ir.range(31, 25) != 0)<< std::endl ;}
         else if (b_type_inst_sd)
-            if (if_ir.range(14, 12) == 2 || if_ir.range(14, 12) == 3)
+            if (if_ir.range(14, 12) == 2 || if_ir.range(14, 12) == 3){
                 invalid_inst2 = true;
+            std::cout << "test 2 "<< std::endl ;}
             else if (s_type_inst_sd)
-                if (if_ir.range(14, 12) > 2)
+                if (if_ir.range(14, 12) > 2){
                     invalid_inst2 = true;
+            std::cout << "test 3 "<< std::endl ;}
                 else if (system_type_inst_sd)
-                    if (if_ir.range(14, 12) == 4) invalid_inst2 = true;
+                    if (if_ir.range(14, 12) == 4){ invalid_inst2 = true;
+                    std::cout << "test 3 "<< std::endl ;}
 
     illegal_instruction_rd.write(invalid_instr || invalid_inst2);
 
@@ -809,8 +815,7 @@ void decod::pc_inc() {
     }
 
     // Adress missaligned exception :
-
-    if (pc_out && 0b11 != 0) { adress_missaligned_sd = true; }
+    if (pc_out & 0b11 != 0) { adress_missaligned_sd = true; }
     if(EXCEPTION_RM.read() == 0)
     {
     dec2if_in_sd.write(pc_out);

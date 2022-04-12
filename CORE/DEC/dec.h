@@ -1,5 +1,6 @@
 #include <systemc.h>
 #include "../UTIL/fifo.h"
+#include <iostream>
 #define dec2exe_size 212
 
 SC_MODULE(decod) {
