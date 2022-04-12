@@ -396,10 +396,10 @@ void decod::pre_reg_read_decoding() {
             csr_wenable_rd = 1;
             CSR_RADR_SD.write(csr_radr_sd);
         } else if (ecall_i_sd || ebreak_i_sd) {
-            radr1_var = 0 ;
-            radr2_var = 0;
+            radr1_var    = 0;
+            radr2_var    = 0;
             adr_dest_var = 0;
-            
+
             // Checking exception for current call mode :
 
             // CSR_RADR_SD.write(0x300); // reading MSTATUS
@@ -505,6 +505,7 @@ void decod::post_reg_read_decoding() {
         exe_cmd_sd.write(0);
         select_shift_sd.write(0);
         exe_neg_op2_sd.write(0);
+        mem_load_sd.write(0);
         offset_branch_var = 0;
         inc_pc_var        = 1;
         dec2exe_op1_var   = rdata1_sd.read();
@@ -675,8 +676,8 @@ void decod::post_reg_read_decoding() {
         }
     } else {
         exe_cmd_sd.write(0);
-        dec2exe_op1_var = 0 ;
-        dec2exe_op2_var = 0 ;
+        dec2exe_op1_var = 0;
+        dec2exe_op2_var = 0;
         exe_neg_op2_sd.write(0);
         dec2exe_wb_var = 0;
         mem_load_sd.write(0);
@@ -689,24 +690,22 @@ void decod::post_reg_read_decoding() {
 
     // Illegal instruction Gestion :
 
-    int invalid_inst2 = false ;
-    if(r_type_inst_sd)
-        if(if_ir.range(31,25)!= 0 || if_ir.range(31,25)!= 32)
-            invalid_inst2 = true ;
-    else if(b_type_inst_sd)
-        if(if_ir.range(14,12) == 2 || if_ir.range(14,12) == 3 )
-            invalid_inst2 = true ;
-    else if(s_type_inst_sd)
-        if(if_ir.range(14,12) > 2 )
-            invalid_inst2 = true ;
-    else if(system_type_inst_sd)
-        if(if_ir.range(14,12) == 4 )
-            invalid_inst2 = true ;
+    int invalid_inst2 = false;
+    if (r_type_inst_sd)
+        if (if_ir.range(31, 25) != 0 || if_ir.range(31, 25) != 32)
+            invalid_inst2 = true;
+        else if (b_type_inst_sd)
+            if (if_ir.range(14, 12) == 2 || if_ir.range(14, 12) == 3)
+                invalid_inst2 = true;
+            else if (s_type_inst_sd)
+                if (if_ir.range(14, 12) > 2)
+                    invalid_inst2 = true;
+                else if (system_type_inst_sd)
+                    if (if_ir.range(14, 12) == 4) invalid_inst2 = true;
 
-    illegal_instruction_rd.write(invalid_instr || invalid_inst2) ;
+    illegal_instruction_rd.write(invalid_instr || invalid_inst2);
 
     invalid_instr = invalid_instr || IF2DEC_EMPTY_SI.read();
-            
 
     exe_wb_sd.write(dec2exe_wb_var);
     offset_branch_sd.write(offset_branch_var);
@@ -739,10 +738,7 @@ void decod::pc_inc() {
 
     // Adress missaligned exception :
 
-    if(pc_out && 0b11 != 0)
-    {
-        adress_missaligned = true ;
-    }
+    if (pc_out && 0b11 != 0) { adress_missaligned = true; }
 
     dec2if_in_sd.write(pc_out);
 }
