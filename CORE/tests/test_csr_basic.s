@@ -2,8 +2,8 @@
 .global _start
 
 _start:
-    li x2, 0x5E
-    csrrwi x1, 0x341, 0x5E
+    li x2, 0xE
+    csrrwi x1, 0x341, 0xE
     nop
     nop
     nop
