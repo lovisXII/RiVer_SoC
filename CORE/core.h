@@ -236,6 +236,11 @@ SC_MODULE(core) {
         dec_inst.BP_RADR2_RD(BP_RADR2_RD);
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
 
+        dec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        dec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        dec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        dec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+
         dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
         dec_inst.CSR_WADR_RD(CSR_WADR_RD);
         dec_inst.CSR_RADR_SD(CSR_RADR_SD);
@@ -293,6 +298,9 @@ SC_MODULE(core) {
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
+
+        exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
 
         exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         exec_inst.INTERRUPTION_SX(INTERRUPTION_SX);

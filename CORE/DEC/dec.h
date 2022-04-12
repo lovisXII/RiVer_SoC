@@ -73,6 +73,11 @@ SC_MODULE(decod) {
     sc_in<sc_uint<6>>  BP_DEST_RM;
     sc_in<sc_uint<32>> BP_MEM_RES_RM;
 
+    sc_in<bool>        CSR_WENABLE_RE;
+    sc_in<sc_uint<32>> CSR_RDATA_RE;
+    sc_in<bool>        CSR_WENABLE_RM;
+    sc_in<sc_uint<32>> CSR_RDATA_RM;
+
     sc_out<bool>       BP_R1_VALID_RD;
     sc_out<bool>       BP_R2_VALID_RD;
     sc_out<sc_uint<6>> BP_RADR1_RD;

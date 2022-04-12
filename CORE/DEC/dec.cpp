@@ -934,4 +934,8 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, csrrci_i_sd, GET_NAME(csrrci_i_sd));
     sc_trace(tf, csr_wenable_rd, GET_NAME(csr_wenable_rd));
     sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
+    sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
+    sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
+    sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
 }
