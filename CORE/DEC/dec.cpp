@@ -409,24 +409,28 @@ void decod::pre_reg_read_decoding() {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = if_ir.range(11, 7);
+        CSR_RADR_SD.write(0);
     }
     // I-type Instruction :
     else if (i_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
+        CSR_RADR_SD.write(0);
     }
     // S-type Instruction :
     else if (s_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = 0;
+        CSR_RADR_SD.write(0);
     }
     // Branch Instruction :
     else if (b_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = 0;
+        CSR_RADR_SD.write(0);
     }
     // U-type Instruction :
     else if (u_type_inst_sd == 1) {
@@ -438,18 +442,21 @@ void decod::pre_reg_read_decoding() {
             radr2_var = 0x2F;
         else
             radr2_var = 0;
+        CSR_RADR_SD.write(0);
     }
     // J-type Instruction :
     else if (j_type_inst_sd == 1) {
         radr1_var    = 0;
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
+        CSR_RADR_SD.write(0);
     }
     // JALR-type Instruction :
     else if (jalr_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
+        CSR_RADR_SD.write(0);
     }
     // system-type Instruction
     else if (system_type_inst_sd == 1) {
@@ -458,11 +465,11 @@ void decod::pre_reg_read_decoding() {
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
-            csr_radr_sd  = if_ir.range(31, 20);
+            CSR_RADR_SD.write(if_ir.range(31, 20));
+            csr_radr_sd = if_ir.range(31, 20);
             radr1_var    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
             radr2_var    = 0;
             adr_dest_var = if_ir.range(11, 7);
-            CSR_RADR_SD.write(csr_radr_sd);
         } else if (ecall_i_sd || ebreak_i_sd) {
             radr1_var    = 0;
             radr2_var    = 0;
@@ -713,22 +720,33 @@ void decod::post_reg_read_decoding() {
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_rd.write(1);
-            sc_uint<32> rdata1_signal_sd = rdata1_sd;
-            dec2exe_op1_var              = CSR_RDATA_SC.read();
+            sc_uint<32> rdata1_signal_sd = rdata1_sd; // loading value of rs1
+            dec2exe_op1_var              = CSR_RDATA_SC.read(); // reading value of the csr
 
-            if (csrrc_i_sd || csrrci_i_sd)
+            if (csrrc_i_sd || csrrci_i_sd){
                 exe_neg_op2_sd.write(1);
-            else
+                exe_cmd_sd.write(1);
+            }
+            else if(csrrw_i_sd || csrrwi_i_sd){
                 exe_neg_op2_sd.write(0);
+                exe_cmd_sd.write(0);
+            }
+            else{
+                exe_neg_op2_sd.write(0);
+                exe_cmd_sd.write(2);
+            }
 
-            if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd)
-                dec2exe_op2_var = rdata1_signal_sd;
-            else
-                dec2exe_op2_var = if_ir.range(19, 15);
+            if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd){
+                dec2exe_op2_var = rdata1_signal_sd; // if non immediat type, loading value of the register
+            }
+            else{
+                dec2exe_op2_var = if_ir.range(19, 15); // else loading value of register as an immediat
+            }
 
+            dec2exe_wb_var = 1;
             offset_branch_var = 0;
             mem_data_var      = 0;
-            inc_pc_var        = 0;
+            inc_pc_var        = 1;
 
         } else if (ecall_i_sd || ebreak_i_sd) {
             csr_wenable_rd.write(0);
@@ -744,7 +762,7 @@ void decod::post_reg_read_decoding() {
             select_shift_sd.write(0);
             offset_branch_var = 0;
             mem_data_var      = 0;
-            inc_pc_var        = 0;
+            inc_pc_var        = 1;
         }
     } else {
         exe_cmd_sd.write(0);

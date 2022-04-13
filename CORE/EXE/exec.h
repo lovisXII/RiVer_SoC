@@ -167,7 +167,17 @@ SC_MODULE(exec) {
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
-                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re;
+                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD 
+                  << CSR_WADR_RD << CSR_RDATA_RD
+                  << ECALL_I_RD
+        << EBREAK_I_RD
+        << ILLEGAL_INSTRUCTION_RD
+        << ADRESS_MISSALIGNED_RD
+        << SYSCALL_U_MODE_RD
+        << SYSCALL_M_MODE_RD
+        << exception_se
+        << load_adress_missaligned_se
+        << instruction_access_fault_se;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);

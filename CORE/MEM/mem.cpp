@@ -81,9 +81,11 @@ void mem::csr_exception() {
         if (CSR_WENABLE_RE.read()) {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
             CSR_WDATA_SM.write(EXE_RES_RE.read());
+            CSR_ENABLE_BEFORE_FIFO_SM.write(true) ;
         } else {
             CSR_WADR_SM.write(0);
             CSR_WDATA_SM.write(0);
+            CSR_ENABLE_BEFORE_FIFO_SM.write(0) ;
         }
     }
     else{// Affectation of the cause

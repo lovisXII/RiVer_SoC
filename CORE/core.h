@@ -131,7 +131,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MCAUSE_WDATA_RM ;
     sc_signal<sc_uint<32>> MTVEC_VALUE_RC ;
     sc_signal<sc_uint<32>> MIP_VALUE_RC ;
-
+    sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
     //MEM - Pipeline :
 
@@ -417,6 +417,8 @@ SC_MODULE(core) {
         mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
 
+        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
 
@@ -458,7 +460,7 @@ SC_MODULE(core) {
 
         csr_inst.CSR_WADR_SM(CSR_WADR_SM);
         csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);
-        csr_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
 
         csr_inst.CSR_RADR_SD(CSR_RADR_SD);
         csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);

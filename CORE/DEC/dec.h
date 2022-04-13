@@ -345,7 +345,10 @@ SC_MODULE(decod) {
                   << bgeu_i_sd << lui_i_sd << auipc_i_sd
 
                   << jal_i_sd << sw_i_sd << sh_i_sd << sb_i_sd << j_type_inst_sd << jalr_type_inst_sd << dec2exe_push_sd
-                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd;
+                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd
+                  << system_type_inst_sd << csrrw_i_sd << csrrs_i_sd 
+                  << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd
+                  << CSR_RDATA_SC << ecall_i_sd << ebreak_i_sd;
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd 
         << MTVEC_VALUE_RM << EXCEPTION_RM;

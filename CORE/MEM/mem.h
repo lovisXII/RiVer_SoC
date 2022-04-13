@@ -94,6 +94,7 @@ SC_MODULE(mem) {
 
     sc_out<sc_uint<12>> CSR_WADR_SM;
     sc_out<sc_uint<32>> CSR_WDATA_SM;
+    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM ;
 
     sc_out<sc_uint<32>> MSTATUS_WDATA_RM ;
     sc_out<sc_uint<32>> MIP_WDATA_RM ;
@@ -125,7 +126,8 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << MEM_SIZE_RE << wb_sm << SIGN_EXTEND_RE;
+        sensitive << data_sm << DEST_RE << wb_sm
+        << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << MTVEC_VALUE_RC;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
