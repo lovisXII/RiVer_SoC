@@ -37,15 +37,20 @@ void exec::select_exec_res() {
     } else {
         if(MEM_LOAD_RD.read() || MEM_STORE_RD.read())
         {
-            if(alu_out_se.read() && 0b11 != 0){ //if adress isn't aligned it creates an exception
+            if(alu_out_se.read() & 0b11 != 0){ //if adress isn't aligned it creates an exception
                 load_adress_missaligned_se.write(1) ;
             }
             else{
                 load_adress_missaligned_se.write(0) ;
             }
-            if(alu_out_se.read() > start_kernel_adress )
+            if(false) // need to change this condition to check current mode
             {
-                instruction_access_fault_se.write(1) ;
+                if(alu_out_se.read() > start_kernel_adress )
+                {
+                    instruction_access_fault_se.write(1) ;
+                }
+                else
+                    instruction_access_fault_se.write(0) ;
             }
             else{
                 instruction_access_fault_se.write(0) ;

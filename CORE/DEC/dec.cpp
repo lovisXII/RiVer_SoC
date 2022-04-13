@@ -54,11 +54,11 @@ void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if(EXCEPTION_RM.read() == 0)
     {
-        dec2exe_in_var[211]            = ecall_i_sd || ebreak_i_sd || illegal_instruction_rd 
+        dec2exe_in_var[211]            = ecall_i_sd || ebreak_i_sd || illegal_instruction_sd 
         || adress_missaligned_sd || syscall_u_mode_sd || syscall_s_mode_sd ; // tells if there is an exception
         dec2exe_in_var[210]            = ecall_i_sd.read();
         dec2exe_in_var[209]            = ebreak_i_sd.read();
-        dec2exe_in_var[208]            = illegal_instruction_rd.read();
+        dec2exe_in_var[208]            = illegal_instruction_sd.read();
         dec2exe_in_var[207]            = adress_missaligned_sd.read();
         dec2exe_in_var[206]            = syscall_u_mode_sd.read();
         dec2exe_in_var[205]            = syscall_s_mode_sd.read();
@@ -457,7 +457,7 @@ void decod::pre_reg_read_decoding() {
         // rd = CSR
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
-        if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrw_i_sd || csrrsi_i_sd || csrrci_i_sd) {
+        if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_radr_sd  = if_ir.range(31, 20);
             radr1_var    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
             radr2_var    = 0;
@@ -499,7 +499,7 @@ void decod::post_reg_read_decoding() {
     sc_uint<32> mem_data_var;
     sc_uint<32> offset_branch_var;
     bool        inc_pc_var;
-    bool        invalid_instr = false;
+    bool        illegal_inst = false;
 
     // R-type Instruction :
 
@@ -711,7 +711,7 @@ void decod::post_reg_read_decoding() {
         // rd = CSR
         // CSR = (rs1 | 0) operation CSR
         // So CSR must be wbk in rd
-        if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrw_i_sd || csrrsi_i_sd || csrrci_i_sd) {
+        if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_rd.write(1);
             sc_uint<32> rdata1_signal_sd = rdata1_sd;
             dec2exe_op1_var              = CSR_RDATA_SC.read();
@@ -757,41 +757,42 @@ void decod::post_reg_read_decoding() {
         mem_sign_extend_sd.write(0);
         mem_size_sd.write(0);
         select_shift_sd.write(0);
-        invalid_instr = true;
+        illegal_inst = true;
     }
 
     // Illegal instruction Gestion :
 
-    int invalid_inst2 = false;
     if (r_type_inst_sd)
-        if (if_ir.range(31, 25) != 0 || if_ir.range(31, 25) != 0b0100000)
-            { invalid_inst2 = true;
-            std::cout << "test 1 "<< std::endl ;
-            std::cout << if_ir.range(31, 25)<< std::endl ;
-            std::cout << (if_ir.range(31, 25) != 0)<< std::endl ;}
-        else if (b_type_inst_sd)
-            if (if_ir.range(14, 12) == 2 || if_ir.range(14, 12) == 3){
-                invalid_inst2 = true;
-            std::cout << "test 2 "<< std::endl ;}
-            else if (s_type_inst_sd)
-                if (if_ir.range(14, 12) > 2){
-                    invalid_inst2 = true;
-            std::cout << "test 3 "<< std::endl ;}
-                else if (system_type_inst_sd)
-                    if (if_ir.range(14, 12) == 4){ invalid_inst2 = true;
-                    std::cout << "test 3 "<< std::endl ;}
+    {
+        if (if_ir.range(31, 25) != 0 && if_ir.range(31, 25) != 0b0100000){
+            illegal_inst = true;}
+    }
+    else if (b_type_inst_sd)
+    {
+        if (if_ir.range(14, 12) == 2 || if_ir.range(14, 12) == 3)
+            illegal_inst = true;
+    }
 
-    illegal_instruction_rd.write(invalid_instr || invalid_inst2);
+    else if (s_type_inst_sd)
+    {
+        if (if_ir.range(14, 12) > 2)
+            illegal_inst = true;
+    }
+    else if (system_type_inst_sd)
+        if (if_ir.range(14, 12) == 4) illegal_inst = true;
 
-    invalid_instr = invalid_instr || IF2DEC_EMPTY_SI.read();
 
+    illegal_inst = illegal_inst && !IF2DEC_EMPTY_SI.read();
+
+    illegal_instruction_sd.write(illegal_inst);
+    
     exe_wb_sd.write(dec2exe_wb_var);
     offset_branch_sd.write(offset_branch_var);
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
-    inc_pc_sd.write((inc_pc_var && dec2if_push_sd.read()) || invalid_instr);
-    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() && !invalid_instr);
+    inc_pc_sd.write((inc_pc_var || IF2DEC_EMPTY_SI ) && dec2if_push_sd.read() );
+    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI);
 }
 
 //---------------------------------------------PC GESTION
@@ -815,7 +816,8 @@ void decod::pc_inc() {
     }
 
     // Adress missaligned exception :
-    if (pc_out & 0b11 != 0) { adress_missaligned_sd = true; }
+    if (pc_out & 0b11 != 0) 
+        adress_missaligned_sd = true; 
     if(EXCEPTION_RM.read() == 0)
     {
     dec2if_in_sd.write(pc_out);
@@ -1091,7 +1093,7 @@ void decod::trace(sc_trace_file* tf) {
 
     sc_trace(tf,ecall_i_sd,GET_NAME(ecall_i_sd));
     sc_trace(tf,ebreak_i_sd,GET_NAME(ebreak_i_sd));
-    sc_trace(tf,illegal_instruction_rd,GET_NAME(illegal_instruction_rd));  // instruction doesnt exist
+    sc_trace(tf,illegal_instruction_sd,GET_NAME(illegal_instruction_sd));  // instruction doesnt exist
     sc_trace(tf,adress_missaligned_sd,GET_NAME(adress_missaligned_sd));      // branch offset is misaligned
     sc_trace(tf,syscall_u_mode_sd,GET_NAME(syscall_u_mode_sd));
     sc_trace(tf,syscall_s_mode_sd,GET_NAME(syscall_s_mode_sd));

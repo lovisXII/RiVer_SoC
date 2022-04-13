@@ -87,7 +87,11 @@ void csr::trace(sc_trace_file *tf){
 
     // General Interface :
 
-    
+    for(int i = 0 ; i < N_CSR ; i++){
+        std::string regname = "CSR_";
+        regname += std::to_string(i);
+        sc_trace(tf, csr_rc[i], signal_get_name(csr_rc[i].name(), regname.c_str()));
+    } 
     sc_trace(tf,CLK,GET_NAME(CLK));
     sc_trace(tf,RESET_N,GET_NAME(RESET_N));
 }

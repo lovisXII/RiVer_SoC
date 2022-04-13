@@ -253,7 +253,7 @@ SC_MODULE(decod) {
 
     sc_signal<bool> ecall_i_sd;
     sc_signal<bool> ebreak_i_sd;
-    sc_signal<bool> illegal_instruction_rd;  // instruction doesnt exist
+    sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
     sc_signal<bool> adress_missaligned_sd;      // branch offset is misaligned
     sc_signal<bool> syscall_u_mode_sd;
     sc_signal<bool> syscall_s_mode_sd;
@@ -326,7 +326,10 @@ SC_MODULE(decod) {
                   << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
                   << jalr_type_inst_sd << beq_i_sd << bne_i_sd
 
-                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd;
+                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd
+                  << system_type_inst_sd << csrrw_i_sd << csrrs_i_sd 
+                  << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd
+                  << ecall_i_sd << ebreak_i_sd ;
         SC_METHOD(post_reg_read_decoding)
         sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
                   << jalr_type_inst_sd << beq_i_sd << bne_i_sd
@@ -344,7 +347,8 @@ SC_MODULE(decod) {
                   << jal_i_sd << sw_i_sd << sh_i_sd << sb_i_sd << j_type_inst_sd << jalr_type_inst_sd << dec2exe_push_sd
                   << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd;
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd;
+        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd 
+        << MTVEC_VALUE_RM << EXCEPTION_RM;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

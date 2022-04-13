@@ -68,5 +68,8 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, RESET, GET_NAME(RESET));
     sc_trace(tf, if2dec_in_si, GET_NAME(if2dec_in_si));
     sc_trace(tf, instr_ri, GET_NAME(instr_ri));
+    sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
+    sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
+    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     fifo_inst.trace(tf);
 }
