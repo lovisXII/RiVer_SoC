@@ -10,13 +10,13 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> CSR_WDATA_SM;
     sc_in<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
-    sc_in<bool>        EXCEPTION_RM;
-    sc_in<sc_uint<32>> MSTATUS_WDATA_RM ;
-    sc_in<sc_uint<32>> MIP_WDATA_RM ;
-    sc_in<sc_uint<32>> MEPC_WDATA_RM ;
-    sc_in<sc_uint<32>> MCAUSE_WDATA_RM ;
-    sc_out<sc_uint<32>> MTVEC_VALUE_RC ;
-    sc_out<sc_uint<32>> MIP_VALUE_RC ;
+    sc_in<bool>         EXCEPTION_RM;
+    sc_in<sc_uint<32>>  MSTATUS_WDATA_RM;
+    sc_in<sc_uint<32>>  MIP_WDATA_RM;
+    sc_in<sc_uint<32>>  MEPC_WDATA_RM;
+    sc_in<sc_uint<32>>  MCAUSE_WDATA_RM;
+    sc_out<sc_uint<32>> MTVEC_VALUE_RC;
+    sc_out<sc_uint<32>> MIP_VALUE_RC;
 
     // Output :
 
@@ -50,10 +50,8 @@ SC_MODULE(csr) {
     void trace(sc_trace_file * tf);
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
-        SC_METHOD(reading_csr) ;
-        sensitive << CSR_WADR_SM << CSR_WDATA_SM 
-        << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM
-        << EXCEPTION_RM << MSTATUS_WDATA_RM <<  MIP_WDATA_RM
-        << MEPC_WDATA_RM << MCAUSE_WDATA_RM ;
+        SC_METHOD(reading_csr);
+        sensitive << CSR_WADR_SM << CSR_WDATA_SM << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_RM
+                  << MSTATUS_WDATA_RM << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_RM;
     }
 };

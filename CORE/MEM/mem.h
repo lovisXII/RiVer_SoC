@@ -37,19 +37,19 @@ SC_MODULE(mem) {
     sc_in<sc_uint<12>> CSR_WADR_SE;
     sc_in<sc_uint<32>> CSR_RDATA_RE;
 
-    sc_in<bool> EXCEPTION_RE ;
-    sc_in<bool> LOAD_ADRESS_MISSALIGNED_RE ; // adress from store/load isn't aligned
-    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE ; // trying to access memory in wrong mode
+    sc_in<bool> EXCEPTION_RE;
+    sc_in<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
+    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
     sc_in<bool> ECALL_I_RE;
     sc_in<bool> EBREAK_I_RE;
     sc_in<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_in<bool> ADRESS_MISSALIGNED_RE;      // branch offset is misaligned
+    sc_in<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
     sc_in<bool> SYSCALL_U_MODE_RE;
     sc_in<bool> SYSCALL_M_MODE_RE;
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
-    sc_in<bool> BUS_ERROR_SX ;
+    sc_in<bool> BUS_ERROR_SX;
 
     // exe2mem interface :
 
@@ -75,16 +75,16 @@ SC_MODULE(mem) {
 
     sc_signal<sc_bv<mem2wbk_size>> mem2wbk_din_sm;
     sc_signal<sc_bv<mem2wbk_size>> mem2wbk_dout_sm;
-    sc_signal<bool> exception_sm ;
-    sc_signal<sc_uint<32>> data_sm;
-    sc_signal<bool>        wb_sm;
+    sc_signal<bool>                exception_sm;
+    sc_signal<sc_uint<32>>         data_sm;
+    sc_signal<bool>                wb_sm;
 
     // Global Interface :
 
-    sc_out<bool> EXCEPTION_RM ; 
-    sc_out<sc_uint<32>> MTVEC_VALUE_RM ; 
-    sc_in_clk CLK;
-    sc_in_clk RESET;
+    sc_out<bool>        EXCEPTION_RM;
+    sc_out<sc_uint<32>> MTVEC_VALUE_RM;
+    sc_in_clk           CLK;
+    sc_in_clk           RESET;
 
     // Interruption :
 
@@ -94,14 +94,14 @@ SC_MODULE(mem) {
 
     sc_out<sc_uint<12>> CSR_WADR_SM;
     sc_out<sc_uint<32>> CSR_WDATA_SM;
-    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM ;
+    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
-    sc_out<sc_uint<32>> MSTATUS_WDATA_RM ;
-    sc_out<sc_uint<32>> MIP_WDATA_RM ;
-    sc_out<sc_uint<32>> MEPC_WDATA_RM ;
-    sc_out<sc_uint<32>> MCAUSE_WDATA_RM ;
-    sc_in<sc_uint<32>> MTVEC_VALUE_RC ;
-    sc_in<sc_uint<32>> MIP_VALUE_RC ;
+    sc_out<sc_uint<32>> MSTATUS_WDATA_RM;
+    sc_out<sc_uint<32>> MIP_WDATA_RM;
+    sc_out<sc_uint<32>> MEPC_WDATA_RM;
+    sc_out<sc_uint<32>> MCAUSE_WDATA_RM;
+    sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
+    sc_in<sc_uint<32>>  MIP_VALUE_RC;
 
     // FIFO
     fifo<mem2wbk_size> fifo_inst;
@@ -126,8 +126,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm
-        << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << MTVEC_VALUE_RC;
+        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << MTVEC_VALUE_RC;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
@@ -137,9 +136,8 @@ SC_MODULE(mem) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE
-        << MIP_VALUE_RC << PC_EXE2MEM_RE << INSTRUCTION_ACCESS_FAULT_RE<< ECALL_I_RE << EBREAK_I_RE
-        << ILLEGAL_INSTRUCTION_RE << ADRESS_MISSALIGNED_RE << SYSCALL_U_MODE_RE << SYSCALL_M_MODE_RE
-        << BUS_ERROR_SX ;
+        sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE << MIP_VALUE_RC
+                  << PC_EXE2MEM_RE << INSTRUCTION_ACCESS_FAULT_RE << ECALL_I_RE << EBREAK_I_RE << ILLEGAL_INSTRUCTION_RE
+                  << ADRESS_MISSALIGNED_RE << SYSCALL_U_MODE_RE << SYSCALL_M_MODE_RE << BUS_ERROR_SX;
     }
 };

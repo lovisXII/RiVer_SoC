@@ -3,7 +3,7 @@
 void ifetch::fetch_method() {
     sc_bv<64> if2dec_in_var;
     sc_bv<64> instr_ri_var = instr_ri.read();
-    if(EXCEPTION_RM.read() == 0){
+    if (EXCEPTION_RM.read() == 0) {
         ADR_SI.write(PC_RD.read());
 
         // data sent in if2dec
@@ -16,38 +16,34 @@ void ifetch::fetch_method() {
         INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
         PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
 
-       
-    }
-    else{
+    } else {
         // data sent in if2dec
 
-        if2dec_in_var.range(63, 32) = nop_encoding ;
+        if2dec_in_var.range(63, 32) = nop_encoding;
         if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
         // data coming out from if2dec :
 
         INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
         PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
-
     }
     if (IF2DEC_FLUSH_SD.read()) {
-            IF2DEC_PUSH_SI.write(false);
-            DEC2IF_POP_SI.write(true);
-            ADR_VALID_SI.write(false);
-        } else {
-            // stall if the memory stalls, if we can't push to dec, or have no value
-            // of pc to pop from dec
-            bool stall = IC_STALL_SI.read() || IF2DEC_FULL_SI.read() || DEC2IF_EMPTY_SI.read();
-            IF2DEC_PUSH_SI.write(!stall);
-            DEC2IF_POP_SI.write(!stall);
-            ADR_VALID_SI.write(!DEC2IF_EMPTY_SI.read());
-        }
-
+        IF2DEC_PUSH_SI.write(false);
+        DEC2IF_POP_SI.write(true);
+        ADR_VALID_SI.write(false);
+    } else {
+        // stall if the memory stalls, if we can't push to dec, or have no value
+        // of pc to pop from dec
+        bool stall = IC_STALL_SI.read() || IF2DEC_FULL_SI.read() || DEC2IF_EMPTY_SI.read();
+        IF2DEC_PUSH_SI.write(!stall);
+        DEC2IF_POP_SI.write(!stall);
+        ADR_VALID_SI.write(!DEC2IF_EMPTY_SI.read());
+    }
 }
 
-void ifetch::exception() // can be usefull for further use
+void ifetch::exception()  // can be usefull for further use
 {
-    EXCEPTION_RI.write(0) ;
+    EXCEPTION_RI.write(0);
 }
 void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, ADR_SI, GET_NAME(ADR_SI));

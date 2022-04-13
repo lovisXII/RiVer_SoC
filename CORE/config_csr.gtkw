@@ -43,7 +43,7 @@ SystemC.core_inst.decod.csrrw_i_sd
 SystemC.core_inst.decod.CSR_RDATA_SC[31:0]
 SystemC.core_inst.decod.exe_op1_sd[31:0]
 @28
-SystemC.core_inst.decod.csr_wenable_rd
+SystemC.core_inst.decod.csr_wenable_sd
 @22
 SystemC.core_inst.exec.DEST_RE[5:0]
 SystemC.core_inst.decod.adr_dest_sd[5:0]

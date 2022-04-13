@@ -26,23 +26,12 @@ SC_MODULE(shifter) {
 
     SC_CTOR(shifter) {
         SC_METHOD(decode_cmd);
-        sensitive 
-			<< CMD_SE;
+        sensitive << CMD_SE;
         SC_METHOD(shifter_sll);
-        sensitive 
-			<< DIN_SE 
-			<< SHIFT_VAL_SE;
+        sensitive << DIN_SE << SHIFT_VAL_SE;
         SC_METHOD(shifter_sr);
-        sensitive 
-			<< DIN_SE 
-			<< SHIFT_VAL_SE 
-			<< sra_se;
+        sensitive << DIN_SE << SHIFT_VAL_SE << sra_se;
         SC_METHOD(shifter_agregate);
-        sensitive 
-			<< sll_dout_se 
-			<< sr_dout_se 
-			<< sll_se 
-			<< srl_se 
-			<< sra_se;
+        sensitive << sll_dout_se << sr_dout_se << sll_se << srl_se << sra_se;
     }
 };
