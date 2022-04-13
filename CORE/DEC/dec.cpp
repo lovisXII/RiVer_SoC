@@ -373,7 +373,7 @@ void decod::decoding_instruction() {
         csrrw_i_sd.write(1);
     else
         csrrw_i_sd.write(0);
-    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b001)
+    if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b010)
         csrrs_i_sd.write(1);
     else
         csrrs_i_sd.write(0);

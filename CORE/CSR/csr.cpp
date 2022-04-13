@@ -13,7 +13,8 @@ void csr::writing_csr() {
     while (1) {
         if (CSR_ENABLE_BEFORE_FIFO_SM.read()) {
             sc_uint<32> mstatus = csr_rc[3].read();
-            switch (CSR_WADR_SM.read()) {
+            sc_uint<32> csr_wadr_sm = CSR_WADR_SM.read() ;
+            switch (csr_wadr_sm) {
                 case 0xF11: break;                                  // mvendorid
                 case 0xF12: break;                                  // marchid
                 case 0xF13: break;                                  // mimpid
@@ -26,10 +27,10 @@ void csr::writing_csr() {
                 case 0x343: csr_rc[10].write(CSR_WDATA_SM); break;  // mtval
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM); break;  // mip
                 case 0x300:
-                    mstatus[3]  = CSR_WDATA_SM[3];
-                    mstatus[7]  = CSR_WDATA_SM[7];
-                    mstatus[11] = CSR_WDATA_SM[11];
-                    mstatus[12] = CSR_WDATA_SM[12];
+                    mstatus[3]  = csr_wadr_sm[3];
+                    mstatus[7]  = csr_wadr_sm[7];
+                    mstatus[11] = csr_wadr_sm[11];
+                    mstatus[12] = csr_wadr_sm[12];
                     break;  // mstatus
                 default: break;
             }
