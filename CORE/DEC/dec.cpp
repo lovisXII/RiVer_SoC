@@ -1061,6 +1061,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_wenable_sd, GET_NAME(csr_wenable_sd));
     sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
     sc_trace(tf, offset_branch_sd, GET_NAME(offset_branch_sd));
+    sc_trace(tf, csr_in_progress, GET_NAME(csr_in_progress));
 
     // PC gestion :
 
