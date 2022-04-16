@@ -196,15 +196,15 @@ implementation is to simply implement WFI as a NOP." bah ok alors
 * Illegal instruction             -> instruction doesnt exist, ``DEC``
 * Breakpoint                      -> not implemented  
 * Load address misaligned         -> ``EXE``
-* Load access fault               ->  
-* Store/AMO address misaligned    ->
-* Store/AMO access fault          ->
+* Load access fault               ->  ``MEM``, bus error
+* Store/AMO address misaligned    -> not implemented  
+* Store/AMO access fault          -> not implemented  
 * Environment call from U-mode    -> ``DEC``
-* Environment call from S-mode    -> ``DEC``
+* Environment call from S-mode    -> not implemented  
 * Environment call from M-mode    -> ``DEC``
-* Instruction page fault          ->
-* Load page fault                 ->
-* Store/AMO page fault            ->
+* Instruction page fault          -> not implemented  
+* Load page fault                 -> not implemented  
+* Store/AMO page fault            -> not implemented  
 
 ## IFETCH :
 

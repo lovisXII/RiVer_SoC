@@ -7,6 +7,7 @@ void core::trace(sc_trace_file* tf) {
     mem_inst.trace(tf);
     wbk_inst.trace(tf);
     reg_inst.trace(tf);
+    csr_inst.trace(tf);
 }
 
 void core::core_method() {

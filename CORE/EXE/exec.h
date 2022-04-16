@@ -6,6 +6,8 @@
 #include "../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
+#define exe2mem_size        162
+#define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
     // Input/Output of EXE :
 
@@ -35,22 +37,40 @@ SC_MODULE(exec) {
 
     // Exception coming from Decod :
 
-    sc_in<bool> ECALL_I_SD;
-    sc_in<bool> EBREAK_I_SD;
-    sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
-    sc_in<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
-    sc_in<bool> SYSCALL_U_MODE_SD;
-    sc_in<bool> SYSCALL_S_MODE_SD;
-
     sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
+
+    sc_in<bool> ECALL_I_RD;
+    sc_in<bool> EBREAK_I_RD;
+    sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
+    sc_in<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
+    sc_in<bool> SYSCALL_U_MODE_RD;
+    sc_in<bool> SYSCALL_M_MODE_RD;
+
+    sc_out<bool> EXCEPTION_RE;
+    sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
+    sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_out<bool> ECALL_I_RE;
+    sc_out<bool> EBREAK_I_RE;
+    sc_out<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
+    sc_out<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_out<bool> SYSCALL_U_MODE_RE;
+    sc_out<bool> SYSCALL_M_MODE_RE;
 
     // Interruption :
 
     sc_out<bool> INTERRUPTION_SE;
     sc_in<bool>  INTERRUPTION_SX;  // asynchrone Interruption from outside
 
+    // bypasses
+
+    sc_in<sc_uint<6>>  MEM_DEST_RM;
+    sc_in<sc_uint<32>> MEM_RES_RM;
+    sc_in<bool>        CSR_WENABLE_RM;
+    sc_in<sc_uint<32>> CSR_RDATA_RM;
+
     // Genral Interface :
 
+    sc_in<bool> EXCEPTION_RM;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
 
@@ -74,8 +94,8 @@ SC_MODULE(exec) {
 
     sc_signal<sc_uint<32>> exe_res_se;
 
-    sc_signal<sc_bv<153>> exe2mem_din_se;  // concatenation of exe_res, mem_data...etc
-    sc_signal<sc_bv<153>> exe2mem_dout_se;
+    sc_signal<sc_bv<exe2mem_size>> exe2mem_din_se;  // concatenation of exe_res, mem_data...etc
+    sc_signal<sc_bv<exe2mem_size>> exe2mem_dout_se;
 
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
@@ -92,18 +112,17 @@ SC_MODULE(exec) {
     sc_signal<bool> mem_load_re;
     sc_signal<bool> mem_store_re;
 
-    // bypasses
+    // Exception :
 
-    sc_in<sc_uint<6>>  MEM_DEST_RM;
-    sc_in<sc_uint<32>> MEM_RES_RM;
-    sc_in<bool>        CSR_WENABLE_RM;
-    sc_in<sc_uint<32>> CSR_RDATA_RM;
+    sc_signal<bool> exception_se;
+    sc_signal<bool> load_adress_missaligned_se;   // adress from store/load isn't aligned
+    sc_signal<bool> instruction_access_fault_se;  // trying to access memory in wrong mode
 
     // Instance used :
 
-    alu       alu_inst;
-    shifter   shifter_inst;
-    fifo<153> fifo_inst;
+    alu                alu_inst;
+    shifter            shifter_inst;
+    fifo<exe2mem_size> fifo_inst;
 
     void preprocess_op();    // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res();  // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT
@@ -148,7 +167,10 @@ SC_MODULE(exec) {
         sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
-                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re;
+                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
+                  << CSR_RDATA_RD << ECALL_I_RD << EBREAK_I_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD
+                  << SYSCALL_U_MODE_RD << SYSCALL_M_MODE_RD << exception_se << load_adress_missaligned_se
+                  << instruction_access_fault_se;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);

@@ -19,11 +19,7 @@ SC_MODULE(fifo) {
     SC_CTOR(fifo) {
         SC_CTHREAD(function, fifo::CLK.pos());
         SC_METHOD(flags_update);
-        sensitive 
-			<< PUSH_S 
-			<< POP_S 
-			<< fifo_v 
-			<< DOUT_R;
+        sensitive << PUSH_S << POP_S << fifo_v << DOUT_R;
 
         reset_signal_is(RESET_N, false);
     }

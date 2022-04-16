@@ -61,3 +61,10 @@ To align sensitivity list :
 \n
 \t\t\t$1
 ```
+7. 
+```
+sc_[\w]+<([\w]+|sc_[\w]+<[\w]+>)>[\s]+[\w]+([\s]+|);
+```
+```
+sc_trace(tf,$2,GET_NAME($2));
+```

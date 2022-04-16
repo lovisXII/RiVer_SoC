@@ -71,13 +71,13 @@ int sc_main(int argc, char** argv) {
                 start = end + 1;
             }
             // std::cout <<RAM_block<<" : "
-			<< RAM[RAM_block][0] << " " <<
+            << RAM[RAM_block][0] << " " <<
             // RAM[RAM_block][1]
-            //          << " " 
-			<< RAM[RAM_block][2] << " " 
-			<< RAM[RAM_block][3]
-            //          
-			<< std::endl;
+            //          << " "
+            << RAM[RAM_block][2] << " "
+            << RAM[RAM_block][3]
+            //
+            << std::endl;
             RAM_block++;
         }
         ram_file.close();
@@ -141,8 +141,7 @@ int sc_main(int argc, char** argv) {
     unit_dcache.trace(tf);
 
     // RESET
-    cout << "Reseting...." 
-			<< endl;
+    cout << "Reseting...." << endl;
     RESET.write(true);
     sc_start(3, SC_NS);
     RESET.write(false);

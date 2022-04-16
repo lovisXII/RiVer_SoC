@@ -3,19 +3,30 @@
 void ifetch::fetch_method() {
     sc_bv<64> if2dec_in_var;
     sc_bv<64> instr_ri_var = instr_ri.read();
+    if (EXCEPTION_RM.read() == 0) {
+        ADR_SI.write(PC_RD.read());
 
-    ADR_SI.write(PC_RD.read());
+        // data sent in if2dec
 
-    // data sent in if2dec
+        if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
+        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
+        if2dec_in_si.write(if2dec_in_var);
+        // data coming out from if2dec :
 
-    if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
-    if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
-    if2dec_in_si.write(if2dec_in_var);
-    // data coming out from if2dec :
+        INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
+        PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
 
-    INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
-    PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
+    } else {
+        // data sent in if2dec
 
+        if2dec_in_var.range(63, 32) = nop_encoding;
+        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
+        if2dec_in_si.write(if2dec_in_var);
+        // data coming out from if2dec :
+
+        INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
+        PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
+    }
     if (IF2DEC_FLUSH_SD.read()) {
         IF2DEC_PUSH_SI.write(false);
         DEC2IF_POP_SI.write(true);
@@ -28,6 +39,11 @@ void ifetch::fetch_method() {
         DEC2IF_POP_SI.write(!stall);
         ADR_VALID_SI.write(!DEC2IF_EMPTY_SI.read());
     }
+}
+
+void ifetch::exception()  // can be usefull for further use
+{
+    EXCEPTION_RI.write(0);
 }
 void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, ADR_SI, GET_NAME(ADR_SI));
@@ -48,5 +64,8 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, RESET, GET_NAME(RESET));
     sc_trace(tf, if2dec_in_si, GET_NAME(if2dec_in_si));
     sc_trace(tf, instr_ri, GET_NAME(instr_ri));
+    sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
+    sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
+    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     fifo_inst.trace(tf);
 }

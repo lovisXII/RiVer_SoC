@@ -1,19 +1,21 @@
 #include "mem.h"
 
 void mem::mem2wbk_concat() {
-    sc_bv<107> ff_din;
+    sc_bv<mem2wbk_size> ff_din;
 
-    ff_din.range(31, 0)   = data_sm.read();
-    ff_din.range(36, 32)  = DEST_RE.read();
-    ff_din[37]            = wb_sm.read();
-    ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
-    ff_din[74]            = CSR_WENABLE_RE.read();
-    ff_din.range(106, 75) = CSR_RDATA_RE.read();
+    ff_din.range(31, 0)    = data_sm.read();
+    ff_din.range(36, 32)   = DEST_RE.read();
+    ff_din[37]             = wb_sm.read();
+    ff_din.range(73, 38)   = PC_EXE2MEM_RE.read();
+    ff_din[74]             = CSR_WENABLE_RE.read();
+    ff_din.range(106, 75)  = CSR_RDATA_RE.read();
+    ff_din[107]            = exception_sm.read();
+    ff_din.range(139, 108) = MTVEC_VALUE_RC.read();  // value of mtvec
 
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
-    sc_bv<107> ff_dout = mem2wbk_dout_sm.read();
+    sc_bv<mem2wbk_size> ff_dout = mem2wbk_dout_sm.read();
 
     MEM_RES_RM.write((sc_bv_base)ff_dout.range(31, 0));
     DEST_RM.write((sc_bv_base)ff_dout.range(36, 32));
@@ -21,6 +23,8 @@ void mem::mem2wbk_unconcat() {
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
+    EXCEPTION_RM.write((bool)ff_dout[107]);
+    MTVEC_VALUE_RM.write((sc_bv_base)ff_dout.range(139, 108));
 }
 
 void mem::fifo_gestion() {
@@ -70,13 +74,73 @@ void mem::sign_extend() {
     }
 }
 
-void mem::csr() {
-    if (CSR_WENABLE_RE.read()) {
-        CSR_WADR_SM.write(CSR_WADR_SE.read());
-        CSR_WDATA_SM.write(EXE_RES_RE.read());
-    } else {
-        CSR_WADR_SM.write(0);
-        CSR_WDATA_SM.write(0);
+void mem::csr_exception() {
+    exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
+    if (exception_sm == 0) {
+        if (CSR_WENABLE_RE.read()) {
+            CSR_WADR_SM.write(CSR_WADR_SE.read());
+            CSR_WDATA_SM.write(EXE_RES_RE.read());
+            CSR_ENABLE_BEFORE_FIFO_SM.write(true);
+        } else {
+            CSR_WADR_SM.write(0);
+            CSR_WDATA_SM.write(0);
+            CSR_ENABLE_BEFORE_FIFO_SM.write(0);
+        }
+    } else {  // Affectation of the cause
+        if (LOAD_ADRESS_MISSALIGNED_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(4);
+        }
+        if (INSTRUCTION_ACCESS_FAULT_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFD);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(1);
+        }
+        if (ECALL_I_RE) {
+            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            // MCAUSE_WDATA_RM.write(0);
+        }
+        if (EBREAK_I_RE) {
+            // MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
+            // MIP_WDATA_RM.write(0x1800);
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            // MCAUSE_WDATA_RM.write(0);
+        }
+        if (ILLEGAL_INSTRUCTION_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFB);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(2);
+        }
+        if (ADRESS_MISSALIGNED_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(0);
+        }
+        if (SYSCALL_U_MODE_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFEFF);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(8);
+        }
+        if (SYSCALL_M_MODE_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFBFF);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(11);
+        }
+        if (BUS_ERROR_SX) {  // load access fault
+            MSTATUS_WDATA_RM.write(0x1800);
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(5);
+        }
     }
 }
 
@@ -119,5 +183,28 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
     sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
+    sc_trace(tf, EXCEPTION_RE, GET_NAME(EXCEPTION_RE));
+    sc_trace(
+        tf, LOAD_ADRESS_MISSALIGNED_RE, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE));  // adress from store/load isn't aligned
+    sc_trace(tf,
+             INSTRUCTION_ACCESS_FAULT_RE,
+             GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
+    sc_trace(tf, ECALL_I_RE, GET_NAME(ECALL_I_RE));
+    sc_trace(tf, EBREAK_I_RE, GET_NAME(EBREAK_I_RE));
+    sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
+    sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
+    sc_trace(tf, SYSCALL_U_MODE_RE, GET_NAME(SYSCALL_U_MODE_RE));
+    sc_trace(tf, SYSCALL_M_MODE_RE, GET_NAME(SYSCALL_M_MODE_RE));
+    sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
+    sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
+    sc_trace(tf, MTVEC_VALUE_RM, GET_NAME(MTVEC_VALUE_RM));
+    sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
+    sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
+    sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));
+    sc_trace(tf, MCAUSE_WDATA_RM, GET_NAME(MCAUSE_WDATA_RM));
+    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
+    sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
+    sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
+    sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     fifo_inst.trace(tf);
 }

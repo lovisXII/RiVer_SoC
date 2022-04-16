@@ -1,5 +1,8 @@
 #include <systemc.h>
+#include <iostream>
 #include "../UTIL/fifo.h"
+#define dec2exe_size 212
+
 SC_MODULE(decod) {
     // Interface with REG :
 
@@ -55,9 +58,9 @@ SC_MODULE(decod) {
 
     // Interface with DEC2EXE
 
-    sc_in<bool>           DEC2EXE_POP_SE;
-    sc_out<bool>          DEC2EXE_EMPTY_SD;
-    sc_signal<sc_bv<205>> dec2exe_out_sd;
+    sc_in<bool>                    DEC2EXE_POP_SE;
+    sc_out<bool>                   DEC2EXE_EMPTY_SD;
+    sc_signal<sc_bv<dec2exe_size>> dec2exe_out_sd;
 
     // Interface with CSR :
 
@@ -85,20 +88,22 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_in<bool> EXCEPTION_RI;
+    sc_in<bool> EXCEPTION_RI;  // this signal will be at 0 considering there is no exception in IFETCH
 
-    sc_out<bool> ECALL_I_SD;
-    sc_out<bool> EBREAK_I_SD;
-    sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
-    sc_out<bool> ADRESS_MISSALIGNED;      // branch offset is misaligned
-    sc_out<bool> SYSCALL_U_MODE_SD;
-    sc_out<bool> SYSCALL_S_MODE_SD;
+    sc_out<bool> ECALL_I_RD;
+    sc_out<bool> EBREAK_I_RD;
+    sc_out<bool> ILLEGAL_INSTRUCTION_RD;  // instruction doesnt exist
+    sc_out<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
+    sc_out<bool> SYSCALL_U_MODE_RD;
+    sc_out<bool> SYSCALL_M_MODE_RD;
 
     sc_out<bool> EXCEPTION_RD;
     // General Interface :
 
-    sc_in_clk   CLK;
-    sc_in<bool> RESET_N;
+    sc_in<bool>        EXCEPTION_RM;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RM;
+    sc_in_clk          CLK;
+    sc_in<bool>        RESET_N;
 
     // Interruption :
 
@@ -106,8 +111,8 @@ SC_MODULE(decod) {
 
     // Instance used :
 
-    fifo<32>  dec2if;
-    fifo<205> dec2exe;
+    fifo<32>           dec2if;
+    fifo<dec2exe_size> dec2exe;
 
     // Signals :
 
@@ -128,9 +133,9 @@ SC_MODULE(decod) {
 
     // fifo dec2exe :
 
-    sc_signal<sc_bv<205>> dec2exe_in_sd;
-    sc_signal<bool>       dec2exe_push_sd;
-    sc_signal<bool>       dec2exe_full_sd;
+    sc_signal<sc_bv<dec2exe_size>> dec2exe_in_sd;
+    sc_signal<bool>                dec2exe_push_sd;
+    sc_signal<bool>                dec2exe_full_sd;
 
     // Instruction format type :
 
@@ -213,9 +218,11 @@ SC_MODULE(decod) {
     sc_signal<bool> csrrsi_i_sd;
     sc_signal<bool> csrrci_i_sd;
 
+    sc_signal<bool> csr_in_progress;
+
     // Signal for Kernel usage
 
-    sc_signal<bool>        csr_wenable_rd;
+    sc_signal<bool>        csr_wenable_sd;
     sc_signal<sc_uint<12>> csr_radr_sd;
 
     // Offset for branch :
@@ -246,12 +253,10 @@ SC_MODULE(decod) {
 
     // Exception :
 
-    sc_signal<bool> exception_ri;
-
     sc_signal<bool> ecall_i_sd;
     sc_signal<bool> ebreak_i_sd;
-    sc_signal<bool> illegal_instruction_rd;  // accessing stuff in wrong mode
-    sc_signal<bool> adress_missaligned;      // branch offset is misaligned
+    sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
+    sc_signal<bool> adress_missaligned_sd;   // branch offset is misaligned
     sc_signal<bool> syscall_u_mode_sd;
     sc_signal<bool> syscall_s_mode_sd;
 
@@ -291,61 +296,246 @@ SC_MODULE(decod) {
         SC_METHOD(dec2if_gestion)
         sensitive
 
-            << dec2if_empty_sd << dec2if_full_sd << stall;
+            
+			<< dec2if_empty_sd 
+			<< dec2if_full_sd 
+			<< stall 
+			<< EXCEPTION_RM;
 
         SC_METHOD(concat_dec2exe)
-        sensitive << dec2exe_in_sd << exe_op1_sd << exe_op2_sd << exe_cmd_sd << exe_neg_op2_sd << exe_wb_sd
-                  << mem_data_sd << mem_load_sd << mem_store_sd
+        sensitive 
+			<< dec2exe_in_sd 
+			<< exe_op1_sd 
+			<< exe_op2_sd 
+			<< exe_cmd_sd 
+			<< exe_neg_op2_sd 
+			<< exe_wb_sd
 
-                  << mem_sign_extend_sd << mem_size_sd << select_shift_sd << adr_dest_sd << slti_i_sd << slt_i_sd
-                  << sltiu_i_sd << sltu_i_sd << RADR1_SD
+                  
+			<< mem_data_sd 
+			<< mem_load_sd 
+			<< mem_store_sd
 
-                  << RADR2_SD << r1_valid_sd << r2_valid_sd << PC_IF2DEC_RI;
+                  
+			<< mem_sign_extend_sd 
+			<< mem_size_sd 
+			<< select_shift_sd 
+			<< adr_dest_sd 
+			<< slti_i_sd 
+			<< slt_i_sd
+
+                  
+			<< sltiu_i_sd 
+			<< sltu_i_sd 
+			<< RADR1_SD
+
+                  
+			<< RADR2_SD 
+			<< r1_valid_sd 
+            << EXCEPTION_RM
+			<< r2_valid_sd 
+			<< PC_IF2DEC_RI 
+			<< csr_wenable_sd
+            <<  ecall_i_sd << ebreak_i_sd 
+            << illegal_instruction_sd 
+            << adress_missaligned_sd 
+            << syscall_u_mode_sd << syscall_s_mode_sd;
         SC_METHOD(unconcat_dec2exe)
-        sensitive << dec2exe_out_sd;
+        sensitive 
+			<< dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
-        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall;
+        sensitive 
+			<< dec2exe_full_sd 
+			<< IF2DEC_EMPTY_SI 
+			<< stall 
+			<< EXCEPTION_RM;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall;
+        sensitive 
+			<< IF2DEC_EMPTY_SI 
+			<< dec2exe_full_sd 
+			<< add_offset_to_pc_sd 
+			<< stall 
+			<< EXCEPTION_RM;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
-                  << block_in_dec;
+        sensitive 
+			<< b_type_inst_sd 
+			<< jalr_type_inst_sd 
+			<< j_type_inst_sd 
+			<< r1_valid_sd 
+			<< r2_valid_sd
+            << csr_wenable_sd
+            << DEC2EXE_EMPTY_SD
+            << CSR_WENABLE_RE
+            << BP_EXE2MEM_EMPTY_SE
+            << csr_in_progress
+                  
+			<< block_in_dec;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive << INSTR_RI << READ_PC_SR;
+        sensitive 
+			<< INSTR_RI 
+			<< READ_PC_SR;
         SC_METHOD(decoding_instruction)
-        sensitive << INSTR_RI;
+        sensitive 
+			<< INSTR_RI;
         SC_METHOD(pre_reg_read_decoding)
-        sensitive << INSTR_RI << r_type_inst_sd << i_type_inst_sd
+        sensitive 
+			<< INSTR_RI 
+			<< r_type_inst_sd 
+			<< i_type_inst_sd
 
-                  << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
-                  << jalr_type_inst_sd << beq_i_sd << bne_i_sd
+                  
+			<< i_type_inst_sd 
+			<< s_type_inst_sd 
+			<< b_type_inst_sd 
+			<< u_type_inst_sd 
+			<< j_type_inst_sd
 
-                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd;
+                  
+			<< jalr_type_inst_sd 
+			<< beq_i_sd 
+			<< bne_i_sd
+
+                  
+			<< blt_i_sd 
+			<< bge_i_sd 
+			<< bltu_i_sd 
+			<< bgeu_i_sd 
+			<< system_type_inst_sd 
+			<< csrrw_i_sd 
+			<< csrrs_i_sd
+
+                  
+			<< csrrc_i_sd 
+			<< csrrwi_i_sd 
+			<< csrrsi_i_sd 
+			<< csrrci_i_sd 
+			<< ecall_i_sd 
+			<< ebreak_i_sd;
         SC_METHOD(post_reg_read_decoding)
-        sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
-                  << jalr_type_inst_sd << beq_i_sd << bne_i_sd
+        sensitive 
+			<< i_type_inst_sd 
+			<< s_type_inst_sd 
+			<< b_type_inst_sd 
+			<< u_type_inst_sd 
+			<< j_type_inst_sd
 
-                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << IF2DEC_EMPTY_SI << dec2if_push_sd << READ_PC_SR
-                  << stall << dec2if_push_sd << add_i_sd << slt_i_sd << sltu_i_sd << and_i_sd << or_i_sd << xor_i_sd
-                  << sll_i_sd << srl_i_sd << sub_i_sd << sra_i_sd << addi_i_sd
+                  
+			<< jalr_type_inst_sd 
+			<< beq_i_sd 
+			<< bne_i_sd
 
-                  << slti_i_sd << sltiu_i_sd << andi_i_sd << ori_i_sd << xori_i_sd << jalr_i_sd << slli_i_sd
-                  << srli_i_sd << srai_i_sd << lw_i_sd << lh_i_sd
+                  
+			<< blt_i_sd 
+			<< bge_i_sd 
+			<< bltu_i_sd 
+			<< bgeu_i_sd 
+			<< IF2DEC_EMPTY_SI 
+			<< dec2if_push_sd 
+			<< READ_PC_SR
 
-                  << lhu_i_sd << lb_i_sd << lbu_i_sd << beq_i_sd << bne_i_sd << blt_i_sd << bge_i_sd << bltu_i_sd
-                  << bgeu_i_sd << lui_i_sd << auipc_i_sd
+                  
+			<< stall 
+			<< dec2if_push_sd 
+			<< add_i_sd 
+			<< slt_i_sd 
+			<< sltu_i_sd 
+			<< and_i_sd 
+			<< or_i_sd 
+			<< xor_i_sd
 
-                  << jal_i_sd << sw_i_sd << sh_i_sd << sb_i_sd << j_type_inst_sd << jalr_type_inst_sd << dec2exe_push_sd
-                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd;
+                  
+			<< sll_i_sd 
+			<< srl_i_sd 
+			<< sub_i_sd 
+			<< sra_i_sd 
+			<< addi_i_sd
+
+                  
+			<< slti_i_sd 
+			<< sltiu_i_sd 
+			<< andi_i_sd 
+			<< ori_i_sd 
+			<< xori_i_sd 
+			<< jalr_i_sd 
+			<< slli_i_sd
+
+                  
+			<< srli_i_sd 
+			<< srai_i_sd 
+			<< lw_i_sd 
+			<< lh_i_sd
+
+                  
+			<< lhu_i_sd 
+			<< lb_i_sd 
+			<< lbu_i_sd 
+			<< beq_i_sd 
+			<< bne_i_sd 
+			<< blt_i_sd 
+			<< bge_i_sd 
+			<< bltu_i_sd
+
+                  
+			<< bgeu_i_sd 
+			<< lui_i_sd 
+			<< auipc_i_sd
+
+                  
+			<< jal_i_sd 
+			<< sw_i_sd 
+			<< sh_i_sd 
+			<< sb_i_sd 
+			<< j_type_inst_sd 
+			<< jalr_type_inst_sd 
+			<< dec2exe_push_sd
+
+                  
+			<< rdata1_sd 
+			<< rdata2_sd 
+			<< r1_valid_sd 
+			<< r2_valid_sd 
+			<< system_type_inst_sd 
+			<< csrrw_i_sd
+
+                  
+			<< csrrs_i_sd 
+			<< csrrc_i_sd 
+			<< csrrwi_i_sd 
+			<< csrrsi_i_sd 
+			<< csrrci_i_sd 
+			<< CSR_RDATA_SC 
+			<< ecall_i_sd
+
+                  
+			<< ebreak_i_sd;
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd;
+        sensitive 
+			<< CLK.pos() 
+			<< READ_PC_SR 
+			<< offset_branch_sd 
+			<< inc_pc_sd 
+			<< add_offset_to_pc_sd 
+			<< MTVEC_VALUE_RM
+
+                  
+			<< EXCEPTION_RM;
 
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD
-                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE;
+        sensitive 
+			<< RDATA1_SR 
+			<< RDATA2_SR 
+			<< BP_DEST_RE 
+			<< BP_EXE_RES_RE 
+			<< BP_DEST_RM 
+			<< BP_MEM_RES_RM 
+			<< RADR1_SD
+
+                  
+			<< RADR2_SD 
+			<< BP_EXE2MEM_EMPTY_SE;
         reset_signal_is(RESET_N, false);
     }
 };
