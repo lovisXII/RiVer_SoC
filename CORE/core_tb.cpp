@@ -1,3 +1,6 @@
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <string>
 #include <unordered_map>
 #include "UTIL/colors.h"
@@ -15,13 +18,21 @@ int sc_main(int argc, char* argv[]) {
     int                     start_adr;
     int                     good_adr;
     int                     bad_adr;
-    char                    test[512] = "> a.out.txt";
-    string                  opt;
-    if (argc >= 3 && std::string(argv[2]) == "O") {
+    int                     rvtest_code_end;
+    int                     rvtest_entry_point;
+    int                     begin_signature;
+    int                     end_signature;
+
+    char   test[512] = "> a.out.txt";
+    string opt;
+    string signature_name;
+    bool   riscof;
+    if (argc >= 3 && std::string(argv[2]) == "-O") {
         opt = "-O2";
-    } else {
-        opt = "";
-    }
+    } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
+        signature_name = string(argv[3]);
+        riscof         = true;
+    };
 
     if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
         char temp[512];
@@ -105,6 +116,22 @@ int sc_main(int argc, char* argv[]) {
                     cout << "Found good" << endl;
                     good_adr = value;
                 }
+                if (name == "rvtest_code_end") {
+                    cout << "Found rvtest_code_end" << endl;
+                    rvtest_code_end = value;
+                }
+                if (name == "rvtest_entry_point") {
+                    cout << "Found rvtest_entry_point" << endl;
+                    start_adr = value;
+                }
+                if (name == "begin_signature") {
+                    cout << "Found begin_signature" << endl;
+                    begin_signature = value;
+                }
+                if (name == "end_signature") {
+                    cout << "Found end_signature" << endl;
+                    end_signature = value;
+                }
             }
         }
     }
@@ -159,8 +186,11 @@ int sc_main(int argc, char* argv[]) {
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
     cerr << "done." << endl;
-
+    int cycles = 0;
+    int countdown;
     while (1) {
+        if (countdown) countdown--;
+        cycles++;
         int  mem_adr       = MEM_ADR.read();
         bool mem_adr_valid = MEM_ADR_VALID.read();
         int  mem_data      = MEM_DATA.read();
@@ -173,13 +203,25 @@ int sc_main(int argc, char* argv[]) {
         int  if_result;
 
         int pc_adr = PC_VALUE.read();
-        if (pc_adr == bad_adr) {
+        if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
-        } else if (pc_adr == good_adr) {
+        } else if (signature_name == "" && pc_adr == good_adr) {
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
+            exit(0);
+        } else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
+            countdown = 10;
+        }
+        if (countdown == 1) {
+            cout << "Test ended at " << std::hex << pc_adr << endl;
+            sc_start(3, SC_NS);
+            ofstream signature;
+            signature.open(signature_name, ios::out | ios::trunc);
+            for (int i = begin_signature + 4; i <= end_signature; i += 4) {
+                signature << setfill('0') << setw(8) << hex << ram[i] << endl;
+            }
             exit(0);
         }
 

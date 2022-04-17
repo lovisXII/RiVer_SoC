@@ -166,7 +166,7 @@ void decod::decoding_instruction_type() {
     i_type_inst_sd      = (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1 : 0;
     s_type_inst_sd      = if_ir.range(6, 0) == 0b0100011 ? 1 : 0;
     b_type_inst_sd      = if_ir.range(6, 0) == 0b1100011 ? 1 : 0;
-    u_type_inst_sd      = if_ir.range(6, 0) == 0b0110111 ? 1 : 0;
+    u_type_inst_sd      = (if_ir.range(6, 0) == 0b0110111 || if_ir.range(6, 0) == 0b0010111) ? 1 : 0;
     j_type_inst_sd      = if_ir.range(6, 0) == 0b1101111 ? 1 : 0;
     jalr_type_inst_sd   = if_ir.range(6, 0) == 0b1100111 ? 1 : 0;
     system_type_inst_sd = if_ir.range(6, 0) == 0b1110011 ? 1 : 0;
@@ -430,7 +430,7 @@ void decod::pre_reg_read_decoding() {
         // on case of an auipc instruction we need to send PC+imm to rd
         // so we need to get the value from r33
         if (auipc_i_sd == 1)
-            radr2_var = 0x2F;
+            radr2_var = 0x20;
         else
             radr2_var = 0;
         CSR_RADR_SD.write(0);

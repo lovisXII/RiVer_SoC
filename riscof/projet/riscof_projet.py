@@ -36,7 +36,7 @@ class projet(pluginTemplate):
         # test-bench produced by a simulator (like verilator, vcs, incisive, etc). In case of an iss or
         # emulator, this variable could point to where the iss binary is located. If 'PATH variable
         # is missing in the config.ini we can hardcode the alternate here.
-        self.dut_exe = os.path.join(config['PATH'] if 'PATH' in config else "","projet")
+        self.dut_exe = config['PATH']
 
         # Number of parallel jobs that can be spawned off by RISCOF
         # for various actions performed in later functions, specifically to run the tests in
@@ -158,7 +158,7 @@ class projet(pluginTemplate):
 	  # echo statement.
           if self.target_run:
             # set up the simulation command. Template is for spike. Please change.
-            simcmd = self.dut_exe + '+signature={0} +signature-granularity=4 {1}'.format(sig_file, elf)
+            simcmd = self.dut_exe + ' {0} --riscof {1}  >/dev/null 2>&1'.format(elf, sig_file)
           else:
             simcmd = 'echo "NO RUN"'
 
