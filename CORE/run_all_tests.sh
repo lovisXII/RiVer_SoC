@@ -14,7 +14,7 @@ for file in $(ls tests); do
         printf "${RED} failed\n${NOC}"
     fi
     printf "Test ${file} opt..." 
-    timeout 5s ./core_tb tests/$file O >/dev/null 2>&1
+    timeout 5s ./core_tb tests/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"

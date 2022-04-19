@@ -1,4 +1,7 @@
 # RISC-V-project
+
+This README file isn't complete, everything here is subject to modification. 
+
 # Introduction :
 This project as for purpose to modernise the architecture studied at Sorbonne University.\
 It was realised by Timothée Le Berre, Louis Geoffroy Pitailler & Kevin Lastra during their first year of Master SESI.\
