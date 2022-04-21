@@ -116,7 +116,7 @@ int sc_main(int argc, char* argv[]) {
                 }
                 if (name == "rvtest_entry_point") {
                     cout << "Found rvtest_entry_point" << endl;
-                    start_adr = value;
+                    start_adr = value - 4;
                 }
                 if (name == "begin_signature") {
                     cout << "Found begin_signature" << endl;
@@ -236,14 +236,7 @@ int sc_main(int argc, char* argv[]) {
             ram[rounded_mem_adr] |= (mask & (mem_data << offset));
         }
         mem_result = (ram[rounded_mem_adr] & mask) >> offset;
-        // printf("adr: %x, radr : %x, mask: %x, offset: %x, mem_size: %x, mem_result: %x\n",
-        //        mem_adr,
-        //        rounded_mem_adr,
-        //        mask,
-        //        offset,
-        //        mem_size,
-        //        mem_result);
-        if_result = ram[if_adr];
+        if_result  = ram[if_adr];
         MEM_RESULT.write(mem_result);
         MEM_STALL.write(false);
         IC_INST.write(if_result);

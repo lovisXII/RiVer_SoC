@@ -151,7 +151,7 @@ void exec::bypasses() {
     bool        blocked_var     = false;
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD.read();
 
-    if (RADR1_RD.read() == 0) {
+    if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
         op1_se.write(OP1_RD.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
         op1_se.write(CSR_RDATA_RE.read());
@@ -167,7 +167,7 @@ void exec::bypasses() {
         op1_se.write(OP1_RD.read());
     }
 
-    if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read()) {
+    if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read() || BLOCK_BP_RD.read()) {
         op2_se.write(OP2_RD.read());
     } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
         sc_uint<32> bp_value;
