@@ -1,6 +1,6 @@
-.section .text 
+.section .text
 .global _start
-.global _kernel
+
 
 _start:
     addi x1,x0,1
@@ -20,8 +20,10 @@ _bad:
 _good:
     nop
 
-.section .text.kernel 
+.section .kernel
+.global _mtvec
 
 _mtvec :
-    addi x1,x0,10
-    j _good
+    la x1, _good
+    jalr x0, 0(x1) 
+    

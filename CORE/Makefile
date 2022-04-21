@@ -8,8 +8,8 @@ OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o EXE/shifter.o EXE/e
 
 all: core_tb
 
-core_tb: $(OBJECTS)
-	$(CC) $^ -o $@ $(C_ARGS)
+core_tb: $(OBJECTS) 
+	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
 %.o: %.cpp  %.h
 	$(CC) -c $< $(C_ARGS) -o $@
