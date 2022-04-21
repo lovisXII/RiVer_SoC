@@ -52,7 +52,8 @@ int sc_main(int argc, char* argv[]) {
         system((char*)temp);
         path = "a.out";
     }
-    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle " << argv[1] << std::endl;
+    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle " 
+        std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return 2;
     }
     sprintf(temp_text, "riscv32-unknown-elf-objdump -D %s", path.c_str());
