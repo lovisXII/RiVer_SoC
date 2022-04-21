@@ -17,6 +17,7 @@ SC_MODULE(exec) {
     sc_in<bool>        OP2_VALID_RD;
     sc_in<sc_uint<6>>  RADR1_RD;
     sc_in<sc_uint<6>>  RADR2_RD;
+    sc_in<bool>        BLOCK_BP_RD;
 
     sc_in<sc_uint<32>> PC_DEC2EXE_RD;
     sc_in<sc_uint<32>> MEM_DATA_RD;

@@ -47,6 +47,7 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_RM.read() == 0) {
+        dec2exe_in_var[212] = block_bp_sd;
         dec2exe_in_var[211] = ecall_i_sd || ebreak_i_sd || illegal_instruction_sd || adress_missaligned_sd ||
                               syscall_u_mode_sd || syscall_s_mode_sd;  // tells if there is an exception
         dec2exe_in_var[210]            = ecall_i_sd.read();
@@ -81,6 +82,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
+        dec2exe_in_var[212]            = 0;
         dec2exe_in_var[211]            = 0;
         dec2exe_in_var[210]            = 0;
         dec2exe_in_var[209]            = 0;
@@ -121,6 +123,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    BLOCK_BP_RD.write((bool)dec2exe_out_var[212]);
     EXCEPTION_RD.write((bool)dec2exe_out_var[211]);
     ECALL_I_RD.write((bool)dec2exe_out_var[210]);
     EBREAK_I_RD.write((bool)dec2exe_out_var[209]);
@@ -808,7 +811,7 @@ void decod::post_reg_read_decoding() {
     illegal_inst = illegal_inst && !IF2DEC_EMPTY_SI.read();
 
     illegal_instruction_sd.write(illegal_inst);
-
+    block_bp_sd.write(jalr_type_inst_sd);
     exe_wb_sd.write(dec2exe_wb_var);
     offset_branch_sd.write(offset_branch_var);
     exe_op1_sd.write(dec2exe_op1_var);

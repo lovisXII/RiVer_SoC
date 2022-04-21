@@ -22,6 +22,7 @@ void reg::writing_adresse() {
         REG_RR[i].write(0);  // all register are initialized to 0
     }
     REG_RR[32].write(PC_INIT.read());
+    wait(1);
     while (1) {
         if (WRITE_PC_ENABLE_SD.read()) {
             REG_RR[32].write(WRITE_PC_SD);  // we write the data into the

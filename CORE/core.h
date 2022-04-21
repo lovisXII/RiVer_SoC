@@ -53,6 +53,7 @@ SC_MODULE(core) {
     sc_signal<bool>       BP_R2_VALID_RD;
     sc_signal<sc_uint<6>> BP_RADR1_RD;
     sc_signal<sc_uint<6>> BP_RADR2_RD;
+    sc_signal<bool>       BLOCK_BP_RD;
 
     sc_signal<bool>        CSR_WENABLE_RD;
     sc_signal<sc_uint<32>> CSR_RDATA_RD;
@@ -282,6 +283,7 @@ SC_MODULE(core) {
         dec_inst.SYSCALL_M_MODE_RD(SYSCALL_M_MODE_RD);
         dec_inst.EXCEPTION_RM(EXCEPTION_RM);
         dec_inst.MTVEC_VALUE_RM(MTVEC_VALUE_RM);
+        dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -355,6 +357,7 @@ SC_MODULE(core) {
         exec_inst.SYSCALL_U_MODE_RE(SYSCALL_U_MODE_RE);
         exec_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
         exec_inst.EXCEPTION_RM(EXCEPTION_RM);
+        exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);

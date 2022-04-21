@@ -1,7 +1,7 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
-#define dec2exe_size 212
+#define dec2exe_size 213
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -85,6 +85,7 @@ SC_MODULE(decod) {
     sc_out<bool>       BP_R2_VALID_RD;
     sc_out<sc_uint<6>> BP_RADR1_RD;
     sc_out<sc_uint<6>> BP_RADR2_RD;
+    sc_out<bool>       BLOCK_BP_RD;
 
     // Exception :
 
@@ -252,6 +253,7 @@ SC_MODULE(decod) {
     sc_signal<bool>       exe_neg_op2_sd;
     sc_signal<bool>       exe_wb_sd;
     sc_signal<bool>       mem_sign_extend_sd;
+    sc_signal<bool>       block_bp_sd;
 
     // Exception :
 
@@ -311,7 +313,7 @@ SC_MODULE(decod) {
 
                   << RADR2_SD << r1_valid_sd << EXCEPTION_RM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd
                   << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << syscall_u_mode_sd
-                  << syscall_s_mode_sd;
+                  << block_bp_sd << syscall_s_mode_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
