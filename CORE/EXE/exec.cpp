@@ -40,7 +40,10 @@ void exec::select_exec_res() {
         }
     } else {
         if (MEM_LOAD_RD.read() || MEM_STORE_RD.read()) {
-            if (alu_out_se.read() & 0b11 != 0) {  // if adress isn't aligned it creates an exception
+            if ((alu_out_se.read() & 0b11 != 0 && MEM_SIZE_RD.read() == 0) ||
+                (alu_out_se.read() & 0b1 != 0 &&
+                 MEM_SIZE_RD.read() == 1)) {  // if adress isn't aligned it creates an exception
+                                              // loading bytes on byte-aligned adresses is legal
                 load_adress_missaligned_se.write(1);
             } else {
                 load_adress_missaligned_se.write(0);

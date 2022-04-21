@@ -187,19 +187,19 @@ int sc_main(int argc, char* argv[]) {
     while (1) {
         if (countdown) countdown--;
         cycles++;
-        int  mem_adr       = MEM_ADR.read();
-        bool mem_adr_valid = MEM_ADR_VALID.read();
-        int  mem_data      = MEM_DATA.read();
-        bool mem_store     = MEM_STORE.read();
-        bool mem_load      = MEM_LOAD.read();
-        bool mem_size      = MEM_SIZE.read();
-        int  mem_result;
+        unsigned int mem_adr       = MEM_ADR.read();
+        bool         mem_adr_valid = MEM_ADR_VALID.read();
+        unsigned int mem_data      = MEM_DATA.read();
+        bool         mem_store     = MEM_STORE.read();
+        bool         mem_load      = MEM_LOAD.read();
+        unsigned int mem_size      = MEM_SIZE.read();
+        unsigned int mem_result;
 
-        int  if_adr       = IF_ADR.read();
-        bool if_afr_valid = IF_ADR_VALID.read();
-        int  if_result;
+        unsigned int if_adr       = IF_ADR.read();
+        bool         if_afr_valid = IF_ADR_VALID.read();
+        unsigned int if_result;
 
-        int pc_adr = PC_VALUE.read();
+        unsigned int pc_adr = PC_VALUE.read();
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
@@ -221,10 +221,10 @@ int sc_main(int argc, char* argv[]) {
             }
             exit(0);
         }
-        int rounded_mem_adr = mem_adr - (mem_adr % 4);
-        int offset          = 8 * (mem_adr % 4);
-        int mask;
-        if (mem_size == 0)
+        unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
+        unsigned int offset          = 8 * (mem_adr % 4);
+        unsigned int mask;
+        if (mem_size == 2)
             mask = 0xFF;
         else if (mem_size == 1)
             mask = 0xFFFF;
@@ -232,12 +232,18 @@ int sc_main(int argc, char* argv[]) {
             mask = 0xFFFFFFFF;
         mask <<= offset;
         if (mem_store && mem_adr_valid) {
-            // ram[rounded_mem_adr] &= ~mask;
-            // ram[rounded_mem_adr] &= (mask & (mem_data << offset));
-            ram[mem_adr] = mem_data;
+            ram[rounded_mem_adr] &= ~mask;
+            ram[rounded_mem_adr] |= (mask & (mem_data << offset));
         }
-        mem_result = ram[mem_adr];
-        if_result  = ram[if_adr];
+        mem_result = (ram[rounded_mem_adr] & mask) >> offset;
+        // printf("adr: %x, radr : %x, mask: %x, offset: %x, mem_size: %x, mem_result: %x\n",
+        //        mem_adr,
+        //        rounded_mem_adr,
+        //        mask,
+        //        offset,
+        //        mem_size,
+        //        mem_result);
+        if_result = ram[if_adr];
         MEM_RESULT.write(mem_result);
         MEM_STALL.write(false);
         IC_INST.write(if_result);
