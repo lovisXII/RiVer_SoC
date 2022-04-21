@@ -247,6 +247,10 @@ void decod::decoding_instruction() {
         xori_i_sd.write(1);
     else
         xori_i_sd.write(0);
+    if (if_ir.range(6, 0) == 0b0001111 && if_ir.range(14, 12) == 0b000)
+        fence_i_sd.write(1);
+    else
+        fence_i_sd.write(0);
 
     // I-type shift instructions :
 
@@ -427,12 +431,7 @@ void decod::pre_reg_read_decoding() {
     else if (u_type_inst_sd == 1) {
         radr1_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
-        // on case of an auipc instruction we need to send PC+imm to rd
-        // so we need to get the value from r33
-        if (auipc_i_sd == 1)
-            radr2_var = 0x20;
-        else
-            radr2_var = 0;
+        radr2_var    = 0;
         CSR_RADR_SD.write(0);
     }
     // J-type Instruction :
@@ -514,7 +513,10 @@ void decod::post_reg_read_decoding() {
         } else if (u_type_inst_sd) {
             dec2exe_op1_var.range(31, 12) = if_ir.range(31, 12);
             dec2exe_op1_var.range(11, 0)  = 0;
-            dec2exe_op2_var               = rdata2_sd.read();
+            if (auipc_i_sd)
+                dec2exe_op2_var = PC_IF2DEC_RI.read();
+            else
+                dec2exe_op2_var = rdata2_sd.read();
         } else {
             dec2exe_op1_var = (rdata1_sd.read());
             dec2exe_op2_var = (rdata2_sd.read());
@@ -528,15 +530,15 @@ void decod::post_reg_read_decoding() {
             } else if (lh_i_sd | lhu_i_sd) {
                 mem_size_sd.write(1);
                 if (lhu_i_sd)
-                    mem_sign_extend_sd.write(1);
-                else
                     mem_sign_extend_sd.write(0);
+                else
+                    mem_sign_extend_sd.write(1);
             } else if (lb_i_sd | lbu_i_sd) {
                 mem_size_sd.write(2);
                 if (lbu_i_sd)
-                    mem_sign_extend_sd.write(1);
-                else
                     mem_sign_extend_sd.write(0);
+                else
+                    mem_sign_extend_sd.write(1);
             }
         } else {
             mem_load_sd.write(0);
@@ -751,6 +753,20 @@ void decod::post_reg_read_decoding() {
             mem_data_var      = 0;
             inc_pc_var        = 1;
         }
+    } else if (fence_i_sd) {
+        exe_cmd_sd.write(0);
+        dec2exe_op1_var = 0;
+        dec2exe_op2_var = 0;
+        exe_neg_op2_sd.write(0);
+        dec2exe_wb_var = 0;
+        mem_load_sd.write(0);
+        mem_store_sd.write(0);
+        mem_sign_extend_sd.write(0);
+        mem_size_sd.write(0);
+        select_shift_sd.write(0);
+        offset_branch_var = 0;
+        mem_data_var      = 0;
+        inc_pc_var        = 1;
     } else {
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
@@ -804,7 +820,7 @@ void decod::pc_inc() {
         WRITE_PC_SD.write(pc_out);
         WRITE_PC_ENABLE_SD.write(1);
     } else if (!inc_pc_sd && add_offset_to_pc_sd.read()) {
-        pc_out = pc + offset_branch_var - 4;
+        pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
         WRITE_PC_SD.write(pc_out);
         WRITE_PC_ENABLE_SD.write(1);
     } else {

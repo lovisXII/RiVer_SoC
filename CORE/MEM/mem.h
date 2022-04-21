@@ -18,6 +18,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<32>> MCACHE_ADR_SM;  // adress in memory
     sc_out<sc_uint<32>> MCACHE_DATA_SM;
     sc_out<bool>        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM;
+    sc_out<sc_uint<2>>  MCACHE_MEM_SIZE_SM;
 
     sc_in<sc_uint<32>> MCACHE_RESULT_SM;
     sc_in<bool>        MCACHE_STALL_SM;
@@ -132,7 +133,8 @@ SC_MODULE(mem) {
         SC_METHOD(fifo_gestion);
         sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
         SC_METHOD(mem_preprocess);
-        sensitive << WB_RE << LOAD_RE << MCACHE_RESULT_SM << EXE_RES_RE << MEM_DATA_RE << STORE_RE << EXE2MEM_EMPTY_SE;
+        sensitive << WB_RE << LOAD_RE << MEM_SIZE_RE << MCACHE_RESULT_SM << EXE_RES_RE << MEM_DATA_RE << STORE_RE
+                  << EXE2MEM_EMPTY_SE;
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
