@@ -635,27 +635,38 @@ void decod::post_reg_read_decoding() {
 
         dec2exe_op1_var = rdata1_sd.read();
         dec2exe_op2_var = rdata2_sd.read();
-        sc_uint<32> res = dec2exe_op1_var ^ dec2exe_op2_var;
         sc_uint<33> res_comparaison;
-        res_comparaison = dec2exe_op1_var - dec2exe_op2_var;
-
+        res_comparaison     = dec2exe_op1_var - dec2exe_op2_var;
+        bool different_sign = dec2exe_op1_var[31] ^ dec2exe_op2_var[31];
+        bool equal          = res_comparaison == 0;
+        bool branch;
         if (bne_i_sd.read()) {
-            inc_pc_var = ((res == 0x0 ? 1 : 0));
+            branch = !equal;
         } else if (beq_i_sd.read()) {
-            inc_pc_var = ((res == 0x0 ? 0 : 1));
+            branch = equal;
         } else if (blt_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 1 | res_comparaison.range(31, 31) == 1)
-                              ? 0
-                              : 1);  // if bit 31 == 1, it means rs1 < rs2
+            if (different_sign)
+                branch = dec2exe_op1_var[31];  // branch if the first number is negative
+            else
+                branch = res_comparaison[31];  // branch if the result is negative
         } else if (bltu_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 1 | res_comparaison.range(31, 31) == 1) ? 1 : 0);
+            if (different_sign)
+                branch = dec2exe_op2_var[31];  // branch if the second number is bigger
+            else
+                branch = res_comparaison[31];  // branch if the result is negative
         } else if (bge_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 0 && res_comparaison.range(31, 31) == 0)
-                              ? 0
-                              : 1);  // if bit 31 == 1, it means rs1 < rs2
+            if (different_sign)
+                branch = dec2exe_op2_var[31];  // branch if the second number is negative
+            else
+                branch = !res_comparaison[31];  // branch if the result is positive
         } else if (bgeu_i_sd.read()) {
-            inc_pc_var = ((res_comparaison.range(32, 32) == 0 && res_comparaison.range(31, 31) == 0) ? 1 : 0);
+            if (different_sign)
+                branch = dec2exe_op1_var[31];  // branch if the second number is negative
+            else
+                branch = !res_comparaison[31];  // branch if the result is positive
         }
+
+        inc_pc_var = !branch;
     }
 
     else if (jalr_type_inst_sd.read() || j_type_inst_sd.read()) {
