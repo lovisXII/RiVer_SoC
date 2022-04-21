@@ -831,11 +831,9 @@ void decod::pc_inc() {
 
     if (inc_pc_sd) {
         pc_out = pc + 4;
-        WRITE_PC_SD.write(pc_out);
         WRITE_PC_ENABLE_SD.write(1);
     } else if (!inc_pc_sd && add_offset_to_pc_sd.read()) {
         pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
-        WRITE_PC_SD.write(pc_out);
         WRITE_PC_ENABLE_SD.write(1);
     } else {
         WRITE_PC_ENABLE_SD.write(0);
@@ -844,9 +842,11 @@ void decod::pc_inc() {
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) adress_missaligned_sd = true;
     if (EXCEPTION_RM.read() == 0) {
-        dec2if_in_sd.write(pc_out);
+        dec2if_in_sd.write(pc_out);    
+        WRITE_PC_SD.write(pc_out);
     } else {
-        dec2if_in_sd.write(MTVEC_VALUE_RM.read());
+        dec2if_in_sd.write(MTVEC_VALUE_RC.read());
+        WRITE_PC_SD.write(MTVEC_VALUE_RC.read());
     }
 }
 
@@ -1019,7 +1019,7 @@ void decod::trace(sc_trace_file* tf) {
     // General Interface :
 
     sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
-    sc_trace(tf, MTVEC_VALUE_RM, GET_NAME(MTVEC_VALUE_RM));
+    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));

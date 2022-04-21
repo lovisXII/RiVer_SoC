@@ -10,7 +10,6 @@ void mem::mem2wbk_concat() {
     ff_din[74]             = CSR_WENABLE_RE.read();
     ff_din.range(106, 75)  = CSR_RDATA_RE.read();
     ff_din[107]            = exception_sm.read();
-    ff_din.range(139, 108) = MTVEC_VALUE_RC.read();  // value of mtvec
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -24,12 +23,11 @@ void mem::mem2wbk_unconcat() {
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
     EXCEPTION_RM.write((bool)ff_dout[107]);
-    MTVEC_VALUE_RM.write((sc_bv_base)ff_dout.range(139, 108));
 }
 
 void mem::fifo_gestion() {
     bool stall = MCACHE_STALL_SM.read() || mem2wbk_full_sm.read() || EXE2MEM_EMPTY_SE.read();
-    mem2wbk_push_sm.write(!stall && wb_sm.read());
+    mem2wbk_push_sm.write(!stall);
     EXE2MEM_POP_SM.write(!stall);
 }
 void mem::mem_preprocess() {
@@ -198,12 +196,10 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, SYSCALL_M_MODE_RE, GET_NAME(SYSCALL_M_MODE_RE));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
     sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
-    sc_trace(tf, MTVEC_VALUE_RM, GET_NAME(MTVEC_VALUE_RM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
     sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
     sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));
     sc_trace(tf, MCAUSE_WDATA_RM, GET_NAME(MCAUSE_WDATA_RM));
-    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));

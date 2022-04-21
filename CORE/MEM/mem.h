@@ -83,7 +83,6 @@ SC_MODULE(mem) {
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_RM;
-    sc_out<sc_uint<32>> MTVEC_VALUE_RM;
     sc_in_clk           CLK;
     sc_in_clk           RESET;
 
@@ -101,7 +100,6 @@ SC_MODULE(mem) {
     sc_out<sc_uint<32>> MIP_WDATA_RM;
     sc_out<sc_uint<32>> MEPC_WDATA_RM;
     sc_out<sc_uint<32>> MCAUSE_WDATA_RM;
-    sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
 
     // FIFO
@@ -127,7 +125,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << MTVEC_VALUE_RC;
+        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm ;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);

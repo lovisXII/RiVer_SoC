@@ -9,6 +9,7 @@ void csr::writing_csr() {
     }
     csr_rc[3].write(0x00000000);  // mstatus
     csr_rc[4].write(0x40100100);  // misa
+    csr_rc[6].write(0x80000000);  // mtvec
 
     wait(3);
 
@@ -60,10 +61,8 @@ void csr::reading_csr() {
             default: CSR_RDATA_SC.write(0); break;
         }
     }
-    test ++ ;
-    test_sc.write(test) ;
+    MTVEC_VALUE_RC.write(csr_rc[6]);
     if (EXCEPTION_RM.read()) {
-        MTVEC_VALUE_RC.write(csr_rc[6]);
         MIP_VALUE_RC.write(csr_rc[11]);
     }
 }
@@ -85,7 +84,6 @@ void csr::trace(sc_trace_file* tf) {
 
     sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));
     sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));
-    sc_trace(tf, test_sc, GET_NAME(test_sc));
 
     // General Interface :
 

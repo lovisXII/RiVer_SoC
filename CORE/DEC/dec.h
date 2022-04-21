@@ -102,7 +102,7 @@ SC_MODULE(decod) {
     // General Interface :
 
     sc_in<bool>        EXCEPTION_RM;
-    sc_in<sc_uint<32>> MTVEC_VALUE_RM;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RC;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
 
@@ -367,9 +367,9 @@ SC_MODULE(decod) {
 
                   << csrrs_i_sd << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << CSR_RDATA_SC << ecall_i_sd
 
-                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI;
+                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_RM;
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RM
+        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RC
 
                   << EXCEPTION_RM << PC_IF2DEC_RI;
 

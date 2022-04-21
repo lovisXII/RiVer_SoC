@@ -137,7 +137,6 @@ SC_MODULE(core) {
     // MEM - Pipeline :
 
     sc_signal<bool>        EXCEPTION_RM;
-    sc_signal<sc_uint<32>> MTVEC_VALUE_RM;
     sc_signal<bool>        BUS_ERROR_SX;
     // WBK-REG interface
 
@@ -282,7 +281,7 @@ SC_MODULE(core) {
         dec_inst.SYSCALL_U_MODE_RD(SYSCALL_U_MODE_RD);
         dec_inst.SYSCALL_M_MODE_RD(SYSCALL_M_MODE_RD);
         dec_inst.EXCEPTION_RM(EXCEPTION_RM);
-        dec_inst.MTVEC_VALUE_RM(MTVEC_VALUE_RM);
+        dec_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
 
         dec_inst.CLK(CLK);
@@ -414,12 +413,10 @@ SC_MODULE(core) {
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
 
         mem_inst.EXCEPTION_RM(EXCEPTION_RM);
-        mem_inst.MTVEC_VALUE_RM(MTVEC_VALUE_RM);
         mem_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
         mem_inst.MIP_WDATA_RM(MIP_WDATA_RM);
         mem_inst.MEPC_WDATA_RM(MEPC_WDATA_RM);
         mem_inst.MCAUSE_WDATA_RM(MCAUSE_WDATA_RM);
-        mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
 
         mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
