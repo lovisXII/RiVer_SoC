@@ -9,7 +9,7 @@ void csr::writing_csr() {
     }
     csr_rc[3].write(0x00000000);  // mstatus
     csr_rc[4].write(0x40100100);  // misa
-    csr_rc[6].write(0x80000000);  // mtvec
+    csr_rc[6].write(adress_mtvec);  // mtvec
 
     wait(3);
 

@@ -1,5 +1,6 @@
-.section .text
+.section .text 
 .global _start
+.global _kernel
 
 _start:
     addi x1,x0,1
@@ -18,3 +19,9 @@ _bad:
     nop
 _good:
     nop
+
+.section .text.kernel 
+
+_mtvec :
+    addi x1,x0,10
+    j _good

@@ -52,8 +52,7 @@ int sc_main(int argc, char* argv[]) {
         system((char*)temp);
         path = "a.out";
     }
-    if (!reader.load(path)) {  // verify if the path is correctly load
-        std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
+    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle " << argv[1] << std::endl;
         return 2;
     }
     sprintf(temp_text, "riscv32-unknown-elf-objdump -D %s", path.c_str());
@@ -68,8 +67,13 @@ int sc_main(int argc, char* argv[]) {
     We need to find out the sections of ELF file. The code below find out theses
     sections.
     */
-
+    // section* text_sec = reader.sections.add( ".section .kernel" );
+    // text_sec->set_type( SHT_PROGBITS );
+    // text_sec->set_flags( SHF_ALLOC | SHF_EXECINSTR );
+    // text_sec->set_address( 0x80000000 );
+    
     int n_sec = reader.sections.size();  // get the total amount of sectionss
+
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
         cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;

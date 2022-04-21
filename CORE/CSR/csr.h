@@ -2,7 +2,10 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/debug_util.h"
+
 #define N_CSR 12
+#define adress_mtvec 0x80000000
+
 SC_MODULE(csr) {
     // Input :
 
