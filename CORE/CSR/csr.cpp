@@ -1,6 +1,8 @@
 #include "csr.h"
 #include <systemc.h>
 
+sc_uint<32> test = 0 ;
+
 void csr::writing_csr() {
     for (int rid = 0; rid < N_CSR; rid++) {
         csr_rc[rid].write(0);
@@ -58,7 +60,8 @@ void csr::reading_csr() {
             default: CSR_RDATA_SC.write(0); break;
         }
     }
-
+    test ++ ;
+    test_sc.write(test) ;
     if (EXCEPTION_RM.read()) {
         MTVEC_VALUE_RC.write(csr_rc[6]);
         MIP_VALUE_RC.write(csr_rc[11]);
@@ -82,6 +85,7 @@ void csr::trace(sc_trace_file* tf) {
 
     sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));
     sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));
+    sc_trace(tf, test_sc, GET_NAME(test_sc));
 
     // General Interface :
 

@@ -37,7 +37,7 @@ SC_MODULE(decod) {
     sc_out<bool>        MEM_SIGN_EXTEND_RD;
     sc_out<sc_uint<2>>  MEM_SIZE_RD;  // tells to mem if we do an acces in word, hw or byte
 
-    sc_out<bool> CSR_WENABLE_RD;       // indicate if we do a csr operation,
+    sc_inout<bool> CSR_WENABLE_RD;       // indicate if we do a csr operation,
                                        // if so need to WBK CSR in rd
     sc_out<sc_uint<12>> CSR_WADR_RD;   // CSR adress sent to EXE, will allow to wbk csr in MEM
     sc_out<sc_uint<32>> CSR_RDATA_RD;  // CSR read data to be wb in register

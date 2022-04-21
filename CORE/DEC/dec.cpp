@@ -724,7 +724,7 @@ void decod::post_reg_read_decoding() {
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_sd.write(1);
             sc_uint<32> rdata1_signal_sd = rdata1_sd;            // loading value of rs1
-            dec2exe_op1_var              = CSR_RDATA_SC.read();  // reading value of the csr
+            dec2exe_op1_var              = CSR_RDATA_SC ;  // reading value of the csr
 
             if (csrrc_i_sd || csrrci_i_sd) {
                 exe_neg_op2_sd.write(1);
@@ -908,7 +908,7 @@ void decod::bypasses() {
 }
 
 void decod::stall_method() {
-    csr_in_progress = (csr_wenable_sd && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
+    csr_in_progress = (CSR_WENABLE_RD && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
     stall.write(csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
                                     (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec)));
 }

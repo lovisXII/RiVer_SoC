@@ -44,14 +44,16 @@ SC_MODULE(csr) {
      * 11: mip 0x344
      ***/
     sc_signal<sc_uint<32>> csr_rc[N_CSR];
-
+    sc_signal<sc_uint<32>> test_sc ;
     void writing_csr();
     void reading_csr();
     void trace(sc_trace_file * tf);
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM << CSR_WDATA_SM << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_RM
-                  << MSTATUS_WDATA_RM << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_RM;
+        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_RM
+                  << MSTATUS_WDATA_RM << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_RM ;
+        for (int i = 0; i < N_CSR; i++)
+            sensitive << csr_rc[i];
     }
 };
