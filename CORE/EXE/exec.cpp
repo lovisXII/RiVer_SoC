@@ -59,6 +59,10 @@ void exec::select_exec_res() {
                 instruction_access_fault_se.write(0);
             }
         }
+        else{
+            load_adress_missaligned_se.write(0) ;
+            instruction_access_fault_se.write(0) ;
+        }
         exe_res_se.write(alu_out_se);
     }
 }
