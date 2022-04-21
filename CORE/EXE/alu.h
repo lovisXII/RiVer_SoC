@@ -13,6 +13,6 @@ SC_MODULE(alu) {
 
     SC_CTOR(alu) {
         SC_METHOD(operation);
-        sensitive << OP1_SE << OP2_SE << CIN_SE;
+        sensitive << OP1_SE << OP2_SE << CIN_SE << CMD_SE;
     }
 };

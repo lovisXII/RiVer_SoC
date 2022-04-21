@@ -1,4 +1,3 @@
-
 *.o
 *alu_tb
 *shifter_tb

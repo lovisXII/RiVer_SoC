@@ -34,9 +34,9 @@ int sc_main(int argc, char* argv[]) {
         riscof         = true;
     };
 
+    char temp_text[512];
     if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
         char temp[512];
-        char temp_text[512];
 
         sprintf(temp,
                 "riscv32-unknown-elf-gcc -nostdlib %s %s",
@@ -45,26 +45,20 @@ int sc_main(int argc, char* argv[]) {
                                 // path" in temp
         system((char*)temp);    // send the command in temp to the terminal
         path = "a.out";         // give the output
-
-        sprintf(temp_text, "riscv32-unknown-elf-objdump -d %s", path.c_str());
-        strcat(temp_text, test);
-        system((char*)temp_text);
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
         char temp[512];
-        char temp_text[512];
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib %s %s", opt.c_str(), path.c_str());
         system((char*)temp);
         path = "a.out";
-
-        sprintf(temp_text, "riscv32-unknown-elf-objdump -d %s", path.c_str());
-        strcat(temp_text, test);
-        system((char*)temp_text);
     }
     if (!reader.load(path)) {  // verify if the path is correctly load
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return 2;
     }
+    sprintf(temp_text, "riscv32-unknown-elf-objdump -D %s", path.c_str());
+    strcat(temp_text, test);
+    system((char*)temp_text);
     cout << "Loading ELF file..." << endl;
 
     /*
@@ -147,6 +141,7 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> MEM_RESULT;
     sc_signal<bool>        MEM_STALL;
+    sc_signal<sc_uint<2>>  MEM_SIZE;
 
     // Icache interface
     sc_signal<sc_uint<32>> IF_ADR;
@@ -167,6 +162,7 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_LOAD_SM(MEM_LOAD);
     core_inst.MCACHE_RESULT_SM(MEM_RESULT);
     core_inst.MCACHE_STALL_SM(MEM_STALL);
+    core_inst.MCACHE_MEM_SIZE_SM(MEM_SIZE);
 
     core_inst.ADR_SI(IF_ADR);
     core_inst.ADR_VALID_SI(IF_ADR_VALID);
@@ -191,18 +187,19 @@ int sc_main(int argc, char* argv[]) {
     while (1) {
         if (countdown) countdown--;
         cycles++;
-        int  mem_adr       = MEM_ADR.read();
-        bool mem_adr_valid = MEM_ADR_VALID.read();
-        int  mem_data      = MEM_DATA.read();
-        bool mem_store     = MEM_STORE.read();
-        bool mem_load      = MEM_LOAD.read();
-        int  mem_result;
+        unsigned int mem_adr       = MEM_ADR.read();
+        bool         mem_adr_valid = MEM_ADR_VALID.read();
+        unsigned int mem_data      = MEM_DATA.read();
+        bool         mem_store     = MEM_STORE.read();
+        bool         mem_load      = MEM_LOAD.read();
+        unsigned int mem_size      = MEM_SIZE.read();
+        unsigned int mem_result;
 
-        int  if_adr       = IF_ADR.read();
-        bool if_afr_valid = IF_ADR_VALID.read();
-        int  if_result;
+        unsigned int if_adr       = IF_ADR.read();
+        bool         if_afr_valid = IF_ADR_VALID.read();
+        unsigned int if_result;
 
-        int pc_adr = PC_VALUE.read();
+        unsigned int pc_adr = PC_VALUE.read();
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
@@ -219,15 +216,34 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
-            for (int i = begin_signature + 4; i <= end_signature; i += 4) {
+            for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             exit(0);
         }
-
-        if (mem_store && mem_adr_valid) { ram[mem_adr] = mem_data; }
-        mem_result = ram[mem_adr];
-        if_result  = ram[if_adr];
+        unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
+        unsigned int offset          = 8 * (mem_adr % 4);
+        unsigned int mask;
+        if (mem_size == 2)
+            mask = 0xFF;
+        else if (mem_size == 1)
+            mask = 0xFFFF;
+        else
+            mask = 0xFFFFFFFF;
+        mask <<= offset;
+        if (mem_store && mem_adr_valid) {
+            ram[rounded_mem_adr] &= ~mask;
+            ram[rounded_mem_adr] |= (mask & (mem_data << offset));
+        }
+        mem_result = (ram[rounded_mem_adr] & mask) >> offset;
+        // printf("adr: %x, radr : %x, mask: %x, offset: %x, mem_size: %x, mem_result: %x\n",
+        //        mem_adr,
+        //        rounded_mem_adr,
+        //        mask,
+        //        offset,
+        //        mem_size,
+        //        mem_result);
+        if_result = ram[if_adr];
         MEM_RESULT.write(mem_result);
         MEM_STALL.write(false);
         IC_INST.write(if_result);
