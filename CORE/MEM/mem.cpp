@@ -75,7 +75,7 @@ void mem::sign_extend() {
 
 void mem::csr_exception() {
     exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
-    if (exception_sm == 0) {
+    if ( ! exception_sm) {
         if (CSR_WENABLE_RE.read()) {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
             CSR_WDATA_SM.write(EXE_RES_RE.read());

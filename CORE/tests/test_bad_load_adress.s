@@ -15,15 +15,4 @@ _start:
     addi x1,x0,0
     addi x1,x0,0
     nop
-_bad: 
-    nop
-_good:
-    nop
 
-.section .kernel
-.global _mtvec
-
-_mtvec :
-    la x1, _good
-    jalr x0, 0(x1) 
-    
