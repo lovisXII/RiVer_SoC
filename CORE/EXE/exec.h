@@ -6,7 +6,7 @@
 #include "../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
-#define exe2mem_size        162
+#define exe2mem_size        164
 #define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
     // Input/Output of EXE :
@@ -36,6 +36,7 @@ SC_MODULE(exec) {
     sc_in<sc_uint<12>> CSR_WADR_RD;
     sc_in<sc_uint<32>> CSR_RDATA_RD;
 
+    sc_in<sc_uint<2>>  CURRENT_MODE_RD;
     // Exception coming from Decod :
 
     sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
@@ -56,6 +57,7 @@ SC_MODULE(exec) {
     sc_out<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
     sc_out<bool> SYSCALL_U_MODE_RE;
     sc_out<bool> SYSCALL_M_MODE_RE;
+    sc_out<sc_uint<2>>  CURRENT_MODE_RE;
 
     // Interruption :
 
@@ -171,7 +173,7 @@ SC_MODULE(exec) {
                   << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
                   << CSR_RDATA_RD << ECALL_I_RD << EBREAK_I_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD
                   << SYSCALL_U_MODE_RD << SYSCALL_M_MODE_RD << exception_se << load_adress_missaligned_se
-                  << instruction_access_fault_se << EXCEPTION_RM;
+                  << instruction_access_fault_se << EXCEPTION_RM << CURRENT_MODE_RD ;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);

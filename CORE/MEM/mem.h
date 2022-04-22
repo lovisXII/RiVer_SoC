@@ -47,6 +47,7 @@ SC_MODULE(mem) {
     sc_in<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
     sc_in<bool> SYSCALL_U_MODE_RE;
     sc_in<bool> SYSCALL_M_MODE_RE;
+    sc_in<sc_uint<2>> CURRENT_MODE_RE ;
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
@@ -71,7 +72,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<6>>  DEST_RM;
     sc_out<bool>        WB_RM;
     sc_out<sc_uint<32>> CSR_RDATA_RM;
-
+    sc_out<sc_uint<2>> CURRENT_MODE_RM ;
     // Internal signals
 
     sc_signal<sc_bv<mem2wbk_size>> mem2wbk_din_sm;
@@ -125,7 +126,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm;
+        sensitive << data_sm << DEST_RE << wb_sm << CURRENT_MODE_RE << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);

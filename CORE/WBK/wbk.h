@@ -25,7 +25,8 @@ SC_MODULE(wbk) {
     sc_in<sc_uint<32>> PC_MEM2WBK_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
     sc_in<bool>        CSR_WENABLE_RM;
-
+    sc_in<sc_uint<2>> CURRENT_MODE_RM ;
+    
     // Mem2wbk interface
 
     sc_in<bool>  MEM2WBK_EMPTY_SM;

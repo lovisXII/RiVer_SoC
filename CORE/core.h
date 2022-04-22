@@ -164,6 +164,13 @@ SC_MODULE(core) {
     sc_in<sc_uint<32>>  PC_INIT;
     sc_out<sc_uint<32>> DEBUG_PC_READ;
 
+    //
+
+    sc_signal<sc_uint<2>> CURRENT_MODE_RI ;
+    sc_signal<sc_uint<2>> CURRENT_MODE_RD ;
+    sc_signal<sc_uint<2>> CURRENT_MODE_RE ;
+    sc_signal<sc_uint<2>> CURRENT_MODE_RM ;
+
     // Stage instanciation
     decod  dec_inst;
     exec   exec_inst;
@@ -205,6 +212,7 @@ SC_MODULE(core) {
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_RM(EXCEPTION_RM);
+        ifetch_inst.CURRENT_MODE_RI(CURRENT_MODE_RI);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -283,6 +291,8 @@ SC_MODULE(core) {
         dec_inst.EXCEPTION_RM(EXCEPTION_RM);
         dec_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
+        dec_inst.CURRENT_MODE_RI(CURRENT_MODE_RI);
+        dec_inst.CURRENT_MODE_RD(CURRENT_MODE_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -357,6 +367,8 @@ SC_MODULE(core) {
         exec_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
         exec_inst.EXCEPTION_RM(EXCEPTION_RM);
         exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
+        exec_inst.CURRENT_MODE_RD(CURRENT_MODE_RD);
+        exec_inst.CURRENT_MODE_RE(CURRENT_MODE_RE);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -420,6 +432,8 @@ SC_MODULE(core) {
         mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
 
         mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        mem_inst.CURRENT_MODE_RE(CURRENT_MODE_RE);
+        mem_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);
@@ -456,6 +470,7 @@ SC_MODULE(core) {
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
+        wbk_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);

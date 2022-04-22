@@ -84,7 +84,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
         
-        dec2exe_in_var.range(214, 213) = 0;
+        dec2exe_in_var.range(214, 213) = CURRENT_MODE_RI.read();
         dec2exe_in_var[212]            = 0;
         dec2exe_in_var[211]            = 0;
         dec2exe_in_var[210]            = 0;
@@ -1127,4 +1127,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, adress_missaligned_sd, GET_NAME(adress_missaligned_sd));    // branch offset is misaligned
     sc_trace(tf, syscall_u_mode_sd, GET_NAME(syscall_u_mode_sd));
     sc_trace(tf, syscall_s_mode_sd, GET_NAME(syscall_s_mode_sd));
+
+    sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
+    sc_trace(tf, CURRENT_MODE_RI, GET_NAME(CURRENT_MODE_RI));
 }

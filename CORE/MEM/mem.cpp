@@ -10,6 +10,7 @@ void mem::mem2wbk_concat() {
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
     ff_din[107]           = exception_sm.read();
+    ff_din.range(109, 108) = CURRENT_MODE_RE.read();
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -23,6 +24,7 @@ void mem::mem2wbk_unconcat() {
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
     EXCEPTION_RM.write((bool)ff_dout[107]);
+    CURRENT_MODE_RM.write((sc_bv_base)ff_dout.range(109, 108));
 }
 
 void mem::fifo_gestion() {
@@ -204,5 +206,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
+    sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
+    sc_trace(tf, CURRENT_MODE_RM, GET_NAME(CURRENT_MODE_RM));
     fifo_inst.trace(tf);
 }

@@ -88,6 +88,7 @@ void exec::fifo_concat() {
         ff_din[159]            = exception_se.read();
         ff_din[160]            = load_adress_missaligned_se.read();
         ff_din[161]            = instruction_access_fault_se.read();
+        ff_din.range(163, 162) = CURRENT_MODE_RD.read();
     } else {
         ff_din.range(31, 0)    = 0;
         ff_din.range(63, 32)   = 0;
@@ -110,6 +111,7 @@ void exec::fifo_concat() {
         ff_din[159]            = 0;
         ff_din[160]            = 0;
         ff_din[161]            = 0;
+        ff_din.range(163, 162) = CURRENT_MODE_RD.read();
     }
 
     exe2mem_din_se.write(ff_din);
@@ -137,6 +139,7 @@ void exec::fifo_unconcat() {
     EXCEPTION_RE.write((bool)ff_dout[159]);
     LOAD_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[160]);
     INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[161]);
+    CURRENT_MODE_RE.write((sc_bv_base)ff_dout.range(163, 162));
 }
 
 void exec::manage_fifo() {
@@ -335,6 +338,8 @@ void exec::trace(sc_trace_file* tf) {
     // Exception :
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));
+    sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
+    sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, instruction_access_fault_se, GET_NAME(instruction_access_fault_se));

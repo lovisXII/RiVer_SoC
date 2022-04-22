@@ -314,7 +314,7 @@ SC_MODULE(decod) {
 
                   << RADR2_SD << r1_valid_sd << EXCEPTION_RM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd
                   << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << syscall_u_mode_sd
-                  << block_bp_sd << syscall_s_mode_sd;
+                  << block_bp_sd << syscall_s_mode_sd << CURRENT_MODE_RI;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)

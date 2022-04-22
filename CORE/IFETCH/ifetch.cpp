@@ -46,8 +46,8 @@ void ifetch::fetch_method() {
 
 void ifetch::exception()  // can be usefull for further use
 {
-    if(RESET)
-        current_mode_si = 0b11 ; // at initialization, strating in M-MODE
+    if(!RESET)
+        current_mode_si = 3 ; // at initialization, strating in M-MODE
     EXCEPTION_RI.write(0);
 }
 
@@ -74,5 +74,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
     sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, CURRENT_MODE_RI, GET_NAME(CURRENT_MODE_RI));
+    sc_trace(tf, current_mode_si, GET_NAME(current_mode_si));
     fifo_inst.trace(tf);
 }
