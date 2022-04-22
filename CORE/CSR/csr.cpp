@@ -1,14 +1,14 @@
 #include "csr.h"
 #include <systemc.h>
 
-sc_uint<32> test = 0 ;
+sc_uint<32> test = 0;
 
 void csr::writing_csr() {
     for (int rid = 0; rid < N_CSR; rid++) {
         csr_rc[rid].write(0);
     }
-    csr_rc[3].write(0x00000000);  // mstatus
-    csr_rc[4].write(0x40100100);  // misa
+    csr_rc[3].write(0x00000000);    // mstatus
+    csr_rc[4].write(0x40100100);    // misa
     csr_rc[6].write(adress_mtvec);  // mtvec
 
     wait(3);
@@ -62,9 +62,7 @@ void csr::reading_csr() {
         }
     }
     MTVEC_VALUE_RC.write(csr_rc[6]);
-    if (EXCEPTION_RM.read()) {
-        MIP_VALUE_RC.write(csr_rc[11]);
-    }
+    if (EXCEPTION_RM.read()) { MIP_VALUE_RC.write(csr_rc[11]); }
 }
 
 void csr::trace(sc_trace_file* tf) {

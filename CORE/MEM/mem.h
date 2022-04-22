@@ -82,9 +82,9 @@ SC_MODULE(mem) {
 
     // Global Interface :
 
-    sc_out<bool>        EXCEPTION_RM;
-    sc_in_clk           CLK;
-    sc_in_clk           RESET;
+    sc_out<bool> EXCEPTION_RM;
+    sc_in_clk    CLK;
+    sc_in_clk    RESET;
 
     // Interruption :
 
@@ -125,7 +125,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm ;
+        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);

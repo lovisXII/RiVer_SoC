@@ -3,13 +3,13 @@
 void mem::mem2wbk_concat() {
     sc_bv<mem2wbk_size> ff_din;
 
-    ff_din.range(31, 0)    = data_sm.read();
-    ff_din.range(36, 32)   = DEST_RE.read();
-    ff_din[37]             = wb_sm.read();
-    ff_din.range(73, 38)   = PC_EXE2MEM_RE.read();
-    ff_din[74]             = CSR_WENABLE_RE.read();
-    ff_din.range(106, 75)  = CSR_RDATA_RE.read();
-    ff_din[107]            = exception_sm.read();
+    ff_din.range(31, 0)   = data_sm.read();
+    ff_din.range(36, 32)  = DEST_RE.read();
+    ff_din[37]            = wb_sm.read();
+    ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
+    ff_din[74]            = CSR_WENABLE_RE.read();
+    ff_din.range(106, 75) = CSR_RDATA_RE.read();
+    ff_din[107]           = exception_sm.read();
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -75,7 +75,7 @@ void mem::sign_extend() {
 
 void mem::csr_exception() {
     exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
-    if ( ! exception_sm) {
+    if (!exception_sm) {
         if (CSR_WENABLE_RE.read()) {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
             CSR_WDATA_SM.write(EXE_RES_RE.read());

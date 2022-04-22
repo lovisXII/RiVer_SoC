@@ -175,16 +175,12 @@ SC_MODULE(exec) {
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD
-                 << exception_se << blocked;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
-                  << RADR2_RD << OP1_RD << OP2_RD
-                 << exception_se
-                  << MEM_DATA_RD;
+                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD;
         SC_METHOD(exception);
-        sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD << load_adress_missaligned_se
-                 << exception_se
-        << instruction_access_fault_se;
+        sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD
+                  << load_adress_missaligned_se << exception_se << instruction_access_fault_se;
     }
 };

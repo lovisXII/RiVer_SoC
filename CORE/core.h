@@ -136,8 +136,8 @@ SC_MODULE(core) {
 
     // MEM - Pipeline :
 
-    sc_signal<bool>        EXCEPTION_RM;
-    sc_signal<bool>        BUS_ERROR_SX;
+    sc_signal<bool> EXCEPTION_RM;
+    sc_signal<bool> BUS_ERROR_SX;
     // WBK-REG interface
 
     sc_signal<sc_uint<6>>  WADR_SW;

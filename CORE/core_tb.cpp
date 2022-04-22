@@ -52,7 +52,7 @@ int sc_main(int argc, char* argv[]) {
         system((char*)temp);
         path = "a.out";
     }
-    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle " 
+    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle "
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return 2;
     }
@@ -72,7 +72,7 @@ int sc_main(int argc, char* argv[]) {
     // text_sec->set_type( SHT_PROGBITS );
     // text_sec->set_flags( SHF_ALLOC | SHF_EXECINSTR );
     // text_sec->set_address( 0x80000000 );
-    
+
     int n_sec = reader.sections.size();  // get the total amount of sectionss
 
     for (int i = 0; i < n_sec; i++) {

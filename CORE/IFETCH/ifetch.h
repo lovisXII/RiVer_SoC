@@ -5,7 +5,7 @@
 #include "../UTIL/fifo.h"
 
 #define nop_encoding 0x0000013
-#define if2dec_size 64
+#define if2dec_size  64
 
 SC_MODULE(ifetch) {
     // Icache Interface :
@@ -48,8 +48,8 @@ SC_MODULE(ifetch) {
 
     // Internals signals :
 
-    sc_signal<bool>      IF2DEC_PUSH_SI;
-    sc_signal<bool>      IF2DEC_FULL_SI;
+    sc_signal<bool>               IF2DEC_PUSH_SI;
+    sc_signal<bool>               IF2DEC_FULL_SI;
     sc_signal<sc_bv<if2dec_size>> if2dec_in_si;
     sc_signal<sc_bv<if2dec_size>> instr_ri;  // instruction sent to if2dec
 
@@ -67,8 +67,8 @@ SC_MODULE(ifetch) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI
-                  << RESET << EXCEPTION_RM;
+        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
+                  << EXCEPTION_RM;
         SC_METHOD(exception)
         sensitive << EXCEPTION_RI;
     }

@@ -726,8 +726,8 @@ void decod::post_reg_read_decoding() {
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_sd.write(1);
-            sc_uint<32> rdata1_signal_sd = rdata1_sd;            // loading value of rs1
-            dec2exe_op1_var              = CSR_RDATA_SC ;  // reading value of the csr
+            sc_uint<32> rdata1_signal_sd = rdata1_sd;     // loading value of rs1
+            dec2exe_op1_var              = CSR_RDATA_SC;  // reading value of the csr
 
             if (csrrc_i_sd || csrrci_i_sd) {
                 exe_neg_op2_sd.write(1);
@@ -842,7 +842,7 @@ void decod::pc_inc() {
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) adress_missaligned_sd = true;
     if (EXCEPTION_RM.read() == 0) {
-        dec2if_in_sd.write(pc_out);    
+        dec2if_in_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
     } else {
         dec2if_in_sd.write(MTVEC_VALUE_RC.read());
