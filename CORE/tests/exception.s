@@ -1,10 +1,10 @@
-.section .good_bad
-.global _bad
+.section text
 .global _good
+.global _bad
 
-_bad :
-    nop
 _good :
+    nop
+_bad :
     nop
 
 .section .kernel

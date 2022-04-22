@@ -3,7 +3,10 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
+
 #define nop_encoding 0x0000013
+#define if2dec_size 64
+
 SC_MODULE(ifetch) {
     // Icache Interface :
 
@@ -41,14 +44,14 @@ SC_MODULE(ifetch) {
     sc_in_clk   RESET;
 
     // FIFO
-    fifo<64> fifo_inst;
+    fifo<if2dec_size> fifo_inst;
 
     // Internals signals :
 
     sc_signal<bool>      IF2DEC_PUSH_SI;
     sc_signal<bool>      IF2DEC_FULL_SI;
-    sc_signal<sc_bv<64>> if2dec_in_si;
-    sc_signal<sc_bv<64>> instr_ri;  // instruction sent to if2dec
+    sc_signal<sc_bv<if2dec_size>> if2dec_in_si;
+    sc_signal<sc_bv<if2dec_size>> instr_ri;  // instruction sent to if2dec
 
     void fetch_method();
     void trace(sc_trace_file * tf);

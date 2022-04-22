@@ -22,9 +22,3 @@ int main() {
     if (somme(0) == 0) _good();
     _bad();
 }
-
-__asm__("nop");
-__asm__("_bad:");
-__asm__("    add x0, x0, x0");
-__asm__("_good :");
-__asm__("    add x1, x1, x1");

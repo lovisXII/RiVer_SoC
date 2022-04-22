@@ -1,8 +1,8 @@
 #include "ifetch.h"
 
 void ifetch::fetch_method() {
-    sc_bv<64> if2dec_in_var;
-    sc_bv<64> instr_ri_var = instr_ri.read();
+    sc_bv<if2dec_size> if2dec_in_var;
+    sc_bv<if2dec_size> instr_ri_var = instr_ri.read();
     if (EXCEPTION_RM.read() == 0) {
         ADR_SI.write(PC_RD.read());
 

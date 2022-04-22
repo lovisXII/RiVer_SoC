@@ -10,11 +10,6 @@
 
 SECTIONS
 {
-    . = 0x1004C ;
-    seg_bad_good :
-    {
-        *(.good_bad)
-    }
     . = 0x10054 ;
     seg_text :
     {
@@ -24,11 +19,6 @@ SECTIONS
     seg_kernel :
     {
         *(.kernel) 
-    }
-    . = 0x80000000 ;
-    seg_irq_vector :
-    {
-        *(.irq_vector)
     }
 }
 
