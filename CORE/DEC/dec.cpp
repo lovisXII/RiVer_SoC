@@ -47,6 +47,7 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_RM.read() == 0) {
+        dec2exe_in_var.range(214, 213) = CURRENT_MODE_RI.read();
         dec2exe_in_var[212] = block_bp_sd;
         dec2exe_in_var[211] = ecall_i_sd || ebreak_i_sd || illegal_instruction_sd || adress_missaligned_sd ||
                               syscall_u_mode_sd || syscall_s_mode_sd;  // tells if there is an exception
@@ -82,6 +83,8 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
+        
+        dec2exe_in_var.range(214, 213) = 0;
         dec2exe_in_var[212]            = 0;
         dec2exe_in_var[211]            = 0;
         dec2exe_in_var[210]            = 0;
@@ -123,6 +126,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    CURRENT_MODE_RD.write((sc_bv_base)dec2exe_out_var.range(214, 213));
     BLOCK_BP_RD.write((bool)dec2exe_out_var[212]);
     EXCEPTION_RD.write((bool)dec2exe_out_var[211]);
     ECALL_I_RD.write((bool)dec2exe_out_var[210]);

@@ -1,7 +1,7 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
-#define dec2exe_size 213
+#define dec2exe_size 215
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -41,7 +41,7 @@ SC_MODULE(decod) {
                                        // if so need to WBK CSR in rd
     sc_out<sc_uint<12>> CSR_WADR_RD;   // CSR adress sent to EXE, will allow to wbk csr in MEM
     sc_out<sc_uint<32>> CSR_RDATA_RD;  // CSR read data to be wb in register
-
+    sc_out<sc_uint<2>>  CURRENT_MODE_RD ;
     // Interface with DEC2IF :
 
     sc_in<bool>       DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
@@ -50,6 +50,7 @@ SC_MODULE(decod) {
 
     // Interface with IF2DEC :
 
+    sc_in<sc_uint<2>>  CURRENT_MODE_RI ;
     sc_in<sc_uint<32>> PC_IF2DEC_RI;
     sc_in<sc_bv<32>>   INSTR_RI;
     sc_in<bool>        IF2DEC_EMPTY_SI;

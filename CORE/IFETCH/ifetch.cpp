@@ -8,17 +8,20 @@ void ifetch::fetch_method() {
 
         // data sent in if2dec
 
+        if2dec_in_var.range(65,64) =  current_mode_si ;
         if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
         if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
         // data coming out from if2dec :
 
+        CURRENT_MODE_RI.write((sc_bv_base)instr_ri_var.range(65,64 )) ;
         INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
         PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
 
     } else {
         // data sent in if2dec
 
+        if2dec_in_var.range(64,65) = 0 ;
         if2dec_in_var.range(63, 32) = nop_encoding;
         if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
@@ -43,8 +46,12 @@ void ifetch::fetch_method() {
 
 void ifetch::exception()  // can be usefull for further use
 {
+    if(RESET)
+        current_mode_si = 0b11 ; // at initialization, strating in M-MODE
     EXCEPTION_RI.write(0);
 }
+
+
 void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, ADR_SI, GET_NAME(ADR_SI));
     sc_trace(tf, ADR_VALID_SI, GET_NAME(ADR_VALID_SI));
