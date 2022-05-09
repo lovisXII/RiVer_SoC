@@ -1,5 +1,5 @@
 CC=g++
-RISC=gcc
+RISC=riscv32-unknown-elf-gcc 
 SYSTEMC_DIR=../systemc-2.3.3
 INCLUDE_PATH=-I$(SYSTEMC_DIR)/include -I../ELFIO
 SYSC_PATH=$(SYSTEMC_DIR)/lib-linux64
@@ -8,7 +8,7 @@ LIBS=-lsystemc -lm
 C_ARGS=$(INCLUDE_PATH) $(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o EXE/shifter.o EXE/exec.o MEM/mem.o REG/reg.o WBK/wbk.o CSR/csr.o
 LD_SCRIPT= -T seg.ld
-RISC_FLAGS= -nostdlib -march=rv32iz $(LD_SCRIPT)
+RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: core_tb
 
