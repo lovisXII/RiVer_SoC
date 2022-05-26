@@ -16,6 +16,9 @@ void exec::preprocess_op() {
 void exec::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
+
+    current_mode_se = CURRENT_MODE_RD ;
+    
     if (SELECT_SHIFT_RD.read()) {
         exe_res_se.write(shifter_out_se);
     } else if (SLT_RD.read()) {
@@ -48,7 +51,7 @@ void exec::select_exec_res() {
             } else {
                 load_adress_missaligned_se.write(0);
             }
-            if (false)  // need to change this condition to check current mode
+            if ((current_mode_se.read() == 0))  // If in User Mode
             {
                 if (alu_out_se.read() > start_kernel_adress) {
                     instruction_access_fault_se.write(1);
@@ -334,12 +337,14 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_re, GET_NAME(wb_re));
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, mem_store_re, GET_NAME(mem_store_re));
+    sc_trace(tf, current_mode_se, GET_NAME(current_mode_se));
 
     // Exception :
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));
     sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
     sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
+    sc_trace(tf, current_mode_se, GET_NAME(current_mode_se));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, instruction_access_fault_se, GET_NAME(instruction_access_fault_se));

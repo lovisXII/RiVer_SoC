@@ -71,6 +71,6 @@ SC_MODULE(ifetch) {
         sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
                   << EXCEPTION_RM << CURRENT_MODE_RI << current_mode_si;
         SC_METHOD(exception)
-        sensitive << EXCEPTION_RI << RESET ;
+        sensitive << RESET << EXCEPTION_RM;
     }
 };

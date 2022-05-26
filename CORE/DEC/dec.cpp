@@ -47,16 +47,16 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_RM.read() == 0) {
-        dec2exe_in_var.range(214, 213) = CURRENT_MODE_RI.read();
+        dec2exe_in_var.range(214, 213) = current_mode_sd.read();
         dec2exe_in_var[212] = block_bp_sd;
         dec2exe_in_var[211] = ecall_i_sd || ebreak_i_sd || illegal_instruction_sd || adress_missaligned_sd ||
-                              syscall_u_mode_sd || syscall_s_mode_sd;  // tells if there is an exception
+                              env_call_u_mode_sd || env_call_s_mode_sd;  // tells if there is an exception
         dec2exe_in_var[210]            = ecall_i_sd.read();
         dec2exe_in_var[209]            = ebreak_i_sd.read();
         dec2exe_in_var[208]            = illegal_instruction_sd.read();
         dec2exe_in_var[207]            = adress_missaligned_sd.read();
-        dec2exe_in_var[206]            = syscall_u_mode_sd.read();
-        dec2exe_in_var[205]            = syscall_s_mode_sd.read();
+        dec2exe_in_var[206]            = env_call_u_mode_sd.read();
+        dec2exe_in_var[205]            = env_call_s_mode_sd.read();
         dec2exe_in_var.range(204, 173) = CSR_RDATA_SC.read();
         dec2exe_in_var[172]            = csr_wenable_sd.read();
         dec2exe_in_var.range(171, 160) = csr_radr_sd.read();
@@ -84,7 +84,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
         
-        dec2exe_in_var.range(214, 213) = CURRENT_MODE_RI.read();
+        dec2exe_in_var.range(214, 213) = current_mode_sd.read();
         dec2exe_in_var[212]            = 0;
         dec2exe_in_var[211]            = 0;
         dec2exe_in_var[210]            = 0;
@@ -395,6 +395,14 @@ void decod::decoding_instruction() {
         csrrci_i_sd.write(1);
     else
         csrrci_i_sd.write(0);
+    if (if_ir == 0b00010000001000000000000001110011)
+        mret_i_sd.write(1);
+    else
+        mret_i_sd.write(0);
+    if (if_ir == 0b00110000001000000000000001110011)
+        sret_i_sd.write(1);
+    else
+        sret_i_sd.write(0);
 }
 
 //---------------------------------------------REGISTRE & OPERAND DETECTION
@@ -405,7 +413,7 @@ void decod::pre_reg_read_decoding() {
     sc_uint<6>  radr1_var;
     sc_uint<6>  radr2_var;
     sc_uint<6>  adr_dest_var;
-
+    current_mode_sd = CURRENT_MODE_RI ;
     // R-type Instruction :
     if (r_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
@@ -471,10 +479,34 @@ void decod::pre_reg_read_decoding() {
             radr1_var    = 0;
             radr2_var    = 0;
             adr_dest_var = 0;
-            // Checking exception for current call mode :
+        }
+        else if(sret_i_sd || mret_i_sd){
+            // xRET instruction read the current value of MEPC register
+            CSR_RADR_SD.write(0x341); // sent to CSR directly
+            csr_radr_sd.write(0x341); // sent to dec2exe
+            radr1_var = 0;
+            radr2_var = 0;
+            adr_dest_var = 0;
 
-            // CSR_RADR_SD.write(0x300); // reading MSTATUS
-            // if(CSR_RDATA_SC[]
+            // Changing pipeline mode
+            // 0 -> User
+            // 1 -> S-mode
+            // 2 -> M-mode
+            if(current_mode_sd.read() != 3 && mret_i_sd){//mret 
+                env_call_s_mode_sd = 1 ;
+            }
+            else{
+                current_mode_sd = 0 ; // Return to user Mode
+                env_call_s_mode_sd = 0 ;
+            }
+            if(current_mode_sd.read() != 1 && sret_i_sd){//sret 
+                env_call_s_mode_sd = 1 ;
+            }
+            else{
+                current_mode_sd = 0 ; // Return to user Mode
+                env_call_s_mode_sd = 0 ;
+            }
+
         }
     }
     // Default case :
@@ -785,7 +817,23 @@ void decod::post_reg_read_decoding() {
         offset_branch_var = 0;
         mem_data_var      = 0;
         inc_pc_var        = 1;
-    } else {
+    } 
+    else if(sret_i_sd || mret_i_sd){
+        exe_cmd_sd.write(0);
+        dec2exe_op1_var = 0;
+        dec2exe_op2_var = 0;
+        exe_neg_op2_sd.write(0);
+        dec2exe_wb_var = 0;
+        mem_load_sd.write(0);
+        mem_store_sd.write(0);
+        mem_sign_extend_sd.write(0);
+        mem_size_sd.write(0);
+        select_shift_sd.write(0);
+        offset_branch_var = CSR_RDATA_SC; //getting value from mepc
+        mem_data_var      = 0;
+        inc_pc_var        = 0;
+    }
+    else {
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
         dec2exe_op2_var = 0;
@@ -837,8 +885,17 @@ void decod::pc_inc() {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD.write(1);
     } else if (!inc_pc_sd && add_offset_to_pc_sd.read()) {
+        if(!sret_i_sd || ! mret_i_sd){
         pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
         WRITE_PC_ENABLE_SD.write(1);
+        }
+        else{
+        //in case of a xRET instruction, we're just loading value of mepc
+        //inside PC
+        std ::cout << "ouhgohog" << endl ; 
+        pc_out = offset_branch_var; //putting epc value inside register
+        WRITE_PC_ENABLE_SD.write(1);
+        }
     } else {
         WRITE_PC_ENABLE_SD.write(0);
     }
@@ -1096,6 +1153,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
     sc_trace(tf, offset_branch_sd, GET_NAME(offset_branch_sd));
     sc_trace(tf, csr_in_progress, GET_NAME(csr_in_progress));
+    sc_trace(tf, csr_in_progress, GET_NAME(csr_in_progress));
+    sc_trace(tf, mret_i_sd, GET_NAME(mret_i_sd));
+    sc_trace(tf, sret_i_sd, GET_NAME(sret_i_sd));
 
     // PC gestion :
 
@@ -1125,9 +1185,10 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, ebreak_i_sd, GET_NAME(ebreak_i_sd));
     sc_trace(tf, illegal_instruction_sd, GET_NAME(illegal_instruction_sd));  // instruction doesnt exist
     sc_trace(tf, adress_missaligned_sd, GET_NAME(adress_missaligned_sd));    // branch offset is misaligned
-    sc_trace(tf, syscall_u_mode_sd, GET_NAME(syscall_u_mode_sd));
-    sc_trace(tf, syscall_s_mode_sd, GET_NAME(syscall_s_mode_sd));
+    sc_trace(tf, env_call_u_mode_sd, GET_NAME(env_call_u_mode_sd));
+    sc_trace(tf, env_call_s_mode_sd, GET_NAME(env_call_s_mode_sd));
 
     sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
     sc_trace(tf, CURRENT_MODE_RI, GET_NAME(CURRENT_MODE_RI));
+    sc_trace(tf, current_mode_sd, GET_NAME(current_mode_sd));
 }

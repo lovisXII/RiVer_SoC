@@ -224,11 +224,13 @@ SC_MODULE(decod) {
 
     sc_signal<bool> csr_in_progress;
 
+    sc_signal<bool> mret_i_sd ;
+    sc_signal<bool> sret_i_sd ;
     // Signal for Kernel usage
 
     sc_signal<bool>        csr_wenable_sd;
     sc_signal<sc_uint<12>> csr_radr_sd;
-
+    sc_signal<sc_uint<2>>  current_mode_sd ;
     // Offset for branch :
 
     sc_signal<sc_uint<32>> offset_branch_sd;
@@ -262,8 +264,8 @@ SC_MODULE(decod) {
     sc_signal<bool> ebreak_i_sd;
     sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
     sc_signal<bool> adress_missaligned_sd;   // branch offset is misaligned
-    sc_signal<bool> syscall_u_mode_sd;
-    sc_signal<bool> syscall_s_mode_sd;
+    sc_signal<bool> env_call_u_mode_sd;
+    sc_signal<bool> env_call_s_mode_sd;
 
     void dec2if_gestion();
     void concat_dec2exe();
@@ -313,8 +315,8 @@ SC_MODULE(decod) {
                   << sltiu_i_sd << sltu_i_sd << RADR1_SD
 
                   << RADR2_SD << r1_valid_sd << EXCEPTION_RM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd
-                  << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << syscall_u_mode_sd
-                  << block_bp_sd << syscall_s_mode_sd << CURRENT_MODE_RI;
+                  << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << env_call_u_mode_sd
+                  << block_bp_sd << env_call_s_mode_sd << CURRENT_MODE_RI;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
@@ -342,7 +344,10 @@ SC_MODULE(decod) {
 
                   << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << system_type_inst_sd << csrrw_i_sd << csrrs_i_sd
 
-                  << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << ecall_i_sd << ebreak_i_sd << fence_i_sd;
+                  << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << ecall_i_sd << ebreak_i_sd << fence_i_sd
+                  << mret_i_sd
+                  << sret_i_sd 
+                  << current_mode_sd;;
         SC_METHOD(post_reg_read_decoding)
         sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
 
@@ -368,11 +373,13 @@ SC_MODULE(decod) {
 
                   << csrrs_i_sd << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << CSR_RDATA_SC << ecall_i_sd
 
-                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_RM;
+                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_RM << mret_i_sd
+                  << sret_i_sd ;
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RC
 
-                  << EXCEPTION_RM << PC_IF2DEC_RI;
+                  << EXCEPTION_RM << PC_IF2DEC_RI << mret_i_sd
+                  << sret_i_sd ;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

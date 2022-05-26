@@ -20,8 +20,10 @@ void ifetch::fetch_method() {
 
     } else {
         // data sent in if2dec
-
-        if2dec_in_var.range(64,65) = 0 ;
+        // If an exception is detected
+        //Pipeline pass in M-mode
+        //Fifo send nop instruction 
+        if2dec_in_var.range(64,65) = current_mode_si ;
         if2dec_in_var.range(63, 32) = nop_encoding;
         if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
@@ -44,10 +46,13 @@ void ifetch::fetch_method() {
     }
 }
 
-void ifetch::exception()  // can be usefull for further use
+void ifetch::exception()  
 {
-    if(!RESET)
-        current_mode_si = 3 ; // at initialization, strating in M-MODE
+    if(!RESET.read())
+        current_mode_si.write(3) ; // at initialization, strating in M-MODE
+    if(EXCEPTION_RM.read()){
+        current_mode_si.write(3) ;
+    }
     EXCEPTION_RI.write(0);
 }
 

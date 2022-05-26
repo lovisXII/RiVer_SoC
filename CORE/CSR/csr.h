@@ -5,6 +5,7 @@
 
 #define N_CSR        12
 #define adress_mtvec 0x80000000
+#define main_adresse 0x10054
 
 SC_MODULE(csr) {
     // Input :

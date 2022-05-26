@@ -19,6 +19,7 @@ SECTIONS
     seg_kernel :
     {
         *(.kernel) 
+        *(.reset)
     }
 }
 

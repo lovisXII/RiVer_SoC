@@ -10,7 +10,7 @@ void mem::mem2wbk_concat() {
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
     ff_din[107]           = exception_sm.read();
-    ff_din.range(109, 108) = CURRENT_MODE_RE.read();
+    ff_din.range(109, 108) = current_mode_sm.read();
 
     mem2wbk_din_sm.write(ff_din);
 }
@@ -77,6 +77,8 @@ void mem::sign_extend() {
 
 void mem::csr_exception() {
     exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
+    current_mode_sm = CURRENT_MODE_RE ;
+
     if (!exception_sm) {
         if (CSR_WENABLE_RE.read()) {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
@@ -207,6 +209,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
     sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
-    sc_trace(tf, CURRENT_MODE_RM, GET_NAME(CURRENT_MODE_RM));
+    sc_trace(tf, current_mode_sm, GET_NAME(CURRENT_MODE_RM));
+    sc_trace(tf, current_mode_sm, GET_NAME(current_mode_sm));
     fifo_inst.trace(tf);
 }

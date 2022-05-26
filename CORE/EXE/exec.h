@@ -120,7 +120,7 @@ SC_MODULE(exec) {
     sc_signal<bool> exception_se;
     sc_signal<bool> load_adress_missaligned_se;   // adress from store/load isn't aligned
     sc_signal<bool> instruction_access_fault_se;  // trying to access memory in wrong mode
-
+    sc_signal<sc_uint<2>> current_mode_se;
     // Instance used :
 
     alu                alu_inst;

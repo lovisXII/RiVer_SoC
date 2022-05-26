@@ -15,6 +15,7 @@ int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
     elfio                   reader;  // creation of an elfio object
     string                  path(argv[1]);
+    int                     reset_adr;
     int                     start_adr;
     int                     good_adr;
     int                     bad_adr;
@@ -73,7 +74,7 @@ int sc_main(int argc, char* argv[]) {
     // text_sec->set_flags( SHF_ALLOC | SHF_EXECINSTR );
     // text_sec->set_address( 0x80000000 );
 
-    int n_sec = reader.sections.size();  // get the total amount of sectionss
+    int n_sec = reader.sections.size();  // get the total amount of sections
 
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
@@ -103,6 +104,10 @@ int sc_main(int argc, char* argv[]) {
                 unsigned char other;
 
                 symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
+                if (name == "_reset") {
+                    cout << "Found reset" << endl;
+                    reset_adr = value - 4;  // minus 4 to acount for init inc_pc
+                }
                 if (name == "_start") {
                     cout << "Found start" << endl;
                     start_adr = value - 4;  // minus 4 to acount for init inc_pc
@@ -183,7 +188,7 @@ int sc_main(int argc, char* argv[]) {
     cout << "Reseting...";
 
     RESET.write(false);  // reset
-    PC_RESET.write(start_adr);
+    PC_RESET.write(reset_adr);
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
     cerr << "done." << endl;

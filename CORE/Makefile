@@ -14,8 +14,8 @@ all: core_tb
 core_tb: $(OBJECTS) exception
 	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
-exception: tests/exception.s
-	$(RISC) $(RISC_FLAGS) $^ -o tests/$@
+exception: exception.s
+	$(RISC) $(RISC_FLAGS) $^ -o $@
 
 %.o: %.cpp  %.h
 	$(CC) -c $< $(C_ARGS) -o $@
@@ -25,4 +25,4 @@ exception: tests/exception.s
 
 clean: 
 	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out
-	rm tests/exception
+	rm exception

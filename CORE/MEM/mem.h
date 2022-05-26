@@ -81,6 +81,9 @@ SC_MODULE(mem) {
     sc_signal<sc_uint<32>>         data_sm;
     sc_signal<bool>                wb_sm;
 
+    // MODE 
+    sc_signal<sc_uint<2>> current_mode_sm ;
+
     // Global Interface :
 
     sc_out<bool> EXCEPTION_RM;
