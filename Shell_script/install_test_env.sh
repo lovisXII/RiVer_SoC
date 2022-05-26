@@ -1,5 +1,6 @@
 #! /bin/bash
-
+echo "Need to be executed in sudo"
+apt install python3-pip
 pip3 install git+https://github.com/riscv/riscof.git
 cd /tmp
 apt-get install device-tree-compiler

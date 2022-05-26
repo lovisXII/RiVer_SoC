@@ -6,9 +6,17 @@ This README file isn't complete, everything here is subject to modification.
 This project as for purpose to modernise the architecture studied at Sorbonne University.\
 It was realised by Timothée Le Berre, Louis Geoffroy Pitailler & Kevin Lastra during their first year of Master SESI.\
 Since one decate or more, class from Master SESI used MIPS32 architecture. In this project our purpose is to create a material description of a RISCV architecture based on a 5 stage pipeline MIPS32.\
-To do this we used the riscv spec and we used the mips 5 stage pipele as base for our design.
+The implementation use the standard instruction set from [RISCV fondation](https://riscv.org/technical/specifications/). We choosed to implement a **RV32IM** with **Zicsr** extension and a **user** and **machine** mode.\
 
-![plot](RiscV_graph.PNG)
+Here's a schema of the 5 stage pipeline of our architecture without the Kernel mode :
+
+![plot](Documentation/Reports/Pictures_for_reports/RiscV_graph.PNG)
+
+Here's the same schema but with the kernel Mode :
+
+![plot](Documentation/Reports/Pictures_for_reports/schema_pipeline_exception.jpg)
+
+To find out more about it, please go into ``Documentation/Reports/`` and read **PSESI_final_report**.
 
 # I. How to compile ?
 ## A. What's needed 
@@ -19,12 +27,12 @@ To help you install all of this you will find two scripts in ```/Shell_script/``
 * install_systemc.sh : it will install Systemc.2.3.3, **need to be in sudo**
 
 Once everything is installed you will have to do a ```make``` in the directory ```/CORE/```. It will generate the executable core_tb.\
-This file takes has argument an assembly file or a c one, once you pass him the file it will execute it using our descritption of a RISCV core.\
+This file takes as argument an assembly file or a c one, once you pass it the file it will executes it using our descritption of a RISCV core.\
 You will find some test programm in ``/CORE/tests``.
 
 For example you can run ``core_tb tests/pgcd.c``.
 
-We also write a shell script ``run_all_tests.sh`` that take all the file inside tests/ and execute it and print a message saying if the exectution was a success or not.
+We also write a shell script ``run_all_tests.sh`` that take all the file inside tests/ and execute it and print a message saying if the execution was a success or not.
 
 ## B. Directory map :
 

@@ -22,4 +22,4 @@ SECTIONS
     }
 }
 
-INPUT(tests/exception)
+INPUT(exception)
