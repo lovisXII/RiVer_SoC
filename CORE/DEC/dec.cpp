@@ -777,7 +777,10 @@ void decod::post_reg_read_decoding() {
             }
 
             if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd) {
-                dec2exe_op2_var = rdata1_signal_sd;  // if non immediat type, loading value of the register
+                if(csrrw_i_sd)
+                    dec2exe_op2_var = 0 ;
+                else
+                    dec2exe_op2_var = rdata1_signal_sd;  // if non immediat type, loading value of the register
             } else {
                 dec2exe_op2_var = if_ir.range(19, 15);  // else loading value of register as an immediat
             }

@@ -16,10 +16,14 @@ SECTIONS
         *(.text)
     }
     . = 0x80000000 ;
+    seg_reset :
+    {
+        *(.reset)
+    }
+    . = 0x81000000 ;
     seg_kernel :
     {
         *(.kernel) 
-        *(.reset)
     }
 }
 
