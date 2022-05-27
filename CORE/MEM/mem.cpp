@@ -126,13 +126,17 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(0);
         }
-        if (SYSCALL_U_MODE_RE) {
+        if (ENV_CALL_S_MODE_RE) 
+        // sret made in wrong mode
+        {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFEFF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(8);
+            MCAUSE_WDATA_RM.write(9);
         }
-        if (SYSCALL_M_MODE_RE) {
+        if (ENV_CALL_M_MODE_RE) 
+        // mret made in wrong mode
+        {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFBFF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
@@ -196,8 +200,8 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, EBREAK_I_RE, GET_NAME(EBREAK_I_RE));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
     sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
-    sc_trace(tf, SYSCALL_U_MODE_RE, GET_NAME(SYSCALL_U_MODE_RE));
-    sc_trace(tf, SYSCALL_M_MODE_RE, GET_NAME(SYSCALL_M_MODE_RE));
+    sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
+    sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
     sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));

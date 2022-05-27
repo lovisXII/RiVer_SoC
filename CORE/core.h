@@ -106,8 +106,8 @@ SC_MODULE(core) {
     sc_signal<bool> EBREAK_I_RE;
     sc_signal<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
     sc_signal<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
-    sc_signal<bool> SYSCALL_U_MODE_RE;
-    sc_signal<bool> SYSCALL_M_MODE_RE;
+    sc_signal<bool> ENV_CALL_S_MODE_RE;
+    sc_signal<bool> ENV_CALL_M_MODE_RE;
 
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
@@ -213,6 +213,7 @@ SC_MODULE(core) {
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_RM(EXCEPTION_RM);
         ifetch_inst.CURRENT_MODE_RI(CURRENT_MODE_RI);
+        ifetch_inst.CURRENT_MODE_RD(CURRENT_MODE_RD);
 
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
@@ -363,8 +364,8 @@ SC_MODULE(core) {
         exec_inst.EBREAK_I_RE(EBREAK_I_RE);
         exec_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
         exec_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
-        exec_inst.SYSCALL_U_MODE_RE(SYSCALL_U_MODE_RE);
-        exec_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
+        exec_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);
+        exec_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         exec_inst.EXCEPTION_RM(EXCEPTION_RM);
         exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
         exec_inst.CURRENT_MODE_RD(CURRENT_MODE_RD);
@@ -419,8 +420,8 @@ SC_MODULE(core) {
         mem_inst.EBREAK_I_RE(EBREAK_I_RE);
         mem_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
         mem_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
-        mem_inst.SYSCALL_U_MODE_RE(SYSCALL_U_MODE_RE);
-        mem_inst.SYSCALL_M_MODE_RE(SYSCALL_M_MODE_RE);
+        mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);
+        mem_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
 
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
 

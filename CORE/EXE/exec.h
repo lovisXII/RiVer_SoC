@@ -55,8 +55,8 @@ SC_MODULE(exec) {
     sc_out<bool> EBREAK_I_RE;
     sc_out<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
     sc_out<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
-    sc_out<bool> SYSCALL_U_MODE_RE;
-    sc_out<bool> SYSCALL_M_MODE_RE;
+    sc_out<bool> ENV_CALL_S_MODE_RE;
+    sc_out<bool> ENV_CALL_M_MODE_RE;
     sc_out<sc_uint<2>>  CURRENT_MODE_RE;
 
     // Interruption :

@@ -47,9 +47,14 @@ void ifetch::fetch_method() {
 }
 
 void ifetch::exception()  
+// No exception in IFECTH
+// Gestion of current mode, start in Machine mode
+// Then keep the same mode as the pipeline 
 {
     if(!RESET.read())
         current_mode_si.write(3) ; // at initialization, strating in M-MODE
+    else 
+        current_mode_si.write(CURRENT_MODE_RD.read()) ;
     if(EXCEPTION_RM.read()){
         current_mode_si.write(3) ;
     }
@@ -81,5 +86,6 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, CURRENT_MODE_RI, GET_NAME(CURRENT_MODE_RI));
     sc_trace(tf, current_mode_si, GET_NAME(current_mode_si));
+    sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
     fifo_inst.trace(tf);
 }

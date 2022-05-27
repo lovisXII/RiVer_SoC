@@ -264,8 +264,8 @@ SC_MODULE(decod) {
     sc_signal<bool> ebreak_i_sd;
     sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
     sc_signal<bool> adress_missaligned_sd;   // branch offset is misaligned
-    sc_signal<bool> env_call_u_mode_sd;
     sc_signal<bool> env_call_s_mode_sd;
+    sc_signal<bool> env_call_m_mode_sd;
 
     void dec2if_gestion();
     void concat_dec2exe();
@@ -315,8 +315,8 @@ SC_MODULE(decod) {
                   << sltiu_i_sd << sltu_i_sd << RADR1_SD
 
                   << RADR2_SD << r1_valid_sd << EXCEPTION_RM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd
-                  << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << env_call_u_mode_sd
-                  << block_bp_sd << env_call_s_mode_sd << CURRENT_MODE_RI;
+                  << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << env_call_m_mode_sd
+                  << block_bp_sd << env_call_s_mode_sd << CURRENT_MODE_RI ;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
@@ -347,7 +347,7 @@ SC_MODULE(decod) {
                   << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << ecall_i_sd << ebreak_i_sd << fence_i_sd
                   << mret_i_sd
                   << sret_i_sd 
-                  << current_mode_sd;;
+                  << current_mode_sd << RESET_N;
         SC_METHOD(post_reg_read_decoding)
         sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
 

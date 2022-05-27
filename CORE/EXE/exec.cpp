@@ -137,8 +137,8 @@ void exec::fifo_unconcat() {
     EBREAK_I_RE.write((bool)ff_dout[154]);
     ILLEGAL_INSTRUCTION_RE.write((bool)ff_dout[155]);
     ADRESS_MISSALIGNED_RE.write((bool)ff_dout[156]);
-    SYSCALL_U_MODE_RE.write((bool)ff_dout[157]);
-    SYSCALL_M_MODE_RE.write((bool)ff_dout[158]);
+    ENV_CALL_S_MODE_RE.write((bool)ff_dout[157]);
+    ENV_CALL_M_MODE_RE.write((bool)ff_dout[158]);
     EXCEPTION_RE.write((bool)ff_dout[159]);
     LOAD_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[160]);
     INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[161]);
@@ -276,8 +276,8 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, EBREAK_I_RE, GET_NAME(EBREAK_I_RE));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
     sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
-    sc_trace(tf, SYSCALL_U_MODE_RE, GET_NAME(SYSCALL_U_MODE_RE));
-    sc_trace(tf, SYSCALL_M_MODE_RE, GET_NAME(SYSCALL_M_MODE_RE));
+    sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
+    sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
 
     // Interruption :
 
@@ -344,7 +344,6 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, exception_se, GET_NAME(exception_se));
     sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
     sc_trace(tf, CURRENT_MODE_RD, GET_NAME(CURRENT_MODE_RD));
-    sc_trace(tf, current_mode_se, GET_NAME(current_mode_se));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, instruction_access_fault_se, GET_NAME(instruction_access_fault_se));

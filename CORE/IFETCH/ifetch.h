@@ -32,6 +32,7 @@ SC_MODULE(ifetch) {
     sc_out<sc_uint<32>> PC_IF2DEC_RI;  // pc sent to if2dec
 
     sc_out<bool> EXCEPTION_RI;  // tells if an instruction have been made in IFETCH
+    sc_in<sc_uint<2>> CURRENT_MODE_RD ;
     sc_out<sc_uint<2>> CURRENT_MODE_RI ;
     // Interruption :
 
@@ -71,6 +72,6 @@ SC_MODULE(ifetch) {
         sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
                   << EXCEPTION_RM << CURRENT_MODE_RI << current_mode_si;
         SC_METHOD(exception)
-        sensitive << RESET << EXCEPTION_RM;
+        sensitive << RESET << EXCEPTION_RM << CURRENT_MODE_RD;
     }
 };

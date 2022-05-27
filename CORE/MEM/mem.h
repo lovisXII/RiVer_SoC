@@ -45,8 +45,8 @@ SC_MODULE(mem) {
     sc_in<bool> EBREAK_I_RE;
     sc_in<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
     sc_in<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
-    sc_in<bool> SYSCALL_U_MODE_RE;
-    sc_in<bool> SYSCALL_M_MODE_RE;
+    sc_in<bool> ENV_CALL_S_MODE_RE;
+    sc_in<bool> ENV_CALL_M_MODE_RE;
     sc_in<sc_uint<2>> CURRENT_MODE_RE ;
 
     // Bus Interface : // No bus in our implemation but can be use for further use
@@ -142,6 +142,6 @@ SC_MODULE(mem) {
         SC_METHOD(csr_exception);
         sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE << MIP_VALUE_RC
                   << PC_EXE2MEM_RE << INSTRUCTION_ACCESS_FAULT_RE << ECALL_I_RE << EBREAK_I_RE << ILLEGAL_INSTRUCTION_RE
-                  << ADRESS_MISSALIGNED_RE << SYSCALL_U_MODE_RE << SYSCALL_M_MODE_RE << BUS_ERROR_SX << exception_sm;
+                  << ADRESS_MISSALIGNED_RE << ENV_CALL_S_MODE_RE << ENV_CALL_M_MODE_RE << BUS_ERROR_SX << exception_sm;
     }
 };
