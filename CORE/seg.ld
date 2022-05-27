@@ -27,4 +27,4 @@ SECTIONS
     }
 }
 
-INPUT(exception)
+INPUT(kernel)

@@ -877,7 +877,7 @@ void decod::post_reg_read_decoding() {
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
     inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !(mret_i_sd || sret_i_sd));
-    add_offset_to_pc_sd.write((!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && (mret_i_sd || sret_i_sd));
+    add_offset_to_pc_sd.write((!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI));
 }
 
 //---------------------------------------------PC GESTION

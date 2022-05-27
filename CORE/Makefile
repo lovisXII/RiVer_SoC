@@ -11,12 +11,12 @@ RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: core_tb
 
-core_tb: $(OBJECTS) exception
+core_tb: $(OBJECTS) kernel
 	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
-exception: exception.s
+kernel: exception.s reset.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
-
+	
 %.o: %.cpp  %.h
 	$(CC) -c $< $(C_ARGS) -o $@
 
@@ -25,4 +25,4 @@ exception: exception.s
 
 clean: 
 	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out
-	rm exception
+	rm kernel
