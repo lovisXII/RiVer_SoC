@@ -395,11 +395,11 @@ void decod::decoding_instruction() {
         csrrci_i_sd.write(1);
     else
         csrrci_i_sd.write(0);
-    if (if_ir == 0b00010000001000000000000001110011)
+    if (if_ir == 0b00110000001000000000000001110011)
         mret_i_sd.write(1);
     else
         mret_i_sd.write(0);
-    if (if_ir == 0b00110000001000000000000001110011)
+    if (if_ir == 0b00010000001000000000000001110011)
         sret_i_sd.write(1);
     else
         sret_i_sd.write(0);
@@ -584,7 +584,6 @@ void decod::post_reg_read_decoding() {
             mem_size_sd.write(0);
             mem_sign_extend_sd.write(0);
         }
-
         mem_store_sd.write(0);
         dec2exe_wb_var    = 1;
         mem_data_var      = 0;
@@ -751,6 +750,7 @@ void decod::post_reg_read_decoding() {
             inc_pc_var                      = 0;
         }
     } else if (system_type_inst_sd == 1) {
+
         mem_load_sd.write(0);
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
@@ -803,22 +803,8 @@ void decod::post_reg_read_decoding() {
             mem_data_var      = 0;
             inc_pc_var        = 1;
         }
-    } else if (fence_i_sd) {
-        exe_cmd_sd.write(0);
-        dec2exe_op1_var = 0;
-        dec2exe_op2_var = 0;
-        exe_neg_op2_sd.write(0);
-        dec2exe_wb_var = 0;
-        mem_load_sd.write(0);
-        mem_store_sd.write(0);
-        mem_sign_extend_sd.write(0);
-        mem_size_sd.write(0);
-        select_shift_sd.write(0);
-        offset_branch_var = 0;
-        mem_data_var      = 0;
-        inc_pc_var        = 1;
-    } 
-    else if(sret_i_sd || mret_i_sd){
+        else if(sret_i_sd || mret_i_sd){
+        csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
         dec2exe_op2_var = 0;
@@ -833,7 +819,25 @@ void decod::post_reg_read_decoding() {
         mem_data_var      = 0;
         inc_pc_var        = 0;
     }
+    } else if (fence_i_sd) {
+        csr_wenable_sd.write(0);
+        exe_cmd_sd.write(0);
+        dec2exe_op1_var = 0;
+        dec2exe_op2_var = 0;
+        exe_neg_op2_sd.write(0);
+        dec2exe_wb_var = 0;
+        mem_load_sd.write(0);
+        mem_store_sd.write(0);
+        mem_sign_extend_sd.write(0);
+        mem_size_sd.write(0);
+        select_shift_sd.write(0);
+        offset_branch_var = 0;
+        mem_data_var      = 0;
+        inc_pc_var        = 1;
+    } 
+    
     else {
+        csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
         dec2exe_op2_var = 0;
@@ -869,8 +873,8 @@ void decod::post_reg_read_decoding() {
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
-    inc_pc_sd.write((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read());
-    add_offset_to_pc_sd.write(!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI);
+    inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !(mret_i_sd || sret_i_sd));
+    add_offset_to_pc_sd.write((!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && (mret_i_sd || sret_i_sd));
 }
 
 //---------------------------------------------PC GESTION
@@ -885,14 +889,13 @@ void decod::pc_inc() {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD.write(1);
     } else if (!inc_pc_sd && add_offset_to_pc_sd.read()) {
-        if(!sret_i_sd || ! mret_i_sd){
+        if(!(sret_i_sd || mret_i_sd)){
         pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
         WRITE_PC_ENABLE_SD.write(1);
         }
         else{
         //in case of a xRET instruction, we're just loading value of mepc
         //inside PC
-        std ::cout << "ouhgohog" << endl ; 
         pc_out = offset_branch_var; //putting epc value inside register
         WRITE_PC_ENABLE_SD.write(1);
         }
@@ -1152,7 +1155,6 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_wenable_sd, GET_NAME(csr_wenable_sd));
     sc_trace(tf, csr_radr_sd, GET_NAME(csr_radr_sd));
     sc_trace(tf, offset_branch_sd, GET_NAME(offset_branch_sd));
-    sc_trace(tf, csr_in_progress, GET_NAME(csr_in_progress));
     sc_trace(tf, csr_in_progress, GET_NAME(csr_in_progress));
     sc_trace(tf, mret_i_sd, GET_NAME(mret_i_sd));
     sc_trace(tf, sret_i_sd, GET_NAME(sret_i_sd));
