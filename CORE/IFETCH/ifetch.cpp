@@ -46,15 +46,16 @@ void ifetch::fetch_method() {
     }
 }
 
+
 void ifetch::exception()  
 // No exception in IFECTH
 // Gestion of current mode, start in Machine mode
 // Then keep the same mode as the pipeline 
 {
-    if(!RESET.read())
+    if(RESET.posedge())
         current_mode_si.write(3) ; // at initialization, strating in M-MODE
     else 
-        current_mode_si.write(CURRENT_MODE_RD.read()) ;
+        current_mode_si.write(CURRENT_MODE_RD) ;
     if(EXCEPTION_RM.read()){
         current_mode_si.write(3) ;
     }

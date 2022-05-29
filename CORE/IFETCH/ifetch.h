@@ -49,15 +49,16 @@ SC_MODULE(ifetch) {
 
     // Internals signals :
 
-    sc_signal<bool>               IF2DEC_PUSH_SI;
-    sc_signal<bool>               IF2DEC_FULL_SI;
-    sc_signal<sc_bv<if2dec_size>> if2dec_in_si;
-    sc_signal<sc_bv<if2dec_size>> instr_ri;  // instruction sent to if2dec
-    sc_signal<sc_uint<2>> current_mode_si ;
-
+    sc_signal<bool>                 IF2DEC_PUSH_SI;
+    sc_signal<bool>                 IF2DEC_FULL_SI;
+    sc_signal<sc_bv<if2dec_size>>   if2dec_in_si;
+    sc_signal<sc_bv<if2dec_size>>   instr_ri;  // instruction sent to if2dec
+    sc_signal<sc_uint<2>>           current_mode_si ;
+    
     void fetch_method();
     void trace(sc_trace_file * tf);
     void exception();
+    
     SC_CTOR(ifetch) : fifo_inst("if2dec") {
         fifo_inst.DIN_S(if2dec_in_si);
         fifo_inst.DOUT_R(instr_ri);
@@ -72,6 +73,6 @@ SC_MODULE(ifetch) {
         sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
                   << EXCEPTION_RM << CURRENT_MODE_RI << current_mode_si;
         SC_METHOD(exception)
-        sensitive << RESET << EXCEPTION_RM << CURRENT_MODE_RD;
+        sensitive << RESET << EXCEPTION_RM << CURRENT_MODE_RD ;
     }
 };

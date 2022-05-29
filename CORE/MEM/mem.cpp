@@ -77,7 +77,11 @@ void mem::sign_extend() {
 
 void mem::csr_exception() {
     exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
-    current_mode_sm = CURRENT_MODE_RE ;
+
+    if(RESET.posedge())
+        current_mode_sm = 3 ;
+    else
+        current_mode_sm = CURRENT_MODE_RE ;
 
     if (!exception_sm) {
         if (CSR_WENABLE_RE.read()) {

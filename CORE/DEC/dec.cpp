@@ -414,11 +414,11 @@ void decod::pre_reg_read_decoding() {
     sc_uint<6>  radr1_var;
     sc_uint<6>  radr2_var;
     sc_uint<6>  adr_dest_var;
-    if(!RESET_N)
+    if(RESET_N.posedge() )
         current_mode_sd = 3 ;
     else
         current_mode_sd = CURRENT_MODE_RI ;
-    // R-type Instruction :
+    //R-type Instruction :
     if (r_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);

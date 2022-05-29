@@ -17,7 +17,11 @@ void exec::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
 
-    current_mode_se = CURRENT_MODE_RD ;
+    // Setup of current mode in case of RESET and other cases
+    if(RESET.posedge())
+        current_mode_se = 3 ;
+    else
+        current_mode_se = CURRENT_MODE_RD ;
     
     if (SELECT_SHIFT_RD.read()) {
         exe_res_se.write(shifter_out_se);
