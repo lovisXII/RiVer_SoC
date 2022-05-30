@@ -406,6 +406,43 @@ void decod::decoding_instruction() {
         sret_i_sd.write(0);
 }
 
+void decod::decod_mode(){
+ // Changing pipeline mode
+    // 0 -> User
+    // 1 -> S-mode
+    // 2 -> M-mode
+    
+    if(RESET_N.posedge()) //at reset starts in machine mode
+    {
+        current_mode_sd = 3 ;
+    }
+    else{
+        cout << "CURRENT_MODE_RI : "<< CURRENT_MODE_RI << " " << sc_time_stamp() << endl ;
+
+        current_mode_sd = CURRENT_MODE_RI ;
+        cout << "curent_mode_sd : "<< current_mode_sd << " " << sc_time_stamp() << endl ;
+        if(CURRENT_MODE_RI.read() != 3 && mret_i_sd){//mret in wrong mode 
+            cout << "if 1" << endl ;
+            env_call_m_mode_sd = 1 ;
+        }
+        else if(mret_i_sd && CURRENT_MODE_RI.read() == 3)// mret in right mode
+        {
+            cout << "if 2" << endl ;
+            current_mode_sd = 0 ; // Return to user Mode
+            env_call_m_mode_sd = 0 ;
+        }
+        if(CURRENT_MODE_RI.read() != 1 && sret_i_sd){//sret 
+        cout << "if 3" << endl ;
+            env_call_s_mode_sd = 1 ;
+        }
+        else if(sret_i_sd && CURRENT_MODE_RI.read() == 1)
+        {cout << "if 4" << endl ;
+            current_mode_sd = 0 ; // Return to user Mode
+            env_call_s_mode_sd = 0 ;
+        }
+    }
+}
+
 //---------------------------------------------REGISTRE & OPERAND DETECTION
 //:---------------------------------------------
 // this needs to be done in two steps :
@@ -414,18 +451,14 @@ void decod::pre_reg_read_decoding() {
     sc_uint<6>  radr1_var;
     sc_uint<6>  radr2_var;
     sc_uint<6>  adr_dest_var;
-    if(RESET_N.posedge() )
-        current_mode_sd = 3 ;
-    else
-        current_mode_sd = CURRENT_MODE_RI ;
+
+   
     //R-type Instruction :
     if (r_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = if_ir.range(11, 7);
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // I-type Instruction :
     else if (i_type_inst_sd == 1) {
@@ -433,8 +466,6 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // S-type Instruction :
     else if (s_type_inst_sd == 1) {
@@ -442,8 +473,6 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = 0;
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // Branch Instruction :
     else if (b_type_inst_sd == 1) {
@@ -451,8 +480,6 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = 0;
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // U-type Instruction :
     else if (u_type_inst_sd == 1) {
@@ -460,8 +487,6 @@ void decod::pre_reg_read_decoding() {
         adr_dest_var = if_ir.range(11, 7);
         radr2_var    = 0;
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // J-type Instruction :
     else if (j_type_inst_sd == 1) {
@@ -469,8 +494,6 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // JALR-type Instruction :
     else if (jalr_type_inst_sd == 1) {
@@ -478,8 +501,6 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = 0;
         adr_dest_var = if_ir.range(11, 7);
         CSR_RADR_SD.write(0);
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
     }
     // system-type Instruction
     else if (system_type_inst_sd == 1) {
@@ -493,8 +514,6 @@ void decod::pre_reg_read_decoding() {
             radr1_var    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
             radr2_var    = 0;
             adr_dest_var = if_ir.range(11, 7);
-            env_call_m_mode_sd = 0 ;
-            env_call_s_mode_sd = 0 ;
         } else if (ecall_i_sd || ebreak_i_sd) {
             radr1_var    = 0;
             radr2_var    = 0;
@@ -507,26 +526,6 @@ void decod::pre_reg_read_decoding() {
             radr1_var = 0;
             radr2_var = 0;
             adr_dest_var = 0;
-
-            // Changing pipeline mode
-            // 0 -> User
-            // 1 -> S-mode
-            // 2 -> M-mode
-            if(current_mode_sd.read() != 3 && mret_i_sd){//mret 
-                env_call_m_mode_sd = 1 ;
-            }
-            else{
-                current_mode_sd = 0 ; // Return to user Mode
-                env_call_m_mode_sd = 0 ;
-            }
-            if(current_mode_sd.read() != 1 && sret_i_sd){//sret 
-                env_call_s_mode_sd = 1 ;
-            }
-            else{
-                current_mode_sd = 0 ; // Return to user Mode
-                env_call_s_mode_sd = 0 ;
-            }
-
         }
     }
     // Default case :

@@ -279,6 +279,7 @@ SC_MODULE(decod) {
     void pc_inc();
     void bypasses();
     void stall_method();
+    void decod_mode() ;
     void trace(sc_trace_file * tf);
 
     SC_CTOR(decod) : dec2if("dec2if"), dec2exe("dec2exe") {
@@ -316,7 +317,7 @@ SC_MODULE(decod) {
 
                   << RADR2_SD << r1_valid_sd << EXCEPTION_RM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd
                   << ecall_i_sd << ebreak_i_sd << illegal_instruction_sd << adress_missaligned_sd << env_call_m_mode_sd
-                  << block_bp_sd << env_call_s_mode_sd << CURRENT_MODE_RI ;
+                  << block_bp_sd << env_call_s_mode_sd << current_mode_sd ;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
@@ -386,5 +387,7 @@ SC_MODULE(decod) {
 
                   << RADR2_SD << BP_EXE2MEM_EMPTY_SE;
         reset_signal_is(RESET_N, false);
+        SC_METHOD(decod_mode);
+        sensitive << RESET_N << CLK.pos() << CURRENT_MODE_RI ;
     }
 };
