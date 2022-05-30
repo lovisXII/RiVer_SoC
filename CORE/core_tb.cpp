@@ -10,6 +10,48 @@
 
 using namespace std;
 using namespace ELFIO;
+
+//#define ICACHE_ON
+//#define DCACHE_ON
+//#define DEBUG_MAX_ITERATIONS
+
+#ifdef ICACHE_ON
+
+#include "CACHES/icache.h"
+
+// ICACHE I/O INTERFACE MAE STATES
+enum IC_FSM
+{
+    IC_IDLE,
+    IC_SEND_INSTRUCTION_1,
+    IC_CLK_SIMU0,
+    IC_SEND_INSTRUCTION_2,
+    IC_CLK_SIMU1,
+    IC_SEND_INSTRUCTION_3,
+    IC_END_BURST
+};
+
+#endif
+
+#ifdef DCACHE_ON
+
+#include "CACHES/dcache.h"
+
+// DCACHE ANSWER MAE STATES
+enum DC_FSM
+{
+    DC_IDLE,
+    DC_CLK_SIMU0,
+    DC_SEND_DTA_1,
+    DC_CLK_SIMU1,
+    DC_SEND_DTA_2,
+    DC_CLK_SIMU2,
+    DC_SEND_DTA_3,
+    DC_END_BURST
+};
+
+#endif
+
 // arguments
 int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
@@ -142,6 +184,14 @@ int sc_main(int argc, char* argv[]) {
 
     core core_inst("core_inst");
 
+#ifdef ICACHE_ON
+    icache icache_inst("icache");
+#endif
+
+#ifdef DCACHE_ON
+    dcache dcache_inst("dcache");
+#endif
+
     sc_trace_file* tf;
     tf = sc_create_vcd_trace_file("tf");
 
@@ -151,7 +201,18 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> MEM_RESULT;
     sc_signal<bool>        MEM_STALL;
-    sc_signal<sc_uint<2>>  MEM_SIZE;
+
+#ifdef DCACHE_ON
+    //MP interface DCACHE
+    sc_signal<bool> DCACHE_LOAD, DCACHE_STORE;
+    sc_signal<bool> DCACHE_DTA_VALID;
+    sc_signal<sc_uint<32>> DCACHE_DT;
+    sc_signal<sc_uint<32>> DCACHE_A;
+
+    sc_signal<sc_uint<32>> MP_DT;
+    sc_signal<sc_uint<32>> MP_A;
+    sc_signal<bool> MP_ACK_DCACHE;
+#endif
 
     // Icache interface
     sc_signal<sc_uint<32>> IF_ADR;
@@ -159,6 +220,14 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_bv<32>> IC_INST;
     sc_signal<bool>      IC_STALL;
+
+#ifdef ICACHE_ON
+    //MP interface ICACHE
+    sc_signal<bool>                 MP_ACK_ICACHE;
+    sc_signal<sc_uint<32>>          ICACHE_DT;
+    sc_signal<sc_uint<32>>          ICACHE_A;
+    sc_signal<bool>                 ICACHE_DTA_VALID;
+#endif
 
     sc_signal<sc_uint<32>> PC_RESET;
     sc_signal<sc_uint<32>> PC_VALUE;
@@ -172,7 +241,6 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_LOAD_SM(MEM_LOAD);
     core_inst.MCACHE_RESULT_SM(MEM_RESULT);
     core_inst.MCACHE_STALL_SM(MEM_STALL);
-    core_inst.MCACHE_MEM_SIZE_SM(MEM_SIZE);
 
     core_inst.ADR_SI(IF_ADR);
     core_inst.ADR_VALID_SI(IF_ADR_VALID);
@@ -185,6 +253,59 @@ int sc_main(int argc, char* argv[]) {
     core_inst.PC_INIT(PC_RESET);
     core_inst.trace(tf);
 
+#ifdef DCACHE_ON
+
+    //Dcache map
+    dcache_inst.CLK(CLK);
+    dcache_inst.RESET_N(RESET);
+    dcache_inst.trace(tf);
+    //processor side
+    dcache_inst.DATA_ADR_SM(MEM_ADR);
+    dcache_inst.DATA_SM(MEM_DATA);
+    dcache_inst.LOAD_SM(MEM_LOAD);
+    dcache_inst.STORE_SM(MEM_STORE);
+    dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
+    dcache_inst.DATA_SC(MEM_RESULT);
+    dcache_inst.STALL_SC(MEM_STALL);
+    //MP side
+    dcache_inst.DTA_VALID_SC(DCACHE_DTA_VALID);
+    dcache_inst.READ_SC(DCACHE_LOAD);
+    dcache_inst.WRITE_SC(DCACHE_STORE);
+    dcache_inst.DT_SC(DCACHE_DT);
+    dcache_inst.A_SC(DCACHE_A);
+    dcache_inst.DT_SP(MP_DT);
+    dcache_inst.A_SP(MP_A);
+    dcache_inst.SLAVE_ACK_SP(MP_ACK_DCACHE);
+
+    DC_FSM DC_fsm_current_state = DC_IDLE;
+
+    bool dcache_dta_valid;
+    bool read, write;
+#endif
+
+#ifdef ICACHE_ON
+
+    // ICache map
+    icache_inst.CLK(CLK);
+    icache_inst.RESET_N(RESET);
+    icache_inst.trace(tf);
+    //processor side
+    icache_inst.ADR_SI(IF_ADR);
+    icache_inst.ADR_VALID_SI(IF_ADR_VALID);
+    icache_inst.IC_INST_SI(IC_INST);
+    icache_inst.IC_STALL_SI(IC_STALL);
+    //MP side
+    icache_inst.DT(ICACHE_DT);
+    icache_inst.A(ICACHE_A);
+    icache_inst.DTA_VALID(ICACHE_DTA_VALID);
+    icache_inst.SLAVE_ACK_SP(MP_ACK_ICACHE);
+
+    //init MAE state
+    IC_FSM IC_fsm_current_state = IC_IDLE;
+
+    bool icache_dta_valid;
+#endif
+
     cout << "Reseting...";
 
     RESET.write(false);  // reset
@@ -192,22 +313,163 @@ int sc_main(int argc, char* argv[]) {
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
     cerr << "done." << endl;
+
+
     int cycles = 0;
     int countdown;
+
+    int if_adr;
+    int if_result;
+    int mem_adr;
+
+#ifdef DEBUG_MAX_ITERATIONS
+    int cpt = 0;
+    while (cpt < 200) { cpt++;
+#else
     while (1) {
+#endif
         if (countdown) countdown--;
         cycles++;
-        unsigned int mem_adr       = MEM_ADR.read();
+#ifdef DCACHE_ON
+        dcache_dta_valid = DCACHE_DTA_VALID.read();
+
+        read = DCACHE_LOAD.read();
+        write = DCACHE_STORE.read();
+
+        switch (DC_fsm_current_state)
+        {
+            case DC_IDLE:
+                if(dcache_dta_valid)
+                {
+                    if(read)
+                    {
+                        mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
+
+                        std::cout << "start reading  adr: "
+                                  << mem_adr << std::endl;
+
+                        MP_DT.write(ram[mem_adr]);
+                        MP_A.write(mem_adr);
+                        MP_ACK_DCACHE.write(true);
+                        DC_fsm_current_state = DC_CLK_SIMU0;
+                    }
+                    else
+                        MP_ACK_DCACHE.write(false);
+
+                    if(write)
+                    {
+                        mem_adr = DCACHE_A.read();
+                        int data = DCACHE_DT.read();
+                        ram[mem_adr] = data;
+
+                        std::cout << "store " << ram[mem_adr] 
+                                  << " at " <<  mem_adr << std::endl;
+                    }
+                }       
+                else
+                    MP_ACK_DCACHE.write(false);
+            break;
+            case DC_CLK_SIMU0:
+                DC_fsm_current_state = DC_SEND_DTA_1;
+            break;
+            case DC_SEND_DTA_1:
+                MP_DT.write(ram[mem_adr+4]);
+                MP_A.write(mem_adr+4);
+                MP_ACK_DCACHE.write(true);
+                DC_fsm_current_state = DC_CLK_SIMU1;
+            break;
+            case DC_CLK_SIMU1:
+                DC_fsm_current_state = DC_SEND_DTA_2;
+            break;
+            case DC_SEND_DTA_2:
+                MP_DT.write(ram[mem_adr+8]);
+                MP_A.write(mem_adr+8);
+                MP_ACK_DCACHE.write(true);
+                DC_fsm_current_state = DC_CLK_SIMU2;
+            break;
+            case DC_CLK_SIMU2:
+                DC_fsm_current_state = DC_SEND_DTA_3;
+            break;
+            case DC_SEND_DTA_3:
+                MP_DT.write(ram[mem_adr+12]);
+                MP_A.write(mem_adr+12);
+                MP_ACK_DCACHE.write(true);
+                DC_fsm_current_state = DC_END_BURST;
+            break;
+            case DC_END_BURST:
+                DC_fsm_current_state = DC_IDLE;
+                MP_ACK_DCACHE.write(false);
+            break;
+        }
+#else     
+        mem_adr       = MEM_ADR.read();
         bool         mem_adr_valid = MEM_ADR_VALID.read();
         unsigned int mem_data      = MEM_DATA.read();
         bool         mem_store     = MEM_STORE.read();
         bool         mem_load      = MEM_LOAD.read();
-        unsigned int mem_size      = MEM_SIZE.read();
         unsigned int mem_result;
+#endif
 
-        unsigned int if_adr       = IF_ADR.read();
+#ifdef ICACHE_ON
+        switch(IC_fsm_current_state)
+        {
+            case IC_IDLE:
+                icache_dta_valid = ICACHE_DTA_VALID.read();
+                if(icache_dta_valid)
+                {
+                    if_adr = ICACHE_A.read();
+
+                    ICACHE_DT.write(ram[if_adr]);
+                    //std::cout << "inst 0: " << ram[if_adr] << std::endl;
+                    ICACHE_A.write(if_adr);
+                    MP_ACK_ICACHE.write(true);
+                    IC_fsm_current_state = IC_SEND_INSTRUCTION_1;
+                }
+                else
+                {
+                    MP_ACK_ICACHE.write(false);
+                }
+            break;
+            case IC_SEND_INSTRUCTION_1:
+                ICACHE_DT.write(ram[if_adr+4]);
+                ICACHE_A.write(if_adr+4);
+                MP_ACK_ICACHE.write(true);
+                IC_fsm_current_state = IC_CLK_SIMU0;
+
+                //std::cout << "inst 1: " << ram[if_adr+4] << std::endl;
+            break;
+            case IC_CLK_SIMU0:
+                IC_fsm_current_state = IC_SEND_INSTRUCTION_2;
+            break;
+            case IC_SEND_INSTRUCTION_2:
+                ICACHE_DT.write(ram[if_adr+8]);
+                ICACHE_A.write(if_adr+8);
+                MP_ACK_ICACHE.write(true);
+                IC_fsm_current_state = IC_CLK_SIMU1;
+
+                //std::cout << "inst 2: " << ram[if_adr+8] << std::endl;
+            break;
+            case IC_CLK_SIMU1:
+                IC_fsm_current_state = IC_SEND_INSTRUCTION_3;
+            break;
+            case IC_SEND_INSTRUCTION_3:
+                ICACHE_DT.write(ram[if_adr+12]);
+                ICACHE_A.write(if_adr+12);
+                MP_ACK_ICACHE.write(true);
+                IC_fsm_current_state = IC_END_BURST;
+
+                //std::cout << "inst 3: " << ram[if_adr + 12] << std::endl;
+            break;
+            case IC_END_BURST:
+                IC_fsm_current_state = IC_IDLE;
+                MP_ACK_ICACHE.write(false);
+            break;
+        }
+#else
+        if_adr       = IF_ADR.read();
         bool         if_afr_valid = IF_ADR_VALID.read();
-        unsigned int if_result;
+#endif
+
 
         unsigned int pc_adr = PC_VALUE.read();
         if (signature_name == "" && pc_adr == bad_adr) {
@@ -231,7 +493,8 @@ int sc_main(int argc, char* argv[]) {
             }
             exit(0);
         }
-        unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
+
+        /*unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
         unsigned int offset          = 8 * (mem_adr % 4);
         unsigned int mask;
         if (mem_size == 2)
@@ -245,12 +508,22 @@ int sc_main(int argc, char* argv[]) {
             ram[rounded_mem_adr] &= ~mask;
             ram[rounded_mem_adr] |= (mask & (mem_data << offset));
         }
-        mem_result = (ram[rounded_mem_adr] & mask) >> offset;
-        if_result  = ram[if_adr];
+        mem_result = (ram[rounded_mem_adr] & mask) >> offset;*/
+
+#ifndef DCACHE_ON
+        if (mem_store && mem_adr_valid) {
+            ram[mem_adr] = mem_data;
+        }
+        mem_result = ram[mem_adr];
         MEM_RESULT.write(mem_result);
         MEM_STALL.write(false);
+#endif
+
+#ifndef ICACHE_ON
+        if_result = ram[if_adr];
         IC_INST.write(if_result);
         IC_STALL.write(false);
+#endif
 
         sc_start(500, SC_PS);
     }

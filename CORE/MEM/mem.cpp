@@ -42,7 +42,7 @@ void mem::mem_preprocess() {
     MCACHE_LOAD_SM.write(LOAD_RE.read());
     MCACHE_STORE_SM.write(STORE_RE.read());
     MCACHE_ADR_VALID_SM.write(!EXE2MEM_EMPTY_SE.read());
-    MCACHE_MEM_SIZE_SM.write(MEM_SIZE_RE.read());
+    //MCACHE_MEM_SIZE_SM.write(MEM_SIZE_RE.read());
 }
 
 void mem::sign_extend() {
@@ -215,7 +215,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
-    sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
+    //sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
     sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
     sc_trace(tf, current_mode_sm, GET_NAME(CURRENT_MODE_RM));
     sc_trace(tf, current_mode_sm, GET_NAME(current_mode_sm));

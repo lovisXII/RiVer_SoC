@@ -147,8 +147,10 @@ SC_MODULE(core) {
     // Mcache interface
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
     sc_out<sc_uint<32>> MCACHE_DATA_SM;
-    sc_out<bool>        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM;
-    sc_out<sc_uint<2>>  MCACHE_MEM_SIZE_SM;
+    sc_out<bool>        MCACHE_ADR_VALID_SM, 
+                        MCACHE_STORE_SM, 
+                        MCACHE_LOAD_SM;
+
 
     sc_in<sc_uint<32>> MCACHE_RESULT_SM;
     sc_in<bool>        MCACHE_STALL_SM;
@@ -399,7 +401,6 @@ SC_MODULE(core) {
         mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);
         mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
         mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);
-        mem_inst.MCACHE_MEM_SIZE_SM(MCACHE_MEM_SIZE_SM);
 
         mem_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
         mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);

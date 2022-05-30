@@ -2,9 +2,10 @@
 #define D_CACHE
 
 #include <systemc.h>
+#include "buffercache.h"
 #include "../UTIL/debug_util.h"
 
-// cache N-way associatif, write through et buffet
+//cache N-way associatif, write through et buffet
 // taille du cache 1024
 // buffer de taille 2
 
@@ -13,108 +14,122 @@
 // offset => 4 mots => 2 bits
 // tag => 23 bits
 
-// communication direct avec la MP (pas de bus ni BCU)
+//communication direct avec la MP (pas de bus ni BCU) 
+
+// C: cache   M: memory  P: MP
+//acronym_X
 
 #define WAY_SIZE 128
 
-// ACKNOWLEDGE
-#define A_READY   0x00
-#define A_WAIT    0x01
-#define A_RETRACT 0x10
 
-enum STATE  // MAE STATES
-{ IDLE,
-  WAIT_BUFF_READ,
-  WAIT_MEM,
-  WAIT_BUFF_WRITE };
 
-SC_MODULE(dcache) {
-    sc_in<bool> CK;
-    sc_in<bool> RESET;
+SC_MODULE(dcache)
+{
+  sc_in_clk CLK;
+  sc_in<bool> RESET_N;
 
-    // interface processeur
-    sc_in<sc_uint<32>> DATA_ADDRESS_M;
-    sc_in<sc_uint<32>> DATA_M;
-    sc_in<bool>        LOAD_M;
-    sc_in<bool>        STORE_M;
-    sc_in<bool>        VALID_ADDRESS_M;
+// interface processeur
+  sc_in<sc_uint<32>> DATA_ADR_SM;
+  sc_in<sc_uint<32>> DATA_SM;
+  sc_in<bool> LOAD_SM;
+  sc_in<bool> STORE_SM;
+  sc_in<bool> VALID_ADR_SM;
 
-    sc_out<sc_uint<32>> DATA_C;
-    sc_out<bool>        STALL;
-    sc_out<bool>        MISS_C;  // 0 : HIT, 1 : MISS
-    sc_out<bool>        VALID_DATA_C;
-    // interface MP
-    sc_out<bool>          DTA_VALID;  // data or/and adresse valid
-    sc_out<bool>          READ, WRITE;
-    sc_inout<sc_uint<32>> DT;
-    sc_inout<sc_uint<32>> A;
-    sc_in<bool>           SLAVE_ACK;  // slave answer (slave dt valid)
+  sc_out<sc_uint<32>> DATA_SC;
+  sc_out<bool> STALL_SC;               // if stall donc miss else hit
+// interface MP
+  sc_out<bool> DTA_VALID_SC;         // data or/and adresse valid
+  sc_out<bool> READ_SC, WRITE_SC;
 
-    // signals
-    sc_signal<sc_uint<23>> address_tag;
-    sc_signal<sc_uint<7>>  address_index;
-    sc_signal<sc_uint<2>>  address_offset;
-    sc_signal<sc_uint<32>> data;
-    sc_signal<bool>        store, load;
+  // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
+  // la MP ou du CACHE
+  sc_out<sc_uint<32>> DT_SC;
+  sc_out<sc_uint<32>> A_SC;
 
-    sc_signal<bool> way0_hit;
-    sc_signal<bool> way1_hit;
+  sc_in<sc_uint<32>> DT_SP;
+  sc_in<sc_uint<32>> A_SP;
+  sc_in<bool> SLAVE_ACK_SP;          // slave answer (slave dt valid)
 
-    sc_signal<sc_uint<32>> selected_data;
+//signals
+  //parse address from CPU
+  sc_signal<sc_uint<21>> address_tag;
+  sc_signal<sc_uint<7>> address_index;
+  sc_signal<sc_uint<4>> address_offset;
+  //parse address from MP
+  sc_signal<sc_uint<21>> mp_address_tag;
+  sc_signal<sc_uint<7>> mp_address_index;
+  sc_signal<sc_uint<4>> mp_address_offset;
 
-    sc_signal<bool> full;
-    sc_signal<bool> current_LRU;  // false: 0, true: 1
+  sc_signal<sc_uint<4>> mp_last_addr_offset;
 
-    // WAYS 128 lines
-    bool LRU_bit_check[128];  // bit to compare least recently used
+  sc_signal<bool> way0_hit;
+  sc_signal<bool> way1_hit;
+  
+  sc_signal<sc_uint<32>> selected_data;
 
-    // WAY 0
-    sc_signal<sc_uint<32>> w0_word[128][4];
-    sc_signal<sc_uint<23>> w0_TAG[128];
-    sc_signal<bool>        w0_LINE_VALIDATE[128];
+  sc_signal<bool> current_LRU; // false: 0, true: 1
 
-    // WAY 1
-    sc_signal<sc_uint<32>> w1_word[128][4];
-    sc_signal<sc_uint<23>> w1_TAG[128];
-    sc_signal<bool>        w1_LINE_VALIDATE[128];
+// WAYS 128 lines
+  sc_signal<bool> LRU_bit_check[128];     // bit to compare least recently used 
 
-    // buffers
-    // buff0
-    sc_signal<sc_uint<32>> buff0_DATA;
-    sc_signal<sc_uint<32>> buff0_DATA_ADDRESS;
-    sc_signal<bool>        buff0_LOAD;
-    sc_signal<bool>        buff0_STORE;
-    sc_signal<bool>        buff0_VALIDATE;  // data valid on buffer
+// WAY 0
+  sc_signal<sc_uint<32>> w0_word[128][4];
+  sc_signal<sc_uint<21>> w0_TAG[128];
+  sc_signal<bool> w0_LINE_VALIDATE[128];
 
-    // buff1
-    sc_signal<sc_uint<32>> buff1_DATA;
-    sc_signal<sc_uint<32>> buff1_DATA_ADDRESS;
-    sc_signal<bool>        buff1_LOAD;
-    sc_signal<bool>        buff1_STORE;
-    sc_signal<bool>        buff1_VALIDATE;  // data valid on buffer
+//WAY 1
+  sc_signal<sc_uint<32>> w1_word[128][4];
+  sc_signal<sc_uint<21>> w1_TAG[128];
+  sc_signal<bool> w1_LINE_VALIDATE[128];
 
-    // fsm : finite state machine
-    sc_signal<STATE> fsm_current_state;
-    sc_signal<STATE> fsm_future_state;
+//buffer
+  sc_signal<bool> write_buff, read_buff;
+  sc_signal<bool> full, empty;
 
-    void miss_detection();
-    void transition();
-    void transition_clk();
+//FMS signal debug
+  sc_signal<sc_uint<3>> fsm_state;
 
-    void trace(sc_trace_file*);
+  void adresse_parcer();
+  void miss_detection();
+  void transition();
 
-    SC_CTOR(dcache) {
-        SC_METHOD(miss_detection);
-        sensitive << VALID_ADDRESS_M.pos();
+  void buffer_manager();
 
-        SC_METHOD(transition_clk);
-        sensitive << CK.pos();
+  void trace(sc_trace_file*);
 
-        SC_METHOD(transition);
-        sensitive << CK.neg();
+  buffercache buffcache_inst;
 
-        reset_signal_is(RESET, true);
-    }
+  SC_CTOR(dcache) :
+  buffcache_inst("buffercache")
+  {     
+    SC_METHOD(adresse_parcer);
+    sensitive << DATA_ADR_SM;
+
+    SC_METHOD(miss_detection);
+    sensitive << address_tag << address_index << address_offset << STALL_SC << CLK;
+      
+    SC_THREAD(transition);
+    sensitive << CLK.neg() << SLAVE_ACK_SP << A_SP;
+
+    reset_signal_is(RESET_N, false);
+
+
+    buffcache_inst.RESET_N(RESET_N);
+    buffcache_inst.CLK(CLK);
+    buffcache_inst.WRITE_OBUFF(write_buff);
+    buffcache_inst.READ_OBUFF(read_buff);
+    buffcache_inst.DATA_C(DATA_SM);
+    buffcache_inst.ADR_C(DATA_ADR_SM);
+    buffcache_inst.STORE_C(STORE_SM);
+    buffcache_inst.LOAD_C(LOAD_SM);
+    buffcache_inst.FULL(full);
+    buffcache_inst.EMPTY(empty);
+    buffcache_inst.DATA_MP(DT_SC);
+    buffcache_inst.ADR_MP(A_SC);
+    buffcache_inst.STORE_MP(WRITE_SC);
+    buffcache_inst.LOAD_MP(READ_SC);
+    
+  }
 };
 
 #endif
