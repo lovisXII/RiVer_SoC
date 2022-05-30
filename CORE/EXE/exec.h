@@ -176,7 +176,7 @@ SC_MODULE(exec) {
                   << instruction_access_fault_se << EXCEPTION_RM << CURRENT_MODE_RD ;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
-        SC_METHOD(manage_fifo);
+        SC_METHOD(manage_fifo); 
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD

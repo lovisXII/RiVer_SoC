@@ -115,7 +115,7 @@ void exec::fifo_concat() {
         ff_din[156]            = 0;
         ff_din[157]            = 0;
         ff_din[158]            = 0;
-        ff_din[159]            = 0;
+        ff_din[159]            = 0; 
         ff_din[160]            = 0;
         ff_din[161]            = 0;
         ff_din.range(163, 162) = CURRENT_MODE_RD.read();

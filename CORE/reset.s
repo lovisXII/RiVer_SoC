@@ -11,8 +11,9 @@
 _reset:
     nop
     nop
-    la x1,0x10054       #loading main adress
-    la x2,0x81000000    #loading exception handler adress
-    csrrw x0, 0x341,x1 
-    csrrw x0, 0x305,x2
+    la x28,0x10054       #loading main adress
+    la x29,0x81000000    #loading exception handler adress
+    csrrw x0, 0x341,x28 
+    csrrw x0, 0x305,x29
+    li x2,0x10000       # sp initialization
     mret

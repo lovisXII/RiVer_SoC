@@ -417,26 +417,31 @@ void decod::decod_mode(){
         current_mode_sd = 3 ;
     }
     else{
-        current_mode_sd = CURRENT_MODE_RI ;
-        env_call_m_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
-        if(CURRENT_MODE_RI.read() != 3 && mret_i_sd){//mret in wrong mode 
-            env_call_m_mode_sd = 1 ;
-        }
-        else if(mret_i_sd && CURRENT_MODE_RI.read() == 3)// mret in right mode
-        {
-            current_mode_sd = 0 ; // Return to user Mode
+        if(!EXCEPTION_RM){
+            current_mode_sd = CURRENT_MODE_RI ;
             env_call_m_mode_sd = 0 ;
-        }
-        if(CURRENT_MODE_RI.read() != 1 && sret_i_sd){//sret 
-        cout << "if 3" << endl ;
-            env_call_s_mode_sd = 1 ;
-        }
-        else if(sret_i_sd && CURRENT_MODE_RI.read() == 1)
-        {cout << "if 4" << endl ;
-            current_mode_sd = 0 ; // Return to user Mode
             env_call_s_mode_sd = 0 ;
+            if(CURRENT_MODE_RI.read() != 3 && mret_i_sd){//mret in wrong mode 
+                env_call_m_mode_sd = 1 ;
+            }
+            else if(mret_i_sd && CURRENT_MODE_RI.read() == 3)// mret in right mode
+            {
+                current_mode_sd = 0 ; // Return to user Mode
+                env_call_m_mode_sd = 0 ;
+            }
+            if(CURRENT_MODE_RI.read() != 1 && sret_i_sd){//sret 
+                env_call_s_mode_sd = 1 ;
+            }
+            else if(sret_i_sd && CURRENT_MODE_RI.read() == 1)
+            {
+                current_mode_sd = 0 ; // Return to user Mode
+                env_call_s_mode_sd = 0 ;
+            }
         }
+        else{
+            current_mode_sd = 3 ;
+        }
+
     }
 }
 
