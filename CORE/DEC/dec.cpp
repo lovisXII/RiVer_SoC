@@ -417,17 +417,14 @@ void decod::decod_mode(){
         current_mode_sd = 3 ;
     }
     else{
-        cout << "CURRENT_MODE_RI : "<< CURRENT_MODE_RI << " " << sc_time_stamp() << endl ;
-
         current_mode_sd = CURRENT_MODE_RI ;
-        cout << "curent_mode_sd : "<< current_mode_sd << " " << sc_time_stamp() << endl ;
+        env_call_m_mode_sd = 0 ;
+        env_call_s_mode_sd = 0 ;
         if(CURRENT_MODE_RI.read() != 3 && mret_i_sd){//mret in wrong mode 
-            cout << "if 1" << endl ;
             env_call_m_mode_sd = 1 ;
         }
         else if(mret_i_sd && CURRENT_MODE_RI.read() == 3)// mret in right mode
         {
-            cout << "if 2" << endl ;
             current_mode_sd = 0 ; // Return to user Mode
             env_call_m_mode_sd = 0 ;
         }

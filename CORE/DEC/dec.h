@@ -388,6 +388,6 @@ SC_MODULE(decod) {
                   << RADR2_SD << BP_EXE2MEM_EMPTY_SE;
         reset_signal_is(RESET_N, false);
         SC_METHOD(decod_mode);
-        sensitive << RESET_N << CLK.pos() << CURRENT_MODE_RI ;
+        sensitive << RESET_N << CURRENT_MODE_RI << mret_i_sd << sret_i_sd;
     }
 };

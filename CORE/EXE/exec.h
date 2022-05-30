@@ -167,7 +167,7 @@ SC_MODULE(exec) {
         SC_METHOD(preprocess_op);
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD << exception_se << RESET;
+        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD << exception_se << RESET << CURRENT_MODE_RD;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
                   << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
