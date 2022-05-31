@@ -6,6 +6,8 @@
 #include "../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
+#include "multiplier.h"
+
 #define exe2mem_size        163
 #define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
@@ -26,7 +28,7 @@ SC_MODULE(exec) {
     sc_in<sc_uint<2>>  MEM_SIZE_RD;
     sc_in<bool>        NEG_OP2_RD, WB_RD;
     sc_in<bool>        MEM_SIGN_EXTEND_RD;
-    sc_in<bool>        SELECT_SHIFT_RD;  // taille fifo entrée : 110
+    sc_in<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
     sc_in<bool>        EXE2MEM_POP_SM;
     sc_in<bool>        DEC2EXE_EMPTY_SD;
@@ -108,6 +110,8 @@ SC_MODULE(exec) {
     sc_signal<sc_uint<32>> alu_in_op2_se;
     sc_signal<sc_uint<32>> alu_out_se;
     sc_signal<sc_uint<32>> shifter_out_se;
+    sc_signal< sc_uint<32> > multiplier_out_se;
+    sc_signal< sc_uint<32> > divider_out_se;
     sc_signal<sc_uint<32>> bp_mem_data_sd;
     sc_signal<sc_uint<5>>  shift_val_se;
 
@@ -127,6 +131,8 @@ SC_MODULE(exec) {
 
     alu                alu_inst;
     shifter            shifter_inst;
+    multiplier         multiplier_inst;
+    //divider          divider_inst;
     fifo<exe2mem_size> fifo_inst;
 
     void preprocess_op();    // send op2 or ~op2 in ALU_IN_OP2
@@ -139,7 +145,13 @@ SC_MODULE(exec) {
     void exception();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(exec) : alu_inst("alu"), shifter_inst("shifter"), fifo_inst("exe2mem") {
+    SC_CTOR(exec) : 
+    alu_inst("alu"), 
+    shifter_inst("shifter"), 
+    multiplier_inst("multiplier"),
+    //divider_inst("divider"),
+    fifo_inst("exe2mem") 
+    {
         // ALU port map :
 
         alu_inst.OP1_SE(op1_se);
@@ -155,6 +167,21 @@ SC_MODULE(exec) {
         shifter_inst.CMD_SE(CMD_RD);
         shifter_inst.DOUT_SE(shifter_out_se);
 
+        //MULTIPLIER port map :
+
+        multiplier_inst.OP1_SE(op1_se);
+        multiplier_inst.OP2_SE(op2_se);
+        multiplier_inst.CMD_SE(CMD_RD);
+        multiplier_inst.RES_SE(multiplier_out_se);
+
+        //DIVIDER port map :
+
+        /*divider_inst.OP1_SE(op1_se);
+        divider_inst.OP2_SE(alu_in_op2_se);
+        divider_inst.CMD_SE(CMD_RD);
+        divider_inst.CIN_SE(NEG_OP2_RD);
+        divider_inst.RES_SE(divider_out_se);*/
+
         // fifo port map
 
         fifo_inst.DIN_S(exe2mem_din_se);
@@ -169,7 +196,7 @@ SC_MODULE(exec) {
         SC_METHOD(preprocess_op);
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << shifter_out_se << SELECT_SHIFT_RD << exception_se << RESET ;
+        sensitive << alu_out_se << multiplier_out_se << divider_out_se << shifter_out_se << SELECT_TYPE_OPERATIONS_RD << exception_se << RESET ;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
                   << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD

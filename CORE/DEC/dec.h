@@ -1,7 +1,7 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
-#define dec2exe_size 214
+#define dec2exe_size 215
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -26,7 +26,7 @@ SC_MODULE(decod) {
                                           // substraction for example
     sc_out<bool>        WB_RD;            // say if we plan to wbk the value of rd or no
     sc_out<sc_uint<6>>  EXE_DEST_SD;      // the destination register
-    sc_out<bool>        SELECT_SHIFT_RD;  // taille fifo entrée : 110
+    sc_out<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD;
     sc_out<bool>        SLTU_RD;
     sc_out<sc_uint<32>> PC_DEC2EXE_RD;  // PC link to the current decoded instruction
@@ -152,6 +152,8 @@ SC_MODULE(decod) {
     sc_signal<bool> j_type_inst_sd;       // J type format
     sc_signal<bool> jalr_type_inst_sd;    // JALR has a specific opcode
     sc_signal<bool> system_type_inst_sd;  // System instruction
+    sc_signal<bool> m_type_inst_sd;       // M type format
+
     // R-type Instructions :
 
     sc_signal<bool> add_i_sd;
@@ -216,6 +218,17 @@ SC_MODULE(decod) {
     sc_signal<bool> sh_i_sd;
     sc_signal<bool> sb_i_sd;
 
+    // M-type Instructions :
+
+    sc_signal<bool> mul_i_sd;
+    sc_signal<bool> mulh_i_sd;
+    sc_signal<bool> mulhsu_i_sd;
+    sc_signal<bool> mulhu_i_sd;
+    sc_signal<bool> div_i_sd;
+    sc_signal<bool> divu_i_sd;
+    sc_signal<bool> rem_i_sd;
+    sc_signal<bool> remu_i_sd;
+
     // Kernel instruction :
 
     sc_signal<bool> csrrw_i_sd;
@@ -254,7 +267,15 @@ SC_MODULE(decod) {
     sc_signal<bool>       mem_store_sd;
 
     sc_signal<sc_uint<2>> exe_cmd_sd;
-    sc_signal<bool>       select_shift_sd;
+
+    // operation types :
+    // 0 : alu
+    // 1 : shifter
+    // 2 : multiplier
+    // 3 : divider
+    sc_signal<sc_uint<2>>   select_type_operations_sd ;
+    
+
     sc_signal<bool>       exe_neg_op2_sd;
     sc_signal<bool>       exe_wb_sd;
     sc_signal<bool>       mem_sign_extend_sd;
@@ -314,7 +335,7 @@ SC_MODULE(decod) {
 
                   << mem_data_sd << mem_load_sd << mem_store_sd
 
-                  << mem_sign_extend_sd << mem_size_sd << select_shift_sd << adr_dest_sd << slti_i_sd << slt_i_sd
+                  << mem_sign_extend_sd << mem_size_sd << select_type_operations_sd << adr_dest_sd << slti_i_sd << slt_i_sd
 
                   << sltiu_i_sd << sltu_i_sd << RADR1_SD
 

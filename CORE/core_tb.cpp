@@ -11,8 +11,8 @@
 using namespace std;
 using namespace ELFIO;
 
-//#define ICACHE_ON
-//#define DCACHE_ON
+#define ICACHE_ON
+#define DCACHE_ON
 //#define DEBUG_MAX_ITERATIONS
 
 #ifdef ICACHE_ON
@@ -149,6 +149,7 @@ int sc_main(int argc, char* argv[]) {
                 if (name == "_reset") {
                     cout << "Found reset" << endl;
                     reset_adr = value - 4;  // minus 4 to acount for init inc_pc
+                    cout << "reset adress value : " << reset_adr << endl ;
                 }
                 if (name == "_start") {
                     cout << "Found start" << endl;

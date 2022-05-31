@@ -1,6 +1,7 @@
 #include "core.h"
 
 void core::trace(sc_trace_file* tf) {
+    sc_trace(tf, PC_INIT, GET_NAME(PC_INIT));
     ifetch_inst.trace(tf);
     dec_inst.trace(tf);
     exec_inst.trace(tf);
