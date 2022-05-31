@@ -58,7 +58,7 @@ void icache::transition()
                         fsm_current_state = WAIT_MEM;
                         A.write(ADR_SI.read() & 0xFFFFFFF0);
                         dta_valid = true;
-                        IC_STALL_SI.write(true);
+                        IC_STALL_SI.write(false);
                         cpt = 0;
                         
                     }

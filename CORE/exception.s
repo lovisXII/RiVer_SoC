@@ -44,7 +44,7 @@ _illegal_instruction :
     nop
 _load_adress_missaligned :
     nop
-    la x1, _good
+    la x1, _bad
     jalr x0, 0(x1) 
 _load_access_fault :
     nop
