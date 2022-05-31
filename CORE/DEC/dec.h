@@ -1,7 +1,9 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
+
 #define dec2exe_size 215
+
 
 SC_MODULE(decod) {
     // Interface with REG :
