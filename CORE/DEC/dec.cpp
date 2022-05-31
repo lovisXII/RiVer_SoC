@@ -874,6 +874,7 @@ void decod::post_reg_read_decoding() {
         mem_data_var      = 0;
         inc_pc_var        = 1;
     }
+    }
     else if (m_type_inst_sd)
     {
         if(mul_i_sd || div_i_sd) // multiplication (return lower bits) and division
@@ -953,7 +954,7 @@ void decod::post_reg_read_decoding() {
     inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM );
     add_offset_to_pc_sd.write((!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && ! EXCEPTION_SM);
 }
-}
+
 //---------------------------------------------PC GESTION
 //:---------------------------------------------
 
