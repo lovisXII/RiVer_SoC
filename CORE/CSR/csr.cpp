@@ -32,7 +32,7 @@ void csr::writing_csr() {
             }
         }
 
-        if (EXCEPTION_RM.read()) {
+        if (EXCEPTION_SM.read()) {
             csr_rc[3]  = MSTATUS_WDATA_RM.read();
             csr_rc[11] = MIP_WDATA_RM.read();
             csr_rc[8]  = MEPC_WDATA_RM.read();
@@ -43,7 +43,6 @@ void csr::writing_csr() {
 }
 
 void csr::reading_csr() {
-    if (EXCEPTION_RM.read() == 0) {
         switch (CSR_RADR_SD.read()) {
             case 0xF11: CSR_RDATA_SC.write(csr_rc[0]); break;
             case 0xF12: CSR_RDATA_SC.write(csr_rc[1]); break;
@@ -59,9 +58,11 @@ void csr::reading_csr() {
             case 0x344: CSR_RDATA_SC.write(csr_rc[11]); break;
             default: CSR_RDATA_SC.write(0); break;
         }
-    }
+    MEPC_SC.write(csr_rc[8]) ;
+    MSTATUS_RC.write(csr_rc[3]) ;
     MTVEC_VALUE_RC.write(csr_rc[6]);
-    if (EXCEPTION_RM.read()) { MIP_VALUE_RC.write(csr_rc[11]); }
+    MIP_VALUE_RC.write(csr_rc[11]); 
+
 }
 
 void csr::trace(sc_trace_file* tf) {
@@ -69,7 +70,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
 
-    sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
+    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
     sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
     sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));

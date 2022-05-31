@@ -9,9 +9,7 @@ void mem::mem2wbk_concat() {
     ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
-    ff_din[107]           = exception_sm.read();
-    ff_din.range(109, 108) = current_mode_sm.read();
-
+    ff_din.range(108, 107) = current_mode_sm.read();
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
@@ -23,8 +21,7 @@ void mem::mem2wbk_unconcat() {
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
-    EXCEPTION_RM.write((bool)ff_dout[107]);
-    CURRENT_MODE_RM.write((sc_bv_base)ff_dout.range(109, 108));
+    CURRENT_MODE_RM.write((sc_bv_base)ff_dout.range(108, 107));
 }
 
 void mem::fifo_gestion() {
@@ -76,14 +73,13 @@ void mem::sign_extend() {
 }
 
 void mem::csr_exception() {
-    exception_sm = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
-
-    if(RESET.posedge())
+    EXCEPTION_SM = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
+    sc_uint<32> mstatus_new = MSTATUS_RC ;
+    
+    if(!RESET)
         current_mode_sm = 3 ;
-    else
-        current_mode_sm = CURRENT_MODE_RE ;
 
-    if (!exception_sm) {
+    if (!EXCEPTION_SM) {
         if (CSR_WENABLE_RE.read()) {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
             CSR_WDATA_SM.write(EXE_RES_RE.read());
@@ -93,61 +89,94 @@ void mem::csr_exception() {
             CSR_WDATA_SM.write(0);
             CSR_ENABLE_BEFORE_FIFO_SM.write(0);
         }
+        MRET_SM = 0 ;
     } else {  // Affectation of the cause
         if (LOAD_ADRESS_MISSALIGNED_RE) {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFEF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(4);
+            current_mode_sm = 3 ;
         }
         if (INSTRUCTION_ACCESS_FAULT_RE) {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFD);
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFD);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(1);
+            current_mode_sm = 3 ;
         }
-        if (ECALL_I_RE) {
+        if (ILLEGAL_INSTRUCTION_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFB);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(2);
+            current_mode_sm = 3 ;
+        }
+        if (ADRESS_MISSALIGNED_RE) {
+            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
+            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFE);
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(0);
+            current_mode_sm = 3 ;
+        }
+        if (ENV_CALL_U_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
             // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
+            current_mode_sm = 3 ;
         }
-        if (EBREAK_I_RE) {
+        if (ENV_CALL_S_MODE_RE) {
+            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            // MCAUSE_WDATA_RM.write(0);
+            current_mode_sm = 3 ;
+        }
+        if (ENV_CALL_M_MODE_RE) {
+            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
+            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            // MCAUSE_WDATA_RM.write(0);
+            current_mode_sm = 3 ;
+        }
+        if (ENV_CALL_WRONG_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
             // MIP_WDATA_RM.write(0x1800);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
+            current_mode_sm = 3 ;
         }
-        if (ILLEGAL_INSTRUCTION_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFB);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(2);
+        if (MRET_RE) {
+            cout << sc_time_stamp() << endl;
+            save_restore_sm     = 1 ;
+            mpp_sm              = current_mode_sm ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 1;
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+
+            current_mode_sm = 0 ; // Retrun in user mode
+
+            // loading return value (main) from EPC to PC :
+            // The adress will be send to ifetch
+            
+            RETURN_ADRESS_SM = MEPC_SC ;
+
+            // Informing IFETCH that a return instruction have been received
+
+            MRET_SM = MRET_RE ;
         }
-        if (ADRESS_MISSALIGNED_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(0);
-        }
-        if (ENV_CALL_S_MODE_RE) 
-        // sret made in wrong mode
-        {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFEFF);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(9);
-        }
-        if (ENV_CALL_M_MODE_RE) 
-        // mret made in wrong mode
-        {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFBFF);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(11);
+        else{
+            MRET_SM = 0 ;
         }
         if (BUS_ERROR_SX) {  // load access fault
-            MSTATUS_WDATA_RM.write(0x1800);
+
+
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(5);
@@ -200,14 +229,14 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf,
              INSTRUCTION_ACCESS_FAULT_RE,
              GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
-    sc_trace(tf, ECALL_I_RE, GET_NAME(ECALL_I_RE));
-    sc_trace(tf, EBREAK_I_RE, GET_NAME(EBREAK_I_RE));
+    sc_trace(tf, ENV_CALL_U_MODE_RE, GET_NAME(ENV_CALL_U_MODE_RE));
+    sc_trace(tf, ENV_CALL_WRONG_MODE_RE, GET_NAME(ENV_CALL_WRONG_MODE_RE));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
     sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
     sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
     sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
-    sc_trace(tf, EXCEPTION_RM, GET_NAME(EXCEPTION_RM));
+    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
     sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
     sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));
@@ -216,8 +245,11 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     //sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
-    sc_trace(tf, CURRENT_MODE_RE, GET_NAME(CURRENT_MODE_RE));
     sc_trace(tf, current_mode_sm, GET_NAME(CURRENT_MODE_RM));
     sc_trace(tf, current_mode_sm, GET_NAME(current_mode_sm));
+    sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
+    sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
+    sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
+    sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     fifo_inst.trace(tf);
 }
