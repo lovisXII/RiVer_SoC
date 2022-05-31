@@ -36,7 +36,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<2>>  EXE_CMD_RD;
     sc_signal<bool>        NEG_OP2_RD;
     sc_signal<bool>        WB_RD;
-    sc_signal<bool>        SELECT_SHIFT_RD;
+    sc_signal<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;
 
     sc_signal<sc_uint<32>> MEM_DATA_RD;
     sc_signal<bool>        MEM_LOAD_RD;
@@ -235,7 +235,7 @@ SC_MODULE(core) {
         dec_inst.EXE_CMD_RD(EXE_CMD_RD);
         dec_inst.NEG_OP2_RD(NEG_OP2_RD);
         dec_inst.WB_RD(WB_RD);
-        dec_inst.SELECT_SHIFT_RD(SELECT_SHIFT_RD);
+        dec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
         dec_inst.SLT_RD(SLT_RD);
         dec_inst.SLTU_RD(SLTU_RD);
 
@@ -312,7 +312,7 @@ SC_MODULE(core) {
         exec_inst.DEST_RD(EXE_DEST_SD);
         exec_inst.NEG_OP2_RD(NEG_OP2_RD);
         exec_inst.WB_RD(WB_RD);
-        exec_inst.SELECT_SHIFT_RD(SELECT_SHIFT_RD);
+        exec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
 
         exec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
