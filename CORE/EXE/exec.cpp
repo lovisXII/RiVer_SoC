@@ -21,7 +21,8 @@ void exec::select_exec_res() {
     {
         exe_res_se.write(divider_out_se);
     }
-    else */if (SELECT_TYPE_OPERATIONS_RD.read() == 0b10) 
+    else */
+    if (SELECT_TYPE_OPERATIONS_RD.read() == 0b10) 
     {
         exe_res_se.write(multiplier_out_se);
     }
@@ -31,6 +32,7 @@ void exec::select_exec_res() {
     else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b00)
     {   
         if (SLT_RD.read()) {
+            cout << sc_time_stamp() << "eré" << endl ;
             if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
                 exe_res_se.write(1);
             } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
@@ -50,20 +52,36 @@ void exec::select_exec_res() {
             } else {
                 exe_res_se.write((bool)alu_out_se.read()[31]);
             }
+        }
+        else {
+        if (MEM_LOAD_RD.read() || MEM_STORE_RD.read()) {
+            if ((alu_out_se.read() & 0b11 != 0 && MEM_SIZE_RD.read() == 0) ||
+                (alu_out_se.read() & 0b1 != 0 &&
+                 MEM_SIZE_RD.read() == 1)) {  // if adress isn't aligned it creates an exception
+                                              // loading bytes on byte-aligned adresses is legal
+                load_adress_missaligned_se.write(1);
+            } else {
+                load_adress_missaligned_se.write(0);
+            }
             if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
             {
                 if (alu_out_se.read() > start_kernel_adress) {
                     instruction_access_fault_se.write(1);
                 } else
                     instruction_access_fault_se.write(0);
-                }
             } else {
-                load_adress_missaligned_se.write(0);
                 instruction_access_fault_se.write(0);
             }
-            exe_res_se.write(alu_out_se);
+        } else {
+            load_adress_missaligned_se.write(0);
+            instruction_access_fault_se.write(0);
         }
+        exe_res_se.write(alu_out_se);
+    }
+ 
+    }
 }
+
 void exec::fifo_concat() {
     sc_bv<exe2mem_size> ff_din;
     if (EXCEPTION_SM.read() == 0) {

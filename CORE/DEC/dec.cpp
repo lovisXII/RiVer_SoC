@@ -757,7 +757,6 @@ void decod::post_reg_read_decoding() {
             else
                 branch = !res_comparaison[31];  // branch if the result is positive
         }
-
         inc_pc_var = !branch;
     }
 

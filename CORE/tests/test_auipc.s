@@ -9,7 +9,3 @@ _start:
     nop
     nop
     nop
-_bad: 
-    nop
-_good:
-    nop

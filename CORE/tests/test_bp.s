@@ -28,8 +28,3 @@ _start:
     bne  x2, x4, _bad
     j _good
     nop
-_bad: 
-    nop
-_good:
-    nop
-    

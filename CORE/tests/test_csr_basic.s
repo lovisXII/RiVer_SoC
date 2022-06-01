@@ -14,9 +14,3 @@ _start:
     nop
     beq x1, x2, _good
     nop
-
-_bad: 
-    nop
-_good:
-    
-    nop

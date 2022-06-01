@@ -9,9 +9,5 @@ _start:
     beq x3,x4, _good
     nop
     nop
-_bad: 
-    nop
-_good:
-    nop
 
 

@@ -43,7 +43,3 @@ _start:
 
     nop
     nop
-_bad: 
-    nop
-_good:
-    nop

@@ -19,9 +19,5 @@ _start:
     jal x6, _good
     nop
     nop
-_bad: 
-    nop
-_good:
-    nop
 
 
