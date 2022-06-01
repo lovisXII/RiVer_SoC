@@ -353,10 +353,15 @@ SC_MODULE(decod) {
         sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall << EXCEPTION_SM;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
-                  << csr_wenable_sd << DEC2EXE_EMPTY_SD << CSR_WENABLE_RE << BP_EXE2MEM_EMPTY_SE << csr_in_progress
+        sensitive << b_type_inst_sd << jalr_type_inst_sd 
+        << j_type_inst_sd << r1_valid_sd << r2_valid_sd
+                  << csr_wenable_sd << DEC2EXE_EMPTY_SD 
+                  << CSR_WENABLE_RD 
+                  << CSR_WENABLE_RE
+                  << BP_EXE2MEM_EMPTY_SE 
+                  << csr_in_progress
 
-                  << block_in_dec;
+                  << block_in_dec << csr_in_progress;
 
         SC_METHOD(decoding_instruction_type)
         sensitive << INSTR_RI << READ_PC_SR;
