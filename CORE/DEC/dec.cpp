@@ -816,9 +816,8 @@ void decod::post_reg_read_decoding() {
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_sd.write(1);
             sc_uint<32> rdata1_signal_sd = rdata1_sd;     // loading value of rs1
-            dec2exe_op1_var              = CSR_RDATA_SC;  // reading value of the csr
             if (csrrc_i_sd || csrrci_i_sd) {
-                exe_neg_op2_sd.write(1);
+                exe_neg_op2_sd.write(0);
                 exe_cmd_sd.write(1);
             } else if (csrrw_i_sd || csrrwi_i_sd) {
                 exe_neg_op2_sd.write(0);
@@ -828,14 +827,32 @@ void decod::post_reg_read_decoding() {
                 exe_cmd_sd.write(2);
             }
 
-            if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd) {
-                if(csrrw_i_sd)
-                    dec2exe_op2_var = 0 ;
-                else
-                    dec2exe_op2_var = rdata1_signal_sd;  // if non immediat type, loading value of the register
-            } else {
-                dec2exe_op2_var = if_ir.range(19, 15);  // else loading value of register as an immediat
+            // We put rdata1 or immediat value in rs1
+
+            if(csrrw_i_sd | csrrc_i_sd | csrrs_i_sd){
+                if(!csrrc_i_sd)
+                    dec2exe_op1_var = rdata1_sd ;
+                else    
+                    dec2exe_op1_var = ~rdata1_sd.read() ;
             }
+            else{
+                if(!csrrci_i_sd)
+                    dec2exe_op1_var = if_ir.range(19,15) ;
+                else
+                    dec2exe_op1_var = ~if_ir.range(19,15) ;
+            }
+
+            // We put CSR value or 0 inside rs2
+            // If instruction are write one, the value of rs1 just 
+            // erase what's inside the csr 
+            if (csrrs_i_sd || csrrc_i_sd || csrrsi_i_sd || csrrci_i_sd) 
+            {
+                dec2exe_op2_var = CSR_RDATA_SC ;
+            } 
+            else{
+                dec2exe_op2_var = 0 ;
+            }
+
 
             dec2exe_wb_var    = 1;
             offset_branch_var = 0;

@@ -176,18 +176,25 @@ void exec::bypasses() {
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD.read();
 
     if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
+        cout << "1 " << sc_time_stamp() << endl ;
         op1_se.write(OP1_RD.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
+        cout << "2 " << sc_time_stamp() << endl ;
         op1_se.write(CSR_RDATA_RE.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) {
+        cout << "3 " << sc_time_stamp() << endl ;
         op1_se.write(EXE_RES_RE.read());
     } else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) {
+        cout << "4 " << sc_time_stamp() << endl ;
         op1_se.write(CSR_RDATA_RM.read());
     } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
+        cout << "5 " << sc_time_stamp() << endl ;
         op1_se.write(MEM_RES_RM.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
+        cout << "6 " << sc_time_stamp() << endl ;
         blocked_var = true;
     } else {
+        cout << "7 " << sc_time_stamp() << endl ;
         op1_se.write(OP1_RD.read());
     }
 

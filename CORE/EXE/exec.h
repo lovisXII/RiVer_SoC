@@ -196,22 +196,38 @@ SC_MODULE(exec) {
         SC_METHOD(preprocess_op);
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << multiplier_out_se << divider_out_se << shifter_out_se 
+        sensitive << alu_out_se << multiplier_out_se 
+        << divider_out_se << shifter_out_se 
         << SLT_RD << SLTU_RD
         << SELECT_TYPE_OPERATIONS_RD << exception_se << RESET ;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
-                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
-                  << CSR_RDATA_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD
-                  << ENV_CALL_U_MODE_RD << ENV_CALL_M_MODE_RD << exception_se << load_adress_missaligned_se
+        sensitive << bp_mem_data_sd << DEST_RD 
+                << MEM_SIZE_RD << MEM_LOAD_RD 
+                << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
+                  << WB_RD << exe_res_se 
+                  << mem_load_re 
+                  << mem_store_re 
+                  << wb_re 
+                  << CSR_WENABLE_RD << CSR_WADR_RD
+                  << CSR_RDATA_RD 
+                  << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD
+                  << ENV_CALL_U_MODE_RD 
+                  << ENV_CALL_M_MODE_RD 
+                  << exception_se << load_adress_missaligned_se
                   << instruction_access_fault_se << EXCEPTION_SM << MRET_RD ;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo); 
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
-                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD;
+        sensitive << OP1_VALID_RD << OP2_VALID_RD 
+                << MEM_DEST_RM << MEM_RES_RM << DEST_RE 
+                << EXE_RES_RE << RADR1_RD<< CSR_WENABLE_RE
+                <<BLOCK_BP_RD<<DEST_RE << MEM_LOAD_RE 
+                << CSR_WENABLE_RM << CSR_RDATA_RM
+                  << RADR2_RD << OP1_RD << OP2_RD 
+                  << exception_se << MEM_DATA_RD
+                  << MEM_STORE_RD;
         SC_METHOD(exception);
         sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD
                   << load_adress_missaligned_se << exception_se << instruction_access_fault_se;
