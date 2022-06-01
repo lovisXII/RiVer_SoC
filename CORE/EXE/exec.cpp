@@ -50,7 +50,7 @@ void exec::select_exec_res() {
             } else {
                 exe_res_se.write((bool)alu_out_se.read()[31]);
             }
-            if ((CURRENT_MODE_RM.read() == 0))  // If in User Mode
+            if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
             {
                 if (alu_out_se.read() > start_kernel_adress) {
                     instruction_access_fault_se.write(1);

@@ -184,7 +184,7 @@ SC_MODULE(core) {
 
     // Pipeline Mode
     
-    sc_signal<sc_uint<2>> CURRENT_MODE_RM ;
+    sc_signal<sc_uint<2>> CURRENT_MODE_SM ;
 
     // Stage instanciation
     decod  dec_inst;
@@ -227,7 +227,7 @@ SC_MODULE(core) {
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_SM(EXCEPTION_SM);
-        ifetch_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
+        ifetch_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         ifetch_inst.MRET_SM(MRET_SM);
         ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
@@ -309,7 +309,7 @@ SC_MODULE(core) {
         dec_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         dec_inst.MRET_SM(MRET_SM);
         dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        dec_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
+        dec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         dec_inst.MRET_RD(MRET_RD);
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
@@ -387,7 +387,7 @@ SC_MODULE(core) {
         exec_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         exec_inst.EXCEPTION_SM(EXCEPTION_SM);
         exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        exec_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
+        exec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         exec_inst.MRET_RE(MRET_RE);
 
         exec_inst.CLK(CLK);
@@ -449,7 +449,7 @@ SC_MODULE(core) {
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
 
         mem_inst.EXCEPTION_SM(EXCEPTION_SM);
-        mem_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
+        mem_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         mem_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         mem_inst.MRET_SM(MRET_SM);
 
@@ -500,7 +500,7 @@ SC_MODULE(core) {
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        wbk_inst.CURRENT_MODE_RM(CURRENT_MODE_RM);
+        wbk_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);

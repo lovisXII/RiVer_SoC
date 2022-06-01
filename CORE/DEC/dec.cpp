@@ -530,12 +530,12 @@ void decod::pre_reg_read_decoding() {
             //Generate the exception corresponding to the right 
             // call
 
-            if(!CURRENT_MODE_RM.read() && ecall_i_sd){
+            if(!CURRENT_MODE_SM.read() && ecall_i_sd){
                 env_call_u_mode_sd = 1 ;
                 env_call_s_mode_sd = 0 ;
                 env_call_m_mode_sd = 0 ;
             }
-            else if (ecall_i_sd && CURRENT_MODE_RM.read() == 3){
+            else if (ecall_i_sd && CURRENT_MODE_SM.read() == 3){
                 env_call_u_mode_sd = 0 ;
                 env_call_s_mode_sd = 0 ;
                 env_call_m_mode_sd = 1 ;
@@ -556,7 +556,7 @@ void decod::pre_reg_read_decoding() {
 
             // Exception will be generate in case of mret in wrong mode
 
-            if(mret_i_sd && CURRENT_MODE_RM.read() != 3){
+            if(mret_i_sd && CURRENT_MODE_SM.read() != 3){
                 env_call_wrong_mode = 1 ;
             }
             else{
@@ -1275,7 +1275,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, adress_missaligned_sd, GET_NAME(adress_missaligned_sd));    // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd, GET_NAME(env_call_m_mode_sd));
     sc_trace(tf, env_call_s_mode_sd, GET_NAME(env_call_s_mode_sd));
-    sc_trace(tf, CURRENT_MODE_RM, GET_NAME(CURRENT_MODE_RM));
+    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
     sc_trace(tf, MRET_RD, GET_NAME(MRET_RD));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));

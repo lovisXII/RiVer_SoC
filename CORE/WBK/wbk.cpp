@@ -24,5 +24,5 @@ void wbk::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET, GET_NAME(RESET));
-    sc_trace(tf, CURRENT_MODE_RM, GET_NAME(CURRENT_MODE_RM));
+    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
 }

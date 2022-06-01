@@ -41,7 +41,7 @@ SC_MODULE(exec) {
     // Exception coming from Decod :
 
     sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
-    sc_in<sc_uint<2>> CURRENT_MODE_RM ;
+    sc_in<sc_uint<2>> CURRENT_MODE_SM ;
 
     sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_in<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned

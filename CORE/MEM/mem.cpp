@@ -9,7 +9,6 @@ void mem::mem2wbk_concat() {
     ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
     ff_din[74]            = CSR_WENABLE_RE.read();
     ff_din.range(106, 75) = CSR_RDATA_RE.read();
-    ff_din.range(108, 107) = current_mode_sm.read();
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
@@ -21,7 +20,6 @@ void mem::mem2wbk_unconcat() {
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
-    CURRENT_MODE_RM.write((sc_bv_base)ff_dout.range(108, 107));
 }
 
 void mem::fifo_gestion() {
@@ -77,7 +75,7 @@ void mem::csr_exception() {
     sc_uint<32> mstatus_new = MSTATUS_RC ;
     
     if(!RESET)
-        current_mode_sm = 3 ;
+        CURRENT_MODE_SM = 3 ;
 
     if (!EXCEPTION_SM) {
         if (CSR_WENABLE_RE.read()) {
@@ -96,61 +94,61 @@ void mem::csr_exception() {
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFEF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(4);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (INSTRUCTION_ACCESS_FAULT_RE) {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFD);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(1);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ILLEGAL_INSTRUCTION_RE) {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFB);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(2);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ADRESS_MISSALIGNED_RE) {
             MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
             MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFE);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_RM.write(0);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ENV_CALL_U_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
             // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ENV_CALL_S_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
             // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ENV_CALL_M_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
             // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (ENV_CALL_WRONG_MODE_RE) {
             // MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
             // MIP_WDATA_RM.write(0x1800);
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(0);
-            current_mode_sm = 3 ;
+            CURRENT_MODE_SM = 3 ;
         }
         if (MRET_RE) {
             cout << sc_time_stamp() << endl;
             save_restore_sm     = 1 ;
-            mpp_sm              = current_mode_sm ;
+            mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
             mie_sm              = 1;
 
@@ -160,7 +158,7 @@ void mem::csr_exception() {
             mstatus_new[3]             = mie_sm ;
             MSTATUS_WDATA_RM = mstatus_new ; 
 
-            current_mode_sm = 0 ; // Retrun in user mode
+            CURRENT_MODE_SM = 0 ; // Retrun in user mode
 
             // loading return value (main) from EPC to PC :
             // The adress will be send to ifetch
@@ -245,8 +243,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     //sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
-    sc_trace(tf, current_mode_sm, GET_NAME(CURRENT_MODE_RM));
-    sc_trace(tf, current_mode_sm, GET_NAME(current_mode_sm));
+    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
     sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));

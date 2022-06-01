@@ -36,7 +36,7 @@ SC_MODULE(ifetch) {
     // Interruption :
 
     sc_in<bool> INTERRUPTION_SE;
-    sc_in<sc_uint<2>> CURRENT_MODE_RM ;
+    sc_in<sc_uint<2>> CURRENT_MODE_SM ;
     sc_in<bool> MRET_SM ;
     sc_in<sc_uint<32>> RETURN_ADRESS_SM ;
 

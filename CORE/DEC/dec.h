@@ -102,7 +102,7 @@ SC_MODULE(decod) {
     sc_out<bool> ENV_CALL_WRONG_MODE_RD ;
     sc_out<bool> MRET_RD;
     sc_out<bool>        EXCEPTION_RD;
-    sc_in<sc_uint<2>>   CURRENT_MODE_RM ;
+    sc_in<sc_uint<2>>   CURRENT_MODE_SM ;
     // General Interface :
 
     sc_in<bool>        EXCEPTION_SM;

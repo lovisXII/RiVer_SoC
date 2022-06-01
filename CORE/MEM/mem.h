@@ -76,7 +76,7 @@ SC_MODULE(mem) {
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM;
-    sc_out<sc_uint<2>>  CURRENT_MODE_RM ;
+    sc_out<sc_uint<2>>  CURRENT_MODE_SM ;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM ;
     sc_out<bool>        MRET_SM ;//43
 
@@ -111,7 +111,6 @@ SC_MODULE(mem) {
     sc_signal<bool>                exception_sm;
     sc_signal<sc_uint<32>>         data_sm;
     sc_signal<bool>                wb_sm;
-    sc_signal<sc_uint<2>>          current_mode_sm ;
 
     // Exception signals
 
@@ -147,7 +146,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << current_mode_sm << mret_sm << return_adress_sm;
+        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << CURRENT_MODE_SM << mret_sm << return_adress_sm;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
