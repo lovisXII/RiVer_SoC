@@ -1,12 +1,13 @@
 .section text
 .global _good
 .global _bad
-
+.global _exception_occur
 _good :
     nop
 _bad :
     nop
-
+_exception_occur :
+    nop
 .section .kernel
 .global _exception
 .global _instruction_address_misagligned 
@@ -44,17 +45,19 @@ _illegal_instruction :
     nop
 _load_adress_missaligned :
     nop
-    la x1, _bad
+    la x1, _exception_occur
     jalr x0, 0(x1) 
 _load_access_fault :
     nop
 _ecall_m_mode :
     nop
-    la x1, _bad
+    la x1, _exception_occur
     jalr x0, 0(x1) 
 _ecall_s_mode :
     nop
-    la x1, _bad
+    la x1, _exception_occur
     jalr x0, 0(x1) 
+
+
 
     

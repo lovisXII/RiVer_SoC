@@ -60,6 +60,7 @@ int sc_main(int argc, char* argv[]) {
     int                     reset_adr;
     int                     start_adr;
     int                     good_adr;
+    int                     exception_occur ;
     int                     bad_adr;
     int                     rvtest_code_end;
     int                     rvtest_entry_point;
@@ -162,6 +163,10 @@ int sc_main(int argc, char* argv[]) {
                 if (name == "_good") {
                     cout << "Found good" << endl;
                     good_adr = value;
+                }
+                if (name == "_exception_occur") {
+                    cout << "Found exception_occur" << endl;
+                    exception_occur = value;
                 }
                 if (name == "rvtest_code_end") {
                     cout << "Found rvtest_code_end" << endl;
@@ -481,7 +486,13 @@ int sc_main(int argc, char* argv[]) {
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(0);
-        } else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
+        } 
+        else if(signature_name == "" && pc_adr == exception_occur){
+            cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
+            sc_start(3, SC_NS);
+            exit(0);
+        }
+        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
             countdown = 10;
         }
         if (countdown == 1) {
