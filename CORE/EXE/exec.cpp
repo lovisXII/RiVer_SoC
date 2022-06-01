@@ -59,22 +59,35 @@ void exec::select_exec_res() {
                 (alu_out_se.read() & 0b1 != 0 &&
                  MEM_SIZE_RD.read() == 1)) {  // if adress isn't aligned it creates an exception
                                               // loading bytes on byte-aligned adresses is legal
-                load_adress_missaligned_se.write(1);
+                if (MEM_LOAD_RD)
+                    load_adress_missaligned_se = 1;
+                else
+                    store_adress_missaligned_se = 1 ;
             } else {
                 load_adress_missaligned_se.write(0);
+                store_adress_missaligned_se.write(0) ;
             }
             if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
             {
                 if (alu_out_se.read() > start_kernel_adress) {
-                    instruction_access_fault_se.write(1);
-                } else
-                    instruction_access_fault_se.write(0);
+                    if(MEM_LOAD_RD)
+                        load_access_fault_se = 1;
+                    else
+                        store_access_fault_se = 1 ;
+                } else{
+                    load_access_fault_se = 0;
+                    store_access_fault_se = 0;
+
+                }
             } else {
-                instruction_access_fault_se.write(0);
+                load_access_fault_se = 0;
+                store_access_fault_se = 0 ;
             }
         } else {
             load_adress_missaligned_se.write(0);
-            instruction_access_fault_se.write(0);
+            load_access_fault_se.write(0);
+            store_adress_missaligned_se = 0 ;
+            store_access_fault_se = 0 ;
         }
         exe_res_se.write(alu_out_se);
     }
@@ -105,8 +118,11 @@ void exec::fifo_concat() {
         ff_din[158]            = ENV_CALL_M_MODE_RD.read();
         ff_din[159]            = exception_se.read();
         ff_din[160]            = load_adress_missaligned_se.read();
-        ff_din[161]            = instruction_access_fault_se.read();
+        ff_din[161]            = load_access_fault_se.read();
         ff_din[162]            = MRET_RD.read();
+        ff_din[163]            = store_adress_missaligned_se ;
+        ff_din[164]            = store_access_fault_se ;
+        
     } else {
         ff_din.range(31, 0)    = 0;
         ff_din.range(63, 32)   = 0;
@@ -130,6 +146,8 @@ void exec::fifo_concat() {
         ff_din[160]            = 0;
         ff_din[161]            = 0;
         ff_din[162]            = 0;
+        ff_din[163]            = 0;
+        ff_din[164]            = 0;
     }
 
     exe2mem_din_se.write(ff_din);
@@ -151,13 +169,15 @@ void exec::fifo_unconcat() {
     ENV_CALL_S_MODE_RE.write((bool)ff_dout[153]);
     ENV_CALL_WRONG_MODE_RE.write((bool)ff_dout[154]);
     ILLEGAL_INSTRUCTION_RE.write((bool)ff_dout[155]);
-    ADRESS_MISSALIGNED_RE.write((bool)ff_dout[156]);
+    INSTRUCTION_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[156]);
     ENV_CALL_S_MODE_RE.write((bool)ff_dout[157]);
     ENV_CALL_M_MODE_RE.write((bool)ff_dout[158]);
     EXCEPTION_RE.write((bool)ff_dout[159]);
     LOAD_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[160]);
-    INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[161]);
+    LOAD_ACCESS_FAULT_RE.write((bool)ff_dout[161]);
     MRET_RE.write((bool)ff_dout[162]);
+    STORE_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[163]);
+    STORE_ACCESS_FAULT_RE.write((bool)ff_dout[164]);
 }
 
 void exec::manage_fifo() {
@@ -234,7 +254,8 @@ void exec::bypasses() {
 }
 
 void exec::exception() {
-    exception_se = EXCEPTION_RD | load_adress_missaligned_se | instruction_access_fault_se;
+    exception_se = EXCEPTION_RD | load_adress_missaligned_se | load_access_fault_se | store_access_fault_se
+    | store_adress_missaligned_se;
 
     if (INTERRUPTION_SX.read() || EXCEPTION_RD.read())
     // in case of interrupt or exception have to inform other stage
@@ -292,12 +313,12 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(
         tf, LOAD_ADRESS_MISSALIGNED_RE, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE));  // adress from store/load isn't aligned
     sc_trace(tf,
-             INSTRUCTION_ACCESS_FAULT_RE,
-             GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
+             LOAD_ACCESS_FAULT_RE,
+             GET_NAME(LOAD_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
     sc_trace(tf, ENV_CALL_U_MODE_RE, GET_NAME(ENV_CALL_U_MODE_RE));
     sc_trace(tf, ENV_CALL_WRONG_MODE_RE, GET_NAME(ENV_CALL_WRONG_MODE_RE));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
-    sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
+    sc_trace(tf, INSTRUCTION_ADRESS_MISSALIGNED_RE, GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
     sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
     sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
 
@@ -367,7 +388,7 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
-    sc_trace(tf, instruction_access_fault_se, GET_NAME(instruction_access_fault_se));
+    sc_trace(tf, load_access_fault_se, GET_NAME(load_access_fault_se));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

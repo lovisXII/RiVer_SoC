@@ -8,7 +8,7 @@
 #include "shifter.h"
 #include "multiplier.h"
 
-#define exe2mem_size        163
+#define exe2mem_size        165
 #define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
     // Input/Output of EXE :
@@ -54,9 +54,11 @@ SC_MODULE(exec) {
 
     sc_out<bool> EXCEPTION_RE;
     sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
-    sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_out<bool> LOAD_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_out<bool> STORE_ADRESS_MISSALIGNED_RE;
+    sc_out<bool> STORE_ACCESS_FAULT_RE;
     sc_out<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_out<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
     sc_out<bool> ENV_CALL_S_MODE_RE;
     sc_out<bool> ENV_CALL_M_MODE_RE;
     sc_out<bool> ENV_CALL_U_MODE_RE;
@@ -126,7 +128,9 @@ SC_MODULE(exec) {
 
     sc_signal<bool> exception_se;
     sc_signal<bool> load_adress_missaligned_se;   // adress from store/load isn't aligned
-    sc_signal<bool> instruction_access_fault_se;  // trying to access memory in wrong mode
+    sc_signal<bool> load_access_fault_se;  // trying to access memory in wrong mode
+    sc_signal<bool> store_access_fault_se ;
+    sc_signal<bool> store_adress_missaligned_se ;
     // Instance used :
 
     alu                alu_inst;
@@ -214,7 +218,7 @@ SC_MODULE(exec) {
                   << ENV_CALL_U_MODE_RD 
                   << ENV_CALL_M_MODE_RD 
                   << exception_se << load_adress_missaligned_se
-                  << instruction_access_fault_se << EXCEPTION_SM << MRET_RD ;
+                  << load_access_fault_se << EXCEPTION_SM << MRET_RD ;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo); 
@@ -230,6 +234,6 @@ SC_MODULE(exec) {
                   << MEM_STORE_RD;
         SC_METHOD(exception);
         sensitive << INTERRUPTION_SX << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD
-                  << load_adress_missaligned_se << exception_se << instruction_access_fault_se;
+                  << load_adress_missaligned_se << exception_se << load_access_fault_se;
     }
 };

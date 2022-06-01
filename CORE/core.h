@@ -101,11 +101,14 @@ SC_MODULE(core) {
 
     sc_signal<bool> EXCEPTION_RE;
     sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
-    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_signal<bool> LOAD_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    
+    sc_signal<bool> STORE_ADRESS_MISSALIGNED_RE;
+    sc_signal<bool> STORE_ACCESS_FAULT_RE;
     sc_signal<bool> ECALL_I_RE;
     sc_signal<bool> EBREAK_I_RE;
     sc_signal<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_signal<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
     sc_signal<bool> ENV_CALL_S_MODE_RE;
     sc_signal<bool> ENV_CALL_M_MODE_RE;
     sc_signal<bool> ENV_CALL_S_MODE_RD;
@@ -378,11 +381,13 @@ SC_MODULE(core) {
 
         exec_inst.EXCEPTION_RE(EXCEPTION_RE);
         exec_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
-        exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
+        exec_inst.LOAD_ACCESS_FAULT_RE(LOAD_ACCESS_FAULT_RE);
+        exec_inst.STORE_ADRESS_MISSALIGNED_RE(STORE_ADRESS_MISSALIGNED_RE);
+        exec_inst.STORE_ACCESS_FAULT_RE(STORE_ACCESS_FAULT_RE);
         exec_inst.ENV_CALL_WRONG_MODE_RE(ENV_CALL_WRONG_MODE_RE);
         exec_inst.ENV_CALL_U_MODE_RE(ENV_CALL_U_MODE_RE);
         exec_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
-        exec_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
+        exec_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE(INSTRUCTION_ADRESS_MISSALIGNED_RE);
         exec_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);
         exec_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         exec_inst.EXCEPTION_SM(EXCEPTION_SM);
@@ -436,11 +441,14 @@ SC_MODULE(core) {
 
         mem_inst.EXCEPTION_RE(EXCEPTION_RE);
         mem_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
-        mem_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
+        mem_inst.LOAD_ACCESS_FAULT_RE(LOAD_ACCESS_FAULT_RE);
+
+        mem_inst.STORE_ADRESS_MISSALIGNED_RE(STORE_ADRESS_MISSALIGNED_RE);
+        mem_inst.STORE_ACCESS_FAULT_RE(STORE_ACCESS_FAULT_RE);
         mem_inst.ENV_CALL_U_MODE_RE(ENV_CALL_U_MODE_RE);
         mem_inst.ENV_CALL_WRONG_MODE_RE(ENV_CALL_WRONG_MODE_RE);
         mem_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
-        mem_inst.ADRESS_MISSALIGNED_RE(ADRESS_MISSALIGNED_RE);
+        mem_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE(INSTRUCTION_ADRESS_MISSALIGNED_RE);
         mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);//39
         mem_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         mem_inst.MRET_RE(MRET_RE);

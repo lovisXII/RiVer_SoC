@@ -88,66 +88,46 @@ void mem::csr_exception() {
             CSR_ENABLE_BEFORE_FIFO_SM.write(0);
         }
         MRET_SM = 0 ;
-    } else {  // Affectation of the cause
-        if (LOAD_ADRESS_MISSALIGNED_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFEF);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(4);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (INSTRUCTION_ACCESS_FAULT_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFD);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(1);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (ILLEGAL_INSTRUCTION_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFB);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(2);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (ADRESS_MISSALIGNED_RE) {
-            MSTATUS_WDATA_RM.write(0x1800);  // MPP set to 11
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() & 0xFFFFFFFE);
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(0);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (ENV_CALL_U_MODE_RE) {
-            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
-            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+    } else {  
+        // Affectation of the cause
+        // PLEASE DO NOT MOVE THE IF ORDER
+        // THEY ARE IN A SPECIFIC ORDER
+        // TO RESPECT PRIORITY IN CASE OF SEVERAL
+        // EXCEPTION OCCURING AT THE SAME CYCLE
+        bool macine_interrupt_enable = MSTATUS_RC[3] ;
+       if (BUS_ERROR_SX) {  // load access fault
+            save_restore_sm     = 0 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            // MCAUSE_WDATA_RM.write(0);
-            CURRENT_MODE_SM = 3 ;
+            // MCAUSE_WDATA_RM.write(5);
         }
-        if (ENV_CALL_S_MODE_RE) {
-            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
-            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
+        if (ENV_CALL_WRONG_MODE_RE ) {
+            save_restore_sm     = 0 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            // MCAUSE_WDATA_RM.write(0);
+            MCAUSE_WDATA_RM.write(24);
             CURRENT_MODE_SM = 3 ;
         }
-        if (ENV_CALL_M_MODE_RE) {
-            // MSTATUS_WDATA_RM.write(0x1800); // MPP set to 11
-            // MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFFE);
-            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            // MCAUSE_WDATA_RM.write(0);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (ENV_CALL_WRONG_MODE_RE) {
-            // MSTATUS_WDATA_RM.write(0x1800);// MPP set to 11
-            // MIP_WDATA_RM.write(0x1800);
-            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            // MCAUSE_WDATA_RM.write(0);
-            CURRENT_MODE_SM = 3 ;
-        }
-        if (MRET_RE) {
-            cout << sc_time_stamp() << endl;
-            save_restore_sm     = 1 ;
+        if (MRET_RE ) {
+            save_restore_sm     = 0 ;
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
             mie_sm              = 1;
@@ -172,12 +152,117 @@ void mem::csr_exception() {
         else{
             MRET_SM = 0 ;
         }
-        if (BUS_ERROR_SX) {  // load access fault
+        if (LOAD_ADRESS_MISSALIGNED_RE ) {
+            save_restore_sm     = 0 ;
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
 
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
 
-            MIP_WDATA_RM.write(MIP_VALUE_RC.read() && 0xFFFFFFEF);
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(5);
+            MCAUSE_WDATA_RM.write(4);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (ENV_CALL_M_MODE_RE) {
+            save_restore_sm     = 1 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(11);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (ENV_CALL_S_MODE_RE) {
+            save_restore_sm     = 1 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(9);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (ENV_CALL_U_MODE_RE) {
+            save_restore_sm     = 1 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(8);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (INSTRUCTION_ADRESS_MISSALIGNED_RE ) {
+            save_restore_sm     = 0 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(0);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (ILLEGAL_INSTRUCTION_RE ) {
+            save_restore_sm     = 1 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(2);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (LOAD_ACCESS_FAULT_RE ) {
+            save_restore_sm     = 1 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(1);
+            CURRENT_MODE_SM = 3 ;
         }
     }
 }
@@ -225,12 +310,12 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(
         tf, LOAD_ADRESS_MISSALIGNED_RE, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE));  // adress from store/load isn't aligned
     sc_trace(tf,
-             INSTRUCTION_ACCESS_FAULT_RE,
-             GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
+             LOAD_ACCESS_FAULT_RE,
+             GET_NAME(LOAD_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
     sc_trace(tf, ENV_CALL_U_MODE_RE, GET_NAME(ENV_CALL_U_MODE_RE));
     sc_trace(tf, ENV_CALL_WRONG_MODE_RE, GET_NAME(ENV_CALL_WRONG_MODE_RE));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
-    sc_trace(tf, ADRESS_MISSALIGNED_RE, GET_NAME(ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
+    sc_trace(tf, INSTRUCTION_ADRESS_MISSALIGNED_RE, GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE));    // branch offset is misaligned
     sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
     sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));

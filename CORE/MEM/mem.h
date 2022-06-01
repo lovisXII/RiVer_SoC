@@ -40,14 +40,16 @@ SC_MODULE(mem) {
 
     sc_in<bool> EXCEPTION_RE;
     sc_in<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
-    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_in<bool> LOAD_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
     sc_in<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_in<bool> ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_in<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_in<bool> STORE_ADRESS_MISSALIGNED_RE ;
+    sc_in<bool> STORE_ACCESS_FAULT_RE ;
     sc_in<bool> ENV_CALL_S_MODE_RE;
     sc_in<bool> ENV_CALL_M_MODE_RE;
     sc_in<bool> ENV_CALL_U_MODE_RE;
     sc_in<bool> ENV_CALL_WRONG_MODE_RE;
-    sc_in<bool> MRET_RE;//28
+    sc_in<bool> MRET_RE;//30
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
@@ -60,12 +62,12 @@ SC_MODULE(mem) {
 
     // mem2wbk interface
 
-    sc_in<bool>         MEM2WBK_POP_SW;//32
+    sc_in<bool>         MEM2WBK_POP_SW;//34
     sc_signal<bool>     mem2wbk_push_sm;
     sc_signal<bool>     mem2wbk_full_sm;
     sc_out<bool>        MEM2WBK_EMPTY_SM;
     sc_out<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_out<bool>        CSR_WENABLE_RM;//35
+    sc_out<bool>        CSR_WENABLE_RM;//37
 
     // WBK interface
     sc_out<sc_uint<32>> MEM_RES_RM;
@@ -78,7 +80,7 @@ SC_MODULE(mem) {
     sc_out<bool>        EXCEPTION_SM;
     sc_out<sc_uint<2>>  CURRENT_MODE_SM ;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM ;
-    sc_out<bool>        MRET_SM ;//43
+    sc_out<bool>        MRET_SM ;//45
 
     sc_in_clk    CLK;
     sc_in<bool>     RESET;
@@ -99,7 +101,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<32>> MCAUSE_WDATA_RM;
 
     sc_in<sc_uint<32>>  MEPC_SC;
-    sc_in<sc_uint<32>>  MSTATUS_RC;//55
+    sc_in<sc_uint<32>>  MSTATUS_RC;//57
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
 
@@ -158,8 +160,8 @@ SC_MODULE(mem) {
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
         sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE << MIP_VALUE_RC
-                  << PC_EXE2MEM_RE << INSTRUCTION_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE
-                  << ADRESS_MISSALIGNED_RE << ENV_CALL_S_MODE_RE << ENV_CALL_M_MODE_RE << EXCEPTION_SM
+                  << PC_EXE2MEM_RE << LOAD_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE
+                  << INSTRUCTION_ADRESS_MISSALIGNED_RE << ENV_CALL_S_MODE_RE << ENV_CALL_M_MODE_RE << EXCEPTION_SM
                   << RESET << MRET_RE << MSTATUS_RC << MEPC_SC ;
     }
 };
