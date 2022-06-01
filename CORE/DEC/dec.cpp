@@ -47,12 +47,13 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
-        
+        dec2exe_in_var[215] = instruction_access_fault_sd;  
         dec2exe_in_var[214] = mret_i_sd;            
         dec2exe_in_var[213] = block_bp_sd;
         dec2exe_in_var[212] = illegal_instruction_sd || adress_missaligned_sd ||
                               env_call_u_mode_sd || env_call_m_mode_sd || env_call_s_mode_sd 
-                              || env_call_wrong_mode || mret_i_sd ;  // tells if there is an exception
+                              || env_call_wrong_mode || mret_i_sd
+                              || instruction_access_fault_sd ;  // tells if there is an exception
         dec2exe_in_var[211]            = env_call_wrong_mode.read();
         dec2exe_in_var[210]            = env_call_u_mode_sd.read();
         dec2exe_in_var[209]            = illegal_instruction_sd.read();
@@ -86,6 +87,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
         
+        dec2exe_in_var[215]            = 0 ;    
         dec2exe_in_var[214]            = 0 ;      
         dec2exe_in_var[213]            = 0 ;         
         dec2exe_in_var[212]            = 0;
@@ -128,6 +130,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[215]);
     MRET_RD.write((bool)dec2exe_out_var[214]);
     BLOCK_BP_RD.write((bool)dec2exe_out_var[213]);
     EXCEPTION_RD.write((bool)dec2exe_out_var[212]);
@@ -992,8 +995,14 @@ void decod::pc_inc() {
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0) {
-        dec2if_in_sd.write(pc_out);
-        WRITE_PC_SD.write(pc_out);
+            dec2if_in_sd.write(pc_out);
+            WRITE_PC_SD.write(pc_out);
+        if(pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3){
+            instruction_access_fault_sd = 1 ;
+        }
+        else{
+            instruction_access_fault_sd = 0;
+        }
     } else {
         if(!MRET_SM){
             dec2if_in_sd.write(MTVEC_VALUE_RC.read());
@@ -1295,4 +1304,5 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_RD, GET_NAME(MRET_RD));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
+    sc_trace(tf, instruction_access_fault_sd, GET_NAME(instruction_access_fault_sd));
 }

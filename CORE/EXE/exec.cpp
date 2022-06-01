@@ -122,6 +122,7 @@ void exec::fifo_concat() {
         ff_din[162]            = MRET_RD.read();
         ff_din[163]            = store_adress_missaligned_se ;
         ff_din[164]            = store_access_fault_se ;
+        ff_din[165]            = INSTRUCTION_ACCESS_FAULT_RD ;
         
     } else {
         ff_din.range(31, 0)    = 0;
@@ -148,6 +149,7 @@ void exec::fifo_concat() {
         ff_din[162]            = 0;
         ff_din[163]            = 0;
         ff_din[164]            = 0;
+        ff_din[165]            = 0;
     }
 
     exe2mem_din_se.write(ff_din);
@@ -178,6 +180,7 @@ void exec::fifo_unconcat() {
     MRET_RE.write((bool)ff_dout[162]);
     STORE_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[163]);
     STORE_ACCESS_FAULT_RE.write((bool)ff_dout[164]);
+    INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[165]);
 }
 
 void exec::manage_fifo() {

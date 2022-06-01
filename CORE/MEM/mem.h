@@ -49,6 +49,7 @@ SC_MODULE(mem) {
     sc_in<bool> ENV_CALL_M_MODE_RE;
     sc_in<bool> ENV_CALL_U_MODE_RE;
     sc_in<bool> ENV_CALL_WRONG_MODE_RE;
+    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_in<bool> MRET_RE;//30
 
     // Bus Interface : // No bus in our implemation but can be use for further use
@@ -159,9 +160,18 @@ SC_MODULE(mem) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE << BUS_ERROR_SX << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE << MIP_VALUE_RC
-                  << PC_EXE2MEM_RE << LOAD_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE
-                  << INSTRUCTION_ADRESS_MISSALIGNED_RE << ENV_CALL_S_MODE_RE << ENV_CALL_M_MODE_RE << EXCEPTION_SM
+        sensitive << EXCEPTION_RE << BUS_ERROR_SX 
+        << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE 
+        << MIP_VALUE_RC
+                  << PC_EXE2MEM_RE << LOAD_ACCESS_FAULT_RE 
+                  << ILLEGAL_INSTRUCTION_RE
+                  << INSTRUCTION_ADRESS_MISSALIGNED_RE 
+                  << ENV_CALL_U_MODE_RE
+                  << ENV_CALL_S_MODE_RE 
+                  << ENV_CALL_M_MODE_RE 
+                  << EXCEPTION_SM
+                  << STORE_ACCESS_FAULT_RE
+                  << STORE_ADRESS_MISSALIGNED_RE
                   << RESET << MRET_RE << MSTATUS_RC << MEPC_SC ;
     }
 };

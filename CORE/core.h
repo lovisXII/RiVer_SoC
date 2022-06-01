@@ -117,6 +117,8 @@ SC_MODULE(core) {
     sc_signal<bool> ENV_CALL_WRONG_MODE_RE;
     sc_signal<bool> ENV_CALL_U_MODE_RE;
     sc_signal<bool> MRET_RE;
+    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD;
+    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;
 
     
     // MEM-WBK interface
@@ -315,6 +317,7 @@ SC_MODULE(core) {
         dec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         dec_inst.MRET_RD(MRET_RD);
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
+        dec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -394,6 +397,8 @@ SC_MODULE(core) {
         exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
         exec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         exec_inst.MRET_RE(MRET_RE);
+        exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
+        exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -442,7 +447,6 @@ SC_MODULE(core) {
         mem_inst.EXCEPTION_RE(EXCEPTION_RE);
         mem_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
         mem_inst.LOAD_ACCESS_FAULT_RE(LOAD_ACCESS_FAULT_RE);
-
         mem_inst.STORE_ADRESS_MISSALIGNED_RE(STORE_ADRESS_MISSALIGNED_RE);
         mem_inst.STORE_ACCESS_FAULT_RE(STORE_ACCESS_FAULT_RE);
         mem_inst.ENV_CALL_U_MODE_RE(ENV_CALL_U_MODE_RE);
@@ -452,6 +456,7 @@ SC_MODULE(core) {
         mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);//39
         mem_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         mem_inst.MRET_RE(MRET_RE);
+        mem_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
 
 
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);

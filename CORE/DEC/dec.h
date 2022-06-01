@@ -2,8 +2,8 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size 215
-
+#define dec2exe_size 216
+#define start_kernel_adress 0x80000000
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -100,6 +100,7 @@ SC_MODULE(decod) {
     sc_out<bool> ENV_CALL_M_MODE_RD;
     sc_out<bool> ENV_CALL_S_MODE_RD;
     sc_out<bool> ENV_CALL_WRONG_MODE_RD ;
+    sc_out<bool> INSTRUCTION_ACCESS_FAULT_RD ;
     sc_out<bool> MRET_RD;
     sc_out<bool>        EXCEPTION_RD;
     sc_in<sc_uint<2>>   CURRENT_MODE_SM ;
@@ -289,6 +290,7 @@ SC_MODULE(decod) {
     sc_signal<bool> ebreak_i_sd;
     sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
     sc_signal<bool> adress_missaligned_sd;   // branch offset is misaligned
+    sc_signal<bool> instruction_access_fault_sd;
     sc_signal<bool> env_call_u_mode_sd ;
     sc_signal<bool> env_call_s_mode_sd;
     sc_signal<bool> env_call_m_mode_sd;

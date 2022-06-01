@@ -8,7 +8,7 @@
 #include "shifter.h"
 #include "multiplier.h"
 
-#define exe2mem_size        165
+#define exe2mem_size        166
 #define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
     // Input/Output of EXE :
@@ -49,6 +49,7 @@ SC_MODULE(exec) {
     sc_in<bool> ENV_CALL_M_MODE_RD;
     sc_in<bool> ENV_CALL_S_MODE_RD;
     sc_in<bool> ENV_CALL_WRONG_MODE_RD ;
+    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RD;
     sc_in<bool> MRET_RD;
 
 
@@ -63,6 +64,7 @@ SC_MODULE(exec) {
     sc_out<bool> ENV_CALL_M_MODE_RE;
     sc_out<bool> ENV_CALL_U_MODE_RE;
     sc_out<bool> ENV_CALL_WRONG_MODE_RE;
+    sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_out<bool> MRET_RE ;
     
 
