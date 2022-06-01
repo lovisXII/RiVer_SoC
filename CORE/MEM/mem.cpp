@@ -281,7 +281,23 @@ void mem::csr_exception() {
             CURRENT_MODE_SM = 3 ;
         }
         if (ILLEGAL_INSTRUCTION_RE ) {
-            save_restore_sm     = 1 ; // Need to save context
+            save_restore_sm     = 0 ; // Need to save context
+            mpp_sm              = CURRENT_MODE_SM ;
+            mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
+            mie_sm              = 0;//No interruption during exception gestion
+
+            mstatus_new[31]            = save_restore_sm ;
+            mstatus_new.range(12,11)   = mpp_sm ;
+            mstatus_new[7]             = mpie_sm ;
+            mstatus_new[3]             = mie_sm ;
+            MSTATUS_WDATA_RM = mstatus_new ; 
+            
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MCAUSE_WDATA_RM.write(2);
+            CURRENT_MODE_SM = 3 ;
+        }
+        if (INSTRUCTION_ACCESS_FAULT_RE ) {
+            save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
             mie_sm              = 0;//No interruption during exception gestion
