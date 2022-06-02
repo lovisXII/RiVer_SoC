@@ -110,7 +110,7 @@ void mem::csr_exception() {
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_RM.write(5);
         }
-        if (ENV_CALL_WRONG_MODE_RE ) {
+        else if (ENV_CALL_WRONG_MODE_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -126,7 +126,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(24);
             CURRENT_MODE_SM = 3 ;
         }
-        if (MRET_RE ) {
+        else if (MRET_RE ) {
             save_restore_sm     = 0 ;
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -149,10 +149,7 @@ void mem::csr_exception() {
 
             MRET_SM = MRET_RE ;
         }
-        else{
-            MRET_SM = 0 ;
-        }
-        if (STORE_ACCESS_FAULT_RE ) {
+        else if (STORE_ACCESS_FAULT_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -168,7 +165,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(7);
             CURRENT_MODE_SM = 3 ;
         }
-        if (LOAD_ACCESS_FAULT_RE ) {
+        else if (LOAD_ACCESS_FAULT_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -184,7 +181,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(5);
             CURRENT_MODE_SM = 3 ;
         }
-        if (STORE_ADRESS_MISSALIGNED_RE ) {
+        else if (STORE_ADRESS_MISSALIGNED_RE ) {
             save_restore_sm     = 0 ;
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -200,7 +197,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(6);
             CURRENT_MODE_SM = 3 ;
         }
-        if (LOAD_ADRESS_MISSALIGNED_RE ) {
+        else if (LOAD_ADRESS_MISSALIGNED_RE ) {
             save_restore_sm     = 0 ;
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -216,7 +213,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(4);
             CURRENT_MODE_SM = 3 ;
         }
-        if (ENV_CALL_M_MODE_RE) {
+        else if (ENV_CALL_M_MODE_RE) {
             save_restore_sm     = 1 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -232,7 +229,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(11);
             CURRENT_MODE_SM = 3 ;
         }
-        if (ENV_CALL_S_MODE_RE) {
+        else if (ENV_CALL_S_MODE_RE) {
             save_restore_sm     = 1 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -248,7 +245,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(9);
             CURRENT_MODE_SM = 3 ;
         }
-        if (ENV_CALL_U_MODE_RE) {
+        else if (ENV_CALL_U_MODE_RE) {
             save_restore_sm     = 1 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -264,7 +261,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(8);
             CURRENT_MODE_SM = 3 ;
         }
-        if (INSTRUCTION_ADRESS_MISSALIGNED_RE ) {
+        else if (INSTRUCTION_ADRESS_MISSALIGNED_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -280,7 +277,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(0);
             CURRENT_MODE_SM = 3 ;
         }
-        if (ILLEGAL_INSTRUCTION_RE ) {
+        else if (ILLEGAL_INSTRUCTION_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -296,7 +293,7 @@ void mem::csr_exception() {
             MCAUSE_WDATA_RM.write(2);
             CURRENT_MODE_SM = 3 ;
         }
-        if (INSTRUCTION_ACCESS_FAULT_RE ) {
+        else if (INSTRUCTION_ACCESS_FAULT_RE ) {
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
             mpie_sm             = mstatus_new[3] ; //reading precedent value of MIE
@@ -309,9 +306,11 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM = mstatus_new ; 
             
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(2);
+            MCAUSE_WDATA_RM.write(1);
             CURRENT_MODE_SM = 3 ;
         }
+        if(!MRET_RE.read())
+            MRET_SM = 0 ;
     }
 }
 
