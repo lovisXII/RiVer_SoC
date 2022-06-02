@@ -70,7 +70,7 @@ SC_MODULE(core) {
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD;
     sc_signal<sc_uint<32>> CSR_RDATA_SC;
-
+    sc_signal<sc_uint<32>> MCAUSE_SC ;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
     sc_signal<sc_uint<32>> RDATA2_SR;
@@ -173,6 +173,7 @@ SC_MODULE(core) {
 
     // Mcache interface
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
+
     sc_out<sc_uint<32>> MCACHE_DATA_SM;
     sc_out<bool>        MCACHE_ADR_VALID_SM, 
                         MCACHE_STORE_SM, 
@@ -324,6 +325,7 @@ SC_MODULE(core) {
         dec_inst.MRET_RD(MRET_RD);
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
+        dec_inst.MCAUSE_SC(MCAUSE_SC);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -414,7 +416,7 @@ SC_MODULE(core) {
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-        mem_inst.EXE_RES_RE(EXE_RES_RE);//0
+       mem_inst.EXE_RES_RE(EXE_RES_RE);//0
         mem_inst.MEM_DATA_RE(MEM_DATA_RE);
         mem_inst.DEST_RE(DEST_RE);
         mem_inst.MEM_SIZE_RE(MEM_SIZE_RE);
@@ -549,6 +551,7 @@ SC_MODULE(core) {
         csr_inst.MSTATUS_RC(MSTATUS_RC);
         csr_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
+        csr_inst.MCAUSE_SC(MCAUSE_SC);
 
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);

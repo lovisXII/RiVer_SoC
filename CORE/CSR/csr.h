@@ -24,6 +24,7 @@ SC_MODULE(csr) {
     sc_out<sc_uint<32>> MSTATUS_RC ;
     sc_out<sc_uint<32>> MTVEC_VALUE_RC;
     sc_out<sc_uint<32>> MIP_VALUE_RC;
+    sc_out<sc_uint<32>> MCAUSE_SC ;
 
     // Output :
 

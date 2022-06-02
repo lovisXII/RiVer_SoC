@@ -50,7 +50,7 @@ SC_MODULE(mem) {
     sc_in<bool> ENV_CALL_U_MODE_RE;
     sc_in<bool> ENV_CALL_WRONG_MODE_RE;
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
-    sc_in<bool> MRET_RE;//30
+    sc_in<bool> MRET_RE;//31
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
@@ -63,12 +63,12 @@ SC_MODULE(mem) {
 
     // mem2wbk interface
 
-    sc_in<bool>         MEM2WBK_POP_SW;//34
+    sc_in<bool>         MEM2WBK_POP_SW;//35
     sc_signal<bool>     mem2wbk_push_sm;
     sc_signal<bool>     mem2wbk_full_sm;
     sc_out<bool>        MEM2WBK_EMPTY_SM;
     sc_out<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_out<bool>        CSR_WENABLE_RM;//37
+    sc_out<bool>        CSR_WENABLE_RM;//38
 
     // WBK interface
     sc_out<sc_uint<32>> MEM_RES_RM;
@@ -81,7 +81,7 @@ SC_MODULE(mem) {
     sc_out<bool>        EXCEPTION_SM;
     sc_out<sc_uint<2>>  CURRENT_MODE_SM ;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM ;
-    sc_out<bool>        MRET_SM ;//45
+    sc_out<bool>        MRET_SM ;//46
 
     sc_in_clk    CLK;
     sc_in<bool>     RESET;

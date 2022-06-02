@@ -108,6 +108,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>        EXCEPTION_SM;
     sc_in<sc_uint<32>> MTVEC_VALUE_RC;
+    sc_in<sc_uint<32>> MCAUSE_SC;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
     sc_in<bool>        MRET_SM ;
@@ -419,7 +420,7 @@ SC_MODULE(decod) {
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RC
 
                   << EXCEPTION_SM << PC_IF2DEC_RI
-                  << sret_i_sd << MRET_SM;
+                  << sret_i_sd << MRET_SM << MCAUSE_SC;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

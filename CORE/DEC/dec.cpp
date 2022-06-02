@@ -1005,9 +1005,33 @@ void decod::pc_inc() {
         }
     } else {
         if(!MRET_SM){
-            dec2if_in_sd.write(MTVEC_VALUE_RC.read());
-            WRITE_PC_SD.write(MTVEC_VALUE_RC.read());
-            WRITE_PC_ENABLE_SD.write(1);
+            // Need to check MTVEC value, bits 1,0 indicate :
+            // =0 -> direct type, so pc just get value of mtvec.range(31,2)
+            // =1 -> vectorise, so pc get value of mtvec.range(31,2) + 4*mcause
+            sc_uint<32> dec2if_var ;
+            sc_uint<32> WRITE_PC_VAR ;
+            if(!MTVEC_VALUE_RC.read().range(1,0)){
+                dec2if_var.range(31,2)      = MTVEC_VALUE_RC.read().range(31,2);
+                dec2if_var.range(1,0)       = 0 ;
+                WRITE_PC_VAR.range(31,2)    = MTVEC_VALUE_RC.read().range(31,2);
+                WRITE_PC_VAR.range(1,0)       = 0 ;
+                WRITE_PC_ENABLE_SD.write(1);
+            }
+            else if(MTVEC_VALUE_RC.read().range(1,0) == 1){
+                sc_uint<32> MCAUSE_VAR ;
+                // MCAUSE * 4 :
+                MCAUSE_VAR.range(31,2)  = MCAUSE_SC.read().range(29,0) ;
+                MCAUSE_VAR.range(1,0)   = 0 ;
+                
+                dec2if_var.range(31,2)          = MTVEC_VALUE_RC.read().range(31,2) + MCAUSE_VAR;
+                dec2if_var.range(1,0)           = 0 ;
+                WRITE_PC_VAR.range(31,2)        = MTVEC_VALUE_RC.read().range(31,2) + MCAUSE_VAR ;
+                WRITE_PC_VAR.range(1,0)         = 0 ;
+                WRITE_PC_ENABLE_SD.write(1);
+            }
+            dec2if_in_sd = dec2if_var ;
+            WRITE_PC_VAR = WRITE_PC_SD ;
+
         }
         else{
             dec2if_in_sd.write(RETURN_ADRESS_SM.read());

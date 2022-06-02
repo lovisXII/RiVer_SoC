@@ -62,7 +62,7 @@ void csr::reading_csr() {
     MSTATUS_RC.write(csr_rc[3]) ;
     MTVEC_VALUE_RC.write(csr_rc[6]);
     MIP_VALUE_RC.write(csr_rc[11]); 
-
+    MCAUSE_SC.write(csr_rc[9]) ;
 }
 
 void csr::trace(sc_trace_file* tf) {
