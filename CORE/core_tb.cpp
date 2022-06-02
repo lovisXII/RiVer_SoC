@@ -149,7 +149,7 @@ int sc_main(int argc, char* argv[]) {
                 symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
                 if (name == "_reset") {
                     cout << "Found reset" << endl;
-                    reset_adr = value -4;  // minus 4 to acount for init inc_pc
+                    reset_adr = value - 4;  // minus 4 to acount for init inc_pc
                 }
                 if (name == "_start") {
                     cout << "Found start" << endl;
@@ -173,7 +173,7 @@ int sc_main(int argc, char* argv[]) {
                 }
                 if (name == "rvtest_entry_point") {
                     cout << "Found rvtest_entry_point" << endl;
-                    start_adr = value - 4;
+                    reset_adr = value - 4;
                 }
                 if (name == "begin_signature") {
                     cout << "Found begin_signature" << endl;
@@ -505,21 +505,21 @@ int sc_main(int argc, char* argv[]) {
             exit(0);
         }
 
-        /*unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
-        unsigned int offset          = 8 * (mem_adr % 4);
-        unsigned int mask;
-        if (mem_size == 2)
-            mask = 0xFF;
-        else if (mem_size == 1)
-            mask = 0xFFFF;
-        else
-            mask = 0xFFFFFFFF;
-        mask <<= offset;
-        if (mem_store && mem_adr_valid) {
-            ram[rounded_mem_adr] &= ~mask;
-            ram[rounded_mem_adr] |= (mask & (mem_data << offset));
-        }
-        mem_result = (ram[rounded_mem_adr] & mask) >> offset;*/
+        // unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
+        // unsigned int offset          = 8 * (mem_adr % 4);
+        // unsigned int mask;
+        // if (mem_size == 2)
+        //     mask = 0xFF;
+        // else if (mem_size == 1)
+        //     mask = 0xFFFF;
+        // else
+        //     mask = 0xFFFFFFFF;
+        // mask <<= offset;
+        // if (mem_store && mem_adr_valid) {
+        //     ram[rounded_mem_adr] &= ~mask;
+        //     ram[rounded_mem_adr] |= (mask & (mem_data << offset));
+        // }
+        // mem_result = (ram[rounded_mem_adr] & mask) >> offset;
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
