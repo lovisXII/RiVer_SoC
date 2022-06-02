@@ -43,4 +43,26 @@ _reset:
     sw x15, 40(x9)
     sw x20, 96(x9) #_env_call_wrong mode set in custom use 24
 
+    # reseting register value
+
+    la x3, 0
+    la x4, 0
+    la x5, 0
+    la x6, 0
+    la x7, 0
+    la x8, 0
+    la x9, 0
+    la x10, 0
+    la x11, 0
+    la x12, 0
+    la x13, 0
+    la x14, 0
+    la x15, 0
+    la x16, 0
+    la x17, 0
+    la x18, 0
+    la x19, 0
+    la x20, 0
+    la x21, 0
+
     mret
