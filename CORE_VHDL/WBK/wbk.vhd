@@ -23,7 +23,7 @@ entity wbk is
         -- Reg interface
         REG_DATA_SW : out std_logic_vector(31 downto 0);
         REG_DEST_SW : out std_logic_vector(5 downto 0);
-        REG_WB_SW : std_logic; 
+        REG_WB_SW : std_logic 
 
     );
 end wbk;
