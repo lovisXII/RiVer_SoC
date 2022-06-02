@@ -32,7 +32,6 @@ void exec::select_exec_res() {
     else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b00)
     {   
         if (SLT_RD.read()) {
-            cout << sc_time_stamp() << "eré" << endl ;
             if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
                 exe_res_se.write(1);
             } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
@@ -172,7 +171,7 @@ void exec::fifo_unconcat() {
     ENV_CALL_WRONG_MODE_RE.write((bool)ff_dout[154]);
     ILLEGAL_INSTRUCTION_RE.write((bool)ff_dout[155]);
     INSTRUCTION_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[156]);
-    ENV_CALL_S_MODE_RE.write((bool)ff_dout[157]);
+    ENV_CALL_U_MODE_RE.write((bool)ff_dout[157]);
     ENV_CALL_M_MODE_RE.write((bool)ff_dout[158]);
     EXCEPTION_RE.write((bool)ff_dout[159]);
     LOAD_ADRESS_MISSALIGNED_RE.write((bool)ff_dout[160]);
@@ -199,25 +198,18 @@ void exec::bypasses() {
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD.read();
 
     if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
-        cout << "1 " << sc_time_stamp() << endl ;
         op1_se.write(OP1_RD.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
-        cout << "2 " << sc_time_stamp() << endl ;
         op1_se.write(CSR_RDATA_RE.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) {
-        cout << "3 " << sc_time_stamp() << endl ;
         op1_se.write(EXE_RES_RE.read());
     } else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) {
-        cout << "4 " << sc_time_stamp() << endl ;
         op1_se.write(CSR_RDATA_RM.read());
     } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
-        cout << "5 " << sc_time_stamp() << endl ;
         op1_se.write(MEM_RES_RM.read());
     } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
-        cout << "6 " << sc_time_stamp() << endl ;
         blocked_var = true;
     } else {
-        cout << "7 " << sc_time_stamp() << endl ;
         op1_se.write(OP1_RD.read());
     }
 

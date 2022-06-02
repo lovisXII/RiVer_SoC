@@ -3,5 +3,26 @@
 
 
 _start :
-    nop
+    la x29,_trampoline    #loading exception handler adress
+    srli x29,x29,2       # removing least 2 significant bits to allow 
+    sll x29,x29,2
+    addi x29,x29,1       # direct mode for mtvec 
+    csrrw x0, 0x305,x29  # writting exception handler adress in mtvec
     ecall
+
+
+_trampoline: 
+   nop
+   nop
+   nop
+   nop
+   nop
+   nop
+   nop
+   nop
+   j _good
+   nop
+   nop
+   nop
+   nop
+   nop

@@ -359,7 +359,14 @@ SC_MODULE(decod) {
         sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall << EXCEPTION_SM;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall << EXCEPTION_SM;
+        sensitive << IF2DEC_EMPTY_SI 
+        << dec2exe_full_sd 
+        << add_offset_to_pc_sd 
+        << stall 
+        << EXCEPTION_SM
+        << MRET_SM
+        << MTVEC_VALUE_RC;
+
 
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd << jalr_type_inst_sd 
@@ -377,18 +384,35 @@ SC_MODULE(decod) {
         SC_METHOD(decoding_instruction)
         sensitive << INSTR_RI;
         SC_METHOD(pre_reg_read_decoding)
-        sensitive << INSTR_RI << r_type_inst_sd << i_type_inst_sd
-
-                  << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
-
-                  << jalr_type_inst_sd << beq_i_sd << bne_i_sd
-
-                  << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << system_type_inst_sd << csrrw_i_sd << csrrs_i_sd
-
-                  << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << ecall_i_sd << ebreak_i_sd << fence_i_sd
-                  << mret_i_sd
-                  << sret_i_sd 
-                  << RESET_N;
+        sensitive   << INSTR_RI 
+                    << r_type_inst_sd 
+                    << i_type_inst_sd
+                    << i_type_inst_sd 
+                    << s_type_inst_sd 
+                    << b_type_inst_sd 
+                    << u_type_inst_sd 
+                    << j_type_inst_sd
+                    << jalr_type_inst_sd 
+                    << beq_i_sd 
+                    << bne_i_sd
+                    << blt_i_sd 
+                    << bge_i_sd 
+                    << bltu_i_sd 
+                    << bgeu_i_sd 
+                    << system_type_inst_sd 
+                    << csrrw_i_sd 
+                    << csrrs_i_sd
+                    << csrrc_i_sd 
+                    << csrrwi_i_sd 
+                    << csrrsi_i_sd 
+                    << csrrci_i_sd 
+                    << ecall_i_sd 
+                    << ebreak_i_sd 
+                    << fence_i_sd
+                    << mret_i_sd
+                    << sret_i_sd 
+                    << RESET_N
+                    << CURRENT_MODE_SM;
         SC_METHOD(post_reg_read_decoding)
         sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
 
@@ -417,10 +441,16 @@ SC_MODULE(decod) {
                   << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd
                   << sret_i_sd << CSR_RDATA_SC;
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RC
-
-                  << EXCEPTION_SM << PC_IF2DEC_RI
-                  << sret_i_sd << MRET_SM << MCAUSE_SC;
+        sensitive   << CLK.pos() 
+                    << READ_PC_SR 
+                    << offset_branch_sd 
+                    << inc_pc_sd 
+                    << add_offset_to_pc_sd 
+                    << MTVEC_VALUE_RC
+                    << EXCEPTION_SM 
+                    << PC_IF2DEC_RI
+                    << MRET_SM 
+                    << MCAUSE_SC;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

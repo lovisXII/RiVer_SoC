@@ -13,7 +13,7 @@ void decod::dec2if_gestion() {
 
 void decod::if2dec_pop_method() {
     if (EXCEPTION_SM.read() == 0) {
-        if (add_offset_to_pc_sd.read()) {
+        if (add_offset_to_pc_sd.read() || EXCEPTION_SM ) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
         } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read() ) {
@@ -410,7 +410,7 @@ void decod::decoding_instruction() {
     else
         sret_i_sd.write(0);
     
-    // M-type Instructions :
+    // M-type Instructions :j _bad
 
     if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b000)
         mul_i_sd.write(1);
@@ -533,7 +533,7 @@ void decod::pre_reg_read_decoding() {
             //Generate the exception corresponding to the right 
             // call
 
-            if(!CURRENT_MODE_SM.read() && ecall_i_sd){
+            if(CURRENT_MODE_SM.read() == 0 && ecall_i_sd){
                 env_call_u_mode_sd = 1 ;
                 env_call_s_mode_sd = 0 ;
                 env_call_m_mode_sd = 0 ;
@@ -544,6 +544,7 @@ void decod::pre_reg_read_decoding() {
                 env_call_m_mode_sd = 1 ;
             }
             else{
+                cout << "other " << sc_time_stamp() << endl ; 
                 env_call_u_mode_sd = 0 ;
                 env_call_s_mode_sd = 0 ;
                 env_call_m_mode_sd = 0 ;
@@ -572,6 +573,11 @@ void decod::pre_reg_read_decoding() {
         radr1_var    = 0;
         radr2_var    = 0;
         adr_dest_var = 0;
+    }
+    if(!ecall_i_sd){
+        env_call_u_mode_sd = 0 ;
+        env_call_s_mode_sd = 0 ;
+        env_call_m_mode_sd = 0 ;
     }
     RADR1_SD.write(radr1_var);
     RADR2_SD.write(radr2_var);
@@ -994,7 +1000,7 @@ void decod::pc_inc() {
 
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
-    if (EXCEPTION_SM.read() == 0) {
+    if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
             dec2if_in_sd.write(pc_out);
             WRITE_PC_SD.write(pc_out);
         if(pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3){
@@ -1003,34 +1009,33 @@ void decod::pc_inc() {
         else{
             instruction_access_fault_sd = 0;
         }
-    } else {
+    } 
+    if(EXCEPTION_SM.read() == 1) {
         if(!MRET_SM){
             // Need to check MTVEC value, bits 1,0 indicate :
             // =0 -> direct type, so pc just get value of mtvec.range(31,2)
             // =1 -> vectorise, so pc get value of mtvec.range(31,2) + 4*mcause
             sc_uint<32> dec2if_var ;
             sc_uint<32> WRITE_PC_VAR ;
-            if(!MTVEC_VALUE_RC.read().range(1,0)){
-                dec2if_var.range(31,2)      = MTVEC_VALUE_RC.read().range(31,2);
-                dec2if_var.range(1,0)       = 0 ;
-                WRITE_PC_VAR.range(31,2)    = MTVEC_VALUE_RC.read().range(31,2);
-                WRITE_PC_VAR.range(1,0)       = 0 ;
+            sc_uint<32> MTVEC_VALUE_VAR ;
+            ;
+            MTVEC_VALUE_VAR.range(31,2) = MTVEC_VALUE_RC.read().range(31,2) ;
+            MTVEC_VALUE_VAR.range(1,0)  = 0 ;
+            
+            if(MTVEC_VALUE_RC.read().range(1,0) == 0){//direct
+                dec2if_in_sd  = MTVEC_VALUE_VAR ;
+                WRITE_PC_SD = MTVEC_VALUE_VAR ;
                 WRITE_PC_ENABLE_SD.write(1);
             }
-            else if(MTVEC_VALUE_RC.read().range(1,0) == 1){
+            else if(MTVEC_VALUE_RC.read().range(1,0) == 1){//vectorise
                 sc_uint<32> MCAUSE_VAR ;
                 // MCAUSE * 4 :
                 MCAUSE_VAR.range(31,2)  = MCAUSE_SC.read().range(29,0) ;
                 MCAUSE_VAR.range(1,0)   = 0 ;
-                
-                dec2if_var.range(31,2)          = MTVEC_VALUE_RC.read().range(31,2) + MCAUSE_VAR;
-                dec2if_var.range(1,0)           = 0 ;
-                WRITE_PC_VAR.range(31,2)        = MTVEC_VALUE_RC.read().range(31,2) + MCAUSE_VAR ;
-                WRITE_PC_VAR.range(1,0)         = 0 ;
+                dec2if_in_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
+                WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR) ;
                 WRITE_PC_ENABLE_SD.write(1);
             }
-            dec2if_in_sd = dec2if_var ;
-            WRITE_PC_VAR = WRITE_PC_SD ;
 
         }
         else{
@@ -1331,4 +1336,5 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, env_call_u_mode_sd, GET_NAME(env_call_u_mode_sd));
     sc_trace(tf, instruction_access_fault_sd, GET_NAME(instruction_access_fault_sd));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
+    sc_trace(tf, MCAUSE_SC, GET_NAME(MCAUSE_SC));
 }
