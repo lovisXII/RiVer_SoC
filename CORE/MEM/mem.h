@@ -89,7 +89,9 @@ SC_MODULE(mem) {
     // Interruption :
 
     sc_in<bool> INTERRUPTION_SE;
-
+    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SE ;
+    sc_in<bool> MACHINE_TIMER_INTERRUPT_SE ;
+    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE ;
     // CSR Interface :
 
     sc_out<sc_uint<12>> CSR_WADR_SM;
