@@ -29,7 +29,7 @@ entity dec is
         SLT_RD, SLTU_RD : out std_logic;    
         MEM_DATA_RD : out std_logic_vector(31 downto 0);
         MEM_LOAD_RD , MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
-        MEM_SIZE_RD : std_logic_vector(1 downto 0);
+        MEM_SIZE_RD : out std_logic_vector(1 downto 0);
 
         -- dec2if interface
         DEC2IF_POP_SI : in std_logic; 
@@ -80,16 +80,17 @@ signal beq_i_sd, bne_i_sd, blt_i_sd, bge_i_sd, bltu_i_sd, bgeu_i_sd : std_logic;
 signal lui_i_sd : std_logic;
 signal auipc_i_sd : std_logic;
 
-signal jal_i_sd, jalr_i_sd : std_logic;
+signal j_i_sd, jalr_i_sd : std_logic;
 
 -- dec2exe data and commands
 signal dec2exe_op1_sd, dec2exe_op2_sd, op1_u_type_sd, op2_i_type_sd : std_logic_vector(31 downto 0); 
 signal radr1_sd, radr2_sd, rdest_sd : std_logic_vector(5 downto 0);
 signal neg_op2_sd : std_logic;
 signal alu_cmd_sd : std_logic_vector(1 downto 0);
-signal select_shift : std_logic;
+signal select_shift_sd : std_logic;
 signal mem_data_sd : std_logic_vector(31 downto 0);
-signal mem_load_sd,mem_store_sd, mem_size_sd, mem_sign_extend_sd : std_logic;
+signal mem_load_sd,mem_store_sd, mem_sign_extend_sd : std_logic;
+signal mem_size_sd : std_logic_vector(1 downto 0);
 signal wb_sd : std_logic;
 
 -- branch and pc gestion
@@ -97,7 +98,7 @@ signal offset_branch_sd : std_logic_vector(31 downto 0);
 signal inval_adr_dest, invalid_instr, invalid_i, inc_pc, inc_pc_sd, inc_pc_b_type : std_logic;
 signal res : std_logic_vector(31 downto 0);
 signal res_compare : std_logic_vector(32 downto 0);
-signal add_offset_to_pc : std_logic;
+signal add_offset_to_pc_sd : std_logic;
 signal pc : std_logic_vector(31 downto 0);
 
 -- bypass
@@ -127,7 +128,7 @@ dec2if : entity work.fifo
     );
 
 dec2exe : entity work.fifo 
-    generate map(N => 128)
+    generic map(N => 128)
     port map(
         clk => clk, 
         reset_n => reset_n, 
@@ -147,7 +148,7 @@ dec2if_push_sd <=  '0' when (READ_PC_VALID_SR = '1' and dec2if_full_sd = '0') el
                 '1';
 
 -- if2dec 
-IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall = '0' IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
+IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
                  '0'; 
 IF2DEC_FLUSH_SD <= '1' when (add_offset_to_pc_sd = '1') else 
                    '0'; 
@@ -207,8 +208,8 @@ lui_i_sd <= u_type_sd;
 auipc_i_sd <= '1' when INSTR_RI(6 downto 0) = "0010111" else '0';
 
 -- J type 
-jal_i_sd <= jal_type_sd; 
-jarl_i_sd <= jarl_type_sd;
+j_i_sd <= j_type_sd; 
+jalr_i_sd <= jalr_type_sd;
 
 -- Mem access 
 lw_i_sd  <= '1' when load_type_sd = '1' and INSTR_RI(14 downto 12) = "010" else '0';
@@ -225,13 +226,13 @@ sb_i_sd <= '1' when s_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else '0';
 -- Registers and operands selection
 ------------------------------------
 -- Registers affectation 
-radr1_sd <= INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd or jarl_type_sd) ='1') else
+radr1_sd <= INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd or jalr_type_sd) ='1') else
             "000000";
 
 radr2_sd <= INSTR_RI(24 downto 20) when ((r_type_sd or s_type_sd or b_type_sd) = '1') else
             "000000";
 
-rdest_sd <= INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or s_type_sd or u_type_sd or j_type_sd or jarl_type_sd) = '1') else
+rdest_sd <= INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or s_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
             "000000";
 
 -- Operand 1 selection
@@ -240,7 +241,7 @@ op1_u_type_sd(11 downto 0)  <= x"000";
 
 dec2exe_op1_sd <= RDATA1_SR when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd) = '1') else 
                op1_u_type_sd when u_type_sd = '1' else 
-               READ_PC_SR when ((j_type_sd or jarl_type_sd) = '1') else 
+               READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
                "000000";
 
 -- Operand 2 selection
@@ -251,7 +252,7 @@ op2_i_type_sd(11 downto 0)  <= INSTR_RI(31 downto 20);
 dec2exe_op2_sd <= RDATA2_SR when ((r_type_sd or s_type_sd or b_type_sd or (u_type_sd and not(auipc_i_sd))) = '1') else 
                op2_i_type_sd when i_type_sd = '1' else
                PC_IF2DEC_RI when auipc_i_sd = '1' else 
-               READ_PC_SR when ((j_type_sd or jarl_type_sd) = '1') else 
+               READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
                "000000";
 
 -------------------------
@@ -260,7 +261,7 @@ dec2exe_op2_sd <= RDATA2_SR when ((r_type_sd or s_type_sd or b_type_sd or (u_typ
 -- neg
 neg_op2_sd <= sub_i_sd or slt_i_sd or slti_i_sd or sltu_i_sd or sltiu_i_sd; 
 -- alu 
-alu_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i or srli_i_sd) = '1') else 
+alu_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd) = '1') else 
                 "10" when ((or_i_sd or ori_i_sd or sra_i_sd or srai_i_sd) = '1') else
                 "11" when ((xor_i_sd or xori_i_sd) = '1') else 
                 "00";
@@ -269,7 +270,7 @@ select_shift_sd <= sll_i_sd or slli_i_sd or srl_i_sd or sra_i_sd or srai_i_sd;
 
 
 -- ?????????? and load_type ?
-wb_sd <=  r_type_sd or i_type_sd or u_type_sd or b_type_sd or j_type_sd or jarl_type_sd;
+wb_sd <=  r_type_sd or i_type_sd or u_type_sd or b_type_sd or j_type_sd or jalr_type_sd;
 
 mem_data_sd <= RDATA2_SR when s_type_sd = '1' else 
                x"00000000";
@@ -282,7 +283,7 @@ mem_size_sd <=  "00" when lw_i_sd = '1' else
                 "10" when ((lb_i_sd or lbu_i_sd or sb_i_sd) = '1') else 
                 "11";
  
-mem_sign_extend_sd <= '1' when ((lh_i_sd and lhu_i_sd = '1') or (lb_i_sd and lbu_i_sd) = '1') else
+mem_sign_extend_sd <= '1' when (((lh_i_sd and lhu_i_sd )= '1') or ((lb_i_sd and lbu_i_sd) = '1')) else
                       '0';
 
 -------------------------
@@ -293,8 +294,8 @@ offset_branch_sd(31 downto 13) <=   (others => INSTR_RI(31)) when b_type_sd = '1
 
 offset_branch_sd(12) <= INSTR_RI(31) when b_type_sd = '1' else '0';
 offset_branch_sd(11) <= INSTR_RI(7) when b_type_sd = '1' else '0';
-offset_branch_sd(10 downto 5) <= INSTR_RI(30 downto 25) when b_type_sd = '1' else '0';
-offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else '0';
+offset_branch_sd(10 downto 5) <= INSTR_RI(30 downto 25) when b_type_sd = '1' else "000000";
+offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else "000000";
 offset_branch_sd(0) <= '0'; 
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
@@ -314,13 +315,13 @@ inc_pc <= '1' when ((r_type_sd or i_type_sd or s_type_sd) = '1') else
              inc_pc_b_type when b_type_sd = '1' else 
              '0';
 
-inval_adr_dest <= '1' when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jarl_type_sd) = '1') else '0';
+inval_adr_dest <= '1' when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else '0';
 
 invalid_i <= '0'; -- idk the need of this signal 
 
 invalid_instr <= invalid_i or IF2DEC_EMPTY_SI; 
 
-inc_pc_sd <= inc_pc and dec2if_push_sd or invalid_instr;
+inc_pc_sd <= (inc_pc and dec2if_push_sd) or invalid_instr;
 
 add_offset_to_pc_sd <= not stall and not inc_pc and dec2if_push_sd and not invalid_instr;
 
@@ -340,8 +341,8 @@ begin
 end process; 
 
 -- Bypass...
-bloc_in_dec <= '1' when (((radr1_sd = rdest_sd) or(radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
-stall <= (not r1_valid_sd or not r2_valid_sd) and (b_type_sd or j_type_sd or jarl_type_sd or bloc_in_dec);  
+block_in_dec <= '1' when (((radr1_sd = rdest_sd) or(radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
+stall <= (not r1_valid_sd or not r2_valid_sd) and (b_type_sd or j_type_sd or jalr_type_sd or block_in_dec);  
              
 -- ... not really implemented yet
 r1_valid_sd <= '1'; 
@@ -379,13 +380,13 @@ dec2exe_din(11) <= mem_sign_extend_sd;
 dec2exe_din(10 downto 9) <= mem_size_sd; 
 dec2exe_din(8) <= select_shift_sd; 
 dec2exe_din(7 downto 2) <= rdest_sd; 
-dec2dec_din(1) <= (slt_i_sd or slti_i_sd);
-dec2dec_din(0) <= (sltu_i_sd or sltui_i_sd);
+dec2exe_din(1) <= (slt_i_sd or slti_i_sd);
+dec2exe_din(0) <= (sltu_i_sd or sltiu_i_sd);
 
 BP_R1_VALID_RD <= dec2exe_dout(127);
 BP_R2_VALID_RD <= dec2exe_dout(126);
 BP_RADR1_RD <= dec2exe_dout(125 downto 120);
-BP_RADR2_RD <= dec2dexe_dout(119 downto 114);
+BP_RADR2_RD <= dec2exe_dout(119 downto 114);
 CMD_RD <= dec2exe_dout(113 downto 112);
 OP1_RD <= dec2exe_dout(111 downto 80);
 OP2_RD <= dec2exe_dout(79 downto 48);
