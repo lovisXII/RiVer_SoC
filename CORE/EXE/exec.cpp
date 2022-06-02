@@ -261,10 +261,12 @@ void exec::exception() {
     | store_access_fault_se
     | store_adress_missaligned_se;
 
-    if (INTERRUPTION_SX.read() || EXCEPTION_RD.read())
+    if (MACHINE_SOFTWARE_INTERRUPT_SX | MACHINE_TIMER_INTERRUPT_SX | MACHINE_EXTERNAL_INTERRUPT_SX)
     // in case of interrupt or exception have to inform other stage
     {
         INTERRUPTION_SE.write(1);
+    }else{
+        INTERRUPTION_SE.write(0) ;
     }
 
     if (exception_se.read()) {
@@ -329,7 +331,12 @@ void exec::trace(sc_trace_file* tf) {
     // Interruption :
 
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
-    sc_trace(tf, INTERRUPTION_SX, GET_NAME(INTERRUPTION_SX));  // asynchrone Interruption from outside
+    sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SX, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SX));
+    sc_trace(tf, MACHINE_TIMER_INTERRUPT_SX, GET_NAME(MACHINE_TIMER_INTERRUPT_SX));
+    sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SX, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SX));
+    sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SE, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SE));
+    sc_trace(tf, MACHINE_TIMER_INTERRUPT_SE, GET_NAME(MACHINE_TIMER_INTERRUPT_SE));
+    sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SE, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SE));
 
     // bypasses
 

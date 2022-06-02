@@ -70,9 +70,10 @@ SC_MODULE(exec) {
 
     // Interruption :
 
-    sc_out<bool> INTERRUPTION_SE;
-    sc_in<bool>  INTERRUPTION_SX;  // asynchrone Interruption from outside
-
+    sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE ;
+    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE ;
+    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE ;
+    sc_out<bool> INTERRUPTION_SE ;
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM;
@@ -85,7 +86,10 @@ SC_MODULE(exec) {
     sc_in<bool> EXCEPTION_SM;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
-
+    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX ;
+    sc_in<bool> MACHINE_TIMER_INTERRUPT_SX ;
+    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SX ;
+    
     // Fifo exe2mem interface :
 
     sc_out<sc_uint<32>> EXE_RES_RE;
@@ -255,8 +259,7 @@ SC_MODULE(exec) {
                   << exception_se << MEM_DATA_RD
                   << MEM_STORE_RD;
         SC_METHOD(exception);
-        sensitive << INTERRUPTION_SX 
-                  << WB_RD 
+        sensitive << WB_RD 
                   << MEM_LOAD_RD 
                   << MEM_STORE_RD 
                   << WB_RD 
