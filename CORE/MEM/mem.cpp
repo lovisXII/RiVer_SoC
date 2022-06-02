@@ -94,7 +94,7 @@ void mem::csr_exception() {
         // THEY ARE IN A SPECIFIC ORDER
         // TO RESPECT PRIORITY IN CASE OF SEVERAL
         // EXCEPTION OCCURING AT THE SAME CYCLE
-        bool macine_interrupt_enable = mstatus_new[3] ;
+        bool machine_interrupt_enable = mstatus_new[3] ;
        if (BUS_ERROR_SX) {  // load access fault
             save_restore_sm     = 0 ; // Need to save context
             mpp_sm              = CURRENT_MODE_SM ;
@@ -380,5 +380,8 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
+    sc_trace(tf, STORE_ACCESS_FAULT_RE, GET_NAME(STORE_ACCESS_FAULT_RE));
+    sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE, GET_NAME(STORE_ADRESS_MISSALIGNED_RE));
+    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));
     fifo_inst.trace(tf);
 }

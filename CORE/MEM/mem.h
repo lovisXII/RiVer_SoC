@@ -149,7 +149,7 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << CURRENT_MODE_SM << mret_sm << return_adress_sm;
+        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << mret_sm << return_adress_sm;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
@@ -160,18 +160,29 @@ SC_MODULE(mem) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE << BUS_ERROR_SX 
-        << CSR_WENABLE_RE << LOAD_ADRESS_MISSALIGNED_RE 
-        << MIP_VALUE_RC
-                  << PC_EXE2MEM_RE << LOAD_ACCESS_FAULT_RE 
+        sensitive << EXCEPTION_RE 
+                  << CSR_WENABLE_RE 
+                  << MIP_VALUE_RC
+                  << PC_EXE2MEM_RE 
+                  << CSR_WADR_SE
+                  << EXE_RES_RE
+                  << INSTRUCTION_ACCESS_FAULT_RE
                   << ILLEGAL_INSTRUCTION_RE
                   << INSTRUCTION_ADRESS_MISSALIGNED_RE 
                   << ENV_CALL_U_MODE_RE
                   << ENV_CALL_S_MODE_RE 
                   << ENV_CALL_M_MODE_RE 
-                  << EXCEPTION_SM
-                  << STORE_ACCESS_FAULT_RE
+                  << LOAD_ADRESS_MISSALIGNED_RE
                   << STORE_ADRESS_MISSALIGNED_RE
-                  << RESET << MRET_RE << MSTATUS_RC << MEPC_SC ;
+                  << LOAD_ACCESS_FAULT_RE 
+                  << STORE_ACCESS_FAULT_RE
+                  << MRET_RE
+                  << EXCEPTION_SM
+                  << ENV_CALL_WRONG_MODE_RE
+                  << BUS_ERROR_SX
+                  << EXCEPTION_SM
+                  << RESET  
+                  << MSTATUS_RC 
+                  << MEPC_SC ;
     }
 };

@@ -50,14 +50,14 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[215] = instruction_access_fault_sd;  
         dec2exe_in_var[214] = mret_i_sd;            
         dec2exe_in_var[213] = block_bp_sd;
-        dec2exe_in_var[212] = illegal_instruction_sd || adress_missaligned_sd ||
+        dec2exe_in_var[212] = illegal_instruction_sd || instruction_adress_missaligned_sd ||
                               env_call_u_mode_sd || env_call_m_mode_sd || env_call_s_mode_sd 
                               || env_call_wrong_mode || mret_i_sd
                               || instruction_access_fault_sd ;  // tells if there is an exception
         dec2exe_in_var[211]            = env_call_wrong_mode.read();
         dec2exe_in_var[210]            = env_call_u_mode_sd.read();
         dec2exe_in_var[209]            = illegal_instruction_sd.read();
-        dec2exe_in_var[208]            = adress_missaligned_sd.read();
+        dec2exe_in_var[208]            = instruction_adress_missaligned_sd.read();
         dec2exe_in_var[207]            = env_call_m_mode_sd.read();
         dec2exe_in_var[206]            = env_call_s_mode_sd.read();
         dec2exe_in_var.range(205, 174) = CSR_RDATA_SC.read();
@@ -993,7 +993,7 @@ void decod::pc_inc() {
     }
 
     // Adress missaligned exception :
-    if (pc_out & 0b11 != 0) adress_missaligned_sd = true;
+    if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0) {
             dec2if_in_sd.write(pc_out);
             WRITE_PC_SD.write(pc_out);
@@ -1297,12 +1297,14 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, ecall_i_sd, GET_NAME(ecall_i_sd));
     sc_trace(tf, ebreak_i_sd, GET_NAME(ebreak_i_sd));
     sc_trace(tf, illegal_instruction_sd, GET_NAME(illegal_instruction_sd));  // instruction doesnt exist
-    sc_trace(tf, adress_missaligned_sd, GET_NAME(adress_missaligned_sd));    // branch offset is misaligned
+    sc_trace(tf, instruction_adress_missaligned_sd, GET_NAME(instruction_adress_missaligned_sd));    // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd, GET_NAME(env_call_m_mode_sd));
     sc_trace(tf, env_call_s_mode_sd, GET_NAME(env_call_s_mode_sd));
     sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
     sc_trace(tf, MRET_RD, GET_NAME(MRET_RD));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
+    sc_trace(tf, env_call_u_mode_sd, GET_NAME(env_call_u_mode_sd));
     sc_trace(tf, instruction_access_fault_sd, GET_NAME(instruction_access_fault_sd));
+    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
 }

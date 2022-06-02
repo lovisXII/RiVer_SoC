@@ -289,7 +289,7 @@ SC_MODULE(decod) {
     sc_signal<bool> ecall_i_sd;
     sc_signal<bool> ebreak_i_sd;
     sc_signal<bool> illegal_instruction_sd;  // instruction doesnt exist
-    sc_signal<bool> adress_missaligned_sd;   // branch offset is misaligned
+    sc_signal<bool> instruction_adress_missaligned_sd;   // branch offset is misaligned
     sc_signal<bool> instruction_access_fault_sd;
     sc_signal<bool> env_call_u_mode_sd ;
     sc_signal<bool> env_call_s_mode_sd;
@@ -348,10 +348,10 @@ SC_MODULE(decod) {
                   << CSR_RDATA_SC << csr_radr_sd
                   << RADR2_SD << r1_valid_sd << EXCEPTION_SM << r2_valid_sd 
                   << PC_IF2DEC_RI << csr_wenable_sd
-                  << illegal_instruction_sd << adress_missaligned_sd 
+                  << illegal_instruction_sd << instruction_adress_missaligned_sd 
                   << env_call_m_mode_sd
                   << block_bp_sd << env_call_s_mode_sd << env_call_u_mode_sd 
-                  << env_call_wrong_mode << mret_i_sd ;
+                  << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)

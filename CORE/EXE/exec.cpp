@@ -257,7 +257,8 @@ void exec::bypasses() {
 }
 
 void exec::exception() {
-    exception_se = EXCEPTION_RD | load_adress_missaligned_se | load_access_fault_se | store_access_fault_se
+    exception_se = EXCEPTION_RD | load_adress_missaligned_se | load_access_fault_se 
+    | store_access_fault_se
     | store_adress_missaligned_se;
 
     if (INTERRUPTION_SX.read() || EXCEPTION_RD.read())
@@ -389,6 +390,9 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, exception_se, GET_NAME(exception_se));
     sc_trace(tf, MRET_RD, GET_NAME(MRET_RD));
     sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
+    sc_trace(tf, store_access_fault_se, GET_NAME(store_access_fault_se));
+    sc_trace(tf, store_adress_missaligned_se, GET_NAME(store_adress_missaligned_se));
+    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, load_access_fault_se, GET_NAME(load_access_fault_se));
