@@ -10,8 +10,8 @@ entity reg is
         PC_INIT : in std_logic_vector(31 downto 0);
 
         -- read ports
-        RDATA1_SD, RDATA2_SD : out std_logic_vector(31 downto 0);
-        RADR1_SR, RADR2_SR : in std_logic_vector(5 downto 0);
+        RDATA1_SR, RDATA2_SR : out std_logic_vector(31 downto 0);
+        RADR1_SD, RADR2_SD : in std_logic_vector(5 downto 0);
         
         -- write ports
         WDATA_SW : in std_logic_vector(31 downto 0);

@@ -12,8 +12,8 @@ entity dec is
         RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
         ADR_DEST_SR : out std_logic_vector(5 downto 0);
         RADR1_SR, RADR2_SR : out std_logic_vector(5 downto 0);
-        WRITE_PC_SR : out std_logic_vector(31 downto 0);
-        WRITE_PC_ENABLE_SR : out std_logic;
+        WRITE_PC_SD : out std_logic_vector(31 downto 0);
+        WRITE_PC_ENABLE_SD : out std_logic;
         READ_PC_SR : in std_logic_vector(31 downto 0);
 
         -- Exe interface 
