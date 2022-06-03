@@ -150,7 +150,6 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             // MCAUSE_WDATA_SM.write(5);
         } else if (ENV_CALL_WRONG_MODE_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -164,7 +163,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MCAUSE_WDATA_SM.write(24);
             CURRENT_MODE_SM = 3;
         } else if (MRET_RE) {
@@ -188,6 +187,7 @@ void mem::csr_exception() {
 
             // Informing IFETCH that a return instruction have been received
 
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MRET_SM = MRET_RE;
         } else if (STORE_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
