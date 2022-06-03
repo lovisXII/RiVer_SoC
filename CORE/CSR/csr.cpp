@@ -38,6 +38,7 @@ void csr::writing_csr() {
             csr_rc[11] = MIP_WDATA_RM.read();
             csr_rc[8]  = MEPC_WDATA_RM.read();
             csr_rc[9]  = MCAUSE_WDATA_SM.read();
+            csr_rc[10] = MTVAL_WDATA_SM ;
         }
         wait(1);
     }

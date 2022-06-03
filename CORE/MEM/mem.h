@@ -102,7 +102,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<32>> MIP_WDATA_RM;
     sc_out<sc_uint<32>> MEPC_WDATA_RM;
     sc_out<sc_uint<32>> MCAUSE_WDATA_SM;
-
+    sc_out<sc_uint<32>> MTVAL_WDATA_SM ;
     sc_in<sc_uint<32>>  MEPC_SC;
     sc_in<sc_uint<32>>  MSTATUS_RC;//57
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
@@ -185,6 +185,7 @@ SC_MODULE(mem) {
                   << EXCEPTION_SM
                   << RESET  
                   << MSTATUS_RC 
+                  << EXE_RES_RE
                   << MEPC_SC ;
     }
 };
