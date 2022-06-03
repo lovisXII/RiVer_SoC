@@ -92,7 +92,10 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> PC_EXE2MEM_RE;
     sc_signal<bool>        MEM_WB, MEM_SIGN_EXTEND_RE;
     sc_signal<bool>        MEM_LOAD_RE, MEM_STORE_RE;
+    sc_signal<bool>        MEM_MULT_RE, MULT_SEL_HIGH_RE;
+
     sc_signal<bool>        EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
+    sc_signal<bool>        x02x1_EMPTY_SE, x02x1_POP_SM;
 
     sc_signal<bool>        CSR_WENABLE_RE;
     sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX ;
@@ -368,8 +371,12 @@ SC_MODULE(core) {
         exec_inst.MEM_SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
         exec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
+        exec_inst.MEM_MULT_RE(MEM_MULT_RE);
+        exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
+        exec_inst.x02x1_EMPTY_SE(x02x1_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
+        exec_inst.x02x1_POP_SM(x02x1_POP_SM);
 
         exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
@@ -417,7 +424,7 @@ SC_MODULE(core) {
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-       mem_inst.EXE_RES_RE(EXE_RES_RE);//0
+        mem_inst.EXE_RES_RE(EXE_RES_RE);//0
         mem_inst.MEM_DATA_RE(MEM_DATA_RE);
         mem_inst.DEST_RE(DEST_RE);
         mem_inst.MEM_SIZE_RE(MEM_SIZE_RE);

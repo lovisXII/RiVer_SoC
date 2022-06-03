@@ -22,14 +22,10 @@ void exec::select_exec_res() {
         exe_res_se.write(divider_out_se);
     }
     else */
-    if (SELECT_TYPE_OPERATIONS_RD.read() == 0b10) 
-    {
-        exe_res_se.write(multiplier_out_se);
-    }
-    else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b01) {
+    if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0010) {
         exe_res_se.write(shifter_out_se);
     } 
-    else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b00)
+    else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0001)
     {   
         if (SLT_RD.read()) {
             if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
