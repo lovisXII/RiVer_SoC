@@ -407,37 +407,37 @@ void decod::decoding_instruction() {
     else
         sret_i_sd.write(0);
     
-    // M-type Instructions :j _bad
+    // M-type Instructions :
 
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b000)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 25) == 0b0000001)
         mul_i_sd.write(1);
     else
         mul_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b001)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b001 && if_ir.range(31, 25) == 0b0000001)
         mulh_i_sd.write(1);
     else
         mulh_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b010)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b010 && if_ir.range(31, 25) == 0b0000001)
         mulhsu_i_sd.write(1);
     else
         mulhsu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b011)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b011 && if_ir.range(31, 25) == 0b0000001)
         mulhu_i_sd.write(1);
     else
         mulhu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b100)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b100 && if_ir.range(31, 25) == 0b0000001)
         div_i_sd.write(1);
     else
         div_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b101)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b101 && if_ir.range(31, 25) == 0b0000001)
         divu_i_sd.write(1);
     else
         divu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b110)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b110 && if_ir.range(31, 25) == 0b0000001)
         rem_i_sd.write(1);
     else
         rem_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b111)
+    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b111 && if_ir.range(31, 25) == 0b0000001)
         remu_i_sd.write(1);
     else
         remu_i_sd.write(0);
@@ -676,7 +676,7 @@ void decod::post_reg_read_decoding() {
     else if (s_type_inst_sd) {
         csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(0b0001);
         exe_neg_op2_sd.write(0);
         mem_load_sd.write(0);
         offset_branch_var = 0;
@@ -720,7 +720,7 @@ void decod::post_reg_read_decoding() {
         dec2exe_wb_var = 1;
         mem_data_var   = 0;
         exe_cmd_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(0b0001);
         exe_neg_op2_sd.write(0);
         // Offset must be *4, so he's shift by 2 on the left
 
@@ -781,7 +781,7 @@ void decod::post_reg_read_decoding() {
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
         mem_size_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(1);
         mem_data_var = 0;
         if (jalr_type_inst_sd) {
             dec2exe_op1_var = READ_PC_SR.read();
@@ -820,7 +820,7 @@ void decod::post_reg_read_decoding() {
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
         mem_size_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(1);
         // in CSR operation we always have :
         // rd = CSR
         // CSR = (rs1 | 0) operation CSR
@@ -897,7 +897,7 @@ void decod::post_reg_read_decoding() {
             mem_store_sd.write(0);
             mem_sign_extend_sd.write(0);
             mem_size_sd.write(0);
-            select_type_operations_sd.write(0);
+            select_type_operations_sd.write(1);
             offset_branch_var = 0; 
             mem_data_var      = 0;
             inc_pc_var        = 1;
@@ -914,7 +914,7 @@ void decod::post_reg_read_decoding() {
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
         mem_size_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(0b0001);
         offset_branch_var = 0;
         mem_data_var      = 0;
         inc_pc_var        = 1;
@@ -930,7 +930,7 @@ void decod::post_reg_read_decoding() {
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
         mem_size_sd.write(0);
-        select_type_operations_sd.write(0b00);
+        select_type_operations_sd.write(0b0001);
         illegal_inst = true;
     }
 
@@ -1219,6 +1219,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, b_type_inst_sd, GET_NAME(b_type_inst_sd));        // B type format
     sc_trace(tf, u_type_inst_sd, GET_NAME(u_type_inst_sd));        // U type format
     sc_trace(tf, j_type_inst_sd, GET_NAME(j_type_inst_sd));        // J type format
+    sc_trace(tf, m_type_inst_sd, GET_NAME(m_type_inst_sd));        // M type format
     sc_trace(tf, jalr_type_inst_sd, GET_NAME(jalr_type_inst_sd));  // JALR has a specific opcode
     sc_trace(tf, system_type_inst_sd, GET_NAME(system_type_inst_sd));
     sc_trace(tf, add_i_sd, GET_NAME(add_i_sd));

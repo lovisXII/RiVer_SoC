@@ -17,7 +17,7 @@ void exec::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
     
-    /*if (SELECT_TYPE_OPERATIONS_RD.read() == 0b11) 
+    /*if (SELECT_TYPE_OPERATIONS_RD.read() == 0b1000) 
     {
         exe_res_se.write(divider_out_se);
     }
@@ -380,6 +380,7 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, mem_store_re, GET_NAME(mem_store_re));
 
+    sc_trace(tf, multiplier_out_se, GET_NAME(multiplier_out_se));
     // Exception :
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));
@@ -388,12 +389,12 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, store_access_fault_se, GET_NAME(store_access_fault_se));
     sc_trace(tf, store_adress_missaligned_se, GET_NAME(store_adress_missaligned_se));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));
-    sc_trace(
-        tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
+    sc_trace(tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, load_access_fault_se, GET_NAME(load_access_fault_se));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);
+    multiplier_inst.trace(tf);
 }
 
 // 0000010000101100010001100011011

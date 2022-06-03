@@ -9,7 +9,7 @@
 #include "x0_multiplier.h"
 
 #define exe2mem_size        166
-#define x02x1_size        320
+#define x02x1_size          385
 #define start_kernel_adress 0x80000000
 SC_MODULE(exec) {
     // Input/Output of EXE :
@@ -129,7 +129,7 @@ SC_MODULE(exec) {
     sc_signal<sc_uint<32>> alu_in_op2_se;
     sc_signal<sc_uint<32>> alu_out_se;
     sc_signal<sc_uint<32>> shifter_out_se;
-    sc_signal<sc_bv<320>> multiplier_out_se;
+    sc_signal<sc_bv<385>> multiplier_out_se;
     sc_signal<sc_uint<32>> divider_out_se;
     sc_signal<sc_uint<32>> bp_mem_data_sd;
     sc_signal<sc_uint<5>>  shift_val_se;
