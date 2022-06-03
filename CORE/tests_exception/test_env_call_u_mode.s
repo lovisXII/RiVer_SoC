@@ -19,10 +19,10 @@ _trampoline:
    nop
    nop
    nop
-   nop
+   j _bad
    j _good
    nop
    nop
    nop
    nop
-   nop
+   j _bad
