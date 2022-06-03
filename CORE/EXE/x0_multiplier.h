@@ -1,0 +1,161 @@
+#pragma once
+#include <systemc.h>
+#include "../UTIL/debug_util.h"
+
+
+SC_MODULE(x0_multiplier)
+{
+    sc_in<sc_uint<32>> OP1_SE, OP2_SE;
+
+    // MULT/EXE
+    sc_out<sc_bv<320>> RES_SE;
+
+    sc_signal<sc_uint<64>> product[32];
+    sc_signal<sc_uint<64>> product_s1[20]; // product of stage 1
+    sc_signal<sc_uint<64>> product_s2[14]; // product of stage 2
+    sc_signal<sc_uint<64>> product_s3[10]; // product of stage 3
+    sc_signal<sc_uint<64>> product_s4[6];  // product of stage 4
+    sc_signal<sc_uint<64>> product_s5[4];  // product of stage 5
+
+    void operation();
+
+    // stage 1 (10 CSA remind product 30 and 31)
+    void CSA_1();
+    void CSA_2();
+    void CSA_3();
+    void CSA_4();
+    void CSA_5();
+    void CSA_6();
+    void CSA_7();
+    void CSA_8();
+    void CSA_9();
+    void CSA_10();
+
+    // stage 2 (7 CSA remind product 31)
+
+    void CSA_11();
+    void CSA_12();
+    void CSA_13();
+    void CSA_14();
+    void CSA_15();
+    void CSA_16();
+    void CSA_17();
+
+    //stage 3 (5 CSA)
+
+    void CSA_18();
+    void CSA_19();
+    void CSA_20();
+    void CSA_21();
+    void CSA_22();
+
+    //stage 4 (3 CSA remind product_s3 9)
+    void CSA_23();
+    void CSA_24();
+    void CSA_25();
+
+    //stage 5 (2 CSA remind product_s3 9)
+    void CSA_26();
+    void CSA_27();
+
+    //res => 320bits => 5x64 => M4 M3 M2 M1 M0
+    void RES();
+
+    void trace(sc_trace_file* tf);
+
+    SC_CTOR(x0_multiplier)
+    {
+        SC_METHOD(operation);
+        sensitive << OP1_SE << OP2_SE;
+
+        //stage 1
+        SC_METHOD(CSA_1);
+        sensitive << product[0] << product[1] << product[2];
+
+        SC_METHOD(CSA_2);
+        sensitive << product[3] << product[4] << product[5];
+        
+        SC_METHOD(CSA_3);
+        sensitive << product[6] << product[7] << product[8];
+
+        SC_METHOD(CSA_4);
+        sensitive << product[9] << product[10] << product[11];
+
+        SC_METHOD(CSA_5);
+        sensitive << product[12] << product[13] << product[14];
+
+        SC_METHOD(CSA_6);
+        sensitive << product[15] << product[16] << product[17];
+
+        SC_METHOD(CSA_7);
+        sensitive << product[18] << product[19] << product[20];
+
+        SC_METHOD(CSA_8);
+        sensitive << product[21] << product[22] << product[23];
+
+        SC_METHOD(CSA_9);
+        sensitive << product[24] << product[25] << product[26];
+
+        SC_METHOD(CSA_10);
+        sensitive << product[27] << product[28] << product[29];
+
+        // stage 2
+        SC_METHOD(CSA_11);
+        sensitive << product_s1[0] << product_s1[1] << product_s1[2];
+
+        SC_METHOD(CSA_12);
+        sensitive << product_s1[3] << product_s1[4] << product_s1[5];
+        
+        SC_METHOD(CSA_13);
+        sensitive << product_s1[6] << product_s1[7] << product_s1[8];
+
+        SC_METHOD(CSA_14);
+        sensitive << product_s1[9] << product_s1[10] << product_s1[11];
+
+        SC_METHOD(CSA_15);
+        sensitive << product_s1[12] << product_s1[13] << product_s1[14];
+
+        SC_METHOD(CSA_16);
+        sensitive << product_s1[15] << product_s1[16] << product_s1[17];
+
+        SC_METHOD(CSA_17);
+        sensitive << product_s1[18] << product_s1[19];
+
+        // stage 3
+        SC_METHOD(CSA_18);
+        sensitive << product_s2[0] << product_s2[1] << product_s2[2];
+
+        SC_METHOD(CSA_19);
+        sensitive << product_s2[3] << product_s2[4] << product_s2[5];
+        
+        SC_METHOD(CSA_20);
+        sensitive << product_s2[6] << product_s2[7] << product_s2[8];
+
+        SC_METHOD(CSA_21);
+        sensitive << product_s2[9] << product_s2[10] << product_s2[11];
+
+        SC_METHOD(CSA_22);
+        sensitive << product_s2[12] << product_s2[13];
+
+        //stage 4
+        SC_METHOD(CSA_23);
+        sensitive << product_s3[0] << product_s3[1] << product_s3[2];
+
+        SC_METHOD(CSA_24);
+        sensitive << product_s3[3] << product_s3[4] << product_s3[5];
+        
+        SC_METHOD(CSA_25);
+        sensitive << product_s3[6] << product_s3[7] << product_s3[8];
+
+        //stage 5
+        SC_METHOD(CSA_26);
+        sensitive << product_s4[0] << product_s4[1] << product_s4[2];
+
+        SC_METHOD(CSA_27);
+        sensitive << product_s4[3] << product_s4[4] << product_s4[5];
+
+        //RES
+        SC_METHOD(RES);
+        sensitive << product_s5[0] << product_s5[1] << product_s5[2] << product_s5[3];
+    }
+};

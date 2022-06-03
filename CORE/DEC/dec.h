@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size 216
+#define dec2exe_size 218
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(decod) {
@@ -15,7 +15,6 @@ SC_MODULE(decod) {
 
     sc_out<sc_uint<6>> RADR1_SD;  // adress of rs
     sc_out<sc_uint<6>> RADR2_SD;  // adress of rt
-
     sc_out<sc_uint<32>> WRITE_PC_SD;
     sc_out<bool>        WRITE_PC_ENABLE_SD;
 
@@ -28,7 +27,7 @@ SC_MODULE(decod) {
                                           // substraction for example
     sc_out<bool>        WB_RD;            // say if we plan to wbk the value of rd or no
     sc_out<sc_uint<6>>  EXE_DEST_SD;      // the destination register
-    sc_out<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
+    sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD;
     sc_out<bool>        SLTU_RD;
     sc_out<sc_uint<32>> PC_DEC2EXE_RD;  // PC link to the current decoded instruction
@@ -277,7 +276,7 @@ SC_MODULE(decod) {
     // 1 : shifter
     // 2 : multiplier
     // 3 : divider
-    sc_signal<sc_uint<2>>   select_type_operations_sd ;
+    sc_signal<sc_uint<4>>   select_type_operations_sd ;
     
 
     sc_signal<bool>       exe_neg_op2_sd;
@@ -392,6 +391,7 @@ SC_MODULE(decod) {
                     << b_type_inst_sd 
                     << u_type_inst_sd 
                     << j_type_inst_sd
+                    << m_type_inst_sd
                     << jalr_type_inst_sd 
                     << beq_i_sd 
                     << bne_i_sd
@@ -417,6 +417,8 @@ SC_MODULE(decod) {
         sensitive << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd << u_type_inst_sd << j_type_inst_sd
 
                   << jalr_type_inst_sd << beq_i_sd << bne_i_sd
+
+                  << m_type_inst_sd << mul_i_sd << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd << div_i_sd << divu_i_sd << rem_i_sd << remu_i_sd
 
                   << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << IF2DEC_EMPTY_SI << dec2if_push_sd << READ_PC_SR
 

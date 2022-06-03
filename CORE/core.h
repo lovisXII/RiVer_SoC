@@ -36,7 +36,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<2>>  EXE_CMD_RD;
     sc_signal<bool>        NEG_OP2_RD;
     sc_signal<bool>        WB_RD;
-    sc_signal<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;
+    sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;
 
     sc_signal<sc_uint<32>> MEM_DATA_RD;
     sc_signal<bool>        MEM_LOAD_RD;

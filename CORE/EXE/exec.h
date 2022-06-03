@@ -28,7 +28,7 @@ SC_MODULE(exec) {
     sc_in<sc_uint<2>>  MEM_SIZE_RD;
     sc_in<bool>        NEG_OP2_RD, WB_RD;
     sc_in<bool>        MEM_SIGN_EXTEND_RD;
-    sc_in<sc_uint<2>>        SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
+    sc_in<sc_uint<4>>        SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
     sc_in<bool>        EXE2MEM_POP_SM;
     sc_in<bool>        DEC2EXE_EMPTY_SD;
