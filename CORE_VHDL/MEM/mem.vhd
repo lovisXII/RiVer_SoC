@@ -37,7 +37,7 @@ entity mem is
 end mem;
 
 architecture archi of mem is 
-signal mem2wbk_din, mem2wbk_dout : std_logic_vector(31 downto 0);
+signal mem2wbk_din, mem2wbk_dout : std_logic_vector(42 downto 0);
 signal mem2wbk_push, mem2wbk_full : std_logic;
 signal stall, wb : std_logic;
 

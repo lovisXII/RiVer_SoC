@@ -273,4 +273,6 @@ reg_i : entity worK.reg
         READ_PC_SR
     );
 
+DEBUG_PC_READ <= READ_PC_SR; 
+
 end archi;

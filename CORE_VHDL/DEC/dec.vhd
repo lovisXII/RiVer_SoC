@@ -222,13 +222,13 @@ sb_i_sd <= '1' when s_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else '0';
 -- Registers and operands selection
 ------------------------------------
 -- Registers affectation 
-radr1_sd <= INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd or jalr_type_sd) ='1') else
+radr1_sd <= '0'&INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd or jalr_type_sd) ='1') else
             "000000";
 
-radr2_sd <= INSTR_RI(24 downto 20) when ((r_type_sd or s_type_sd or b_type_sd) = '1') else
+radr2_sd <= '0'&INSTR_RI(24 downto 20) when ((r_type_sd or s_type_sd or b_type_sd) = '1') else
             "000000";
 
-rdest_sd <= INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or s_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
+rdest_sd <= '0'&INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or s_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
             "000000";
 
 -- Operand 1 selection
@@ -238,7 +238,7 @@ op1_u_type_sd(11 downto 0)  <= x"000";
 dec2exe_op1_sd <= RDATA1_SR when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd) = '1') else 
                op1_u_type_sd when u_type_sd = '1' else 
                READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
-               "000000";
+               x"00000000";
 
 -- Operand 2 selection
 op2_i_type_sd(31 downto 12) <= x"FFFFF" when RDATA2_SR(31) = '1' else 
@@ -249,7 +249,7 @@ dec2exe_op2_sd <= RDATA2_SR when ((r_type_sd or s_type_sd or b_type_sd or (u_typ
                op2_i_type_sd when i_type_sd = '1' else
                PC_IF2DEC_RI when auipc_i_sd = '1' else 
                READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
-               "000000";
+               x"00000000";
 
 -------------------------
 -- Exec commands  
@@ -291,7 +291,7 @@ offset_branch_sd(31 downto 13) <=   (others => INSTR_RI(31)) when b_type_sd = '1
 offset_branch_sd(12) <= INSTR_RI(31) when b_type_sd = '1' else '0';
 offset_branch_sd(11) <= INSTR_RI(7) when b_type_sd = '1' else '0';
 offset_branch_sd(10 downto 5) <= INSTR_RI(30 downto 25) when b_type_sd = '1' else "000000";
-offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else "000000";
+offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else "0000";
 offset_branch_sd(0) <= '0'; 
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
@@ -326,12 +326,12 @@ process(READ_PC_SR, add_offset_to_pc_sd, inc_pc_sd)
 begin 
     if inc_pc_sd = '1' then 
         pc <= READ_PC_SR + 4; 
-        WRITE_PC_ENABLE_SR <= '1'; 
+        WRITE_PC_ENABLE_SD <= '1'; 
     elsif inc_pc_sd = '0' and add_offset_to_pc_sd = '1' then 
         pc <= READ_PC_SR - 4;
-        WRITE_PC_ENABLE_SR <= '1'; 
+        WRITE_PC_ENABLE_SD <= '1'; 
     else 
-    WRITE_PC_ENABLE_SR <= '0';
+    WRITE_PC_ENABLE_SD <= '0';
     end if; 
     -- dec2if_din <= pc; 
 end process; 

@@ -57,8 +57,8 @@ begin
     end if;
 end process; 
 
-RDATA1_SD <= reg(to_integer(unsigned(RADR1_SR)));
-RDATA2_SD <= reg(to_integer(unsigned(RADR2_SR)));
+RDATA1_SR <= reg(to_integer(unsigned(RADR1_SD)));
+RDATA2_SR <= reg(to_integer(unsigned(RADR2_SD)));
 READ_PC_SR <= reg(32);
 
 end archi;
