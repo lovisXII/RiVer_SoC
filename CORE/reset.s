@@ -11,11 +11,13 @@
 _reset:
     la x28,0x10054       #loading main adress
     la x29,_exception    #loading exception handler adress
+    li x30, 0x90000000   # loading mscratch value
     srli x29,x29,2       # removing least 2 significant bits to allow 
     sll x29,x29,2
     addi x29,x29,0       # direct mode for mtvec 
     csrrw x0, 0x341,x28  # writting main adress in mepc
     csrrw x0, 0x305,x29  # writting exception handler adress in mtvec
+    csrrw x0,mscratch,x30
     li x2,0x10000        # sp initialization
 
     # loading isr adresses
