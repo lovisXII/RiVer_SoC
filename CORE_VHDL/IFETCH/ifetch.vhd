@@ -44,19 +44,19 @@ if2dec : entity work.fifo
         DIN(63 downto 32) => IC_INST_SI,
         DIN(31 downto 0) => PC_RD, 
         PUSH => if2dec_push_si, 
-        POP => IF2DEC_POP_SI,
-        FULL => if2dec_full, 
+        POP => IF2DEC_POP_SD,
+        FULL => if2dec_full_si, 
         EMPTY => IF2DEC_EMPTY_SI, 
-        DOUT(63 downto 32) => INSTR_SI, 
-        DOUT(31 downto 0) => PC_IF2DEC_RI;
+        DOUT(63 downto 32) => INSTR_RI, 
+        DOUT(31 downto 0) => PC_IF2DEC_RI
     );
 
 stall <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SI;
 
-if2dec_push_si <= not stall when IF2DEC_FLUSH_SI = '0' else '0'; 
-DEC2IF_POP_SI <= not stall when IF2DEC_FLUSH_SI = '0' else '1';
-ADR_VALID_SI <= not DEC2IF_EMPTY_SI when IF2DEC_FLUSH_SI = '0' else '0';
+if2dec_push_si <= not stall when IF2DEC_FLUSH_SD = '0' else '0'; 
+DEC2IF_POP_SI <= not stall when IF2DEC_FLUSH_SD = '0' else '1';
+ADR_VALID_SI <= not DEC2IF_EMPTY_SI when IF2DEC_FLUSH_SD = '0' else '0';
 
-ADR_SI <= PC_SI;
+ADR_SI <= PC_RD;
 
 end archi;

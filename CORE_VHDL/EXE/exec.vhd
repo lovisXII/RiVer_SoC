@@ -19,8 +19,8 @@ entity exec is
         MEM_SIGN_EXTEND_RD : in std_logic;
         SELECT_SHIFT_RD : in std_logic;
         MEM_LOAD_RD, MEM_STORE_RD : in std_logic;
-        EXE2MEM_POP_RD : in std_logic;
-        DEC2EXE_EMPTY_RD : in std_logic;
+        EXE2MEM_POP_SM : in std_logic;
+        DEC2EXE_EMPTY_SD : in std_logic;
         SLT_RD, SLTU_RD : in std_logic;
 
         EXE_RES_RE : out std_logic_vector(31 downto 0);    
@@ -30,8 +30,8 @@ entity exec is
         WB_RE : out std_logic;
         MEM_SIGN_EXTEND_RE : out std_logic;
         MEM_LOAD_RE, MEM_STORE_RE : out std_logic;
-        EXE2MEM_EMPTY_RE : out std_logic;
-        DEC2EXE_POP_RE : out std_logic
+        EXE2MEM_EMPTY_SE : out std_logic;
+        DEC2EXE_POP_SE : out std_logic
     );
 end exec; 
 
@@ -90,9 +90,9 @@ exe2mem : entity work.fifo
         DIN(75) => MEM_SIGN_EXTEND_RD,
 
         PUSH => exe2mem_push,
-        POP => EXE2MEM_POP_RD, 
+        POP => EXE2MEM_POP_SM, 
         FULL => exe2mem_full,
-        EMPTY => EXE2MEM_EMPTY_RE, 
+        EMPTY => EXE2MEM_EMPTY_SE, 
 
         DOUT(31 downto 0) => exe_fifo_res,
         DOUT(63 downto 32) => MEM_DATA_RE, 
@@ -123,8 +123,8 @@ exe_res <=  shifter_res when SELECT_SHIFT_RD = '1' else
             alu_res;
 
 -- fifo 
-exe2mem_push <= not (exe2mem_full or DEC2EXE_EMPTY_RD or blocked);
-DEC2EXE_POP_RE <= not (exe2mem_full or DEC2EXE_EMPTY_RD or blocked);
+exe2mem_push <= not (exe2mem_full or DEC2EXE_EMPTY_SD or blocked);
+DEC2EXE_POP_SE <= not (exe2mem_full or DEC2EXE_EMPTY_SD or blocked);
 
 -- Bypasses not implemented yet
 op1 <= OP1_RD;

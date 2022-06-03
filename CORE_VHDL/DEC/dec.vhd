@@ -12,12 +12,9 @@ entity dec is
         RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
         ADR_DEST_SR : out std_logic_vector(5 downto 0);
         RADR1_SR, RADR2_SR : out std_logic_vector(5 downto 0);
-        INVAL_DEST_SR : out std_logic_vector(5 downto 0);
-        INVAL_ENABLE_SR : out std_logic;
         WRITE_PC_SR : out std_logic_vector(31 downto 0);
         WRITE_PC_ENABLE_SR : out std_logic;
         READ_PC_SR : in std_logic_vector(31 downto 0);
-        READ_PC_VALID_SR : in std_logic;
 
         -- Exe interface 
         OP1_RD, OP2_RD : out std_logic_vector(31 downto 0);
@@ -144,8 +141,7 @@ dec2exe : entity work.fifo
 -- fifo gestion 
 -------------------------
 -- dec2if 
-dec2if_push_sd <=  '0' when (READ_PC_VALID_SR = '1' and dec2if_full_sd = '0') else 
-                '1';
+dec2if_push_sd <= dec2if_full_sd;
 
 -- if2dec 
 IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
@@ -326,12 +322,12 @@ inc_pc_sd <= (inc_pc and dec2if_push_sd) or invalid_instr;
 add_offset_to_pc_sd <= not stall and not inc_pc and dec2if_push_sd and not invalid_instr;
 
 -- PC 
-process(READ_PC_SR, READ_PC_VALID_SR, add_offset_to_pc_sd, inc_pc_sd)
+process(READ_PC_SR, add_offset_to_pc_sd, inc_pc_sd)
 begin 
-    if inc_pc_sd = '1' and READ_PC_VALID_SR = '1' then 
+    if inc_pc_sd = '1' then 
         pc <= READ_PC_SR + 4; 
         WRITE_PC_ENABLE_SR <= '1'; 
-    elsif inc_pc_sd = '0' and READ_PC_VALID_SR = '1' and add_offset_to_pc_sd = '1' then 
+    elsif inc_pc_sd = '0' and add_offset_to_pc_sd = '1' then 
         pc <= READ_PC_SR - 4;
         WRITE_PC_ENABLE_SR <= '1'; 
     else 
