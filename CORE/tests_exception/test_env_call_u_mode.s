@@ -9,20 +9,20 @@ _start :
     addi x29,x29,1       # direct mode for mtvec 
     csrrw x0, 0x305,x29  # writting exception handler adress in mtvec
     ecall
-
+    nop
 
 _trampoline: 
-   nop
-   nop
-   nop
-   nop
-   nop
-   nop
-   nop
-   nop
+   j _bad
+   j _bad
+   j _bad
+   j _bad
+   j _bad
+   j _bad
+   j _bad
+   j _bad
    j _good
-   nop
-   nop
-   nop
-   nop
-   nop
+   j _bad
+   j _bad
+   j _bad
+   j _bad
+   j _bad

@@ -151,7 +151,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            // MCAUSE_WDATA_RM.write(5);
+            // MCAUSE_WDATA_SM.write(5);
         } else if (ENV_CALL_WRONG_MODE_RE) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM;
@@ -165,7 +165,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             // MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(24);
+            MCAUSE_WDATA_SM.write(24);
             CURRENT_MODE_SM = 3;
         } else if (MRET_RE) {
             save_restore_sm = 0;
@@ -202,7 +202,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(7);
+            MCAUSE_WDATA_SM.write(7);
             CURRENT_MODE_SM = 3;
         } else if (LOAD_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -217,7 +217,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(5);
+            MCAUSE_WDATA_SM.write(5);
             CURRENT_MODE_SM = 3;
         } else if (STORE_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;
@@ -232,7 +232,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(6);
+            MCAUSE_WDATA_SM.write(6);
             CURRENT_MODE_SM = 3;
         } else if (LOAD_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;
@@ -247,7 +247,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(4);
+            MCAUSE_WDATA_SM.write(4);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_M_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
@@ -262,7 +262,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(11);
+            MCAUSE_WDATA_SM.write(11);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_S_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
@@ -277,7 +277,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(9);
+            MCAUSE_WDATA_SM.write(9);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_U_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
@@ -292,7 +292,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(8);
+            MCAUSE_WDATA_SM.write(8);
             CURRENT_MODE_SM = 3;
         } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -307,7 +307,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(0);
+            MCAUSE_WDATA_SM.write(0);
             CURRENT_MODE_SM = 3;
         } else if (ILLEGAL_INSTRUCTION_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -322,7 +322,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(2);
+            MCAUSE_WDATA_SM.write(2);
             CURRENT_MODE_SM = 3;
         } else if (INSTRUCTION_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -337,7 +337,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MCAUSE_WDATA_RM.write(1);
+            MCAUSE_WDATA_SM.write(1);
             CURRENT_MODE_SM = 3;
         }
         if (!MRET_RE.read()) MRET_SM = 0;
@@ -401,7 +401,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
     sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
     sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));
-    sc_trace(tf, MCAUSE_WDATA_RM, GET_NAME(MCAUSE_WDATA_RM));
+    sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));

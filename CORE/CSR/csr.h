@@ -18,7 +18,7 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>>  MSTATUS_WDATA_RM;
     sc_in<sc_uint<32>>  MIP_WDATA_RM;
     sc_in<sc_uint<32>>  MEPC_WDATA_RM;
-    sc_in<sc_uint<32>>  MCAUSE_WDATA_RM;
+    sc_in<sc_uint<32>>  MCAUSE_WDATA_SM;
 
     sc_out<sc_uint<32>> MEPC_SC ;
     sc_out<sc_uint<32>> MSTATUS_RC ;
@@ -60,7 +60,7 @@ SC_MODULE(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
         sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_SM << MSTATUS_WDATA_RM
-                  << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_RM;
+                  << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_SM;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }

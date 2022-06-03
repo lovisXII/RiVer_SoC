@@ -67,5 +67,9 @@ _reset:
     la x19, 0
     la x20, 0
     la x21, 0
+    la x22, 0
+    la x23, 0
+    la x24, 0
+    la x25, 0
 
     mret

@@ -13,7 +13,7 @@ void decod::dec2if_gestion() {
 
 void decod::if2dec_pop_method() {
     if (EXCEPTION_SM.read() == 0) {
-        if (add_offset_to_pc_sd.read() || EXCEPTION_SM ) {
+        if (add_offset_to_pc_sd.read() ) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
         } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read() ) {
@@ -1018,7 +1018,7 @@ void decod::pc_inc() {
             sc_uint<32> dec2if_var ;
             sc_uint<32> WRITE_PC_VAR ;
             sc_uint<32> MTVEC_VALUE_VAR ;
-            ;
+            
             MTVEC_VALUE_VAR.range(31,2) = MTVEC_VALUE_RC.read().range(31,2) ;
             MTVEC_VALUE_VAR.range(1,0)  = 0 ;
             
@@ -1030,7 +1030,7 @@ void decod::pc_inc() {
             else if(MTVEC_VALUE_RC.read().range(1,0) == 1){//vectorise
                 sc_uint<32> MCAUSE_VAR ;
                 // MCAUSE * 4 :
-                MCAUSE_VAR.range(31,2)  = MCAUSE_SC.read().range(29,0) ;
+                MCAUSE_VAR.range(31,2)  = MCAUSE_WDATA_SM.read().range(29,0) ;
                 MCAUSE_VAR.range(1,0)   = 0 ;
                 dec2if_in_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR) ;
@@ -1336,5 +1336,5 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, env_call_u_mode_sd, GET_NAME(env_call_u_mode_sd));
     sc_trace(tf, instruction_access_fault_sd, GET_NAME(instruction_access_fault_sd));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
-    sc_trace(tf, MCAUSE_SC, GET_NAME(MCAUSE_SC));
+    sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
 }

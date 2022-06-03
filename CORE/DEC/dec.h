@@ -108,7 +108,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>        EXCEPTION_SM;
     sc_in<sc_uint<32>> MTVEC_VALUE_RC;
-    sc_in<sc_uint<32>> MCAUSE_SC;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
     sc_in<bool>        MRET_SM ;
@@ -450,7 +450,7 @@ SC_MODULE(decod) {
                     << EXCEPTION_SM 
                     << PC_IF2DEC_RI
                     << MRET_SM 
-                    << MCAUSE_SC;
+                    << MCAUSE_WDATA_SM;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

@@ -147,7 +147,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MSTATUS_WDATA_RM;
     sc_signal<sc_uint<32>> MIP_WDATA_RM;
     sc_signal<sc_uint<32>> MEPC_WDATA_RM;
-    sc_signal<sc_uint<32>> MCAUSE_WDATA_RM;
+    sc_signal<sc_uint<32>> MCAUSE_WDATA_SM;
     sc_signal<sc_uint<32>> MEPC_SC;
     sc_signal<sc_uint<32>> MSTATUS_RC;
     sc_signal<sc_uint<32>> MTVEC_VALUE_RC;
@@ -325,7 +325,7 @@ SC_MODULE(core) {
         dec_inst.MRET_RD(MRET_RD);
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
-        dec_inst.MCAUSE_SC(MCAUSE_SC);
+        dec_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -485,7 +485,7 @@ SC_MODULE(core) {
         mem_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
         mem_inst.MIP_WDATA_RM(MIP_WDATA_RM);
         mem_inst.MEPC_WDATA_RM(MEPC_WDATA_RM);
-        mem_inst.MCAUSE_WDATA_RM(MCAUSE_WDATA_RM);
+        mem_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
 
         mem_inst.MEPC_SC(MEPC_SC);
         mem_inst.MSTATUS_RC(MSTATUS_RC);
@@ -545,7 +545,7 @@ SC_MODULE(core) {
         csr_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
         csr_inst.MIP_WDATA_RM(MIP_WDATA_RM);
         csr_inst.MEPC_WDATA_RM(MEPC_WDATA_RM);
-        csr_inst.MCAUSE_WDATA_RM(MCAUSE_WDATA_RM);
+        csr_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
 
         csr_inst.MEPC_SC(MEPC_SC);
         csr_inst.MSTATUS_RC(MSTATUS_RC);

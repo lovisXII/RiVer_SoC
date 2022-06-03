@@ -36,7 +36,7 @@ void csr::writing_csr() {
             csr_rc[3]  = MSTATUS_WDATA_RM.read();
             csr_rc[11] = MIP_WDATA_RM.read();
             csr_rc[8]  = MEPC_WDATA_RM.read();
-            csr_rc[9]  = MCAUSE_WDATA_RM.read();
+            csr_rc[9]  = MCAUSE_WDATA_SM.read();
         }
         wait(1);
     }
@@ -74,7 +74,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
     sc_trace(tf, MIP_WDATA_RM, GET_NAME(MIP_WDATA_RM));
     sc_trace(tf, MEPC_WDATA_RM, GET_NAME(MEPC_WDATA_RM));
-    sc_trace(tf, MCAUSE_WDATA_RM, GET_NAME(MCAUSE_WDATA_RM));
+    sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
 
