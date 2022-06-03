@@ -141,7 +141,7 @@ dec2exe : entity work.fifo
 -- fifo gestion 
 -------------------------
 -- dec2if 
-dec2if_push_sd <= dec2if_full_sd;
+dec2if_push_sd <= not dec2if_full_sd;
 
 -- if2dec 
 IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
@@ -295,7 +295,7 @@ offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else 
 offset_branch_sd(0) <= '0'; 
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
-res_compare <= dec2exe_op1_sd - dec2exe_op2_sd;
+res_compare <= '0'&(dec2exe_op1_sd - dec2exe_op2_sd);
 
 -------- why res => 33 bits ??
 inc_pc_b_type <= '1' when b_type_sd = '1' and ((bne_i_sd = '1' and (res = x"00000000")) 
@@ -317,7 +317,7 @@ invalid_i <= '0'; -- idk the need of this signal
 
 invalid_instr <= invalid_i or IF2DEC_EMPTY_SI; 
 
-inc_pc_sd <= (inc_pc and dec2if_push_sd) or invalid_instr;
+inc_pc_sd <= (inc_pc and dec2if_push_sd) or not invalid_instr;
 
 add_offset_to_pc_sd <= not stall and not inc_pc and dec2if_push_sd and not invalid_instr;
 
@@ -331,10 +331,13 @@ begin
         pc <= READ_PC_SR - 4;
         WRITE_PC_ENABLE_SD <= '1'; 
     else 
+    pc <= READ_PC_SR;
     WRITE_PC_ENABLE_SD <= '0';
     end if; 
     -- dec2if_din <= pc; 
 end process; 
+
+WRITE_PC_SD <= pc;
 
 -- Bypass...
 block_in_dec <= '1' when (((radr1_sd = rdest_sd) or(radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
