@@ -7,8 +7,8 @@ void csr::writing_csr() {
     for (int rid = 0; rid < N_CSR; rid++) {
         csr_rc[rid].write(0);
     }
-    csr_rc[3].write(0x00000000);    // mstatus
-    csr_rc[4].write(0x40100100);    // misa
+    csr_rc[3].write(0x00000000);  // mstatus
+    csr_rc[4].write(0x40100100);  // misa
 
     wait(3);
 
@@ -28,6 +28,7 @@ void csr::writing_csr() {
                 case 0x343: csr_rc[10].write(CSR_WDATA_SM); break;  // mtval
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM); break;   // mstatus
+                case 0x340: csr_rc[12].write(CSR_WDATA_SM); break;  // mstatus
                 default: break;
             }
         }
@@ -43,26 +44,27 @@ void csr::writing_csr() {
 }
 
 void csr::reading_csr() {
-        switch (CSR_RADR_SD.read()) {
-            case 0xF11: CSR_RDATA_SC.write(csr_rc[0]); break;
-            case 0xF12: CSR_RDATA_SC.write(csr_rc[1]); break;
-            case 0xF13: CSR_RDATA_SC.write(csr_rc[2]); break;
-            case 0x300: CSR_RDATA_SC.write(csr_rc[3]); break;
-            case 0x301: CSR_RDATA_SC.write(csr_rc[4]); break;
-            case 0x304: CSR_RDATA_SC.write(csr_rc[5]); break;
-            case 0x305: CSR_RDATA_SC.write(csr_rc[6]); break;
-            case 0x310: CSR_RDATA_SC.write(csr_rc[7]); break;
-            case 0x341: CSR_RDATA_SC.write(csr_rc[8]); break;
-            case 0x342: CSR_RDATA_SC.write(csr_rc[9]); break;
-            case 0x343: CSR_RDATA_SC.write(csr_rc[10]); break;
-            case 0x344: CSR_RDATA_SC.write(csr_rc[11]); break;
-            default: CSR_RDATA_SC.write(0); break;
-        }
-    MEPC_SC.write(csr_rc[8]) ;
-    MSTATUS_RC.write(csr_rc[3]) ;
+    switch (CSR_RADR_SD.read()) {
+        case 0xF11: CSR_RDATA_SC.write(csr_rc[0]); break;
+        case 0xF12: CSR_RDATA_SC.write(csr_rc[1]); break;
+        case 0xF13: CSR_RDATA_SC.write(csr_rc[2]); break;
+        case 0x300: CSR_RDATA_SC.write(csr_rc[3]); break;
+        case 0x301: CSR_RDATA_SC.write(csr_rc[4]); break;
+        case 0x304: CSR_RDATA_SC.write(csr_rc[5]); break;
+        case 0x305: CSR_RDATA_SC.write(csr_rc[6]); break;
+        case 0x310: CSR_RDATA_SC.write(csr_rc[7]); break;
+        case 0x341: CSR_RDATA_SC.write(csr_rc[8]); break;
+        case 0x342: CSR_RDATA_SC.write(csr_rc[9]); break;
+        case 0x343: CSR_RDATA_SC.write(csr_rc[10]); break;
+        case 0x344: CSR_RDATA_SC.write(csr_rc[11]); break;
+        case 0x340: CSR_RDATA_SC.write(csr_rc[12]); break;
+        default: CSR_RDATA_SC.write(0); break;
+    }
+    MEPC_SC.write(csr_rc[8]);
+    MSTATUS_RC.write(csr_rc[3]);
     MTVEC_VALUE_RC.write(csr_rc[6]);
-    MIP_VALUE_RC.write(csr_rc[11]); 
-    MCAUSE_SC.write(csr_rc[9]) ;
+    MIP_VALUE_RC.write(csr_rc[11]);
+    MCAUSE_SC.write(csr_rc[9]);
 }
 
 void csr::trace(sc_trace_file* tf) {

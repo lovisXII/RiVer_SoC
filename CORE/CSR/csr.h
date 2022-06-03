@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 
-#define N_CSR        12
+#define N_CSR        13
 #define adress_mtvec 0x80000000
 #define main_adresse 0x10054
 
@@ -14,17 +14,17 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> CSR_WDATA_SM;
     sc_in<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
-    sc_in<bool>         EXCEPTION_SM;
-    sc_in<sc_uint<32>>  MSTATUS_WDATA_RM;
-    sc_in<sc_uint<32>>  MIP_WDATA_RM;
-    sc_in<sc_uint<32>>  MEPC_WDATA_RM;
-    sc_in<sc_uint<32>>  MCAUSE_WDATA_SM;
+    sc_in<bool>        EXCEPTION_SM;
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM;
+    sc_in<sc_uint<32>> MIP_WDATA_RM;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM;
 
-    sc_out<sc_uint<32>> MEPC_SC ;
-    sc_out<sc_uint<32>> MSTATUS_RC ;
+    sc_out<sc_uint<32>> MEPC_SC;
+    sc_out<sc_uint<32>> MSTATUS_RC;
     sc_out<sc_uint<32>> MTVEC_VALUE_RC;
     sc_out<sc_uint<32>> MIP_VALUE_RC;
-    sc_out<sc_uint<32>> MCAUSE_SC ;
+    sc_out<sc_uint<32>> MCAUSE_SC;
 
     // Output :
 
@@ -50,6 +50,7 @@ SC_MODULE(csr) {
      * 9: mcause 0x342
      * 10: mtval 0x343
      * 11: mip 0x344
+     * 12: mscratch 0x340
      ***/
     sc_signal<sc_uint<32>> csr_rc[N_CSR];
     sc_signal<sc_uint<32>> test_sc;
