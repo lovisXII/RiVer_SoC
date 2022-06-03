@@ -21,11 +21,11 @@ entity core is
         IC_STALL_SI : in std_logic; 
 
         ADR_SI : out std_logic_vector(31 downto 0);
-        ADR_VALID_SI : out std_logic
+        ADR_VALID_SI : out std_logic; 
 
         -- Debug 
-        --PC_INIT : in std_logic_vector(31 downto 0);
-       ---DEBUG_PC_READ : out std_logic_vector(31 downto 0)
+        PC_INIT : in std_logic_vector(31 downto 0);
+        DEBUG_PC_READ : out std_logic_vector(31 downto 0)
     );
 end core;
 
@@ -53,10 +53,10 @@ signal SLT_RD, SLTU_RD : std_logic;
 -- Decod Reg interface
 signal RDATA1_SR, RDATA2_SR : std_logic_vector(31 downto 0);
 signal ADR_DEST_SR : std_logic_vector(5 downto 0);
-signal RADR1_SR, RADR2_SR : std_logic_vector(5 downto 0);
-signal WRITE_PC_SR : std_logic_vector(31 downto 0);
-signal WRITE_PC_ENABLE_SR : std_logic;
-signal READ_PC_SR : std_logic; 
+signal RADR1_SD, RADR2_SD : std_logic_vector(5 downto 0);
+signal WRITE_PC_SD : std_logic_vector(31 downto 0);
+signal WRITE_PC_ENABLE_SD : std_logic;
+signal READ_PC_SR : std_logic_vector(31 downto 0); 
 
 -- exe2mem
 signal EXE2MEM_POP_SM, EXE2MEM_EMPTY_SE : std_logic;
@@ -125,14 +125,14 @@ dec_i : entity work.dec
         -- Reg interface
         RDATA1_SR, RDATA2_SR,
         ADR_DEST_SR,
-        RADR1_SR, RADR2_SR,
-        WRITE_PC_SR,
+        RADR1_SD, RADR2_SD,
+        WRITE_PC_SD,
+        WRITE_PC_ENABLE_SD,
         READ_PC_SR,
 
         -- Exe interface 
         OP1_RD, OP2_RD,
         CMD_RD,
-        MEM_SIZE_RD,
         NEG_OP2_RD, 
         WB_RD,
         DEST_RD,
@@ -252,6 +252,25 @@ wbk_i : entity work.wbk
         REG_DATA_SW,
         REG_DEST_SW,
         REG_WB_SW 
+    );
+ 
+reg_i : entity worK.reg 
+    port map(
+        clk, reset_n,
+        PC_INIT, 
+        
+        -- read
+        RDATA1_SR, RDATA2_SR, 
+        RADR1_SD, RADR2_SD, 
+        
+        -- write 
+        REG_DATA_SW, 
+        REG_DEST_SW, 
+        WB_RM,
+        
+        WRITE_PC_SD, 
+        WRITE_PC_ENABLE_SD,
+        READ_PC_SR
     );
 
 end archi;
