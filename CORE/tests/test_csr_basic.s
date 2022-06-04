@@ -3,7 +3,8 @@
 
 _start:
     li x2, 0xE
-    csrrwi x1, 0x341, 0xE
+    csrrwi x0,mepc,0x0 # reseting value inside mepc
+    csrrwi x1, mepc, 0xE
     nop
     nop
     nop
