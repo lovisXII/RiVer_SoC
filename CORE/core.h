@@ -7,6 +7,8 @@
 #include "WBK/wbk.h"
 #include "systemc.h"
 
+#include "EXE/x0_multiplier.h"
+
 SC_MODULE(core) {
     // Global Interface :
 
@@ -84,6 +86,12 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
+    // DEC-X0 interface
+    // X0-X1 interface
+    sc_signal<sc_bv<385>> multiplier_out_sx0;
+    sc_signal<bool>       signed_op_rx0;
+    sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
+
     // EXE-MEM interface
     sc_signal<sc_uint<32>> EXE_RES_RE;
     sc_signal<sc_uint<32>> MEM_DATA_RE;
@@ -95,8 +103,6 @@ SC_MODULE(core) {
     sc_signal<bool>        MEM_MULT_RE, MULT_SEL_HIGH_RE;
 
     sc_signal<bool>        EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
-    sc_signal<bool>        x02x1_EMPTY_SE, x02x1_POP_SM;
-
     sc_signal<bool>        CSR_WENABLE_RE;
     sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX ;
     sc_signal<bool> MACHINE_TIMER_INTERRUPT_SX ;
@@ -211,12 +217,16 @@ SC_MODULE(core) {
     wbk    wbk_inst;
     csr    csr_inst;
 
+
+    x0_multiplier      multiplier_inst;
+
     void core_method();
 
     void trace(sc_trace_file * tf);
     SC_CTOR(core)
         : dec_inst("decod"),
           exec_inst("exec"),
+          multiplier_inst("x0_multiplier"),
           ifetch_inst("ifetch"),
           mem_inst("mem"),
           reg_inst("reg"),
@@ -374,9 +384,7 @@ SC_MODULE(core) {
         exec_inst.MEM_MULT_RE(MEM_MULT_RE);
         exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        exec_inst.x02x1_EMPTY_SE(x02x1_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
-        exec_inst.x02x1_POP_SM(x02x1_POP_SM);
 
         exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
@@ -423,6 +431,32 @@ SC_MODULE(core) {
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
+
+        //MULTIPLIER port map :
+
+        multiplier_inst.OP1_RD(OP1_RD);
+        multiplier_inst.OP2_RD(OP2_RD);
+        multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
+        multiplier_inst.MEM_DATA_RD(MEM_DATA_RD);
+        multiplier_inst.RADR1_RD(RADR1_SD);
+        multiplier_inst.RADR2_RD(RADR2_SD);
+        multiplier_inst.BLOCK_BP_RD(BLOCK_BP_RD);
+        multiplier_inst.MEM_DEST_RM(DEST_RM);
+        multiplier_inst.MEM_RES_RM(MEM_RES_RM);
+        multiplier_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        multiplier_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        multiplier_inst.EXE_RES_RE(EXE_RES_RE);
+        multiplier_inst.DEST_RE(DEST_RE);
+
+        multiplier_inst.RES_RX0(multiplier_out_sx0);
+        multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
+        multiplier_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        multiplier_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+
+        multiplier_inst.CLK(CLK);
+        multiplier_inst.RESET(RESET);
+        // MEM port map :
 
         mem_inst.EXE_RES_RE(EXE_RES_RE);//0
         mem_inst.MEM_DATA_RE(MEM_DATA_RE);

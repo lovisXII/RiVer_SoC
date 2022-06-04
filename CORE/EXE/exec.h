@@ -6,11 +6,10 @@
 #include "../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
-#include "x0_multiplier.h"
 
 #define exe2mem_size        166
-#define x02x1_size          385
 #define start_kernel_adress 0x80000000
+
 SC_MODULE(exec) {
     // Input/Output of EXE :
 
@@ -33,7 +32,6 @@ SC_MODULE(exec) {
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
 
     sc_in<bool>        EXE2MEM_POP_SM;
-    sc_in<bool>        x02x1_POP_SM;
 
     sc_in<bool>        DEC2EXE_EMPTY_SD;
     sc_in<bool>        SLT_RD, SLTU_RD;
@@ -85,7 +83,7 @@ SC_MODULE(exec) {
     sc_in<bool>        CSR_WENABLE_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
 
-    // Genral Interface :
+    // General Interface :
 
     sc_in<bool> EXCEPTION_SM;
     sc_in_clk   CLK;
@@ -108,7 +106,6 @@ SC_MODULE(exec) {
     sc_out<bool> MULT_SEL_HIGH_RE; // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
-    sc_out<bool> x02x1_EMPTY_SE;
 
     sc_out<bool>        CSR_WENABLE_RE;
     sc_out<sc_uint<12>> CSR_WADR_RE;
@@ -121,21 +118,17 @@ SC_MODULE(exec) {
     sc_signal<sc_bv<exe2mem_size>> exe2mem_din_se;  // concatenation of exe_res, mem_data...etc
     sc_signal<sc_bv<exe2mem_size>> exe2mem_dout_se;
 
-    sc_signal<sc_bv<x02x1_size>> x02x1_din_se;
-    sc_signal<sc_bv<x02x1_size>> x02x1_dout_se;
 
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
     sc_signal<sc_uint<32>> alu_in_op2_se;
     sc_signal<sc_uint<32>> alu_out_se;
     sc_signal<sc_uint<32>> shifter_out_se;
-    sc_signal<sc_bv<385>> multiplier_out_se;
     sc_signal<sc_uint<32>> divider_out_se;
     sc_signal<sc_uint<32>> bp_mem_data_sd;
     sc_signal<sc_uint<5>>  shift_val_se;
 
     sc_signal<bool> exe2mem_push_se, exe2mem_full_se;
-    sc_signal<bool> x02x1_push_se, x02x1_full_se;
 
     sc_signal<bool> blocked;
 
@@ -154,10 +147,8 @@ SC_MODULE(exec) {
 
     alu                alu_inst;
     shifter            shifter_inst;
-    x0_multiplier      multiplier_inst;
     //divider          divider_inst;
     fifo<exe2mem_size> fifo_inst;
-    fifo<x02x1_size> fifo_mult_inst;
 
     void preprocess_op();    // send op2 or ~op2 in ALU_IN_OP2
     void select_exec_res();  // setup FFIN_EXE_RES as ALU_OUT or SHIFTER_OUT
@@ -171,11 +162,9 @@ SC_MODULE(exec) {
     void trace(sc_trace_file * tf);
     SC_CTOR(exec) : 
     alu_inst("alu"), 
-    shifter_inst("shifter"), 
-    multiplier_inst("x0_multiplier"),
+    shifter_inst("shifter"),
     //divider_inst("divider"),
-    fifo_inst("exe2mem"),
-    fifo_mult_inst("x02x1")
+    fifo_inst("exe2mem")
     {
         // ALU port map :
 
@@ -191,12 +180,6 @@ SC_MODULE(exec) {
         shifter_inst.SHIFT_VAL_SE(shift_val_se);
         shifter_inst.CMD_SE(CMD_RD);
         shifter_inst.DOUT_SE(shifter_out_se);
-
-        //MULTIPLIER port map :
-
-        multiplier_inst.OP1_SE(op1_se);
-        multiplier_inst.OP2_SE(alu_in_op2_se);
-        multiplier_inst.RES_SE(multiplier_out_se);
 
         //DIVIDER port map :
 
@@ -217,21 +200,10 @@ SC_MODULE(exec) {
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
-        // fifo mult port map
-        fifo_mult_inst.DIN_S(multiplier_out_se);
-        fifo_mult_inst.DOUT_R(x02x1_dout_se);
-        fifo_mult_inst.EMPTY_S(x02x1_EMPTY_SE);
-        fifo_mult_inst.FULL_S(x02x1_full_se);
-        fifo_mult_inst.PUSH_S(x02x1_push_se);
-        fifo_mult_inst.POP_S(x02x1_POP_SM);
-        fifo_mult_inst.CLK(CLK);
-        fifo_mult_inst.RESET_N(RESET);
-
         SC_METHOD(preprocess_op);
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se 
-                  << multiplier_out_se 
                   << divider_out_se 
                   << shifter_out_se 
                   << SLT_RD 

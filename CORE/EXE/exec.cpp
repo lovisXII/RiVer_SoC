@@ -379,8 +379,6 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_re, GET_NAME(wb_re));
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, mem_store_re, GET_NAME(mem_store_re));
-
-    sc_trace(tf, multiplier_out_se, GET_NAME(multiplier_out_se));
     // Exception :
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));
@@ -394,7 +392,6 @@ void exec::trace(sc_trace_file* tf) {
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);
-    multiplier_inst.trace(tf);
 }
 
 // 0000010000101100010001100011011

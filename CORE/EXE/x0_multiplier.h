@@ -1,13 +1,43 @@
 #pragma once
 #include <systemc.h>
 #include "../UTIL/debug_util.h"
+#include "../UTIL/fifo.h"
 
+#define x02x1_size          385
 
 SC_MODULE(x0_multiplier)
 {
-    sc_in<sc_uint<32>> OP1_SE, OP2_SE;
-    // MULT/EXE
-    sc_out<sc_bv<385>> RES_SE;
+    // input :
+    sc_in<sc_uint<32>> OP1_RD, OP2_RD;
+
+    sc_in<bool>       X02X1_POP_SX1;
+
+    sc_in<sc_uint<32>> MEM_DATA_RD;
+    sc_in<sc_uint<6>>  RADR1_RD;
+    sc_in<sc_uint<6>>  RADR2_RD;
+
+    sc_in<bool>        BLOCK_BP_RD;
+
+    sc_in<sc_uint<6>>  MEM_DEST_RM;
+    sc_in<sc_uint<32>> MEM_RES_RM;
+    sc_in<bool>        CSR_WENABLE_RM;
+    sc_in<sc_uint<32>> CSR_RDATA_RM;
+    sc_in<sc_uint<32>> EXE_RES_RE;
+    sc_in<sc_uint<6>>  DEST_RE;
+
+    sc_in<bool>        CSR_WENABLE_RE;
+    sc_in<sc_uint<32>> CSR_RDATA_RE;
+    
+    // output :
+    sc_out<sc_bv<385>> RES_RX0;
+    sc_out<bool>       SIGNED_OP_RX0;
+    sc_out<bool>       X02X1_EMPTY_SX0;
+
+
+    // General interace : 
+    sc_in_clk   CLK;
+    sc_in<bool> RESET;
+
 
     sc_signal<sc_bv<64>> product[34];
     sc_signal<sc_bv<64>> product_s1[22]; // product of stage 1
@@ -15,6 +45,17 @@ SC_MODULE(x0_multiplier)
     sc_signal<sc_bv<64>> product_s3[10]; // product of stage 3
     sc_signal<sc_bv<64>> product_s4[6];  // product of stage 4
     sc_signal<sc_bv<64>> product_s5[4];  // product of stage 5
+
+    sc_signal<sc_uint<32>> op1_sx0;
+    sc_signal<sc_uint<32>> op2_sx0;
+    sc_signal<bool>        signed_op;
+
+    // fifo x02x1
+    sc_signal<sc_bv<x02x1_size>> x02x1_din_sx0;  
+    sc_signal<sc_bv<x02x1_size>> x02x1_dout_sx0;
+    sc_signal<bool> x02x1_push_sx0, x02x1_full_sx0;
+
+    fifo<x02x1_size> fifo_inst;
 
     void operation();
 
@@ -60,15 +101,28 @@ SC_MODULE(x0_multiplier)
     void CSA_27();
     void CSA_28();
 
-    //res => 320bits => 5x64 => M4 M3 M2 M1 M0
-    void RES();
+    void bypasses();  // allow the push/pop of fifo exe2mem
 
+    //res => 320bits => 5x64 => M4 M3 M2 M1 M0
+    void manage_fifo();
+    void fifo_concat();
+    void fifo_unconcat();
     void trace(sc_trace_file* tf);
 
-    SC_CTOR(x0_multiplier)
+    SC_CTOR(x0_multiplier) :
+    fifo_inst("x02x1")
     {
+        fifo_inst.DIN_S(x02x1_din_sx0);
+        fifo_inst.DOUT_R(x02x1_dout_sx0);
+        fifo_inst.EMPTY_S(X02X1_EMPTY_SX0);
+        fifo_inst.FULL_S(x02x1_full_sx0);
+        fifo_inst.PUSH_S(x02x1_push_sx0);
+        fifo_inst.POP_S(X02X1_POP_SX1);
+        fifo_inst.CLK(CLK);
+        fifo_inst.RESET_N(RESET);
+
         SC_METHOD(operation);
-        sensitive << OP1_SE << OP2_SE;
+        sensitive << op1_sx0 << op2_sx0;
 
         //stage 1
         SC_METHOD(CSA_1);
@@ -159,8 +213,14 @@ SC_MODULE(x0_multiplier)
         SC_METHOD(CSA_28);
         sensitive << product_s4[3] << product_s4[4] << product_s4[5];
 
-        //RES
-        SC_METHOD(RES);
+        //bypasses
+        SC_METHOD(bypasses);
+        sensitive << OP1_RD << OP2_RD;
+        //fifo
+        SC_METHOD(fifo_concat);
         sensitive << product_s5[0] << product_s5[1] << product_s5[2] << product_s5[3];
+
+        SC_METHOD(fifo_unconcat);
+        sensitive << x02x1_dout_sx0;
     }
 };

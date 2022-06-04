@@ -16,8 +16,8 @@ void x0_multiplier::operation()
     // |                                                 |                                           |
     // +-------------------------------------------------+-------------------------------------------+
 
-    sc_uint<32> op1 = OP1_SE;
-    sc_uint<32> op2 = OP2_SE;
+    sc_uint<32> op1 = op1_sx0;
+    sc_uint<32> op2 = op2_sx0;
 
     // signed extension
     op1 = op1[31] == 1?(sc_uint<32>)(~op1):op1;
@@ -26,12 +26,18 @@ void x0_multiplier::operation()
     product[32] = op1[31] == 1?op2:(sc_uint<32>)0;
     product[33] = op2[31] == 1?op1:(sc_uint<32>)0;
     
+    if(op1[31] && op2[31])
+        signed_op = 1;
+    else
+        signed_op = 0;
 
     // generating partial product
     for(int i = 0; i < 32; i++)
     {
         sc_bv<64> prod = 0;
         int t = 0;
+        if(op1[i] != 0)
+                
         for(int j = i; j < i+32; j++)
         {
             prod[j] = (bool)(op1[i] & op2[t]);
@@ -220,32 +226,73 @@ void x0_multiplier::CSA_28()
     product_s5[2] =  xor_ ^ (sc_bv<64>)product_s4[5];
     product_s5[3] = ((sc_bv<64>)product_s4[3] & (sc_bv<64>)product_s4[4]) | (xor_ & (sc_bv<64>)product_s4[5]);  
 }
-void x0_multiplier::RES()
-{
-    sc_bv<385> res;
-    res.range(383, 320) = (sc_bv_base)product[33];
-    res.range(319, 256) = (sc_bv_base)product_s3[9];
-    res.range(255, 192) = (sc_bv_base)product_s5[3];
-    res.range(191, 128) = (sc_bv_base)product_s5[2];
-    res.range(127, 64) = (sc_bv_base)product_s5[1];
-    res.range(63, 0) = (sc_bv_base)product_s5[0];
+void x0_multiplier::fifo_concat() {
+    sc_bv<x02x1_size> ff_din;
+    ff_din[384]            = signed_op;   
+    ff_din.range(383, 320) = (sc_bv_base)product[33];
+    ff_din.range(319, 256) = (sc_bv_base)product_s3[9];
+    ff_din.range(255, 192) = (sc_bv_base)product_s5[3];
+    ff_din.range(191, 128) = (sc_bv_base)product_s5[2];
+    ff_din.range(127, 64)  = (sc_bv_base)product_s5[1];
+    ff_din.range(63, 0)    = (sc_bv_base)product_s5[0];
 
-    sc_uint<32> op1 = OP1_SE;
-    sc_uint<32> op2 = OP2_SE;
-
-    if(op1[31] && op2[31])
-        res[384] = 1;
-    else
-        res[384] = 0;
-
-    RES_SE.write(res);
+    x02x1_din_sx0.write(ff_din);
 }
+void x0_multiplier::fifo_unconcat()
+{
+    sc_bv<x02x1_size> ff_dout = x02x1_dout_sx0.read();
+    SIGNED_OP_RX0.write((bool)ff_dout[384]);
+    RES_RX0.write(ff_dout.range(383, 0));
+}
+void x0_multiplier::manage_fifo() {
+    bool stall = x02x1_full_sx0.read() || X02X1_EMPTY_SX0.read();
+    if (stall) {
+        x02x1_push_sx0.write(false);
+    } else {
+        x02x1_push_sx0.write(true);
+    }
+}
+void x0_multiplier::bypasses() {
 
+    if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
+        op1_sx0.write(OP1_RD.read());
+    } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
+        op1_sx0.write(CSR_RDATA_RE.read());
+    } else if (DEST_RE.read() == RADR1_RD.read()) {
+        op1_sx0.write(EXE_RES_RE.read());
+    }else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) {
+        op1_sx0.write(CSR_RDATA_RM.read());
+    } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
+        op1_sx0.write(MEM_RES_RM.read());
+    } else {
+        op1_sx0.write(OP1_RD.read());
+    }
+
+    if (RADR2_RD.read() == 0 || BLOCK_BP_RD.read()) {
+        op2_sx0.write(OP2_RD.read());
+    } else if (DEST_RE.read() == RADR2_RD.read()) {
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RE)
+            bp_value = CSR_RDATA_RE;
+        else
+            bp_value = EXE_RES_RE;
+        op2_sx0.write(bp_value);
+    } else if (MEM_DEST_RM.read() == RADR2_RD.read()) {
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RM)
+            bp_value = CSR_RDATA_RM;
+        else
+            bp_value = MEM_RES_RM;
+        op2_sx0.write(MEM_RES_RM.read());
+    } else {
+        op2_sx0.write(OP2_RD.read());
+    }
+}
 void x0_multiplier::trace(sc_trace_file* tf)
 {
-    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
-    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
-    sc_trace(tf, RES_SE, GET_NAME(RES_SE));
+    sc_trace(tf, op1_sx0, GET_NAME(op1_sx0));
+    sc_trace(tf, op2_sx0, GET_NAME(op2_sx0));
+    sc_trace(tf, RES_RX0, GET_NAME(RES_RX0));
     for(int i = 0; i < 34; i++)
     {
         std::string iname = std::to_string(i) + "_prod";
@@ -256,4 +303,5 @@ void x0_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, product_s3[0], GET_NAME(product_s3[0]));
     sc_trace(tf, product_s4[0], GET_NAME(product_s4[0]));
     sc_trace(tf, product_s5[0], GET_NAME(product_s5[0]));
+    sc_trace(tf, x02x1_din_sx0, GET_NAME(x02x1_din_sx0));
 }
