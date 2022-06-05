@@ -58,7 +58,7 @@ void icache::transition()
                         fsm_current_state = WAIT_MEM;
                         A.write(ADR_SI.read() & 0xFFFFFFF0);
                         dta_valid = true;
-                        IC_STALL_SI.write(false);
+                        IC_STALL_SI.write(true);
                         cpt = 0;
                         
                     }
@@ -78,6 +78,7 @@ void icache::transition()
                     data_validate[address_index.read()] = true;
 
                 }
+                IC_STALL_SI.write(true);
             break;
             case UPDT:
                 if(!SLAVE_ACK_SP.read())
@@ -91,6 +92,7 @@ void icache::transition()
                 else
                 {
                     data[address_index.read()][cpt++] = DT.read();
+                    IC_STALL_SI.write(true);
                 }
             break;
             default:

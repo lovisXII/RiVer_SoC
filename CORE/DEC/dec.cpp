@@ -560,6 +560,8 @@ void decod::pre_reg_read_decoding() {
             if(mret_i_sd && CURRENT_MODE_SM.read() != 3){
                 env_call_wrong_mode = 1 ;
             }
+            else if(sret_i_sd && CURRENT_MODE_SM.read() != 2)
+                env_call_s_mode_sd = 1 ;
             else{
                 env_call_wrong_mode = 0 ;
             }
@@ -575,6 +577,9 @@ void decod::pre_reg_read_decoding() {
         env_call_u_mode_sd = 0 ;
         env_call_s_mode_sd = 0 ;
         env_call_m_mode_sd = 0 ;
+    }
+    if(!mret_i_sd | !sret_i_sd){
+        env_call_wrong_mode = 0 ;
     }
     RADR1_SD.write(radr1_var);
     RADR2_SD.write(radr2_var);
@@ -900,7 +905,7 @@ void decod::post_reg_read_decoding() {
             select_type_operations_sd.write(1);
             offset_branch_var = 0; 
             mem_data_var      = 0;
-            inc_pc_var        = 1;
+            inc_pc_var        = 0;
         }
     }
     else if (fence_i_sd) {
@@ -957,7 +962,7 @@ void decod::post_reg_read_decoding() {
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
     inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM );
-    add_offset_to_pc_sd.write((!stall && !inc_pc_var && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && ! EXCEPTION_SM);
+    add_offset_to_pc_sd.write((!stall && !inc_pc_var &&( b_type_inst_sd || j_type_inst_sd || jalr_type_inst_sd ) && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && ! EXCEPTION_SM);
 }
 
 //---------------------------------------------PC GESTION
@@ -1318,4 +1323,5 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, instruction_access_fault_sd, GET_NAME(instruction_access_fault_sd));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
+    sc_trace(tf, env_call_wrong_mode, GET_NAME(env_call_wrong_mode));
 }

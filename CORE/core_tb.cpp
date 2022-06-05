@@ -187,6 +187,9 @@ int sc_main(int argc, char* argv[]) {
         }
     }
 
+
+// Components instanciation
+
     core core_inst("core_inst");
 
 #ifdef ICACHE_ON
