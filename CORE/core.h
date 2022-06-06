@@ -397,6 +397,7 @@ SC_MODULE(core) {
         exec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
         exec_inst.MULT_INST_RE(MULT_INST_RE);
+        exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
 
@@ -556,20 +557,6 @@ SC_MODULE(core) {
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);  // 58
-
-        //X1 - MULTIPLIER port map :
-
-        x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
-        x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
-        x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
-        x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
-        x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
-        x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
-        x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
-        x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
-        x1_multiplier_inst.CLK(CLK);
-        x1_multiplier_inst.RESET(RESET);
-        // REG port map :
 
         //X1 - MULTIPLIER port map :
 

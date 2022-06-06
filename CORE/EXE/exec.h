@@ -102,7 +102,7 @@ SC_MODULE(exec) {
 
     sc_out<bool> WB_RE, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
-    sc_out<bool> MEM_MULT_RE;       // multiplication instruction
+    sc_out<bool> MULT_INST_RE;       // multiplication instruction
     sc_out<bool> MULT_SEL_HIGH_RE;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
@@ -230,7 +230,7 @@ SC_MODULE(exec) {
                   << EXCEPTION_SM 
                   << MRET_RD 
                   << INSTRUCTION_ACCESS_FAULT_RD 
-                  << MULT_INST_RE;
+                  << MULT_INST_RD;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
