@@ -114,7 +114,8 @@ void exec::fifo_concat() {
         ff_din[164]            = store_access_fault_se;
         ff_din[165]            = INSTRUCTION_ACCESS_FAULT_RD;
         ff_din[166]            = EBREAK_RD;
-
+        ff_din[167]            = MULT_INST_RD.read();
+        
     } else {
         ff_din.range(31, 0)    = 0;
         ff_din.range(63, 32)   = 0;
@@ -142,6 +143,7 @@ void exec::fifo_concat() {
         ff_din[164]            = 0;
         ff_din[165]            = 0;
         ff_din[166]            = 0;
+        ff_din[167]            = 0;
     }
 
     exe2mem_din_se.write(ff_din);
@@ -174,6 +176,7 @@ void exec::fifo_unconcat() {
     STORE_ACCESS_FAULT_RE.write((bool)ff_dout[164]);
     INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[165]);
     EBREAK_RE.write((bool)ff_dout[166]);
+    MULT_INST_RE.write((bool)ff_dout[167]);
 }
 
 void exec::manage_fifo() {
@@ -377,6 +380,7 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_re, GET_NAME(wb_re));
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, mem_store_re, GET_NAME(mem_store_re));
+    sc_trace(tf, MULT_INST_RE, GET_NAME(MULT_INST_RE));
     // Exception :
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size        219
+#define dec2exe_size 220
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(decod) {
@@ -63,6 +63,11 @@ SC_MODULE(decod) {
     sc_out<bool>                   DEC2EXE_EMPTY_SD;
     sc_signal<sc_bv<dec2exe_size>> dec2exe_out_sd;
 
+    // Multiplications signals
+    sc_out<bool>                   MULT_INST_RD;
+
+    sc_in<bool>                   MULT_INST_RE;
+    sc_in<bool>                   MULT_INST_RM;
     // Interface with CSR :
 
     sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
@@ -341,10 +346,15 @@ SC_MODULE(decod) {
                   << mem_sign_extend_sd << mem_size_sd << select_type_operations_sd << adr_dest_sd << slti_i_sd
                   << slt_i_sd
 
-                  << sltiu_i_sd << sltu_i_sd << RADR1_SD << CSR_RDATA_SC << csr_radr_sd << RADR2_SD << r1_valid_sd
-                  << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd << illegal_instruction_sd
-                  << instruction_adress_missaligned_sd << env_call_m_mode_sd << block_bp_sd << env_call_s_mode_sd
-                  << env_call_u_mode_sd << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd;
+                  << sltiu_i_sd << sltu_i_sd << RADR1_SD
+                  << CSR_RDATA_SC << csr_radr_sd
+                  << RADR2_SD << r1_valid_sd << EXCEPTION_SM << r2_valid_sd 
+                  << PC_IF2DEC_RI << csr_wenable_sd
+                  << illegal_instruction_sd << instruction_adress_missaligned_sd 
+                  << env_call_m_mode_sd
+                  << block_bp_sd << env_call_s_mode_sd << env_call_u_mode_sd 
+                  << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd
+                  << mul_i_sd << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)

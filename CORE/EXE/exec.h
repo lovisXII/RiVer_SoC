@@ -7,7 +7,7 @@
 #include "alu.h"
 #include "shifter.h"
 
-#define exe2mem_size        167
+#define exe2mem_size        168
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(exec) {
@@ -31,10 +31,10 @@ SC_MODULE(exec) {
     sc_in<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
 
-    sc_in<bool> EXE2MEM_POP_SM;
-
-    sc_in<bool> DEC2EXE_EMPTY_SD;
-    sc_in<bool> SLT_RD, SLTU_RD;
+    sc_in<bool>        EXE2MEM_POP_SM;
+    sc_in<bool>        MULT_INST_RD;
+    sc_in<bool>        DEC2EXE_EMPTY_SD;
+    sc_in<bool>        SLT_RD, SLTU_RD;
 
     sc_in<bool>        CSR_WENABLE_RD;
     sc_in<sc_uint<12>> CSR_WADR_RD;
@@ -204,12 +204,33 @@ SC_MODULE(exec) {
         sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD << SLTU_RD << SELECT_TYPE_OPERATIONS_RD
                   << CURRENT_MODE_SM << MEM_LOAD_RD << MEM_STORE_RD << exception_se << RESET;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
-                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
-                  << CSR_RDATA_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD << ENV_CALL_U_MODE_RD
-                  << ENV_CALL_M_MODE_RD << exception_se << load_adress_missaligned_se << load_access_fault_se
-                  << store_access_fault_se << store_adress_missaligned_se << EXCEPTION_SM << MRET_RD
-                  << INSTRUCTION_ACCESS_FAULT_RD;
+        sensitive << bp_mem_data_sd 
+                  << DEST_RD 
+                  << MEM_SIZE_RD 
+                  << MEM_LOAD_RD 
+                  << MEM_SIGN_EXTEND_RD 
+                  << MEM_STORE_RD
+                  << WB_RD 
+                  << exe_res_se 
+                  << mem_load_re 
+                  << mem_store_re 
+                  << wb_re 
+                  << CSR_WENABLE_RD 
+                  << CSR_WADR_RD
+                  << CSR_RDATA_RD 
+                  << ILLEGAL_INSTRUCTION_RD 
+                  << ADRESS_MISSALIGNED_RD
+                  << ENV_CALL_U_MODE_RD 
+                  << ENV_CALL_M_MODE_RD 
+                  << exception_se 
+                  << load_adress_missaligned_se
+                  << load_access_fault_se 
+                  << store_access_fault_se
+                  << store_adress_missaligned_se
+                  << EXCEPTION_SM 
+                  << MRET_RD 
+                  << INSTRUCTION_ACCESS_FAULT_RD 
+                  << MULT_INST_RE;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);

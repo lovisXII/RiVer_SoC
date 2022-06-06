@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-#define mem2wbk_size 109
+#define mem2wbk_size 108
 /*
 Assuming the following stuff :
 
@@ -31,8 +31,9 @@ SC_MODULE(mem) {
 
     sc_in<sc_uint<32>> PC_EXE2MEM_RE;
     sc_in<bool>        WB_RE;
-    sc_in<bool>        SIGN_EXTEND_RE;     // taille fifo entrée : 74
-    sc_in<bool>        LOAD_RE, STORE_RE;  // 15
+    sc_in<bool>        SIGN_EXTEND_RE;  // taille fifo entrée : 74
+    sc_in<bool>        LOAD_RE, STORE_RE;//15
+    sc_in<bool>        MULT_INST_RE;
 
     sc_in<bool>        CSR_WENABLE_RE;
     sc_in<sc_uint<12>> CSR_WADR_SE;
@@ -60,7 +61,7 @@ SC_MODULE(mem) {
 
     sc_in<bool>  EXE2MEM_EMPTY_SE;
     sc_out<bool> EXE2MEM_POP_SM;
-
+    
     // mem2wbk interface
 
     sc_in<bool>         MEM2WBK_POP_SW;  // 35
@@ -75,7 +76,7 @@ SC_MODULE(mem) {
     sc_out<sc_uint<6>>  DEST_RM;
     sc_out<bool>        WB_RM;
     sc_out<sc_uint<32>> CSR_RDATA_RM;
-
+    sc_out<bool>        MULT_INST_RM;
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM;
