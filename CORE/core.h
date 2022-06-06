@@ -571,6 +571,20 @@ SC_MODULE(core) {
         x1_multiplier_inst.RESET(RESET);
         // REG port map :
 
+        //X1 - MULTIPLIER port map :
+
+        x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
+        x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
+        x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
+        x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
+        x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
+        x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
+        x1_multiplier_inst.CLK(CLK);
+        x1_multiplier_inst.RESET(RESET);
+        // REG port map :
+
         reg_inst.RADR1_SD(RADR1_SD);
         reg_inst.RADR2_SD(RADR2_SD);
         reg_inst.RDATA1_SR(RDATA1_SR);
