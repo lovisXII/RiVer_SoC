@@ -47,6 +47,7 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
+        dec2exe_in_var[218] = mul_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd;  
         dec2exe_in_var[217] = instruction_access_fault_sd;  
         dec2exe_in_var[216] = mret_i_sd;            
         dec2exe_in_var[215] = block_bp_sd;
@@ -86,7 +87,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
-        
+        dec2exe_in_var[218]            = 0; 
         dec2exe_in_var[217]            = 0;  
         dec2exe_in_var[216]            = 0;            
         dec2exe_in_var[215]            = 0;
@@ -127,6 +128,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    MULT_INST_RD.write((bool)dec2exe_out_var[218]);
     INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[217]);
     MRET_RD.write((bool)dec2exe_out_var[216]);
     BLOCK_BP_RD.write((bool)dec2exe_out_var[215]);
@@ -1153,7 +1155,8 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
     sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
     sc_trace(tf, dec2exe_out_sd, GET_NAME(dec2exe_out_sd));
-
+    sc_trace(tf, MULT_INST_RD, GET_NAME(MULT_INST_RD));
+    
     // Interface with CSR :
 
     sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));    // CSR adress sent to CSR to get data

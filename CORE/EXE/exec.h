@@ -7,7 +7,7 @@
 #include "alu.h"
 #include "shifter.h"
 
-#define exe2mem_size        166
+#define exe2mem_size        167
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(exec) {
@@ -32,7 +32,7 @@ SC_MODULE(exec) {
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
 
     sc_in<bool>        EXE2MEM_POP_SM;
-
+    sc_in<bool>        MULT_INST_RD;
     sc_in<bool>        DEC2EXE_EMPTY_SD;
     sc_in<bool>        SLT_RD, SLTU_RD;
 
@@ -102,8 +102,7 @@ SC_MODULE(exec) {
 
     sc_out<bool> WB_RE, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
-    sc_out<bool> MEM_MULT_RE;      // multiplication instruction
-    sc_out<bool> MULT_SEL_HIGH_RE; // select higher bits of multiplication
+    sc_out<bool> MULT_INST_RE;      // multiplication instruction
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
 
@@ -240,7 +239,8 @@ SC_MODULE(exec) {
                   << store_adress_missaligned_se
                   << EXCEPTION_SM 
                   << MRET_RD 
-                  << INSTRUCTION_ACCESS_FAULT_RD ;
+                  << INSTRUCTION_ACCESS_FAULT_RD 
+                  << MULT_INST_RE;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo); 

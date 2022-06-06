@@ -8,6 +8,8 @@
 #include "systemc.h"
 
 #include "EXE/x0_multiplier.h"
+#include "MEM/x1_multiplier.h"
+#include "WBK/x2_multiplier.h"
 
 SC_MODULE(core) {
     // Global Interface :
@@ -86,9 +88,8 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
-    // DEC-X0 interface
     // X0-X1 interface
-    sc_signal<sc_bv<385>> multiplier_out_sx0;
+    sc_signal<sc_bv<384>> multiplier_out_sx0;
     sc_signal<bool>       signed_op_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
 
@@ -134,8 +135,15 @@ SC_MODULE(core) {
     sc_signal<bool> MRET_RE;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;
+    sc_signal<bool> MULT_INST_RD;
+    sc_signal<bool> MULT_INST_RE;
+    sc_signal<bool> MULT_INST_RM;
+    // X1-X2 interface
+    sc_signal<sc_bv<128>> multiplier_out_sx1;
+    sc_signal<sc_uint<32>>  multiplier_out_sx2;
+    sc_signal<bool>       signed_op_rx1;
+    sc_signal<bool>       x12x2_EMPTY_SX1, x12x2_POP_SX2;
 
-    
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
     sc_signal<sc_uint<6>>  DEST_RM;
@@ -218,19 +226,23 @@ SC_MODULE(core) {
     csr    csr_inst;
 
 
-    x0_multiplier      multiplier_inst;
+    x0_multiplier      x0_multiplier_inst;
+    x1_multiplier      x1_multiplier_inst;
+    x2_multiplier      x2_multiplier_inst;
 
     void core_method();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(core)
-        : dec_inst("decod"),
-          exec_inst("exec"),
-          multiplier_inst("x0_multiplier"),
+    SC_CTOR(core) : 
           ifetch_inst("ifetch"),
+          dec_inst("decod"),
+          exec_inst("exec"),
+          x0_multiplier_inst("x0_multiplier"),
           mem_inst("mem"),
-          reg_inst("reg"),
+          x1_multiplier_inst("x1_multiplier"),
           wbk_inst("wbk"),
+          x2_multiplier_inst("x2_multiplier"),
+          reg_inst("reg"),
           csr_inst("csr") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
@@ -340,6 +352,9 @@ SC_MODULE(core) {
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
         dec_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
+        dec_inst.MULT_INST_RD(MULT_INST_RD);
+        dec_inst.MULT_INST_RE(MULT_INST_RE);
+        dec_inst.MULT_INST_RM(MULT_INST_RM);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -357,7 +372,7 @@ SC_MODULE(core) {
         exec_inst.NEG_OP2_RD(NEG_OP2_RD);
         exec_inst.WB_RD(WB_RD);
         exec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
-
+        exec_inst.MULT_INST_RD(MULT_INST_RD);
         exec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
 
@@ -381,8 +396,7 @@ SC_MODULE(core) {
         exec_inst.MEM_SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
         exec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
-        exec_inst.MEM_MULT_RE(MEM_MULT_RE);
-        exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
+        exec_inst.MULT_INST_RE(MULT_INST_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
 
@@ -432,30 +446,32 @@ SC_MODULE(core) {
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-        //MULTIPLIER port map :
+        //X0 - MULTIPLIER port map :
 
-        multiplier_inst.OP1_RD(OP1_RD);
-        multiplier_inst.OP2_RD(OP2_RD);
-        multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
-        multiplier_inst.MEM_DATA_RD(MEM_DATA_RD);
-        multiplier_inst.RADR1_RD(RADR1_SD);
-        multiplier_inst.RADR2_RD(RADR2_SD);
-        multiplier_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        multiplier_inst.MEM_DEST_RM(DEST_RM);
-        multiplier_inst.MEM_RES_RM(MEM_RES_RM);
-        multiplier_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
-        multiplier_inst.CSR_RDATA_RM(CSR_RDATA_RM);
-        multiplier_inst.EXE_RES_RE(EXE_RES_RE);
-        multiplier_inst.DEST_RE(DEST_RE);
+        x0_multiplier_inst.OP1_RD(OP1_RD);
+        x0_multiplier_inst.OP2_RD(OP2_RD);
+        x0_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
+        x0_multiplier_inst.MEM_DATA_RD(MEM_DATA_RD);
+        x0_multiplier_inst.RADR1_RD(RADR1_SD);
+        x0_multiplier_inst.RADR2_RD(RADR2_SD);
+        x0_multiplier_inst.BLOCK_BP_RD(BLOCK_BP_RD);
+        x0_multiplier_inst.MEM_DEST_RM(DEST_RM);
+        x0_multiplier_inst.MEM_RES_RM(MEM_RES_RM);
+        x0_multiplier_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
+        x0_multiplier_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        x0_multiplier_inst.EXE_RES_RE(EXE_RES_RE);
+        x0_multiplier_inst.DEST_RE(DEST_RE);
 
-        multiplier_inst.RES_RX0(multiplier_out_sx0);
-        multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
-        multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
-        multiplier_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
-        multiplier_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
+        x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
+        x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
+        x0_multiplier_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        x0_multiplier_inst.CSR_RDATA_RE(CSR_RDATA_RE);
 
-        multiplier_inst.CLK(CLK);
-        multiplier_inst.RESET(RESET);
+        x0_multiplier_inst.CLK(CLK);
+        x0_multiplier_inst.RESET(RESET);
+
         // MEM port map :
 
         mem_inst.EXE_RES_RE(EXE_RES_RE);//0
@@ -467,7 +483,8 @@ SC_MODULE(core) {
         mem_inst.SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
         mem_inst.LOAD_RE(MEM_LOAD_RE);
         mem_inst.STORE_RE(MEM_STORE_RE);
-
+        mem_inst.MULT_INST_RE(MULT_INST_RE);
+        mem_inst.MULT_INST_RM(MULT_INST_RM);
         mem_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         mem_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
 
@@ -540,6 +557,20 @@ SC_MODULE(core) {
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);//58
 
+        //X1 - MULTIPLIER port map :
+
+        x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
+        x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
+        x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
+        x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
+        x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
+        x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
+        x1_multiplier_inst.CLK(CLK);
+        x1_multiplier_inst.RESET(RESET);
+        // REG port map :
+
         reg_inst.RADR1_SD(RADR1_SD);
         reg_inst.RADR2_SD(RADR2_SD);
         reg_inst.RDATA1_SR(RDATA1_SR);
@@ -573,9 +604,22 @@ SC_MODULE(core) {
 
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         wbk_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        
+        wbk_inst.MULT_INST_RM(MULT_INST_RM);
+        wbk_inst.X2_RES_RX2(multiplier_out_sx2);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);
+
+        //X1 - MULTIPLIER port map :
+
+        x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
+        x2_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x2_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
+        x2_multiplier_inst.RES_RX2(multiplier_out_sx2);
+        x2_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
+        x2_multiplier_inst.CLK(CLK);
+        x2_multiplier_inst.RESET(RESET);
 
         csr_inst.CSR_WADR_SM(CSR_WADR_SM);
         csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);

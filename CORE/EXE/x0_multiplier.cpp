@@ -244,13 +244,10 @@ void x0_multiplier::fifo_unconcat()
     SIGNED_OP_RX0.write((bool)ff_dout[384]);
     RES_RX0.write(ff_dout.range(383, 0));
 }
-void x0_multiplier::manage_fifo() {
-    bool stall = x02x1_full_sx0.read() || X02X1_EMPTY_SX0.read();
-    if (stall) {
-        x02x1_push_sx0.write(false);
-    } else {
-        x02x1_push_sx0.write(true);
-    }
+void x0_multiplier::manage_fifo() 
+{
+    bool stall = x02x1_full_sx0.read() || DEC2X0_EMPTY_SD.read();
+    x02x1_push_sx0.write(!stall);
 }
 void x0_multiplier::bypasses() {
 
@@ -290,18 +287,12 @@ void x0_multiplier::bypasses() {
 }
 void x0_multiplier::trace(sc_trace_file* tf)
 {
+    sc_trace(tf, x02x1_full_sx0, GET_NAME(x02x1_full_sx0));
+    sc_trace(tf, DEC2X0_EMPTY_SD, GET_NAME(DEC2X0_EMPTY_SD));
     sc_trace(tf, op1_sx0, GET_NAME(op1_sx0));
     sc_trace(tf, op2_sx0, GET_NAME(op2_sx0));
     sc_trace(tf, RES_RX0, GET_NAME(RES_RX0));
-    for(int i = 0; i < 34; i++)
-    {
-        std::string iname = std::to_string(i) + "_prod";
-        sc_trace(tf, product[i], signal_get_name(product[i].name(), iname.c_str()));
-    }
-    sc_trace(tf, product_s1[0], GET_NAME(product_s1[0]));
-    sc_trace(tf, product_s2[0], GET_NAME(product_s2[0]));
-    sc_trace(tf, product_s3[0], GET_NAME(product_s3[0]));
-    sc_trace(tf, product_s4[0], GET_NAME(product_s4[0]));
-    sc_trace(tf, product_s5[0], GET_NAME(product_s5[0]));
     sc_trace(tf, x02x1_din_sx0, GET_NAME(x02x1_din_sx0));
+    sc_trace(tf, x02x1_dout_sx0, GET_NAME(x02x1_dout_sx0));
+    fifo_inst.trace(tf);
 }

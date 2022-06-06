@@ -10,7 +10,9 @@ SC_MODULE(x0_multiplier)
     // input :
     sc_in<sc_uint<32>> OP1_RD, OP2_RD;
 
-    sc_in<bool>       X02X1_POP_SX1;
+    sc_in<bool>        X02X1_POP_SX1;
+
+    sc_in<bool>       DEC2X0_EMPTY_SD;
 
     sc_in<sc_uint<32>> MEM_DATA_RD;
     sc_in<sc_uint<6>>  RADR1_RD;
@@ -29,10 +31,9 @@ SC_MODULE(x0_multiplier)
     sc_in<sc_uint<32>> CSR_RDATA_RE;
     
     // output :
-    sc_out<sc_bv<385>> RES_RX0;
+    sc_out<sc_bv<384>> RES_RX0;
     sc_out<bool>       SIGNED_OP_RX0;
     sc_out<bool>       X02X1_EMPTY_SX0;
-
 
     // General interace : 
     sc_in_clk   CLK;
@@ -222,5 +223,8 @@ SC_MODULE(x0_multiplier)
 
         SC_METHOD(fifo_unconcat);
         sensitive << x02x1_dout_sx0;
+
+        SC_METHOD(manage_fifo);
+        sensitive << x02x1_full_sx0 << DEC2X0_EMPTY_SD;
     }
 };
