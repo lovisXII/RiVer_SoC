@@ -63,7 +63,8 @@ SC_MODULE(core) {
     sc_signal<bool>        INTERRUPTION_SE;
     sc_signal<bool>        EXCEPTION_RD;
     sc_signal<bool>        ECALL_I_RD;
-    sc_signal<bool>        EBREAK_I_RD;
+    sc_signal<bool>        EBREAK_RD;
+    sc_signal<bool>        EBREAK_RE;
     sc_signal<bool>        ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_signal<bool>        ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
     sc_signal<bool>        ENV_CALL_U_MODE_RD;
@@ -72,7 +73,7 @@ SC_MODULE(core) {
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD;
     sc_signal<sc_uint<32>> CSR_RDATA_SC;
-    sc_signal<sc_uint<32>> MCAUSE_SC ;
+    sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
     sc_signal<sc_uint<32>> RDATA2_SR;
@@ -102,28 +103,28 @@ SC_MODULE(core) {
     sc_signal<bool>        MEM_LOAD_RE, MEM_STORE_RE;
     sc_signal<bool>        MEM_MULT_RE, MULT_SEL_HIGH_RE;
 
-    sc_signal<bool>        EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
-    sc_signal<bool>        CSR_WENABLE_RE;
-    sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX ;
-    sc_signal<bool> MACHINE_TIMER_INTERRUPT_SX ;
-    sc_signal<bool> MACHINE_EXTERNAL_INTERRUPT_SX ;
+    sc_signal<bool> EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
+    sc_signal<bool> CSR_WENABLE_RE;
+    sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
+    sc_signal<bool> MACHINE_TIMER_INTERRUPT_SX;
+    sc_signal<bool> MACHINE_EXTERNAL_INTERRUPT_SX;
 
-    sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SE ;
-    sc_signal<bool> MACHINE_TIMER_INTERRUPT_SE ;
-    sc_signal<bool> MACHINE_EXTERNAL_INTERRUPT_SE ;
+    sc_signal<bool>        MACHINE_SOFTWARE_INTERRUPT_SE;
+    sc_signal<bool>        MACHINE_TIMER_INTERRUPT_SE;
+    sc_signal<bool>        MACHINE_EXTERNAL_INTERRUPT_SE;
     sc_signal<sc_uint<12>> CSR_WADR_RE;
     sc_signal<sc_uint<32>> CSR_RDATA_RE;
 
     sc_signal<bool> EXCEPTION_RE;
-    sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
-    sc_signal<bool> LOAD_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
-    
+    sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE;  // adress from store/load isn't aligned
+    sc_signal<bool> LOAD_ACCESS_FAULT_RE;        // trying to access memory in wrong mode
+
     sc_signal<bool> STORE_ADRESS_MISSALIGNED_RE;
     sc_signal<bool> STORE_ACCESS_FAULT_RE;
     sc_signal<bool> ECALL_I_RE;
     sc_signal<bool> EBREAK_I_RE;
-    sc_signal<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_signal<bool> ILLEGAL_INSTRUCTION_RE;             // accessing stuff in wrong mode
+    sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
     sc_signal<bool> ENV_CALL_S_MODE_RE;
     sc_signal<bool> ENV_CALL_M_MODE_RE;
     sc_signal<bool> ENV_CALL_S_MODE_RD;
@@ -135,7 +136,6 @@ SC_MODULE(core) {
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;
 
-    
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
     sc_signal<sc_uint<6>>  DEST_RM;
@@ -161,15 +161,13 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MSTATUS_RC;
     sc_signal<sc_uint<32>> MTVEC_VALUE_RC;
     sc_signal<sc_uint<32>> MIP_VALUE_RC;
-    sc_signal<sc_uint<32>> MTVAL_WDATA_SM ;
+    sc_signal<sc_uint<32>> MTVAL_WDATA_SM;
     sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
     // MEM-IFETCH
 
     sc_signal<bool>        MRET_SM;
     sc_signal<sc_uint<32>> RETURN_ADRESS_SM;
-
-
 
     // MEM - Pipeline :
 
@@ -185,10 +183,7 @@ SC_MODULE(core) {
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
 
     sc_out<sc_uint<32>> MCACHE_DATA_SM;
-    sc_out<bool>        MCACHE_ADR_VALID_SM, 
-                        MCACHE_STORE_SM, 
-                        MCACHE_LOAD_SM;
-
+    sc_out<bool>        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM;
 
     sc_in<sc_uint<32>> MCACHE_RESULT_SM;
     sc_in<bool>        MCACHE_STALL_SM;
@@ -205,8 +200,8 @@ SC_MODULE(core) {
     sc_out<sc_uint<32>> DEBUG_PC_READ;
 
     // Pipeline Mode
-    
-    sc_signal<sc_uint<2>> CURRENT_MODE_SM ;
+
+    sc_signal<sc_uint<2>> CURRENT_MODE_SM;
 
     // Stage instanciation
     decod  dec_inst;
@@ -217,8 +212,7 @@ SC_MODULE(core) {
     wbk    wbk_inst;
     csr    csr_inst;
 
-
-    x0_multiplier      multiplier_inst;
+    x0_multiplier multiplier_inst;
 
     void core_method();
 
@@ -316,6 +310,7 @@ SC_MODULE(core) {
         dec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
         dec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         dec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        dec_inst.EBREAK_RD(EBREAK_RD);
 
         dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
         dec_inst.CSR_WADR_RD(CSR_WADR_RD);
@@ -357,6 +352,8 @@ SC_MODULE(core) {
         exec_inst.NEG_OP2_RD(NEG_OP2_RD);
         exec_inst.WB_RD(WB_RD);
         exec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
+        exec_inst.EBREAK_RD(EBREAK_RD);
+        exec_inst.EBREAK_RE(EBREAK_RE);
 
         exec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
@@ -432,7 +429,7 @@ SC_MODULE(core) {
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-        //MULTIPLIER port map :
+        // MULTIPLIER port map :
 
         multiplier_inst.OP1_RD(OP1_RD);
         multiplier_inst.OP2_RD(OP2_RD);
@@ -458,7 +455,7 @@ SC_MODULE(core) {
         multiplier_inst.RESET(RESET);
         // MEM port map :
 
-        mem_inst.EXE_RES_RE(EXE_RES_RE);//0
+        mem_inst.EXE_RES_RE(EXE_RES_RE);  // 0
         mem_inst.MEM_DATA_RE(MEM_DATA_RE);
         mem_inst.DEST_RE(DEST_RE);
         mem_inst.MEM_SIZE_RE(MEM_SIZE_RE);
@@ -474,6 +471,7 @@ SC_MODULE(core) {
         mem_inst.MEM_RES_RM(MEM_RES_RM);
         mem_inst.DEST_RM(DEST_RM);
         mem_inst.WB_RM(WB_RM);
+        mem_inst.EBREAK_RE(EBREAK_RE);
 
         mem_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
         mem_inst.MEM2WBK_POP_SW(MEM2WBK_POP_SW);
@@ -482,8 +480,8 @@ SC_MODULE(core) {
         mem_inst.MCACHE_DATA_SM(MCACHE_DATA_SM);
         mem_inst.MCACHE_ADR_VALID_SM(MCACHE_ADR_VALID_SM);
         mem_inst.MCACHE_STORE_SM(MCACHE_STORE_SM);
-        mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);//19
-        
+        mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);  // 19
+
         mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
         mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);
 
@@ -511,11 +509,10 @@ SC_MODULE(core) {
         mem_inst.ENV_CALL_WRONG_MODE_RE(ENV_CALL_WRONG_MODE_RE);
         mem_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
         mem_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE(INSTRUCTION_ADRESS_MISSALIGNED_RE);
-        mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);//39
+        mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);  // 39
         mem_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         mem_inst.MRET_RE(MRET_RE);
         mem_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
-
 
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
 
@@ -532,13 +529,13 @@ SC_MODULE(core) {
         mem_inst.MEPC_SC(MEPC_SC);
         mem_inst.MSTATUS_RC(MSTATUS_RC);
         mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
-        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);//54
-        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);//54
+        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
+        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);  // 54
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);//55
+        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);  // 55
 
         mem_inst.CLK(CLK);
-        mem_inst.RESET(RESET);//58
+        mem_inst.RESET(RESET);  // 58
 
         reg_inst.RADR1_SD(RADR1_SD);
         reg_inst.RADR2_SD(RADR2_SD);

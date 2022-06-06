@@ -164,7 +164,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(24);
             CURRENT_MODE_SM = 3;
         } else if (MRET_RE) {
@@ -189,8 +189,8 @@ void mem::csr_exception() {
             // Informing IFETCH that a return instruction have been received
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
-            MRET_SM = MRET_RE;
+            MTVAL_WDATA_SM = 0;
+            MRET_SM        = MRET_RE;
         } else if (STORE_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM;
@@ -204,7 +204,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE ;
+            MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(7);
             CURRENT_MODE_SM = 3;
         } else if (LOAD_ACCESS_FAULT_RE) {
@@ -220,7 +220,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE ;
+            MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(5);
             CURRENT_MODE_SM = 3;
         } else if (STORE_ADRESS_MISSALIGNED_RE) {
@@ -236,7 +236,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE ;
+            MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(6);
             CURRENT_MODE_SM = 3;
         } else if (LOAD_ADRESS_MISSALIGNED_RE) {
@@ -252,7 +252,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE ;
+            MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(4);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_M_MODE_RE) {
@@ -268,7 +268,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(11);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_S_MODE_RE) {
@@ -284,7 +284,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(9);
             CURRENT_MODE_SM = 3;
         } else if (ENV_CALL_U_MODE_RE) {
@@ -300,8 +300,24 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(8);
+            CURRENT_MODE_SM = 3;
+        } else if (EBREAK_RE) {
+            save_restore_sm = 1;  // Need to save context
+            mpp_sm          = CURRENT_MODE_SM;
+            mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
+            mie_sm          = 0;               // No interruption during exception gestion
+
+            mstatus_new[31]           = save_restore_sm;
+            mstatus_new.range(12, 11) = mpp_sm;
+            mstatus_new[7]            = mpie_sm;
+            mstatus_new[3]            = mie_sm;
+            MSTATUS_WDATA_RM          = mstatus_new;
+
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MTVAL_WDATA_SM = 0;
+            MCAUSE_WDATA_SM.write(3);
             CURRENT_MODE_SM = 3;
         } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;  // Need to save context
@@ -316,7 +332,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(0);
             CURRENT_MODE_SM = 3;
         } else if (ILLEGAL_INSTRUCTION_RE) {
@@ -332,7 +348,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(2);
             CURRENT_MODE_SM = 3;
         } else if (INSTRUCTION_ACCESS_FAULT_RE) {
@@ -348,7 +364,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0 ;
+            MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(1);
             CURRENT_MODE_SM = 3;
         }

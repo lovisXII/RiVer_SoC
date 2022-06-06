@@ -13,10 +13,10 @@ void decod::dec2if_gestion() {
 
 void decod::if2dec_pop_method() {
     if (EXCEPTION_SM.read() == 0) {
-        if (add_offset_to_pc_sd.read() ) {
+        if (add_offset_to_pc_sd.read()) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
-        } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read() ) {
+        } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(0);
         } else {
@@ -47,13 +47,13 @@ void decod::dec2exe_push_method() {
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
-        dec2exe_in_var[217] = instruction_access_fault_sd;  
-        dec2exe_in_var[216] = mret_i_sd;            
+        dec2exe_in_var[218] = ebreak_i_sd;
+        dec2exe_in_var[217] = instruction_access_fault_sd;
+        dec2exe_in_var[216] = mret_i_sd;
         dec2exe_in_var[215] = block_bp_sd;
-        dec2exe_in_var[214] = illegal_instruction_sd || instruction_adress_missaligned_sd ||
-                              env_call_u_mode_sd || env_call_m_mode_sd || env_call_s_mode_sd 
-                              || env_call_wrong_mode || mret_i_sd
-                              || instruction_access_fault_sd ;  // tells if there is an exception
+        dec2exe_in_var[214] = illegal_instruction_sd || instruction_adress_missaligned_sd || env_call_u_mode_sd ||
+                              env_call_m_mode_sd || env_call_s_mode_sd || env_call_wrong_mode || mret_i_sd ||
+                              instruction_access_fault_sd || ebreak_i_sd;  // tells if there is an exception
         dec2exe_in_var[213]            = env_call_wrong_mode.read();
         dec2exe_in_var[212]            = env_call_u_mode_sd.read();
         dec2exe_in_var[211]            = illegal_instruction_sd.read();
@@ -79,16 +79,15 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[16] = mem_load_sd.read();
         dec2exe_in_var[15] = mem_store_sd.read();
 
-        dec2exe_in_var[14]          = mem_sign_extend_sd.read();
+        dec2exe_in_var[14]           = mem_sign_extend_sd.read();
         dec2exe_in_var.range(13, 12) = mem_size_sd.read();
-        dec2exe_in_var.range(11, 8)          = select_type_operations_sd.read();
-        dec2exe_in_var.range(7, 2)  = adr_dest_sd.read();
-        dec2exe_in_var[1]           = slt_i_sd.read() | slti_i_sd.read();
-        dec2exe_in_var[0]           = sltu_i_sd.read() | sltiu_i_sd.read();
+        dec2exe_in_var.range(11, 8)  = select_type_operations_sd.read();
+        dec2exe_in_var.range(7, 2)   = adr_dest_sd.read();
+        dec2exe_in_var[1]            = slt_i_sd.read() | slti_i_sd.read();
+        dec2exe_in_var[0]            = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
-        
-        dec2exe_in_var[217]            = 0;  
-        dec2exe_in_var[216]            = 0;            
+        dec2exe_in_var[217]            = 0;
+        dec2exe_in_var[216]            = 0;
         dec2exe_in_var[215]            = 0;
         dec2exe_in_var[214]            = 0;  // tells if there is an exception
         dec2exe_in_var[213]            = 0;
@@ -127,6 +126,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    EBREAK_RD.write((bool)dec2exe_out_var[218]);
     INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[217]);
     MRET_RD.write((bool)dec2exe_out_var[216]);
     BLOCK_BP_RD.write((bool)dec2exe_out_var[215]);
@@ -406,38 +406,38 @@ void decod::decoding_instruction() {
         sret_i_sd.write(1);
     else
         sret_i_sd.write(0);
-    
+
     // M-type Instructions :
 
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 25) == 0b0000001)
         mul_i_sd.write(1);
     else
         mul_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b001 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b001 && if_ir.range(31, 25) == 0b0000001)
         mulh_i_sd.write(1);
     else
         mulh_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b010 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b010 && if_ir.range(31, 25) == 0b0000001)
         mulhsu_i_sd.write(1);
     else
         mulhsu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b011 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b011 && if_ir.range(31, 25) == 0b0000001)
         mulhu_i_sd.write(1);
     else
         mulhu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b100 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b100 && if_ir.range(31, 25) == 0b0000001)
         div_i_sd.write(1);
     else
         div_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b101 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b101 && if_ir.range(31, 25) == 0b0000001)
         divu_i_sd.write(1);
     else
         divu_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b110 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b110 && if_ir.range(31, 25) == 0b0000001)
         rem_i_sd.write(1);
     else
         rem_i_sd.write(0);
-    if(if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b111 && if_ir.range(31, 25) == 0b0000001)
+    if (if_ir.range(6, 0) == 0b0110011 && if_ir.range(14, 12) == 0b111 && if_ir.range(31, 25) == 0b0000001)
         remu_i_sd.write(1);
     else
         remu_i_sd.write(0);
@@ -452,8 +452,7 @@ void decod::pre_reg_read_decoding() {
     sc_uint<6>  radr2_var;
     sc_uint<6>  adr_dest_var;
 
-   
-    //R-type Instruction :
+    // R-type Instruction :
     if (r_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
@@ -503,8 +502,7 @@ void decod::pre_reg_read_decoding() {
         CSR_RADR_SD.write(0);
     }
     // M-type Instruction :
-    else if(m_type_inst_sd == 1)
-    {
+    else if (m_type_inst_sd == 1) {
         radr1_var    = if_ir.range(19, 15);
         radr2_var    = if_ir.range(24, 20);
         adr_dest_var = if_ir.range(11, 7);
@@ -521,49 +519,43 @@ void decod::pre_reg_read_decoding() {
             radr1_var    = (csrrw_i_sd | csrrs_i_sd | csrrc_i_sd) ? if_ir.range(19, 15) : 0;
             radr2_var    = 0;
             adr_dest_var = if_ir.range(11, 7);
-        } else if (ecall_i_sd || ebreak_i_sd) 
-        {
+        } else if (ecall_i_sd || ebreak_i_sd) {
             radr1_var    = 0;
             radr2_var    = 0;
             adr_dest_var = 0;
 
-            //Generate the exception corresponding to the right 
+            // Generate the exception corresponding to the right
             // call
 
-            if(CURRENT_MODE_SM.read() == 0 && ecall_i_sd){
-                env_call_u_mode_sd = 1 ;
-                env_call_s_mode_sd = 0 ;
-                env_call_m_mode_sd = 0 ;
-            }
-            else if (ecall_i_sd && CURRENT_MODE_SM.read() == 3){
-                env_call_u_mode_sd = 0 ;
-                env_call_s_mode_sd = 0 ;
-                env_call_m_mode_sd = 1 ;
-            }
-            else{
-                cout << "other " << sc_time_stamp() << endl ; 
-                env_call_u_mode_sd = 0 ;
-                env_call_s_mode_sd = 0 ;
-                env_call_m_mode_sd = 0 ;
+            if (CURRENT_MODE_SM.read() == 0 && ecall_i_sd) {
+                env_call_u_mode_sd = 1;
+                env_call_s_mode_sd = 0;
+                env_call_m_mode_sd = 0;
+            } else if (ecall_i_sd && CURRENT_MODE_SM.read() == 3) {
+                env_call_u_mode_sd = 0;
+                env_call_s_mode_sd = 0;
+                env_call_m_mode_sd = 1;
+            } else {
+                cout << "other " << sc_time_stamp() << endl;
+                env_call_u_mode_sd = 0;
+                env_call_s_mode_sd = 0;
+                env_call_m_mode_sd = 0;
             }
 
-
-        }
-        else if(sret_i_sd || mret_i_sd){
+        } else if (sret_i_sd || mret_i_sd) {
             // xRET instruction read the current value of MEPC register
-            radr1_var = 0;
-            radr2_var = 0;
+            radr1_var    = 0;
+            radr2_var    = 0;
             adr_dest_var = 0;
 
             // Exception will be generate in case of mret in wrong mode
 
-            if(mret_i_sd && CURRENT_MODE_SM.read() != 3){
-                env_call_wrong_mode = 1 ;
-            }
-            else if(sret_i_sd && CURRENT_MODE_SM.read() != 2)
-                env_call_s_mode_sd = 1 ;
-            else{
-                env_call_wrong_mode = 0 ;
+            if (mret_i_sd && CURRENT_MODE_SM.read() != 3) {
+                env_call_wrong_mode = 1;
+            } else if (sret_i_sd && CURRENT_MODE_SM.read() != 2)
+                env_call_s_mode_sd = 1;
+            else {
+                env_call_wrong_mode = 0;
             }
         }
     }
@@ -573,14 +565,12 @@ void decod::pre_reg_read_decoding() {
         radr2_var    = 0;
         adr_dest_var = 0;
     }
-    if(!ecall_i_sd){
-        env_call_u_mode_sd = 0 ;
-        env_call_s_mode_sd = 0 ;
-        env_call_m_mode_sd = 0 ;
+    if (!ecall_i_sd) {
+        env_call_u_mode_sd = 0;
+        env_call_s_mode_sd = 0;
+        env_call_m_mode_sd = 0;
     }
-    if(!mret_i_sd | !sret_i_sd){
-        env_call_wrong_mode = 0 ;
-    }
+    if (!mret_i_sd | !sret_i_sd) { env_call_wrong_mode = 0; }
     RADR1_SD.write(radr1_var);
     RADR2_SD.write(radr2_var);
     adr_dest_sd.write(adr_dest_var);
@@ -669,16 +659,15 @@ void decod::post_reg_read_decoding() {
         else
             exe_cmd_sd.write(0);
 
-        if(div_i_sd || divu_i_sd || rem_i_sd || remu_i_sd)
+        if (div_i_sd || divu_i_sd || rem_i_sd || remu_i_sd)
             select_type_operations_sd.write(0b1000);
-        else if(mul_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd)
+        else if (mul_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd)
             select_type_operations_sd.write(0b0100);
-        else if(sll_i_sd || slli_i_sd || srl_i_sd || srli_i_sd || sra_i_sd || srai_i_sd)
+        else if (sll_i_sd || slli_i_sd || srl_i_sd || srli_i_sd || sra_i_sd || srai_i_sd)
             select_type_operations_sd.write(0b0010);
-        else 
+        else
             select_type_operations_sd.write(0b0001);
-    }
-    else if (s_type_inst_sd) {
+    } else if (s_type_inst_sd) {
         csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
         select_type_operations_sd.write(0b0001);
@@ -820,7 +809,6 @@ void decod::post_reg_read_decoding() {
             inc_pc_var                      = 0;
         }
     } else if (system_type_inst_sd == 1) {
-
         mem_load_sd.write(0);
         mem_store_sd.write(0);
         mem_sign_extend_sd.write(0);
@@ -832,7 +820,7 @@ void decod::post_reg_read_decoding() {
         // So CSR must be wbk in rd
         if (csrrw_i_sd || csrrs_i_sd || csrrc_i_sd || csrrwi_i_sd || csrrsi_i_sd || csrrci_i_sd) {
             csr_wenable_sd.write(1);
-            sc_uint<32> rdata1_signal_sd = rdata1_sd;     // loading value of rs1
+            sc_uint<32> rdata1_signal_sd = rdata1_sd;  // loading value of rs1
             if (csrrc_i_sd || csrrci_i_sd) {
                 exe_neg_op2_sd.write(0);
                 exe_cmd_sd.write(1);
@@ -846,30 +834,26 @@ void decod::post_reg_read_decoding() {
 
             // We put rdata1 or immediat value in rs1
 
-            if(csrrw_i_sd | csrrc_i_sd | csrrs_i_sd){
-                if(!csrrc_i_sd)
-                    dec2exe_op1_var = rdata1_sd ;
-                else    
-                    dec2exe_op1_var = ~rdata1_sd.read() ;
-            }
-            else{
-                if(!csrrci_i_sd)
-                    dec2exe_op1_var = if_ir.range(19,15) ;
+            if (csrrw_i_sd | csrrc_i_sd | csrrs_i_sd) {
+                if (!csrrc_i_sd)
+                    dec2exe_op1_var = rdata1_sd;
                 else
-                    dec2exe_op1_var = ~if_ir.range(19,15) ;
+                    dec2exe_op1_var = ~rdata1_sd.read();
+            } else {
+                if (!csrrci_i_sd)
+                    dec2exe_op1_var = if_ir.range(19, 15);
+                else
+                    dec2exe_op1_var = ~if_ir.range(19, 15);
             }
 
             // We put CSR value or 0 inside rs2
-            // If instruction are write one, the value of rs1 just 
-            // erase what's inside the csr 
-            if (csrrs_i_sd || csrrc_i_sd || csrrsi_i_sd || csrrci_i_sd) 
-            {
-                dec2exe_op2_var = CSR_RDATA_SC ;
-            } 
-            else{
-                dec2exe_op2_var = 0 ;
+            // If instruction are write one, the value of rs1 just
+            // erase what's inside the csr
+            if (csrrs_i_sd || csrrc_i_sd || csrrsi_i_sd || csrrci_i_sd) {
+                dec2exe_op2_var = CSR_RDATA_SC;
+            } else {
+                dec2exe_op2_var = 0;
             }
-
 
             dec2exe_wb_var    = 1;
             offset_branch_var = 0;
@@ -890,8 +874,7 @@ void decod::post_reg_read_decoding() {
             offset_branch_var = 0;
             mem_data_var      = 0;
             inc_pc_var        = 1;
-        }
-        else if(sret_i_sd || mret_i_sd){
+        } else if (sret_i_sd || mret_i_sd) {
             csr_wenable_sd.write(0);
             exe_cmd_sd.write(0);
             dec2exe_op1_var = 0;
@@ -903,12 +886,11 @@ void decod::post_reg_read_decoding() {
             mem_sign_extend_sd.write(0);
             mem_size_sd.write(0);
             select_type_operations_sd.write(1);
-            offset_branch_var = 0; 
+            offset_branch_var = 0;
             mem_data_var      = 0;
             inc_pc_var        = 0;
         }
-    }
-    else if (fence_i_sd) {
+    } else if (fence_i_sd) {
         csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
@@ -923,8 +905,7 @@ void decod::post_reg_read_decoding() {
         offset_branch_var = 0;
         mem_data_var      = 0;
         inc_pc_var        = 1;
-    }    
-    else {
+    } else {
         csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
         dec2exe_op1_var = 0;
@@ -961,8 +942,10 @@ void decod::post_reg_read_decoding() {
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
-    inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM );
-    add_offset_to_pc_sd.write((!stall && !inc_pc_var &&( b_type_inst_sd || j_type_inst_sd || jalr_type_inst_sd ) && dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) && ! EXCEPTION_SM);
+    inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
+    add_offset_to_pc_sd.write((!stall && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd || jalr_type_inst_sd) &&
+                               dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
+                              !EXCEPTION_SM);
 }
 
 //---------------------------------------------PC GESTION
@@ -986,44 +969,41 @@ void decod::pc_inc() {
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
-            dec2if_in_sd.write(pc_out);
-            WRITE_PC_SD.write(pc_out);
-        if(pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3){
-            instruction_access_fault_sd = 1 ;
-        }
-        else{
+        dec2if_in_sd.write(pc_out);
+        WRITE_PC_SD.write(pc_out);
+        if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+            instruction_access_fault_sd = 1;
+        } else {
             instruction_access_fault_sd = 0;
         }
-    } 
-    if(EXCEPTION_SM.read() == 1) {
-        if(!MRET_SM){
+    }
+    if (EXCEPTION_SM.read() == 1) {
+        if (!MRET_SM) {
             // Need to check MTVEC value, bits 1,0 indicate :
             // =0 -> direct type, so pc just get value of mtvec.range(31,2)
             // =1 -> vectorise, so pc get value of mtvec.range(31,2) + 4*mcause
-            sc_uint<32> dec2if_var ;
-            sc_uint<32> WRITE_PC_VAR ;
-            sc_uint<32> MTVEC_VALUE_VAR ;
-            
-            MTVEC_VALUE_VAR.range(31,2) = MTVEC_VALUE_RC.read().range(31,2) ;
-            MTVEC_VALUE_VAR.range(1,0)  = 0 ;
-            
-            if(MTVEC_VALUE_RC.read().range(1,0) == 0){//direct
-                dec2if_in_sd  = MTVEC_VALUE_VAR ;
-                WRITE_PC_SD = MTVEC_VALUE_VAR ;
+            sc_uint<32> dec2if_var;
+            sc_uint<32> WRITE_PC_VAR;
+            sc_uint<32> MTVEC_VALUE_VAR;
+
+            MTVEC_VALUE_VAR.range(31, 2) = MTVEC_VALUE_RC.read().range(31, 2);
+            MTVEC_VALUE_VAR.range(1, 0)  = 0;
+
+            if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
+                dec2if_in_sd = MTVEC_VALUE_VAR;
+                WRITE_PC_SD  = MTVEC_VALUE_VAR;
                 WRITE_PC_ENABLE_SD.write(1);
-            }
-            else if(MTVEC_VALUE_RC.read().range(1,0) == 1){//vectorise
-                sc_uint<32> MCAUSE_VAR ;
+            } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
+                sc_uint<32> MCAUSE_VAR;
                 // MCAUSE * 4 :
-                MCAUSE_VAR.range(31,2)  = MCAUSE_WDATA_SM.read().range(29,0) ;
-                MCAUSE_VAR.range(1,0)   = 0 ;
+                MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM.read().range(29, 0);
+                MCAUSE_VAR.range(1, 0)  = 0;
                 dec2if_in_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
-                WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR) ;
+                WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_ENABLE_SD.write(1);
             }
 
-        }
-        else{
+        } else {
             dec2if_in_sd.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
@@ -1116,13 +1096,13 @@ void decod::trace(sc_trace_file* tf) {
 
     // Interface with EXE :
 
-    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));                    // value of op1
-    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));                    // value of op2
-    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));            // value of the command sent to exe
-    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));            // say if we take the opposite of the op1 to do a
-                                                               // substraction for example
-    sc_trace(tf, WB_RD, GET_NAME(WB_RD));                      // say if we plan to wbk the value of rd or no
-    sc_trace(tf, EXE_DEST_SD, GET_NAME(EXE_DEST_SD));          // the destination register
+    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));            // value of op1
+    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));            // value of op2
+    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));    // value of the command sent to exe
+    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));    // say if we take the opposite of the op1 to do a
+                                                       // substraction for example
+    sc_trace(tf, WB_RD, GET_NAME(WB_RD));              // say if we plan to wbk the value of rd or no
+    sc_trace(tf, EXE_DEST_SD, GET_NAME(EXE_DEST_SD));  // the destination register
     sc_trace(tf, SELECT_TYPE_OPERATIONS_RD, GET_NAME(SELECT_TYPE_OPERATIONS_RD));  // taille fifo entrée : 110
     sc_trace(tf, SLT_RD, GET_NAME(SLT_RD));
     sc_trace(tf, SLTU_RD, GET_NAME(SLTU_RD));
@@ -1312,7 +1292,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, ecall_i_sd, GET_NAME(ecall_i_sd));
     sc_trace(tf, ebreak_i_sd, GET_NAME(ebreak_i_sd));
     sc_trace(tf, illegal_instruction_sd, GET_NAME(illegal_instruction_sd));  // instruction doesnt exist
-    sc_trace(tf, instruction_adress_missaligned_sd, GET_NAME(instruction_adress_missaligned_sd));    // branch offset is misaligned
+    sc_trace(tf,
+             instruction_adress_missaligned_sd,
+             GET_NAME(instruction_adress_missaligned_sd));  // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd, GET_NAME(env_call_m_mode_sd));
     sc_trace(tf, env_call_s_mode_sd, GET_NAME(env_call_s_mode_sd));
     sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));

@@ -7,7 +7,7 @@
 #include "alu.h"
 #include "shifter.h"
 
-#define exe2mem_size        166
+#define exe2mem_size        167
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(exec) {
@@ -31,10 +31,10 @@ SC_MODULE(exec) {
     sc_in<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
 
-    sc_in<bool>        EXE2MEM_POP_SM;
+    sc_in<bool> EXE2MEM_POP_SM;
 
-    sc_in<bool>        DEC2EXE_EMPTY_SD;
-    sc_in<bool>        SLT_RD, SLTU_RD;
+    sc_in<bool> DEC2EXE_EMPTY_SD;
+    sc_in<bool> SLT_RD, SLTU_RD;
 
     sc_in<bool>        CSR_WENABLE_RD;
     sc_in<sc_uint<12>> CSR_WADR_RD;
@@ -42,40 +42,40 @@ SC_MODULE(exec) {
 
     // Exception coming from Decod :
 
-    sc_in<bool> EXCEPTION_RD;  // tells if an instruction have been made in DEC
-    sc_in<sc_uint<2>> CURRENT_MODE_SM ;
+    sc_in<bool>       EXCEPTION_RD;  // tells if an instruction have been made in DEC
+    sc_in<sc_uint<2>> CURRENT_MODE_SM;
 
     sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_in<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
     sc_in<bool> ENV_CALL_U_MODE_RD;
     sc_in<bool> ENV_CALL_M_MODE_RD;
     sc_in<bool> ENV_CALL_S_MODE_RD;
-    sc_in<bool> ENV_CALL_WRONG_MODE_RD ;
+    sc_in<bool> ENV_CALL_WRONG_MODE_RD;
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RD;
     sc_in<bool> MRET_RD;
-
+    sc_in<bool> EBREAK_RD;
 
     sc_out<bool> EXCEPTION_RE;
-    sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE;   // adress from store/load isn't aligned
-    sc_out<bool> LOAD_ACCESS_FAULT_RE;  // trying to access memory in wrong mode
+    sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE;  // adress from store/load isn't aligned
+    sc_out<bool> LOAD_ACCESS_FAULT_RE;        // trying to access memory in wrong mode
     sc_out<bool> STORE_ADRESS_MISSALIGNED_RE;
     sc_out<bool> STORE_ACCESS_FAULT_RE;
-    sc_out<bool> ILLEGAL_INSTRUCTION_RE;  // accessing stuff in wrong mode
-    sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;   // branch offset is misaligned
+    sc_out<bool> ILLEGAL_INSTRUCTION_RE;             // accessing stuff in wrong mode
+    sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
     sc_out<bool> ENV_CALL_S_MODE_RE;
     sc_out<bool> ENV_CALL_M_MODE_RE;
     sc_out<bool> ENV_CALL_U_MODE_RE;
     sc_out<bool> ENV_CALL_WRONG_MODE_RE;
     sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE;
-    sc_out<bool> MRET_RE ;
-    
+    sc_out<bool> MRET_RE;
+    sc_out<bool> EBREAK_RE;
 
     // Interruption :
 
-    sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE ;
-    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE ;
-    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE ;
-    sc_out<bool> INTERRUPTION_SE ;
+    sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE;
+    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE;
+    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
+    sc_out<bool> INTERRUPTION_SE;
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM;
@@ -88,10 +88,10 @@ SC_MODULE(exec) {
     sc_in<bool> EXCEPTION_SM;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
-    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX ;
-    sc_in<bool> MACHINE_TIMER_INTERRUPT_SX ;
-    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SX ;
-    
+    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
+    sc_in<bool> MACHINE_TIMER_INTERRUPT_SX;
+    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SX;
+
     // Fifo exe2mem interface :
 
     sc_out<sc_uint<32>> EXE_RES_RE;
@@ -102,8 +102,8 @@ SC_MODULE(exec) {
 
     sc_out<bool> WB_RE, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
-    sc_out<bool> MEM_MULT_RE;      // multiplication instruction
-    sc_out<bool> MULT_SEL_HIGH_RE; // select higher bits of multiplication
+    sc_out<bool> MEM_MULT_RE;       // multiplication instruction
+    sc_out<bool> MULT_SEL_HIGH_RE;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
 
@@ -117,7 +117,6 @@ SC_MODULE(exec) {
 
     sc_signal<sc_bv<exe2mem_size>> exe2mem_din_se;  // concatenation of exe_res, mem_data...etc
     sc_signal<sc_bv<exe2mem_size>> exe2mem_dout_se;
-
 
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
@@ -139,15 +138,15 @@ SC_MODULE(exec) {
     // Exception :
 
     sc_signal<bool> exception_se;
-    sc_signal<bool> load_adress_missaligned_se;   // adress from store/load isn't aligned
-    sc_signal<bool> load_access_fault_se;  // trying to access memory in wrong mode
-    sc_signal<bool> store_access_fault_se ;
-    sc_signal<bool> store_adress_missaligned_se ;
+    sc_signal<bool> load_adress_missaligned_se;  // adress from store/load isn't aligned
+    sc_signal<bool> load_access_fault_se;        // trying to access memory in wrong mode
+    sc_signal<bool> store_access_fault_se;
+    sc_signal<bool> store_adress_missaligned_se;
     // Instance used :
 
-    alu                alu_inst;
-    shifter            shifter_inst;
-    //divider          divider_inst;
+    alu     alu_inst;
+    shifter shifter_inst;
+    // divider          divider_inst;
     fifo<exe2mem_size> fifo_inst;
 
     void preprocess_op();    // send op2 or ~op2 in ALU_IN_OP2
@@ -160,12 +159,11 @@ SC_MODULE(exec) {
     void exception();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(exec) : 
-    alu_inst("alu"), 
-    shifter_inst("shifter"),
-    //divider_inst("divider"),
-    fifo_inst("exe2mem")
-    {
+    SC_CTOR(exec)
+        : alu_inst("alu"),
+          shifter_inst("shifter"),
+          // divider_inst("divider"),
+          fifo_inst("exe2mem") {
         // ALU port map :
 
         alu_inst.OP1_SE(op1_se);
@@ -181,7 +179,7 @@ SC_MODULE(exec) {
         shifter_inst.CMD_SE(CMD_RD);
         shifter_inst.DOUT_SE(shifter_out_se);
 
-        //DIVIDER port map :
+        // DIVIDER port map :
 
         /*divider_inst.OP1_SE(op1_se);
         divider_inst.OP2_SE(alu_in_op2_se);
@@ -203,67 +201,25 @@ SC_MODULE(exec) {
         SC_METHOD(preprocess_op);
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se 
-                  << divider_out_se 
-                  << shifter_out_se 
-                  << SLT_RD 
-                  << SLTU_RD
-                  << SELECT_TYPE_OPERATIONS_RD 
-                  << CURRENT_MODE_SM
-                  << MEM_LOAD_RD
-                  << MEM_STORE_RD
-                  << exception_se 
-                  << RESET ;
+        sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD << SLTU_RD << SELECT_TYPE_OPERATIONS_RD
+                  << CURRENT_MODE_SM << MEM_LOAD_RD << MEM_STORE_RD << exception_se << RESET;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd 
-                  << DEST_RD 
-                  << MEM_SIZE_RD 
-                  << MEM_LOAD_RD 
-                  << MEM_SIGN_EXTEND_RD 
-                  << MEM_STORE_RD
-                  << WB_RD 
-                  << exe_res_se 
-                  << mem_load_re 
-                  << mem_store_re 
-                  << wb_re 
-                  << CSR_WENABLE_RD 
-                  << CSR_WADR_RD
-                  << CSR_RDATA_RD 
-                  << ILLEGAL_INSTRUCTION_RD 
-                  << ADRESS_MISSALIGNED_RD
-                  << ENV_CALL_U_MODE_RD 
-                  << ENV_CALL_M_MODE_RD 
-                  << exception_se 
-                  << load_adress_missaligned_se
-                  << load_access_fault_se 
-                  << store_access_fault_se
-                  << store_adress_missaligned_se
-                  << EXCEPTION_SM 
-                  << MRET_RD 
-                  << INSTRUCTION_ACCESS_FAULT_RD ;
+        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
+                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
+                  << CSR_RDATA_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD << ENV_CALL_U_MODE_RD
+                  << ENV_CALL_M_MODE_RD << exception_se << load_adress_missaligned_se << load_access_fault_se
+                  << store_access_fault_se << store_adress_missaligned_se << EXCEPTION_SM << MRET_RD
+                  << INSTRUCTION_ACCESS_FAULT_RD;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
-        SC_METHOD(manage_fifo); 
+        SC_METHOD(manage_fifo);
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD << OP2_VALID_RD 
-                << MEM_DEST_RM << MEM_RES_RM << DEST_RE 
-                << EXE_RES_RE << RADR1_RD<< CSR_WENABLE_RE
-                <<BLOCK_BP_RD<<DEST_RE << MEM_LOAD_RE 
-                << CSR_WENABLE_RM << CSR_RDATA_RM
-                  << RADR2_RD << OP1_RD << OP2_RD 
-                  << exception_se << MEM_DATA_RD
-                  << MEM_STORE_RD;
+        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
+                  << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
+                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD;
         SC_METHOD(exception);
-        sensitive << WB_RD 
-                  << MEM_LOAD_RD 
-                  << MEM_STORE_RD 
-                  << WB_RD 
-                  << EXCEPTION_RD
-                  << load_adress_missaligned_se 
-                  << exception_se 
-                  << load_access_fault_se
-                  << store_access_fault_se
-                  << store_adress_missaligned_se ;
+        sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD << load_adress_missaligned_se
+                  << exception_se << load_access_fault_se << store_access_fault_se << store_adress_missaligned_se;
     }
 };
