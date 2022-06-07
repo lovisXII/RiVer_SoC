@@ -3,6 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
+library std; 
+use std.textio.all;
+
+
 entity tb_core is 
 end tb_core;
 
@@ -30,7 +34,34 @@ signal ADR_VALID_SI : std_logic;
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
 
+-- file
+signal eof : std_logic := '0';
+file program : text;
+constant filename : string := "../../CORE/a.out.txt";
+
+
 begin 
+
+process 
+begin 
+
+read_file : process 
+variable fstatus : file_open_status; 
+variable file_line : line; 
+variable var_instr : std_logic_vector(31 downto 0); 
+variable end_of_line : boolean; 
+
+begin 
+    file_open(fstatus, program, filename, read_mode);
+    wait until reset_n = '1'; 
+    while not endfile(program) loop 
+        wait until clk = '1'; 
+        hreadline(program, inline); 
+        read(inline, char, end_of_line);
+    end loop;
+    wait;
+end process; 
+            
 
 core0 : entity work.core 
     port map(

@@ -33,11 +33,23 @@ architecture archi of ifetch is
 signal if2dec_push_si, if2dec_full_si : std_logic;
 signal stall : std_logic;
 
+component fifo_64b
+    port(
+        clk     : in    std_logic; 
+        reset_n : in    std_logic; 
+        DIN     : in    std_logic_vector(63 downto 0);
+        PUSH    : in    std_logic;
+        POP     : in    std_logic;
+        FULL    : out   std_logic;
+        EMPTY   : out   std_logic;
+        DOUT    : out   std_logic_vector(63 downto 0)
+    );
+end component;
+
 begin 
 
 -- Instanciation 
-if2dec : entity work.fifo
-    generic map(N => 64)
+if2dec : fifo_64b
     port map(
         clk => clk,
         reset_n => reset_n,
