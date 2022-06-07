@@ -8,7 +8,7 @@ void wbk::wbk_method() {
     // if CSR operation we WBK the value of CSR in rd
     if (CSR_WENABLE_RM)
         WDATA_SW.write(CSR_RDATA_RM);
-    if (MULT_INST_RM)
+    else if (MULT_INST_RM)
         WDATA_SW.write(X2_RES_RX2);
     else
         WDATA_SW.write(MEM_RES_RM);
