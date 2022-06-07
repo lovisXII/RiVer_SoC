@@ -46,11 +46,25 @@ signal load_byte, load_halfword, load_word : std_logic_vector(31 downto 0);
 
 signal data : std_logic_vector(31 downto 0);
 
+
+component fifo_43b
+    port(
+        clk     : in    std_logic; 
+        reset_n : in    std_logic; 
+        DIN     : in    std_logic_vector(42 downto 0);
+        PUSH    : in    std_logic;
+        POP     : in    std_logic;
+        FULL    : out   std_logic;
+        EMPTY   : out   std_logic;
+        DOUT    : out   std_logic_vector(42 downto 0)
+);
+end component;
+
+
 begin
 
 -- Intanciation 
-mem2wbk : entity work.fifo
-    generic map(N => 43)
+mem2wbk : fifo_43b
     port map(
         clk => clk,
         reset_n => reset_n,

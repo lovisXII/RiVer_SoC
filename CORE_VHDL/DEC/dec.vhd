@@ -106,13 +106,38 @@ signal r1_valid_sd, r2_valid_sd : std_logic;
 signal mem_load_fifo : std_logic;
 signal dec2exe_empty : std_logic;
 
+component fifo_32b
+    port(
+        clk     : in    std_logic; 
+        reset_n : in    std_logic; 
+        DIN     : in    std_logic_vector(31 downto 0);
+        PUSH    : in    std_logic;
+        POP     : in    std_logic;
+        FULL    : out   std_logic;
+        EMPTY   : out   std_logic;
+        DOUT    : out   std_logic_vector(31 downto 0)
+    );
+end component;
+
+component fifo_128b
+    port(
+        clk     : in    std_logic; 
+        reset_n : in    std_logic; 
+        DIN     : in    std_logic_vector(127 downto 0);
+        PUSH    : in    std_logic;
+        POP     : in    std_logic;
+        FULL    : out   std_logic;
+        EMPTY   : out   std_logic;
+        DOUT    : out   std_logic_vector(127 downto 0)
+    );
+end component;
+
 begin 
 
 -------------------------
 -- Instanciation 
 -------------------------
-dec2if : entity work.fifo 
-    generic map(N => 32)
+dec2if : fifo_32b 
     port map(
         clk => clk, 
         reset_n => reset_n,
@@ -124,8 +149,7 @@ dec2if : entity work.fifo
         DOUT => dec2if_dout
     );
 
-dec2exe : entity work.fifo 
-    generic map(N => 128)
+dec2exe : fifo_128b
     port map(
         clk => clk, 
         reset_n => reset_n, 
@@ -325,10 +349,10 @@ add_offset_to_pc_sd <= not stall and not inc_pc and dec2if_push_sd and not inval
 process(READ_PC_SR, add_offset_to_pc_sd, inc_pc_sd)
 begin 
     if inc_pc_sd = '1' then 
-        pc <= READ_PC_SR + 4; 
+        pc <= std_logic_vector(signed(READ_PC_SR) + signed(x"00000004")); 
         WRITE_PC_ENABLE_SD <= '1'; 
     elsif inc_pc_sd = '0' and add_offset_to_pc_sd = '1' then 
-        pc <= READ_PC_SR - 4;
+        pc <= std_logic_vector(signed(READ_PC_SR) - signed(x"00000004"));
         WRITE_PC_ENABLE_SD <= '1'; 
     else 
     pc <= READ_PC_SR;
