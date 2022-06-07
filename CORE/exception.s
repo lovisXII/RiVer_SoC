@@ -2,9 +2,9 @@
 .global _good
 .global _bad
 .global _exception_occur
-_good :
-    nop
 _bad :
+    nop
+_good :
     nop
 _exception_occur :
     nop

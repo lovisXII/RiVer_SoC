@@ -12,12 +12,17 @@ void icache::parse_adr()
 void icache::miss_detection()
 {
     // COMPARE HIT WAY0
-    if(address_tag == tag[address_index.read()])
+    if(address_tag == tag[address_index.read()] && data_validate[address_index.read()])
     {   
-        hit = data_validate[address_index.read()];        
+        hit = true;       
+        IC_STALL_SI.write(false); 
+        IC_INST_SI.write(data[address_index.read()][(address_offset.read()/4)]);
     }
-    else
+    else{
         hit = false;
+        IC_STALL_SI.write(true);
+    
+    }
 
 }
 
@@ -35,7 +40,8 @@ void icache::transition()
 
     int cpt = 0;
     bool dta_valid;
-    
+    sc_uint<8> current_address_index;
+    sc_uint<20>  current_address_tag;
     bool adr_valid;
 
     bool debug = true;
@@ -48,24 +54,16 @@ void icache::transition()
             case IDLE:
                 if(ADR_VALID_SI.read() & RESET_N.read())
                 {
-                    if(hit)
-                    {
-                        IC_INST_SI.write(data[address_index.read()][(address_offset.read()/4)]);
-                        IC_STALL_SI.write(false);
-                    }
-                    else
+                    if(!hit)
                     {
                         fsm_current_state = WAIT_MEM;
                         A.write(ADR_SI.read() & 0xFFFFFFF0);
+                        current_address_index = address_index;
+                        current_address_tag = address_tag;
                         dta_valid = true;
-                        IC_STALL_SI.write(true);
                         cpt = 0;
                         
                     }
-                }
-                else
-                {
-                    IC_STALL_SI.write(false);
                 }
                 break;
             case WAIT_MEM:
@@ -73,26 +71,22 @@ void icache::transition()
                 {
                     fsm_current_state = UPDT;
 
-                    data[address_index.read()][cpt++] = DT.read();
-                    tag[address_index.read()] = address_tag.read();
-                    data_validate[address_index.read()] = true;
+                    data[current_address_index][cpt++] = DT.read();
+                    tag[current_address_index] = current_address_tag;
+                    data_validate[current_address_index] = false;
+                    
 
                 }
-                IC_STALL_SI.write(true);
             break;
             case UPDT:
                 if(!SLAVE_ACK_SP.read())
                 {
                     fsm_current_state = IDLE;
-
-                    IC_INST_SI.write(data[address_index.read()][(address_offset.read()/4)]);
-
-                    IC_STALL_SI.write(false);
+                    data_validate[current_address_index] = true;
                 }
                 else
                 {
-                    data[address_index.read()][cpt++] = DT.read();
-                    IC_STALL_SI.write(true);
+                    data[current_address_index][cpt++] = DT.read();
                 }
             break;
             default:
