@@ -54,10 +54,42 @@ signal slt_res, sltu_res : std_logic_vector(31 downto 0);
 
 signal blocked : std_logic;
 signal bp_mem_data : std_logic_vector(31 downto 0);
+
+component alu
+    port(
+        OP1_SE, OP2_SE : in std_logic_vector(31 downto 0);
+        CIN_SE : in std_logic;
+        CMD_SE : in std_logic_vector(1 downto 0);
+        RES_SE : out std_logic_vector(31 downto 0)
+    );
+end component; 
+
+component shifter 
+    port(
+        DIN_SE : in std_logic_vector(31 downto 0);
+        SHIFT_VAL_SE : in std_logic_vector(4 downto 0);
+        CMD_SE : in std_logic_vector(1 downto 0);
+        DOUT_SE : out std_logic_vector(31 downto 0)
+    );
+end component; 
+
+component fifo_76b
+    port(
+        clk     : in    std_logic; 
+        reset_n : in    std_logic; 
+        DIN     : in    std_logic_vector(75 downto 0);
+        PUSH    : in    std_logic;
+        POP     : in    std_logic;
+        FULL    : out   std_logic;
+        EMPTY   : out   std_logic;
+        DOUT    : out   std_logic_vector(75 downto 0)
+);
+end component;
+
 begin 
 
 --  Instances
-alu_i : entity work.alu 
+alu_i : alu
     port map(
         OP1_SE => op1,
         OP2_SE => alu_op2,
@@ -66,7 +98,7 @@ alu_i : entity work.alu
         RES_SE => alu_res 
     );
 
-shifter_i : entity work.shifter
+shifter_i : shifter
     port map(
         DIN_SE => OP1, 
         SHIFT_VAL_SE => OP2(4 downto 0),
@@ -74,8 +106,7 @@ shifter_i : entity work.shifter
         DOUT_SE => shifter_res
     );
 
-exe2mem : entity work.fifo 
-    generic map(N => 76)
+exe2mem : fifo_76b 
     port map(
         clk => clk,
         reset_n => reset_n,

@@ -261,13 +261,12 @@ SC_MODULE(decod) {
     // PC gestion :
 
     sc_signal<bool> inc_pc_sd;
-    sc_signal<bool> add_offset_to_pc_sd;
+    sc_signal<bool> jump_sd;
 
     // Pipeline Gestion
 
     
     sc_signal<bool>        stall_sd;
-    sc_signal<bool>        discard_sd;
     sc_signal<bool>        normal_sd;
     // Internal signals :
 
@@ -306,11 +305,8 @@ SC_MODULE(decod) {
     sc_signal<bool> env_call_m_mode_sd;
     sc_signal<bool> env_call_wrong_mode;
 
-    void dec2if_gestion();
     void concat_dec2exe();
     void unconcat_dec2exe();
-    void dec2exe_push_method();
-    void if2dec_pop_method();
     void decoding_instruction_type();
     void decoding_instruction();
     void pre_reg_read_decoding();
@@ -339,11 +335,6 @@ SC_MODULE(decod) {
         dec2exe.CLK(CLK);
         dec2exe.RESET_N(RESET_N);
 
-        SC_METHOD(dec2if_gestion)
-        sensitive
-
-            << dec2if_empty_sd << dec2if_full_sd << stall_sd << MRET_SM;
-
         SC_METHOD(concat_dec2exe)
         sensitive << dec2exe_in_sd << exe_op1_sd << exe_op2_sd << exe_cmd_sd << exe_neg_op2_sd << exe_wb_sd
 
@@ -363,19 +354,23 @@ SC_MODULE(decod) {
                   << mul_i_sd << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
-        SC_METHOD(dec2exe_push_method)
-        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall_sd << EXCEPTION_SM;
-
-        SC_METHOD(if2dec_pop_method)
-        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall_sd << EXCEPTION_SM << MRET_SM
-                  << MTVEC_VALUE_RC;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
-                  << csr_wenable_sd << DEC2EXE_EMPTY_SD << CSR_WENABLE_RD << CSR_WENABLE_RE << BP_EXE2MEM_EMPTY_SE
-                  << csr_in_progress
-
-                  << block_in_dec << csr_in_progress;
+        sensitive   << b_type_inst_sd 
+                    << jalr_type_inst_sd 
+                    << j_type_inst_sd 
+                    << r1_valid_sd 
+                    << r2_valid_sd
+                    << csr_wenable_sd 
+                    << DEC2EXE_EMPTY_SD 
+                    << CSR_WENABLE_RD 
+                    << CSR_WENABLE_RE 
+                    << BP_EXE2MEM_EMPTY_SE
+                    << csr_in_progress
+                    << block_in_dec 
+                    << IF2DEC_EMPTY_SI
+                    << dec2exe_full_sd
+                    << csr_in_progress;
 
         SC_METHOD(decoding_instruction_type)
         sensitive << INSTR_RI << READ_PC_SR;
@@ -418,8 +413,19 @@ SC_MODULE(decod) {
                   << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd << sret_i_sd
                   << CSR_RDATA_SC;
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << add_offset_to_pc_sd << MTVEC_VALUE_RC
-                  << EXCEPTION_SM << PC_IF2DEC_RI << MRET_SM << MCAUSE_WDATA_SM;
+        sensitive   << CLK.pos() 
+                    << READ_PC_SR 
+                    << offset_branch_sd 
+                    << inc_pc_sd 
+                    << jump_sd 
+                    << MTVEC_VALUE_RC
+                    << EXCEPTION_SM 
+                    << PC_IF2DEC_RI 
+                    << MRET_SM 
+                    << dec2if_full_sd
+                    << IF2DEC_EMPTY_SI
+                    << MCAUSE_WDATA_SM
+                    << stall_sd;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD

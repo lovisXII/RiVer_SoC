@@ -1,48 +1,8 @@
 #include "dec.h"
 
-// ---------------------------------------------METHODS FOR DEC2IF GESTION
+
+// ---------------------------------------------DECODING INSTRUCTION
 // :---------------------------------------------
-
-void decod::dec2if_gestion() {
-    dec2if_push_sd.write(!dec2if_full_sd);
-    DEC2IF_EMPTY_SD.write(dec2if_empty_sd.read());
-}
-
-// ---------------------------------------------METHODS FOR IF2DEC GESTION
-// :---------------------------------------------
-
-void decod::if2dec_pop_method() {
-    if (EXCEPTION_SM.read() == 0) {
-        if (add_offset_to_pc_sd.read()) {
-            IF2DEC_POP_SD.write(1);
-            IF2DEC_FLUSH_SD.write(1);
-        } else if (!stall_sd && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
-            IF2DEC_POP_SD.write(1);
-            IF2DEC_FLUSH_SD.write(0);
-        } else {
-            IF2DEC_POP_SD.write(0);
-            IF2DEC_FLUSH_SD.write(0);
-        }
-    } else {
-        IF2DEC_POP_SD.write(1);
-        IF2DEC_FLUSH_SD.write(0);
-    }
-}
-
-// ---------------------------------------------METHODS FOR DEC2EXE GESTION
-// :---------------------------------------------
-
-void decod::dec2exe_push_method() {
-    if (EXCEPTION_SM.read() == 0) {
-        if (stall_sd || dec2exe_full_sd.read() || IF2DEC_EMPTY_SI.read()) {
-            dec2exe_push_sd.write(0);
-        } else {
-            dec2exe_push_sd.write(1);
-        }
-    } else {
-        dec2exe_push_sd.write(1);
-    }
-}
 
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
@@ -594,7 +554,7 @@ void decod::post_reg_read_decoding() {
     sc_uint<32> if_ir = INSTR_RI.read();
     sc_uint<32> mem_data_var;
     sc_uint<32> offset_branch_var;
-    bool        inc_pc_var;
+    bool        not_jump_var;
     bool        illegal_inst = false;
 
     // R-type Instruction :
@@ -648,7 +608,7 @@ void decod::post_reg_read_decoding() {
         dec2exe_wb_var    = 1;
         mem_data_var      = 0;
         offset_branch_var = 0;
-        inc_pc_var        = 1;
+        not_jump_var        = 1;
 
         // sub
         exe_neg_op2_sd.write(sub_i_sd | slt_i_sd | slti_i_sd | sltu_i_sd | sltiu_i_sd);
@@ -678,7 +638,7 @@ void decod::post_reg_read_decoding() {
         exe_neg_op2_sd.write(0);
         mem_load_sd.write(0);
         offset_branch_var = 0;
-        inc_pc_var        = 1;
+        not_jump_var        = 1;
         dec2exe_op1_var   = rdata1_sd.read();
 
         // The adress is obtained by adding rs1 to the 12 bit immediat sign
@@ -767,7 +727,7 @@ void decod::post_reg_read_decoding() {
             else
                 branch = !res_comparaison[31];  // branch if the result is positive
         }
-        inc_pc_var = !branch;
+        not_jump_var = !branch;
     }
 
     else if (jalr_type_inst_sd.read() || j_type_inst_sd.read()) {
@@ -794,7 +754,7 @@ void decod::post_reg_read_decoding() {
             offset_branch_var += rdata1_sd.read() - READ_PC_SR.read() + 4;
             offset_branch_var.range(0, 0) = 0;
             mem_data_var                  = 0;
-            inc_pc_var                    = 0;
+            not_jump_var                    = 0;
         } else {
             dec2exe_op1_var = READ_PC_SR.read();
             dec2exe_op2_var = 0x0;  // on va envoyer l'adresse de retour
@@ -810,7 +770,7 @@ void decod::post_reg_read_decoding() {
             offset_branch_var.range(10, 1)  = if_ir.range(30, 21);
             offset_branch_var.range(0, 0)   = 0;
             mem_data_var                    = 0;
-            inc_pc_var                      = 0;
+            not_jump_var                      = 0;
         }
     } else if (system_type_inst_sd == 1) {
         mem_load_sd.write(0);
@@ -862,7 +822,7 @@ void decod::post_reg_read_decoding() {
             dec2exe_wb_var    = 1;
             offset_branch_var = 0;
             mem_data_var      = 0;
-            inc_pc_var        = 1;
+            not_jump_var        = 1;
 
         } else if (ecall_i_sd || ebreak_i_sd) {
             csr_wenable_sd.write(0);
@@ -877,7 +837,7 @@ void decod::post_reg_read_decoding() {
             mem_size_sd.write(0);
             offset_branch_var = 0;
             mem_data_var      = 0;
-            inc_pc_var        = 1;
+            not_jump_var        = 1;
         } else if (sret_i_sd || mret_i_sd) {
             csr_wenable_sd.write(0);
             exe_cmd_sd.write(0);
@@ -892,7 +852,7 @@ void decod::post_reg_read_decoding() {
             select_type_operations_sd.write(1);
             offset_branch_var = 0;
             mem_data_var      = 0;
-            inc_pc_var        = 0;
+            not_jump_var      = 1;
         }
     } else if (fence_i_sd) {
         csr_wenable_sd.write(0);
@@ -908,7 +868,7 @@ void decod::post_reg_read_decoding() {
         select_type_operations_sd.write(0b0001);
         offset_branch_var = 0;
         mem_data_var      = 0;
-        inc_pc_var        = 1;
+        not_jump_var        = 1;
     } else {
         csr_wenable_sd.write(0);
         exe_cmd_sd.write(0);
@@ -946,11 +906,12 @@ void decod::post_reg_read_decoding() {
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
-    inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
-    add_offset_to_pc_sd.write((!stall_sd && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd 
-                                || jalr_type_inst_sd) &&
-                               dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
-                              !EXCEPTION_SM);
+    // inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
+    // add_offset_to_pc_sd.write((!stall_sd && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd 
+    //                             || jalr_type_inst_sd) &&
+    //                            dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
+    //                           !EXCEPTION_SM);
+    jump_sd = !not_jump_var ; 
 }
 
 //---------------------------------------------PC GESTION
@@ -960,17 +921,22 @@ void decod::pc_inc() {
     sc_uint<32> pc                = READ_PC_SR.read();
     sc_uint<32> pc_out            = pc;
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
-
-    if (inc_pc_sd) {
+    bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
+    
+    if (!add_offset_to_pc && !dec2if_full_sd ) {
         pc_out = pc + 4;
-        WRITE_PC_ENABLE_SD.write(1);
-    } else if (!inc_pc_sd && add_offset_to_pc_sd.read()) {
+        WRITE_PC_ENABLE_SD  = 1;
+        dec2if_push_sd      = 1;
+    } else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd) {
         pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
-        WRITE_PC_ENABLE_SD.write(1);
+        WRITE_PC_ENABLE_SD  = 1;
+        dec2if_push_sd      = 1;
     } else {
-        WRITE_PC_ENABLE_SD.write(0);
+        WRITE_PC_ENABLE_SD  = 0;
+        dec2if_push_sd      = 0;
     }
 
+        DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
     // Adress missaligned exception :
     if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
@@ -982,6 +948,9 @@ void decod::pc_inc() {
             instruction_access_fault_sd = 0;
         }
     }
+
+    // Exception & fifo gestion
+
     if (EXCEPTION_SM.read() == 1) {
         if (!MRET_SM) {
             // Need to check MTVEC value, bits 1,0 indicate :
@@ -1012,6 +981,39 @@ void decod::pc_inc() {
             dec2if_in_sd.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
+        }
+        
+        // IF2DEC Gestion
+        
+        IF2DEC_POP_SD.write(1);
+        IF2DEC_FLUSH_SD.write(0);
+
+        // DEC2EXE Gestion
+
+        dec2exe_push_sd.write(1);
+
+    }
+    else{
+        
+        // IF2DEC Gestion
+        
+        if (jump_sd.read() && !stall_sd) {
+            IF2DEC_POP_SD.write(1);
+            IF2DEC_FLUSH_SD.write(1);
+        } else if (!jump_sd && !stall_sd) {
+            IF2DEC_POP_SD.write(1);
+            IF2DEC_FLUSH_SD.write(0);
+        } else {
+            IF2DEC_POP_SD.write(0);
+            IF2DEC_FLUSH_SD.write(0);
+        }
+
+        // DEC2EXE Gestion
+        
+        if (stall_sd) {
+            dec2exe_push_sd.write(0);
+        } else {
+            dec2exe_push_sd.write(1);
         }
     }
 }
@@ -1086,8 +1088,9 @@ void decod::bypasses() {
 
 void decod::stall_method() {
     csr_in_progress = (CSR_WENABLE_RD && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
-    stall_sd.write(csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
-                                    (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec)));
+    stall_sd        = (csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
+                      (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec))
+                      || IF2DEC_EMPTY_SI || dec2exe_full_sd);
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS
@@ -1283,7 +1286,7 @@ void decod::trace(sc_trace_file* tf) {
     // PC gestion :
 
     sc_trace(tf, inc_pc_sd, GET_NAME(inc_pc_sd));
-    sc_trace(tf, add_offset_to_pc_sd, GET_NAME(add_offset_to_pc_sd));
+    sc_trace(tf, jump_sd, GET_NAME(jump_sd));
 
     // Internal signals :
 
