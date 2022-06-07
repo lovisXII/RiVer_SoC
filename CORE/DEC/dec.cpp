@@ -16,7 +16,7 @@ void decod::if2dec_pop_method() {
         if (add_offset_to_pc_sd.read()) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
-        } else if (!stall && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
+        } else if (!stall_sd && !IF2DEC_EMPTY_SI.read() && !dec2exe_full_sd.read()) {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(0);
         } else {
@@ -34,7 +34,7 @@ void decod::if2dec_pop_method() {
 
 void decod::dec2exe_push_method() {
     if (EXCEPTION_SM.read() == 0) {
-        if (stall || dec2exe_full_sd.read() || IF2DEC_EMPTY_SI.read()) {
+        if (stall_sd || dec2exe_full_sd.read() || IF2DEC_EMPTY_SI.read()) {
             dec2exe_push_sd.write(0);
         } else {
             dec2exe_push_sd.write(1);
@@ -947,7 +947,8 @@ void decod::post_reg_read_decoding() {
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
     inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
-    add_offset_to_pc_sd.write((!stall && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd || jalr_type_inst_sd) &&
+    add_offset_to_pc_sd.write((!stall_sd && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd 
+                                || jalr_type_inst_sd) &&
                                dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
                               !EXCEPTION_SM);
 }
@@ -1077,7 +1078,7 @@ void decod::bypasses() {
 
 void decod::stall_method() {
     csr_in_progress = (CSR_WENABLE_RD && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
-    stall.write(csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
+    stall_sd.write(csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
                                     (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec)));
 }
 
@@ -1193,7 +1194,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, rdata2_sd, GET_NAME(rdata2_sd));
     sc_trace(tf, r1_valid_sd, GET_NAME(r1_valid_sd));
     sc_trace(tf, r2_valid_sd, GET_NAME(r2_valid_sd));
-    sc_trace(tf, stall, GET_NAME(stall));
+    sc_trace(tf, stall_sd, GET_NAME(stall_sd));
     sc_trace(tf, block_in_dec, GET_NAME(block_in_dec));
     sc_trace(tf, dec2if_in_sd, GET_NAME(dec2if_in_sd));
     sc_trace(tf, dec2if_push_sd, GET_NAME(dec2if_push_sd));

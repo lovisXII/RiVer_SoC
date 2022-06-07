@@ -133,7 +133,6 @@ SC_MODULE(decod) {
     sc_signal<sc_uint<32>> rdata2_sd;
     sc_signal<bool>        r1_valid_sd;
     sc_signal<bool>        r2_valid_sd;
-    sc_signal<bool>        stall;
     sc_signal<bool>        block_in_dec;
 
     // fifo dec2if :
@@ -263,6 +262,12 @@ SC_MODULE(decod) {
     sc_signal<bool> inc_pc_sd;
     sc_signal<bool> add_offset_to_pc_sd;
 
+    // Pipeline Gestion
+
+    
+    sc_signal<bool>        stall_sd;
+    sc_signal<bool>        discard_sd;
+    sc_signal<bool>        normal_sd;
     // Internal signals :
 
     sc_signal<sc_uint<6>>  adr_dest_sd;
@@ -336,7 +341,7 @@ SC_MODULE(decod) {
         SC_METHOD(dec2if_gestion)
         sensitive
 
-            << dec2if_empty_sd << dec2if_full_sd << stall << MRET_SM;
+            << dec2if_empty_sd << dec2if_full_sd << stall_sd << MRET_SM;
 
         SC_METHOD(concat_dec2exe)
         sensitive << dec2exe_in_sd << exe_op1_sd << exe_op2_sd << exe_cmd_sd << exe_neg_op2_sd << exe_wb_sd
@@ -358,10 +363,10 @@ SC_MODULE(decod) {
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
         SC_METHOD(dec2exe_push_method)
-        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall << EXCEPTION_SM;
+        sensitive << dec2exe_full_sd << IF2DEC_EMPTY_SI << stall_sd << EXCEPTION_SM;
 
         SC_METHOD(if2dec_pop_method)
-        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall << EXCEPTION_SM << MRET_SM
+        sensitive << IF2DEC_EMPTY_SI << dec2exe_full_sd << add_offset_to_pc_sd << stall_sd << EXCEPTION_SM << MRET_SM
                   << MTVEC_VALUE_RC;
 
         SC_METHOD(stall_method)
@@ -391,7 +396,7 @@ SC_MODULE(decod) {
 
                   << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << IF2DEC_EMPTY_SI << dec2if_push_sd << READ_PC_SR
 
-                  << stall << dec2if_push_sd << add_i_sd << slt_i_sd << sltu_i_sd << and_i_sd << or_i_sd << xor_i_sd
+                  << stall_sd << dec2if_push_sd << add_i_sd << slt_i_sd << sltu_i_sd << and_i_sd << or_i_sd << xor_i_sd
 
                   << sll_i_sd << srl_i_sd << sub_i_sd << sra_i_sd << addi_i_sd
 
