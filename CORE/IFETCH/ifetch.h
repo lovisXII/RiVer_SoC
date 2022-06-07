@@ -72,8 +72,13 @@ SC_MODULE(ifetch) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
-                  << EXCEPTION_SM << MRET_SM << RETURN_ADRESS_SM;
+        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI 
+        << IF2DEC_FULL_SI << PC_RD 
+        << IF2DEC_FLUSH_SD << IC_STALL_SI 
+        << RESET
+        << EXCEPTION_SM 
+        << MRET_SM 
+        << RETURN_ADRESS_SM;
         SC_METHOD(exception)
         sensitive << RESET << EXCEPTION_SM ;
     }

@@ -48,7 +48,17 @@ SC_MODULE(icache)
         sensitive << ADR_SI; 
 
         SC_METHOD(miss_detection);
-        sensitive << address_tag << address_index << address_offset << IC_STALL_SI;
+        sensitive   << address_tag 
+                    << address_index 
+                    << address_offset 
+                    << IC_STALL_SI;
+        for(int i=0; i < 256 ;i++){
+            sensitive << data[i][0]
+                        << data[i][1]
+                        << data[i][2]
+                        << data[i][3]
+                        << data_validate[i];
+        }
 
         SC_THREAD(transition);
         sensitive << CLK.neg() << DT << SLAVE_ACK_SP;
