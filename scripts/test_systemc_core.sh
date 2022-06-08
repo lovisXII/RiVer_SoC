@@ -2,7 +2,7 @@
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOC='\033[0m'
-
+export PATH=$PATH:$HOME/riscv/bin
 cd ../CORE
 for file in $(ls tests); do 
     timeout 20s ./CORE/core_tb CORE/tests/$file >/dev/null 2>&1
