@@ -41,6 +41,8 @@ jobs:
         name: Get riscv
         run: 
           sudo ./scripts/install_cross_compile.sh &&
+          mkdir -p ~/riscv && 
+          tar -xzf riscv32-unknown-elf.gcc-10.2.0.rv32i.ilp32.newlib.tar.gz -C ~/riscv &&
           ls ~/riscv && 
           echo $PATH
       - name: Cache systemC
