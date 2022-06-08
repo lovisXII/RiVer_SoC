@@ -1,6 +1,5 @@
 library ieee; 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity core is 
@@ -390,7 +389,7 @@ exec_i : exec
         DEC2EXE_POP_SE
     );
 
-mem_i : entity work.mem 
+mem_i : mem 
     port map(
         -- global interface
         clk, reset_n,
@@ -422,7 +421,7 @@ mem_i : entity work.mem
         WB_RM, SIGN_EXTEND_RM, LOAD_RM
     );
 
-wbk_i : entity wbk 
+wbk_i : wbk 
     port map(
         -- global interface
         clk, reset_n,
@@ -445,7 +444,7 @@ wbk_i : entity wbk
         REG_WB_SW 
     );
  
-reg_i : entity reg 
+reg_i : reg 
     port map(
         clk, reset_n,
         PC_INIT, 

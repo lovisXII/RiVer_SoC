@@ -1,6 +1,5 @@
 library ieee; 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity exec is 
@@ -73,17 +72,18 @@ component shifter
     );
 end component; 
 
-component fifo_76b
+component fifo
+    generic(N : integer);
     port(
         clk     : in    std_logic; 
         reset_n : in    std_logic; 
-        DIN     : in    std_logic_vector(75 downto 0);
+        DIN     : in    std_logic_vector(N-1 downto 0);
         PUSH    : in    std_logic;
         POP     : in    std_logic;
         FULL    : out   std_logic;
         EMPTY   : out   std_logic;
-        DOUT    : out   std_logic_vector(75 downto 0)
-);
+        DOUT    : out   std_logic_vector(N-1 downto 0)
+    );
 end component;
 
 begin 
@@ -106,7 +106,8 @@ shifter_i : shifter
         DOUT_SE => shifter_res
     );
 
-exe2mem : fifo_76b 
+exe2mem : fifo
+    generic map(N => 76)
     port map(
         clk => clk,
         reset_n => reset_n,

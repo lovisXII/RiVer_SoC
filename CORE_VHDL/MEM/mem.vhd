@@ -1,6 +1,5 @@
 library ieee; 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
 entity mem is
@@ -46,25 +45,26 @@ signal load_byte, load_halfword, load_word : std_logic_vector(31 downto 0);
 
 signal data : std_logic_vector(31 downto 0);
 
-
-component fifo_43b
+component fifo
+    generic(N : integer);
     port(
         clk     : in    std_logic; 
         reset_n : in    std_logic; 
-        DIN     : in    std_logic_vector(42 downto 0);
+        DIN     : in    std_logic_vector(N-1 downto 0);
         PUSH    : in    std_logic;
         POP     : in    std_logic;
         FULL    : out   std_logic;
         EMPTY   : out   std_logic;
-        DOUT    : out   std_logic_vector(42 downto 0)
-);
+        DOUT    : out   std_logic_vector(N-1 downto 0)
+    );
 end component;
 
 
 begin
 
 -- Intanciation 
-mem2wbk : fifo_43b
+mem2wbk : fifo
+    generic map(N => 43)
     port map(
         clk => clk,
         reset_n => reset_n,
