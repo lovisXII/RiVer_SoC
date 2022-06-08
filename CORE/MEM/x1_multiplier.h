@@ -3,19 +3,21 @@
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
 
-#define x12x2_size          129
+#define x12x2_size          130
 
 SC_MODULE(x1_multiplier)
 {
     // input :
     sc_in<sc_bv<384>> IN_RX0;
     sc_in<bool>       SIGNED_OP_RX0;
+    sc_in<bool>       CARRY_RX0;
     sc_in<bool>       X02X1_EMPTY_SX0;
     sc_in<bool>       X12X2_POP_SX2;
 
     // output :
     sc_out<sc_bv<128>>        RES_RX1;
     sc_out<bool>              SIGNED_OP_RX1;
+    sc_out<bool>              CARRY_RX1;
     sc_out<bool>              X12X2_EMPTY_SX1;
     sc_out<bool>              X02X1_POP_SX1;
 

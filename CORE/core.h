@@ -93,7 +93,8 @@ SC_MODULE(core) {
     sc_signal<sc_bv<384>> multiplier_out_sx0;
     sc_signal<bool>       signed_op_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
-
+    sc_signal<bool>       carry_rx0;
+    sc_signal<bool>       carry_rx1;
     // EXE-MEM interface
     sc_signal<sc_uint<32>> EXE_RES_RE;
     sc_signal<sc_uint<32>> MEM_DATA_RE;
@@ -452,6 +453,7 @@ SC_MODULE(core) {
 
         x0_multiplier_inst.OP1_RD(OP1_RD);
         x0_multiplier_inst.OP2_RD(OP2_RD);
+        x0_multiplier_inst.EXE_CMD_RD(EXE_CMD_RD);
         x0_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
         x0_multiplier_inst.MEM_DATA_RD(MEM_DATA_RD);
         x0_multiplier_inst.RADR1_RD(RADR1_SD);
@@ -466,6 +468,7 @@ SC_MODULE(core) {
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
         x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x0_multiplier_inst.CARRY_RX0(carry_rx0);
         x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
         x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
         x0_multiplier_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
@@ -563,9 +566,11 @@ SC_MODULE(core) {
 
         x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
         x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x1_multiplier_inst.CARRY_RX0(carry_rx0);
         x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
         x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x1_multiplier_inst.CARRY_RX1(carry_rx1);
         x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
         x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
         x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
@@ -617,6 +622,7 @@ SC_MODULE(core) {
 
         x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
         x2_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x2_multiplier_inst.CARRY_RX1(carry_rx1);
         x2_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x2_multiplier_inst.RES_RX2(multiplier_out_sx2);
         x2_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);

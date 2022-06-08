@@ -1170,7 +1170,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BP_MEM2WBK_EMPTY_SM, GET_NAME(BP_MEM2WBK_EMPTY_SM));
     sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
     sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
-
+    sc_trace(tf, MULT_INST_RE, GET_NAME(MULT_INST_RE));
+    sc_trace(tf, MULT_INST_RM, GET_NAME(MULT_INST_RM));
+    
     sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
     sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
     sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));

@@ -6,13 +6,14 @@ void x2_multiplier::pre_process()
     a = in.range(63, 0);
     b = in.range(127, 64);
 
-    c[0] = false;
+    c[0] = CARRY_RX1.read();
 
     //test
     sc_biguint<64> a_ = (sc_bv<64>)a;
     sc_biguint<64> b_ = (sc_bv<64>)b;
     sc_biguint<64> test = a_ + b_;
-    for(int i = 0; i < 64; i++)
+
+    for(int i = 63; i >= 0; i--)
     {
         S[i] = (bool)test[i];
     }

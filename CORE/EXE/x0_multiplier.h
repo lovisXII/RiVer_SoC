@@ -3,16 +3,16 @@
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
 
-#define x02x1_size          385
+#define x02x1_size          386
 
 SC_MODULE(x0_multiplier)
 {
     // input :
     sc_in<sc_uint<32>> OP1_RD, OP2_RD;
-
+    sc_in<sc_uint<2>>  EXE_CMD_RD;
     sc_in<bool>        X02X1_POP_SX1;
 
-    sc_in<bool>       DEC2X0_EMPTY_SD;
+    sc_in<bool>        DEC2X0_EMPTY_SD;
 
     sc_in<sc_uint<32>> MEM_DATA_RD;
     sc_in<sc_uint<6>>  RADR1_RD;
@@ -33,6 +33,7 @@ SC_MODULE(x0_multiplier)
     // output :
     sc_out<sc_bv<384>> RES_RX0;
     sc_out<bool>       SIGNED_OP_RX0;
+    sc_out<bool>       CARRY_RX0;
     sc_out<bool>       X02X1_EMPTY_SX0;
 
     // General interace : 
@@ -50,7 +51,9 @@ SC_MODULE(x0_multiplier)
     sc_signal<sc_uint<32>> op1_sx0;
     sc_signal<sc_uint<32>> op2_sx0;
     sc_signal<bool>        signed_op;
-
+    sc_signal<bool>        select_higher_bits_sx0;
+    sc_signal<bool>        carry_sx0;
+    
     // fifo x02x1
     sc_signal<sc_bv<x02x1_size>> x02x1_din_sx0;  
     sc_signal<sc_bv<x02x1_size>> x02x1_dout_sx0;
@@ -123,7 +126,7 @@ SC_MODULE(x0_multiplier)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(operation);
-        sensitive << op1_sx0 << op2_sx0;
+        sensitive << op1_sx0 << op2_sx0 << EXE_CMD_RD;
 
         //stage 1
         SC_METHOD(CSA_1);
