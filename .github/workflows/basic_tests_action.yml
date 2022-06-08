@@ -43,6 +43,27 @@ jobs:
       - if: ${{ steps.cache-systemc.outputs.cache-hit == 'false' }}
         name: Build systemC
         run: sudo ./scripts/install_systemc.sh
+      
+      - name: Cache riscv
+        id: cache-riscv
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-riscv
+        with:
+          # systemC is installed in /usr/local/systemc-2.3.3/
+          path: ~/riscv
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-riscv.outputs.cache-hit == 'false' }}
+        name: Get riscv
+        run: 
+          sudo ./scripts/install_cross_compile.sh
+          echo "export PATH=$PATH:~/riscv/bin" >> ~/.bashrc
+          source ~/.bashrc
 
       - name: Build
         run: ./scripts/build_systemc_core.sh
