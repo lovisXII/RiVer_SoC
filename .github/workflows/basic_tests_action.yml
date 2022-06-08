@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-
 
       - name: Build systemC
-        run: ./Shell_script/install_systemc.sh
+        run: ./scripts/install_systemc.sh
 
   tests:
     runs-on: ubuntu-latest
