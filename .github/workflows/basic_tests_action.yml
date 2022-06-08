@@ -42,7 +42,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-systemc.outputs.cache-hit == 'false' }}
+      - if: ${{ steps.cache-systemc.outputs.cache-hit != 'true' }}
         name: Build systemC
         run: sudo ./scripts/install_systemc.sh
       
@@ -60,7 +60,7 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - if: ${{ steps.cache-riscv.outputs.cache-hit == 'false' }}
+      - if: ${{ steps.cache-riscv.outputs.cache-hit != 'true' }}
         name: Get riscv
         run: 
           sudo ./scripts/install_cross_compile.sh
