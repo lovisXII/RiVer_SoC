@@ -17,11 +17,15 @@ permissions:
   pull-requests: read
 
 jobs:
-  build_systemc:
+  tests:
     runs-on: ubuntu-latest
+    needs: build_systemc
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
+      - name: Fix permissions
+        run: sudo chmod -R a+rwx /usr/local/
       - name: Cache systemC
         id: cache-systemc
         uses: actions/cache@v3
@@ -36,18 +40,9 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
-      - name: Build systemC
+      - if: ${{ steps.cache-systemc.outputs.cache-hit == 'false' }}
+        name: Build systemC
         run: sudo ./scripts/install_systemc.sh
-
-  tests:
-    runs-on: ubuntu-latest
-    needs: build_systemc
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Build
-        run: ls -R
 
       - name: Build
         run: ./scripts/build_systemc_core.sh
