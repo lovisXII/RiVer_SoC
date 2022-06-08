@@ -8,6 +8,6 @@ then
     mkdir /usr/local/systemc-2.3.3/
 fi
 cd systemc-2.3.3 && mkdir -p objdir && cd objdir
-../configure --prefix=/usr/local/systemc-2.3.3/
+./configure --prefix=/usr/local/systemc-2.3.3/
 make
 make install
