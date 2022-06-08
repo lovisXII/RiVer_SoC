@@ -61,7 +61,7 @@ jobs:
           sudo ./scripts/install_cross_compile.sh &&
           echo "export PATH=$PATH:~/riscv/bin" >> ~/.bashrc &&
           source ~/.bashrc &&
-          ls ~/riscof && 
+          ls ~/riscv && 
           echo $PATH
 
       - name: Build
