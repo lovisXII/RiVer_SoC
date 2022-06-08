@@ -40,11 +40,7 @@ jobs:
       - if: ${{ steps.cache-riscv.outputs.cache-hit != 'true' }}
         name: Get riscv
         run: 
-          sudo ./scripts/install_cross_compile.sh &&
-          mkdir -p ~/riscv && 
-          tar -xzf riscv32-unknown-elf.gcc-10.2.0.rv32i.ilp32.newlib.tar.gz -C ~/riscv &&
-          ls ~/riscv && 
-          echo $PATH
+          ./scripts/install_cross_compile.sh
       - name: Cache systemC
         id: cache-systemc
         uses: actions/cache@v3
@@ -61,7 +57,7 @@ jobs:
 
       - if: ${{ steps.cache-systemc.outputs.cache-hit != 'true' }}
         name: Build systemC
-        run: sudo ./scripts/install_systemc.sh
+        run: ./scripts/install_systemc.sh
 
       - name: Build
         run: ./scripts/build_systemc_core.sh
