@@ -23,11 +23,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Fix permissions
-        run: 
-          sudo mkdir /usr/local/systemc-2.3.3/ &&
-          sudo chmod -R a+rwx /usr/local/systemc-2.3.3/
-
       - name: Cache systemC
         id: cache-systemc
         uses: actions/cache@v3
@@ -35,7 +30,7 @@ jobs:
           cache-name: cache-systemc
         with:
           # systemC is installed in /usr/local/systemc-2.3.3/
-          path: /usr/local/systemc-2.3.3/
+          path: ~/systemc-2.3.3/
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -65,7 +60,9 @@ jobs:
         run: 
           sudo ./scripts/install_cross_compile.sh &&
           echo "export PATH=$PATH:~/riscv/bin" >> ~/.bashrc &&
-          source ~/.bashrc
+          source ~/.bashrc &&
+          ls ~/riscof && 
+          echo $PATH
 
       - name: Build
         run: ./scripts/build_systemc_core.sh
