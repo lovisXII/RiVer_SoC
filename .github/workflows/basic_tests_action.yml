@@ -18,23 +18,23 @@ permissions:
 jobs:
   build_systemc:
   runs-on: ubuntu-latest
-    steps:
-      - name: Cache systemC
-        id: cache-systemc
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-systemc
-        with:
-          # systemC is installed in /usr/local/systemc-2.3.3/
-          path: /usr/local/systemc-2.3.3/
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+  steps:
+    - name: Cache systemC
+      id: cache-systemc
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-systemc
+      with:
+        # systemC is installed in /usr/local/systemc-2.3.3/
+        path: /usr/local/systemc-2.3.3/
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
 
-      - name: Build systemC
-        run: sudo ./Shell_script/install_systemc.sh
+    - name: Build systemC
+      run: sudo ./Shell_script/install_systemc.sh
 
   tests:
     runs-on: ubuntu-latest
