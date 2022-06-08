@@ -5,7 +5,7 @@ NOC='\033[0m'
 
 cd ../CORE
 for file in $(ls tests); do 
-    timeout 20s ./core_tb tests/$file >/dev/null 2>&1
+    timeout 20s ./CORE/core_tb CORE/tests/$file >/dev/null 2>&1
     printf "Test ${file} non opt..." 
     if (($? == 0)) 
     then
@@ -15,7 +15,7 @@ for file in $(ls tests); do
         exit -1
     fi
     printf "Test ${file} opt..." 
-    timeout 20s ./core_tb tests/$file -O >/dev/null 2>&1
+    timeout 20s ./CORE/core_tb CORE/tests/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -26,7 +26,7 @@ for file in $(ls tests); do
 done
 
 for file in $(ls tests_exception); do 
-    timeout 20s ./core_tb tests/$file >/dev/null 2>&1
+    timeout 20s ./CORE/core_tb CORE/tests/$file >/dev/null 2>&1
     printf "Test ${file} non opt..." 
     if (($? == 0)) 
     then
@@ -36,7 +36,7 @@ for file in $(ls tests_exception); do
         exit -1
     fi
     printf "Test ${file} opt..." 
-    timeout 20s ./core_tb tests/$file -O >/dev/null 2>&1
+    timeout 20s ./CORE/core_tb CORE/tests/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
