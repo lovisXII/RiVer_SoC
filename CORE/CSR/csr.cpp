@@ -87,12 +87,20 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));
 
     // General Interface :
+    sc_trace(tf, csr_rc[0], signal_get_name(csr_rc[0].name(),"mvendorid" ));
+    sc_trace(tf, csr_rc[1], signal_get_name(csr_rc[1].name(),"marchid" ));
+    sc_trace(tf, csr_rc[2], signal_get_name(csr_rc[2].name(),"mimpid" ));
+    sc_trace(tf, csr_rc[3], signal_get_name(csr_rc[3].name(),"mstatus" ));
+    sc_trace(tf, csr_rc[4], signal_get_name(csr_rc[4].name(),"misa" ));
+    sc_trace(tf, csr_rc[5], signal_get_name(csr_rc[5].name(),"mie" ));
+    sc_trace(tf, csr_rc[6], signal_get_name(csr_rc[6].name(),"mtvec" ));
+    sc_trace(tf, csr_rc[7], signal_get_name(csr_rc[7].name(),"mstatush" ));
+    sc_trace(tf, csr_rc[8], signal_get_name(csr_rc[8].name(),"mepc" ));
+    sc_trace(tf, csr_rc[9], signal_get_name(csr_rc[9].name(),"mcause" ));
+    sc_trace(tf, csr_rc[10], signal_get_name(csr_rc[10].name(),"mtval" ));
+    sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(),"mip" ));
+    sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(),"mscratch" ));
 
-    for (int i = 0; i < N_CSR; i++) {
-        std::string regname = "CSR_";
-        regname += std::to_string(i);
-        sc_trace(tf, csr_rc[i], signal_get_name(csr_rc[i].name(), regname.c_str()));
-    }
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
 }
