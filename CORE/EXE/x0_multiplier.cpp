@@ -19,41 +19,51 @@ void x0_multiplier::operation()
     sc_uint<32> op1 = op1_sx0;
     sc_uint<32> op2 = op2_sx0;
 
-
     // signed extension
-    if(op1[31] == 1)
+
+    bool signed_1 = op1[31] == 1;
+    bool signed_2 = op2[31] == 1;
+
+    if(signed_1)
+    {
         product[32] = op2;
+        op1 = op1 - 1;
+    }
     else
         product[32] = (sc_bv<64>)0;
-    if(op2[31] == 1)
+
+    if(signed_2)
+    {
         product[33] = op1;
+        op2 = op2 - 1;
+    }
     else
         product[33] = (sc_bv<64>)0;
 
-    if(op1[31] && op2[31])
+    if(signed_1 && signed_2)
         carry_sx0 = 1;
     else
         carry_sx0 = 0;
 
-    op1 = op1[31] == 1?(sc_uint<32>)(~op1):op1;
-    op2 = op2[31] == 1?(sc_uint<32>)(~op2):op2;
     
-    select_higher_bits_sx0 = EXE_CMD_RD.read() == 2;
     // generating partial product
     for(int i = 0; i < 32; i++)
     {
         sc_bv<64> prod = 0;
-        int t = 0;
         if(op1[i] != 0)
         {
             for(int j = i; j < i+32; j++)
             {
-                prod[j] = (bool)(op1[i] & op2[t]);
-                t++;
+                prod[j] = (bool)(op1[i] & op2[j-i]);
             }
+            if(signed_1 || signed_2)
+                for(int j = i+32; j < 64; j++)
+                    prod[j] = 1;
         }
         product[i] = prod;
     }
+
+    select_higher_bits_sx0 = EXE_CMD_RD.read() == 2;
 }
 //stage 1 - M33 CSA_32_30 CSA_29_27 CSA_26_24 CSA_23_21 CSA_20_18 CSA_17_15 
 //        -     CSA_14_12 CSA_11_9  CSA_8_6   CSA_5_3   CSA_2_0
@@ -306,5 +316,10 @@ void x0_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, x02x1_din_sx0, GET_NAME(x02x1_din_sx0));
     sc_trace(tf, x02x1_dout_sx0, GET_NAME(x02x1_dout_sx0));
 
+    for(int i = 0; i < 34; i++)
+    {
+        std::string icname = "prod_"+std::to_string(i);
+        sc_trace(tf, product[i], signal_get_name(product[i].name(), icname.c_str()));
+    }
     fifo_inst.trace(tf);
 }
