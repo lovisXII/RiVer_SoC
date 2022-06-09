@@ -941,9 +941,6 @@ void decod::pc_inc() {
 
         DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
     
-    //Instruction adress missaligned exception :
-    
-    if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
         dec2if_in_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
@@ -952,6 +949,14 @@ void decod::pc_inc() {
         } else {
             instruction_access_fault_sd = 0;
         }
+    }
+    //Instruction adress missaligned exception :
+    if ((pc_out & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
+    {
+        instruction_adress_missaligned_sd = 1;
+    } 
+    else{
+        instruction_adress_missaligned_sd = 0;
     }
 
     // Exception & fifo gestion
@@ -986,7 +991,8 @@ void decod::pc_inc() {
             dec2if_in_sd.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
-        }
+        }          
+            
         
         // IF2DEC Gestion
         
