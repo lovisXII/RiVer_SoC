@@ -14,6 +14,7 @@ entity core is
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
         MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
         MCACHE_ADR_SM : out std_logic_vector(31 downto 0);
+        byt_sel : out std_logic_vector(3 downto 0);
 
         -- Icache interface
         IC_INST_SI : in std_logic_vector(31 downto 0);
@@ -59,8 +60,8 @@ signal READ_PC_SR : std_logic_vector(31 downto 0);
 
 -- exe2mem
 signal EXE2MEM_POP_SM, EXE2MEM_EMPTY_SE : std_logic;
-signal EXE_RES_RE : std_logic_vector(31 downto 0);
-signal MEM_DATA_RE : std_logic_vector(31 downto 0);
+signal RES_RE : std_logic_vector(31 downto 0);
+signal DATA_RE : std_logic_vector(31 downto 0);
 signal DEST_RE : std_logic_vector(5 downto 0);
 signal MEM_SIZE_RE : std_logic_vector(1 downto 0);
 signal WB_RE, MEM_SIGN_EXTEND_RE, MEM_LOAD_RE, MEM_STORE_RE : std_logic;
@@ -184,8 +185,8 @@ component exec
         DEC2EXE_EMPTY_SD : in std_logic;
         SLT_RD, SLTU_RD : in std_logic;
 
-        EXE_RES_RE : out std_logic_vector(31 downto 0);    
-        MEM_DATA_RE : out std_logic_vector(31 downto 0);
+        RES_RE : out std_logic_vector(31 downto 0);    
+        DATA_RE : out std_logic_vector(31 downto 0);
         DEST_RE : out std_logic_vector(5 downto 0);
         MEM_SIZE_RE : out std_logic_vector(1 downto 0);
         WB_RE : out std_logic;
@@ -206,13 +207,14 @@ component mem
         MCACHE_STALL_SM : in std_logic;
         MCACHE_ADR_SM, MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
+        byt_sel : out std_logic_vector(3 downto 0);
 
         -- Exe interface
-        EXE_RES_RE, MEM_DATA_RE : in std_logic_vector(31 downto 0);
-        EXE_DEST_RE : in std_logic_vector(5 downto 0);
-        EXE_MEM_SIZE_RE : in std_logic_vector(1 downto 0);
-        EXE_WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
-
+        RES_RE, DATA_RE : in std_logic_vector(31 downto 0);
+        DEST_RE : in std_logic_vector(5 downto 0);
+        MEM_SIZE_RE : in std_logic_vector(1 downto 0);
+        WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
+        
         -- exe2mem interface
         EXE2MEM_EMPTY_SM : in std_logic;
         EXE2MEM_POP_SM : out std_logic;
@@ -222,10 +224,10 @@ component mem
         MEM2WBK_EMPTY_SM : out std_logic;
         
         -- Wbk interface
-        WBK_DATA_RM : out std_logic_vector(31 downto 0);
-        WBK_DEST_RM : out std_logic_vector(5 downto 0);
-        WBK_MEM_SIZE_RM : out std_logic_vector(1 downto 0);
-        WBK_WB_RM, WBK_SIGN_EXTEND_RM, WBK_LOAD_RM : out std_logic
+        DATA_RM : out std_logic_vector(31 downto 0);
+        DEST_RM : out std_logic_vector(5 downto 0);
+        MEM_SIZE_RM : out std_logic_vector(1 downto 0);
+        WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic
     ); 
 end component; 
 
@@ -378,8 +380,8 @@ exec_i : exec
         DEC2EXE_EMPTY_SD,
         SLT_RD, SLTU_RD,
 
-        EXE_RES_RE,    
-        MEM_DATA_RE,
+        RES_RE,    
+        DATA_RE,
         DEST_RE,
         MEM_SIZE_RE,
         WB_RE,
@@ -399,9 +401,10 @@ mem_i : mem
         MCACHE_STALL_SM,
         MCACHE_ADR_SM, MCACHE_DATA_SM,
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM,
+        byt_sel, 
 
         -- Exe interface
-        EXE_RES_RE, MEM_DATA_RE,
+        RES_RE, DATA_RE,
         DEST_RE,
         MEM_SIZE_RE,
         WB_RE, MEM_SIGN_EXTEND_RE, MEM_LOAD_RE, MEM_STORE_RE,

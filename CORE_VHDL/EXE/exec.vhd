@@ -22,8 +22,8 @@ entity exec is
         DEC2EXE_EMPTY_SD : in std_logic;
         SLT_RD, SLTU_RD : in std_logic;
 
-        EXE_RES_RE : out std_logic_vector(31 downto 0);    
-        MEM_DATA_RE : out std_logic_vector(31 downto 0);
+        RES_RE : out std_logic_vector(31 downto 0);    
+        DATA_RE : out std_logic_vector(31 downto 0);
         DEST_RE : out std_logic_vector(5 downto 0);
         MEM_SIZE_RE : out std_logic_vector(1 downto 0);
         WB_RE : out std_logic;
@@ -127,7 +127,7 @@ exe2mem : fifo
         EMPTY => EXE2MEM_EMPTY_SE, 
 
         DOUT(31 downto 0) => exe_fifo_res,
-        DOUT(63 downto 32) => MEM_DATA_RE, 
+        DOUT(63 downto 32) => DATA_RE, 
         DOUT(69 downto 64) => DEST_RE, 
         DOUT(71 downto 70) => MEM_SIZE_RE,
         DOUT(72) => WB_RE, 
@@ -165,6 +165,6 @@ bp_mem_data <= x"00000000";
 blocked <= '0';
 
 -- Output
-EXE_RES_RE <= exe_fifo_res;
+RES_RE <= exe_fifo_res;
 
 end archi;

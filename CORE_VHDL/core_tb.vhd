@@ -7,6 +7,25 @@ entity core_tb is
 end core_tb;
 
 architecture simu of core_tb is 
+
+function get_inst (adr : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_inst; 
+attribute foreign of get_inst : function is "VHPIDIRECT get_inst";    
+
+function get_mem (adr : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_mem; 
+attribute foreign of get_mem : function is "VHPIDIRECT get_mem";    
+
+function write_mem (adr : integer; data : integer) return integer is 
+begin 
+    assert false severity failure;
+end write_mem; 
+attribute foreign of write_mem : function is "VHPIDIRECT write_mem";    
+
 -- global interface
 signal clk, reset_n : std_logic := '0';
 
@@ -17,6 +36,7 @@ signal MCACHE_STALL_SM : std_logic;
 signal MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : std_logic;
 signal MCACHE_DATA_SM : std_logic_vector(31 downto 0);
 signal MCACHE_ADR_SM : std_logic_vector(31 downto 0);
+signal byt_sel : std_logic_vector(3 downto 0);
 
 -- Icache interface
 signal IC_INST_SI : std_logic_vector(31 downto 0);
@@ -44,6 +64,7 @@ component core
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
         MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
         MCACHE_ADR_SM : out std_logic_vector(31 downto 0);
+        byt_sel : out std_logic_vector(3 downto 0);
 
         -- Icache interface
         IC_INST_SI : in std_logic_vector(31 downto 0);
@@ -72,7 +93,7 @@ core0 : core
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM,
         MCACHE_DATA_SM,
         MCACHE_ADR_SM,
-
+        byt_sel, 
         -- Icache interface
         IC_INST_SI,
         IC_STALL_SI, 
@@ -102,7 +123,7 @@ end process;
 
 reset_n <= '0', '1' after 10 ns;
 
-MCACHE_RESULT_SM <= x"0C0C0C0C";
+--MCACHE_RESULT_SM <= x"0C0C0C0C";
 MCACHE_STALL_SM <= '0';
 
 IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4

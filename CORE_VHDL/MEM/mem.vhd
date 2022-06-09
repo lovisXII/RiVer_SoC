@@ -12,12 +12,13 @@ entity mem is
         MCACHE_STALL_SM : in std_logic;
         MCACHE_ADR_SM, MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
+        byt_sel : out std_logic_vector(3 downto 0);
 
         -- Exe interface
-        EXE_RES_RE, MEM_DATA_RE : in std_logic_vector(31 downto 0);
-        EXE_DEST_RE : in std_logic_vector(5 downto 0);
-        EXE_MEM_SIZE_RE : in std_logic_vector(1 downto 0);
-        EXE_WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
+        RES_RE, DATA_RE : in std_logic_vector(31 downto 0);
+        DEST_RE : in std_logic_vector(5 downto 0);
+        MEM_SIZE_RE : in std_logic_vector(1 downto 0);
+        WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
 
         -- exe2mem interface
         EXE2MEM_EMPTY_SM : in std_logic;
@@ -28,10 +29,10 @@ entity mem is
         MEM2WBK_EMPTY_SM : out std_logic;
         
         -- Wbk interface
-        WBK_DATA_RM : out std_logic_vector(31 downto 0);
-        WBK_DEST_RM : out std_logic_vector(5 downto 0);
-        WBK_MEM_SIZE_RM : out std_logic_vector(1 downto 0);
-        WBK_WB_RM, WBK_SIGN_EXTEND_RM, WBK_LOAD_RM : out std_logic
+        DATA_RM : out std_logic_vector(31 downto 0);
+        DEST_RM : out std_logic_vector(5 downto 0);
+        MEM_SIZE_RM : out std_logic_vector(1 downto 0);
+        WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic
     ); 
 end mem;
 
@@ -78,29 +79,29 @@ mem2wbk : fifo
     
 -- fifo concat   
 mem2wbk_din(31 downto 0) <= data; 
-mem2wbk_din(37 downto 32) <= EXE_DEST_RE; 
-mem2wbk_din(39 downto 38) <= EXE_MEM_SIZE_RE;
+mem2wbk_din(37 downto 32) <= DEST_RE; 
+mem2wbk_din(39 downto 38) <= MEM_SIZE_RE;
 mem2wbk_din(40) <= wb;
 mem2wbk_din(41) <= SIGN_EXTEND_RE;
 mem2wbk_din(42) <= LOAD_RE; 
 
 -- fifo unconcat 
-WBK_DATA_RM <= mem2wbk_dout(31 downto 0);
-WBK_DEST_RM <= mem2wbk_dout(37 downto 32);
-WBK_MEM_SIZE_RM <= mem2wbk_dout(39 downto 38);
-WBK_WB_RM <= mem2wbk_dout(40);
-WBK_SIGN_EXTEND_RM <= mem2wbk_dout(41);
-WBK_LOAD_RM <= mem2wbk_dout(42);
+DATA_RM <= mem2wbk_dout(31 downto 0);
+DEST_RM <= mem2wbk_dout(37 downto 32);
+MEM_SIZE_RM <= mem2wbk_dout(39 downto 38);
+WB_RM <= mem2wbk_dout(40);
+SIGN_EXTEND_RM <= mem2wbk_dout(41);
+LOAD_RM <= mem2wbk_dout(42);
 
 -- fifo manage 
 stall <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SM;
-wb <= EXE_WB_RE or LOAD_RE;
+wb <= WB_RE or LOAD_RE;
 mem2wbk_push <= (not stall) and wb;
 EXE2MEM_POP_SM <= not stall;
 
 -- Mcache 
-MCACHE_DATA_SM <= MEM_DATA_RE; 
-MCACHE_ADR_SM <= EXE_RES_RE;
+MCACHE_DATA_SM <= DATA_RE; 
+MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;
 MCACHE_ADR_VALID_SM <= not EXE2MEM_EMPTY_SM;
@@ -114,12 +115,22 @@ load_halfword <= (x"00000000" or (x"0000"&MCACHE_RESULT_SM(15 downto 0))) when S
 
 load_word <= MCACHE_RESULT_SM; 
 
-load_data <= load_byte when EXE_MEM_SIZE_RE = "10" else 
-             load_halfword when EXE_MEM_SIZE_RE = "01" else
+load_data <= load_byte when MEM_SIZE_RE = "10" else 
+             load_halfword when MEM_SIZE_RE = "01" else
              load_word; 
 
--- Data selection to be written in register
+-- byte select 
+byt_sel <=  "0001" when (MEM_SIZE_RE = "10" and RES_RE(1 downto 0) = "00") else 
+            "0010" when (MEM_SIZE_RE = "10" and RES_RE(1 downto 0) = "01") else   
+            "0100" when (MEM_SIZE_RE = "10" and RES_RE(1 downto 0) = "10") else 
+            "1000" when (MEM_SIZE_RE = "10" and RES_RE(1 downto 0) = "11") else
+            "0011" when (MEM_SIZE_RE = "01" and RES_RE(1 downto 0) = "00") else 
+            "1100" when (MEM_SIZE_RE = "01" and RES_RE(1 downto 0) = "10") else
+            "1111" when (MEM_SIZE_RE = "00" and RES_RE(1 downto 0) = "00") else
+            "0000";   
+
+-- Data selection to be written in register file
 data <= load_data when LOAD_RE = '1' else 
-        EXE_RES_RE;
+        RES_RE;
 
 end archi;
