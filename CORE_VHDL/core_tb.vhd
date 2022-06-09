@@ -1,17 +1,12 @@
 library ieee; 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
 
-library std; 
-use std.textio.all;
 
+entity core_tb is 
+end core_tb;
 
-entity tb_core is 
-end tb_core;
-
-architecture simu of tb_core is 
-
+architecture simu of core_tb is 
 -- global interface
 signal clk, reset_n : std_logic := '0';
 
@@ -34,36 +29,38 @@ signal ADR_VALID_SI : std_logic;
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
 
--- file
-signal eof : std_logic := '0';
-file program : text;
-constant filename : string := "../../CORE/a.out.txt";
+constant NCYCLES : integer := 10; 
+signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 
+component core
+    port(
+        -- global interface
+        clk, reset_n : in std_logic;
+
+        -- Mcache interface
+        MCACHE_RESULT_SM : in std_logic_vector(31 downto 0);
+        MCACHE_STALL_SM : in std_logic;
+
+        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
+        MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
+        MCACHE_ADR_SM : out std_logic_vector(31 downto 0);
+
+        -- Icache interface
+        IC_INST_SI : in std_logic_vector(31 downto 0);
+        IC_STALL_SI : in std_logic; 
+
+        ADR_SI : out std_logic_vector(31 downto 0);
+        ADR_VALID_SI : out std_logic; 
+
+        -- Debug 
+        PC_INIT : in std_logic_vector(31 downto 0);
+        DEBUG_PC_READ : out std_logic_vector(31 downto 0)
+    );
+end component; 
 
 begin 
 
-process 
-begin 
-
-read_file : process 
-variable fstatus : file_open_status; 
-variable file_line : line; 
-variable var_instr : std_logic_vector(31 downto 0); 
-variable end_of_line : boolean; 
-
-begin 
-    file_open(fstatus, program, filename, read_mode);
-    wait until reset_n = '1'; 
-    while not endfile(program) loop 
-        wait until clk = '1'; 
-        hreadline(program, inline); 
-        read(inline, char, end_of_line);
-    end loop;
-    wait;
-end process; 
-            
-
-core0 : entity work.core 
+core0 : core
     port map(
         -- global interface
         clk, reset_n,
@@ -88,7 +85,21 @@ core0 : entity work.core
         DEBUG_PC_READ
     );
 
-clk <= not clk after 5 ns; 
+
+clk_gen : process
+begin 
+    clk <= '0'; 
+    wait for 5 ns; 
+    clk <= '1'; 
+    wait for 5 ns; 
+    CYCLES <= CYCLES + 1; 
+    if CYCLES = NCYCLES then 
+        assert false report "end of simulation" severity note; 
+        wait; 
+    end if; 
+end process; 
+
+
 reset_n <= '0', '1' after 10 ns;
 
 MCACHE_RESULT_SM <= x"0C0C0C0C";
@@ -99,4 +110,5 @@ IC_STALL_SI <= '0';
 
 PC_INIT <= x"AAAAAAAA";
 
-end simu; 
+
+end simu;

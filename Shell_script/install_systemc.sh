@@ -12,7 +12,7 @@ if ( $OS = "Linux" ) && ( !lsb_release -a | grep -q Scientific ) then
         if ( "$1" = "clean" )
         then    
             echo "rm systemc-2.3.3.gz"
-            sudo rm -f /user/local/systemc-2.3.3.gz.1
+            sudo rm -f /usr/local/systemc-2.3.3.gz
         else
             echo "Installing systemc for Linux distribution"
             cd /usr/local/

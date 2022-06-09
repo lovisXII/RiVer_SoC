@@ -66,8 +66,8 @@ SC_MODULE(decod) {
     // Multiplications signals
     sc_out<bool>                   MULT_INST_RD;
 
-    sc_in<bool>                   MULT_INST_RE;
-    sc_in<bool>                   MULT_INST_RM;
+    sc_in<bool>                    MULT_INST_RE;
+    sc_in<bool>                    MULT_INST_RM;
     // Interface with CSR :
 
     sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
@@ -79,6 +79,7 @@ SC_MODULE(decod) {
     sc_in<sc_uint<32>> BP_EXE_RES_RE;
     sc_in<bool>        BP_MEM_LOAD_RE;
     sc_in<bool>        BP_EXE2MEM_EMPTY_SE;
+    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
     sc_in<sc_uint<6>>  BP_DEST_RM;
     sc_in<sc_uint<32>> BP_MEM_RES_RM;
 
@@ -429,7 +430,7 @@ SC_MODULE(decod) {
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD
 
-                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE;
+                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM;
         reset_signal_is(RESET_N, false);
     }
 };

@@ -1,0 +1,66 @@
+name: 'Basic tests'
+
+# **What it does**: Run tests 
+# **Why we have it**: To make sure nobody breaks things
+# **Who does it impact**: Not much
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - test_actions
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache riscv
+        id: cache-riscv
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-riscv
+        with:
+          # systemC is installed in /usr/local/systemc-2.3.3/
+          path: ~/riscv
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-riscv.outputs.cache-hit != 'true' }}
+        name: Get riscv
+        run: 
+          ./scripts/install_cross_compile.sh
+      - name: Cache systemC
+        id: cache-systemc
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-systemc
+        with:
+          # systemC is installed in /usr/local/systemc-2.3.3/
+          path: ~/systemc-2.3.3/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-systemc.outputs.cache-hit != 'true' }}
+        name: Build systemC
+        run: ./scripts/install_systemc.sh
+
+      - name: Build
+        run: ./scripts/build_systemc_core.sh
+
+      - name: Run tests
+        run: ./scripts/test_systemc_core.sh

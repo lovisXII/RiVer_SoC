@@ -314,6 +314,7 @@ SC_MODULE(core) {
         dec_inst.BP_DEST_RM(DEST_RM);
         dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
         dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
+        dec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
         dec_inst.BP_R1_VALID_RD(BP_R1_VALID_RD);
         dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);

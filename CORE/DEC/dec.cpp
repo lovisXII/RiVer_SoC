@@ -1034,13 +1034,17 @@ void decod::bypasses() {
                !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
                                         // currently in mem
         r1_valid_sd.write(false);
+    } else if(RADR1_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
+        r1_valid_sd.write(false);
+    } else if(RADR1_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()){ // dont bypass if mul instruction didnt finish
+        r1_valid_sd.write(false);
     } else if (RADR1_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r1_valid_sd.write(true);
         if (CSR_WENABLE_RE.read())
             rdata1_sd.write(CSR_RDATA_RE.read());
         else
             rdata1_sd.write(BP_EXE_RES_RE.read());
-    } else if (RADR1_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
+    } else if (RADR1_SD.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) {  // bypass M->D
         r1_valid_sd.write(true);
         if (CSR_WENABLE_RM.read())
             rdata1_sd.write(CSR_RDATA_RM.read());
@@ -1061,13 +1065,17 @@ void decod::bypasses() {
                !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
                                         // currently in mem
         r2_valid_sd.write(false);
+    } else if(RADR2_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
+        r2_valid_sd.write(false);
+    } else if(RADR2_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()){ // dont bypass if mul instruction didnt finish
+        r2_valid_sd.write(false);
     } else if (RADR2_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r2_valid_sd.write(true);
         if (CSR_WENABLE_RE.read())
             rdata2_sd.write(CSR_RDATA_RE.read());
         else
             rdata2_sd.write(BP_EXE_RES_RE.read());
-    } else if (RADR2_SD.read() == BP_DEST_RM.read()) {  // bypass M->D
+    } else if (RADR2_SD.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) {  // bypass M->D
         r2_valid_sd.write(true);
         if (CSR_WENABLE_RM.read())
             rdata2_sd.write(CSR_RDATA_RM.read());
@@ -1164,6 +1172,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
     sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME(BP_MEM_LOAD_RE));
     sc_trace(tf, BP_EXE2MEM_EMPTY_SE, GET_NAME(BP_EXE2MEM_EMPTY_SE));
+    sc_trace(tf, BP_MEM2WBK_EMPTY_SM, GET_NAME(BP_MEM2WBK_EMPTY_SM));
     sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
     sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
 
