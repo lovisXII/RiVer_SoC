@@ -47,6 +47,9 @@ void exec::select_exec_res() {
             }
         } else {
             if (MEM_LOAD_RD.read() || MEM_STORE_RD.read()) {
+                //MEM_SIZE = 0 -> Word
+                //MEM_SIZE = 1 -> Half word
+                //MEM_SIZE = 2 -> byte
                 if ((alu_out_se.read() & 0b11 != 0 && MEM_SIZE_RD.read() == 0) ||
                     (alu_out_se.read() & 0b1 != 0 &&
                      MEM_SIZE_RD.read() == 1)) {  // if adress isn't aligned it creates an exception

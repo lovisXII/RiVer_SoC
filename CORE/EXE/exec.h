@@ -213,7 +213,7 @@ SC_MODULE(exec) {
                   << WB_RD 
                   << exe_res_se 
                   << mem_load_re 
-                  << mem_store_re 
+                  << mem_store_re
                   << wb_re 
                   << CSR_WENABLE_RD 
                   << CSR_WADR_RD

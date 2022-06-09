@@ -189,6 +189,7 @@ SC_MODULE(core) {
     sc_signal<bool>        WENABLE_SW;
 
     // Mcache interface
+    sc_out<sc_uint<2>>  MEM_SIZE_SM;
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
 
     sc_out<sc_uint<32>> MCACHE_DATA_SM;
@@ -502,6 +503,7 @@ SC_MODULE(core) {
         mem_inst.MCACHE_ADR_VALID_SM(MCACHE_ADR_VALID_SM);
         mem_inst.MCACHE_STORE_SM(MCACHE_STORE_SM);
         mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);  // 19
+        mem_inst.MEM_SIZE_SM(MEM_SIZE_SM);  
 
         mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
         mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);

@@ -34,10 +34,12 @@ SC_MODULE(dcache)
   sc_in<bool> LOAD_SM;
   sc_in<bool> STORE_SM;
   sc_in<bool> VALID_ADR_SM;
+  sc_in<sc_uint<2>> MEM_SIZE_SM;
 
   sc_out<sc_uint<32>> DATA_SC;
   sc_out<bool> STALL_SC;               // if stall donc miss else hit
 // interface MP
+  sc_out<sc_uint<2>> MEM_SIZE_SC;
   sc_out<bool> DTA_VALID_SC;         // data or/and adresse valid
   sc_out<bool> READ_SC, WRITE_SC;
 
@@ -106,7 +108,10 @@ SC_MODULE(dcache)
     sensitive << DATA_ADR_SM;
 
     SC_METHOD(miss_detection);
-    sensitive << address_tag << address_index << address_offset << STALL_SC << CLK;
+    sensitive << address_tag 
+              << MEM_SIZE_SM
+              << address_index << address_offset << STALL_SC << CLK;
+              
       
     SC_THREAD(transition);
     sensitive << CLK.neg() << SLAVE_ACK_SP << A_SP;

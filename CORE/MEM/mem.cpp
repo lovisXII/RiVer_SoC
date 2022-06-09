@@ -1,5 +1,48 @@
 #include "mem.h"
 
+/*
+3 memory access are possible :
+*  access in byte
+*  access in half word
+*  access in word
+In every situation the adress must be aligned with the size of the access type. Meaning :
+* byte      : adress must be aligned on a byte (01)
+* half-word : adress must be aligned on a half-word (10)
+* word      : adress must be aligned on a word (00)
+
+If a access is made in a specific type and the adress doesnt respect the alignement it must raise an exception.
+
+For load access :
+* byte      :   we load a specific byte of an adress (00, 01, 10 or 11) and we place the value on the least significant bits of the 
+                destination register
+* half-word :   we load a specific half-word (10 or 00) and we place the value on the least significant 
+                destination register
+* word      : we load a word in a register
+
+For store access :
+* byte      : we store the least significant byte of the register inside the proper adress
+* half-word : we store the least significant half-word of the register inside the proper adress
+* word      : no specific issue with it 
+*/
+
+/*
+The memory receive a 32 bits adress and ignore the least 2 significant bits.
+Meaning it deals with a 30 bits adress.
+The Memory must be split in 4 distinct parts, each of these parts
+dealing with a byte of a word-align adress.
+
+For example :
+li x1,0x1000F101
+li x2,12
+sb x2,0(x1)
+
+The ram receive the adress 0x1000F101 and ignore the least 2 bits, 
+so it receive 0x1000F100.
+The ram access this adress and is informed that a byte access is made
+with the least 2 significant bits equal to 01
+So it will store the data in the corresponding case adress
+
+*/
 void mem::mem2wbk_concat() {
     sc_bv<mem2wbk_size> ff_din;
 
@@ -33,14 +76,15 @@ void mem::mem_preprocess() {
     int         size        = MEM_SIZE_RE.read();
     bool        sign_extend = SIGN_EXTEND_RE.read();
     sc_uint<32> din         = MEM_DATA_RE.read();
-    int         adr         = EXE_RES_RE.read() & 0xFFFFFFFC;
+    int         adr         ;
     sc_uint<32> dout;
     int         range_size;
     int         range_end;
     int         range_start;  // The beginning of the range of din that should actually
                               // be written to the register
-
-    switch (EXE_RES_RE.read().range(2, 0)) {
+    MEM_SIZE_SM = MEM_SIZE_RE ;
+    // Memory slot selection
+    switch (EXE_RES_RE.read().range(1, 0)) {
         case 0: range_start = 0; break;
         case 1: range_start = 8; break;
         case 2: range_start = 16; break;
@@ -48,10 +92,11 @@ void mem::mem_preprocess() {
         default: range_start = 0; break;
     }
 
+    // Size of the data manipulate
     switch (size) {
-        case 2: range_size = 7; break;
-        case 1: range_size = 15; break;
-        case 0: range_size = 31; break;
+        case 2: range_size = 7; break;  //byte
+        case 1: range_size = 15; break; // half word
+        case 0: range_size = 31; break; // word
         default: range_size = 31; break;
     }
     range_end = std::min(31, range_start + range_size);
@@ -61,13 +106,24 @@ void mem::mem_preprocess() {
     } else {
         dout = 0;
     }
-    dout.range(range_size, 0) = din.range(range_end, range_start);
+
+    // size = 2, range_size = 7
+    // adresse : 3, range_start = 24
+    // range_end = 7+24 = 31
+    // din.range(7,0)
+    //dout.range(31,24)
+    // issue with the store value
+    dout.range(range_end, range_start) = din.range(range_size, 0);
 
     // Whether the register bank shoudl actually write the data
     wb_sm.write(WB_RE.read() || LOAD_RE.read());
 
-    // The data sent to the actual memory
+    // The data sent to the actual memory/Icache
     MCACHE_DATA_SM.write(dout);
+    if(STORE_RE)
+        adr = EXE_RES_RE.read() ;
+    else
+        adr = EXE_RES_RE.read() & 0xFFFFFFFC ;
     MCACHE_ADR_SM.write(adr);
     MCACHE_LOAD_SM.write(LOAD_RE.read());
     MCACHE_STORE_SM.write(STORE_RE.read());
@@ -84,7 +140,9 @@ void mem::sign_extend() {
     int         range_size;
     int         range_start;  // The beginning of the range of din that should actually
                               // be written to the register
-
+    //MEM_SIZE = 0 -> Word
+    //MEM_SIZE = 1 -> Half word
+    //MEM_SIZE = 2 -> byte
     switch (EXE_RES_RE.read().range(2, 0)) {
         case 0: range_start = 0; break;
         case 1: range_start = 8; break;
@@ -442,6 +500,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
+    sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
     sc_trace(tf, STORE_ACCESS_FAULT_RE, GET_NAME(STORE_ACCESS_FAULT_RE));
     sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE, GET_NAME(STORE_ADRESS_MISSALIGNED_RE));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));

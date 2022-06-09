@@ -923,6 +923,9 @@ void decod::pc_inc() {
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
     bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
     
+
+    // PC Incrementation
+
     if (!add_offset_to_pc && !dec2if_full_sd ) {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD  = 1;
@@ -937,7 +940,9 @@ void decod::pc_inc() {
     }
 
         DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
-    // Adress missaligned exception :
+    
+    //Instruction adress missaligned exception :
+    
     if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
         dec2if_in_sd.write(pc_out);

@@ -11,6 +11,7 @@ void icache::parse_adr()
 
 void icache::miss_detection()
 {
+
     // COMPARE HIT WAY0
     if(address_tag == tag[address_index.read()] && data_validate[address_index.read()])
     {   
