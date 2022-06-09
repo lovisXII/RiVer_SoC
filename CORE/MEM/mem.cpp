@@ -13,16 +13,13 @@ In every situation the adress must be aligned with the size of the access type. 
 If a access is made in a specific type and the adress doesnt respect the alignement it must raise an exception.
 
 For load access :
-* byte      :   we load a specific byte of an adress (00, 01, 10 or 11) and we place the value on the least significant bits of the 
-                destination register
-* half-word :   we load a specific half-word (10 or 00) and we place the value on the least significant 
-                destination register
-* word      : we load a word in a register
+In all the case we send a word-align adress to the ram and we do the masking
+operation in mem
 
 For store access :
-* byte      : we store the least significant byte of the register inside the proper adress
-* half-word : we store the least significant half-word of the register inside the proper adress
-* word      : no specific issue with it 
+* byte      : we store the least significant byte of the register in the corresponding part of the adress
+* half-word : same thing but with a half word  
+* word      : the word is directly store inside the memory case
 */
 
 /*
@@ -38,9 +35,9 @@ sb x2,0(x1)
 
 The ram receive the adress 0x1000F101 and ignore the least 2 bits, 
 so it receive 0x1000F100.
-The ram access this adress and is informed that a byte access is made
+The ram accesses this adress and is informed that a byte access is made
 with the least 2 significant bits equal to 01
-So it will store the data in the corresponding case adress
+So it will store the data in the corresponding case adress with is the 2nd one.
 
 */
 void mem::mem2wbk_concat() {
