@@ -41,6 +41,7 @@ SC_MODULE(core) {
     sc_signal<bool>        NEG_OP2_RD;
     sc_signal<bool>        WB_RD;
     sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;
+    sc_signal<sc_uint<32>>  PC_BRANCH_VALUE_RD;
 
     sc_signal<sc_uint<32>> MEM_DATA_RD;
     sc_signal<bool>        MEM_LOAD_RD;
@@ -95,6 +96,7 @@ SC_MODULE(core) {
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
 
     // EXE-MEM interface
+    sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE;
     sc_signal<sc_uint<32>> EXE_RES_RE;
     sc_signal<sc_uint<32>> MEM_DATA_RE;
     sc_signal<sc_uint<6>>  DEST_RE;
@@ -354,6 +356,7 @@ SC_MODULE(core) {
         dec_inst.MULT_INST_RD(MULT_INST_RD);
         dec_inst.MULT_INST_RE(MULT_INST_RE);
         dec_inst.MULT_INST_RM(MULT_INST_RM);
+        dec_inst.PC_BRANCH_VALUE_RD(PC_BRANCH_VALUE_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -445,6 +448,8 @@ SC_MODULE(core) {
         exec_inst.MRET_RE(MRET_RE);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
+        exec_inst.PC_BRANCH_VALUE_RD(PC_BRANCH_VALUE_RD);
+        exec_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -557,6 +562,7 @@ SC_MODULE(core) {
         mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);  // 54
 
         mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);  // 55
+        mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);  
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);  // 58

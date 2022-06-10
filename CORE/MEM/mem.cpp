@@ -389,7 +389,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0;
+            MTVAL_WDATA_SM = PC_BRANCH_VALUE_RE;
             MCAUSE_WDATA_SM.write(0);
             CURRENT_MODE_SM = 3;
         } else if (ILLEGAL_INSTRUCTION_RE) {
@@ -498,6 +498,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+    sc_trace(tf, PC_BRANCH_VALUE_RE, GET_NAME(PC_BRANCH_VALUE_RE));
     sc_trace(tf, STORE_ACCESS_FAULT_RE, GET_NAME(STORE_ACCESS_FAULT_RE));
     sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE, GET_NAME(STORE_ADRESS_MISSALIGNED_RE));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));

@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size 220
+#define dec2exe_size 252
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(decod) {
@@ -30,9 +30,9 @@ SC_MODULE(decod) {
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD;
     sc_out<bool>        SLTU_RD;
-    sc_out<sc_uint<32>> PC_DEC2EXE_RD;  // PC link to the current decoded instruction
-
-    sc_out<sc_uint<32>> MEM_DATA_RD;   // data sent to mem for storage
+    sc_out<sc_uint<32>> PC_DEC2EXE_RD;              // PC link to the current decoded instruction
+    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RD;         // PC of the branch value, will be usefull for exception
+    sc_out<sc_uint<32>> MEM_DATA_RD;                // data sent to mem for storage
     sc_out<bool>        MEM_LOAD_RD;   // say to mem if we do a load
     sc_out<bool>        MEM_STORE_RD;  // say to mem if we do a store
     sc_out<bool>        MEM_SIGN_EXTEND_RD;
@@ -254,6 +254,7 @@ SC_MODULE(decod) {
 
     sc_signal<bool>        csr_wenable_sd;
     sc_signal<sc_uint<12>> csr_radr_sd;
+    sc_signal<sc_uint<32>> pc_branch_value_sd;
     // Offset for branch :
 
     sc_signal<sc_uint<32>> offset_branch_sd;

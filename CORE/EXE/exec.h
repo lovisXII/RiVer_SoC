@@ -7,7 +7,7 @@
 #include "alu.h"
 #include "shifter.h"
 
-#define exe2mem_size        168
+#define exe2mem_size        200
 #define start_kernel_adress 0x80000000
 
 SC_MODULE(exec) {
@@ -44,6 +44,10 @@ SC_MODULE(exec) {
 
     sc_in<bool>       EXCEPTION_RD;  // tells if an instruction have been made in DEC
     sc_in<sc_uint<2>> CURRENT_MODE_SM;
+    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RD ;
+    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RE ;
+    
+
 
     sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_in<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned

@@ -118,6 +118,7 @@ void exec::fifo_concat() {
         ff_din[165]            = INSTRUCTION_ACCESS_FAULT_RD;
         ff_din[166]            = EBREAK_RD;
         ff_din[167]            = MULT_INST_RD.read();
+        ff_din.range(168, 199) = PC_BRANCH_VALUE_RD.read();
         
     } else {
         ff_din.range(31, 0)    = 0;
@@ -147,6 +148,7 @@ void exec::fifo_concat() {
         ff_din[165]            = 0;
         ff_din[166]            = 0;
         ff_din[167]            = 0;
+        ff_din.range(168, 199) = 0;
     }
 
     exe2mem_din_se.write(ff_din);
@@ -180,6 +182,7 @@ void exec::fifo_unconcat() {
     INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[165]);
     EBREAK_RE.write((bool)ff_dout[166]);
     MULT_INST_RE.write((bool)ff_dout[167]);
+    PC_BRANCH_VALUE_RE.write((sc_bv_base)ff_dout.range(168, 199));
 }
 
 void exec::manage_fifo() {
@@ -319,6 +322,8 @@ void exec::trace(sc_trace_file* tf) {
              GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE));  // branch offset is misaligned
     sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
     sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
+    sc_trace(tf, PC_BRANCH_VALUE_RD, GET_NAME(PC_BRANCH_VALUE_RD));
+    sc_trace(tf, PC_BRANCH_VALUE_RE, GET_NAME(PC_BRANCH_VALUE_RE));
 
     // Interruption :
 

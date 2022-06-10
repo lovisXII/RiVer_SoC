@@ -1,11 +1,11 @@
 #! /bin/bash
 
 echo "Installing dependencies"
-apt-get install libedit clang lldb lld pkg-config zlib1g-dev
+apt-get install libedit clang lldb lld pkg-config zlib1g-dev gnat
 
 echo "Downloading ghdl sources"
 wget https://github.com/ghdl/ghdl/archive/master.tar.gz
-tar -xvf ghdl-master.tar.gz
+tar -xvf master.tar.gz
 cd ghdl-master && mkdir -p build 
 cd build && ../configure --with-llvm-config --prefix=/opt/ghdl
 make 

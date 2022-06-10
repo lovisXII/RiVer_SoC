@@ -7,6 +7,7 @@
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
+        dec2exe_in_var.range(251,220) = pc_branch_value_sd;  
         dec2exe_in_var[219] = mul_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd;  
         dec2exe_in_var[218] = ebreak_i_sd;
         dec2exe_in_var[217] = instruction_access_fault_sd;  
@@ -47,6 +48,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[1]            = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]            = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
+        dec2exe_in_var.range(251,220)  = 0;
         dec2exe_in_var[219]            = 0;
         dec2exe_in_var[218]            = 0; 
         dec2exe_in_var[217]            = 0;  
@@ -89,6 +91,7 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
+    PC_BRANCH_VALUE_RD.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD.write((bool)dec2exe_out_var[219]);
     EBREAK_RD.write((bool)dec2exe_out_var[218]);
     INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[217]);
@@ -944,6 +947,7 @@ void decod::pc_inc() {
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
         dec2if_in_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
+        pc_branch_value_sd = pc_out ;
         if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd = 1;
         } else {
@@ -1335,4 +1339,6 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, env_call_wrong_mode, GET_NAME(env_call_wrong_mode));
+    sc_trace(tf, PC_BRANCH_VALUE_RD, GET_NAME(PC_BRANCH_VALUE_RD));
+    sc_trace(tf, pc_branch_value_sd, GET_NAME(pc_branch_value_sd));
 }

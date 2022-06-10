@@ -502,7 +502,9 @@ int sc_main(int argc, char* argv[]) {
             exit(1);
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
-            countdown = 10;
+            cerr << "inside if : " << endl ; 
+            countdown = 20;
+            cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
@@ -510,8 +512,12 @@ int sc_main(int argc, char* argv[]) {
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
             cout << "signature_name :" << signature_name << endl ;
+            cout << "begin_signature :" << begin_signature << endl ;
+            cout << "end_signature :" << end_signature << endl ;
+            
             for (int i = begin_signature; i < end_signature; i += 4){
-                cout << setfill('0') << setw(8) << hex << ram[i] << endl;
+                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
+                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;

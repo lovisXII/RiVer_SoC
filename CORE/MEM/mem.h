@@ -53,6 +53,8 @@ SC_MODULE(mem) {
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_in<bool> MRET_RE;  // 31
 
+    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE ;
+
     // Bus Interface : // No bus in our implemation but can be use for further use
 
     sc_in<bool> BUS_ERROR_SX;
