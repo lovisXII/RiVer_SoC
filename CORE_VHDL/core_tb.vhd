@@ -8,19 +8,19 @@ end core_tb;
 
 architecture simu of core_tb is 
 
-function get_inst (adr : integer) return integer is 
+function get_inst(adr : std_logic_vector(31 downto 0)) return std_logic_vector is 
 begin 
     assert false severity failure;
 end get_inst; 
 attribute foreign of get_inst : function is "VHPIDIRECT get_inst";    
 
-function get_mem (adr : integer) return integer is 
+function get_mem(adr : integer) return integer is 
 begin 
     assert false severity failure;
 end get_mem; 
 attribute foreign of get_mem : function is "VHPIDIRECT get_mem";    
 
-function write_mem (adr : integer; data : integer) return integer is 
+function write_mem(adr : integer; data : integer) return integer is 
 begin 
     assert false severity failure;
 end write_mem; 
@@ -126,10 +126,11 @@ reset_n <= '0', '1' after 10 ns;
 --MCACHE_RESULT_SM <= x"0C0C0C0C";
 MCACHE_STALL_SM <= '0';
 
-IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
+--IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
 IC_STALL_SI <= '0';
+IC_INST_SI <= get_inst(ADR_SI);
 
-PC_INIT <= x"AAAAAAAA";
+PC_INIT <= x"00000000";
 
 
 end simu;

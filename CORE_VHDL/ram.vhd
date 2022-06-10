@@ -23,7 +23,6 @@ process(clk)
 begin
     if rising_edge(clk) then 
         if reset_n = '0' then 
-            data_r <= x"00000000";
             for i in 0 to SIZE-1 loop 
                 ram0(i) <= x"00";
                 ram1(i) <= x"00";
