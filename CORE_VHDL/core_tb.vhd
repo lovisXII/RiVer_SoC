@@ -8,7 +8,8 @@ end core_tb;
 
 architecture simu of core_tb is 
 
-function get_inst(adr : std_logic_vector(31 downto 0)) return std_logic_vector is 
+-- functions 
+function get_inst(adr : integer) return integer is 
 begin 
     assert false severity failure;
 end get_inst; 
@@ -128,9 +129,22 @@ MCACHE_STALL_SM <= '0';
 
 --IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
 IC_STALL_SI <= '0';
-IC_INST_SI <= get_inst(ADR_SI);
+
+IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
 
 PC_INIT <= x"00000000";
 
+mem_access : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM)
+variable read : integer;
+begin 
+    if MCACHE_ADR_VALID_SM = '1' then 
+        if MCACHE_STORE_SM = '1' then 
+            read := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)));
+        elsif MCACHE_LOAD_SM = '1' then 
+            MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
+        end if; 
+
+    end if; 
+end process;
 
 end simu;

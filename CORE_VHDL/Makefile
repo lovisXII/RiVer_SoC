@@ -1,22 +1,25 @@
 BUILD=build
+GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=--workdir=$(BUILD)
-GHDL=$(ghdl)
-COMPONENTS=core IFETCH/* DEC/dec EXE/* MEM/* WBK/* REG/* UTIL/* ram
-TB=core_tb 
-MODS=$(COMPONENTS) $(TB)
+COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg UTIL/fifo 
+TB=core_tb
+MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))
+OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 
-all : analyse elaborate build 
-	$(GHDL) -r $(TB) --vcd=core_tb.vcd 
+all : $(BUILD)/a.out
 
-build : 
-	cd $(BUILD) && clang ../ram_sim.cpp -Wl, `$(GHDL) --list-link $(TB)`
+analyse: $(OBJ)
 
-analyse : $(SOURCES)
-	$(GHDL) -a -v $^ && $(GHDL) --bind $(TB)
+$(BUILD)/a.out: $(BUILD)/e~$(TB).o ram_sim.c
+	cd $(BUILD) && clang ../ram_sim.c -Wl,`$(GHDL) --list-link $(TB)`
 
-elaborate : analyse 
-	$(GHDL) -e -v $(TB) 	
+$(BUILD)/e~$(TB).o: $(OBJ)
+	cd $(BUILD) && $(GHDL) --bind $(TB)
+	
+$(BUILD)/core_tb.o: $(SOURCES)
+	$(GHDL) -a $(GHDLFLAGS) $^
 
-clean : 
-	rm *.vcd *.cf *.o *.lst
+clean:
+		rm $(BUILD)/* -f *.lst *.o
+	
