@@ -40,6 +40,8 @@ SC_MODULE(exec) {
     sc_in<sc_uint<12>> CSR_WADR_RD;
     sc_in<sc_uint<32>> CSR_RDATA_RD;
 
+    sc_in<bool>        MULT_INST_RM;
+    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
     // Exception coming from Decod :
 
     sc_in<bool>       EXCEPTION_RD;  // tells if an instruction have been made in DEC
@@ -135,6 +137,9 @@ SC_MODULE(exec) {
     sc_signal<bool> mem_load_re;
     sc_signal<bool> mem_store_re;
 
+    sc_signal<bool> stall_se;
+    sc_signal<bool> r1_valid_se;
+    sc_signal<bool> r2_valid_se;
     // Exception :
 
     sc_signal<bool> exception_se;
@@ -234,11 +239,11 @@ SC_MODULE(exec) {
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked << r1_valid_se << r2_valid_se;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
                   << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
-                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD;
+                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD << MULT_INST_RE << MULT_INST_RM << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
         SC_METHOD(exception);
         sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD << load_adress_missaligned_se
                   << exception_se << load_access_fault_se << store_access_fault_se << store_adress_missaligned_se;

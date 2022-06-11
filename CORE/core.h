@@ -446,6 +446,9 @@ SC_MODULE(core) {
         exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
 
+        exec_inst.MULT_INST_RM(MULT_INST_RM);
+        exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 

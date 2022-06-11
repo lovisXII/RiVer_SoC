@@ -72,7 +72,7 @@ void x1_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, IN_RX0, GET_NAME(IN_RX0));
     sc_trace(tf, RES_RX1, GET_NAME(RES_RX1));
     sc_trace(tf, X12X2_POP_SX2, GET_NAME(X12X2_POP_SX2));
-
+/*
     sc_trace(tf, M[0], GET_NAME(M[0]));
     sc_trace(tf, M[1], GET_NAME(M[1]));
     sc_trace(tf, M[2], GET_NAME(M[2]));
@@ -87,6 +87,6 @@ void x1_multiplier::trace(sc_trace_file* tf)
     
     sc_trace(tf, product_s7[0], GET_NAME(product_s7[0]));
     sc_trace(tf, product_s7[1], GET_NAME(product_s7[1]));
-
+*/
     fifo_inst.trace(tf);
 }

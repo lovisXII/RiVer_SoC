@@ -24,21 +24,6 @@ void x0_multiplier::operation()
     bool signed_1 = op1[31] == 1;
     bool signed_2 = op2[31] == 1;
 
-    if(signed_1)
-    {
-        product[32] = op2;
-        op1 = op1 - 1;
-    }
-    else
-        product[32] = (sc_bv<64>)0;
-
-    if(signed_2)
-    {
-        product[33] = op1;
-        op2 = op2 - 1;
-    }
-    else
-        product[33] = (sc_bv<64>)0;
 
     if(signed_1 && signed_2)
         carry_sx0 = 1;
