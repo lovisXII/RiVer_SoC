@@ -89,6 +89,10 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
+    //EXE-X0
+    sc_signal<sc_uint<32>> op1_se;
+    sc_signal<sc_uint<32>> op2_se;
+
     // X0-X1 interface
     sc_signal<sc_bv<384>> multiplier_out_sx0;
     sc_signal<bool>       signed_op_rx0;
@@ -446,6 +450,9 @@ SC_MODULE(core) {
         exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
 
+        exec_inst.OP1_SE(op1_se);
+        exec_inst.OP2_SE(op2_se);
+
         exec_inst.MULT_INST_RM(MULT_INST_RM);
         exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
@@ -454,28 +461,16 @@ SC_MODULE(core) {
 
         //X0 - MULTIPLIER port map :
 
-        x0_multiplier_inst.OP1_RD(OP1_RD);
-        x0_multiplier_inst.OP2_RD(OP2_RD);
+        x0_multiplier_inst.OP1_SE(op1_se);
+        x0_multiplier_inst.OP2_SE(op2_se);
         x0_multiplier_inst.EXE_CMD_RD(EXE_CMD_RD);
         x0_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
-        x0_multiplier_inst.MEM_DATA_RD(MEM_DATA_RD);
-        x0_multiplier_inst.RADR1_RD(RADR1_SD);
-        x0_multiplier_inst.RADR2_RD(RADR2_SD);
-        x0_multiplier_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        x0_multiplier_inst.MEM_DEST_RM(DEST_RM);
-        x0_multiplier_inst.MEM_RES_RM(MEM_RES_RM);
-        x0_multiplier_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
-        x0_multiplier_inst.CSR_RDATA_RM(CSR_RDATA_RM);
-        x0_multiplier_inst.EXE_RES_RE(EXE_RES_RE);
-        x0_multiplier_inst.DEST_RE(DEST_RE);
+        x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
         x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
         x0_multiplier_inst.CARRY_RX0(carry_rx0);
-        x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
         x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
-        x0_multiplier_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
-        x0_multiplier_inst.CSR_RDATA_RE(CSR_RDATA_RE);
 
         x0_multiplier_inst.CLK(CLK);
         x0_multiplier_inst.RESET(RESET);

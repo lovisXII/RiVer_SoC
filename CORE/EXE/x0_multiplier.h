@@ -8,27 +8,10 @@
 SC_MODULE(x0_multiplier)
 {
     // input :
-    sc_in<sc_uint<32>> OP1_RD, OP2_RD;
+    sc_in<sc_uint<32>> OP1_SE, OP2_SE;
     sc_in<sc_uint<2>>  EXE_CMD_RD;
     sc_in<bool>        X02X1_POP_SX1;
-
     sc_in<bool>        DEC2X0_EMPTY_SD;
-
-    sc_in<sc_uint<32>> MEM_DATA_RD;
-    sc_in<sc_uint<6>>  RADR1_RD;
-    sc_in<sc_uint<6>>  RADR2_RD;
-
-    sc_in<bool>        BLOCK_BP_RD;
-
-    sc_in<sc_uint<6>>  MEM_DEST_RM;
-    sc_in<sc_uint<32>> MEM_RES_RM;
-    sc_in<bool>        CSR_WENABLE_RM;
-    sc_in<sc_uint<32>> CSR_RDATA_RM;
-    sc_in<sc_uint<32>> EXE_RES_RE;
-    sc_in<sc_uint<6>>  DEST_RE;
-
-    sc_in<bool>        CSR_WENABLE_RE;
-    sc_in<sc_uint<32>> CSR_RDATA_RE;
     
     // output :
     sc_out<sc_bv<384>> RES_RX0;
@@ -48,8 +31,6 @@ SC_MODULE(x0_multiplier)
     sc_signal<sc_bv<64>> product_s4[6];  // product of stage 4
     sc_signal<sc_bv<64>> product_s5[4];  // product of stage 5
 
-    sc_signal<sc_uint<32>> op1_sx0;
-    sc_signal<sc_uint<32>> op2_sx0;
     sc_signal<bool>        signed_op;
     sc_signal<bool>        select_higher_bits_sx0;
     sc_signal<bool>        carry_sx0;
@@ -126,7 +107,7 @@ SC_MODULE(x0_multiplier)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(operation);
-        sensitive << op1_sx0 << op2_sx0 << EXE_CMD_RD;
+        sensitive << OP1_SE << OP2_SE << EXE_CMD_RD;
 
         //stage 1
         SC_METHOD(CSA_1);
@@ -217,9 +198,6 @@ SC_MODULE(x0_multiplier)
         SC_METHOD(CSA_28);
         sensitive << product_s4[3] << product_s4[4] << product_s4[5];
 
-        //bypasses
-        SC_METHOD(bypasses);
-        sensitive << OP1_RD << OP2_RD;
         //fifo
         SC_METHOD(fifo_concat);
         sensitive << product_s5[0] << product_s5[1] << product_s5[2] << product_s5[3];

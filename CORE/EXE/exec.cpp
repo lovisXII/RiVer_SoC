@@ -11,6 +11,9 @@ void exec::preprocess_op() {
         alu_in_op2_se.write(op2);
     }
     shift_val_se.write(op2.range(4, 0));
+
+    OP1_SE.write(op1_se);
+    OP2_SE.write(op2_se);
 }
 
 void exec::select_exec_res() {
@@ -412,6 +415,9 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, r1_valid_se, GET_NAME(r1_valid_se));
     sc_trace(tf, r2_valid_se, GET_NAME(r2_valid_se));
     sc_trace(tf, MULT_INST_RM, GET_NAME(MULT_INST_RM));
+
+    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
+    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
     
     alu_inst.trace(tf);
     shifter_inst.trace(tf);

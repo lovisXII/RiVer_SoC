@@ -72,6 +72,8 @@ SC_MODULE(exec) {
     sc_out<bool> MRET_RE;
     sc_out<bool> EBREAK_RE;
 
+    sc_out<sc_uint<32>> OP1_SE;
+    sc_out<sc_uint<32>> OP2_SE;
     // Interruption :
 
     sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE;
