@@ -50,9 +50,10 @@ void exec::select_exec_res() {
                 //MEM_SIZE = 0 -> Word
                 //MEM_SIZE = 1 -> Half word
                 //MEM_SIZE = 2 -> byte
-                if ((alu_out_se.read() & 0b11 != 0 && MEM_SIZE_RD.read() == 0) ||
-                    (alu_out_se.read() & 0b1 != 0 &&
-                     MEM_SIZE_RD.read() == 1)) {  // if adress isn't aligned it creates an exception
+                if (((alu_out_se.read() & 0b11) != 0 && MEM_SIZE_RD.read() == 0) 
+                    ||
+                    ((alu_out_se.read() & 0b1) != 0 && MEM_SIZE_RD.read() == 1)) 
+                    {  // if adress isn't aligned it creates an exception
                                                   // loading bytes on byte-aligned adresses is legal
                     if (MEM_LOAD_RD)
                         load_adress_missaligned_se = 1;
