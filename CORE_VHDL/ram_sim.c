@@ -25,17 +25,22 @@ int write_mem(int a, int data) {
 }
 
 extern int ghdl_main(int argc, char const* argv[]);
-//argc nombre d'arguments du terminal
-//argv nom des arguments
+
+
 int main(int argc, char const* argv[]) {
+
+    if(argc != 2) { 
+        printf("Erreur : nombre d'arguments non valide\n");
+        return EXIT_FAILURE;
+    }
+
     char* line_buf = NULL; 
     size_t line_buf_size = 0; 
     FILE* file; 
     file = fopen(argv[argc-1], "r");
-    printf("opening file : %s\n", argv[argc-1]);
 
     if(file == NULL) {
-        printf("error opening file %s\n", argv[argc-1]);
+        printf("Erreur lors de l'ouverture du fichier %s\n", argv[argc-1]);
         return EXIT_FAILURE;
     }
 

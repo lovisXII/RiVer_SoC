@@ -130,7 +130,11 @@ MCACHE_STALL_SM <= '0';
 --IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
 IC_STALL_SI <= '0';
 
-IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
+process(ADR_SI)
+begin
+    IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
+    assert false report "new instruction" severity note; 
+end process; 
 
 PC_INIT <= x"00000000";
 
