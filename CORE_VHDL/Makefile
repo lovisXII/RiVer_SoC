@@ -2,7 +2,7 @@ BUILD=build
 SIM_DIR=sim
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=--workdir=$(BUILD)
-COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg UTIL/fifo 
+COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
 TB=core_tb
 MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))

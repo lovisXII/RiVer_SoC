@@ -28,7 +28,8 @@ end write_mem;
 attribute foreign of write_mem : function is "VHPIDIRECT write_mem";    
 
 -- global interface
-signal clk, reset_n : std_logic := '1';
+signal clk : std_logic := '1';
+signal reset_n : std_logic := '0';
 
 -- Mcache interface
 signal MCACHE_RESULT_SM : std_logic_vector(31 downto 0);
@@ -121,7 +122,7 @@ begin
     end if; 
 end process; 
 
-reset_n <= '0', '1' after 1 ns;
+reset_n <= '0', '1' after 6 ns;
 
 MCACHE_STALL_SM <= '0';
 
