@@ -28,7 +28,7 @@ end write_mem;
 attribute foreign of write_mem : function is "VHPIDIRECT write_mem";    
 
 -- global interface
-signal clk, reset_n : std_logic := '0';
+signal clk, reset_n : std_logic := '1';
 
 -- Mcache interface
 signal MCACHE_RESULT_SM : std_logic_vector(31 downto 0);
@@ -121,22 +121,20 @@ begin
     end if; 
 end process; 
 
+reset_n <= '0', '1' after 1 ns;
 
-reset_n <= '0', '1' after 10 ns;
-
---MCACHE_RESULT_SM <= x"0C0C0C0C";
 MCACHE_STALL_SM <= '0';
 
---IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
 IC_STALL_SI <= '0';
+PC_INIT <= x"00000000";
 
-process(ADR_SI)
+process(ADR_SI, ADR_VALID_SI)
 begin
-    IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
-    assert false report "new instruction" severity note; 
+    if ADR_VALID_SI = '1' then 
+        IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
+    end if; 
 end process; 
 
-PC_INIT <= x"00000000";
 
 mem_access : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM)
 variable read : integer;

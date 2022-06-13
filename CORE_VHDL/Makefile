@@ -1,4 +1,5 @@
 BUILD=build
+SIM_DIR=sim
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=--workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg UTIL/fifo 
@@ -7,6 +8,12 @@ MODS=$(TB) $(COMPONENTS)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=clang
+
+view: run
+	gtkwave $(SIM_DIR)/$(TB).vcd
+
+run: all 
+	cd $(SIM_DIR) && ../$(BUILD)/a.out --vcd=$(TB).vcd
 
 all: $(BUILD)/a.out 
 
