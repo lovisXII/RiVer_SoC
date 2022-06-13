@@ -373,7 +373,7 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = 0;
+            MTVAL_WDATA_SM = PC_EXE2MEM_RE;
             MCAUSE_WDATA_SM.write(3);
             CURRENT_MODE_SM = 3;
         } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE) {
