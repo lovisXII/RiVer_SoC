@@ -270,6 +270,26 @@ void x0_multiplier::trace(sc_trace_file* tf)
         std::string icname = "prod_"+std::to_string(i);
         sc_trace(tf, product[i], signal_get_name(product[i].name(), icname.c_str()));
     }
+    for(int i = 0; i < 22; i++)
+    {
+        std::string icname = "prod_s1_"+std::to_string(i);
+        sc_trace(tf, product_s1[i], signal_get_name(product_s1[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 14; i++)
+    {
+        std::string icname = "prod_s2_"+std::to_string(i);
+        sc_trace(tf, product_s2[i], signal_get_name(product_s2[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 10; i++)
+    {
+        std::string icname = "prod_s3_"+std::to_string(i);
+        sc_trace(tf, product_s3[i], signal_get_name(product_s3[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 6; i++)
+    {
+        std::string icname = "prod_s4_"+std::to_string(i);
+        sc_trace(tf, product_s4[i], signal_get_name(product_s4[i].name(), icname.c_str()));
+    }
     for(int i = 0; i < 4; i++)
     {
         std::string icname = "prod_s5_"+std::to_string(i);
