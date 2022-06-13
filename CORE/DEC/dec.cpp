@@ -7,7 +7,6 @@
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
-        dec2exe_in_var.range(251,220) = pc_branch_value_sd;  
         dec2exe_in_var[219] = mul_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd;  
         dec2exe_in_var[218] = ebreak_i_sd;
         dec2exe_in_var[217] = instruction_access_fault_sd;  
@@ -48,7 +47,6 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[1]            = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]            = sltu_i_sd.read() | sltiu_i_sd.read();
     } else {
-        dec2exe_in_var.range(251,220)  = 0;
         dec2exe_in_var[219]            = 0;
         dec2exe_in_var[218]            = 0; 
         dec2exe_in_var[217]            = 0;  
@@ -91,7 +89,6 @@ void decod::concat_dec2exe() {
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
 
-    PC_BRANCH_VALUE_RD.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD.write((bool)dec2exe_out_var[219]);
     EBREAK_RD.write((bool)dec2exe_out_var[218]);
     INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[217]);
@@ -926,9 +923,6 @@ void decod::pc_inc() {
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
     bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
     
-
-    // PC Incrementation
-
     if (!add_offset_to_pc && !dec2if_full_sd ) {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD  = 1;
@@ -943,24 +937,16 @@ void decod::pc_inc() {
     }
 
         DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
-    
+    // Adress missaligned exception :
+    if (pc_out & 0b11 != 0) instruction_adress_missaligned_sd = true;
     if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
         dec2if_in_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
-        pc_branch_value_sd = pc_out ;
         if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd = 1;
         } else {
             instruction_access_fault_sd = 0;
         }
-    }
-    //Instruction adress missaligned exception :
-    if ((pc_out & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
-    {
-        instruction_adress_missaligned_sd = 1;
-    } 
-    else{
-        instruction_adress_missaligned_sd = 0;
     }
 
     // Exception & fifo gestion
@@ -995,8 +981,7 @@ void decod::pc_inc() {
             dec2if_in_sd.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
-        }          
-            
+        }
         
         // IF2DEC Gestion
         
@@ -1034,6 +1019,8 @@ void decod::pc_inc() {
 }
 
 void decod::bypasses() {
+    // BP_DEST_RE is the same signal than DEST_RE
+    // Same for all other bp_dest_rx
     if (RADR1_SD.read() == 0) {  // ignore r0
         rdata1_sd.write(RDATA1_SR.read());
         r1_valid_sd.write(true);
@@ -1075,6 +1062,7 @@ void decod::bypasses() {
         rdata1_sd.write(RDATA1_SR.read());
     }
 
+
     if (RADR2_SD.read() == 0) {  // ignore r0
         rdata2_sd.write(RDATA2_SR.read());
         r2_valid_sd.write(true);
@@ -1109,12 +1097,20 @@ void decod::bypasses() {
     // Avoid an issue with load - load - add sequence
     block_in_dec.write((RADR1_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read()) ||
                        (RADR2_SD.read() == EXE_DEST_SD.read() && MEM_LOAD_RD && !DEC2EXE_EMPTY_SD.read()));
+
+    
+    dependence_on_mult.write((RADR1_SD.read() == EXE_DEST_SD.read() && MULT_INST_RD && !DEC2EXE_EMPTY_SD.read()) ||
+                             (RADR2_SD.read() == EXE_DEST_SD.read() && MULT_INST_RD && !DEC2EXE_EMPTY_SD.read()) ||
+                             (RADR1_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()) ||
+                             (RADR2_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()) ||
+                             (RADR1_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()) ||
+                             (RADR2_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()));
 }
 
 void decod::stall_method() {
     csr_in_progress = (CSR_WENABLE_RD && !DEC2EXE_EMPTY_SD) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
     stall_sd        = (csr_in_progress || ((!r1_valid_sd || !r2_valid_sd) &&
-                      (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec))
+                      (b_type_inst_sd || jalr_type_inst_sd || j_type_inst_sd || block_in_dec || dependence_on_mult))
                       || IF2DEC_EMPTY_SI || dec2exe_full_sd);
 }
 
@@ -1351,6 +1347,5 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, env_call_wrong_mode, GET_NAME(env_call_wrong_mode));
-    sc_trace(tf, PC_BRANCH_VALUE_RD, GET_NAME(PC_BRANCH_VALUE_RD));
-    sc_trace(tf, pc_branch_value_sd, GET_NAME(pc_branch_value_sd));
+    sc_trace(tf, dependence_on_mult, GET_NAME(dependence_on_mult));
 }

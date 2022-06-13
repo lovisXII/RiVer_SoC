@@ -124,7 +124,7 @@ void mem::mem_preprocess() {
     MCACHE_ADR_SM.write(adr);
     MCACHE_LOAD_SM.write(LOAD_RE.read());
     MCACHE_STORE_SM.write(STORE_RE.read());
-    MCACHE_ADR_VALID_SM.write(!EXE2MEM_EMPTY_SE.read());
+    MCACHE_ADR_VALID_SM.write(!EXE2MEM_EMPTY_SE.read() || !MULT_INST_RM);
     // MCACHE_MEM_SIZE_SM.write(MEM_SIZE_RE.read());
 }
 

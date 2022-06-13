@@ -231,7 +231,7 @@ void exec::bypasses() {
     if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read() || BLOCK_BP_RD.read()) {
         op2_se.write(OP2_RD.read());
         r2_valid_se = true;
-    } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
+    } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE && !MULT_INST_RE) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE)
             bp_value = CSR_RDATA_RE;
@@ -243,9 +243,9 @@ void exec::bypasses() {
             r2_valid_se = true;
         } else {
             op2_se.write(bp_value);
-            r2_valid_se = !MULT_INST_RE || EXE2MEM_EMPTY_SE;
+            r2_valid_se = true;
         }
-    } else if (MEM_DEST_RM.read() == RADR2_RD.read()) {
+    } else if (MEM_DEST_RM.read() == RADR2_RD.read() && !MULT_INST_RM) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM)
             bp_value = CSR_RDATA_RM;
@@ -257,7 +257,7 @@ void exec::bypasses() {
             r2_valid_se = true;
         } else {
             op2_se.write(MEM_RES_RM.read());
-            r2_valid_se = !MULT_INST_RM || BP_MEM2WBK_EMPTY_SM;
+            r2_valid_se = true;
         }
     } else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;

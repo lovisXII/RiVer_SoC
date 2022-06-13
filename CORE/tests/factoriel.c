@@ -10,7 +10,8 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x2,x1 ");
 __asm__("jal x5, main");
 
-
+#define val 10
+#define res 3628800
 int fact(int a)
 {
     int b = 1;
@@ -21,9 +22,9 @@ int fact(int a)
     return b;
 }
 int main() {
-    int b = fact(5);
+    int b = fact(val);
 
-    if (b == 120) {
+    if (b == res) {
         _good();
     }
     _bad();
