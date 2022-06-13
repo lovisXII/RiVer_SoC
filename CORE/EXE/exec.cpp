@@ -418,6 +418,8 @@ void exec::trace(sc_trace_file* tf) {
 
     sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
     sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+
+    sc_trace(tf, BLOCK_BP_RD, GET_NAME(BLOCK_BP_RD));
     
     alu_inst.trace(tf);
     shifter_inst.trace(tf);

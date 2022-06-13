@@ -1022,30 +1022,40 @@ void decod::bypasses() {
     if (RADR1_SD.read() == 0) {  // ignore r0
         rdata1_sd.write(RDATA1_SR.read());
         r1_valid_sd.write(true);
-    } else if (RADR1_SD.read() == EXE_DEST_SD.read() &&
-               !DEC2EXE_EMPTY_SD.read()) {  // dont bypass if instr is currently in exe
+    } 
+    else if (RADR1_SD.read() == EXE_DEST_SD.read() && !DEC2EXE_EMPTY_SD.read()) 
+    {  // dont bypass if instr is currently in exe
         r1_valid_sd.write(false);
-    } else if (RADR1_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
-                                        // currently in mem
+    } 
+    else if (RADR1_SD.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
+    {  // dont bypass if load instr is currently in mem
         r1_valid_sd.write(false);
-    } else if(RADR1_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
+    } 
+    else if(RADR1_SD.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read())
+    { // dont bypass if mul instruction didnt finish
         r1_valid_sd.write(false);
-    } else if(RADR1_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()){ // dont bypass if mul instruction didnt finish
+    } 
+    else if(RADR1_SD.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read())
+    { // dont bypass if mul instruction didnt finish
         r1_valid_sd.write(false);
-    } else if (RADR1_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
+    } 
+    else if (RADR1_SD.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
+    {  // bypass E->D
         r1_valid_sd.write(true);
         if (CSR_WENABLE_RE.read())
             rdata1_sd.write(CSR_RDATA_RE.read());
         else
             rdata1_sd.write(BP_EXE_RES_RE.read());
-    } else if (RADR1_SD.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) {  // bypass M->D
+    } 
+    else if (RADR1_SD.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) 
+    {  // bypass M->D
         r1_valid_sd.write(true);
         if (CSR_WENABLE_RM.read())
             rdata1_sd.write(CSR_RDATA_RM.read());
         else
             rdata1_sd.write(BP_MEM_RES_RM.read());
-    } else {  // no bypass
+    } 
+    else {  // no bypass
         r1_valid_sd.write(true);
         rdata1_sd.write(RDATA1_SR.read());
     }
