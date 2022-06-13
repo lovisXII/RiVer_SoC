@@ -11,6 +11,9 @@ void exec::preprocess_op() {
         alu_in_op2_se.write(op2);
     }
     shift_val_se.write(op2.range(4, 0));
+
+    OP1_SE.write(op1_se);
+    OP2_SE.write(op2_se);
 }
 
 void exec::select_exec_res() {
@@ -187,7 +190,7 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read();
+    bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read() || !r1_valid_se || !r2_valid_se;
     if (stall) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
@@ -195,6 +198,7 @@ void exec::manage_fifo() {
         exe2mem_push_se.write(true);
         DEC2EXE_POP_SE.write(true);
     }
+    stall_se = stall;
 }
 
 void exec::bypasses() {
@@ -203,22 +207,30 @@ void exec::bypasses() {
 
     if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
         op1_se.write(OP1_RD.read());
+        r1_valid_se = true;
     } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
         op1_se.write(CSR_RDATA_RE.read());
+        r1_valid_se = true;
     } else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) {
         op1_se.write(EXE_RES_RE.read());
+        r1_valid_se = !MULT_INST_RE || EXE2MEM_EMPTY_SE;
     } else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) {
         op1_se.write(CSR_RDATA_RM.read());
+        r1_valid_se = true;
     } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
         op1_se.write(MEM_RES_RM.read());
+        r1_valid_se = !MULT_INST_RM || BP_MEM2WBK_EMPTY_SM;
     } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
+        r1_valid_se = true;
     } else {
         op1_se.write(OP1_RD.read());
+        r1_valid_se = true;
     }
 
     if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read() || BLOCK_BP_RD.read()) {
         op2_se.write(OP2_RD.read());
+        r2_valid_se = true;
     } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE)
@@ -228,8 +240,10 @@ void exec::bypasses() {
         if (MEM_STORE_RD.read()) {  // on stores we need to bypass to the data not adr
             bp_mem_data_var = bp_value;
             op2_se.write(OP2_RD.read());
+            r2_valid_se = true;
         } else {
             op2_se.write(bp_value);
+            r2_valid_se = !MULT_INST_RE || EXE2MEM_EMPTY_SE;
         }
     } else if (MEM_DEST_RM.read() == RADR2_RD.read()) {
         sc_uint<32> bp_value;
@@ -240,13 +254,17 @@ void exec::bypasses() {
         if (MEM_STORE_RD.read()) {
             bp_mem_data_var = MEM_RES_RM.read();
             op2_se.write(OP2_RD.read());
+            r2_valid_se = true;
         } else {
             op2_se.write(MEM_RES_RM.read());
+            r2_valid_se = !MULT_INST_RM || BP_MEM2WBK_EMPTY_SM;
         }
     } else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
+        r2_valid_se = true;
     } else {
         op2_se.write(OP2_RD.read());
+        r2_valid_se = true;
     }
     bp_mem_data_sd.write(bp_mem_data_var);
     blocked.write(blocked_var);
@@ -401,6 +419,17 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, load_access_fault_se, GET_NAME(load_access_fault_se));
+
+    sc_trace(tf, stall_se, GET_NAME(stall_se));
+    sc_trace(tf, r1_valid_se, GET_NAME(r1_valid_se));
+    sc_trace(tf, r2_valid_se, GET_NAME(r2_valid_se));
+    sc_trace(tf, MULT_INST_RM, GET_NAME(MULT_INST_RM));
+
+    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
+    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+
+    sc_trace(tf, BLOCK_BP_RD, GET_NAME(BLOCK_BP_RD));
+    
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

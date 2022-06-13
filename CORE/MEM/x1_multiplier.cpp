@@ -43,6 +43,7 @@ void x1_multiplier::CSA4()
 }
 void x1_multiplier::fifo_concat() {
     sc_bv<x12x2_size> ff_din;
+    ff_din[129]            = CARRY_RX0;   
     ff_din[128]            = SIGNED_OP_RX0;   
     ff_din.range(127, 64)  = (sc_bv_base)product_s8[1];
     ff_din.range(63, 0)    = (sc_bv_base)product_s8[0];
@@ -52,6 +53,7 @@ void x1_multiplier::fifo_concat() {
 void x1_multiplier::fifo_unconcat()
 {
     sc_bv<x12x2_size> ff_dout = x12x2_dout_sx1.read();
+    CARRY_RX1.write((bool)ff_dout[129]);
     SIGNED_OP_RX1.write((bool)ff_dout[128]);
     RES_RX1.write(ff_dout.range(127, 0));
 }
@@ -70,6 +72,21 @@ void x1_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, IN_RX0, GET_NAME(IN_RX0));
     sc_trace(tf, RES_RX1, GET_NAME(RES_RX1));
     sc_trace(tf, X12X2_POP_SX2, GET_NAME(X12X2_POP_SX2));
+/*
+    sc_trace(tf, M[0], GET_NAME(M[0]));
+    sc_trace(tf, M[1], GET_NAME(M[1]));
+    sc_trace(tf, M[2], GET_NAME(M[2]));
+    sc_trace(tf, M[3], GET_NAME(M[3]));
+    sc_trace(tf, M[4], GET_NAME(M[4]));
+    sc_trace(tf, M[5], GET_NAME(M[5]));
+
+    sc_trace(tf, product_s6[0], GET_NAME(product_s6[0]));
+    sc_trace(tf, product_s6[1], GET_NAME(product_s6[1]));
+    sc_trace(tf, product_s6[2], GET_NAME(product_s6[2]));
+    sc_trace(tf, product_s6[3], GET_NAME(product_s6[3]));
     
+    sc_trace(tf, product_s7[0], GET_NAME(product_s7[0]));
+    sc_trace(tf, product_s7[1], GET_NAME(product_s7[1]));
+*/
     fifo_inst.trace(tf);
 }

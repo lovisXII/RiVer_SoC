@@ -429,9 +429,13 @@ SC_MODULE(decod) {
                     << stall_sd;
 
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD
+        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE 
+                    
+                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD << EXE_DEST_SD
 
-                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM;
+                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
+                  
+                  << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
         reset_signal_is(RESET_N, false);
     }
 };
