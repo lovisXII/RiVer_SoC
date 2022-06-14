@@ -10,21 +10,16 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x2,x1 ");
 __asm__("jal x5, main");
 
-#define val 20
-#define res 2432902008176640000
-long long fact(int a)
-{
-    long long b = 1;
-    for(int i = 2; i <= a; i++)
-    {
-        b = b*i;
-    }
-    return b;
-}
-int main() {
-    long long b = fact(val);
 
-    if (b == (long long)res) {
+#define val -6;
+#define res -216
+
+int main() {
+    int b = val;
+
+    b = b*b*b;
+
+    if (b == res) {
         _good();
     }
     _bad();

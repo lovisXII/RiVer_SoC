@@ -562,8 +562,8 @@ int sc_main(int argc, char* argv[]) {
                     ram[mem_adr] = temporary_value | temporary_store_value ;
                     break ;
                 case 2 :
-                cout << "byte access 3d case at adr : " << mem_adr << endl ;
-                cout << "value to be store " << std::hex << temporary_store_value << endl ;
+                //cout << "byte access 3d case at adr : " << mem_adr << endl ;
+                //cout << "value to be store " << std::hex << temporary_store_value << endl ;
                     temporary_store_value = temporary_store_value & 0x00FF0000 ;
                     temporary_value = 0xFF00FFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;
@@ -572,7 +572,7 @@ int sc_main(int argc, char* argv[]) {
                     temporary_store_value = temporary_store_value & 0xFF000000 ;
                     temporary_value = 0x00FFFFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;
-                    cout << ram[mem_adr] << endl ;
+                    //cout << ram[mem_adr] << endl ;
                     break ;
                 default:
                     break;

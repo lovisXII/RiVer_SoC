@@ -9,17 +9,19 @@ _start:
     mul x10, x7, x8
     bne x10, x9, _bad
 
-    li x8, 0x7FFFFFFF 
-    ori x9, x0, 1
-    mulh x10, x7, x8
-    bne x10, x9, _bad
-
     mulhu x10, x7, x8
+    bne x10, x0, _bad
+
+    ori x7, x0, -4
+    ori x8, x0, 4
+    ori x9, x0, 0xFFFFFFFF
+    mulhsu x10, x7, x8
     bne x10, x9, _bad
 
-    ori x8, x0, -4
-    ori x9, x0, -16
-    mul x10, x7, x8
+    ori x7, x0, -4
+    ori x9, x0, 0x00000000
+
+    mulh x10, x7, x7
     bne x10, x9, _bad
 
     j _good

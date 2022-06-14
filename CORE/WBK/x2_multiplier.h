@@ -27,6 +27,8 @@ SC_MODULE(x2_multiplier)
 
     sc_signal<bool> c[64];
 
+    sc_signal<sc_bv<64>> result;
+
     void pre_process();
     //modified full adder
     void MFA_0();
@@ -50,7 +52,7 @@ SC_MODULE(x2_multiplier)
         SC_METHOD(RES);
         for(int i = 0; i < 64; i++)
           sensitive << S[i];
-        sensitive << SIGNED_OP_RX1 << CLK;
+        sensitive << SIGNED_OP_RX1;
 
         SC_METHOD(manage_fifo);
         sensitive << X12X2_EMPTY_SX1;

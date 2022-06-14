@@ -95,7 +95,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> op2_se;
 
     // X0-X1 interface
-    sc_signal<sc_bv<384>> multiplier_out_sx0;
+    sc_signal<sc_bv<320>> multiplier_out_sx0;
     sc_signal<bool>       signed_op_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
     sc_signal<bool>       carry_rx0;

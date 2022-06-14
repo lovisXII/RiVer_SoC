@@ -43,6 +43,8 @@ void x2_multiplier::RES()
         RES_RX2.write((sc_bv_base)res.range(63, 32));
     else
         RES_RX2.write((sc_bv_base)res.range(31, 0));
+
+    result = res;
 }
 void x2_multiplier::manage_fifo() 
 {
@@ -55,4 +57,5 @@ void x2_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, b, GET_NAME(b));
     sc_trace(tf, RES_RX2, GET_NAME(RES_RX2));
     sc_trace(tf, SIGNED_OP_RX1, GET_NAME(SIGNED_OP_RX1));
+    sc_trace(tf, result, GET_NAME(result));
 }

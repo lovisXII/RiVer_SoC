@@ -616,11 +616,11 @@ void decod::post_reg_read_decoding() {
         // Command for exe
         if (and_i_sd || andi_i_sd || srl_i_sd || srli_i_sd || mul_i_sd || div_i_sd)
             exe_cmd_sd.write(1);
-        else if (or_i_sd || ori_i_sd || sra_i_sd || srai_i_sd || mulh_i_sd || mulhsu_i_sd || mulhu_i_sd || divu_i_sd)
+        else if (or_i_sd || ori_i_sd || sra_i_sd || srai_i_sd || mulh_i_sd || divu_i_sd)
             exe_cmd_sd.write(2);
-        else if (xor_i_sd || xori_i_sd || rem_i_sd)
+        else if (xor_i_sd || xori_i_sd || mulhu_i_sd || rem_i_sd)
             exe_cmd_sd.write(3);
-        else
+        else // mulhsu_i_sd - remu
             exe_cmd_sd.write(0);
 
         if (div_i_sd || divu_i_sd || rem_i_sd || remu_i_sd)

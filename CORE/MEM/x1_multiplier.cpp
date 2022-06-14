@@ -3,8 +3,7 @@
 
 void x1_multiplier::parse_data()
 {
-    sc_bv<384> in = IN_RX0.read();
-    M[5].write((sc_bv_base)in.range(383,320));
+    sc_bv<320> in = IN_RX0.read();
     M[4].write((sc_bv_base)in.range(319,256));
     M[3].write((sc_bv_base)in.range(255,192));
     M[2].write((sc_bv_base)in.range(191,128));
@@ -17,29 +16,42 @@ void x1_multiplier::CSA1()
 {
     sc_uint<64> xor_ = (sc_uint<64>)M[0] ^ (sc_uint<64>)M[1]; 
     product_s6[0] =  xor_ ^ (sc_uint<64>)M[2];
-    product_s6[1] = ((sc_uint<64>)M[0] & (sc_uint<64>)M[1]) | (xor_ & (sc_uint<64>)M[2]);  
+
+    sc_bv<64> shf = 0;
+    shf.range(63, 1) = ((sc_uint<64>)M[0] & (sc_uint<64>)M[1]) | (xor_ & (sc_uint<64>)M[2]);
+    product_s6[1] = shf;
+
 }
 
-void x1_multiplier::CSA2()
+/*void x1_multiplier::CSA2()
 {
     sc_uint<64> xor_ = (sc_uint<64>)M[3] ^ (sc_uint<64>)M[4]; 
     product_s6[2] =  xor_ ^ (sc_uint<64>)M[5];
-    product_s6[3] = ((sc_uint<64>)M[3] & (sc_uint<64>)M[4]) | (xor_ & (sc_uint<64>)M[5]);  
-}
+
+    sc_bv<64> shf = 0;
+    shf.range(63, 1) = ((sc_uint<64>)M[3] & (sc_uint<64>)M[4]) | (xor_ & (sc_uint<64>)M[5]);  
+    product_s6[3] = shf;
+}*/
 
 // stage 7
 void x1_multiplier::CSA3()
 {
     sc_uint<64> xor_ = (sc_uint<64>)product_s6[0] ^ (sc_uint<64>)product_s6[1]; 
-    product_s7[0] =  xor_ ^ (sc_uint<64>)product_s6[2];
-    product_s7[1] = ((sc_uint<64>)product_s6[0] & (sc_uint<64>)product_s6[1]) | (xor_ & (sc_uint<64>)product_s6[2]);  
+    product_s7[0] =  xor_ ^ (sc_uint<64>)M[3];
+
+    sc_bv<64> shf = 0;
+    shf.range(63, 1) = ((sc_uint<64>)product_s6[0] & (sc_uint<64>)product_s6[1]) | (xor_ & (sc_uint<64>)M[3]);  
+    product_s7[1] = shf;
 }
 // stage 8
 void x1_multiplier::CSA4()
 {
     sc_uint<64> xor_ = (sc_uint<64>)product_s7[0] ^ (sc_uint<64>)product_s7[1]; 
-    product_s8[0] =  xor_ ^ (sc_uint<64>)product_s6[3];
-    product_s8[1] = ((sc_uint<64>)product_s7[0] & (sc_uint<64>)product_s7[1]) | (xor_ & (sc_uint<64>)product_s6[3]);  
+    product_s8[0] =  xor_ ^ (sc_uint<64>)M[4];
+
+    sc_bv<64> shf = 0;
+    shf.range(63, 1) = ((sc_uint<64>)product_s7[0] & (sc_uint<64>)product_s7[1]) | (xor_ & (sc_uint<64>)M[4]);  
+    product_s8[1] = shf;
 }
 void x1_multiplier::fifo_concat() {
     sc_bv<x12x2_size> ff_din;
@@ -72,21 +84,29 @@ void x1_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, IN_RX0, GET_NAME(IN_RX0));
     sc_trace(tf, RES_RX1, GET_NAME(RES_RX1));
     sc_trace(tf, X12X2_POP_SX2, GET_NAME(X12X2_POP_SX2));
-/*
-    sc_trace(tf, M[0], GET_NAME(M[0]));
-    sc_trace(tf, M[1], GET_NAME(M[1]));
-    sc_trace(tf, M[2], GET_NAME(M[2]));
-    sc_trace(tf, M[3], GET_NAME(M[3]));
-    sc_trace(tf, M[4], GET_NAME(M[4]));
-    sc_trace(tf, M[5], GET_NAME(M[5]));
 
-    sc_trace(tf, product_s6[0], GET_NAME(product_s6[0]));
-    sc_trace(tf, product_s6[1], GET_NAME(product_s6[1]));
-    sc_trace(tf, product_s6[2], GET_NAME(product_s6[2]));
-    sc_trace(tf, product_s6[3], GET_NAME(product_s6[3]));
-    
-    sc_trace(tf, product_s7[0], GET_NAME(product_s7[0]));
-    sc_trace(tf, product_s7[1], GET_NAME(product_s7[1]));
-*/
+    sc_trace(tf, SIGNED_OP_RX1, GET_NAME(SIGNED_OP_RX1));
+    sc_trace(tf, CARRY_RX1, GET_NAME(CARRY_RX1));
+
+    for(int i = 0; i < 5; i++)
+    {
+        std::string icname = "M_"+std::to_string(i);
+        sc_trace(tf, M[i], signal_get_name(M[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 2; i++)
+    {
+        std::string icname = "prod_s6_"+std::to_string(i);
+        sc_trace(tf, product_s6[i], signal_get_name(product_s6[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 2; i++)
+    {
+        std::string icname = "prod_s7_"+std::to_string(i);
+        sc_trace(tf, product_s7[i], signal_get_name(product_s7[i].name(), icname.c_str()));
+    }
+    for(int i = 0; i < 2; i++)
+    {
+        std::string icname = "prod_s8_"+std::to_string(i);
+        sc_trace(tf, product_s8[i], signal_get_name(product_s8[i].name(), icname.c_str()));
+    }
     fifo_inst.trace(tf);
 }
