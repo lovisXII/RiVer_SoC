@@ -24,6 +24,16 @@ _start:
     mulh x10, x7, x7
     bne x10, x9, _bad
 
+    ori x7, x0, -175
+    ori x8, x0, 35
+    li x9, -6125
+
+    mul x10, x7, x8
+    bne x10, x9, _bad
+
+    mul x10, x8, x7
+    bne x10, x9, _bad
+
     j _good
 
     nop
