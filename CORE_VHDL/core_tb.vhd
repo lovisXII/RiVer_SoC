@@ -51,7 +51,7 @@ signal ADR_VALID_SI : std_logic;
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
 
-constant NCYCLES : integer := 10; 
+constant NCYCLES : integer := 30; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 
 component core
@@ -114,8 +114,8 @@ begin
     clk <= '0'; 
     wait for 5 ns; 
     clk <= '1'; 
-    wait for 5 ns; 
     CYCLES <= CYCLES + 1; 
+    wait for 5 ns; 
     if CYCLES = NCYCLES then 
         assert false report "end of simulation" severity note; 
         wait; 

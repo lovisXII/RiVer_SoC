@@ -15,7 +15,7 @@ entity mem is
         byt_sel : out std_logic_vector(3 downto 0);
 
         -- Exe interface
-        RES_RE, DATA_RE : in std_logic_vector(31 downto 0);
+        RES_RE, MEM_DATA_RE : in std_logic_vector(31 downto 0);
         DEST_RE : in std_logic_vector(5 downto 0);
         MEM_SIZE_RE : in std_logic_vector(1 downto 0);
         WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
@@ -29,8 +29,8 @@ entity mem is
         MEM2WBK_EMPTY_SM : out std_logic;
         
         -- Wbk interface
-        DATA_RM : out std_logic_vector(31 downto 0);
-        DEST_RM : out std_logic_vector(5 downto 0);
+        MEM_RES_RM : out std_logic_vector(31 downto 0);
+        MEM_DEST_RM : out std_logic_vector(5 downto 0);
         MEM_SIZE_RM : out std_logic_vector(1 downto 0);
         WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic
     ); 
@@ -86,8 +86,8 @@ mem2wbk_din(41) <= SIGN_EXTEND_RE;
 mem2wbk_din(42) <= LOAD_RE; 
 
 -- fifo unconcat 
-DATA_RM <= mem2wbk_dout(31 downto 0);
-DEST_RM <= mem2wbk_dout(37 downto 32);
+MEM_RES_RM <= mem2wbk_dout(31 downto 0);
+MEM_DEST_RM <= mem2wbk_dout(37 downto 32);
 MEM_SIZE_RM <= mem2wbk_dout(39 downto 38);
 WB_RM <= mem2wbk_dout(40);
 SIGN_EXTEND_RM <= mem2wbk_dout(41);
@@ -100,7 +100,7 @@ mem2wbk_push <= (not stall) and wb;
 EXE2MEM_POP_SM <= not stall;
 
 -- Mcache 
-MCACHE_DATA_SM <= DATA_RE; 
+MCACHE_DATA_SM <= MEM_DATA_RE; 
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;

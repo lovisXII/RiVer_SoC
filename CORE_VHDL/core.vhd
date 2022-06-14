@@ -52,7 +52,6 @@ signal SLT_RD, SLTU_RD : std_logic;
 
 -- Decod Reg interface
 signal RDATA1_SR, RDATA2_SR : std_logic_vector(31 downto 0);
-signal ADR_DEST_SR : std_logic_vector(5 downto 0);
 signal RADR1_SD, RADR2_SD : std_logic_vector(5 downto 0);
 signal WRITE_PC_SD : std_logic_vector(31 downto 0);
 signal WRITE_PC_ENABLE_SD : std_logic;
@@ -61,14 +60,14 @@ signal READ_PC_SR : std_logic_vector(31 downto 0);
 -- exe2mem
 signal EXE2MEM_POP_SM, EXE2MEM_EMPTY_SE : std_logic;
 signal RES_RE : std_logic_vector(31 downto 0);
-signal DATA_RE : std_logic_vector(31 downto 0);
+signal MEM_DATA_RE : std_logic_vector(31 downto 0);
 signal DEST_RE : std_logic_vector(5 downto 0);
 signal MEM_SIZE_RE : std_logic_vector(1 downto 0);
 signal WB_RE, MEM_SIGN_EXTEND_RE, MEM_LOAD_RE, MEM_STORE_RE : std_logic;
 
 -- mem2wbk 
-signal DATA_RM : std_logic_vector(31 downto 0);
-signal DEST_RM : std_logic_vector(5 downto 0);
+signal MEM_RES_RM : std_logic_vector(31 downto 0);
+signal MEM_DEST_RM : std_logic_vector(5 downto 0);
 signal MEM_SIZE_RM : std_logic_vector(1 downto 0);
 signal WB_RM, SIGN_EXTEND_RM, LOAD_RM : std_logic; 
 signal MEM2WBK_EMPTY_SM, MEM2WBK_POP_SW : std_logic;
@@ -81,11 +80,13 @@ signal REG_WB_SW : std_logic;
 -- Bypasses
 signal BP_DEST_RE : std_logic_vector(5 downto 0);
 signal BP_EXE_RES_RE : std_logic_vector(31 downto 0);
-signal BP_MEM_LOAD_RE, BP_EXE2MEM_EMPTY : std_logic;
+signal BP_MEM_LOAD_RE, BP_EXE2MEM_EMPTY_SE : std_logic;
 signal BP_DEST_RM : std_logic_vector(5 downto 0);
 signal BP_MEM_RES_RM : std_logic_vector(31 downto 0);
 signal BP_R1_VALID_RD, BP_R2_VALID_RD : std_logic;
 signal BP_RADR1_RD, BP_RADR2_RD : std_logic_vector(5 downto 0);
+
+signal BLOCK_BP_RD : std_logic;
 
 component ifetch 
     port(
@@ -120,7 +121,6 @@ component dec
 
         -- Reg interface
         RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
-        ADR_DEST_SR : out std_logic_vector(5 downto 0);
         RADR1_SR, RADR2_SR : out std_logic_vector(5 downto 0);
         WRITE_PC_SD : out std_logic_vector(31 downto 0);
         WRITE_PC_ENABLE_SD : out std_logic;
@@ -157,11 +157,12 @@ component dec
         BP_DEST_RE : in std_logic_vector(5 downto 0);
         BP_EXE_RES_RE : in std_logic_vector(31 downto 0);
         BP_MEM_LOAD_RE : in std_logic;
-        BP_EXE2MEM_EMPTY : in std_logic;
+        BP_EXE2MEM_EMPTY_SE, BP_MEM2WBK_EMPTY_SM : in std_logic;
         BP_DEST_RM : in std_logic_vector(5 downto 0);
         BP_MEM_RES_RM : in std_logic_vector(31 downto 0);
         BP_R1_VALID_RD, BP_R2_VALID_RD : out std_logic;
-        BP_RADR1_RD, BP_RADR2_RD : out std_logic_vector(5 downto 0)    
+        BP_RADR1_RD, BP_RADR2_RD : out std_logic_vector(5 downto 0);
+        BLOCK_BP_RD : out std_logic
     );
 end component; 
 
@@ -186,14 +187,19 @@ component exec
         SLT_RD, SLTU_RD : in std_logic;
 
         RES_RE : out std_logic_vector(31 downto 0);    
-        DATA_RE : out std_logic_vector(31 downto 0);
+        MEM_DATA_RE : out std_logic_vector(31 downto 0);
         DEST_RE : out std_logic_vector(5 downto 0);
         MEM_SIZE_RE : out std_logic_vector(1 downto 0);
         WB_RE : out std_logic;
         MEM_SIGN_EXTEND_RE : out std_logic;
         MEM_LOAD_RE, MEM_STORE_RE : out std_logic;
         EXE2MEM_EMPTY_SE : out std_logic;
-        DEC2EXE_POP_SE : out std_logic
+        DEC2EXE_POP_SE : out std_logic;
+
+        -- bypasses 
+        BLOCK_BP_RD : in std_logic;
+        MEM_DEST_RM : in std_logic_vector(5 downto 0); 
+        MEM_RES_RM : in std_logic_vector(31 downto 0)
     );
 end component; 
 
@@ -210,7 +216,7 @@ component mem
         byt_sel : out std_logic_vector(3 downto 0);
 
         -- Exe interface
-        RES_RE, DATA_RE : in std_logic_vector(31 downto 0);
+        RES_RE, MEM_DATA_RE : in std_logic_vector(31 downto 0);
         DEST_RE : in std_logic_vector(5 downto 0);
         MEM_SIZE_RE : in std_logic_vector(1 downto 0);
         WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
@@ -224,8 +230,8 @@ component mem
         MEM2WBK_EMPTY_SM : out std_logic;
         
         -- Wbk interface
-        DATA_RM : out std_logic_vector(31 downto 0);
-        DEST_RM : out std_logic_vector(5 downto 0);
+        MEM_RES_RM : out std_logic_vector(31 downto 0);
+        MEM_DEST_RM : out std_logic_vector(5 downto 0);
         MEM_SIZE_RM : out std_logic_vector(1 downto 0);
         WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic
     ); 
@@ -237,8 +243,8 @@ component wbk
         clk, reset_n : in std_logic;
 
         -- Mem 
-        DATA_RM : in std_logic_vector(31 downto 0);
-        DEST_RM : in std_logic_vector(5 downto 0);
+        MEM_RES_RM : in std_logic_vector(31 downto 0);
+        MEM_DEST_RM : in std_logic_vector(5 downto 0);
         MEM_SIZE_RM : in std_logic_vector(1 downto 0);
         WB_RM : in std_logic;
         SIGN_EXTEND_RM : in std_logic;
@@ -316,7 +322,6 @@ dec_i : dec
 
         -- Reg interface
         RDATA1_SR, RDATA2_SR,
-        ADR_DEST_SR,
         RADR1_SD, RADR2_SD,
         WRITE_PC_SD,
         WRITE_PC_ENABLE_SD,
@@ -350,14 +355,15 @@ dec_i : dec
         DEC2EXE_EMPTY_SD,
 
         -- Bypasses
-        BP_DEST_RE,
-        BP_EXE_RES_RE,
-        BP_MEM_LOAD_RE,
-        BP_EXE2MEM_EMPTY,
-        BP_DEST_RM,
-        BP_MEM_RES_RM,
+        DEST_RE,
+        RES_RE,
+        MEM_LOAD_RE,
+        EXE2MEM_EMPTY_SE, MEM2WBK_EMPTY_SM,
+        MEM_DEST_RM,
+        MEM_RES_RM,
         BP_R1_VALID_RD, BP_R2_VALID_RD,
-        BP_RADR1_RD, BP_RADR2_RD
+        BP_RADR1_RD, BP_RADR2_RD,
+        BLOCK_BP_RD
     );
 
 exec_i : exec 
@@ -366,7 +372,7 @@ exec_i : exec
         clk, reset_n,
 
         OP1_RD, OP2_RD,
-        RADR1_RD, RADR2_RD,
+        BP_RADR1_RD, BP_RADR2_RD,
         MEM_DATA_RD,
         DEST_RD,
         CMD_RD,
@@ -381,14 +387,18 @@ exec_i : exec
         SLT_RD, SLTU_RD,
 
         RES_RE,    
-        DATA_RE,
+        MEM_DATA_RE,
         DEST_RE,
         MEM_SIZE_RE,
         WB_RE,
         MEM_SIGN_EXTEND_RE,
         MEM_LOAD_RE, MEM_STORE_RE,
         EXE2MEM_EMPTY_SE,
-        DEC2EXE_POP_SE
+        DEC2EXE_POP_SE,
+
+        BLOCK_BP_RD,
+        MEM_DEST_RM, 
+        MEM_RES_RM
     );
 
 mem_i : mem 
@@ -404,7 +414,7 @@ mem_i : mem
         byt_sel, 
 
         -- Exe interface
-        RES_RE, DATA_RE,
+        RES_RE, MEM_DATA_RE,
         DEST_RE,
         MEM_SIZE_RE,
         WB_RE, MEM_SIGN_EXTEND_RE, MEM_LOAD_RE, MEM_STORE_RE,
@@ -418,8 +428,8 @@ mem_i : mem
         MEM2WBK_EMPTY_SM,
         
         -- Wbk interface
-        DATA_RM,
-        DEST_RM,
+        MEM_RES_RM,
+        MEM_DEST_RM,
         MEM_SIZE_RM,
         WB_RM, SIGN_EXTEND_RM, LOAD_RM
     );
@@ -430,8 +440,8 @@ wbk_i : wbk
         clk, reset_n,
 
         -- Mem 
-        DATA_RM,
-        DEST_RM,
+        MEM_RES_RM,
+        MEM_DEST_RM,
         MEM_SIZE_RM,
         WB_RM,
         SIGN_EXTEND_RM,
