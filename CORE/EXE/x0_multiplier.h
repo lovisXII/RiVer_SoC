@@ -15,7 +15,7 @@ SC_MODULE(x0_multiplier)
     
     // output :
     sc_out<sc_bv<320>> RES_RX0;
-    sc_out<bool>       SIGNED_OP_RX0;
+    sc_out<bool>       SELECT_HIGHER_BITS_RX0;
     sc_out<bool>       CARRY_RX0;
     sc_out<bool>       X02X1_EMPTY_SX0;
 

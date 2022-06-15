@@ -96,7 +96,7 @@ SC_MODULE(core) {
 
     // X0-X1 interface
     sc_signal<sc_bv<320>> multiplier_out_sx0;
-    sc_signal<bool>       signed_op_rx0;
+    sc_signal<bool>       select_higher_bits_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
     sc_signal<bool>       carry_rx0;
     sc_signal<bool>       carry_rx1;
@@ -149,7 +149,7 @@ SC_MODULE(core) {
     // X1-X2 interface
     sc_signal<sc_bv<128>> multiplier_out_sx1;
     sc_signal<sc_uint<32>>  multiplier_out_sx2;
-    sc_signal<bool>       signed_op_rx1;
+    sc_signal<bool>       select_higher_bits_rx1;
     sc_signal<bool>       x12x2_EMPTY_SX1, x12x2_POP_SX2;
 
     // MEM-WBK interface
@@ -474,7 +474,7 @@ SC_MODULE(core) {
         x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
-        x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x0_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
         x0_multiplier_inst.CARRY_RX0(carry_rx0);
         x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
 
@@ -571,11 +571,11 @@ SC_MODULE(core) {
         //X1 - MULTIPLIER port map :
 
         x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
-        x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
+        x1_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
         x1_multiplier_inst.CARRY_RX0(carry_rx0);
         x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
-        x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x1_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
         x1_multiplier_inst.CARRY_RX1(carry_rx1);
         x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
         x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
@@ -627,7 +627,7 @@ SC_MODULE(core) {
         //X1 - MULTIPLIER port map :
 
         x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
-        x2_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
+        x2_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
         x2_multiplier_inst.CARRY_RX1(carry_rx1);
         x2_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x2_multiplier_inst.RES_RX2(multiplier_out_sx2);

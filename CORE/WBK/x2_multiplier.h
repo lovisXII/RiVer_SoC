@@ -6,7 +6,7 @@ SC_MODULE(x2_multiplier)
 {
     // Input :
     sc_in<sc_bv<128>> IN_RX1;
-    sc_in<bool> SIGNED_OP_RX1;
+    sc_in<bool> SELECT_HIGHER_BITS_RX1;
     sc_in<bool> CARRY_RX1;
 
     sc_in<bool> X12X2_EMPTY_SX1;
@@ -42,7 +42,8 @@ SC_MODULE(x2_multiplier)
     SC_CTOR(x2_multiplier)
     {
         SC_METHOD(pre_process);
-        sensitive << IN_RX1 << CARRY_RX1 << SIGNED_OP_RX1 << CLK;
+        sensitive << IN_RX1 << CARRY_RX1;
+
 
         SC_METHOD(MFA_0);
         sensitive << a << b << c[0];
@@ -50,9 +51,7 @@ SC_MODULE(x2_multiplier)
         sensitive << G[0] << P[0] << c[0];
 
         SC_METHOD(RES);
-        for(int i = 0; i < 64; i++)
-          sensitive << S[i];
-        sensitive << SIGNED_OP_RX1;
+        sensitive << result << SELECT_HIGHER_BITS_RX1;
 
         SC_METHOD(manage_fifo);
         sensitive << X12X2_EMPTY_SX1;

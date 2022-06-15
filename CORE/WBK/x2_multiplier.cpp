@@ -7,20 +7,15 @@ void x2_multiplier::pre_process()
     b = in.range(127, 64);
 
     c[0] = CARRY_RX1.read();
-
-    //test
-    sc_biguint<64> a_ = (sc_bv<64>)a;
-    sc_biguint<64> b_ = (sc_bv<64>)b;
-    sc_biguint<64> test = a_ + b_;
-
-    for(int i = 63; i >= 0; i--)
-    {
-        S[i] = (bool)test[i];
-    }
 }
-
 void x2_multiplier::MFA_0()
 {
+    sc_biguint<64> a_ = (sc_bv<64>)a;
+    sc_biguint<64> b_ = (sc_bv<64>)b;
+    sc_biguint<64> add = a_ + b_;
+
+    result = add;
+    
     /*sc_bv<64> a_ = (sc_bv<64>)a;
     sc_bv<64> b_ = (sc_bv<64>)b;
     
@@ -35,16 +30,12 @@ void x2_multiplier::C_gen_1()
 
 void x2_multiplier::RES()
 {
-    sc_bv<64> res;
-    for(int i = 0; i < 64; i++)
-        res[i] = S[i];
+    sc_bv<64> res = result;
 
-    if(SIGNED_OP_RX1)
+    if(SELECT_HIGHER_BITS_RX1)
         RES_RX2.write((sc_bv_base)res.range(63, 32));
     else
         RES_RX2.write((sc_bv_base)res.range(31, 0));
-
-    result = res;
 }
 void x2_multiplier::manage_fifo() 
 {
@@ -56,6 +47,6 @@ void x2_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, a, GET_NAME(a));
     sc_trace(tf, b, GET_NAME(b));
     sc_trace(tf, RES_RX2, GET_NAME(RES_RX2));
-    sc_trace(tf, SIGNED_OP_RX1, GET_NAME(SIGNED_OP_RX1));
+    sc_trace(tf, SELECT_HIGHER_BITS_RX1, GET_NAME(SELECT_HIGHER_BITS_RX1));
     sc_trace(tf, result, GET_NAME(result));
 }

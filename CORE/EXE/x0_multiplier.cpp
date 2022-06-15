@@ -105,7 +105,7 @@ void x0_multiplier::CSA_6()
     product_s1[10] =  xor_ ^ (sc_bv<64>)product[17];
 
     sc_bv<64> shf = 0;
-    shf.range(63, 1)  = ((sc_bv<64>)product[17] & (sc_bv<64>)product[16]) | (xor_ & (sc_bv<64>)product[17]);  
+    shf.range(63, 1)  = ((sc_bv<64>)product[15] & (sc_bv<64>)product[16]) | (xor_ & (sc_bv<64>)product[17]);  
     product_s1[11] = shf;
 }
 void x0_multiplier::CSA_7()
@@ -330,7 +330,7 @@ void x0_multiplier::fifo_concat() {
 void x0_multiplier::fifo_unconcat()
 {
     sc_bv<x02x1_size> ff_dout = x02x1_dout_sx0.read();
-    SIGNED_OP_RX0.write((bool)ff_dout[321]);
+    SELECT_HIGHER_BITS_RX0.write((bool)ff_dout[321]);
     CARRY_RX0.write((bool)ff_dout[320]);
     RES_RX0.write(ff_dout.range(319, 0));
 }
@@ -350,7 +350,7 @@ void x0_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, x02x1_dout_sx0, GET_NAME(x02x1_dout_sx0));
 
     sc_trace(tf, CARRY_RX0, GET_NAME(CARRY_RX0));
-    sc_trace(tf, SIGNED_OP_RX0, GET_NAME(SIGNED_OP_RX0));
+    sc_trace(tf, SELECT_HIGHER_BITS_RX0, GET_NAME(SELECT_HIGHER_BITS_RX0));
     sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));
     sc_trace(tf, select_higher_bits_sx0, GET_NAME(select_higher_bits_sx0));
 
@@ -359,7 +359,7 @@ void x0_multiplier::trace(sc_trace_file* tf)
         std::string icname = "prod_"+std::to_string(i);
         sc_trace(tf, product[i], signal_get_name(product[i].name(), icname.c_str()));
     }
-    for(int i = 0; i < 22; i++)
+    for(int i = 0; i < 20; i++)
     {
         std::string icname = "prod_s1_"+std::to_string(i);
         sc_trace(tf, product_s1[i], signal_get_name(product_s1[i].name(), icname.c_str()));
