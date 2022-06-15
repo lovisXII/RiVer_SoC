@@ -2,8 +2,8 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size 252
-#define start_kernel_adress 0x80000000
+#define dec2exe_size        252
+#define start_kernel_adress 0xF0000000
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -30,11 +30,11 @@ SC_MODULE(decod) {
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD;
     sc_out<bool>        SLTU_RD;
-    sc_out<sc_uint<32>> PC_DEC2EXE_RD;              // PC link to the current decoded instruction
-    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RD;         // PC of the branch value, will be usefull for exception
-    sc_out<sc_uint<32>> MEM_DATA_RD;                // data sent to mem for storage
-    sc_out<bool>        MEM_LOAD_RD;   // say to mem if we do a load
-    sc_out<bool>        MEM_STORE_RD;  // say to mem if we do a store
+    sc_out<sc_uint<32>> PC_DEC2EXE_RD;       // PC link to the current decoded instruction
+    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RD;  // PC of the branch value, will be usefull for exception
+    sc_out<sc_uint<32>> MEM_DATA_RD;         // data sent to mem for storage
+    sc_out<bool>        MEM_LOAD_RD;         // say to mem if we do a load
+    sc_out<bool>        MEM_STORE_RD;        // say to mem if we do a store
     sc_out<bool>        MEM_SIGN_EXTEND_RD;
     sc_out<sc_uint<2>>  MEM_SIZE_RD;  // tells to mem if we do an acces in word, hw or byte
 
@@ -64,10 +64,10 @@ SC_MODULE(decod) {
     sc_signal<sc_bv<dec2exe_size>> dec2exe_out_sd;
 
     // Multiplications signals
-    sc_out<bool>                   MULT_INST_RD;
+    sc_out<bool> MULT_INST_RD;
 
-    sc_in<bool>                    MULT_INST_RE;
-    sc_in<bool>                    MULT_INST_RM;
+    sc_in<bool> MULT_INST_RE;
+    sc_in<bool> MULT_INST_RM;
     // Interface with CSR :
 
     sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
@@ -266,9 +266,8 @@ SC_MODULE(decod) {
 
     // Pipeline Gestion
 
-    
-    sc_signal<bool>        stall_sd;
-    sc_signal<bool>        normal_sd;
+    sc_signal<bool> stall_sd;
+    sc_signal<bool> normal_sd;
     // Internal signals :
 
     sc_signal<sc_uint<6>>  adr_dest_sd;
@@ -344,34 +343,18 @@ SC_MODULE(decod) {
                   << mem_sign_extend_sd << mem_size_sd << select_type_operations_sd << adr_dest_sd << slti_i_sd
                   << slt_i_sd
 
-                  << sltiu_i_sd << sltu_i_sd << RADR1_SD
-                  << CSR_RDATA_SC << csr_radr_sd
-                  << RADR2_SD << r1_valid_sd << EXCEPTION_SM << r2_valid_sd 
-                  << PC_IF2DEC_RI << csr_wenable_sd
-                  << illegal_instruction_sd << instruction_adress_missaligned_sd 
-                  << env_call_m_mode_sd
-                  << block_bp_sd << env_call_s_mode_sd << env_call_u_mode_sd 
-                  << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd
-                  << mul_i_sd << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
+                  << sltiu_i_sd << sltu_i_sd << RADR1_SD << CSR_RDATA_SC << csr_radr_sd << RADR2_SD << r1_valid_sd
+                  << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd << illegal_instruction_sd
+                  << instruction_adress_missaligned_sd << env_call_m_mode_sd << block_bp_sd << env_call_s_mode_sd
+                  << env_call_u_mode_sd << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd << mul_i_sd
+                  << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
 
         SC_METHOD(stall_method)
-        sensitive   << b_type_inst_sd 
-                    << jalr_type_inst_sd 
-                    << j_type_inst_sd 
-                    << r1_valid_sd 
-                    << r2_valid_sd
-                    << csr_wenable_sd 
-                    << DEC2EXE_EMPTY_SD 
-                    << CSR_WENABLE_RD 
-                    << CSR_WENABLE_RE 
-                    << BP_EXE2MEM_EMPTY_SE
-                    << csr_in_progress
-                    << block_in_dec 
-                    << IF2DEC_EMPTY_SI
-                    << dec2exe_full_sd
-                    << csr_in_progress;
+        sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
+                  << csr_wenable_sd << DEC2EXE_EMPTY_SD << CSR_WENABLE_RD << CSR_WENABLE_RE << BP_EXE2MEM_EMPTY_SE
+                  << csr_in_progress << block_in_dec << IF2DEC_EMPTY_SI << dec2exe_full_sd << csr_in_progress;
 
         SC_METHOD(decoding_instruction_type)
         sensitive << INSTR_RI << READ_PC_SR;
@@ -414,27 +397,17 @@ SC_MODULE(decod) {
                   << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd << sret_i_sd
                   << CSR_RDATA_SC;
         SC_METHOD(pc_inc)
-        sensitive   << CLK.pos() 
-                    << READ_PC_SR 
-                    << offset_branch_sd 
-                    << inc_pc_sd 
-                    << jump_sd 
-                    << MTVEC_VALUE_RC
-                    << EXCEPTION_SM 
-                    << PC_IF2DEC_RI 
-                    << MRET_SM 
-                    << dec2if_full_sd
-                    << IF2DEC_EMPTY_SI
-                    << MCAUSE_WDATA_SM
-                    << stall_sd;
+        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << jump_sd << MTVEC_VALUE_RC
+                  << EXCEPTION_SM << PC_IF2DEC_RI << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
+                  << stall_sd;
 
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE 
-                    
+        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE
+
                   << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD << EXE_DEST_SD
 
                   << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
-                  
+
                   << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
         reset_signal_is(RESET_N, false);
     }

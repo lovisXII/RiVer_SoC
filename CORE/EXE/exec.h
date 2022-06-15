@@ -8,7 +8,7 @@
 #include "shifter.h"
 
 #define exe2mem_size        200
-#define start_kernel_adress 0x80000000
+#define start_kernel_adress 0xF0000000
 
 SC_MODULE(exec) {
     // Input/Output of EXE :
@@ -31,25 +31,23 @@ SC_MODULE(exec) {
     sc_in<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_in<bool>        MEM_LOAD_RD, MEM_STORE_RD;
 
-    sc_in<bool>        EXE2MEM_POP_SM;
-    sc_in<bool>        MULT_INST_RD;
-    sc_in<bool>        DEC2EXE_EMPTY_SD;
-    sc_in<bool>        SLT_RD, SLTU_RD;
+    sc_in<bool> EXE2MEM_POP_SM;
+    sc_in<bool> MULT_INST_RD;
+    sc_in<bool> DEC2EXE_EMPTY_SD;
+    sc_in<bool> SLT_RD, SLTU_RD;
 
     sc_in<bool>        CSR_WENABLE_RD;
     sc_in<sc_uint<12>> CSR_WADR_RD;
     sc_in<sc_uint<32>> CSR_RDATA_RD;
 
-    sc_in<bool>        MULT_INST_RM;
-    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
+    sc_in<bool> MULT_INST_RM;
+    sc_in<bool> BP_MEM2WBK_EMPTY_SM;
     // Exception coming from Decod :
 
-    sc_in<bool>       EXCEPTION_RD;  // tells if an instruction have been made in DEC
-    sc_in<sc_uint<2>> CURRENT_MODE_SM;
-    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RD ;
-    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RE ;
-    
-
+    sc_in<bool>         EXCEPTION_RD;  // tells if an instruction have been made in DEC
+    sc_in<sc_uint<2>>   CURRENT_MODE_SM;
+    sc_in<sc_uint<32>>  PC_BRANCH_VALUE_RD;
+    sc_out<sc_uint<32>> PC_BRANCH_VALUE_RE;
 
     sc_in<bool> ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
     sc_in<bool> ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
@@ -110,7 +108,7 @@ SC_MODULE(exec) {
 
     sc_out<bool> WB_RE, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
-    sc_out<bool> MULT_INST_RE;       // multiplication instruction
+    sc_out<bool> MULT_INST_RE;      // multiplication instruction
     sc_out<bool> MULT_SEL_HIGH_RE;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE;
@@ -215,41 +213,22 @@ SC_MODULE(exec) {
         sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD << SLTU_RD << SELECT_TYPE_OPERATIONS_RD
                   << CURRENT_MODE_SM << MEM_LOAD_RD << MEM_STORE_RD << exception_se << RESET;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd 
-                  << DEST_RD 
-                  << MEM_SIZE_RD 
-                  << MEM_LOAD_RD 
-                  << MEM_SIGN_EXTEND_RD 
-                  << MEM_STORE_RD
-                  << WB_RD 
-                  << exe_res_se 
-                  << mem_load_re 
-                  << mem_store_re
-                  << wb_re 
-                  << CSR_WENABLE_RD 
-                  << CSR_WADR_RD
-                  << CSR_RDATA_RD 
-                  << ILLEGAL_INSTRUCTION_RD 
-                  << ADRESS_MISSALIGNED_RD
-                  << ENV_CALL_U_MODE_RD 
-                  << ENV_CALL_M_MODE_RD 
-                  << exception_se 
-                  << load_adress_missaligned_se
-                  << load_access_fault_se 
-                  << store_access_fault_se
-                  << store_adress_missaligned_se
-                  << EXCEPTION_SM 
-                  << MRET_RD 
-                  << INSTRUCTION_ACCESS_FAULT_RD 
-                  << MULT_INST_RD;
+        sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
+                  << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
+                  << CSR_RDATA_RD << ILLEGAL_INSTRUCTION_RD << ADRESS_MISSALIGNED_RD << ENV_CALL_U_MODE_RD
+                  << ENV_CALL_M_MODE_RD << exception_se << load_adress_missaligned_se << load_access_fault_se
+                  << store_access_fault_se << store_adress_missaligned_se << EXCEPTION_SM << MRET_RD
+                  << INSTRUCTION_ACCESS_FAULT_RD << MULT_INST_RD;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked << r1_valid_se << r2_valid_se;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked
+                  << r1_valid_se << r2_valid_se;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
                   << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
-                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD << MULT_INST_RE << MULT_INST_RM << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
+                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD << MULT_INST_RE
+                  << MULT_INST_RM << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
         SC_METHOD(exception);
         sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD << load_adress_missaligned_se
                   << exception_se << load_access_fault_se << store_access_fault_se << store_adress_missaligned_se;
