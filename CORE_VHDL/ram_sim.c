@@ -24,7 +24,7 @@ int write_mem(int a, int data) {
     return 0;
 }
 
-//extern int ghdl_main(int argc, char const* argv[]);
+extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -112,6 +112,6 @@ int main(int argc, char const* argv[]) {
     //     write_mem(4*cur_inst, i);
     //     instr[cur_inst++] = i;
     // }
-    //ghdl_main(argc, argv);
+    ghdl_main(argc, argv);
 }
 

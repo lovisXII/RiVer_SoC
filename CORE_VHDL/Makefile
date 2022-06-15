@@ -11,7 +11,7 @@ OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
 
 
-all: $(BUILD)/a.out 
+all: core_tb
 
 view: run
 	gtkwave $(SIM_DIR)/$(TB).vcd
@@ -21,8 +21,11 @@ run: all
 
 # Building main tb
 
-# core_tb : $(OBJ) ${C_MOD_DIR}/ReadElf/lib/ElfObj.o $(BUILD)/a.out
-# 	${GHDL} -e ${GHDLFLAGS} -Wl,${C_MOD_DIR}/ReadElf/lib/ElfObj.o core_tb
+core_tb : $(OBJ) ${C_MOD_DIR}/ReadElf/lib/ElfObj.o $(BUILD)/ram_sim.o
+	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
+
+$(BUILD)/ram_sim.o :
+	gcc -c ram_sim.c -o $(BUILD)/ram_sim.o
 
 analyse: $(OBJ)
 
