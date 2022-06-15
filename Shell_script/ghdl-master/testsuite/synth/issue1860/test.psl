@@ -1,3 +1,0 @@
-VUNIT test_formal (test) {
-    u_test_formal_test: ENTITY work.test_formal_test(formal);
-}

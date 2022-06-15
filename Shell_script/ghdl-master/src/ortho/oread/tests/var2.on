@@ -1,5 +1,0 @@
--- internal declarations, part 1
-
-TYPE __ghdl_size_type IS UNSIGNED (32);
-
-PUBLIC VAR size1 : __ghdl_size_type;

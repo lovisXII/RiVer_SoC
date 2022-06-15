@@ -1,2 +1,0 @@
-entity r is
-end;
