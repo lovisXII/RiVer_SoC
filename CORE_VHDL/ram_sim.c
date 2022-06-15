@@ -111,7 +111,7 @@ int main(int argc, char const* argv[]) {
     //     int i = strtol(line_buf, NULL, 16);
     //     write_mem(4*cur_inst, i);
     //     instr[cur_inst++] = i;
-    // }
-    ghdl_main(argc, argv);
+    // }    
+    ghdl_main(argc-1, argv+1);
 }
 

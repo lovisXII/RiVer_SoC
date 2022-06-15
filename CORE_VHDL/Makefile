@@ -1,7 +1,7 @@
 BUILD=build
 SIM_DIR=sim
 GHDL?=/opt/ghdl/bin/ghdl
-GHDLFLAGS?=--workdir=$(BUILD)
+GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
 TB=core_tb
 MODS=$(TB) $(COMPONENTS) 
@@ -18,7 +18,7 @@ view: run
 run: all 
 	cd $(SIM_DIR) && ../$(BUILD)/a.out ../test_add.s --vcd=$(TB).vcd
 
-core_tb : $(OBJ) $(BUILD)/ram_sim.o
+core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
 $(BUILD)/ram_sim.o :
