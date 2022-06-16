@@ -1,18 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-# include "elf.h"
+#include "elf.h"
 
-#define MAX_INST 1000
 
-int cur_inst = 0; 
 int start_pc;
 int *instruction;
 int *adr_instr; 
+int NB_INSTR; 
 
-int *ram; 
-int *adr_ram;
+int*** ram[256];
 
-int SIZE; 
 
 int get_index(int a, int size) {
     for(int i = 0; i < size; i++) {
@@ -24,19 +21,35 @@ int get_index(int a, int size) {
 }
 
 int get_inst(int a) {
-    int i = get_index(a, SIZE);
+    int i = get_index(a, NB_INSTR);
     return instruction[i];
 }
 
 int get_mem(int a) {
+    int addr1, addr2, addr3, addr4;
     a = a >> 2; 
-    return ram[a];    
+    addr1 = a & 0xFF; 
+    addr2 = (a >> 8) & 0xFF; 
+    addr3 = (a >> 16) & 0xFF; 
+    addr4 = (a >> 24) & 0xFF; 
+    if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
+        return ram[addr1][addr2][addr3][addr4];
+    }
+    return 0; 
 }
 
 int write_mem(int a, int data) {
-    a = a >> 2;
-    ram[a] = data; 
-    return 0;
+    int addr1, addr2, addr3, addr4;
+    a = a >> 2; 
+    addr1 = a & 0xFF; 
+    addr2 = (a >> 8) & 0xFF; 
+    addr3 = (a >> 16) & 0xFF; 
+    addr4 = (a >> 24) & 0xFF; 
+    if (!ram[addr1]) ram[addr1] = calloc(256, sizeof(int*));
+    if (!ram[addr1][addr2]) ram[addr1][addr2] = calloc(256, sizeof(int*));
+    if (!ram[addr1][addr2][addr3]) ram[addr1][addr2][addr3] = calloc(256, sizeof(int));
+    ram[addr1][addr2][addr3][addr4] = data;
+    return 0; 
 }
 
 int get_startpc(int z) {
@@ -74,14 +87,14 @@ int main(int argc, char const* argv[]) {
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32i %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
+        sprintf(temp,"riscv32-unknown-elf-as -march=rv32i %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
@@ -105,18 +118,21 @@ int main(int argc, char const* argv[]) {
     int j = 0 ;
     instruction = malloc(((structure.size)/4)*sizeof(int)) ;
     adr_instr = malloc(((structure.size)/4)*sizeof(int)) ;
-    SIZE = structure.size;
 
+    NB_INSTR = structure.size;
     while(i < structure.size){
         instruction[j]  = mem_lw(structure.start_adr+i) ;
         adr_instr[j]     = structure.start_adr+i ;
         i+=4 ;
         j++;
     }
+
+/*
     for(int i = 0 ; i < (structure.size)/4 ; i++){
         write_mem(i,instruction[i]) ;
         printf("%8x : %8x\n", adr_instr[i], instruction[i]) ;
     }
+*/
     Del_Elf32(pObj);
     printf("end of main\n") ;
 
