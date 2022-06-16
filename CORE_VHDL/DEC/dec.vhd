@@ -67,7 +67,7 @@ signal dec2exe_full_sd, dec2exe_push_sd : std_logic;
 
 -- Instructions
 signal r_type_sd, i_type_sd, s_type_sd, b_type_sd, u_type_sd, j_type_sd, jalr_type_sd : std_logic;
-signal load_type_sd : std_logic;
+signal load_type_sd, nmem_type_sd : std_logic;
 
 signal add_i_sd, sub_i_sd, slt_i_sd, sltu_i_sd, and_i_sd, or_i_sd, xor_i_sd, sll_i_sd, srl_i_sd, sra_i_sd : std_logic;
 signal addi_i_sd, slti_i_sd, sltiu_i_sd, andi_i_sd, ori_i_sd, xori_i_sd, slli_i_sd, srli_i_sd, srai_i_sd : std_logic;
@@ -184,9 +184,9 @@ s_type_sd <= '1' when INSTR_RI(6 downto 0) = "0100011" else '0';
 b_type_sd <= '1' when INSTR_RI(6 downto 0) = "1100011" else '0';
 u_type_sd <= '1' when INSTR_RI(6 downto 0) = "0110111" else '0';
 j_type_sd <= '1' when INSTR_RI(6 downto 0) = "1101111" else '0';
-jalr_type_sd  <= '1' when INSTR_RI(6 downto 0) = "1100111" else '0';
-load_type_sd  <= '1' when INSTR_RI(6 downto 0) = "0000011" else '0';
-
+jalr_type_sd    <= '1' when INSTR_RI(6 downto 0) = "1100111" else '0';
+load_type_sd    <= '1' when INSTR_RI(6 downto 0) = "0000011" else '0';
+nmem_type_sd    <= '1' when INSTR_RI(6 downto 0) = "0010011" else '0'; -- not mem type but i type
 -------------------------
 -- Instruction decoding  
 -------------------------
@@ -203,15 +203,15 @@ srl_i_sd  <= '1' when r_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and (IN
 sra_i_sd  <= '1' when r_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and (INSTR_RI(30) = '1') else '0';
 
 -- I type
-addi_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else '0';
-slti_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "010" else '0';
-sltiu_i_sd <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "011" else '0';
-andi_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "111" else '0';
-ori_i_sd   <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "110" else '0';
-xori_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "100" else '0';
-slli_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "001" else '0';
-srli_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and INSTR_RI(30) = '0' else '0';
-srai_i_sd  <= '1' when i_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and INSTR_RI(30) = '1' else '0';
+addi_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else '0';
+slti_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "010" else '0';
+sltiu_i_sd <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "011" else '0';
+andi_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "111" else '0';
+ori_i_sd   <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "110" else '0';
+xori_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "100" else '0';
+slli_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "001" else '0';
+srli_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and INSTR_RI(30) = '0' else '0';
+srai_i_sd  <= '1' when nmem_type_sd = '1' and INSTR_RI(14 downto 12) = "101" and INSTR_RI(30) = '1' else '0';
 
 -- B type_sd
 beq_i_sd  <= '1' when b_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else '0';
@@ -267,8 +267,8 @@ op2_i_type_sd(31 downto 12) <= x"FFFFF" when RDATA2_SR(31) = '1' else
                             x"00000";
 op2_i_type_sd(11 downto 0)  <= INSTR_RI(31 downto 20);
 
-dec2exe_op2_sd <= rdata2_sd when ((r_type_sd or s_type_sd or b_type_sd or (u_type_sd and not(auipc_i_sd))) = '1') else 
-               op2_i_type_sd when i_type_sd = '1' else
+dec2exe_op2_sd <= rdata2_sd when ((r_type_sd  or b_type_sd or (u_type_sd and not(auipc_i_sd))) = '1') else 
+               op2_i_type_sd when (i_type_sd or s_type_sd) = '1' else
                PC_IF2DEC_RI when auipc_i_sd = '1' else 
                READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
                x"00000000";

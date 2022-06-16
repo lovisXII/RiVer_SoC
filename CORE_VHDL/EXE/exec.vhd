@@ -149,7 +149,7 @@ exe2mem : fifo
 -- ALU OP2 selection 
 alu_op2 <= not op2 when NEG_OP2_RD = '1' else op2; 
 
--- SLT / SLTU operMEM_DATA_REations 
+-- SLT / SLTU oper 
 slt_res <=  x"00000000" when (op1(31) = '1' and op2(31) = '0') else 
             x"00000001" when (op1(31) = '0' and op2(31) = '1') else
             (x"0000000"&"000"&not(alu_res(31)));
@@ -177,9 +177,11 @@ op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else
 
 r1_valid_se <= '1'; 
 
-op2 <=  exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' else 
-        MEM_RES_RM when MEM_DEST_RM = RADR2_RD else 
-        OP2_RD;
+op2 <= OP2_RD; 
+-- exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' else 
+ --       OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
+  --      MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
+   --     OP2_RD;
 
 r2_valid_se <= '1';
 
