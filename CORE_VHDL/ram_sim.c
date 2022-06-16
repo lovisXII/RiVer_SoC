@@ -40,7 +40,7 @@ int get_startpc(int z) {
     return start_pc; 
 }
 
-//extern int ghdl_main(int argc, char const* argv[]);
+extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -113,7 +113,7 @@ int main(int argc, char const* argv[]) {
     }
     Del_Elf32(structure->pObj_struct);
 
-    //ghdl_main(argc - nargs, &argv[nargs]);
+    ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 
