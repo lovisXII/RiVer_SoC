@@ -39,7 +39,7 @@ end mem;
 architecture archi of mem is 
 signal mem2wbk_din, mem2wbk_dout : std_logic_vector(42 downto 0);
 signal mem2wbk_push, mem2wbk_full : std_logic;
-signal stall, wb : std_logic;
+signal stall_sm, wb : std_logic;
 
 signal load_data : std_logic_vector(31 downto 0);
 signal load_byte, load_halfword, load_word : std_logic_vector(31 downto 0);
@@ -94,10 +94,10 @@ SIGN_EXTEND_RM <= mem2wbk_dout(41);
 LOAD_RM <= mem2wbk_dout(42);
 
 -- fifo manage 
-stall <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SM;
+stall_sm <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SM;
 wb <= WB_RE or LOAD_RE;
-mem2wbk_push <= (not stall) and wb;
-EXE2MEM_POP_SM <= not stall;
+mem2wbk_push <= (not stall_sm) and wb;
+EXE2MEM_POP_SM <= not stall_sm;
 
 -- Mcache 
 MCACHE_DATA_SM <= MEM_DATA_RE; 

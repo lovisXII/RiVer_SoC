@@ -102,7 +102,7 @@ signal add_offset_to_pc_sd : std_logic;
 signal pc : std_logic_vector(31 downto 0);
 
 -- bypass
-signal stall, block_in_dec : std_logic;
+signal stall_sd, block_in_dec : std_logic;
 signal r1_valid_sd, r2_valid_sd : std_logic;
 signal block_bp_sd : std_logic;
 
@@ -166,13 +166,13 @@ dec2exe : fifo
 dec2if_push_sd <= not dec2if_full_sd;
 
 -- if2dec 
-IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
+IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall_sd = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
                  '0'; 
 IF2DEC_FLUSH_SD <= '1' when (add_offset_to_pc_sd = '1') else 
                    '0'; 
 
 -- dec2exe
-dec2exe_push_sd <= '0' when (stall = '1' or dec2exe_full_sd = '1' or IF2DEC_EMPTY_SI = '1') else
+dec2exe_push_sd <= '0' when (stall_sd = '1' or dec2exe_full_sd = '1' or IF2DEC_EMPTY_SI = '1') else
                 '1'; 
 
 -------------------------
@@ -296,10 +296,10 @@ mem_load_sd <= lw_i_sd or lh_i_sd or lhu_i_sd or lb_i_sd or lbu_i_sd;
 
 mem_store_sd <= sw_i_sd or sh_i_sd or sb_i_sd;
 
-mem_size_sd <=  "00" when lw_i_sd = '1' else 
-                "01" when ((lh_i_sd or lhu_i_sd or sh_i_sd) = '1') else 
-                "10" when ((lb_i_sd or lbu_i_sd or sb_i_sd) = '1') else 
-                "11";
+mem_size_sd <=  "00" when ((lw_i_sd or sw_i_sd)= '1') else              -- word size 
+                "01" when ((lh_i_sd or lhu_i_sd or sh_i_sd) = '1') else -- halfword size
+                "10" when ((lb_i_sd or lbu_i_sd or sb_i_sd) = '1') else -- byte size
+                "11";                                                   -- not a mem access
  
 mem_sign_extend_sd <= '1' when (((lh_i_sd and lhu_i_sd )= '1') or ((lb_i_sd and lbu_i_sd) = '1')) else
                       '0';
@@ -341,7 +341,7 @@ invalid_instr <= invalid_i or IF2DEC_EMPTY_SI;
 
 inc_pc_sd <= (inc_pc and dec2if_push_sd) or not invalid_instr;
 
-add_offset_to_pc_sd <= not stall and not inc_pc and dec2if_push_sd and not invalid_instr;
+add_offset_to_pc_sd <= not stall_sd and not inc_pc and dec2if_push_sd and not invalid_instr;
 
 -- PC 
 process(READ_PC_SR, add_offset_to_pc_sd, inc_pc_sd)
@@ -364,7 +364,7 @@ WRITE_PC_SD <= pc;
 -- Bypass
 -------------------------
 block_in_dec <= '1' when (((radr1_sd = rdest_sd) or (radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
-stall <= (not r1_valid_sd or not r2_valid_sd) and (b_type_sd or j_type_sd or jalr_type_sd or block_in_dec);  
+stall_sd <= (not r1_valid_sd or not r2_valid_sd) and (b_type_sd or j_type_sd or jalr_type_sd or block_in_dec);  
 block_bp_sd <= jalr_type_sd;      
 
  

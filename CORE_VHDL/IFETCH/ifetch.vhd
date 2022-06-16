@@ -30,7 +30,7 @@ end ifetch;
 
 architecture archi of ifetch is 
 signal if2dec_push_si, if2dec_full_si : std_logic;
-signal stall : std_logic;
+signal stall_si : std_logic;
 
 component fifo
     generic(N : integer);
@@ -65,10 +65,10 @@ if2dec : fifo
         DOUT(31 downto 0) => PC_IF2DEC_RI
     );
 
-stall <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SI;
+stall_si <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SI;
 
-if2dec_push_si <= not stall when IF2DEC_FLUSH_SD = '0' else '0'; 
-DEC2IF_POP_SI <= not stall when IF2DEC_FLUSH_SD = '0' else '1';
+if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD = '0' else '0'; 
+DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
 ADR_VALID_SI <= not DEC2IF_EMPTY_SI when IF2DEC_FLUSH_SD = '0' else '0';
 
 ADR_SI <= PC_RD;
