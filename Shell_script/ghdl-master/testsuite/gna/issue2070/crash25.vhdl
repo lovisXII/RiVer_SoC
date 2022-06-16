@@ -1,2 +1,0 @@
-package--
-function is;n';

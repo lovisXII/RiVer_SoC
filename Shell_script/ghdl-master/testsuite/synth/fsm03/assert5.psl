@@ -1,6 +1,0 @@
-vunit assert5 (ent)
-{
-  default clock is rising_edge(clk);
-  --my_cond: assert always (({req} |=> {ack}) abort val = '1');
-  my_cond: assert always ({req} |=> {ack});
-}
