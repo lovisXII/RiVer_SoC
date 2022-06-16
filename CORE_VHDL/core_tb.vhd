@@ -29,6 +29,12 @@ begin
 end write_mem; 
 attribute foreign of write_mem : function is "VHPIDIRECT write_mem";    
 
+function get_startpc(a : integer) return integer is 
+begin 
+    assert false severity failure; 
+end get_startpc;
+attribute foreign of get_startpc : function is "VHPIDIRECT get_startpc";
+
 -- global interface
 signal clk : std_logic := '1';
 signal reset_n : std_logic := '0';
@@ -53,7 +59,7 @@ signal ADR_VALID_SI : std_logic;
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
 
-constant NCYCLES : integer := 30; 
+constant NCYCLES : integer := 100; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 
 component core
@@ -129,7 +135,7 @@ reset_n <= '0', '1' after 6 ns;
 MCACHE_STALL_SM <= '0';
 
 IC_STALL_SI <= '0';
-PC_INIT <= x"00000000";
+PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 
 process(ADR_SI, ADR_VALID_SI)
 begin

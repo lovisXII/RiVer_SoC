@@ -54,7 +54,8 @@ signal exe2mem_empty : std_logic;
 
 signal slt_res, sltu_res : std_logic_vector(31 downto 0);
 
-signal blocked : std_logic;
+signal stall_se : std_logic; 
+signal blocked_se : std_logic;
 signal bp_mem_data : std_logic_vector(31 downto 0);
 signal r1_valid_se, r2_valid_se : std_logic; 
 
@@ -164,8 +165,9 @@ exe_res <=  shifter_res when SELECT_SHIFT_RD = '1' else
             alu_res;
 
 -- fifo 
-exe2mem_push <= not (exe2mem_full or DEC2EXE_EMPTY_SD or blocked);
-DEC2EXE_POP_SE <= not (exe2mem_full or DEC2EXE_EMPTY_SD or blocked);
+stall_se <= exe2mem_full or DEC2EXE_EMPTY_SD or blocked_se or not(r1_valid_se) or not(r2_valid_se);
+exe2mem_push <= not stall_se; 
+DEC2EXE_POP_SE <= not stall_se;
 
 -- Bypasses 
 op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else 
@@ -185,7 +187,7 @@ bp_mem_data <=  exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_loa
                 MEM_RES_RM when (MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1') else
                 MEM_DATA_RD;
 
-blocked <=  '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0') 
+blocked_se <=  '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0') 
                 or    (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0')) else 
             '0';
 
@@ -194,4 +196,5 @@ RES_RE <= exe_fifo_res;
 DEST_RE <= exe_fifo_dest; 
 EXE2MEM_EMPTY_SE <= exe2mem_empty;
 MEM_LOAD_RE <= exe_fifo_mem_load; 
+
 end archi;

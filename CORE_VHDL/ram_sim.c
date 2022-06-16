@@ -4,13 +4,28 @@
 
 #define MAX_INST 1000
 
-int instr[MAX_INST];
-int ram[1000];
 int cur_inst = 0; 
+int start_pc;
+int *instruction;
+int *adr_instr; 
+
+int *ram; 
+int *adr_ram;
+
+int SIZE; 
+
+int get_index(int a, int size) {
+    for(int i = 0; i < size; i++) {
+        if(a == adr_instr[i]) 
+            return i; 
+    }
+    printf("index not found\n");
+    return -1;
+}
 
 int get_inst(int a) {
-    a = a >> 2;
-    return ram[a];
+    int i = get_index(a, SIZE);
+    return instruction[i];
 }
 
 int get_mem(int a) {
@@ -23,6 +38,11 @@ int write_mem(int a, int data) {
     ram[a] = data; 
     return 0;
 }
+
+int get_startpc(int z) {
+    return start_pc; 
+}
+
 
 extern int ghdl_main(int argc, char const* argv[]);
 
@@ -80,20 +100,22 @@ int main(int argc, char const* argv[]) {
     printf("Number of Instruction : %x\n", (structure.size)/4) ;
 
     printf("Start Adress : %x\n",structure.start_adr) ;
+    start_pc = structure.start_adr; 
     int i = 0;
     int j = 0 ;
-    int *instruction = malloc(((structure.size)/4)*sizeof(int)) ;
-    int *adresses = malloc(((structure.size)/4)*sizeof(int)) ;
+    instruction = malloc(((structure.size)/4)*sizeof(int)) ;
+    adr_instr = malloc(((structure.size)/4)*sizeof(int)) ;
+    SIZE = structure.size;
 
     while(i < structure.size){
         instruction[j]  = mem_lw(structure.start_adr+i) ;
-        adresses[j]     = structure.start_adr+i ;
+        adr_instr[j]     = structure.start_adr+i ;
         i+=4 ;
         j++;
     }
     for(int i = 0 ; i < (structure.size)/4 ; i++){
         write_mem(i,instruction[i]) ;
-        printf("%8x : %8x\n", adresses[i], instruction[i]) ;
+        printf("%8x : %8x\n", adr_instr[i], instruction[i]) ;
     }
     Del_Elf32(pObj);
     printf("end of main\n") ;
@@ -114,7 +136,6 @@ int main(int argc, char const* argv[]) {
     //     int i = strtol(line_buf, NULL, 16);
     //     write_mem(4*cur_inst, i);
     //     instr[cur_inst++] = i;
-    // }
     printf("plop %d\n", nargs);
     ghdl_main(argc - nargs, &argv[nargs]);
 }
