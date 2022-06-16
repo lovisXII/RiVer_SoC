@@ -99,7 +99,7 @@ int main(int argc, char const* argv[]) {
     printf("Number of Instruction : %x\n", (structure->size)/4) ;
 
     printf("Start Adress : %x\n",structure->start_adr) ;
-    get_startpc(structure->start_adr);
+    start_pc = (structure->start_adr);
     int i = 0;
     int j = 0 ;
 

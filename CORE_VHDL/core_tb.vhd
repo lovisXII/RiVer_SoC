@@ -140,11 +140,11 @@ end process;
 
 
 mem_access : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM)
-variable read : integer;
+variable read0 : integer;
 begin 
     if MCACHE_ADR_VALID_SM = '1' then 
         if MCACHE_STORE_SM = '1' then 
-            read := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)));
+            read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)));
         elsif MCACHE_LOAD_SM = '1' then 
             MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
         end if; 

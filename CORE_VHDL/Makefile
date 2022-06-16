@@ -1,5 +1,7 @@
 BUILD=build
 SIM_DIR=sim
+TESTS_DIR=tests
+APP=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -10,13 +12,13 @@ OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
 
 
-all: core_tb
+all: view
 
 view: run
 	gtkwave $(SIM_DIR)/$(TB).vcd
 
-run: all 
-	cd $(SIM_DIR) && ../$(BUILD)/a.out ../test_add.s --vcd=$(TB).vcd
+run: core_tb 
+	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(APP) --vcd=$(TB).vcd
 
 core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
@@ -34,4 +36,4 @@ $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
 clean:
-	rm $(BUILD)/* -f *.lst *.o *.cf core_tb a.out a.out.txt *.vcd
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb 
