@@ -7,18 +7,18 @@ use core::panic::PanicInfo;
 use core::ptr::null;
 
 
-pub fn instruction_address_fault()  {}
-pub fn illegal_instruction()  {}
-pub fn instruction_address_misagligned()  {}
-pub fn env_call_u_mode()  {}
-pub fn env_call_s_mode() {}
-pub fn env_call_m_mode() {}
-pub fn load_adress_missaligned() {}
-pub fn store_adress_missaligned() {}
-pub fn load_access_fault() {}
-pub fn store_access_fault() {}
-pub fn env_call_wrong_mode() {}
-pub fn breakpoint() {}
+pub fn instruction_address_fault()  {unsafe {asm!("nop")}}
+pub fn illegal_instruction()  {unsafe {asm!("nop")}}
+pub fn instruction_address_misagligned()  {unsafe {asm!("nop")}}
+pub fn env_call_u_mode()  {unsafe {asm!("nop")}}
+pub fn env_call_s_mode() {unsafe {asm!("nop")}}
+pub fn env_call_m_mode() {unsafe {asm!("nop")}}
+pub fn load_adress_missaligned() {unsafe {asm!("nop")}}
+pub fn store_adress_missaligned() {unsafe {asm!("nop")}}
+pub fn load_access_fault() {unsafe {asm!("nop")}}
+pub fn store_access_fault() {unsafe {asm!("nop")}}
+pub fn env_call_wrong_mode() {unsafe {asm!("nop")}}
+pub fn breakpoint() {unsafe {asm!("nop")}}
 
 pub unsafe fn interrupt_handler() -> ! {
     let mut mcause : u32;
