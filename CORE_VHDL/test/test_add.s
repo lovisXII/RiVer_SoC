@@ -1,7 +1,6 @@
 .section .text
 .global _start
-.global _good
-.global _bad
+
 _start:
     ori x1,x0,10 # x1 = 10 // 1010 
     ori x2,x0,12 # x2 = 12 // 1100
@@ -38,3 +37,16 @@ _bad :
 
 _lala: 
     addi x3,x1,10
+
+.section caca
+.global _test
+
+_test :
+    ori x10,x0,3
+
+.section .kernel
+.global _excp
+
+_excp :
+    jal x0, _excp
+    nop 

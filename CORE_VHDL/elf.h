@@ -251,6 +251,8 @@ if (pObj->Head.e_shnum != 0)
 		fseek(felf, pObj->SecNameHdr->sh_offset, SEEK_SET);
 		fread(pObj->SecName, sizeof(char), pObj->SecNameHdr->sh_size, felf);
 	
+	
+
 	// Lecture de la Section .text
 		if((pObj->SecTextHdr = SecByName(pObj, ".text")))
 			{
