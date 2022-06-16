@@ -11,12 +11,6 @@ end core_tb;
 architecture simu of core_tb is 
 
 -- functions 
-function get_inst(adr : integer) return integer is 
-begin 
-    assert false severity failure;
-end get_inst; 
-attribute foreign of get_inst : function is "VHPIDIRECT get_inst";    
-
 function get_mem(adr : integer) return integer is 
 begin 
     assert false severity failure;
@@ -140,7 +134,7 @@ PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 process(ADR_SI, ADR_VALID_SI)
 begin
     if ADR_VALID_SI = '1' then 
-        IC_INST_SI <= std_logic_vector(to_unsigned(get_inst(to_integer(unsigned(ADR_SI))), 32));
+        IC_INST_SI <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(ADR_SI))), 32));
     end if; 
 end process; 
 

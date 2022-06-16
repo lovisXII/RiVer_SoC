@@ -34,4 +34,4 @@ $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
 clean:
-	rm $(BUILD)/* -f *.lst *.o *.cf core_tb a.out a.out.txt
+	rm $(BUILD)/* -f *.lst *.o *.cf core_tb a.out a.out.txt *.vcd

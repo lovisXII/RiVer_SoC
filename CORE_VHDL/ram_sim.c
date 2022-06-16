@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "elf.h"
-
+# include "elfio.h"
 
 int start_pc;
 int *instruction;
@@ -9,21 +8,6 @@ int *adr_instr;
 int NB_INSTR; 
 
 int*** ram[256];
-
-
-int get_index(int a, int size) {
-    for(int i = 0; i < size; i++) {
-        if(a == adr_instr[i]) 
-            return i; 
-    }
-    printf("index not found\n");
-    return -1;
-}
-
-int get_inst(int a) {
-    int i = get_index(a, NB_INSTR);
-    return instruction[i];
-}
 
 int get_mem(int a) {
     int addr1, addr2, addr3, addr4;
@@ -56,8 +40,7 @@ int get_startpc(int z) {
     return start_pc; 
 }
 
-
-extern int ghdl_main(int argc, char const* argv[]);
+//extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -72,6 +55,8 @@ int main(int argc, char const* argv[]) {
 
     strcpy(path,argv[1]) ;
 
+    // Receiving arguments
+    
     if (argc >= 3 && strcmp(argv[2],"-O") == 0) {
         nargs = 2;
         strcpy(opt,"-02") ;
@@ -85,16 +70,18 @@ int main(int argc, char const* argv[]) {
     char point = '.' ;
     char *type_of_file = strrchr(path,point) ; 
 
+    // Generation of executable file
+
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32i %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-as -march=rv32i %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
@@ -104,55 +91,29 @@ int main(int argc, char const* argv[]) {
     strcat(temp_text, test);
     system((char*)temp_text);
 
-    Elf32_Obj *pObj = NULL;
-    pObj = Read_Elf32(argv[1]);
-    
-    FILE_READ structure;
+    // Reading elf file, parsing it and getting sections and segments
 
-    structure = init_mem(output) ;
-    printf("Number of Instruction : %x\n", (structure.size)/4) ;
+    FILE_READ* structure = (FILE_READ*)malloc(sizeof(FILE_READ));
+    structure = Read_Elf32(output);
+      
+    printf("Number of Instruction : %x\n", (structure->size)/4) ;
 
-    printf("Start Adress : %x\n",structure.start_adr) ;
-    start_pc = structure.start_adr; 
+    printf("Start Adress : %x\n",structure->start_adr) ;
     int i = 0;
     int j = 0 ;
-    instruction = malloc(((structure.size)/4)*sizeof(int)) ;
-    adr_instr = malloc(((structure.size)/4)*sizeof(int)) ;
 
-    NB_INSTR = structure.size;
-    while(i < structure.size){
-        instruction[j]  = mem_lw(structure.start_adr+i) ;
-        adr_instr[j]     = structure.start_adr+i ;
+    int *instruction    = malloc(((structure->size)/4)*sizeof(int)) ;
+    int *adresses       = malloc(((structure->size)/4)*sizeof(int)) ;
+
+
+    while(i < structure->size){
+        write_mem(structure->start_adr+i,mem_lw(structure->start_adr+i));
         i+=4 ;
         j++;
     }
+    Del_Elf32(structure->pObj_struct);
 
-/*
-    for(int i = 0 ; i < (structure.size)/4 ; i++){
-        write_mem(i,instruction[i]) ;
-        printf("%8x : %8x\n", adr_instr[i], instruction[i]) ;
-    }
-*/
-    Del_Elf32(pObj);
-    printf("end of main\n") ;
-
-
-    // char* line_buf = NULL; 
-    // size_t line_buf_size = 0; 
-    // FILE* file; 
-    // file = fopen(filename, "r");
-
-    // if(file == NULL) {
-    //     printf("Erreur lors de l'ouverture du fichier %s\n", filename);
-    //     return EXIT_FAILURE;
-    // }
-
-    // while(getline(&line_buf, &line_buf_size, file) > 0) {
-    //     printf("%s", line_buf);
-    //     int i = strtol(line_buf, NULL, 16);
-    //     write_mem(4*cur_inst, i);
-    //     instr[cur_inst++] = i;
-    printf("plop %d\n", nargs);
-    ghdl_main(argc - nargs, &argv[nargs]);
+    //ghdl_main(argc - nargs, &argv[nargs]);
+    return 0 ;
 }
 
