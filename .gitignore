@@ -20,3 +20,5 @@ Shell_script/bcm2835-1.70/
 riscof/__pycache__
 *.cf
 *.lst
+riverOS/target
+riverOS/Cargo.lock

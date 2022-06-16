@@ -28,7 +28,7 @@ _exception :
     csrrci  x11,mscratch,0x01  # reading mscratch and clearing bit 0
     # which will do nothing cause mscratch is an adress 
     # so least to significant bits are 0
-    sw      x10,0(x11)         # storing mcause value on the pile at @mscratch
+    sw      x10,0(x11)         # storing mcause value on the stack at @mscratch
     slli    x10,x10,2          # mcause * 4
     la      x11, _isr_vector   # loading starts of _isr_vector 
     add     x11,x11,x10        # jumping at the right isr function
