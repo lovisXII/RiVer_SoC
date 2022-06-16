@@ -1,0 +1,130 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_FLOATING_POINT
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_CONVERSION
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U types%s		types.ads		95251bf8 EE OO PR PK
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_conversion%s
+W interfaces%s		interfac.ads		interfac.ali
+W system%s		system.ads		system.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D types.ads		20220609165545 873e82fb types%s
+X 1 ada.ads
+16K9*Ada 20e8 7|18r6 63r39 116r39
+X 2 a-unccon.ads
+20v14*Unchecked_Conversion 7|18w10 63r43 116r43
+X 3 interfac.ads
+38K9*Interfaces 184e15 7|16w6 39r22 40r22 42r21 43r21
+74M9*Unsigned_32 7|39r33
+77M9*Unsigned_64 7|40r33
+169F9*IEEE_Float_32<short_float> 7|43r32
+172F9*IEEE_Float_64<long_float> 7|42r32
+X 4 system.ads
+37K9*System 156e11 7|17w6 64r7 117r7 192r26
+67M9*Address 7|64r14 117r14
+73N4*Memory_Size 7|192r33
+X 7 types.ads
+20K9*Types 21r25 193l5 193e10
+24E9*Tri_State_Type 24e49
+24n28*Unknown{24E9}
+24n37*False{24E9}
+24n44*True{24E9}
+27I9*Int32<integer> 28r8 34r21 34r38 102r27 102r44
+31I9*Int64<long_integer> 32r8
+34I12*Nat32{27I9} 35r21 35r38 37r20 70r24 92r13
+35I12*Pos32{34I12} 150r25
+37I12*Nat8{34I12}
+39M9*Uns32<3|74M9> 51r13 52r13 83r27 97r34 121r30
+40M9*Uns64<3|77M9>
+42F9*Fp64<3|172F9>
+43F9*Fp32<3|169F9>
+50R9*Logic_32 53e14
+51m7*Val{39M9}
+52m7*Zx{39M9}
+56P9*String_Acc(string) 58r57
+57P9*String_Cst(string)
+58A9*String_Acc_Array(56P9)<integer>
+61P9*Thin_String_Ptr(string) 62r26 64r23
+63V13*To_Thin_String_Ptr[2|20]{61P9}
+70I9*Name_Id<27I9> 74r26 75r30
+74i4*No_Name_Id{70I9}
+75i4*Null_Identifier{70I9}
+83M9*String8_Id<39M9> 84r8 86r28 91r13 154r30 160r33
+86m4*Null_String8{83M9}
+90R9*String8_Len_Type 93e14
+91m7*Str{83M9}
+92i7*Len{34I12}
+97M9*Source_File_Entry<39M9> 98r35 136r14
+98m4*No_Source_File_Entry{97M9} 143r7
+102I9*Source_Ptr<27I9> 105r30 106r31 106r45 109r30 109r44 112r31 114r48 137r18
+105i4*Source_Ptr_Org{102I9}
+106i4*Source_Ptr_Last{102I9}
+109i4*Source_Ptr_Bad{102I9} 143r29
+112A9*File_Buffer(character)<102I9> 113r35 114r35
+113P9*File_Buffer_Acc(112A9)
+114P9*File_Buffer_Ptr(112A9) 117r23
+116V13*To_File_Buffer_Ptr[2|20]{114P9}
+121M9*Location_Type<39M9> 122r8 123r28 124r27
+123m4*Location_Nil{121M9}
+124m4*No_Location{121M9}
+135R9*Source_Coord_Type 140e14 142r31
+136m7*File{97M9}
+137i7*Line_Pos{102I9}
+138i7*Line{natural}
+139i7*Offset{natural}
+142r4*No_Source_Coord{135R9}
+147N4*Indentation
+150I9*Dim_Type<27I9>
+153A12*Time_Stamp_String{string}<integer>
+154M9*Time_Stamp_Id<83M9> 155r31
+155m4*Null_Time_Stamp{154M9}
+160M9*File_Checksum_Id<83M9> 161r35
+161m4*No_File_Checksum_Id{160M9}
+165A12*File_Checksum_String{string}<integer>
+169X4*Internal_Error
+172X4*Fatal_Error
+175E9*Language_Type 181e7
+177n7*Language_Unknown{175E9}
+178n7*Language_Vhdl{175E9}
+179n7*Language_Psl{175E9}
+180n7*Language_Verilog{175E9}
+184E9*Order_Type 184e45
+184n24*Less{184E9}
+184n30*Equal{184E9}
+184n37*Greater{184E9}
+187E9*Direction_Type 187e47
+187n28*Dir_To{187E9}
+187n36*Dir_Downto{187E9}
+192M9*Size_Type
+

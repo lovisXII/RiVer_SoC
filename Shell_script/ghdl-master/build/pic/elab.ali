@@ -1,0 +1,28 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+
+U elab%s		elab.ads		a9643774 NE OO PU PK
+
+D elab.ads		20220609165545 a9643774 elab%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 elab.ads
+19K9*Elab 21l5 21e9
+

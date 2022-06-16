@@ -1,0 +1,128 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U dyn_interning%b	dyn_interning.adb	9fd7e836 NE OO PK GE
+
+U dyn_interning%s	dyn_interning.ads	8d9bb926 BN EE NE OO PK GE
+W ada%s			ada.ads			ada.ali
+Z ada.unchecked_deallocation%s
+W dyn_maps%s		dyn_maps.adb		dyn_maps.ali
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali
+W hash%s		hash.adb		hash.ali
+W interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+Z system%s		system.ads		system.ali
+Z types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D dyn_interning.ads	20220609165545 b0ef8ebd dyn_interning%s
+D dyn_interning.adb	20220609165545 2f38668b dyn_interning%b
+D dyn_maps.ads		20220609165545 9791ba06 dyn_maps%s
+D dyn_maps.adb		20220609165545 6495808a dyn_maps%b
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D hash.ads		20220609165545 aae58d9d hash%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D types.ads		20220609165545 873e82fb types%s
+X 4 dyn_interning.ads
+24+9 Params_Type 31r33 34r34 37r53 44r22 71r40 75r40 5|27r40
+27+9 Object_Type 34r54 37r31 41r35 45r22 71r63 85r34 5|19r35 27r63
+31V18 Hash{10|20M9} 31>24 47r22
+31*24 Params{24+9}
+34V18 Build{27+9} 34>25 48r22
+34*25 Params{24+9}
+37V18 Equal{boolean} 37>25 37>44 50r22
+37*25 Obj{27+9}
+37*44 Params{24+9}
+39k9*Dyn_Interning 24z9 27z9 31z18 34z18 37z18 87l5 87e18 5|18b14 34l5 34t18
+40R9*No_Value_Type 41r55 46r22 5|19r55
+41V13*Build_No_Value{40R9} 41>29 49r22 5|19b13 24l8 24t22
+41*29 Obj{27+9} 5|19b29 21r28
+43K12*Map[6|56] 52r24 55r49 57r52 60r26 61r63 62r60 63r61 65r38 66r41 76r14
+. 80r14 86r14
+52R12*Instance{6|57R9[43]} 55r31 57r34 71r21 75r21 79r32 84r34 5|27r21
+55U14*Init=55:53
+55r20 Inst{52R12}
+57U14*Free=57:56
+57r20 Inst{52R12}
+60M12*Index_Type{6|64M9[43]} 61r25 61r44 62r25 63r26 65r24 66r27 75r63 79r49
+. 84r52 5|29r13
+61V14*"+"=61:67<17|39M9>
+61m18 L<17|39M9>
+61m21 R<17|39M9>
+62V14*">"=62:64{boolean}
+62m18 L<17|39M9>
+62m21 R<17|39M9>
+63V14*"<="=63:65{boolean}
+63m19 L<17|39M9>
+63m22 R<17|39M9>
+65m4*No_Index{60M12}
+66m4*First_Index{60M12}
+70U14*Get 71=7 71>31 71<53 5|26b14 33l8 33t11
+71r7 Inst{52R12} 5|27b7 31m18 32r28
+71*31 Params{24+9} 5|27b31 31r24
+71*53 Res{27+9} 5|27b53 32m7
+74U14*Get_Index=76:18 5|31s7
+75r7 Inst{52R12}
+75*31 Params{24+9}
+75m53 Idx{60M12}
+79V13*Last_Index=80:18{6|64M9[43]}
+79r25 Inst{52R12}
+84V13*Get_By_Index=86:18{27+9} 5|32s14
+84r27 Inst{52R12}
+84m44 Index{60M12}
+X 5 dyn_interning.adb
+29m7 Idx{4|60M12} 31m32 32r34
+X 6 dyn_maps.ads
+34+9 Params_Type 4|44r7
+37+9 Object_Type 4|45r7
+41+9 Value_Type 4|46r7
+45V18 Hash{10|20M9} 4|47r7
+48V18 Build{37+9} 4|48r7
+51V18 Build_Value{41+9} 4|49r7
+54V18 Equal{boolean} 4|50r7
+56k9*Dyn_Maps 4|18w6 43r23 6|113e13
+57R9 Instance 4|52r28[43]
+60U14 Init 4|55r53[43]
+62U14 Free 4|57r56[43]
+64M9 Index_Type<17|39M9> 4|60r30[43]
+65m4 No_Index{64M9[4|43]} 4|65r42[43]
+66m4 First_Index{64M9[4|43]} 4|66r45[43]
+71U14 Get_Index 4|76r18[43]
+79V13 Last_Index{64M9[4|43]} 4|80r18[43]
+83V13 Get_By_Index{4|27+9} 4|86r18[43]
+X 10 hash.ads
+19K9*Hash 4|17w6 17r16 10|24e9
+20M9*Hash_Value_Type<17|39M9> 4|31r53
+X 11 interfac.ads
+74M9*Unsigned_32
+X 17 types.ads
+39M9*Uns32<11|74M9>
+

@@ -1,0 +1,137 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U netlists.errors%b	netlists-errors.adb	d4912e4a NE OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W netlists%s		netlists.adb		netlists.ali
+
+U netlists.errors%s	netlists-errors.ads	424dd5b5 EE NE OO PK
+W errorout%s		errorout.adb		errorout.ali
+W netlists%s		netlists.adb		netlists.ali
+W netlists.locations%s	netlists-locations.adb	netlists-locations.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D hash.ads		20220609165545 aae58d9d hash%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D netlists.ads		20220609165545 b07d7242 netlists%s
+D netlists-errors.ads	20220609165545 ea58a01c netlists.errors%s
+D netlists-errors.adb	20220609165545 3ec98e56 netlists.errors%b
+D netlists-locations.ads  20220609165545 71ab6767 netlists.locations%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D types.ads		20220609165545 873e82fb types%s
+X 4 errorout.ads
+18K9*Errorout 343e13 8|19w6 19r20
+175R9*Earg_Type 311e14 8|26r39 28r34 29r36 9|20r39 25r34 30r36
+230R9*Error_Record 247e14 9|70r33 87r33 112r33
+269n7*Earg_Synth_Instance{263E9} 9|127r10
+269n28*Earg_Synth_Net{263E9} 9|129r10
+269n44*Earg_Synth_Name{263E9} 9|131r10
+276U14*Register_Earg_Handler 9|126s7 128s7 130s7
+279U14*Output_Identifier 9|53s13 55s13
+281U14*Output_Message 9|41s10 48s10 57s13 64s7 66s7 79s13
+282U14*Output_Uns32 9|58s13 80s13
+288V13*Make_Earg_Synth_Instance{175R9} 9|22s14
+289V13*Make_Earg_Synth_Net{175R9} 9|27s14
+290V13*Make_Earg_Synth_Name{175R9} 9|32s14
+X 6 interfac.ads
+74M9*Unsigned_32
+X 7 netlists.ads
+22K9*Netlists 509e13 8|20r6 22r9 31r14 33r5 9|19r14 133r5
+42n7*Sname_User{38E9} 9|52r15
+43n7*Sname_Artificial{38E9} 9|54r15
+46n7*Sname_Version{38E9} 9|56r15
+50M9*Sname<16|39M9> 8|29r22 9|30r22 35r33 37r16 62r31 97r23 115r20 115r29
+51m4*No_Sname{50M9} 9|40r14 46r20
+62V13*Get_Sname_Kind{38E9} 9|51s12
+63V13*Get_Sname_Prefix{50M9} 9|45s17
+64V13*Get_Sname_Suffix{16|70I9} 9|53s32 55s32
+65V13*Get_Sname_Version{16|39M9} 9|58s27
+95M9*Module
+100M9*Instance<16|39M9> 8|26r22 30r22 9|20r22 73r23 73r35 95r32
+110M9*Net<16|39M9> 8|28r22 9|25r22 90r20 90r27
+148M9*Port_Nbr<16|39M9>
+149M12*Port_Idx{148M9} 9|96r31
+153m7*Name{50M9} 9|100r67 102r68
+249V13*Get_Input_Desc{151R9} 9|100s27
+250V13*Get_Output_Desc{151R9} 9|102s27
+277V13*Is_Self_Instance{boolean} 9|99s19
+278V13*Get_Module{95M9} 9|100s43 102s44
+279V13*Get_Instance_Name{50M9} 9|77s26
+303V13*Get_Net_Parent{100M9} 9|95s44
+304V13*Get_Port_Idx{149M12} 9|96s43
+X 8 netlists-errors.ads
+22K18*Errors 7|22k9 8|33l14 33e20 9|19b23 133l14 133t20
+26V14*"+"{4|175R9} 26>18 9|20b14 23l9 23t11
+26m18 N{7|100M9} 9|20b18 22r47
+28V14*"+"{4|175R9} 28>18 9|25b14 28l9 28t11
+28m18 N{7|110M9} 9|25b18 27r42
+29V14*"+"{4|175R9} 29>18 9|30b14 33l9 33t11
+29m18 N{7|50M9} 9|30b18 32r43
+30V14*"+"=31:33{16|121M9}
+30m18 N{7|100M9}
+32U14*Initialize 9|124b14 132l8 132t18
+X 9 netlists-errors.adb
+35U14 Output_Name_1 35b14 35>29 47s10 60l8 60t21 65s7
+35m29 N{7|50M9} 40r10 45r35 51r28 53r50 55r50 58r46
+37m7 Prefix{7|50M9} 45m7 46r10 47r25
+62U14 Output_Name 62b14 62>27 67l8 67t19 77s13 104s16 118s10
+62m27 N{7|50M9} 65r22
+69U14 Synth_Instance_Handler 69b14 70>7 70>27 70>47 84l8 84t30 127r31
+70e7 Format{character} 75r12
+70r27 Err{4|230R9} 72r28
+70m47 Val{16|39M9} 73r45
+73m7 Inst{7|100M9} 77r45 80r34
+86U14 Synth_Net_Handler 86b14 87>7 87>27 87>47 109l8 109t25 129r26
+87e7 Format{character} 92r12
+87r27 Err{4|230R9} 89r28
+87m47 Val{16|39M9} 90r32
+90m7 N{7|110M9} 95r60 96r57
+95m16 Inst{7|100M9} 99r37 100r55 102r56
+96m16 Idx{7|149M12} 100r62 102r63
+97m16 Name{7|50M9} 100m19 102m19 104r29
+111U14 Synth_Name_Handler 111b14 112>7 112>27 112>47 122l8 122t26 131r27
+112e7 Format{character} 117r10
+112r27 Err{4|230R9} 114r28
+112m47 Val{16|39M9} 115r36
+115m7 N{7|50M9} 118r23
+X 10 netlists-locations.ads
+19K18*Locations 8|20w15 31r23 10|35e23
+28V13*Get_Location{16|121M9} 8|31r33
+X 16 types.ads
+27I9*Int32<integer>
+39M9*Uns32<6|74M9> 9|22r40 27r35 32r36 70r53 80r27 87r53 112r53
+70I9*Name_Id<27I9>
+121M9*Location_Type<39M9> 8|30r39
+169X4*Internal_Error 9|82r19 107r19 120r16
+

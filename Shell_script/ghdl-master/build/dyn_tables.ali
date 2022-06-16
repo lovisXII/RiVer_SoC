@@ -1,0 +1,110 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U dyn_tables%b		dyn_tables.adb		1a985cee NE OO PK GE
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+W system%s		system.ads		system.ali
+
+U dyn_tables%s		dyn_tables.ads		2d5e836e BN EE NE OO PK GE
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+X 3 dyn_tables.ads
+25+9 Table_Component_Type 35r43 88r49 4|146r49
+26E9 Table_Index_Type 31r22 35r13 38r37 64r21 65r40 69r40 85r53 4|91r53 94r10
+. 95r14 122r40 124r14 125r10 129r40 131r14 132r10
+31*4 Table_Low_Bound{26E9} 38r18 64r41 4|95r36 125r32 132r32
+32k9*Dyn_Tables 25z9 26z9 31z4 95E9 104l5 104e15 4|20b14 151l5 151t15
+34A9*Table_Type(25+9)<26E9> 38r6 4|23r14
+37A12*Big_Table_Type{34A9}<26E9> 43r38
+43P9*Table_Thin_Ptr(37A12) 44r26 45r8 54r15 4|30r32 31r32 109r47 137r30
+48R9*Instance_Private 57r14 97c9 103e14
+51R9*Instance 58e14 61r31 65r23 69r23 73r31 76r41 80r41 85r35 88r33 92r35
+. 4|27r33 75r35 80r41 86r41 91r35 106r31 122r23 129r23 135r31 146r33
+54p7 Table{43P9} 4|38r24 69m9 69r30 70r12 112r12 115m12 140r16 141m13 149r8
+. 149r9
+57r7 Priv{48R9} 4|37r24 41r21 42r23 45m9 48r12 48r30 54r23 57r25 61m12 62r32
+. 66r20 69r47 88m9 88r28 97r23 99m12 102r34 114m12 115r40 119m9 126r30 132r53
+. 142m13
+61U14*Init 61=20 61>41 4|106b14 120l8 120t12
+61r20 T{51R9} 4|106b20 112r10 114m10 115m10 115r38 119m7
+61i41 Table_Initial{positive} 4|106b41 114r37
+64*4*First{26E9}
+65V13*Last{26E9} 65>19 66r19 4|122b13 127l8 127t12 149s16
+65r19 T{51R9} 4|122b19 126r28
+69V13*Next{26E9} 69>19 4|129b13 133l8 133t12
+69r19 T{51R9} 4|129b19 132r51
+73U14*Free 73=20 4|135b14 144l8 144t12
+73r20 T{51R9} 4|135b20 140r14 141m7
+76U14*Increment_Last 76=30 77r19 4|80b14 84l8 84t22 148s7
+76r30 T{51R9} 4|80b30 83m15
+80U14*Decrement_Last 80=30 81r19 4|86b14 89l8 89t22
+80r30 T{51R9} 4|86b30 88m7 88r26
+85U14*Set_Last 85=24 85>45 4|91b14 104l8 104t16
+85r24 T{51R9} 4|91b24 97r21 99m10 102m18 102r32
+85*45 Index{26E9} 4|91b45 94r32
+88U14*Append 88=22 88>43 89r19 4|146b14 150l8 150t14
+88r22 T{51R9} 4|146b22 148m23 149r7 149r22
+88*43 Val{25+9} 4|146b43 149r29
+92U14*Allocate 92=24 92>45 4|75b14 78l8 78t16
+92r24 T{51R9} 4|75b24 77m15
+92i45 Num{natural} 4|75b45 77r28
+95M9 Unsigned 99r16 102r18 4|27r49 34r17 35r18 77r18 93r27 114r27 126r14
+99m7 Length{95M9} 4|37r29 48r35 54r28 57r30 61m17 66r25 69r52 114m17 115r45
+. 142m22
+102m7 Last_Pos{95M9} 4|41r26 42r28 45m14 48r17 62r37 88m14 88r33 97r28 99m17
+. 102r39 119m14 126r35 132r58 143m22
+X 4 dyn_tables.adb
+22m4 El_Size{6|60M9} 66r49 69r62 115r55
+27U14 Expand 27b14 27=22 27>43 73l8 73t14 77s7 83s7 102s10
+27r22 T{3|51R9} 37r22 38r22 41r19 42r21 45m7 48r10 48r28 54r21 57r23 61m10
+. 62r30 66r18 69m7 69r28 69r45 70r10
+27m43 Num{3|95M9} 41r37
+30V16*Crealloc{3|43P9} 30>26 30>48 32b<c,realloc>25 69s18
+30p26 Ptr{3|43P9}
+30m48 Size{6|60M9}
+34m7 New_Len{3|95M9} 54m10 57r13 61r27 62r20
+35m7 New_Last{3|95M9} 41m7 42r10 45r26
+93m7 New_Last{3|95M9} 97r10 99r29 102r21
+109V16*Cmalloc{3|43P9} 109>25 110b<c,malloc>25 115s21
+109m25 Size{6|60M9}
+137U17*Cfree 137>24 138b<c,free>25 140s7
+137p24 Ptr{3|43P9}
+X 5 interfac.ads
+38K9*Interfaces 4|17r6 17r24 5|184e15
+X 6 i-c.ads
+18K20*C 4|17w17 17r35 6|230e17
+60M9*size_t 4|22r23 23r6 30r55 66r10 66r35 69r37 109r32 115r30
+X 7 system.ads
+37K9*System 4|18w6 23r42 7|156e11
+71N4*Storage_Unit 4|23r49
+

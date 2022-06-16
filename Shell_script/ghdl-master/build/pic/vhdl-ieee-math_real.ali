@@ -1,0 +1,125 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV SPARK_05
+
+U vhdl.ieee.math_real%b	vhdl-ieee-math_real.adb	2f1efb62 NE OO PK
+Z interfaces%s		interfac.ads		interfac.ali
+W std_names%s		std_names.adb		std_names.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+W vhdl.std_package%s	vhdl-std_package.adb	vhdl-std_package.ali
+
+U vhdl.ieee.math_real%s	vhdl-ieee-math_real.ads	fe591c05 EE NE OO PK
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D std_names.ads		20220609165545 f607720d std_names%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-ieee.ads		20220609165545 c4f3dfad vhdl.ieee%s
+D vhdl-ieee-math_real.ads  20220609165545 3aaac3a8 vhdl.ieee.math_real%s
+D vhdl-ieee-math_real.adb  20220609165545 20de035d vhdl.ieee.math_real%b
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-std_package.ads	20220609165545 c36d499a vhdl.std_package%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 10 std_names.ads
+21K9*Std_Names 1045e14 21|17w6 17r21
+32i4*Name_Mod{16|70I9} 21|43r24
+422i4*Name_Op_Exp{16|70I9} 21|59r24
+758i4*Name_Ceil{16|70I9} 21|45r24
+759i4*Name_Floor{16|70I9} 21|47r24
+760i4*Name_Round{16|70I9} 21|49r24
+761i4*Name_Log2{16|70I9} 21|51r24
+762i4*Name_Sin{16|70I9} 21|53r24
+763i4*Name_Cos{16|70I9} 21|55r24
+764i4*Name_Arctan{16|70I9} 21|57r24
+X 16 types.ads
+27I9*Int32<integer>
+70I9*Name_Id<27I9>
+X 17 vhdl.ads
+17K9*Vhdl 19e9 20|17r9 22r5 21|19r6 21r14 61r29 83r5
+X 19 vhdl-ieee.ads
+18K14*Ieee 17|17k9 19|24e14 20|17r14 22r10 21|21r19 83r10
+20V13*Skip_Copyright_Notice{23|7173I12} 21|32s15
+X 20 vhdl-ieee-math_real.ads
+17K19*Math_Real 19|18k14 20|22l15 22e24 21|21b24 83l15 83t24
+18i4*Math_Real_Pkg{23|7454I12} 21|27m7
+21U14*Extract_Declarations 21>36 21|22b14 82l8 82t28
+21i36 Pkg{23|7454I12} 21|22b36 27r24 29r38
+X 21 vhdl-ieee-math_real.adb
+24i7 Decl{23|7173I12} 29m7 32m7 32r38 36m10 36r29 37r20 39r25 42r37 63r60
+. 75r41
+25e7 Def{23|5293E9} 41m16 44m22 46m22 48m22 50m22 52m22 54m22 56m22 58m22
+. 67m28 69m28 75r47
+62i25 Inter{23|7173I12} 64r59
+64i25 Itype{23|7173I12} 66r28 68r31
+X 23 vhdl-nodes.ads
+4994n7*Iir_Kind_Function_Declaration{4857E9} 21|40r18
+5013n7*Iir_Kind_Constant_Declaration{4857E9} 21|76r18
+5293E9*Iir_Predefined_Functions 21|25r13 23|6335e7
+5608n7*Iir_Predefined_None{5293E9} 21|41r23
+6048n7*Iir_Predefined_Ieee_Math_Real_Ceil{5293E9} 21|46r29
+6049n7*Iir_Predefined_Ieee_Math_Real_Floor{5293E9} 21|48r29
+6050n7*Iir_Predefined_Ieee_Math_Real_Round{5293E9} 21|50r29
+6052n7*Iir_Predefined_Ieee_Math_Real_Mod{5293E9} 21|44r29
+6057n7*Iir_Predefined_Ieee_Math_Real_Pow_Int_Real{5293E9} 21|67r35
+6058n7*Iir_Predefined_Ieee_Math_Real_Pow_Real_Real{5293E9} 21|69r35
+6061n7*Iir_Predefined_Ieee_Math_Real_Log2{5293E9} 21|52r29
+6064n7*Iir_Predefined_Ieee_Math_Real_Sin{5293E9} 21|54r29
+6065n7*Iir_Predefined_Ieee_Math_Real_Cos{5293E9} 21|56r29
+6069n7*Iir_Predefined_Ieee_Math_Real_Arctan{5293E9} 21|58r29
+7173I12*Iir{24|21I9} 21|24r14 62r42 64r42
+7176i4*Null_Iir{7173I12} 20|18r47 21|37r27
+7187V14*"="=7187:69{boolean} 21|37r25 66r34 68r37
+7355I12*Iir_Integer_Subtype_Definition{7173I12}
+7359I12*Iir_Floating_Subtype_Definition{7173I12}
+7454I12*Iir_Package_Declaration{7173I12} 20|18r20 21r42 21|22r42
+7582V13*Get_Kind{4857E9} 21|39s15
+8075V13*Get_Chain{7173I12} 21|36s18
+8088V13*Get_Type{7173I12} 21|64s49
+8160V13*Get_Interface_Declaration_Chain{7173I12} 21|63s27
+8230U14*Set_Implicit_Definition 21|75s16
+8286V13*Get_Declaration_Chain{7173I12} 21|29s15
+8366V13*Get_Identifier{16|70I9} 21|42s21
+X 24 vhdl-nodes_priv.ads
+21I9*Node_Type<16|27I9>
+X 25 vhdl-std_package.ads
+20K14*Std_Package 21|19w11 61r34 25|213e21
+80i4*Integer_Subtype_Definition{23|7355I12} 21|66r36
+89i4*Real_Subtype_Definition{23|7359I12} 21|68r39
+

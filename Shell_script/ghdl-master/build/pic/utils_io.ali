@@ -1,0 +1,95 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_UNCHECKED_CONVERSION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLICIT_LOOPS
+RV SPARK_05
+
+U utils_io%b		utils_io.adb		e5a0b4eb NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_conversion%s
+W simple_io%s		simple_io.adb		simple_io.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.img_lli%s	s-imglli.adb		s-imglli.ali
+Z system.img_uns%s	s-imguns.adb		s-imguns.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+
+U utils_io%s		utils_io.ads		5b59bbd1 EE NE OO PK
+W system%s		system.ads		system.ali
+W types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-imgint.ads		20210601075304 02dbe0c2 system.img_int%s
+D s-imglli.ads		20210601075304 114f55d1 system.img_lli%s
+D s-imguns.ads		20210601075304 9ff43cf7 system.img_uns%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D utils_io.ads		20220609165545 9a52d52e utils_io%s
+D utils_io.adb		20220609165545 8160770b utils_io%b
+X 1 ada.ads
+16K9*Ada 20e8 14|17r6 57r34
+X 2 a-unccon.ads
+17+9 Source 14|58r10
+18+9 Target 14|58r36
+20v14*Unchecked_Conversion 14|17w10 57r38
+X 3 interfac.ads
+74M9*Unsigned_32
+X 4 simple_io.ads
+17K9*Simple_IO 27e14 14|19w6 19r21
+18U14*Put 14|24s7 31s10 33s10 66s7
+X 5 system.ads
+37K9*System 156e11 13|17w6 33r28 14|54r28 56r35 58r20 59r26
+67M9*Address 13|33r35 14|54r35 58r27
+72N4*Word_Size 14|59r33
+73N4*Memory_Size 14|56r42
+X 12 types.ads
+20K9*Types 193e10 13|19w6 19r17
+27I9*Int32<integer> 13|30r29 14|42r29 44r17
+31I9*Int64<long_integer> 13|31r29 14|47r29 49r17
+39M9*Uns32<3|74M9> 13|29r29 14|37r29 39r17
+X 13 utils_io.ads
+21K9*Utils_IO 34l5 34e13 14|21b14 69l5 69t13
+23U14*Put_Indent 23>26 14|22b14 25l8 25t18
+23i26 Indent{natural} 14|22b26 24r25
+26U14*Put_Trim 26>24 14|28b14 35l8 35t16 39s7 44s7 49s7
+26a24 S{string} 14|28b24 30r10 30r21 30r37 30r40 31r15 31r18 31r33 33r15
+29U14*Put_Uns32 29>25 14|37b14 40l8 40t17
+29m25 V{12|39M9} 14|37b25 39r30
+30U14*Put_Int32 30>25 14|42b14 45l8 45t17
+30i25 V{12|27I9} 14|42b25 44r30
+31U14*Put_Int64 31>25 14|47b14 50l8 50t17
+31i25 V{12|31I9} 14|47b25 49r30
+33U14*Put_Addr 33>24 14|54b14 67l8 67t16
+33m24 V{5|67M9} 14|54b24 60r44
+X 14 utils_io.adb
+52a4 Hex_Map(character) 63r21
+56M12 Integer_Address 58r46 60r13
+57V16 To_Integer[2|20]{56M12} 60s32
+59a7 Res{string} 62r24 63m10 66r12
+60m7 Val{56M12} 63r39 64m10 64r17
+62i11 I{integer} 63r15
+

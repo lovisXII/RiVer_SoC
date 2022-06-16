@@ -1,0 +1,113 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P SS ZX
+
+RN
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV SPARK_05
+
+U bug%b			bug.adb			f497c223 NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.command_line%s	a-comlin.adb		a-comlin.ali
+W gnat%s		gnat.ads		gnat.ali
+W gnat.directory_operations%s  g-dirope.adb	g-dirope.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W simple_io%s		simple_io.adb		simple_io.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+W version%s		version.ads		version.ali
+
+U bug%s			bug.ads			5ecbe0b8 EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-charac.ads		20210601075304 2d3ec45b ada.characters%s
+D a-chlat1.ads		20210601075304 66457d31 ada.characters.latin_1%s
+D a-comlin.ads		20210601075304 4aa66568 ada.command_line%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-string.ads		20210601075304 90ac6797 ada.strings%s
+D a-strmap.ads		20210601075304 e8bb714a ada.strings.maps%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D bug.ads		20220609165545 77d2f26d bug%s
+D bug.adb		20220609165545 9c2c7e14 bug%b
+D gnat.ads		20210601075304 b5988c27 gnat%s
+D g-dirope.ads		20210601075304 940c4438 gnat.directory_operations%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-conca3.ads		20210601075304 0b705ca5 system.concat_3%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D version.ads		20220610152337 31ca5eab version%s
+X 1 ada.ads
+16K9*Ada 20e8 9|16r6 16r26 10|17r6 17r28
+X 4 a-comlin.ads
+36K13*Command_Line 144e21 10|17w10 17r32
+39V13*Argument_Count{natural} 10|85s21
+52V13*Argument{string} 10|87s19
+62V13*Command_Name{string} 10|84s16
+X 5 a-except.ads
+54K13*Exceptions 349e19 9|16w10 16r30
+58P9*Exception_Id<21|87P9> 10|63r12
+61p4*Null_Id{58P9} 10|91r16
+63R9*Exception_Occurrence 317e14 9|20r37 10|61r37
+70V13*Exception_Name{string} 10|92s39
+102V13*Exception_Identity{58P9} 10|90s13
+104V13*Exception_Information{string} 10|95s19
+X 9 bug.ads
+18K9*Bug 24l5 24e8 10|22b14 100l5 100t8
+20U14*Disp_Bug_Box 20>28 10|61b14 99l8 99t20
+20r28 Except{5|63R9} 10|61b28 90r33 95r42
+23V13*Get_Gnat_Version{string} 10|32b13 59l8 59t24 73s40
+X 10 bug.adb
+29a4 GNAT_Version{string} 30m22 30r22 36r16 37r15 53r23 55r23 58r14
+34e7 C{character} 37m10 38r15
+36i11 I{integer} 37r29 53r42 55r42
+63p7 Id{5|58P9} 90m7 91r10 92r55
+85i11 I{integer} 87r29
+X 11 gnat.ads
+34K9*GNAT 10|18r6 75r21 11|57e9
+X 12 g-dirope.ads
+43K14*Directory_Operations 10|18w11 75r26 12|262e30
+45A12*Dir_Name_Str{string}<integer>
+89V13*Get_Current_Dir{45A12} 10|75s47
+X 14 simple_io.ads
+17K9*Simple_IO 10|19w6 19r21 14|27e14
+23U14*Put_Err 10|84s7 87s10 95s10
+24U14*Put_Err 10|86s10
+25U14*Put_Line_Err 10|66s7 68s7 70s7 73s7 74s7 75s7 83s7 92s10 94s10 97s7
+26U14*New_Line_Err 10|65s7 89s7
+X 21 s-stalib.ads
+87P9*Exception_Data_Ptr(86R9)
+X 25 version.ads
+3K9*Version 10|20w6 71r10 71r35 25|16e12
+4a4*Ghdl_Ver{string} 10|71r18
+13a4*Ghdl_Release{string} 10|71r43
+

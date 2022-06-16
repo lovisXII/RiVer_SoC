@@ -1,0 +1,28 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+
+U grt%s			grt.ads			9f6b3efc NE OO PU PK
+
+D grt.ads		20220609165545 9f6b3efc grt%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 grt.ads
+23K9*Grt 24r17 25l5 25e8
+

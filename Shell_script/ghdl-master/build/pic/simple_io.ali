@@ -1,0 +1,87 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_IO
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U simple_io%b		simple_io.adb		13a04329 NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+
+U simple_io%s		simple_io.ads		f00931a1 EE NE OO PK
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-ioexce.ads		20210601075304 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-textio.ads		20210601075304 881db35a ada.text_io%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-cstrea.ads		20210601075304 e53d8b8e interfaces.c_streams%s
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D simple_io.adb		20220609165545 6bb4c1d2 simple_io%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-crtl.ads		20210601075304 0ebbdb71 system.crtl%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-ficobl.ads		20210601075304 078245e4 system.file_control_block%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20210601075304 1b7d22d2 system.wch_con%s
+X 1 ada.ads
+16K9*Ada 20e8 11|17r6 22r7 27r7 32r7 37r7 42r7 42r24 47r7 47r24 52r7 52r29
+. 57r7 57r29
+X 6 a-textio.ads
+49K13*Text_IO 471e16 11|17w10 22r11 27r11 32r11 37r11 42r11 42r28 47r11 47r28
+. 52r11 52r33 57r11 57r33
+52P9*File_Type
+119V13*Standard_Error{52P9} 11|42s36 47s36 52s41 57s41
+165U14*New_Line 11|57s19
+166U14*New_Line 11|37s19
+207U14*Put 11|47s19
+208U14*Put 11|27s19
+241U14*Put 11|42s19
+242U14*Put 11|22s19
+259U14*Put_Line 11|52s19
+263U14*Put_Line 11|32s19
+X 10 simple_io.ads
+17K9*Simple_IO 27l5 27e14 11|19b14 59l5 59t14
+18U14*Put 18>19 11|20b14 23l8 23t11
+18a19 S{string} 11|20b19 22r24
+19U14*Put 19>19 11|25b14 28l8 28t11
+19e19 C{character} 11|25b19 27r24
+20U14*Put_Line 20>24 11|30b14 33l8 33t16
+20a24 S{string} 11|30b24 32r29
+21U14*New_Line 11|35b14 38l8 38t16
+23U14*Put_Err 23>23 11|40b14 43l8 43t15
+23a23 S{string} 11|40b23 42r52
+24U14*Put_Err 24>23 11|45b14 48l8 48t15
+24e23 C{character} 11|45b23 47r52
+25U14*Put_Line_Err 25>28 11|50b14 53l8 53t20
+25a28 S{string} 11|50b28 52r57
+26U14*New_Line_Err 11|55b14 58l8 58t20
+

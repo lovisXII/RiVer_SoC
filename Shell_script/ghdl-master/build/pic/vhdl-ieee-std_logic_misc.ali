@@ -1,0 +1,148 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U vhdl.ieee.std_logic_misc%b  vhdl-ieee-std_logic_misc.adb  be7846c4 OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W std_names%s		std_names.adb		std_names.ali
+Z system%s		system.ads		system.ali
+Z system.exception_table%s  s-exctab.adb	s-exctab.ali
+Z system.standard_library%s  s-stalib.adb	s-stalib.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+W vhdl.ieee.std_logic_1164%s  vhdl-ieee-std_logic_1164.adb  vhdl-ieee-std_logic_1164.ali
+
+U vhdl.ieee.std_logic_misc%s  vhdl-ieee-std_logic_misc.ads  943cae2a EE NE OO PK
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D std_names.ads		20220609165545 f607720d std_names%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-ieee.ads		20220609165545 c4f3dfad vhdl.ieee%s
+D vhdl-ieee-std_logic_1164.ads  20220609165545 eacf1889 vhdl.ieee.std_logic_1164%s
+D vhdl-ieee-std_logic_misc.ads  20220609165545 50cf7187 vhdl.ieee.std_logic_misc%s
+D vhdl-ieee-std_logic_misc.adb  20220609165545 92f1edb5 vhdl.ieee.std_logic_misc%b
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 7 interfac.ads
+74M9*Unsigned_32
+X 12 std_names.ads
+21K9*Std_Names 1045e14 27|17w6 17r21
+752i4*Name_And_Reduce{20|70I9} 27|64r21
+753i4*Name_Nand_Reduce{20|70I9} 27|68r21
+754i4*Name_Or_Reduce{20|70I9} 27|72r21
+755i4*Name_Nor_Reduce{20|70I9} 27|76r21
+756i4*Name_Xor_Reduce{20|70I9} 27|80r21
+757i4*Name_Xnor_Reduce{20|70I9} 27|84r21
+X 20 types.ads
+27I9*Int32<integer>
+39M9*Uns32<7|74M9>
+70I9*Name_Id<27I9>
+121M9*Location_Type<39M9>
+X 21 vhdl.ads
+17K9*Vhdl 19e9 26|17r9 20r5 27|18r6 18r23 19r6 21r14 100r5
+X 22 vhdl-errors.ads
+21K14*Errors 130e16 27|18w11 18r28
+35V14*"+"{20|121M9} 27|98s25
+48U14*Error_Msg_Sem 27|98s10
+X 24 vhdl-ieee.ads
+18K14*Ieee 21|17k9 24|24e14 26|17r14 20r10 27|19r11 21r19 43r24 45r27 100r10
+X 25 vhdl-ieee-std_logic_1164.ads
+17K19*Std_Logic_1164 43e29 27|19w16 43r29 45r32
+21i4*Std_Ulogic_Vector_Type{29|7363I12} 27|45r47
+25i4*Std_Logic_Vector_Type{29|7363I12} 27|43r44
+X 26 vhdl-ieee-std_logic_misc.ads
+17K19*Std_Logic_Misc 24|18k14 26|20l15 20e29 27|21b24 100l15 100t29
+19U14*Extract_Declarations 19>36 27|24b14 99l8 99t28
+19i36 Pkg{29|7454I12} 27|24b36 54r38 98r26
+X 27 vhdl-ieee-std_logic_misc.adb
+22X4 Error 37r19 40r19 48r19 97r12
+26i7 Decl{29|7173I12} 35r50 54m7 57r23 60r23 61r46 63r34 91r38 94m10 94r29
+28V16 Handle_Reduce{29|5293E9} 28b16 28>31 29>31 50l11 50t24 65s26 69s26
+. 73s26 77s26 81s26 85s26
+28e31 Res_Slv{29|5293E9} 44r20
+29e31 Res_Suv{29|5293E9} 46r20
+32i10 Arg{29|7173I12} 35m10 36r22 39r24 42r32
+33i10 Arg_Type{29|7173I12} 42m10 43r13 45r16
+52e7 Def{29|5293E9} 58m10 65m19 69m19 73m19 77m19 81m19 85m19 89m19 91r44
+X 29 vhdl-nodes.ads
+4994n7*Iir_Kind_Function_Declaration{4857E9} 27|60r31
+5293E9*Iir_Predefined_Functions 27|28r41 29r41 30r37 52r13 29|6335e7
+5608n7*Iir_Predefined_None{5293E9} 27|58r17 61r54 89r26
+6323n7*Iir_Predefined_Ieee_Std_Logic_Misc_And_Reduce_Slv{5293E9} 27|66r22
+6324n7*Iir_Predefined_Ieee_Std_Logic_Misc_And_Reduce_Suv{5293E9} 27|67r22
+6325n7*Iir_Predefined_Ieee_Std_Logic_Misc_Nand_Reduce_Slv{5293E9} 27|70r22
+6326n7*Iir_Predefined_Ieee_Std_Logic_Misc_Nand_Reduce_Suv{5293E9} 27|71r22
+6327n7*Iir_Predefined_Ieee_Std_Logic_Misc_Or_Reduce_Slv{5293E9} 27|74r22
+6328n7*Iir_Predefined_Ieee_Std_Logic_Misc_Or_Reduce_Suv{5293E9} 27|75r22
+6329n7*Iir_Predefined_Ieee_Std_Logic_Misc_Nor_Reduce_Slv{5293E9} 27|78r22
+6330n7*Iir_Predefined_Ieee_Std_Logic_Misc_Nor_Reduce_Suv{5293E9} 27|79r22
+6331n7*Iir_Predefined_Ieee_Std_Logic_Misc_Xor_Reduce_Slv{5293E9} 27|82r22
+6332n7*Iir_Predefined_Ieee_Std_Logic_Misc_Xor_Reduce_Suv{5293E9} 27|83r22
+6333n7*Iir_Predefined_Ieee_Std_Logic_Misc_Xnor_Reduce_Slv{5293E9} 27|86r22
+6334n7*Iir_Predefined_Ieee_Std_Logic_Misc_Xnor_Reduce_Suv{5293E9} 27|87r22
+7173I12*Iir{30|21I9} 27|26r14 32r16 33r21
+7176i4*Null_Iir{7173I12} 27|39r32
+7180V13*Is_Null{boolean} 27|36s13
+7184V13*Is_Valid{boolean} 27|57s13
+7187V14*"="=7187:69{boolean} 27|39r29 43r22 45r25
+7363I12*Iir_Array_Type_Definition{7173I12}
+7454I12*Iir_Package_Declaration{7173I12} 26|19r42 27|24r42
+7582V13*Get_Kind{4857E9} 27|60s13
+8075V13*Get_Chain{7173I12} 27|39s13 94s18
+8088V13*Get_Type{7173I12} 27|42s22
+8160V13*Get_Interface_Declaration_Chain{7173I12} 27|35s17
+8229V13*Get_Implicit_Definition{5293E9} 27|61s21
+8230U14*Set_Implicit_Definition 27|91s13
+8286V13*Get_Declaration_Chain{7173I12} 27|54s15
+8366V13*Get_Identifier{20|70I9} 27|63s18
+X 30 vhdl-nodes_priv.ads
+21I9*Node_Type<20|27I9>
+

@@ -1,0 +1,76 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_FLOATING_POINT
+RV NO_UNCHECKED_CONVERSION
+RV SPARK_05
+
+U types_utils%b		types_utils.adb		36d8cd72 NE OO PK
+
+U types_utils%s		types_utils.ads		9b016773 EE NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_conversion%s
+W types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D types.ads		20220609165545 873e82fb types%s
+D types_utils.ads	20220609165545 12a4c2e7 types_utils%s
+D types_utils.adb	20220609165545 247c0f95 types_utils%b
+X 1 ada.ads
+16K9*Ada 20e8 8|17r6 22r29 25r29 28r29 31r29 34r29
+X 2 a-unccon.ads
+20v14*Unchecked_Conversion 8|17w10 22r33 25r33 28r33 31r33 34r33
+X 3 interfac.ads
+74M9*Unsigned_32
+77M9*Unsigned_64
+121V13*Shift_Left{74M9} 9|29s38
+129V13*Shift_Right_Arithmetic{74M9} 9|29s14
+141V13*Shift_Left{77M9} 9|22s38
+149V13*Shift_Right_Arithmetic{77M9} 9|22s14
+172F9*IEEE_Float_64<long_float>
+X 7 types.ads
+20K9*Types 193e10 8|19w6 19r17
+27I9*Int32<integer> 8|23r14 26r7
+31I9*Int64<long_integer> 8|29r7 32r14
+39M9*Uns32<3|74M9> 8|23r7 26r14 39r23 39r51 9|25r23 25r51
+40M9*Uns64<3|77M9> 8|29r14 32r7 35r13 38r23 38r51 9|18r23 18r51
+42F9*Fp64<3|172F9> 8|35r7
+X 8 types_utils.ads
+21K9*Types_Utils 40l5 40e16 9|17b14 31l5 31t16
+22V13*To_Int32[2|20]{7|27I9}
+25V13*To_Uns32[2|20]{7|39M9}
+28V13*To_Uns64[2|20]{7|40M9}
+31V13*To_Int64[2|20]{7|31I9}
+34V13*To_Uns64[2|20]{7|40M9}
+38V13*Sext{7|40M9} 38>19 38>30 9|18b13 23l8 23t12
+38m19 V{7|40M9} 9|18b19 22r50
+38i30 Sz{natural} 9|18b30 20r51
+39V13*Sext{7|39M9} 39>19 39>30 9|25b13 30l8 30t12
+39m19 V{7|39M9} 9|25b19 29r50
+39i30 Sz{natural} 9|25b30 27r51
+X 9 types_utils.adb
+20i7 Sh{natural} 22r53 22r58
+27i7 Sh{natural} 29r53 29r58
+

@@ -1,0 +1,227 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_DISPATCHING_CALLS
+RV NO_EXCEPTION_HANDLERS
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_ELABORATION_CODE
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+
+U ghdlvpi%b		ghdlvpi.adb		4679cdce OO PF PK
+W ada%s			ada.ads			ada.ali
+W ada.command_line%s	a-comlin.adb		a-comlin.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.streams%s		a-stream.adb		a-stream.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W default_paths%s	default_paths.ads	default_paths.ali
+W ghdllocal%s		ghdllocal.adb		ghdllocal.ali
+W ghdlmain%s		ghdlmain.adb		ghdlmain.ali
+W gnat%s		gnat.ads		gnat.ali
+W gnat.os_lib%s		g-os_lib.ads		g-os_lib.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W options%s		options.adb		options.ali
+W simple_io%s		simple_io.adb		simple_io.ali
+Z system%s		system.ads		system.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_5%s	s-conca5.adb		s-conca5.ali
+Z system.pool_global%s	s-pooglo.adb		s-pooglo.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.storage_elements%s  s-stoele.adb	s-stoele.ali
+Z system.storage_pools%s  s-stopoo.adb		s-stopoo.ali
+Z system.storage_pools.subpools%s  s-stposu.adb	s-stposu.ali
+Z system.stream_attributes%s  s-stratt.adb	s-stratt.ali
+
+U ghdlvpi%s		ghdlvpi.ads		cff52bc9 EE NE OO PK
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-comlin.ads		20210601075304 4aa66568 ada.command_line%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-finali.ads		20210601075304 bf4f806b ada.finalization%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D default_paths.ads	20220610152334 9e239950 default_paths%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D ghdllocal.ads		20220609165545 6bf7d073 ghdllocal%s
+D ghdlmain.ads		20220609165545 0bb54c0f ghdlmain%s
+D ghdlvpi.ads		20220609165545 cff52bc9 ghdlvpi%s
+D ghdlvpi.adb		20220609165545 4070e026 ghdlvpi%b
+D gnat.ads		20210601075304 b5988c27 gnat%s
+D g-os_lib.ads		20210601075304 0db74523 gnat.os_lib%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D options.ads		20220609165545 808512e7 options%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-conca3.ads		20210601075304 0b705ca5 system.concat_3%s
+D s-conca5.ads		20210601075304 875e432e system.concat_5%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-finmas.ads		20210601075304 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210601075304 4ff27390 system.finalization_root%s
+D s-os_lib.ads		20220309175724 caa7faea system.os_lib%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-pooglo.ads		20210601075304 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-stoele.adb		20210601075304 ed88f8fb system.storage_elements%b
+D s-stopoo.ads		20210601075304 b16154c2 system.storage_pools%s
+D s-stposu.ads		20210601075304 97a6219c system.storage_pools.subpools%s
+D s-stratt.ads		20210601075304 aedef97e system.stream_attributes%s
+D s-string.ads		20210601075304 8fe54fb7 system.strings%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 1 ada.ads
+16K9*Ada 20e8 14|18r6 18r28
+X 2 a-comlin.ads
+36K13*Command_Line 144e21 14|18w10 18r32
+70I9*Exit_Status<integer> 14|160r24
+75U14*Set_Exit_Status 14|160s7
+X 9 default_paths.ads
+17K9*Default_Paths 44e18 14|24w6 24r25 41r11
+24a4*LibDir_Suffix{string} 14|53r64
+28a4*IncDir_Suffix{string} 14|41r25
+42a4*Shared_Library_Extension{string} 14|31r34 32r36
+X 11 ghdllocal.ads
+23K9*Ghdllocal 172e14 14|23w6 38r7 40r14 48r10 50r10 53r14 126r13
+52p4*Exec_Prefix{32|67P12} 14|40r24 48r20 53r24
+91V13*Is_Basename{boolean} 14|126s23
+121U14*Set_Exec_Prefix_From_Program_Name 14|38s17 50s20
+X 12 ghdlmain.ads
+19K9*Ghdlmain 107e13 14|22w6 22r20
+20R9*Command_Type 26e14 14|219r13 229r13 240r13 249r13 259r13 268r13 277r13
+24H9*Command_Type
+33U14*Init
+35U14*Decode_Option
+47U14*Disp_Long_Help
+54H9*Command_Str_Type<24R9> 57e14 14|165r35 201r34
+55p7*Cmd_Str{32|67P12} 14|221m13 231m13 241m13 250m13 260m13 269m13 278m13
+56p7*Help_Str{32|67P12} 14|223m13 233m13 243m13 252m13 262m13 271m13 280m13
+58V13*Decode_Command{boolean}<29p13>
+60V13*Get_Short_Help{string}<43p13>
+63P9*String_Func(string)
+64R9*Command_Str_Disp<54R9> 66e14 14|258r14 267r14 276r14
+65p7*Disp{63P9} 14|265m13 274m13 283m13
+71U14*Register_Command 14|217s7 227s7 238s7 247s7 257s7 266s7 275s7
+74U14*Error 14|123s10
+103V13*Convert_Path_To_Unix{string} 14|60s14
+X 13 ghdlvpi.ads
+16K9*Ghdlvpi 18l5 18e12 14|26b14 286l5 286t12
+17U14*Register_Commands 14|215b14 285l8 285t25
+X 14 ghdlvpi.adb
+31b4 Is_Unix{boolean} 71r10 89r10
+32b4 Is_Darwin{boolean} 89r21
+35V13 Get_Vpi_Include_Dir{string} 35b13 43l8 43t27 68s44 265r21
+46V13 Get_Vpi_Lib_Dir{string} 46b13 54l8 54t23 60s36 85s44 93s58 274r21
+58V13 Get_Vpi_Lib_Dir_Unix{string} 58b13 61l8 61t28 283r21
+63V13 Get_Vpi_Cflags{32|731A12} 63b13 77l8 77t22 226r27 246r22
+65a7 Extra_Args{32|731A12} 68m7 74m10 76r14
+66i7 Nbr{natural} 69m7 73m10 73r17 74r22 76r31
+79V13 Get_Vpi_Ldflags{32|731A12} 79b13 97l8 97t23 236r27 255r22
+81a7 Extra_Args{32|731A12} 84m7 85m7 86m7 93m10 96r14
+82i7 Nbr{natural} 87m7 92m10 92r17 93r22 96r31
+100U14 Disp 100b14 100>20 108l8 108t12 212s7
+100a20 Args{32|731A12} 102r16 103r18 106r15
+102i11 I{integer} 103r13 106r21
+110U14 Spawn_Compile 110b14 110>29 111>29 112>29 161l8 161t21 196s7
+110a29 User_Args{32|731A12} 114r35 122r10 122r28 125r26 125r37 137r16 137r39
+. 139r30
+111a29 Extra_Args{32|731A12} 114r54 143r16 145r30
+112b29 Verbose{boolean} 149r10
+114a7 Cargs{32|731A12} 139m10 145m10 151r19 153r18 159r42 159r49
+115p7 Program_Name{32|67P12} 125m10 126r36 129m13 129r50 150r15 159r24
+116i7 Nbr_Args{natural} 119m7 138m10 138r22 139r17 144m10 144r22 145r17 151r34
+. 159r64
+117i7 Status{integer} 159m7 160r37
+137i11 I{integer} 139r41
+143i11 I{integer} 145r42
+151i14 I{integer} 153r25
+164P9 Extra_Args_Func(44|54A9) 167r20 202r15
+165R9 Command_Spawn_Type<12|54R9> 12|33p14 47p14 58P13 60P13 14|168e14 170P14
+. 170r43 172P14 172r42 178r42 193r43 218r14 228r14
+166b7*Flag_Verbose{boolean} 186m14 196r52 220m13 230m13
+167p7*Extra_Args{164P9} 196r32 226m13 236m13
+170U14 Perform_Action<12|50p14> 170=30 171>30 193b14 197l8 197t22
+170r30 Cmd{165R9} 193b30 196r28 196r48
+171a30 Args{32|731A12} 194b30 196r22
+172U14 Decode_Option<12|35p14> 172=29 173>29 174>29 175<29 178b14 191l8 191t21
+172r29 Cmd{165R9} 178b29 186m10
+173a29 Option{string} 179b29 185r10
+174a29 Arg{string} 180b29 183r28
+175e29 Res{19|19E9} 181b29 187m10 189m10
+201R9 Command_Vpi_Flags<12|54R9> 12|33p14 35p14 47p14 58P13 60P13 14|203e14
+. 204P14 204r43 207r43 239r14 248r14
+202p7*Flags{164P9} 212r17 246m13 255m13
+204U14 Perform_Action<12|50p14> 204=30 205>30 207b14 213l8 213t22
+204r30 Cmd{201R9} 207b30 212r13
+205a30 Args{32|731A12} 208b30 210r28
+X 15 gnat.ads
+34K9*GNAT 14|17r6 17r23 15|57e9
+X 16 g-os_lib.ads
+51K14*OS_Lib=51:36 14|17w11 17r28
+X 19 options.ads
+17K9*Options 14|20w6 20r19 19|69e12
+19E9*Option_State 14|175r39 181r39 19|38e7
+22n7*Option_Ok{19E9} 14|187r17
+25n7*Option_Unknown{19E9} 14|189r17
+X 23 simple_io.ads
+17K9*Simple_IO 14|19w6 19r21 23|27e14
+18U14*Put 14|106s10 150s10 153s13
+19U14*Put 14|104s13 152s13
+21U14*New_Line 14|155s10
+X 32 s-os_lib.ads
+67P12*String_Access{44|45P9} 14|115r22
+69V14*"="=70:22{boolean} 14|48r32
+74A12*String_List{44|54A9}<integer>
+486V13*Locate_Exec_On_Path{67P12} 14|129s29
+731A12*Argument_List{74A12}<integer> 14|63r35 65r20 79r36 81r20 100r27 110r41
+. 111r42 114r15 164r51 171r37 194r37 205r37 208r37
+894V13*Spawn{integer} 14|159s17
+1086e4*Directory_Separator{character} 14|40r42 41r41 53r42
+X 44 s-string.ads
+45P9*String_Access(string)
+54A9*String_List(45P9)<integer>
+

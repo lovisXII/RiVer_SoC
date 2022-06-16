@@ -1,0 +1,530 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_LOCAL_ALLOCATORS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+
+U elab.vhdl_types%b	elab-vhdl_types.adb	38261e45 NE OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_decls%s	elab-vhdl_decls.adb	elab-vhdl_decls.ali
+W elab.vhdl_errors%s	elab-vhdl_errors.adb	elab-vhdl_errors.ali
+W elab.vhdl_expr%s	elab-vhdl_expr.adb	elab-vhdl_expr.ali
+W elab.vhdl_values%s	elab-vhdl_values.adb	elab-vhdl_values.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W mutils%s		mutils.adb		mutils.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+W types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.evaluation%s	vhdl-evaluation.adb	vhdl-evaluation.ali
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+W vhdl.ieee.std_logic_1164%s  vhdl-ieee-std_logic_1164.adb  vhdl-ieee-std_logic_1164.ali
+W vhdl.std_package%s	vhdl-std_package.adb	vhdl-std_package.ali
+W vhdl.utils%s		vhdl-utils.adb		vhdl-utils.ali
+
+U elab.vhdl_types%s	elab-vhdl_types.ads	70d5fd88 EE NE OO PK
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_context%s	elab-vhdl_context.adb	elab-vhdl_context.ali
+W elab.vhdl_objtypes%s	elab-vhdl_objtypes.adb	elab-vhdl_objtypes.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-finali.ads		20210601075304 bf4f806b ada.finalization%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D areapools.ads		20220609165545 cfd4bc11 areapools%s
+D elab.ads		20220609165545 a9643774 elab%s
+D elab-memtype.ads	20220609165545 a9d633d1 elab.memtype%s
+D elab-vhdl_context.ads	20220609165545 f2560b0b elab.vhdl_context%s
+D elab-vhdl_decls.ads	20220609165545 57ccb4ec elab.vhdl_decls%s
+D elab-vhdl_errors.ads	20220609165545 1e6ddfc1 elab.vhdl_errors%s
+D elab-vhdl_expr.ads	20220609165545 e926ec20 elab.vhdl_expr%s
+D elab-vhdl_objtypes.ads  20220609165545 21a4bc64 elab.vhdl_objtypes%s
+D elab-vhdl_types.ads	20220609165545 1e7bd8a2 elab.vhdl_types%s
+D elab-vhdl_types.adb	20220609165545 4ea995aa elab.vhdl_types%b
+D elab-vhdl_values.ads	20220609165545 8f698c4c elab.vhdl_values%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-c.ads		20220609165545 39ab994c grt.c%s
+D grt-files_operations.ads  20220609165545 a286f262 grt.files_operations%s
+D grt-stdio.ads		20220609165545 9e36ac41 grt.stdio%s
+D grt-types.ads		20220609165545 06085c72 grt.types%s
+D grt-vhdl_types.ads	20220609165545 9d784033 grt.vhdl_types%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D mutils.ads		20220609165545 bbbbf1f7 mutils%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-finmas.ads		20210601075304 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210601075304 4ff27390 system.finalization_root%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-pooglo.ads		20210601075304 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20210601075304 b16154c2 system.storage_pools%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-annotations.ads	20220609165545 5b61b848 vhdl.annotations%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-evaluation.ads	20220609165545 1c529a96 vhdl.evaluation%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-ieee.ads		20220609165545 c4f3dfad vhdl.ieee%s
+D vhdl-ieee-std_logic_1164.ads  20220609165545 eacf1889 vhdl.ieee.std_logic_1164%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-std_package.ads	20220609165545 c36d499a vhdl.std_package%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+D vhdl-utils.ads	20220609165545 2ee150f7 vhdl.utils%s
+X 9 elab.ads
+19K9*Elab 21e9 16|21r6 21r29 22r6 22r30 24r9 71r5 17|28r6 28r28 29r6 29r26
+. 30r6 31r6 31r28 33r14 402r13 686r5
+X 11 elab-vhdl_context.ads
+27K14*Vhdl_Context 255e22 16|21w11 21r34
+32P9*Synth_Instance_Acc(31R9) 16|33r18 35r18 37r47 40r47 45r49 52r18 55r18
+. 57r18 59r47 61r18 70r18 17|35r18 61r18 71r47 94r47 161r49 203r18 211r18
+. 221r18 252r18 298r18 312r18 385r47 427r18 455r18 464r18 486r18 564r18 606r18
+. 648r18
+74U14*Set_Error 17|48s10
+135U14*Create_Subtype_Object 17|408s10 451s7 611s7 660s19
+162V13*Get_Subtype_Object{15|97P9} 17|83s17 108s26 216s17 234s17 238s21 244s24
+. 269s24 305s18 319s19 492s9 577s18 683s17
+X 12 elab-vhdl_decls.ads
+23K14*Vhdl_Decls 43e20 17|30w11 402r18
+32U14*Elab_Declarations 17|402s29
+X 13 elab-vhdl_errors.ads
+22K14*Vhdl_Errors 39e21 17|31w11 31r33
+26U14*Error_Msg_Elab 17|47s10
+X 14 elab-vhdl_expr.ads
+25K14*Vhdl_Expr 92e19 17|29w11 29r31
+47V13*Exec_Name{18|106R9} 17|671s25
+51V13*Exec_Name_Subtype{15|97P9} 17|87s17
+57V13*Exec_Expression{18|106R9} 17|66s12 67s12
+68V13*Exec_Expression_With_Basetype{18|106R9} 17|41s12 42s12
+X 15 elab-vhdl_objtypes.ads
+28K14*Vhdl_Objtypes 316e23 16|22w11 22r35
+29R9*Discrete_Range_Type 38e14 16|33r57 42r46 43r44 49r16 17|35r57 96r46
+. 153r44 164r13 173r16 372r19 416r13 455r57 457r13 578r22
+31e7*Dir{49|187E9} 17|49m18 156r26 167r26 179r29 185r22 192r22 376m21
+34b7*Is_Signed{boolean} 17|52m18 377m21
+36i7*Left{49|31I9} 17|50m18 157r34 168r34 177r37 378m21
+37i7*Right{49|31I9} 17|51m18 157r61 168r61 379m21
+41V13*Discrete_Range_Width{49|39M9} 17|422s12 588s24
+43V13*Build_Discrete_Range_Type{29R9} 17|57s14 120s23 140s23 421s14
+46R9*Float_Range_Type 50e14 16|35r57 17|61r57 439r22 464r57 594r22
+52R9*Bound_Type 57e14 16|38r42 44r44 46r59 49r63 17|72r42 117r20 125r20 154r44
+. 162r59 173r63 175r13 541r25
+53e7*Dir{49|187E9} 17|121r54 130r23 132m24 134m24 141r54 156m15 167m15 179m15
+54i7*Left{49|27I9} 17|121r28 137r29 138m18 141r28 157m15 168m15 177m15 184r27
+. 187m20 189m20 194r33 196r33
+55i7*Right{49|27I9} 17|121r44 136r23 137m18 141r44 157m41 168m41 178m15 184m14
+. 187r32 189r32 194m20 196m20
+56m7*Len{49|39M9} 17|158m15 169m15 180m15
+75n7*Type_Vector{69E9} 17|555r15
+76n7*Type_Unbounded_Vector{69E9} 17|525r15
+82n7*Type_Unbounded_Array{69E9} 17|536r15
+91E12*Type_Nets{69E9} 17|236r25 581r33
+97P9*Type_Acc(96R9) 16|52r59 57r59 64r66 66r48 70r58 17|78r16 105r25 211r59
+. 221r57 227r16 228r17 229r13 252r57 260r17 262r20 298r57 301r17 302r13 312r57
+. 315r19 316r19 358r66 387r13 412r72 429r13 486r59 491r29 494r16 540r29 564r59
+. 576r33 608r13 648r58 651r13
+104p7*Typ{97P9} 17|281r61 287m42
+107A9*Rec_El_Array_Type(99R9)<58|6503I9>
+109a7*E{107A9} 17|281r37 287m18
+112P9*Rec_El_Array_Acc(108R9) 17|257r17 263r20
+132e20*Kind{69E9} 17|236r17 524r23 581r25
+140m7*Sz{49|192M9} 17|589r59
+153r13*Drange{29R9} 17|109r30
+170p13*Rec{112P9} 17|270r35
+175p13*File_Signature{49|56P9} 17|339m11
+198V13*Create_Discrete_Type{97P9} 17|380s20 423s14 589s26
+203V13*Create_Float_Type{97P9} 17|444s23 598s23
+206V13*Create_Vector_Type{97P9} 17|528s23
+208V13*Create_Unbounded_Vector{97P9} 17|239s17
+212V13*Create_Array_Type{97P9} 17|547s33
+214V13*Create_Unbounded_Array{97P9} 17|245s20
+216V13*Create_Rec_El_Array{112P9} 17|265s18
+218V13*Create_Record_Type{97P9} 17|293s17
+219V13*Create_Unbounded_Record{97P9} 17|291s17
+221V13*Create_Access_Type{97P9} 17|307s14
+223V13*Create_File_Type{97P9} 17|338s14
+234V13*Is_Last_Dimension{boolean} 17|504s16
+237V13*Get_Array_Bound{52R9} 17|91s14
+240V13*Get_Range_Length{49|39M9} 17|158s22 169s22
+243V13*Get_Array_Element{97P9} 17|505s26 508s26
+308p4*Boolean_Type{97P9} 17|365r17
+309p4*Logic_Type{97P9} 17|363r17
+310p4*Bit_Type{97P9} 17|367r17
+311p4*Protected_Type{97P9} 17|681r17
+X 16 elab-vhdl_types.ads
+24K14*Vhdl_Types 9|19k9 16|71l10 71e20 17|33b19 686l10 686t20
+27V13*Get_Declaration_Type{58|7174I12} 27>35 17|614b13 645l8 645t28
+27i35 Decl{58|7174I12} 17|614b35 616r54 619r22
+30V13*Has_Element_Subtype_Indication{boolean} 30>45 17|475b13 483l8 483t38
+. 497s10
+30i45 Atype{58|7174I12} 17|475b45 477r44 479r37 481r50
+32V13*Synth_Discrete_Range_Expression{15|29R9} 33>7 33>38 17|34b13 58l8 58t39
+. 100s20
+33p7 Syn_Inst{11|32P9} 17|35b7 41r43 42r43 48r21
+33i38 Rng{58|7174I12} 17|35b38 41r69 42r70 47r27 49r40 57r68
+34V13*Synth_Float_Range_Expression{15|46R9} 35>7 35>38 17|60b13 69l8 69t36
+. 469s20
+35p7 Syn_Inst{11|32P9} 17|61b7 66r29 67r29
+35i38 Rng{58|7174I12} 17|61b38 66r55 67r56 68r30
+37V13*Synth_Array_Attribute{15|52R9} 37>36 37>67 17|71b13 92l8 92t29 119s21
+. 128s21
+37p36 Syn_Inst{11|32P9} 17|71b36 83r37 87r36
+37i67 Attr{58|7174I12} 17|71b67 74r49 77r56
+40U14*Synth_Discrete_Range 40>36 41>36 42<36 17|94b14 112s16 145s13 151l8
+. 151t28 166s7 459s7
+40p36 Syn_Inst{11|32P9} 17|94b36 100r53 108r46 113r19 119r44 128r44 146r16
+41i36 Bound{58|7174I12} 17|95b36 98r22 100r63 103r37 108r56 113r51 119r54
+. 128r54 146r68 149r49
+42r36 Rng{15|29R9} 17|96b36 100m13 109m19 113m59 120m16 140m16 147m16
+43V13*Synth_Bounds_From_Range{15|52R9} 43>38 17|153b13 159l8 159t31
+43r38 Rng{15|29R9} 17|153b38 156r22 157r30 157r57 158r40
+45V13*Synth_Bounds_From_Range{15|52R9} 45>38 46>38 17|161b13 170l8 170t31
+. 529s19 546s29
+45p38 Syn_Inst{11|32P9} 17|161b38 166r29
+46i38 Atype{58|7174I12} 17|162b38 166r39
+48V13*Create_Bounds_From_Length{15|52R9} 49>7 49>37 17|172b13 200l8 200t33
+49r7 Bounds{15|29R9} 17|173b7 177r30 179r22 185r15 192r15
+49i37 Len{58|6503I9} 17|173b37 180r29 182r10 194r47 196r47
+51V13*Synth_Array_Subtype_Indication{15|97P9} 52>7 52>38 17|485b13 561l8
+. 561t38 569s20
+52p7 Syn_Inst{11|32P9} 17|486b7 492r29 500r59 529r44 546r54
+52i38 Atype{58|7174I12} 17|486b38 488r55 489r55 490r67 497r42 513r41 515r35
+. 526r43 538r43
+54U14*Synth_Subtype_Indication 55>7 55>38 17|206s10 232s10 605b14 612l8 612t32
+55p7 Syn_Inst{11|32P9} 17|606b7 610r40 611r30
+55i38 Atype{58|7174I12} 17|606b38 610r50 611r40
+56V13*Synth_Subtype_Indication{15|97P9} 57>7 57>38 17|214s17 563b13 603l8
+. 603t32 610s14 659s26
+57p7 Syn_Inst{11|32P9} 17|564b7 569r52 571r50 577r38 587r22 597r19
+57i38 Atype{58|7174I12} 17|564b38 567r22 569r62 571r60 577r63 587r54 597r51
+. 601r65
+59U14*Elab_Type_Definition 59>36 59>67 17|385b14 410l8 410t28
+59p36 Syn_Inst{11|32P9} 17|385b36 393r49 395r50 397r48 399r50 403r16 408r33
+59i67 Def{58|7174I12} 17|385b67 389r22 391r54 393r59 395r60 397r58 399r60
+. 403r49 405r62 408r43
+60U14*Elab_Anonymous_Type_Definition 61>7 61>38 61>50 17|426b14 452l8 452t38
+61p7 Syn_Inst{11|32P9} 17|427b7 447r49 451r30
+61i38 Def{58|7174I12} 17|427b38 431r22 434r49 447r59 449r72 451r40
+61i50 St{58|7174I12} 17|427b50 434r54 437r61
+64V13*Elab_Enumeration_Type_Definition{15|97P9} 64>47 17|358b13 383l8 383t40
+. 391s20
+64i47 Def{58|7174I12} 17|358b47 360r10 361r17 364r13 366r13 371r63 380r68
+65V13*Elab_Scalar_Type_Definition{15|97P9} 65>42 65>54 17|412b13 424l8 424t35
+. 434s20
+65i42 Def{58|7174I12} 17|412b42 423r62
+65i54 St{58|7174I12} 17|412b54 414r52
+69V13*Elab_Declaration_Type{15|97P9} 70>7 70>38 17|647b13 685l8 685t29
+70p7 Syn_Inst{11|32P9} 17|648b7 659r52 660r42 671r36 683r37
+70i38 Decl{58|7174I12} 17|648b38 653r40 657r35 678r29
+X 17 elab-vhdl_types.adb
+37r7 L{18|106R9} 41m7 43m20 43r20 46r26 55r30
+37r10 R{18|106R9} 42m7 44m20 44r20 46r48 56r30
+38i7 Lval{49|31I9} 55m7 57r41
+38i13 Rval{49|31I9} 56m7 57r47
+63r7 L{18|106R9} 66m7 68r47
+63r10 R{18|106R9} 67m7 68r62
+74i7 Prefix_Name{58|7173I12} 75r53 87r46
+75i7 Prefix{58|7173I12} 81r20 83r71
+76i7 Dim{natural} 90r22
+78p7 Typ{15|97P9} 83m10 87m10 91r31
+105p19 Typ{15|97P9} 108m19 109r26
+117r16 B{15|52R9} 119m16 121r26 121r42 121r52
+125r16 B{15|52R9} 128m16 130r21 132m22 134m22 136r21 137m16 137r27 138m16
+. 141r26 141r42 141r52
+126i16 T{49|27I9} 136m16 138r26
+164r7 Rng{15|29R9} 166m46 167r22 168r30 168r57 169r40
+175r7 Res{15|52R9} 177m7 184m10 184r23 187m16 187r28 189m16 189r28 194m16
+. 194r29 196m16 196r29 199r14
+202U14 Synth_Subtype_Indication_If_Anonymous 202b14 203>7 203>38 208l8 208t45
+. 304s7
+203p7 Syn_Inst{11|32P9} 206r36
+203i38 Atype{58|7174I12} 205r31 206r46
+210V13 Synth_Subtype_Indication_If_Anonymous{15|97P9} 210b13 211>7 211>38
+. 218l8 218t45 278s26 284s23 500s20
+211p7 Syn_Inst{11|32P9} 214r43 216r37
+211i38 Atype{58|7174I12} 213r31 214r53 216r47
+220V13 Synth_Array_Type_Definition{15|97P9} 220b13 221>7 221>38 249l8 249t35
+. 393s20 447s20
+221p7 Syn_Inst{11|32P9} 232r36 234r37 238r41 244r44
+221i38 Def{58|7174I12} 223r64 224r55 225r55 237r33 243r36
+223i7 El_St{58|7174I12} 231r20
+224i7 El_Type{58|7174I12} 232r46 234r47
+225i7 Ndims{natural} 236r44 242r32 245r57
+226i7 Idx{58|7174I12} 237m10 238r51 243m13 244r54
+227p7 El_Typ{15|97P9} 234m7 236r10 239r42 241r17
+228p7 Idx_Typ{15|97P9} 238m10 239r50 244m13 245r44
+229p7 Typ{15|97P9} 239m10 241m10 245m13 245r64 248r14
+242i14 I{integer} 245r53
+251V13 Synth_Record_Type_Definition{15|97P9} 251b13 252>7 252>38 295l8 295t36
+. 399s20 571s20
+252p7 Syn_Inst{11|32P9} 269r44 279r19 285r16
+252i38 Def{58|7174I12} 255r19 256r71 269r71 290r41
+254b7 Is_Subtype{boolean} 268r10 276r13
+256i7 El_List{58|7233I12} 266r41 273r43 274r33
+257p7 Rec_Els{15|112P9} 265m7 287r10 291r42 293r37
+258i7 El{58|7174I12} 274m10 275r31 277r26
+259i7 El_Type{58|7174I12} 275m10 279r29 285r26
+260p7 El_Typ{15|97P9} 278m16 281m16 284m13 287r49
+262p7 Parent_Typ{15|97P9} 269m10 270r24
+263p7 Parent_Els{15|112P9} 270m10 281r26
+273i11 I{integer} 274r42 281r53 287r34
+297V13 Synth_Access_Type_Definition{15|97P9} 297b13 298>7 298>38 309l8 309t36
+. 395s20
+298p7 Syn_Inst{11|32P9} 304r46 305r38
+298i38 Def{58|7174I12} 300r56
+300i7 Des_Type{58|7174I12} 304r56 305r48
+301p7 Des_Typ{15|97P9} 305m7 307r34
+302p7 Typ{15|97P9} 307m7 308r14
+311V13 Synth_File_Type_Definition{15|97P9} 311b13 312>7 312>38 342l8 342t34
+. 397s20
+312p7 Syn_Inst{11|32P9} 319r39
+312i38 Def{58|7174I12} 314r66 321r30
+314i7 File_Type{58|7174I12} 319r49 323r21 328r63 331r33
+315p7 File_Typ{15|97P9} 319m7 338r32
+316p7 Typ{15|97P9} 338m7 339r7 341r14
+317p7 Sig{49|56P9} 325m10 334m13 339r29
+328a13 Sig_Str{string} 329r30 331m44 331r44 332m13 333m13 334r32
+329i13 Off{natural} 331m53 331r53 332r22 333r22
+344V13 Scalar_Size_To_Size{49|192M9} 344b13 344>34 356l8 356t27 380s47 423s41
+344i34 Def{58|7174I12} 346r29
+370i13 Nbr_El{natural} 375r39 379r37
+372r13 Rng{15|29R9} 376m13 380r42
+373m13 W{49|39M9} 375m13 380r74
+387p7 Typ{15|97P9} 391m13 393m13 395m13 397m13 399m13 407r10 408r48
+414i7 Cst{58|7174I12} 419r39 420r40 421r62
+415i7 L{49|31I9} 419m7 421r41
+415i10 R{49|31I9} 420m7 421r44
+416r7 Rng{15|29R9} 421m7 422r34 423r36
+417m7 W{49|39M9} 422m7 423r68
+429p7 Typ{15|97P9} 434m13 444m16 447m13 451r45
+437i16 Cst{58|7174I12} 441r51 442r52 443r39
+438f16 L{49|42F9} 441m16 443r45
+438f19 R{49|42F9} 442m16 443r48
+439r16 Rng{15|46R9} 443m16 444r42
+454V13 Synth_Discrete_Range_Constraint{15|29R9} 454b13 455>7 455>38 461l8
+. 461t39 586s26
+455p7 Syn_Inst{11|32P9} 459r29
+455i38 Rng{58|7174I12} 459r39
+457r7 Res{15|29R9} 459m44 460r14
+463V13 Synth_Float_Range_Constraint{15|46R9} 463b13 464>7 464>38 473l8 473t36
+. 596s23
+464p7 Syn_Inst{11|32P9} 469r50
+464i38 Rng{58|7174I12} 466r22 469r60 471r69
+488i7 Parent_Type{58|7174I12} 492r39 514r34
+489i7 El_Type{58|7174I12} 500r69
+490i7 St_Indexes{58|7233I12} 527r41 544r63 545r47
+491p7 Parent_Typ{15|97P9} 502r20 520r20 524r12 534r23 557r20
+493i7 St_El{58|7174I12} 527m16 529r54 545m22 546r64
+494p7 El_Typ{15|97P9} 500m10 502m10 504r35 505m16 505r45 508m16 508r45 529r62
+. 543r30 548r40
+540p19 Res_Typ{15|97P9} 543m19 547m22 548r30 548r48 550r26
+541r19 Bnd{15|52R9} 546m22 548r25
+544i23 I{integer} 545r59
+576p16 Btype{15|97P9} 581r19 584r26 589r53
+578r16 Rng{15|29R9} 586m19 588r46 589r48
+579m16 W{49|39M9} 588m19 589r63
+594r16 Rng{15|46R9} 596m16 598r42
+608p7 Typ{15|97P9} 610m7 611r47
+616i7 Ind{58|7174I12} 619r36 623r16
+617i7 Atype{58|7174I12} 623m7 625r25 627m16 627r43 640r23 642r64
+650i7 Atype{58|7174I12} 653m7 654r10 655r25 659r62 660r52 665m16 665r53 668r54
+. 675r53 678m10 680r20 683r47
+651p7 Typ{15|97P9} 659m19 660r59 661r26
+668i19 Pfx{58|7174I12} 671r46
+669r19 Vt{18|106R9} 671m19 672r26
+X 18 elab-vhdl_values.ads
+31K14*Vhdl_Values 17|28w11 28r33 18|200e21
+66P9*Value_Acc(64R9)
+106R9*Valtyp 17|37r14 63r14 669r24 18|109e14
+107p7*Typ{15|97P9} 17|672r29
+108p7*Val{66P9} 17|46r28 46r50
+120V13*Is_Static{boolean} 17|46s15 46s37
+163U14*Strip_Const 17|43s7 44s7
+189V13*Read_Discrete{49|31I9} 17|55s15 56s15
+195V13*Read_Fp64{49|42F9} 17|68s36 68s51
+X 20 flists.ads
+21I9*Flist_Type<49|27I9>
+X 27 interfac.ads
+74M9*Unsigned_32
+77M9*Unsigned_64
+172F9*IEEE_Float_64<long_float>
+X 29 mutils.ads
+3K9*Mutils 17|20w6 20r18 29|10e11
+6V13*Clog2{integer} 17|375s25
+X 49 types.ads
+20K9*Types 17|19w6 19r17 49|193e10
+27I9*Int32<integer> 17|126r20 157r23 157r50 168r23 168r50 177r23 194r40 196r40
+31I9*Int64<long_integer> 17|38r20 121r19 121r35 141r19 141r35 379r30 415r14
+39M9*Uns32<27|74M9> 17|180r22 373r17 375r18 417r11 579r20
+40M9*Uns64<27|77M9> 17|375r32
+42F9*Fp64<27|172F9> 17|438r23
+56P9*String_Acc(string) 17|317r19
+121M9*Location_Type<39M9>
+169X4*Internal_Error 17|553r22 559r19
+187n28*Dir_To{187E9} 17|131r24 134r31 186r18 193r18 376r28
+187n36*Dir_Downto{187E9} 17|132r31 133r24 188r18 195r18
+192M9*Size_Type 17|344r53
+X 50 vhdl.ads
+17K9*Vhdl 16|19r6 19r22 17|22r6 22r22 23r6 24r6 25r6 26r6 26r23 77r9 360r16
+. 361r23 364r19 366r19 405r13 449r13 471r13 601r13 642r16 50|19e9
+X 52 vhdl-errors.ads
+21K14*Errors 17|26w11 26r28 405r18 449r18 471r18 601r18 642r21 52|130e16
+26U14*Error_Kind 17|149s13 405s25 449s25 471s25 601s25 642s28 675s16
+35V14*"+"{49|121M9} 17|47s26
+X 53 vhdl-evaluation.ads
+19K14*Evaluation 17|25w11 77r14 53|233e20
+47V13*Eval_Attribute_Parameter_Or_1{natural} 17|77s25
+X 55 vhdl-ieee.ads
+18K14*Ieee 17|24r11 360r21 361r28 55|24e14
+X 56 vhdl-ieee-std_logic_1164.ads
+17K19*Std_Logic_1164 17|24w16 360r26 361r33 56|43e29
+20i4*Std_Ulogic_Type{58|7349I12} 17|360r41
+24i4*Std_Logic_Type{58|7351I12} 17|361r48
+X 58 vhdl-nodes.ads
+24K14*Nodes 16|19w11 19r27 58|9512e15
+4914n7*Iir_Kind_Record_Element_Constraint{4857E9} 17|277r32
+4915n7*Iir_Kind_Array_Element_Resolution{4857E9} 17|482r17
+4928n7*Iir_Kind_Access_Type_Definition{4857E9} 17|394r15
+4931n7*Iir_Kind_File_Type_Definition{4857E9} 17|396r15
+4932n7*Iir_Kind_Protected_Type_Declaration{4857E9} 17|400r15 680r29
+4933n7*Iir_Kind_Record_Type_Definition{4857E9} 17|398r15
+4934n7*Iir_Kind_Array_Type_Definition{4857E9} 17|392r15 446r15
+4935n7*Iir_Kind_Array_Subtype_Definition{4857E9} 17|568r15 634r18
+4936n7*Iir_Kind_Record_Subtype_Definition{4857E9} 17|255r26 570r15 635r17
+4938n7*Iir_Kind_Physical_Subtype_Definition{4857E9} 17|573r14 638r17
+4939n7*Iir_Kind_Floating_Subtype_Definition{4857E9} 17|592r15 637r17
+4940n7*Iir_Kind_Integer_Subtype_Definition{4857E9} 17|101r15 572r15 636r17
+4941n7*Iir_Kind_Enumeration_Subtype_Definition{4857E9} 17|102r14 574r14 639r17
+4942n7*Iir_Kind_Enumeration_Type_Definition{4857E9} 17|390r15
+4943n7*Iir_Kind_Integer_Type_Definition{4857E9} 17|432r15
+4944n7*Iir_Kind_Floating_Type_Definition{4857E9} 17|435r15
+4945n7*Iir_Kind_Physical_Type_Definition{4857E9} 17|433r14
+4946n7*Iir_Kind_Range_Expression{4857E9} 17|99r15 467r15
+4974n7*Iir_Kind_Type_Declaration{4857E9} 17|629r17
+4976n7*Iir_Kind_Subtype_Declaration{4857E9} 17|81r30 628r18
+5021n7*Iir_Kind_Interface_Type_Declaration{4857E9} 17|631r17
+5171n7*Iir_Kind_Subtype_Attribute{4857E9} 17|630r17 666r18
+5221n7*Iir_Kind_Range_Array_Attribute{4857E9} 17|115r15
+5222n7*Iir_Kind_Reverse_Range_Array_Attribute{4857E9} 17|123r15
+6424n7*Scalar_8{6422E9} 17|347r15
+6425n7*Scalar_16{6422E9} 17|349r15
+6426n7*Scalar_32{6422E9} 17|351r15
+6427n7*Scalar_64{6422E9} 17|353r15
+6503I9*Iir_Index32<49|27I9> 16|49r43 17|173r43 266r10 281r40 287r21
+6592E12*Iir_Kinds_Subtype_Definition{4857E9} 17|231r30 656r18
+6607E12*Iir_Kinds_Scalar_Type_And_Subtype_Definition{4857E9} 17|323r35
+6875E12*Iir_Kinds_Denoting_Name{4857E9} 17|143r15 626r18 663r18
+7173I12*Iir{59|21I9} 17|74r30 75r25
+7174I12*Node{59|21I9} 16|27r42 27r55 30r53 33r44 35r44 37r74 41r44 46r46
+. 52r46 55r46 57r46 59r73 61r44 61r55 64r53 65r48 65r59 70r45 17|35r44 61r44
+. 71r74 95r44 162r46 203r46 211r46 221r44 223r24 224r26 226r13 252r44 258r17
+. 259r17 298r44 300r27 312r44 314r28 344r40 358r53 385r73 412r48 412r59 414r22
+. 427r44 427r55 437r31 455r44 464r44 475r53 486r46 488r30 489r26 493r15 564r46
+. 606r46 614r42 614r55 616r22 617r15 648r45 650r15 668r34
+7176i4*Null_Iir{7173I12} 17|619r42
+7177i4*Null_Node{7174I12} 17|103r47 205r40 213r40 477r54 479r47 621r17 633r23
+. 654r19
+7187V14*"="=7187:69{boolean} 17|103r44 205r38 213r38 360r14 361r21 364r17
+. 366r17 477r51 479r44 515r12 619r40 654r16
+7232I12*Iir_Flist{20|21I9[54|19]}
+7233I12*Node_Flist{20|21I9[54|19]} 17|256r26 490r29
+7241i4*Flist_First{natural} 17|273r16 544r36
+7242V13*Flist_Last=7243:21{integer} 17|273s31 544s51
+7246V13*Get_Nth_Element=7247:21{59|21I9} 17|274s16
+7250V13*Get_Nbr_Elements=7251:21{natural} 17|266s23 371s15
+7349I12*Iir_Enumeration_Type_Definition{7173I12}
+7351I12*Iir_Enumeration_Subtype_Definition{7173I12}
+7582V13*Get_Kind{4857E9} 17|81s10 98s12 231s10 255s9 277s16 323s11 389s12
+. 431s12 466s12 481s13 567s12 625s15 655s15 680s10
+7752V13*Get_Value{49|31I9} 17|419s12 420s12
+7766V13*Get_Fp_Value{49|42F9} 17|441s21 442s21
+8088V13*Get_Type{7173I12} 17|275s21 314s36 665s25 678s19
+8097V13*Get_Subtype_Indication{7173I12} 17|83s47 146s26 616s30 653s16
+8286V13*Get_Declaration_Chain{7173I12} 17|403s26
+8323V13*Get_Type_Declarator{7173I12} 17|103s16 205s10 213s10
+8339V13*Get_Enumeration_Literal_List{7232I12} 17|371s33
+8388V13*Get_Range_Constraint{7173I12} 17|113s29 414s30 437s39 587s32 597s29
+8392V13*Get_Direction{49|187E9} 17|49s25 57s53 68s15 421s47 443s24
+8396V13*Get_Left_Limit{7173I12} 17|41s53 66s39 419s23 441s35
+8400V13*Get_Right_Limit{7173I12} 17|42s53 67s39 420s23 442s35
+8412V13*Get_Parent_Type{7173I12} 17|269s54 488s38
+8428V13*Get_Resolution_Indication{7173I12} 17|479s10 481s23
+8477V13*Get_Text_File_Flag{boolean} 17|321s10
+8507V13*Get_Index_Subtype_List{7232I12} 17|490s43
+8517V13*Get_Element_Subtype_Indication{7173I12} 17|223s32
+8521V13*Get_Element_Subtype{7173I12} 17|224s34 489s34 514s13 515s14
+8537V13*Get_Array_Element_Constraint{7173I12} 17|477s14
+8554V13*Get_Elements_Declaration_List{7232I12} 17|256s40
+8562V13*Get_Designated_Type{7173I12} 17|300s35
+8789V13*Get_Index_Constraint_Flag{boolean} 17|513s14 526s16 538s16
+9003V13*Get_Named_Entity{7173I12} 17|146s50 627s25 665s35
+9016V13*Get_Scalar_Size{6422E9} 17|346s12
+9058V13*Get_Prefix{7173I12} 17|74s37 668s42
+9269V13*Get_File_Type_Mark{7173I12} 17|314s46
+9437V13*Get_Is_Ref{boolean} 17|619s10 657s23
+X 59 vhdl-nodes_priv.ads
+21I9*Node_Type<49|27I9>
+X 60 vhdl-std_package.ads
+20K14*Std_Package 17|23w11 364r24 366r24 60|213e21
+41i4*Boolean_Type_Definition{58|7349I12} 17|364r36
+47i4*Bit_Type_Definition{58|7349I12} 17|366r36
+X 63 vhdl-utils.ads
+20K14*Utils 17|22w11 22r27 63|437e15
+167V13*Get_Base_Type{58|7173I12} 17|577s48
+180V13*Is_Fully_Constrained_Type{boolean} 17|290s14
+218V13*Strip_Denoting_Name{58|7173I12} 17|75s32
+255V13*Get_Index_Type{58|7173I12} 17|527s25 545s31
+258V13*Get_Index_Type{58|7173I12} 17|237s17 243s20
+261V13*Get_Nbr_Dimensions{natural} 17|225s35
+418V13*Get_File_Signature_Length{natural} 17|328s36
+424U14*Get_File_Signature 17|331s13
+

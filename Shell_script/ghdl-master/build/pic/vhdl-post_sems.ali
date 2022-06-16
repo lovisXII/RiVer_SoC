@@ -1,0 +1,187 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV SPARK_05
+
+U vhdl.post_sems%b	vhdl-post_sems.adb	21b4bdf8 NE OO PK
+W flags%s		flags.adb		flags.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W std_names%s		std_names.adb		std_names.ali
+W types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.ieee%s		vhdl-ieee.adb		vhdl-ieee.ali
+W vhdl.ieee.math_real%s	vhdl-ieee-math_real.adb	vhdl-ieee-math_real.ali
+W vhdl.ieee.numeric%s	vhdl-ieee-numeric.adb	vhdl-ieee-numeric.ali
+W vhdl.ieee.numeric_std_unsigned%s  vhdl-ieee-numeric_std_unsigned.adb  vhdl-ieee-numeric_std_unsigned.ali
+W vhdl.ieee.std_logic_1164%s  vhdl-ieee-std_logic_1164.adb  vhdl-ieee-std_logic_1164.ali
+W vhdl.ieee.std_logic_arith%s  vhdl-ieee-std_logic_arith.adb  vhdl-ieee-std_logic_arith.ali
+W vhdl.ieee.std_logic_misc%s  vhdl-ieee-std_logic_misc.adb  vhdl-ieee-std_logic_misc.ali
+W vhdl.ieee.std_logic_unsigned%s  vhdl-ieee-std_logic_unsigned.adb  vhdl-ieee-std_logic_unsigned.ali
+W vhdl.ieee.vital_timing%s  vhdl-ieee-vital_timing.adb  vhdl-ieee-vital_timing.ali
+W vhdl.sem_specs%s	vhdl-sem_specs.adb	vhdl-sem_specs.ali
+W vhdl.std_env%s	vhdl-std_env.adb	vhdl-std_env.ali
+
+U vhdl.post_sems%s	vhdl-post_sems.ads	4e97c5a6 EE NE OO PK
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D flags.ads		20220609165545 aab170eb flags%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D std_names.ads		20220609165545 f607720d std_names%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-ieee.ads		20220609165545 c4f3dfad vhdl.ieee%s
+D vhdl-ieee-math_real.ads  20220609165545 3aaac3a8 vhdl.ieee.math_real%s
+D vhdl-ieee-numeric.ads	20220609165545 72c1091a vhdl.ieee.numeric%s
+D vhdl-ieee-numeric_std_unsigned.ads  20220609165545 b540d659 vhdl.ieee.numeric_std_unsigned%s
+D vhdl-ieee-std_logic_1164.ads  20220609165545 eacf1889 vhdl.ieee.std_logic_1164%s
+D vhdl-ieee-std_logic_arith.ads  20220609165545 6ae4e2ce vhdl.ieee.std_logic_arith%s
+D vhdl-ieee-std_logic_misc.ads  20220609165545 50cf7187 vhdl.ieee.std_logic_misc%s
+D vhdl-ieee-std_logic_unsigned.ads  20220609165545 85db7df4 vhdl.ieee.std_logic_unsigned%s
+D vhdl-ieee-vital_timing.ads  20220609165545 81f132ea vhdl.ieee.vital_timing%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-post_sems.ads	20220609165545 58534485 vhdl.post_sems%s
+D vhdl-post_sems.adb	20220609165545 77b3c685 vhdl.post_sems%b
+D vhdl-sem_specs.ads	20220609165545 05b96d0f vhdl.sem_specs%s
+D vhdl-std_env.ads	20220609165545 f9800adf vhdl.std_env%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 4 flags.ads
+23K9*Flags 168e10 33|28w6 28r17
+123b4*Flag_Vital_Checks{boolean} 33|97r10
+X 11 std_names.ads
+21K9*Std_Names 1045e14 33|17w6 17r21
+514i4*Name_Std{17|70I9} 33|87r36
+582i4*Name_Env{17|70I9} 33|90r26
+703i4*Name_Ieee{17|70I9} 33|54r33
+704i4*Name_Std_Logic_1164{17|70I9} 33|58r21
+705i4*Name_VITAL_Timing{17|70I9} 33|60r21
+707i4*Name_Numeric_Std{17|70I9} 33|65r21
+708i4*Name_Numeric_Bit{17|70I9} 33|62r21
+709i4*Name_Numeric_Std_Unsigned{17|70I9} 33|68r21
+710i4*Name_Std_Logic_Arith{17|70I9} 33|79r21
+711i4*Name_Std_Logic_Signed{17|70I9} 33|76r21
+712i4*Name_Std_Logic_Unsigned{17|70I9} 33|73r21
+714i4*Name_Std_Logic_Misc{17|70I9} 33|81r21
+715i4*Name_Math_Real{17|70I9} 33|71r21
+X 17 types.ads
+20K9*Types 193e10 33|16w6 16r17
+27I9*Int32<integer>
+70I9*Name_Id<27I9> 33|35r12
+X 18 vhdl.ads
+17K9*Vhdl 19e9 32|16r6 16r22 18r9 23r5 33|18r6 19r6 20r6 21r6 22r6 23r6 24r6
+. 25r6 26r6 27r6 30r14 59r19 61r19 63r19 66r19 69r19 72r19 74r19 75r32 77r19
+. 78r32 80r19 82r19 92r13 99r13 103r28 104r16 105r31 107r16 114r5
+X 20 vhdl-ieee.ads
+18K14*Ieee 24e14 33|20r11 21r11 22r11 23r11 24r11 25r11 26r11 27r11 59r24
+. 61r24 63r24 66r24 69r24 72r24 74r24 75r37 77r24 78r37 80r24 82r24 103r33
+. 104r21 105r36 107r21
+X 21 vhdl-ieee-math_real.ads
+17K19*Math_Real 22e24 33|24w16 72r29
+21U14*Extract_Declarations 33|72s39
+X 22 vhdl-ieee-numeric.ads
+17K19*Numeric 31e22 33|22w16 63r29 66r29
+27U14*Extract_Std_Declarations 33|66s37
+30U14*Extract_Bit_Declarations 33|63s37
+X 23 vhdl-ieee-numeric_std_unsigned.ads
+17K19*Numeric_Std_Unsigned 20e35 33|23w16 69r29
+19U14*Extract_Declarations 33|69s50
+X 24 vhdl-ieee-std_logic_1164.ads
+17K19*Std_Logic_1164 43e29 33|20w16 59r29
+42U14*Extract_Declarations 33|59s44
+X 25 vhdl-ieee-std_logic_arith.ads
+17K19*Std_Logic_Arith 20e30 33|26w16 80r29
+19U14*Extract_Declarations 33|80s45
+X 26 vhdl-ieee-std_logic_misc.ads
+17K19*Std_Logic_Misc 20e29 33|27w16 82r29
+19U14*Extract_Declarations 33|82s44
+X 27 vhdl-ieee-std_logic_unsigned.ads
+17K19*Std_Logic_Unsigned 23e33 33|25w16 74r29 75r42 77r29 78r42
+18n23*Pkg_Unsigned{18E9} 33|75r61
+18n37*Pkg_Signed{18E9} 33|78r61
+21U14*Extract_Declarations 33|74s48 77s48
+X 28 vhdl-ieee-vital_timing.ads
+17K19*Vital_Timing 38e27 33|21w16 61r29 103r38 104r26 105r41 107r26
+19i4*Vital_Level0_Attribute{30|7499I12} 33|103r51
+20i4*Vital_Level1_Attribute{30|7499I12} 33|105r54
+34U14*Extract_Declarations 33|61s42
+36U14*Check_Vital_Level0 33|104s39
+37U14*Check_Vital_Level1 33|107s39
+X 30 vhdl-nodes.ads
+24K14*Nodes 9512e15 32|16w11 16r27
+4965n7*Iir_Kind_Context_Declaration{4857E9} 33|44r14
+4966n7*Iir_Kind_Package_Declaration{4857E9} 33|56r35 89r35
+4971n7*Iir_Kind_Package_Body{4857E9} 33|43r15
+6549E12*Iir_Kinds_Verification_Unit{4857E9} 33|45r14
+7173I12*Iir{31|21I9} 33|33r27
+7176i4*Null_Iir{7173I12} 33|100r25
+7187V14*"="=7187:69{boolean} 33|100r22 103r26 105r29
+7326I12*Iir_Design_Unit{7173I12} 32|22r38 33|31r38
+7415I12*Iir_Attribute_Specification{7173I12} 33|38r14
+7417I12*Iir_Attribute_Value{7173I12} 33|37r15
+7457I12*Iir_Library_Declaration{7173I12} 33|34r13
+7499I12*Iir_Attribute_Declaration{7173I12} 33|39r19
+7582V13*Get_Kind{4857E9} 33|42s12 56s13 89s13
+7646V13*Get_Library{7173I12} 33|52s14
+7666V13*Get_Design_File{7173I12} 33|52s27
+7723V13*Get_Library_Unit{7173I12} 33|33s34
+7841V13*Get_Attribute_Designator{7173I12} 33|102s44
+7852V13*Get_Attribute_Specification{7173I12} 33|101s21
+7996V13*Get_Attribute_Value_Chain{7173I12} 33|98s19
+8008V13*Get_Value_Chain{7173I12} 33|110s22
+8366V13*Get_Identifier{17|70I9} 33|51s13 54s10 87s13
+9003V13*Get_Named_Entity{7173I12} 33|102s26
+X 31 vhdl-nodes_priv.ads
+21I9*Node_Type<17|27I9>
+X 32 vhdl-post_sems.ads
+18K14*Post_Sems 18|17k9 32|23l10 23e19 33|30b19 114l10 114t19
+22U14*Post_Sem_Checks 22>31 33|31b14 113l8 113t23
+22i31 Unit{30|7326I12} 33|31b31 33r52 52r44 104r59 107r59
+X 33 vhdl-post_sems.adb
+33i7 Lib_Unit{30|7173I12} 42r22 51r29 56r23 59r66 61r64 64r22 67r22 70r22
+. 72r61 75r22 78r22 80r67 82r66 89r23 92r48 99r62
+34i7 Lib{30|7457I12} 52m7 54r26 87r29
+35i7 Id{17|70I9} 51m7 57r18 90r21
+37i7 Value{30|7417I12} 98m10 100r16 101r50 110m13 110r39
+38i7 Spec{30|7415I12} 101m13 102r70
+39i7 Attr_Decl{30|7499I12} 102m13 103r16 105r19
+X 34 vhdl-sem_specs.ads
+20K14*Sem_Specs 33|18w11 99r18 34|103e19
+28V13*Get_Attribute_Value_Chain_Parent{30|7173I12} 33|99s28
+X 35 vhdl-std_env.ads
+19K14*Std_Env 33|19w11 92r18 35|24e17
+23U14*Extract_Declarations 33|92s26
+

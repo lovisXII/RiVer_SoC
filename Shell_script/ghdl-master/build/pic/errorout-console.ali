@@ -1,0 +1,190 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLICIT_LOOPS
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+
+U errorout.console%b	errorout-console.adb	524e2230 NE OO PK
+W errorout%s		errorout.adb		errorout.ali
+W files_map%s		files_map.adb		files_map.ali
+W flags%s		flags.adb		flags.ali
+W gnat%s		gnat.ads		gnat.ali
+W gnat.os_lib%s		g-os_lib.ads		g-os_lib.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W name_table%s		name_table.adb		name_table.ali
+W simple_io%s		simple_io.adb		simple_io.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+U errorout.console%s	errorout-console.ads	c17340e5 EE NE OO PK
+W errorout%s		errorout.adb		errorout.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D errorout-console.ads	20220609165545 a8b02069 errorout.console%s
+D errorout-console.adb	20220609165545 79d662de errorout.console%b
+D files_map.ads		20220609165545 817c9f5f files_map%s
+D flags.ads		20220609165545 aab170eb flags%s
+D gnat.ads		20210601075304 b5988c27 gnat%s
+D g-os_lib.ads		20210601075304 0db74523 gnat.os_lib%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D name_table.ads	20220609165545 555bfbb1 name_table%s
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-os_lib.ads		20220309175724 caa7faea system.os_lib%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-string.ads		20210601075304 8fe54fb7 system.strings%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 5 errorout.ads
+18K9*Errorout 343e13 6|17r9 29r5 7|23r14 283r5
+30n7*Msgid_Note{27E9} 7|202r15
+136n7*Msgid_Warning{27E9} 7|207r15
+139n7*Msgid_Error{27E9} 7|212r15
+142n7*Msgid_Fatal{27E9} 7|223r15
+146E12*Msgid_Warnings{27E9} 7|207r31 242r38
+155V13*Warning_Image{string} 7|245s15
+203n7*Option{202E9} 7|173r15
+203n15*Library{202E9} 7|174r14
+203n47*Elaboration{202E9} 7|177r15
+230R9*Error_Record 247e14 6|23r39 7|106r20 155r39
+231e7*Origin{202E9} 7|172r14
+232e7*Id{27E9} 7|201r14 242r32 245r44
+235m7*File{26|97M9} 7|175r30 178r18 182r30 194r15 195r42 257r33 259r49 261r57
+239i7*Line{natural} 7|195r51 258r39 262r57
+261U14*Set_Report_Handler 7|278s7
+339V13 Get_Error_Col{natural} 7|195s57 263s26
+342V13 Natural_Image{string} 7|149s12 151s12
+X 6 errorout-console.ads
+17K18*Console 5|18k9 6|29l14 29e21 7|23b23 283l14 283t21
+20U14*Set_Program_Name 20>32 7|128b14 131l8 131t24
+20a32 Name{string} 7|128b32 130r35
+23U14*Console_Error_Start 23>35 7|155b14 234l8 234t27 278r28
+23r35 E{5|230R9} 7|155b35 160r24 172r12 175r28 178r16 182r28 194r13 195r40
+. 195r49 195r72 201r12
+24U14*Console_Message 24>31 7|236b14 279r28
+24a31 Str{string} 7|236b31
+25U14*Console_Message_End 7|238b14 265l8 265t27 280r28
+28U14*Install_Handler 7|274b14 282l8 282t23
+X 7 errorout-console.adb
+25p4 Program_Name{26|56P9} 130m7 135r10 136r15
+30U14 Detect_Terminal 30b14 72l8 72t23 276s7
+35V16*isatty{integer} 35>24 36b<c,isatty>25 59s13
+35i24 Fd{integer}
+40b7 Is_Windows{boolean} 51r10
+42p7 V{19|67P12} 63m10 64r13 64r30
+75E9 Color_Type 78e35 81r33
+75n24 Color_Locus{75E9} 95r15 189r21
+76n24 Color_Note{75E9} 96r15 204r27
+76n36 Color_Warning{75E9} 97r15 209r27
+76n51 Color_Error{75E9} 98r15 214r27
+76n64 Color_Fatal{75E9} 99r15 225r27
+77n24 Color_Message{75E9} 100r15 231r21
+78n24 Color_None{75E9} 101r15 250r21
+81U14 Set_Color 81b14 81>25 103l8 103t17 189s10 204s16 209s16 214s16 225s16
+. 231s10 250s10
+81e25 Color{75E9} 94r12
+84e7 E{character} 95r41 96r41 97r41 98r41 99r41 100r41 101r41
+105i4 Msg_Len{natural} 112m7 112r18 118m7 118r18 125m7 186m7 216r16
+106r4 Current_Error{5|230R9} 160m7 242r18 245r30 257r19 258r25 259r35 261r43
+. 262r43 263r41
+107i4 Current_Line{natural} 163m10 163r26 165r25 166m10 240r10 255r10 269m7
+108b4 In_Group{boolean} 162r10 270r22 271m7
+110U14 Put 110b14 110>19 114l8 114t11 136s10 144s10 146s10 149s7 151s7 206s13
+. 211s13 221s16 227s13 236r53 244s10 245s10 246s10
+110a19 Str{string} 112r28 113r26
+116U14 Put 116b14 116>19 120l8 120t11 137s10 148s7 150s7 152s7 233s7
+116e19 C{character} 119r26
+122U14 Put_Line 122b14 122>24 126l8 126t16 253s7 261s10 263s10
+122a24 Str{string} 124r31
+133U14 Disp_Program_Name 133b14 139l8 139t25 193s10
+141U14 Disp_Location 141b14 141>29 141>44 141>59 153l8 153t21 195s10 197s10
+141i29 File{26|70I9} 143r10 146r33
+141i44 Line{natural} 149r27
+141i59 Col{natural} 151r27
+158b7 Progname{boolean} 170m7 176m13 179m16 192r10
+267U14 Console_Message_Group 267b14 267>37 272l8 272t29 281r28
+267b37 Start{boolean} 270r34 271r19
+X 8 files_map.ads
+23K9*Files_Map 7|20w6 20r21 8|354e14
+121V13*Get_File_Length{26|102I9} 7|259s18
+132V13*Get_File_Name{26|70I9} 7|195s25
+258V13*Extract_Expanded_Line{string} 7|261s20
+X 9 flags.ads
+23K9*Flags 7|21w6 21r17 9|168e10
+156b4*Flag_Caret_Diagnostics{boolean} 7|256r18
+158n30*On{158E9} 7|70r36 188r35 203r41 208r41 213r41 217r48 224r41 230r35
+. 249r35
+158n34*Off{158E9} 7|49r33 86r35
+158n39*Auto{158E9} 7|44r36
+164e4*Flag_Color_Diagnostics{158E9} 7|44r10 49m7 70m10 86r10 188r10 203r16
+. 208r16 213r16 217r23 224r16 230r10 249r10
+167b4*Flag_Diagnostics_Show_Option{boolean} 7|241r18
+X 10 gnat.ads
+34K9*GNAT 7|17r6 32r11 40r40 63r15 10|57e9
+X 11 g-os_lib.ads
+51K14*OS_Lib=51:36 7|17w11 32r16 40r45 63r20
+X 12 interfac.ads
+74M9*Unsigned_32
+X 13 name_table.ads
+26K9*Name_Table 7|19w6 146r15 13|98e15
+46V13*Image{string} 7|146s26
+X 14 simple_io.ads
+17K9*Simple_IO 7|18w6 83r11 113r7 119r7 124r7 14|27e14
+23U14*Put_Err 7|95s32 96s32 97s32 98s32 99s32 100s32 101s32 113s17
+24U14*Put_Err 7|119s17
+25U14*Put_Line_Err 7|124s17
+X 19 s-os_lib.ads
+67P12*String_Access{24|45P9} 7|42r11
+69V14*"="=70:22{boolean} 7|64r15
+1036V13*Getenv{67P12} 7|63s27
+1086e4*Directory_Separator{character} 7|40r52
+X 24 s-string.ads
+45P9*String_Access(string)
+X 26 types.ads
+27I9*Int32<integer>
+39M9*Uns32<12|74M9>
+56P9*String_Acc(string) 7|25r19
+70I9*Name_Id<27I9> 7|141r35
+75i4*Null_Identifier{70I9} 7|143r17 197r25
+97M9*Source_File_Entry<39M9>
+98m4*No_Source_File_Entry{97M9} 7|175r37 178r25 182r38 194r23 257r41
+102I9*Source_Ptr<27I9>
+

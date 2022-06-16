@@ -1,0 +1,80 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U vhdl.lists%b		vhdl-lists.ads		64adf04c EE OO PK
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali  ED
+Z interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+W lists%s		lists.adb		lists.ali  ED
+Z system%s		system.ads		system.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z tables%s		tables.adb		tables.ali  ED
+Z types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.types%s		vhdl-types.ads		vhdl-types.ali
+
+U vhdl.lists%s		vhdl-lists.ads		ed2991d4 EB EE NE OO PK
+W lists%s		lists.adb		lists.ali
+Z types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.types%s		vhdl-types.ads		vhdl-types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D lists.adb		20220609165545 156e4326 lists%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D tables.adb		20220609165545 fe1a89b0 tables%b
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%b
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 7 lists.ads
+19I9 El_Type 19|19r43
+20k9*Lists 147e10 19|17w6 19r36
+X 16 types.ads
+27I9*Int32<integer>
+X 17 vhdl.ads
+17K9*Vhdl 19e9 19|16r6 19r9 19r54
+X 19 vhdl-lists.ads
+19K14*Lists[7|20] 17|17k9
+X 20 vhdl-nodes_priv.ads
+21I9*Node_Type<16|27I9>
+X 21 vhdl-types.ads
+19K14*Types 19|16w11 19r59 21|24e15
+22I12*Vhdl_Node{20|21I9} 19|19r65
+

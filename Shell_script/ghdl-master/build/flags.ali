@@ -1,0 +1,80 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV SPARK_05
+
+U flags%b		flags.adb		c774e335 NE OO PK
+
+U flags%s		flags.ads		aab170eb EE NE OO PK
+
+D flags.ads		20220609165545 aab170eb flags%s
+D flags.adb		20220609165545 6dc593de flags%b
+D system.ads		20210601075304 4635ec04 system%s
+X 1 flags.ads
+23K9*Flags 168l5 168e10 2|17b14 46l5 46t10
+26E9*Vhdl_Std_Type 27e60 30r14
+27n7*Vhdl_87{26E9} 2|21r15
+27n16*Vhdl_93{26E9} 30r31 2|23r15
+27n25*Vhdl_00{26E9} 2|24r15
+27n34*Vhdl_02{26E9} 2|25r15
+27n43*Vhdl_08{26E9} 2|27r15
+27n52*Vhdl_19{26E9} 2|29r15
+30e4*Vhdl_Std{26E9} 2|20r12
+33b4*AMS_Vhdl{boolean}
+40a4*Flag_String{string} 2|22m13 26m13 28m13 30m13 33m10 35m10 38m10 40m10
+. 44m7
+41U14*Create_Flag_String 2|18b14 45l8 45t26
+46b4*Mb_Comment{boolean}
+49b4*Bootstrap{boolean}
+53b4*Dump_Parse{boolean}
+56b4*Dump_Sem{boolean}
+59b4*Dump_Canon{boolean}
+62b4*Dump_Annotate{boolean}
+65b4*Dump_Origin_Flag{boolean}
+68b4*Dump_All{boolean}
+71b4*Dump_Stats{boolean}
+75i4*Check_Ast_Level{natural}
+80b4*List_All{boolean}
+83b4*List_Verbose{boolean}
+86b4*List_Sem{boolean}
+89b4*List_Canon{boolean}
+92b4*List_Annotate{boolean}
+95b4*Verbose{boolean}
+101b4*Flag_Elocations{boolean}
+106b4*Flag_Elaborate{boolean}
+110b4*Flag_Elaborate_With_Outdated{boolean}
+113b4*Flag_Only_Elab_Warnings{boolean}
+117b4*Flag_Explicit{boolean}
+120b4*Flag_Syn_Binding{boolean}
+123b4*Flag_Vital_Checks{boolean}
+128b4*Flag_Force_Analysis{boolean}
+134b4*Flag_Integer_64{boolean} 2|32r10
+135b4*Flag_Time_64{boolean} 2|37r10
+138b4*Flag_Xref{boolean}
+141b4*Flag_Whole_Analyze{boolean}
+147b4*Flag_Relaxed_Rules{boolean}
+150b4*Flag_Relaxed_Files87{boolean}
+153b4*Flag_Synopsys{boolean}
+156b4*Flag_Caret_Diagnostics{boolean}
+158E9*On_Off_Auto_Type 158e44 164r29
+158n30*On{158E9}
+158n34*Off{158E9}
+158n39*Auto{158E9} 164r49
+164e4*Flag_Color_Diagnostics{158E9}
+167b4*Flag_Diagnostics_Show_Option{boolean}
+

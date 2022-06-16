@@ -1,0 +1,480 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_RECURSION
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_PRAGMAS
+RV SPARK_05
+
+U trans.chap12%b	trans-chap12.adb	7d93a9ab NE OO PK
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W errorout%s		errorout.adb		errorout.ali
+W flags%s		flags.adb		flags.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W libraries%s		libraries.adb		libraries.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+W trans%s		trans.adb		trans.ali
+W trans.chap1%s		trans-chap1.adb		trans-chap1.ali
+W trans.chap2%s		trans-chap2.adb		trans-chap2.ali
+W trans.chap6%s		trans-chap6.adb		trans-chap6.ali
+W trans.helpers2%s	trans-helpers2.adb	trans-helpers2.ali
+W trans.rtis%s		trans-rtis.adb		trans-rtis.ali
+W trans_decls%s		trans_decls.ads		trans_decls.ali
+W translation%s		translation.adb		translation.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.configuration%s	vhdl-configuration.adb	vhdl-configuration.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.sem%s		vhdl-sem.adb		vhdl-sem.ali
+W vhdl.sem_lib%s	vhdl-sem_lib.adb	vhdl-sem_lib.ali
+W vhdl.std_package%s	vhdl-std_package.adb	vhdl-std_package.ali
+W vhdl.utils%s		vhdl-utils.adb		vhdl-utils.ali
+
+U trans.chap12%s	trans-chap12.ads	6da9bec9 EE NE OO PK
+W trans%s		trans.adb		trans.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-finali.ads		20210601075304 bf4f806b ada.finalization%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flags.ads		20220609165545 aab170eb flags%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D libraries.ads		20220609165545 ef8d51d1 libraries%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D ortho_ident.ads	20220609165545 0fea9021 ortho_ident%s
+D ortho_llvm.ads	20220609165545 bc8c6d1a ortho_llvm%s
+D ortho_nodes.ads	20220609165545 a75ade7f ortho_nodes%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-finmas.ads		20210601075304 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210601075304 4ff27390 system.finalization_root%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-pooglo.ads		20210601075304 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20210601075304 b16154c2 system.storage_pools%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D trans.ads		20220609165545 5448365b trans%s
+D trans-chap1.ads	20220609165545 5616a604 trans.chap1%s
+D trans-chap12.ads	20220609165545 39e18892 trans.chap12%s
+D trans-chap12.adb	20220609165545 abbb9834 trans.chap12%b
+D trans-chap2.ads	20220609165545 a2814bdb trans.chap2%s
+D trans-chap6.ads	20220609165545 e246a2d8 trans.chap6%s
+D trans-helpers2.ads	20220609165545 c67ede6c trans.helpers2%s
+D trans-rtis.ads	20220609165545 bc9f3577 trans.rtis%s
+D trans_decls.ads	20220609165545 717e0c3e trans_decls%s
+D translation.ads	20220609165545 7ae5a7e8 translation%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-configuration.ads  20220609165545 41cd3258 vhdl.configuration%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-sem.ads		20220609165545 d1712abf vhdl.sem%s
+D vhdl-sem_lib.ads	20220609165545 b9234689 vhdl.sem_lib%s
+D vhdl-std_package.ads	20220609165545 c36d499a vhdl.std_package%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+D vhdl-utils.ads	20220609165545 2ee150f7 vhdl.utils%s
+X 8 dyn_tables.ads
+34A9*Table_Type(56|21I9)<integer>
+37A12*Big_Table_Type{34A9[38|38[51|21]]}<integer>
+43P9*Table_Thin_Ptr(37A12[38|38[51|21]])
+X 9 errorout.ads
+18K9*Errorout 343e13 42|18w6 18r20
+22i4*Nbr_Errors{natural} 42|561r10
+30n7*Msgid_Note{27E9} 42|566r22 571r25 691r22 696r25
+203n47*Elaboration{202E9} 42|566r34 571r37 691r34 696r37
+208U14*Report_Msg 42|566s10 571s13 691s10 696s13
+X 10 flags.ads
+23K9*Flags 168e10 42|23w6 53r32 565r10 690r10
+40a4*Flag_String{string} 42|53r38
+95b4*Verbose{boolean} 42|565r16 690r16
+X 12 interfac.ads
+74M9*Unsigned_32
+77M9*Unsigned_64 42|63r33 84r48
+X 14 libraries.ads
+19K9*Libraries 181e14 42|22w6 198r15 361r31 435r34 454r32 474r25 587r30
+34m4*Command_Line_Location{49|121M9} 42|361r41 435r44
+41i4*Std_Library{55|7457I12} 42|587r40
+142V13*Get_Latest_Architecture{55|7442I12} 42|198s25
+151V13*Find_Design_Unit{55|7326I12} 42|474s35
+157V13*Find_Secondary_Unit{55|7326I12} 42|454s42
+X 15 lists.ads
+21I9*List_Type<49|27I9>
+102R9*Iterator
+X 16 ortho_ident.ads
+21V13*Get_Identifier{19R9} 42|54s32 64s31 68s41
+X 17 ortho_llvm.ads
+70R9*O_Enode 610e14 41|22r59 42|73r59
+73P9*O_Tnode 42|42r18
+75P9*O_Dnode 42|36r15 50r16 104r40 109r18 110r23 192r15 193r18 196r16 275r16
+. 306r15 307r18 309r16 385r32 406r17
+77P9*O_Fnode
+80p4*O_Dnode_Null{75P9} 42|176r32
+151V13*New_Array_Subtype{73P9} 42|60s19
+184V13*New_Unsigned_Literal{71R9} 42|83s26
+191V13*New_Null_Access{71R9} 42|140s19
+296n23*O_Storage_Public{295E9} 42|55r32 69r29 219r49 227r53 249r16 288r10
+. 321r49 329r53 340r60 389r59 409r58
+297n23*O_Storage_Private{295E9} 42|45r27 65r21
+298n23*O_Storage_Local{295E9} 42|115r21 117r45
+314V13*New_Lit{70R9} 42|83s17 124s21 140s10
+335R9*O_Inter_List 659e14 42|41r20 194r20 273r20 308r20 384r38 405r23
+336R9*O_Assoc_List 724e14 42|75r15 108r15 195r16
+356V13*New_Selected_Element{72R9} 42|136s10
+369V13*New_Convert_Ov{70R9} 42|90s17
+375V13*New_Address{70R9} 42|86s17 130s10
+383V13*New_Obj_Value{70R9} 42|142s30 163s34 169s31 235s35 256s38
+386V13*New_Obj{72R9} 42|86s30 122s10 129s10 130s47 137s37
+415U14*New_Const_Decl 42|218s7 320s7
+422U14*Start_Init_Value 42|221s7 323s7
+423U14*Finish_Init_Value 42|222s7 324s7
+428U14*New_Var_Decl 42|64s7 114s7 117s7
+445U14*Start_Procedure_Decl 42|68s7 226s10 247s13 286s7 328s10 339s7 388s25
+. 408s10
+451U14*New_Interface_Decl 42|228s10 250s13 330s10 341s7
+457U14*Finish_Subprogram_Decl 42|70s7 231s10 252s13 289s7 332s10 342s7 390s25
+. 410s10
+462U14*Start_Subprogram_Body 42|113s7 233s10 254s13 291s7 334s10 344s7 391s25
+. 411s10
+464U14*Finish_Subprogram_Body 42|174s7 237s10 258s10 293s7 335s10 345s7 392s25
+. 412s10
+482U14*Start_Association 42|81s7 94s7 148s7 156s7 162s10 168s7 234s10 255s13
+483U14*New_Association 42|82s7 85s7 87s7 89s7 95s7 163s10 169s7 235s10 256s13
+485U14*New_Procedure_Call 42|91s7 98s7 149s7 157s7 164s10 170s7 236s10 257s13
+489U14*New_Assign_Stmt 42|121s7 128s7 135s7
+X 38 tables.ads
+48p4*Table{8|43P9[38[51|21]]} 42|507r31[51|21] 515r31[51|21] 552r34[51|21]
+. 569r34[51|21] 597r31[51|21] 634r31[51|21] 652r31[51|21] 694r34[51|21]
+54i4*First{integer} 42|506r29[51|21] 513r25[51|21] 551r32[51|21] 568r32[51|21]
+. 596r29[51|21] 633r29[51|21] 651r29[51|21]
+55V13*Last{integer} 42|506s51[51|21] 514s31[51|21] 551s54[51|21] 568s54[51|21]
+. 596s51[51|21] 633s51[51|21] 651s51[51|21] 679s40[51|21] 693s56[51|21]
+75U14*Append 42|439s23[51|21]
+X 39 trans.ads
+23K9*Trans 2218e10 41|17r9 26r5 42|26r6 27r6 28r6 29r6 30r6 30r26 34r14 701r5
+47p4*Current_Filename_Node{17|75P9} 42|176m7
+51p4*Ghdl_Ptr_Type{17|73P9} 42|90r48 331r49 341r63
+66p4*Ghdl_Index_Type{17|73P9} 42|83r48 220r10 322r10
+67r4*Ghdl_Index_0{17|71R9} 42|324r33
+154r4*Wki_Instance{16|19R9} 42|117r31 229r35 250r55 331r35 341r49
+155r4*Wki_Arch_Instance{16|19R9} 42|114r36
+185n46*Alloc_System{184E9} 42|123r21
+204V13*New_Selected_Acc_Value{17|72R9} 42|130s23 137s13
+218E9*Elab_Kind 218e46 42|161r16 225r16 327r16
+219A9*O_Dnode_Elab(17|75P9)<218E9>
+234U17*Set_Global_Storage 42|45s7
+257V16*Get_Scope_Size{17|71R9} 42|124s30 222s33
+325U17*Set_Scope_Via_Param_Ptr 42|153s7
+343U17*Clear_Scope 42|173s7
+349R12*Id_Mark_Type 480e17 42|111r14 187r42 271r52 304r42 357r28 383r32
+352U17*Reset_Identifier_Prefix 42|211s7 277s7 313s7 363s7
+353U17*Push_Identifier_Prefix 42|154s7 215s7 282s7 317s7
+356U17*Push_Identifier_Prefix 42|213s7 214s7 280s7 281s7 283s7 315s7 316s7
+. 365s7 366s7
+360U17*Pop_Identifier_Prefix 42|172s7 262s7 263s7 264s7 295s7 296s7 297s7
+. 298s7 347s7 348s7 349s7 393s25 415s7 416s7
+377V16*Create_Identifier{16|19R9} 42|389s40
+388V16*Create_Identifier{16|19R9} 42|219s17 248s28 287s22 321s17 340s22 409s25
+391V16*Create_Elab_Identifier{16|19R9} 42|227s25 329s25
+1185P9*Ortho_Info_Acc(1184R9)
+1202P12*Block_Info_Acc{1185P9} 42|106r30 107r28 181r21 184r19
+1206P12*Config_Info_Acc{1185P9} 42|190r21 537r19
+1214U14*Update_Node_Infos 42|436s10 586s7
+1221V13*Get_Info{1185P9} 42|88s39 97s32 106s48 107s46 202s20 207s22 243s25
+. 675s20
+1990r13*Block_Scope{243R12} 42|124r56 153m44 173m32 222r59
+1994p13*Block_Decls_Ptr_Type{17|73P9} 42|115r48 118r33 125r31 132r35 230r25
+. 251r43
+1999p13*Block_Link_Field{17|77P9} 42|138r49
+2006p13*Block_Parent_Field{17|77P9} 42|131r57
+2028a13*Block_Elab_Subprg{219A9} 42|162r46 234r47
+2036p13*Block_Elab_Pkg_Subprg{17|75P9} 42|148r45
+2039p13*Block_Rti_Const{17|75P9} 42|88r55
+2067p13*Config_Subprg{17|75P9} 42|255r52 676r41
+2085p13*Package_Rti_Const{17|75P9} 42|97r60
+2140K12*Helpers 2217e15 42|63r10
+2211V16*New_Index_Lit{17|71R9} 42|63s18
+X 40 trans-chap1.ads
+17K15*Chap1 38e16 42|26w12 155r7 158r7
+26U14*Translate_Entity_Init_Generics 42|155s13
+29U14*Translate_Entity_Init_Ports 42|158s13
+X 41 trans-chap12.ads
+17K15*Chap12 39|23k9 41|26l11 26e17 42|34b20 701l11 701t17
+19U14*Gen_Elab_Decls 42|39b14 71l8 71t22 672s7
+22U14*Call_Elab_Decls 22>31 22>43 42|73b14 99l8 99t23 142s7
+22i31 Arch{55|7173I12} 42|73b31 88r49
+22r43 Arch_Instance{17|70R9} 42|73b43 90r33
+25U14*Elaborate 25>25 25>51 42|528b14 700l8 700t17
+25i25 Config{55|7326I12} 42|528b25 540r39
+25b51 Whole{boolean} 42|528b51 576r10 588r27 600r13 621r33 625r33 685r14
+X 42 trans-chap12.adb
+35i4 Elab_Nbr_Pkgs{natural} 47m26 63r46 84r61
+36p4 Pkgs_Arr{17|75P9} 64m21 64r21 86r39
+41r7 Inter_List{17|335R9} 68m29 70m31 70r31
+42p7 Arr_Type{17|73P9} 60m7 65r40
+50p10 Cst{17|75P9} 51r31 53m10
+75r7 Assoc{17|336R9} 81m26 83m10 83r10 86m10 86r10 88m10 88r10 90m10 90r10
+. 91m27 91r27 94m26 96m10 96r10 98m27 98r27
+102U14 Gen_Main 102b14 102>24 103>24 104>24 177l8 177t16 676s7
+102i24 Entity{55|7440I12} 106r58 144r55 155r45 158r42
+103i24 Arch{55|7442I12} 107r56 142r24
+104p24 Config_Subprg{17|75P9} 168r33
+106p7 Entity_Info{39|1202P12} 118r21 132r23 138r37 148r33 153r32 173r20
+107p7 Arch_Info{39|1202P12} 115r38 124r46 125r21 131r47 162r36
+108r7 Assoc{17|336R9} 148m26 149m27 149r27 156m26 157m27 157r27 162m29 163m27
+. 163r27 164m30 164r30 168m26 169m24 169r24 170m27 170r27
+109p7 Instance{17|75P9} 117m21 117r21 129r19 137r46 153r57 163r49
+110p7 Arch_Instance{17|75P9} 114m21 114r21 122r19 130r56 142r45 169r46
+111r7 Mark{39|349R12} 154m31 172r30
+161e11 K{39|218E9} 162r65
+179U14 Gen_Last_Arch 179b14 179>29 265l8 265t21 660s16
+179i29 Entity{55|7440I12} 198r50 200r53 207r32 212r61 214r60
+181p7 Entity_Info{39|1202P12} 207m7 230r13
+183i7 Arch{55|7442I12} 198m7 199r10 202r30 241r56
+184p7 Arch_Info{39|1202P12} 202m7 203r10 222r49 234r37 251r33
+186i7 Lib{55|7457I12} 212m7 213r57
+187r7 Lib_Mark{39|349R12} 213m31 264r30
+187r17 Entity_Mark{39|349R12} 214m31 263r30
+187r30 Arch_Mark{39|349R12} 215m31 262r30
+189i7 Config{55|7446I12} 241m7 242r20 243r53
+190p7 Config_Info{39|1206P12} 243m10 244r13 255r40
+192p7 Const{17|75P9} 219m10 219r10 221m25 221r25 222m26 222r26
+193p7 Instance{17|75P9} 229m25 229r25 235r50 250m45 250r45 256r53
+194r7 Inter_List{17|335R9} 227m13 229m13 229r13 231m34 231r34 248m16 250m33
+. 250r33 252m37 252r37
+195r7 Constr{17|336R9} 234m29 235m27 235r27 236m30 236r30 255m32 256m30 256r30
+. 257m33 257r33
+196p7 Subprg{17|75P9} 231m46 231r46 233r33 252m49 252r49 254r36
+225e11 K{39|218E9} 227r49 234r66
+267U14 Gen_Dummy_Default_Config 267b14 267>40 299l8 299t32 465s16
+267i40 Arch{55|7442I12} 278r29 279r61 283r58 292r32
+269i7 Entity{55|7440I12} 278m7 281r60
+270i7 Lib{55|7457I12} 279m7 280r57
+271r7 Lib_Mark{39|349R12} 280m31 298r30
+271r17 Entity_Mark{39|349R12} 281m31 297r30
+271r30 Sep_Mark{39|349R12} 282m31 296r30
+271r40 Arch_Mark{39|349R12} 283m31 295r30
+273r7 Inter_List{17|335R9} 287m10 289m31 289r31
+275p7 Subprg{17|75P9} 289m43 289r43 291r30
+301U14 Gen_Dummy_Entity_Declaration 301b14 301>44 350l8 350t36 463s16
+301i44 Entity{55|7440I12} 314r61 316r60
+303i7 Lib{55|7457I12} 314m7 315r57
+304r7 Lib_Mark{39|349R12} 315m31 349r30
+304r17 Entity_Mark{39|349R12} 316m31 348r30
+304r30 Arch_Mark{39|349R12} 317m31 347r30
+306p7 Const{17|75P9} 321m10 321r10 323m25 323r25 324m26 324r26
+307p7 Instance{17|75P9} 331m25 331r25 341m39 341r39
+308r7 Inter_List{17|335R9} 329m13 331m13 331r13 332m34 332r34 340m10 341m27
+. 341r27 342m31 342r31
+309p7 Subprg{17|75P9} 332m46 332r46 334r33 342m43 342r43 344r30
+327e11 K{39|218E9} 329r49
+353U14 Gen_Dummy_Package_Declaration 353b14 353>45 417l8 417t37 459s22
+353i45 Unit{55|7326I12} 361r25 362r32
+355i7 Pkg{55|7454I12} 362m7 364r61 366r57 368r25 369r41
+356i7 Lib{55|7457I12} 364m7 365r57
+357r7 Lib_Mark{39|349R12} 365m31 416r30
+357r17 Pkg_Mark{39|349R12} 366m31 415r30
+359i7 Decl{55|7173I12} 369m10 370r16 371r28 379r62 381r44 387r55 399m13 399r32
+383r25 Mark{39|349R12} 387m61 393r48
+384r25 Inter_List{17|335R9} 389m28 390m49 390r49
+385p25 Proc{17|75P9} 390m61 390r61 391r48
+405r10 Inter_List{17|335R9} 409m13 410m34 410r34
+406p10 Proc{17|75P9} 410m46 410r46 411r33
+420U14 Gen_Stubs 420b14 526l8 526t17 686s10
+426U17 Add_Unit_Dependences 426b17 426>39 457s22 478s16 482l11 482t31 495s16
+426i39 Unit{55|7326I12} 435r28 438r25 439r31 443r46 446r40 455r22 459r53
+. 470r43
+428i10 Dep_List{55|7193I12} 470m10 471r34
+429i10 Dep{55|7173I12} 473m13 474r53 476r66
+430i10 Dep_Unit{55|7326I12} 474m13 475r16 477r38 478r38
+431r10 Dep_It{55|7198R12} 471m10 472r26 473r33 480m19 480r19
+432i10 Lib_Unit{55|7173I12} 446m10 447r25 463r46 465r42
+452i19 Pack_Body{55|7173I12} 454m19 456r22 457r44
+485U17 Add_File_Units 485b17 485>33 499l11 499t25 522s13
+485i33 File{55|7324I12} 489r41
+487i10 Unit{55|7326I12} 489m10 490r16 491r35 495r38 497m13 497r32
+501i7 File{55|7324I12} 509m10 510r25 516m10 517r32 518r28 522r29
+502i7 Unit{55|7326I12} 507m10 508r25 509r35 515m10 516r35
+503i7 J{natural} 513m7 514r13 515r38 524m10 524r15
+506i11 I{integer} 507r38
+532i7 Unit{55|7326I12} 552m13 553r48 556r42 569m13 570r43 597m10 598r40 603r66
+. 612r30 620r31 621r27 625r27 634m10 635r40 641r24 652m10 653r40 656r38 694m13
+. 695r43
+533i7 Lib_Unit{55|7173I12} 570m13 572r39 598m10 606r25 608r35 624r61 629r41
+. 635m10 636r23 637r37 653m10 654r25 657r44 660r31 668r44 695m13 697r39
+534i7 Config_Lib{55|7446I12} 540m7 541r29 543r60 675r30
+535i7 Entity{55|7440I12} 541m7 546r37 676r17
+536i7 Arch{55|7442I12} 542m7 676r25
+537p7 Conf_Info{39|1206P12} 675m7 676r31
+538i7 Last_Design_Unit{natural} 679m7 693r19
+551i14 I{integer} 552r41
+568i14 I{integer} 569r41
+596i11 I{integer} 597r38
+633i11 I{integer} 634r38
+651i11 I{integer} 652r38
+693i14 I{integer} 694r41
+X 43 trans-chap2.ads
+17K15*Chap2 42|27w12 387r25 657r19 43|52e16
+30U14*Push_Subprg_Identifier 42|387s31
+37U14*Elab_Package_Body 42|657s25
+X 44 trans-chap6.ads
+17K15*Chap6 42|28w12 292r7 292r38 44|90e16
+61i4*Prg_Err_Dummy_Config{natural} 42|292r44
+65U14*Gen_Program_Error 42|292s13
+X 45 trans-helpers2.ads
+17K15*Helpers2 42|30w12 30r32 45|72e19
+26V13*Create_String{17|75P9} 42|53s17
+38V13*Gen_Alloc{17|70R9} 42|123s10
+X 46 trans-rtis.ads
+17K15*Rtis 42|29w12 47r7 61r10 62r10 86r50 88r17 97r10 139r13 140r36 442r13
+. 587r7 603r13 46|150e15
+95p4*Ghdl_Rti_Access{17|73P9} 42|62r15
+96p4*Ghdl_Rti_Array{17|73P9} 42|61r15
+97p4*Ghdl_Rti_Arr_Acc{17|73P9} 42|86r55
+106p4*Ghdl_Entity_Link_Parent{17|77P9} 42|139r18
+117p4*Ghdl_Component_Link_Acc{17|73P9} 42|140r41
+123V13*New_Rti_Address{17|70R9} 42|88s22 97s15
+136U14*Generate_Library 42|442s18 587s12 603s18
+141U14*Generate_Top 42|47s12
+X 47 trans_decls.ads
+18K9*Trans_Decls 42|32w6 32r23 47|291e16
+285p4*Ghdl_Rti_Add_Package{17|75P9} 42|94r33
+286p4*Ghdl_Rti_Add_Top{17|75P9} 42|81r33
+288p4*Ghdl_Init_Top_Generics{17|75P9} 42|156r33
+290p4*Ghdl_Elaborate{17|75P9} 42|70m43 70r43 113r30
+X 48 translation.ads
+19K9*Translation 42|31w6 31r23 48|115e16
+26U14*Translate 42|612s19 621s16 625s16 641s13
+29U14*Translate_Standard 42|588s7
+39U14*Gen_Filename 42|144s7
+46b4*Flag_Rti{boolean} 42|441r13
+51b4*Flag_Discard_Unused{boolean} 42|580m10
+54b4*Flag_Discard_Unused_Implicit{boolean} 42|581m10
+X 49 types.ads
+27I9*Int32<integer>
+39M9*Uns32<12|74M9>
+70I9*Name_Id<27I9>
+75i4*Null_Identifier{70I9} 42|455r28 608r48 637r49
+121M9*Location_Type<39M9>
+142r4*No_Source_Coord{135R9} 42|566r47 571r50 691r47 696r50
+X 50 vhdl.ads
+17K9*Vhdl 42|17r6 19r6 19r23 20r6 20r28 21r6 21r22 24r6 25r6 25r24 422r11
+. 530r11 553r13 50|19e9
+X 51 vhdl-configuration.ads
+20K14*Configuration 42|17w11 422r16 530r16 51|81e23
+21K12*Design_Units[38|37] 42|439r10 506r16 506r38 507r18 513r12 514r18 515r18
+. 551r19 551r41 552r21 568r19 568r41 569r21 596r16 596r38 597r18 633r16 633r38
+. 634r18 651r16 651r38 652r18 679r27 693r43 694r21
+47b4*Flag_Load_All_Design_Units{boolean} 42|550r10
+56U14*Check_Entity_Declaration_Top 42|546s7
+X 52 vhdl-errors.ads
+21K14*Errors 42|19w11 19r28 52|130e16
+26U14*Error_Kind 42|629s16 668s16
+31V14*"+"{9|175R9} 42|200s52 476s65 572s38 697s38
+63U14*Error_Msg_Elab 42|200s10 476s16
+X 55 vhdl-nodes.ads
+4963n7*Iir_Kind_Entity_Declaration{4857E9} 42|462r18 614r18 659r18
+4964n7*Iir_Kind_Configuration_Declaration{4857E9} 42|607r18 636r35 663r17
+4965n7*Iir_Kind_Context_Declaration{4857E9} 42|626r18 665r17
+4966n7*Iir_Kind_Package_Declaration{4857E9} 42|448r18 616r17 655r18
+4967n7*Iir_Kind_Package_Instantiation_Declaration{4857E9} 42|617r17 664r17
+4971n7*Iir_Kind_Package_Body{4857E9} 42|622r18 662r17
+4972n7*Iir_Kind_Architecture_Body{4857E9} 42|464r18 615r17 661r18
+4994n7*Iir_Kind_Function_Declaration{4857E9} 42|372r21
+4995n7*Iir_Kind_Procedure_Declaration{4857E9} 42|373r20
+7173I12*Iir{56|21I9} 41|22r38 42|73r38 359r14 429r16 432r21 452r31 533r18
+7176i4*Null_Iir{7173I12} 42|199r17 370r24 456r35 475r27 490r24 657r54
+7184V13*Is_Valid{boolean} 42|242s10
+7187V14*"="=7187:69{boolean} 42|199r15 370r21 456r32 475r25 490r21
+7193I12*Iir_List{15|21I9[54|19]} 42|428r21
+7195i4*Null_Iir_List{7193I12} 42|556r50
+7198R12*List_Iterator{15|102R9[54|19]} 42|431r19
+7217V13*List_Iterate=7218:20{15|102R9[54|19]} 42|471s20
+7221V13*Is_Valid=7222:20{boolean} 42|472s16
+7223U14*Next=7224:20 42|480s13
+7225V13*Get_Element=7226:20{56|21I9} 42|473s20
+7230V14*"="=7230:64{boolean} 42|556r48
+7324I12*Iir_Design_File{7173I12} 42|485r40 501r14
+7326I12*Iir_Design_Unit{7173I12} 41|25r34 42|353r52 426r46 430r21 487r17
+. 502r14 528r34 532r14
+7440I12*Iir_Entity_Declaration{7173I12} 42|102r33 179r38 269r16 301r53 535r16
+7442I12*Iir_Architecture_Body{7173I12} 42|103r31 183r14 267r47 536r14
+7446I12*Iir_Configuration_Declaration{7173I12} 42|189r16 534r20
+7454I12*Iir_Package_Declaration{7173I12} 42|355r13
+7457I12*Iir_Library_Declaration{7173I12} 42|186r13 270r13 303r13 356r13
+7582V13*Get_Kind{4857E9} 42|371s18 447s15 606s15 636s13 654s15
+7617V13*Get_First_Design_Unit{7173I12} 42|489s18
+7646V13*Get_Library{7173I12} 42|212s14 279s14 314s14 364s14 443s16 603s36
+7666V13*Get_Design_File{7173I12} 42|144s21 212s27 279s27 314s27 364s27 443s29
+. 509s18 516s18 603s49
+7694V13*Get_Dependence_List{7193I12} 42|470s22
+7702V13*Get_Analysis_Checks_List{7193I12} 42|556s16
+7723V13*Get_Library_Unit{7173I12} 42|243s35 362s14 446s22 540s21 570s25 598s22
+. 635s22 653s22 695s25
+7973V13*Get_Block_Specification{7173I12} 42|543s10
+8024V13*Get_Package{7173I12} 42|624s48
+8038V13*Get_Need_Body{boolean} 42|368s10
+8067V13*Get_Block_Configuration{7173I12} 42|543s35
+8075V13*Get_Chain{7173I12} 42|399s21 497s21
+8269V13*Get_Design_Unit{7173I12} 42|144s38 212s44 279s44 314s44 364s44 624s31
+8286V13*Get_Declaration_Chain{7173I12} 42|369s18
+8366V13*Get_Identifier{49|70I9} 42|213s41 214s44 280s41 281s44 283s42 315s41
+. 316s44 365s41 366s41 608s19 637s21
+8735V13*Get_Foreign_Flag{boolean} 42|381s26
+8767V13*Get_Elab_Flag{boolean} 42|477s23 491s20 517s17 656s23
+8768U14*Set_Elab_Flag 42|438s10 508s10 510s10 518s13 592s7 620s16 624s16
+8849V13*Get_Default_Configuration_Declaration{7173I12} 42|241s17
+X 56 vhdl-nodes_priv.ads
+21I9*Node_Type<49|27I9>
+X 57 vhdl-sem.ads
+19K14*Sem 42|24w11 553r18 57|95e13
+87U14*Sem_Analysis_Checks_List 42|553s22
+X 58 vhdl-sem_lib.ads
+19K14*Sem_Lib 42|25w11 25r29 58|69e17
+31U14*Load_Design_Unit 42|361s7 435s10
+X 59 vhdl-std_package.ads
+20K14*Std_Package 42|20w11 20r33 59|213e21
+36i4*Std_Standard_Unit{55|7326I12} 42|592r22
+37i4*Standard_Package{55|7454I12} 42|97r42
+X 62 vhdl-utils.ads
+20K14*Utils 42|21w11 21r27 62|437e15
+199V13*Is_Second_Subprogram_Specification{boolean} 42|379s26
+218V13*Strip_Denoting_Name{55|7173I12} 42|542s15
+303V13*Get_Entity{55|7173I12} 42|278s17 541s17
+

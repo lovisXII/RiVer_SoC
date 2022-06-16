@@ -1,0 +1,40 @@
+V "GNAT Lib v9"
+A -fPIC
+A -gnatdY
+P ZX
+
+RN
+RR NO_DISPATCH
+RR NO_EXCEPTION_HANDLERS
+RR NO_EXCEPTION_PROPAGATION
+RR NO_FINALIZATION
+RR NO_IO
+RR NO_IMPLICIT_HEAP_ALLOCATIONS
+RR NO_INITIALIZE_SCALARS
+RR NO_SECONDARY_STACK
+RR NO_TASK_HIERARCHY
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RV SPARK_05
+RR MAX_TASKS=0
+
+U main%b		main.adb		85a2dd7a NE OO SU
+W ghdl_main%s		ghdl_main.adb		ghdl_main.ali
+
+U main%s		main.ads		473292ec EE NE OO SU
+W system%s		system.ads		system.ali
+
+D ghdl_main.ads		20220609165545 020be6f6 ghdl_main%s
+D main.ads		20220609165545 01077ee8 main%s
+D main.adb		20220609165545 86ae4564 main%b
+D system.ads		20210601075304 4635ec04 system%s
+D /home/louis/Desktop/Perso/M1_SESI/S2/Projet/RISC-V-project/Shell_script/ghdl-master/build/../src/grt/grt.adc  20220609165545 00000000
+X 1 ghdl_main.ads
+28V10*Ghdl_Main{integer} 30i<c,ghdl_main>19 3|23w6 29s11
+X 2 main.ads
+31V10*Main{integer} 31>16 31>32 32i<c,main>19 3|25b10 30l5 30t9
+31i16 Argc{integer} 3|25b16 29r22
+31m32 Argv{4|67M9} 3|25b32 29r28
+X 4 system.ads
+37K9*System 2|29w6 31r39 3|25r39 4|156e11
+67M9*Address 2|31r46 3|25r46
+

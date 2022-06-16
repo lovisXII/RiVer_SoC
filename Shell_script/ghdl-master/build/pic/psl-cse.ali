@@ -1,0 +1,183 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_IO
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U psl.cse%b		psl-cse.adb		eb80fcbf OO PK IU
+W ada%s			ada.ads			ada.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W psl%s			psl.ads			psl.ali
+W psl.prints%s		psl-prints.adb		psl-prints.ali
+W psl.types%s		psl-types.ads		psl-types.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.img_uns%s	s-imguns.adb		s-imguns.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+W types%s		types.ads		types.ali
+
+U psl.cse%s		psl-cse.ads		01bff728 EE NE OO PK IU
+W psl%s			psl.ads			psl.ali
+W psl.nodes%s		psl-nodes.adb		psl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-ioexce.ads		20210601075304 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-textio.ads		20210601075304 881db35a ada.text_io%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-cstrea.ads		20210601075304 e53d8b8e interfaces.c_streams%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-cse.ads		20220609165545 488c97b6 psl.cse%s
+D psl-cse.adb		20220609165545 296cda0b psl.cse%b
+D psl-nodes.ads		20220609165545 df667e64 psl.nodes%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-prints.ads	20220609165545 fc133be8 psl.prints%s
+D psl-priorities.ads	20220609165545 70fef741 psl.priorities%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-conca4.ads		20210601075304 7e642b20 system.concat_4%s
+D s-crtl.ads		20210601075304 0ebbdb71 system.crtl%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-ficobl.ads		20210601075304 078245e4 system.file_control_block%s
+D s-imgint.ads		20210601075304 02dbe0c2 system.img_int%s
+D s-imguns.ads		20210601075304 9ff43cf7 system.img_uns%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20210601075304 1b7d22d2 system.wch_con%s
+D types.ads		20220609165545 873e82fb types%s
+X 1 ada.ads
+16K9*Ada 20e8 12|17r6 50r11
+X 6 a-textio.ads
+49K13*Text_IO 471e16 12|17w10 50r15
+166U14*New_Line 12|74s19 80s16
+242U14*Put 12|70s16 72s19
+263U14*Put_Line 12|63s10 84s7
+X 8 interfac.ads
+74M9*Unsigned_32
+121V13*Shift_Left{74M9} 12|37s14 38s13 45s14
+X 10 psl.ads
+17K9*PSL 19e8 11|17r6 17r21 19r9 26r5 12|18r6 18r21 19r6 22r14 73r19 221r5
+X 11 psl-cse.ads
+19K13*CSE 10|17k9 11|26l9 26e12 12|22b18 221l9 221t12
+21V13*Build_Bool_And{13|464I12} 21>29 21>32 12|87b13 138l8 138t22
+21i29 L{13|464I12} 12|87b29 94r10 97r17 98r13 100r13 101r17 102r29 109r13
+. 111r32 116r29 122r36 131r22 133r27
+21i32 R{13|464I12} 12|87b32 95r17 96r13 98r36 100r17 102r32 107r20 108r26
+. 110r20 116r32 123r37 132r23
+22V13*Build_Bool_Or{13|464I12} 22>28 22>31 12|140b13 182l8 182t21
+22i28 L{13|464I12} 12|140b28 146r10 147r17 150r13 153r17 154r13 155r17 156r29
+. 160r29 166r36 175r22 177r27
+22i31 R{13|464I12} 12|140b31 148r13 149r17 151r17 152r13 154r17 156r32 160r32
+. 167r37 176r23
+23V13*Build_Bool_Not{13|464I12} 23>29 12|184b13 220l8 220t22
+23i29 N{13|464I12} 12|184b29 190r10 192r13 194r23 195r30 199r29 205r39 213r25
+. 214r27
+25U14*Dump_Hash_Table 25>31 12|48b14 85l8 85t23
+25i31 Level{natural} 12|48b31 66r13 71r19 79r16
+X 12 psl-cse.adb
+23V13 Is_X_And_Not_X{boolean} 23b13 23>29 23>32 29l8 29t22 102s13 111s16
+. 156s13
+23i29 A{13|464I12} 25r25 26r39 28r47
+23i32 B{13|464I12} 26r44 27r28 28r42
+31A9 Hash_Table_Type(13|464I12)<35|39M9> 32r17 56r16
+32a4 Hash_Table{31A9} 58r15 68r18 117r15 117r36 136m7 136r28 161r15 161r36
+. 180m7 180r28 200r15 200r36 217m7 217r28
+34V13 Compute_Hash{35|39M9} 34b13 34>27 34>30 34>40 40l8 40t20 116s15 160s15
+34i27 L{13|464I12} 37r36
+34i30 R{13|464I12} 38r35
+34m40 Op{35|39M9} 39r13
+42V13 Compute_Hash{35|39M9} 42b13 42>27 42>36 46l8 46t20 199s15
+42i27 L{13|464I12} 45r36
+42m36 Op{35|39M9} 45r47
+51i7 Cnt{natural} 57m10 60m13 60r20 64r46 65r27 67m13 76m16 76r23 79r35
+52i7 Total{natural} 55m7 65m10 65r19 84r43
+53i7 N{13|464I12} 58m10 59r16 61m13 61r33 68m13 69r19 70r44 73r41 77m16 77r36
+56m11 I<8|74M9> 58r27 63r49 68r30
+89i7 R1{13|464I12} 108m10 109r17 111r35
+90i7 Res{13|464I12} 130m7 131r17 132r18 133r22 134r22 135r17 136r50 137r14
+91m7 Hash{35|39M9} 116m7 117r27 120r28 135r22 136r19
+92i7 Head{13|464I12} 117m7 118r12 134r27
+92i13 H{13|464I12} 118m7 119r13 120r23 121r31 122r31 123r32 125r20 127m10
+. 127r30
+142i7 Res{13|464I12} 174m7 175r17 176r18 177r22 178r22 179r17 180r50 181r14
+143m7 Hash{35|39M9} 160m7 161r27 164r28 179r22 180r19
+144i7 Head{13|464I12} 161m7 162r12 178r27
+144i13 H{13|464I12} 162m7 163r13 164r23 165r31 166r31 167r32 169r20 171m10
+. 171r30
+185i7 Res{13|464I12} 212m7 213r20 214r22 215r22 216r17 217r50 219r14
+186m7 Hash{35|39M9} 199m7 200r27 203r28 216r22 217r19
+187i7 Head{13|464I12} 200m7 201r12 215r27
+188i7 H{13|464I12} 201m7 202r13 203r23 204r31 205r34 207r20 209m10 209r30
+X 13 psl-nodes.ads
+20K13*Nodes 11|17w10 17r25 13|643e14
+91n7*N_Not_Bool{21E9} 12|25r30 27r33 194r28 204r36 212r27
+92n7*N_And_Bool{21E9} 12|107r25 121r36 130r27
+93n7*N_Or_Bool{21E9} 12|165r36 174r27
+464I12*Node{17|20I12} 11|21r36 21r49 22r35 22r48 23r33 23r46 12|23r36 31r60
+. 34r34 42r30 53r11 87r36 87r49 89r12 90r13 92r17 140r35 140r48 142r13 144r17
+. 184r33 184r46 185r13 187r14 188r11
+466i4*Null_Node{464I12} 12|32r47 59r21 69r24 119r18 163r18 202r18
+467i4*False_Node{464I12} 12|98r17 98r40 99r17 103r17 112r20 150r17 152r17
+. 191r17 192r17
+468i4*True_Node{464I12} 12|94r14 96r17 146r14 148r17 157r17 190r14 193r17
+487V13*Create_Node{464I12} 12|130s14 174s14 212s14
+496U14*Copy_Location 12|133s7 177s7 214s7
+498V13*Get_Kind{21E9} 12|25s15 27s18 107s10 121s21 165s21 194s13 204s21
+546V13*Get_Left{464I12} 12|108s16 122s21 166s21
+547U14*Set_Left 12|131s7 175s7
+550V13*Get_Right{464I12} 12|123s21 167s21
+551U14*Set_Right 12|132s7 176s7
+582V13*Get_Boolean{464I12} 12|26s26 28s29 195s17 205s21
+583U14*Set_Boolean 12|213s7
+594V13*Get_Hash{35|39M9} 12|37s26 38s25 45s26 70s34 120s13 164s13 203s13
+595U14*Set_Hash 12|135s7 179s7 216s7
+599V13*Get_Hash_Link{464I12} 12|61s18 77s21 127s15 171s15 209s15
+600U14*Set_Hash_Link 12|134s7 178s7 215s7
+X 14 psl-nodes_priv.ads
+20I9*PSL_Node<35|27I9>
+X 15 psl-prints.ads
+20K13*Prints 12|19w10 73r23 15|39e15
+37U14*Dump_Expr 12|73s30
+X 17 psl-types.ads
+18K13*Types 12|18w10 18r25 17|29e14
+20I12*PSL_Node{14|20I9}
+21V14*"="=22:29{boolean} 12|26r42 28r45 59r18 69r21 94r12 96r15 98r15 98r38
+. 100r15 109r15 119r15 122r34 123r35 146r12 148r15 150r15 152r15 154r15 163r15
+. 166r34 167r35 190r12 192r15 202r15 205r37
+X 35 types.ads
+20K9*Types 12|20w6 20r17 35|193e10
+27I9*Int32<integer>
+39M9*Uns32<8|74M9> 12|31r35 34r45 34r59 42r41 42r55 63r36 70r21 91r14 143r14
+. 186r14
+

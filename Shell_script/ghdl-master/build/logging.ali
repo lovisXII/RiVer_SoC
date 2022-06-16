@@ -1,0 +1,41 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U logging%b		logging.adb		875006fe NE OO PK
+W simple_io%s		simple_io.adb		simple_io.ali
+
+U logging%s		logging.ads		bfe9ca86 EE NE OO PK
+
+D logging.ads		20220609165545 bfe9ca86 logging%s
+D logging.adb		20220609165545 c8b0fdd9 logging%b
+D simple_io.ads		20220609165545 f00931a1 simple_io%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 logging.ads
+17K9*Logging 21l5 21e12 2|19b14 29l5 29t12
+19U14*Log 19>19 2|20b14 23l8 23t11
+19a19 S{string} 2|20b19 22r26
+20U14*Log_Line 20>24 2|25b14 28l8 28t16
+20a24 S{string} 2|25b24 27r31
+X 3 simple_io.ads
+17K9*Simple_IO 2|17w6 22r7 27r7 3|27e14
+23U14*Put_Err 2|22s17
+25U14*Put_Line_Err 2|27s17
+

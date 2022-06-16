@@ -1,0 +1,563 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_EXCEPTIONS
+RV NO_RECURSION
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV SPARK_05
+
+U elab.vhdl_insts%b	elab-vhdl_insts.adb	71f29bc7 NE OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_decls%s	elab-vhdl_decls.adb	elab-vhdl_decls.ali
+W elab.vhdl_errors%s	elab-vhdl_errors.adb	elab-vhdl_errors.ali
+W elab.vhdl_expr%s	elab-vhdl_expr.adb	elab-vhdl_expr.ali
+W elab.vhdl_files%s	elab-vhdl_files.adb	elab-vhdl_files.ali
+W elab.vhdl_objtypes%s	elab-vhdl_objtypes.adb	elab-vhdl_objtypes.ali
+W elab.vhdl_stmts%s	elab-vhdl_stmts.adb	elab-vhdl_stmts.ali
+W elab.vhdl_types%s	elab-vhdl_types.adb	elab-vhdl_types.ali
+W elab.vhdl_values%s	elab-vhdl_values.adb	elab-vhdl_values.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W libraries%s		libraries.adb		libraries.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+W types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.annotations%s	vhdl-annotations.adb	vhdl-annotations.ali
+W vhdl.configuration%s	vhdl-configuration.adb	vhdl-configuration.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.std_package%s	vhdl-std_package.adb	vhdl-std_package.ali
+W vhdl.utils%s		vhdl-utils.adb		vhdl-utils.ali
+
+U elab.vhdl_insts%s	elab-vhdl_insts.ads	d7eae754 EE NE OO PK
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_context%s	elab-vhdl_context.adb	elab-vhdl_context.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-finali.ads		20210601075304 bf4f806b ada.finalization%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D areapools.ads		20220609165545 cfd4bc11 areapools%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D elab.ads		20220609165545 a9643774 elab%s
+D elab-memtype.ads	20220609165545 a9d633d1 elab.memtype%s
+D elab-vhdl_context.ads	20220609165545 f2560b0b elab.vhdl_context%s
+D elab-vhdl_decls.ads	20220609165545 57ccb4ec elab.vhdl_decls%s
+D elab-vhdl_errors.ads	20220609165545 1e6ddfc1 elab.vhdl_errors%s
+D elab-vhdl_expr.ads	20220609165545 e926ec20 elab.vhdl_expr%s
+D elab-vhdl_files.ads	20220609165545 6e701332 elab.vhdl_files%s
+D elab-vhdl_insts.ads	20220609165545 98e07e1a elab.vhdl_insts%s
+D elab-vhdl_insts.adb	20220609165545 8e16d0e6 elab.vhdl_insts%b
+D elab-vhdl_objtypes.ads  20220609165545 21a4bc64 elab.vhdl_objtypes%s
+D elab-vhdl_stmts.ads	20220609165545 e658b9ab elab.vhdl_stmts%s
+D elab-vhdl_types.ads	20220609165545 1e7bd8a2 elab.vhdl_types%s
+D elab-vhdl_values.ads	20220609165545 8f698c4c elab.vhdl_values%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-c.ads		20220609165545 39ab994c grt.c%s
+D grt-files_operations.ads  20220609165545 a286f262 grt.files_operations%s
+D grt-stdio.ads		20220609165545 9e36ac41 grt.stdio%s
+D grt-types.ads		20220609165545 06085c72 grt.types%s
+D grt-vhdl_types.ads	20220609165545 9d784033 grt.vhdl_types%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D libraries.ads		20220609165545 ef8d51d1 libraries%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-finmas.ads		20210601075304 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210601075304 4ff27390 system.finalization_root%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-pooglo.ads		20210601075304 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20210601075304 b16154c2 system.storage_pools%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-annotations.ads	20220609165545 5b61b848 vhdl.annotations%s
+D vhdl-configuration.ads  20220609165545 41cd3258 vhdl.configuration%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-std_package.ads	20220609165545 c36d499a vhdl.std_package%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+D vhdl-utils.ads	20220609165545 2ee150f7 vhdl.utils%s
+X 9 dyn_tables.ads
+34A9*Table_Type(62|21I9)<integer>
+37A12*Big_Table_Type{34A9[53|38[57|21]]}<integer>
+43P9*Table_Thin_Ptr(37A12[53|38[57|21]])
+X 10 elab.ads
+19K9*Elab 21e9 17|21r6 21r29 23r9 46r5 18|28r6 28r30 29r6 29r28 30r6 30r27
+. 31r6 31r27 32r6 32r27 33r6 34r6 34r28 35r6 35r26 37r14 570r7 782r7 831r5
+X 12 elab-vhdl_context.ads
+27K14*Vhdl_Context 255e22 17|21w11 21r34
+32P9*Synth_Instance_Acc(31R9) 17|24r50 27r21 30r18 32r18 40r28 41r29 18|38r45
+. 40r18 42r18 44r56 56r52 57r52 106r30 149r21 151r18 167r21 169r18 182r21
+. 185r18 215r47 325r52 326r52 355r54 356r54 379r18 381r19 444r18 456r18 467r36
+. 483r36 485r27 496r40 498r39 508r39 516r36 546r18 557r45 588r18 594r18 621r18
+. 628r19 633r18 724r18 755r50 760r18
+34p4*Root_Instance{32P9} 18|385r26 601r26 602r26 707r26 708r26 778r10 784r26
+. 785r26
+50U14*Make_Root_Instance 18|775s7
+56V13*Make_Elab_Instance{32P9} 18|387s20 597s19 637s20 688s22 711s19 777s19
+57i48 Config{61|7174I12} 18|387r56
+66V13*Get_Generate_Sub_Instance{32P9} 18|488s31
+71V13*Is_Error{boolean} 18|614s10
+74U14*Set_Error 18|92s19 97s19
+80V13*Get_Source_Scope{61|7174I12} 18|472s32 559s31
+87V13*Get_Instance_Config{61|7174I12} 18|560s33
+94U14*Add_Extra_Instance 18|388s7
+101U14*Create_Object 18|100s16 798s13
+104U14*Create_Signal 18|372s13 661s16 816s13
+114U14*Create_Sub_Instance 18|599s7 638s7
+119U14*Create_Component_Instance 18|671s10 689s10 712s7
+127V13*Create_Package_Instance{32P9} 18|158s19 187s19
+131U14*Create_Package_Interface 18|109s19
+135U14*Create_Subtype_Object 18|48s7 51s7 128s22
+158V13*Get_Package_Object{32P9} 18|108s31 176s19
+162V13*Get_Subtype_Object{19|97P9} 18|50s10 53s10 126s36 482s18
+165V13*Get_Sub_Instance{32P9} 18|468s18 484s18 497s21 509s21 517s18
+167V13*Get_Component_Instance{32P9} 18|499s21
+173U14*Set_Uninstantiated_Scope 18|205s13
+X 13 elab-vhdl_decls.ads
+23K14*Vhdl_Decls 43e20 18|30w11 30r32
+27U14*Elab_Declaration 18|419s16
+32U14*Elab_Declarations 18|160s7 178s7 193s7 197s10 208s16 572s7 578s7
+X 14 elab-vhdl_errors.ads
+22K14*Vhdl_Errors 39e21 18|34w11 34r33
+23U14*Error_Msg_Elab 18|94s19
+X 15 elab-vhdl_expr.ads
+25K14*Vhdl_Expr 92e19 18|35w11 35r31
+38V13*Exec_Type_Of_Object{19|97P9} 18|340s23 345s23
+62V13*Exec_Expression_With_Type{22|106R9} 18|79s29 83s29 795s20
+72V13*Exec_Subtype_Conversion{22|106R9} 18|89s23
+X 16 elab-vhdl_files.ads
+24K14*Vhdl_Files 53e20 18|33w11 570r12 782r12
+30U14*Set_Design_Unit 18|570s23 782s23
+X 17 elab-vhdl_insts.ads
+23K14*Vhdl_Insts 10|19k9 17|46l10 46e20 18|37b19 831l10 831t20
+24V13*Elab_Top_Unit{12|32P9} 24>28 18|755b13 829l8 829t21
+24i28 Config{61|7174I12} 18|755b28 763r60 778r56
+26U14*Elab_Package_Instantiation 27>7 27>41 18|181b14 213l8 213t34 254s19
+27p7 Parent_Inst{12|32P9} 18|182b7 187r44 190r20
+27i41 Pkg{61|7174I12} 18|182b41 184r57 187r57 191r29 191r65 193r59 202r72
+29U14*Elab_Component_Instantiation_Statement 30>7 30>38 18|620b14 721l8 721t46
+30p7 Syn_Inst{12|32P9} 18|621b7 637r40 638r28 640r45 659r30
+30i38 Stmt{61|7174I12} 18|621b38 624r50 625r62 638r38 642r64 652r46 667r36
+31U14*Elab_Design_Instantiation_Statement 32>7 32>38 18|723b14 753l8 753t43
+32p7 Syn_Inst{12|32P9} 18|724b7 752r10
+32i38 Stmt{61|7174I12} 18|724b38 726r55 752r20
+37U14*Apply_Block_Configuration 37>41 37>53 18|269b14 323l8 323t33 390s7
+. 568s7
+37i41 Cfg{61|7174I12} 18|269b41 275r50 279r45
+37i53 Blk{61|7174I12} 18|269b53 275r58
+39P9*Elab_Foreign_Instance_Acc 40>17 41>17 42>17 43>17 45r28
+40p17 Syn_Inst{12|32P9}
+41p17 Comp_Inst{12|32P9}
+42i17 Bind{61|7174I12}
+43i17 Module{61|7174I12}
+45p4*Elab_Foreign_Instance{39P9} 18|691r10
+X 18 elab-vhdl_insts.adb
+38U14 Elab_Instance_Body 38>34 503s22 511s19 557b14 585l8 585t26 821s7
+38p34 Syn_Inst{12|32P9} 557b34 559r49 560r54 572r26 574r10 576r32 578r26
+. 580r10 582r36 584r32
+39U14 Elab_Recurse_Instantiations 40>7 40>38 471s19 490s19 519s16 545b14
+. 555l8 555t35 582s7
+40p7 Syn_Inst{12|32P9} 546b7 552r49
+40i38 Head{61|7174I12} 546b38 550r47
+41U14 Elab_Recurse_Instantiations_Statement 42>7 42>38 437s13 455b14 532l8
+. 532t45 552s10
+42p7 Syn_Inst{12|32P9} 456b7 468r36 482r38 484r36 497r39 509r39 517r36
+42i38 Stmt{61|7174I12} 456b38 458r22 468r46 478r47 480r47 484r46 494r44 497r49
+. 509r49 517r46 519r55 530r66
+44U14 Elab_Convertible_Declarations 44b14 44>45 54l8 54t37 162s10
+44p45 Syn_Inst{12|32P9} 49r10 50r30 52r10 53r30
+56U14 Elab_Generics_Association 56b14 56>41 57>41 58>41 59>41 146l8 146t33
+. 189s7 605s7 640s7 714s7
+56p41 Sub_Inst{12|32P9} 74r53 80r25 92r30 97r30 100r31 108r51 109r45 129r25
+57p41 Syn_Inst{12|32P9} 84r25 124r62 126r56
+58i41 Inter_Chain{61|7174I12} 69r22
+59i41 Assoc_Chain{61|7174I12} 68r16
+61i7 Inter{61|7174I12} 71m10 72r58 74r63 78r51 95r69 100r41 109r55 113r41
+. 129r45
+62p7 Inter_Type{19|97P9} 74m16 80r43 84r43 89r53
+63i7 Assoc{61|7174I12} 68m7 70r23 71r46 76r31 82r44 89r71 95r23 105r54 119r41
+. 144m38 144r38
+64i7 Assoc_Inter{61|7174I12} 69m7 71r53 144m45 144r45
+65i7 Actual{61|7174I12} 78m22 80r35 82m22 84r35
+66r7 Val{22|106R9} 79m22 83m22 89m16 89r48 91r19 93r37 96m19 100r48
+104i19 Actual{61|7173I12} 108r61
+106p19 Pkg_Inst{12|32P9} 108m19 109r62
+116i22 Act{61|7174I12} 119m22 120r35 121m25 121r42 123r35 124r72 126r66
+117p22 Act_Typ{19|97P9} 124m25 126m25 129r53
+148U14 Elab_Package_Declaration 148b14 149>7 149>41 164l8 164t32 243s22
+149p7 Parent_Inst{12|32P9} 158r44
+149i41 Pkg{61|7174I12} 153r37 158r57 160r59 161r10
+151p7 Syn_Inst{12|32P9} 158m7 160r26 162r41
+166U14 Elab_Package_Body 166b14 167>7 167>41 167>53 179l8 179t25 250s25
+167p7 Parent_Inst{12|32P9} 176r39
+167i41 Pkg{61|7174I12} 171r37 176r52
+167i53 Bod{61|7174I12} 178r59
+169p7 Pkg_Inst{12|32P9} 176m7 178r26
+184i7 Bod{61|7174I12} 195r10 198r46
+185p7 Sub_Inst{12|32P9} 187m7 190r10 193r26 198r13 205r39 209r19
+202i13 Uninst{61|7174I12} 203r61 205r49
+203i13 Uninst_Bod{61|7174I12} 207r16 209r52
+215U14 Elab_Dependencies 215b14 215>33 215>67 229s13 249s25 267l8 267t25
+. 385s7 601s7 602s7 707s7 708s7 784s7 785s7
+215p33 Parent_Inst{12|32P9} 229r32 243r48 249r44 250r44 254r47
+215i67 Unit{61|7174I12} 217r61
+217i7 Dep_List{61|7194I12} 222r31
+218r7 Dep_It{61|7198R12} 222m7 223r23 224r30 265m16 265r16
+219i7 Dep{61|7174I12} 224m10 225r23 226r40 228r28 229r45 230r43
+220i7 Dep_Unit{61|7174I12} 230m13 231r52 240r63 243r61 250r57 254r60
+240i22 Bod{61|7174I12} 247r25 248r54 250r67
+241i22 Bod_Unit{61|7174I12} 248m25 249r57
+271i7 Item{61|7174I12} 279m7 280r13 281r25 285r45 297r57 303r47 309r28 310r68
+. 312r65 319r69 321m10 321r29
+284i19 List{61|7232I12} 289r55 290r45
+286i19 El{61|7174I12} 290m22 291r48
+287i19 Inst{61|7174I12} 291m22 293r35 296r54 297r51
+289i23 I{integer} 290r51
+302i19 Sub_Blk{61|7174I12} 305r34 309r68 310r59 312r56 315r62
+325V13 Elab_Port_Association_Type{19|97P9} 325b13 325>41 326>41 327>41 328>41
+. 353l8 353t34 370s26 658s29
+325p41 Sub_Inst{12|32P9} 351r40
+326p41 Syn_Inst{12|32P9} 340r44 343r19 346r19
+327i41 Inter{61|7174I12} 330r51 346r48 351r50
+328i41 Assoc{61|7174I12} 335r13 338r25 340r66 343r46
+355U14 Elab_Ports_Association_Type 355b14 355>43 356>43 357>43 358>43 376l8
+. 376t35 610s7 718s7
+355p43 Sub_Inst{12|32P9} 371r16 372r28
+356p43 Syn_Inst{12|32P9} 371r26
+357i43 Inter_Chain{61|7174I12} 366r22
+358i43 Assoc_Chain{61|7174I12} 365r16
+360i7 Inter{61|7174I12} 368m10 371r36 372r38
+361i7 Assoc{61|7174I12} 365m7 367r23 368r46 369r41 371r43 374m38 374r38
+362i7 Assoc_Inter{61|7174I12} 366m7 368r53 374m45 374r45
+363p7 Inter_Typ{19|97P9} 370m13 372r45
+378U14 Elab_Verification_Unit 378b14 379>7 379>38 441l8 441t30 450s10
+379p7 Syn_Inst{12|32P9} 387r40 388r27
+379i38 Unit{61|7174I12} 385r58 387r50 391r48 391r55 394r37 434r37
+381p7 Unit_Inst{12|32P9} 387m7 388r37 419r34 426r43 437r52
+382i7 Item{61|7174I12} 394m7 395r13 396r25 419r45 426r54 428r54 430m10 430r29
+. 434m7 435r13 436r23 437r63 439m10 439r29
+383i7 Last_Type{61|7174I12} 393m7 419m58 419r58
+443U14 Elab_Verification_Units 443b14 444>7 444>38 453l8 453t31 576s7 584s7
+444p7 Syn_Inst{12|32P9} 450r34
+444i38 Parent{61|7174I12} 448r38
+446i7 Unit{61|7174I12} 448m7 449r13 450r44 451m10 451r41
+467p16 Sub_Inst{12|32P9} 470r19 472r22 472r50
+477i16 Iterator{61|7174I12} 482r58
+479i16 Bod{61|7174I12} 490r58
+481p16 It_Rng{19|97P9} 487r48
+483p16 Gen_Inst{12|32P9} 489r22
+485p16 Sub_Inst{12|32P9} 488m19 490r48
+487m20 I<31|74M9> 489r42
+496p19 Comp_Inst{12|32P9} 499r45
+498p19 Sub_Inst{12|32P9} 501r22 503r42
+508p19 Sub_Inst{12|32P9} 511r39
+516p16 Blk_Inst{12|32P9} 519r45
+548i7 Stmt{61|7174I12} 550m7 551r13 552r59 553m10 553r29
+559i7 Arch{61|7174I12} 563r20 567r29 568r42 570r40 578r59 580r52 582r46 584r42
+560i7 Config{61|7174I12} 568r34
+561i7 Entity{61|7174I12} 567m7 572r59 574r52 576r42
+587U14 Elab_Direct_Instantiation_Statement 587b14 588>7 589>7 590>7 591>7
+. 592>7 618l8 618t43 751s7
+588p7 Syn_Inst{12|32P9} 597r39 599r28 605r44 610r46
+589i7 Stmt{61|7174I12} 599r38 607r64 612r63
+590i7 Entity{61|7174I12} 601r58 606r53 611r52
+591i7 Arch{61|7174I12} 597r49 602r58
+592i7 Config{61|7174I12} 597r55
+594p7 Sub_Inst{12|32P9} 597m7 599r44 605r34 610r36 614r20
+623i7 Component{61|7174I12} 637r50 641r53 653r41
+625i7 Config{61|7174I12} 626r55 637r61 700r46
+626i7 Bind{61|7174I12} 669r10 675r36 691r54 716r64 720r63
+627i7 Aspect{61|7173I12} 675m7 678r22 680r32 681r39 684r61
+628p7 Comp_Inst{12|32P9} 637m7 638r44 640r34 659r19 661r31 671r37 688r42
+. 689r37 691r43 711r39 712r34 714r44 718r46
+630i7 Ent{61|7174I12} 680m13 687r20 688r53 691r60 696r53 707r58 715r53 719r52
+631i7 Arch{61|7174I12} 681m13 695r10 696m10 698m10 698r36 703r52 708r58 711r50
+632i7 Sub_Config{61|7174I12} 700m7 701r10 702m10 704m10 704r49 711r56
+633p7 Sub_Inst{12|32P9} 688m10 689r48 691r33 711m7 712r45 714r34 718r36
+647i10 Assoc{61|7174I12} 652m10 654r26 655r44 656r52 659r47 663m41 663r41
+648i10 Assoc_Inter{61|7174I12} 653m10 656r59 661r42 663m48 663r48
+649i10 Inter{61|7174I12} 656m16 659r40
+650p10 Inter_Typ{19|97P9} 658m16 661r55
+726i7 Aspect{61|7173I12} 732r47 734r39 736r71 743r42
+727i7 Arch{61|7174I12} 734m13 735r16 736m16 738m16 738r45 741r55 744m13 749r26
+. 752r31
+728i7 Ent{61|7174I12} 749m7 752r26
+729i7 Config{61|7174I12} 740m13 743m13 744r71 748m7 748r42 752r37
+757i7 Arch{61|7174I12} 762m7 764r29 778r25 782r40 785r58
+758i7 Entity{61|7174I12} 764m7 784r58 788r35 806r32
+759i7 Inter{61|7174I12} 788m7 789r23 794r59 796r45 798r38 800m10 800r30 806m7
+. 807r23 808r54 815r59 816r38 818m10 818r30
+760p7 Top_Inst{12|32P9} 777m7 794r49 796r16 798r28 815r49 816r28 821r27 828r14
+770i11 I{integer} 771r57
+791r13 Val{22|106R9} 795m13 797r39 798r45
+792p13 Inter_Typ{19|97P9} 794m13 796r53
+813p13 Inter_Typ{19|97P9} 815m13 816r45
+824i11 I{integer} 825r45
+X 19 elab-vhdl_objtypes.ads
+28K14*Vhdl_Objtypes 18|28w11 28r35 19|316e23
+97P9*Type_Acc(96R9) 18|62r20 117r32 328r62 363r19 481r34 650r22 792r25 813r25
+153r13*Drange{29R9} 18|487r55
+240V13*Get_Range_Length{54|39M9} 18|487s30
+X 20 elab-vhdl_stmts.ads
+23K14*Vhdl_Stmts 18|32w11 32r32 20|29e20
+24U14*Elab_Concurrent_Statement 18|426s16
+27U14*Elab_Concurrent_Statements 18|573s7 579s7
+X 21 elab-vhdl_types.ads
+24K14*Vhdl_Types 18|31w11 31r32 21|71e20
+56V13*Synth_Subtype_Indication{19|97P9} 18|124s36 342s23
+69V13*Elab_Declaration_Type{19|97P9} 18|74s30 351s17 794s26 815s26
+X 22 elab-vhdl_values.ads
+31K14*Vhdl_Values 18|29w11 29r33 22|200e21
+66P9*Value_Acc(64R9)
+106R9*Valtyp 18|66r13 791r19 22|109e14
+108p7*Val{66P9} 18|93r41 797r43
+111r4*No_Valtyp{106R9} 18|91r25 96r26
+120V13*Is_Static{boolean} 18|93s26 797s28
+X 24 flists.ads
+21I9*Flist_Type<54|27I9>
+X 31 interfac.ads
+74M9*Unsigned_32
+X 32 libraries.ads
+19K9*Libraries 18|20w6 696r18 736r24 32|181e14
+142V13*Get_Latest_Architecture{61|7442I12} 18|696s28 736s34
+X 33 lists.ads
+21I9*List_Type<54|27I9>
+102R9*Iterator
+X 53 tables.ads
+48p4*Table{9|43P9[38[57|21]]} 18|771r50[57|21] 825r38[57|21]
+54i4*First{integer} 18|770r29[57|21] 824r29[57|21]
+55V13*Last{integer} 18|770s51[57|21] 824s51[57|21]
+X 54 types.ads
+20K9*Types 18|19w6 19r17 54|193e10
+27I9*Int32<integer>
+39M9*Uns32<31|74M9>
+121M9*Location_Type<39M9>
+169X4*Internal_Error 18|86r28 138r22 141r22 262r25 336r19 348r22 810r19
+X 55 vhdl.ads
+17K9*Vhdl 17|19r6 19r22 18|22r6 22r22 23r6 24r6 25r6 25r30 26r6 26r23 46r11
+. 161r16 314r25 319r16 683r13 767r7 768r7 769r7 769r34 771r10 55|19e9
+X 56 vhdl-annotations.ads
+20K14*Annotations 18|24w11 767m12 768r12 769r12 771r15 56|163e21
+22b4*Flag_Synthesis{boolean} 18|767m24
+139U14*Initialize_Annotate 18|768s24
+143U14*Annotate 18|769s24 771s27
+X 57 vhdl-configuration.ads
+20K14*Configuration 18|25w11 25r35 57|81e23
+21K12*Design_Units[53|37] 18|770r16 770r38 771r37 824r16 824r38 825r25
+X 58 vhdl-errors.ads
+21K14*Errors 18|26w11 26r28 314r30 319r21 683r18 58|130e16
+26U14*Error_Kind 18|314s37 319s28 428s16 530s13 683s25
+31V14*"+"{23|175R9} 18|95s68
+35V14*"+"{54|121M9} 18|95s22
+X 61 vhdl-nodes.ads
+24K14*Nodes 17|19w11 19r27 61|9512e15
+4864n7*Iir_Kind_Design_Unit{4857E9} 18|225r30
+4870n7*Iir_Kind_PSL_Inherit_Spec{4857E9} 18|399r18
+4888n7*Iir_Kind_Association_Element_By_Expression{4857E9} 18|81r24
+4890n7*Iir_Kind_Association_Element_By_Individual{4857E9} 18|341r18
+4891n7*Iir_Kind_Association_Element_Open{4857E9} 18|77r24 344r18
+4901n7*Iir_Kind_Entity_Aspect_Entity{4857E9} 18|679r15 733r15
+4902n7*Iir_Kind_Entity_Aspect_Configuration{4857E9} 18|742r15
+4903n7*Iir_Kind_Entity_Aspect_Open{4857E9} 18|745r15
+4905n7*Iir_Kind_Block_Configuration{4857E9} 18|300r18
+4907n7*Iir_Kind_Component_Configuration{4857E9} 18|282r18
+4920n7*Iir_Kind_Attribute_Specification{4857E9} 18|413r18
+4962n7*Iir_Kind_Foreign_Module{4857E9} 18|261r21 563r28 687r27
+4963n7*Iir_Kind_Entity_Declaration{4857E9} 18|113r51 232r21
+4964n7*Iir_Kind_Configuration_Declaration{4857E9} 18|234r21
+4965n7*Iir_Kind_Context_Declaration{4857E9} 18|236r21
+4966n7*Iir_Kind_Package_Declaration{4857E9} 18|238r21
+4967n7*Iir_Kind_Package_Instantiation_Declaration{4857E9} 18|253r21
+4971n7*Iir_Kind_Package_Body{4857E9} 18|255r21
+4972n7*Iir_Kind_Architecture_Body{4857E9} 18|257r21
+4974n7*Iir_Kind_Type_Declaration{4857E9} 18|417r18
+4975n7*Iir_Kind_Anonymous_Type_Declaration{4857E9} 18|418r18
+4976n7*Iir_Kind_Subtype_Declaration{4857E9} 18|416r18
+4983n7*Iir_Kind_Attribute_Declaration{4857E9} 18|412r18
+4988n7*Iir_Kind_Non_Object_Alias_Declaration{4857E9} 18|415r18
+4990n7*Iir_Kind_Psl_Declaration{4857E9} 18|398r18 522r14
+4994n7*Iir_Kind_Function_Declaration{4857E9} 18|408r18
+4995n7*Iir_Kind_Procedure_Declaration{4857E9} 18|409r18
+4996n7*Iir_Kind_Function_Body{4857E9} 18|410r18
+4997n7*Iir_Kind_Procedure_Body{4857E9} 18|411r18
+5003n7*Iir_Kind_Object_Alias_Declaration{4857E9} 18|414r18
+5011n7*Iir_Kind_Signal_Declaration{4857E9} 18|406r18
+5013n7*Iir_Kind_Constant_Declaration{4857E9} 18|407r18
+5015n7*Iir_Kind_Interface_Constant_Declaration{4857E9} 18|73r18
+5016n7*Iir_Kind_Interface_Variable_Declaration{4857E9} 18|133r18
+5017n7*Iir_Kind_Interface_Signal_Declaration{4857E9} 18|135r18
+5018n7*Iir_Kind_Interface_File_Declaration{4857E9} 18|134r18
+5019n7*Iir_Kind_Interface_Quantity_Declaration{4857E9} 18|136r18
+5020n7*Iir_Kind_Interface_Terminal_Declaration{4857E9} 18|137r18
+5021n7*Iir_Kind_Interface_Type_Declaration{4857E9} 18|112r18
+5022n7*Iir_Kind_Interface_Package_Declaration{4857E9} 18|102r18
+5097n7*Iir_Kind_Concurrent_Simple_Signal_Assignment{4857E9} 18|459r15
+5098n7*Iir_Kind_Concurrent_Conditional_Signal_Assignment{4857E9} 18|460r14
+5099n7*Iir_Kind_Concurrent_Selected_Signal_Assignment{4857E9} 18|461r14
+5100n7*Iir_Kind_Concurrent_Assertion_Statement{4857E9} 18|527r14
+5101n7*Iir_Kind_Concurrent_Procedure_Call_Statement{4857E9} 18|424r18 462r14
+5103n7*Iir_Kind_Psl_Assert_Directive{4857E9} 18|401r18 526r14
+5104n7*Iir_Kind_Psl_Assume_Directive{4857E9} 18|402r18 524r14
+5105n7*Iir_Kind_Psl_Cover_Directive{4857E9} 18|403r18 525r14
+5106n7*Iir_Kind_Psl_Restrict_Directive{4857E9} 18|404r18 523r14
+5107n7*Iir_Kind_Block_Statement{4857E9} 18|311r27 423r18 514r15
+5108n7*Iir_Kind_If_Generate_Statement{4857E9} 18|465r15
+5110n7*Iir_Kind_For_Generate_Statement{4857E9} 18|475r15
+5111n7*Iir_Kind_Component_Instantiation_Statement{4857E9} 18|294r29 425r18
+. 493r15
+5113n7*Iir_Kind_Psl_Default_Clock{4857E9} 18|397r18 521r15
+5115n7*Iir_Kind_Generate_Statement_Body{4857E9} 18|306r27
+6518E12*Iir_Kinds_Library_Unit{4857E9} 18|231r18
+6549E12*Iir_Kinds_Verification_Unit{4857E9} 18|259r21
+6592E12*Iir_Kinds_Subtype_Definition{4857E9} 18|123r43
+6755E12*Iir_Kinds_Interface_Subprogram_Declaration{4857E9} 18|140r18
+6759E12*Iir_Kinds_Interface_Declaration{4857E9} 18|72r15
+6830E12*Iir_Kinds_Association_Element_By_Actual{4857E9} 18|339r18
+6870E12*Iir_Kinds_Entity_Aspect{4857E9} 18|732r12
+6875E12*Iir_Kinds_Denoting_Name{4857E9} 18|120r43
+7022E12*Iir_Kinds_Concurrent_Statement{4857E9} 18|436r32
+7063E12*Iir_Kinds_Process_Statement{4857E9} 18|421r18 463r14
+7067E12*Iir_Kinds_Concurrent_Signal_Assignment{4857E9} 18|420r18
+7086E12*Iir_Kinds_Generate_Statement{4857E9} 18|422r18
+7173I12*Iir{62|21I9} 18|104r37 627r16 726r25
+7174I12*Node{62|21I9} 17|24r37 27r47 30r45 32r45 37r47 37r59 42r24 43r26
+. 18|40r45 42r45 58r55 59r55 61r15 63r15 64r21 65r16 116r28 149r47 167r47
+. 167r59 182r47 184r22 202r31 203r35 215r74 219r13 220r18 240r37 241r33 269r47
+. 269r59 271r14 286r24 287r26 302r38 327r49 328r49 357r57 358r57 360r15 361r15
+. 362r21 379r45 382r14 383r19 444r47 446r14 456r45 477r36 479r31 546r45 548r14
+. 559r23 560r25 561r16 589r14 590r16 591r14 592r16 621r45 623r28 625r25 626r23
+. 630r13 631r14 632r20 647r18 648r24 649r18 724r45 727r14 728r13 729r16 755r37
+. 757r14 758r16 759r15
+7176i4*Null_Iir{7173I12} 18|669r17
+7177i4*Null_Node{7174I12} 18|195r17 207r30 247r32 280r21 296r62 335r21 387r66
+. 393r20 395r21 435r21 449r21 551r21 667r42 688r58 695r17 701r23 735r23
+7184V13*Is_Valid{boolean} 18|70s13 367s13 654s16 789s13 807s13
+7187V14*"="=7187:69{boolean} 18|161r14 195r14 207r27 247r29 275r56 280r18
+. 296r60 335r19 395r18 435r18 449r18 551r18 669r15 695r15 701r21 735r21
+7193I12*Iir_List{33|21I9[60|19]}
+7194I12*Node_List{33|21I9[60|19]} 18|217r27
+7198R12*List_Iterator{33|102R9[60|19]} 18|218r16
+7217V13*List_Iterate=7218:20{33|102R9[60|19]} 18|222s17
+7221V13*Is_Valid=7222:20{boolean} 18|223s13
+7223U14*Next=7224:20 18|265s10
+7225V13*Get_Element=7226:20{62|21I9} 18|224s17
+7232I12*Iir_Flist{24|21I9[59|19]} 18|284r35
+7241i4*Flist_First{natural} 18|289r28
+7242V13*Flist_Last=7243:21{integer} 18|289s43
+7246V13*Get_Nth_Element=7247:21{62|21I9} 18|290s28
+7326I12*Iir_Design_Unit{7173I12}
+7357I12*Iir_Integer_Type_Definition{7173I12}
+7361I12*Iir_Floating_Type_Definition{7173I12}
+7442I12*Iir_Architecture_Body{7173I12}
+7454I12*Iir_Package_Declaration{7173I12}
+7582V13*Get_Kind{4857E9} 18|72s48 76s21 113s19 120s25 123s25 225s13 231s42
+. 281s15 293s25 305s24 338s15 396s15 436s13 458s12 563s10 678s12 687s10 732s37
+7694V13*Get_Dependence_List{7193I12} 18|217s40
+7723V13*Get_Library_Unit{7173I12} 18|230s25 702s24 740s23
+7880V13*Get_Actual{7173I12} 18|82s32 105s42 119s29 340s54
+7894V13*Get_Whole_Association_Flag{boolean} 18|369s13 655s16
+7969V13*Get_Architecture{7173I12} 18|681s21 734s21
+7973V13*Get_Block_Specification{7173I12} 18|275s25 303s22 744s21 763s10
+7985U14*Set_Prev_Block_Configuration 18|308s25
+7988V13*Get_Configuration_Item_Chain{7173I12} 18|279s15
+8029V13*Get_Package_Body{7173I12} 18|203s43 240s45
+8034V13*Get_Instance_Package_Body{7173I12} 18|184s30
+8054V13*Get_Vunit_Item_Chain{7173I12} 18|394s15 434s15
+8059V13*Get_Bound_Vunit_Chain{7173I12} 18|448s15 451s18
+8063V13*Get_Verification_Block_Configuration{7173I12} 18|391s10
+8067V13*Get_Block_Configuration{7173I12} 18|700s21 704s24 744s46 748s17 763s35
+. 778s31
+8071V13*Get_Concurrent_Statement_Chain{7173I12} 18|550s15 574s20 580s20
+8075V13*Get_Chain{7173I12} 18|321s18 430s18 439s18 553s18 800s19 818s19
+8080V13*Get_Port_Chain{7173I12} 18|611s36 653s25 719s36 806s16
+8084V13*Get_Generic_Chain{7173I12} 18|191s10 606s34 641s34 715s34 788s16
+8088V13*Get_Type{7173I12} 18|121s32 129s35 330s41 482s48 808s44
+8243V13*Get_Default_Value{7173I12} 18|78s32 346s29 796s26
+8269V13*Get_Design_Unit{7173I12} 18|248s37 385s41 601s41 602s41 707s41 708s41
+. 784s41 785s41
+8286V13*Get_Declaration_Chain{7173I12} 18|160s36 178s36 193s36 198s23 209s29
+. 572s36 578s36
+8767V13*Get_Elab_Flag{boolean} 18|226s25
+8768U14*Set_Elab_Flag 18|228s13 825s10
+8813V13*Get_Instantiated_Unit{7173I12} 18|624s27 726s32
+8818V13*Get_Generic_Map_Aspect_Chain{7173I12} 18|191s35 607s34 642s34 716s34
+8823V13*Get_Port_Map_Aspect_Chain{7173I12} 18|612s36 652s19 720s36
+8833V13*Get_Component_Configuration{7173I12} 18|296s25 625s33
+8834U14*Set_Component_Configuration 18|297s22 667s7
+8849V13*Get_Default_Configuration_Declaration{7173I12} 18|703s13 741s16
+8900U14*Set_Block_Block_Configuration 18|312s25
+8915V13*Get_Uninstantiated_Package_Decl{7173I12} 18|202s39
+8928V13*Get_Generate_Block_Configuration{7173I12} 18|309s34
+8929U14*Set_Generate_Block_Configuration 18|310s25
+8932V13*Get_Generate_Statement_Body{7173I12} 18|480s18
+8955V13*Get_Parameter_Specification{7173I12} 18|478s18
+8961V13*Get_Parent{7173I12} 18|113s29
+8986V13*Get_Instantiation_List{7232I12} 18|285s21
+8990V13*Get_Entity_Aspect{7173I12} 18|675s17
+8998V13*Get_Binding_Indication{7173I12} 18|626s31
+9003V13*Get_Named_Entity{7173I12} 18|291s30 624s9 698s18 762s15
+9135V13*Get_Actual_Type{7173I12} 18|343s29
+X 62 vhdl-nodes_priv.ads
+21I9*Node_Type<54|27I9>
+X 63 vhdl-std_package.ads
+20K14*Std_Package 18|23w11 46r16 161r21 769r39 63|213e21
+36i4*Std_Standard_Unit{61|7326I12} 18|769r51
+37i4*Standard_Package{61|7454I12} 18|161r33
+65i4*Universal_Integer_Type_Definition{61|7357I12} 18|50r40
+72i4*Universal_Real_Type_Definition{61|7361I12} 18|53r40
+164i4*Convertible_Integer_Type_Definition{61|7357I12} 18|49r20
+165i4*Convertible_Real_Type_Definition{61|7361I12} 18|52r20
+X 66 vhdl-utils.ads
+20K14*Utils 18|22w11 22r27 66|437e15
+97V13*Get_Association_Interface{61|7173I12} 18|71s19 368s19 656s25
+98U14*Next_Association_Interface 18|144s10 374s10 663s13
+180V13*Is_Fully_Constrained_Type{boolean} 18|330s14 808s17
+218V13*Strip_Denoting_Name{61|7173I12} 18|105s21 738s24
+298V13*Get_Block_From_Block_Specification{61|7173I12} 18|274s22 302s46
+303V13*Get_Entity{61|7173I12} 18|567s17 680s20 736s59 749s14 764s17
+307V13*Get_Configuration{61|7173I12} 18|743s23
+314V13*Is_Component_Instantiation{boolean} 18|494s16
+395V13*Is_Uninstantiated_Package{boolean} 18|153s10 171s10
+

@@ -3,8 +3,18 @@
 This README file isn't complete, everything here is subject to modification. 
 
 # Introduction :
-This project as for purpose to modernise the architecture studied at Sorbonne University.\
-It was realised by Timothée Le Berre, Louis Geoffroy Pitailler & Kevin Lastra during their first year of Master SESI.\
+
+This project was introduce as a project of our 1st year Master and had for purpose to modernise the architecture studied at Sorbonne University.\
+We were offer to continue this project during a 3 month Internship from July 2022 to August 2022.\
+This project is the result of about 8 months of works.\
+It was realised by :
+
+**Timothée Le Berre**,\
+**Louis Geoffroy Pitailler**,\
+**Kevin Lastra**,\
+**Samy Attal**
+
+
 Since one decate or more, class from Master SESI used MIPS32 architecture. In this project our purpose is to create a material description of a RISCV architecture based on a 5 stage pipeline MIPS32.\
 The implementation use the standard instruction set from [RISCV fondation](https://riscv.org/technical/specifications/). We choosed to implement a **RV32IM** with **Zicsr** extension and a **user** and **machine** mode.\
 
@@ -12,9 +22,6 @@ Here's a schema of the 5 stage pipeline of our architecture without the Kernel m
 
 ![plot](Documentation/Reports/Pictures_for_reports/RiscV_graph.PNG)
 
-Here's the same schema but with the kernel Mode :
-
-![plot](Documentation/Reports/Pictures_for_reports/schema_pipeline_exception.jpg)
 
 To find out more about it, please go into ``Documentation/Reports/`` and read **PSESI_final_report**.
 
@@ -107,7 +114,12 @@ __example__ :
 
 ## B. Kernel Architecture
 
+![plot](Documentation/Reports/Pictures_for_reports/schema_pipeline_exception.jpg)
+
 Our implementation support a machine mode (11) and user mode (00). To implement this, we needed to add the Zicsr extension and we needed to choose which csr to implement.
+
+We choosed to add a specific adress which delimitate the machine section of the memory segments. You will find a **define inside EXE/exec.h** which indicate the start of the reserved machine adress.\
+``By default it is sets at 0xF0000000``
 
 We implemented the following Csr :
 * 0: mvendorid : not implemented so 0
@@ -117,7 +129,7 @@ We implemented the following Csr :
 * 4: misa : gives the current extension implemented in the core
 * 5: mie : gives the interruption that are mask 
 * 6: mtvec : gives the adress of the trap handler, our implementation supports a **direct** and **vectorise** configuration
-* 7: mstatush : 
+* 7: mstatush : msb of mstatus
 * 8: mepc : stores the adress of an instruction which occur an exception
 * 9: mcause : stores the code value of an exception
 * 10: mtval : stores the adress that generate an access fault or an adress missaligned excption 
@@ -126,3 +138,16 @@ We implemented the following Csr :
 with a user register upon entry to an M-mode trap handler
 
 These CSR can be found inside the csr.h file. 
+
+An exception can occur in any stage of the pipeline and it must be deadly for the current execute program. To be sure of this we detects exception in our stage **MEM** just before the memory accesses, if an exception occur all memories access are disable.
+
+The current exception can occur :
+* Instruction **adress missaligned** after a branch instruction : detected in DEC
+* Instruction **adress fault**, meaning we're trying to access a machine reserved section in user mode : detected in DEC
+* **Illegal** Instruction : detected in DEC
+* Environment call since **User-mode** : detected in DEC
+* Environment call since **Machine-mode** : detected in DEC
+* **Ebreak** instruction : detected in DEC
+* mret, we deal with this instruction as if it was an exception, this instruction can only be used since a machine mode pipeline. So if a user program try to use this instruction it will raise an exception which will be detected in **DEC**
+* Load or store Missaligned : **EXE**
+* Load or Store access fault : **EXE**

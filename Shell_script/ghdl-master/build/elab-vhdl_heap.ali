@@ -1,0 +1,156 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_EXCEPTIONS
+RV NO_LOCAL_ALLOCATORS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U elab.vhdl_heap%b	elab-vhdl_heap.adb	11c06463 OO PK
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali  ED
+W elab%s		elab.ads		elab.ali
+W elab.memtype%s	elab-memtype.adb	elab-memtype.ali
+W interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+Z system%s		system.ads		system.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+W tables%s		tables.adb		tables.ali  ED
+W types%s		types.ads		types.ali
+
+U elab.vhdl_heap%s	elab-vhdl_heap.ads	8b2e1add EE NE OO PK
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_objtypes%s	elab-vhdl_objtypes.adb	elab-vhdl_objtypes.ali
+W elab.vhdl_values%s	elab-vhdl_values.adb	elab-vhdl_values.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D areapools.ads		20220609165545 cfd4bc11 areapools%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D elab.ads		20220609165545 a9643774 elab%s
+D elab-memtype.ads	20220609165545 a9d633d1 elab.memtype%s
+D elab-vhdl_heap.ads	20220609165545 8c871d81 elab.vhdl_heap%s
+D elab-vhdl_heap.adb	20220609165545 7662f86e elab.vhdl_heap%b
+D elab-vhdl_objtypes.ads  20220609165545 21a4bc64 elab.vhdl_objtypes%s
+D elab-vhdl_values.ads	20220609165545 8f698c4c elab.vhdl_values%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-c.ads		20220609165545 39ab994c grt.c%s
+D grt-files_operations.ads  20220609165545 a286f262 grt.files_operations%s
+D grt-stdio.ads		20220609165545 9e36ac41 grt.stdio%s
+D grt-types.ads		20220609165545 06085c72 grt.types%s
+D grt-vhdl_types.ads	20220609165545 9d784033 grt.vhdl_types%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D tables.adb		20220609165545 fe1a89b0 tables%b
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 5 dyn_tables.ads
+34A9*Table_Type(12|106R9)<12|68M9>
+37A12*Big_Table_Type{34A9[34|38[10|26]]}<12|68M9>
+43P9*Table_Thin_Ptr(37A12[34|38[10|26]])
+X 7 elab.ads
+19K9*Elab 21e9 9|19r6 19r30 20r6 20r28 22r9 30r5 10|22r6 22r24 24r14 93r5
+X 8 elab-memtype.ads
+26K14*Memtype 58e17 10|22w11 22r29
+27M9*Memory_Element
+28A9*Memory_Array(27M9)<36|192M9>
+31P9*Memory_Ptr(28A9) 10|32r47 37r11
+X 9 elab-vhdl_heap.ads
+22K14*Vhdl_Heap 7|19k9 9|30l10 30e19 10|24b19 93l10 93t19
+24V13*Allocate_By_Type{12|68M9} 24>31 10|52b13 57l8 57t24
+24p31 T{11|97P9} 10|52b31 55r27 55r48
+25V13*Allocate_By_Value{12|68M9} 25>32 10|68b13 72l8 72t25
+25r32 V{12|106R9} 10|68b32 70r27 70r53
+27V13*Synth_Dereference{12|106R9} 27>32 10|74b13 77l8 77t25
+27m32 Idx{12|68M9} 10|74b32 76r32
+29U14*Synth_Deallocate 29>32 10|85b14 91l8 91t24
+29m32 Idx{12|68M9} 10|85b32 87r28 90r31
+X 10 elab-vhdl_heap.adb
+26K12 Heap_Table[34|37] 55r7 56r14 70r7 71r14 76r14 87r10 90r13
+32V13 Alloc_Mem{8|31P9} 32>24 33b<c,malloc>22 39s12
+32m24 Sz{36|192M9}
+35V13 Allocate_Memory{12|66P9} 35b13 35>30 41l8 41t23 47s14 63s14
+35p30 T{11|97P9} 39r23
+37p7 M{8|31P9} 39m7 40r59
+43V13 Allocate_By_Type{12|66P9} 43b13 43>31 50l8 50t24 55s30
+43p31 T{11|97P9} 47r31 48r37
+45p7 Res{12|66P9} 47m7 48r28 49r14
+59V13 Allocate_By_Value{12|66P9} 59b13 59>32 66l8 66t25 70s34
+59r32 V{12|106R9} 63r31 64r29
+61p7 Res{12|66P9} 63m7 64r20 65r14
+79U14 Free 79b14 79=20 83l8 83t12 90s7
+79r20 Obj{12|106R9} 82m7
+X 11 elab-vhdl_objtypes.ads
+28K14*Vhdl_Objtypes 9|19w11 19r35 11|316e23
+97P9*Type_Acc(96R9) 9|24r35 10|35r34 43r35 52r35
+140m7*Sz{36|192M9} 10|39r25
+X 12 elab-vhdl_values.ads
+31K14*Vhdl_Values 9|20w11 20r33 12|200e21
+48n7*Value_Memory{36E9} 10|40r38
+64R9*Value_Type 10|40r18 12|103e14
+66P9*Value_Acc(64R9) 10|35r51 43r52 45r13 59r51 61r13
+68M9*Heap_Index<36|39M9> 9|24r52 25r51 27r38 29r38 10|28r27 52r52 68r51 74r38
+. 85r38
+76e21*Kind{36E9} 10|40m30
+85p13*Mem{8|31P9} 10|40m52 48r32 64r24
+106R9*Valtyp 9|25r36 27r57 10|27r31 59r36 68r36 74r57 79r33 12|109e14
+107p7*Typ{11|97P9} 10|63r33 70r29
+111r4*No_Valtyp{106R9} 10|82r14 87r35
+181U14*Write_Value_Default 10|48s7
+197U14*Write_Value 10|64s7
+X 20 interfac.ads
+74M9*Unsigned_32
+X 34 tables.ads
+27+9 Table_Component_Type 10|27r7
+28E9 Table_Index_Type 10|28r7
+33*4 Table_Low_Bound{28E9} 10|29r7
+36i4 Table_Initial{positive} 10|30r7
+37k9*Tables 10|20w6 26r30 34|82e11
+48p4*Table{5|43P9[38[10|26]]} 10|76r25[26] 87r21[26] 90r24[26]
+55V13*Last{12|68M9} 10|56s25[26] 71s25[26]
+75U14*Append 10|55s18[26] 70s18[26]
+X 36 types.ads
+20K9*Types 10|19w6 19r17 36|193e10
+39M9*Uns32<20|74M9>
+192M9*Size_Type 10|32r29
+

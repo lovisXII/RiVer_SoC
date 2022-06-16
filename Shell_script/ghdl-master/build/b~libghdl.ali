@@ -1,0 +1,316 @@
+V "GNAT Lib v9"
+A -g
+A -fPIC
+A -gnatA
+A -gnatWb
+A -gnatiw
+A -g
+A -g
+A -gnatws
+A -mtune=generic
+A -march=x86-64
+P ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_DEFAULT_INITIALIZATION
+RV NO_IMPLEMENTATION_ATTRIBUTES
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U libghdl_main%b	b~libghdl.adb		e92e936a OO PK IL
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+Z system%s		system.ads		system.ali
+
+U libghdl_main%s	b~libghdl.ads		83c79fb4 EE NE OO PK IL
+W system%s		system.ads		system.ali
+W system.parameters%s	s-parame.adb		s-parame.ali
+W system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D b~libghdl.ads		20220610152539 ada5c1ad libghdl_main%s
+D b~libghdl.adb		20220610152539 6d924012 libghdl_main%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+X 1 ada.ads
+16K9*Ada 20e8 5|6r6
+X 2 a-except.ads
+54K13*Exceptions 349e19 5|6w10
+X 4 b~libghdl.ads
+6K9*libghdl_main 574l5 574e17 5|8b14 1130l5 1130t17
+8U14*libghdl_init 9i<c,libghdl_init>22 5|379b14 938l8 938t20
+11U14*libghdl_final 12i<c,libghdl_final>22 5|363b14 375l8 375t21
+14M9*Version_32 15r22 17r22
+15m4*u00001{14M9} 16r22
+17m4*u00002{14M9} 18r22
+X 5 b~libghdl.adb
+10i4 E074{short_integer} 10m46 10r46 477r10 480m7 480r15
+11i4 E012{short_integer} 11m46 11r46 454r10 495m7 495r15
+12i4 E024{short_integer} 12m46 12r46 457r10 460m7 460r15
+13i4 E069{short_integer} 13m46 13r46 461r10 464m7 464r15
+14i4 E054{short_integer} 14m46 14r46 465r10 468m7 468r15
+15i4 E039{short_integer} 15m46 15r46 469r10 472m7 472r15
+16i4 E026{short_integer} 16m46 16r46 473r10 476m7 476r15
+17i4 E056{short_integer} 17m46 17r46 481r10 496m7 496r15
+18i4 E060{short_integer} 18m46 18r46 484r10 487m7 487r15
+19i4 E044{short_integer} 19m46 19r46 488r10 497m7 497r15
+20i4 E020{short_integer} 20m46 20r46 491r10 494m7 494r15
+21i4 E080{short_integer} 21m46 21r46 498r10 509m7 509r15
+22i4 E049{short_integer} 22m46 22r46 501r10 504m7 504r15
+23i4 E038{short_integer} 23m46 23r46 505r10 508m7 508r15
+24i4 E098{short_integer} 24m46 24r46 510r10 513r10 516m7 516r15
+25i4 E128{short_integer} 25m46 25r46 517r10 520m7 520r15
+26i4 E115{short_integer} 26m46 26r46 521r10 524m7 524r15
+27i4 E260{short_integer} 27m46 27r46 525r10 528m7 528r15
+28i4 E147{short_integer} 28m46 28r46 529r10 532m7 532r15
+29i4 E146{short_integer} 29m46 29r46 533r10 536m7 536r15
+30i4 E144{short_integer} 30m46 30r46 537r10 540m7 540r15
+31i4 E143{short_integer} 31m46 31r46 350m10 350r18 351r13 541r10 544m7 544r15
+32i4 E219{short_integer} 32m46 32r46 545r10 548m7 548r15
+33i4 E215{short_integer} 33m46 33r46 337m7 337r15 342r13 549r10 552r10 555m7
+. 555r15
+34i4 E213{short_integer} 34m46 34r46 328m7 328r15 333r13 556r10 559m7 559r15
+35i4 E207{short_integer} 35m46 35r46 319m7 319r15 324r13 560r10 563m7 563r15
+36i4 E108{short_integer} 36m46 36r46 564r10 567r10 570m7 570r15
+37i4 E112{short_integer} 37m46 37r46 571r10 574m7 574r15
+38i4 E139{short_integer} 38m46 38r46 310m7 310r15 315r13 575r10 578r10 581m7
+. 581r15
+39i4 E117{short_integer} 39m46 39r46 582r10 585r10 588m7 588r15
+40i4 E126{short_integer} 40m46 40r46 589m7 589r15
+41i4 E130{short_integer} 41m46 41r46 590m7 590r15
+42i4 E124{short_integer} 42m46 42r46 591r10 594m7 594r15
+43i4 E151{short_integer} 43m46 43r46 595r10 598m7 598r15
+44i4 E318{short_integer} 44m46 44r46 301m7 301r15 306r13 599r10 602m7 602r15
+45i4 E229{short_integer} 45m46 45r46 292m7 292r15 297r13 603r10 606m7 606r15
+46i4 E189{short_integer} 46m46 46r46 283m7 283r15 288r13 607r10 610r10 613m7
+. 613r15
+47i4 E532{short_integer} 47m46 47r46 614r10 617m7 617r15
+48i4 E164{short_integer} 48m46 48r46 618r10 621m7 621r15
+49i4 E241{short_integer} 49m46 49r46 622m7 622r15
+50i4 E114{short_integer} 50m46 50r46 623m7 623r15
+51i4 E243{short_integer} 51m46 51r46 624m7 624r15
+52i4 E185{short_integer} 52m46 52r46 625m7 625r15
+53i4 E431{short_integer} 53m46 53r46 626m7 626r15
+54i4 E523{short_integer} 54m46 54r46 627m7 627r15
+55i4 E367{short_integer} 55m46 55r46 628r10 631m7 631r15
+56i4 E449{short_integer} 56m46 56r46 632m7 632r15
+57i4 E393{short_integer} 57m46 57r46 633m7 633r15
+58i4 E391{short_integer} 58m46 58r46 634m7 634r15
+59i4 E427{short_integer} 59m46 59r46 635m7 635r15
+60i4 E466{short_integer} 60m46 60r46 636m7 636r15
+61i4 E239{short_integer} 61m46 61r46 637m7 637r15
+62i4 E137{short_integer} 62m46 62r46 638m7 638r15
+63i4 E135{short_integer} 63m46 63r46 639m7 639r15
+64i4 E454{short_integer} 64m46 64r46 640m7 640r15
+65i4 E163{short_integer} 65m46 65r46 641m7 641r15
+66i4 E264{short_integer} 66m46 66r46 642m7 642r15
+67i4 E251{short_integer} 67m46 67r46 643m7 643r15
+68i4 E149{short_integer} 68m46 68r46 644r10 647m7 647r15
+69i4 E276{short_integer} 69m46 69r46 648m7 648r15
+70i4 E166{short_integer} 70m46 70r46 649r10 652m7 652r15
+71i4 E106{short_integer} 71m46 71r46 653r10 656m7 656r15
+72i4 E104{short_integer} 72m46 72r46 657r10 660r10 663m7 663r15
+73i4 E357{short_integer} 73m46 73r46 664m7 664r15
+74i4 E536{short_integer} 74m46 74r46 665m7 665r15
+75i4 E177{short_integer} 75m46 75r46 666r10 669m7 669r15
+76i4 E179{short_integer} 76m46 76r46 670m7 670r15
+77i4 E268{short_integer} 77m46 77r46 675m7 675r15
+78i4 E270{short_integer} 78m46 78r46 677r10 680m7 680r15
+79i4 E272{short_integer} 79m46 79r46 671r10 674m7 674r15
+80i4 E274{short_integer} 80m46 80r46 676m7 676r15
+81i4 E266{short_integer} 81m46 81r46 681m7 681r15
+82i4 E335{short_integer} 82m46 82r46 682r10 685m7 685r15
+83i4 E337{short_integer} 83m46 83r46 686m7 686r15
+84i4 E331{short_integer} 84m46 84r46 687m7 687r15
+85i4 E329{short_integer} 85m46 85r46 688r10 691m7 691r15
+86i4 E333{short_integer} 86m46 86r46 692m7 692r15
+87i4 E339{short_integer} 87m46 87r46 693m7 693r15
+88i4 E341{short_integer} 88m46 88r46 694r10 697m7 697r15
+89i4 E327{short_integer} 89m46 89r46 698r10 701m7 701r15
+90i4 E343{short_integer} 90m46 90r46 702m7 702r15
+91i4 E460{short_integer} 91m46 91r46 703m7 703r15
+92i4 E406{short_integer} 92m46 92r46 704m7 704r15
+93i4 E398{short_integer} 93m46 93r46 705m7 705r15
+94i4 E389{short_integer} 94m46 94r46 707r10 710m7 710r15
+95i4 E396{short_integer} 95m46 95r46 706m7 706r15
+96i4 E404{short_integer} 96m46 96r46 711m7 711r15
+97i4 E419{short_integer} 97m46 97r46 712m7 712r15
+98i4 E425{short_integer} 98m46 98r46 713m7 713r15
+99i4 E439{short_integer} 99m46 99r46 714m7 714r15
+100i4 E402{short_integer} 100m46 100r46 715r10 718m7 718r15
+101i4 E474{short_integer} 101m46 101r46 719m7 719r15
+102i4 E470{short_integer} 102m46 102r46 720m7 720r15
+103i4 E423{short_integer} 103m46 103r46 721m7 721r15
+104i4 E400{short_integer} 104m46 104r46 722m7 722r15
+105i4 E417{short_integer} 105m46 105r46 723m7 723r15
+106i4 E421{short_integer} 106m46 106r46 724m7 724r15
+107i4 E429{short_integer} 107m46 107r46 725m7 725r15
+108i4 E472{short_integer} 108m46 108r46 726m7 726r15
+109i4 E415{short_integer} 109m46 109r46 727m7 727r15
+110i4 E380{short_integer} 110m46 110r46 728m7 728r15
+111i4 E437{short_integer} 111m46 111r46 729m7 729r15
+112i4 E545{short_integer} 112m46 112r46 730m7 730r15
+113i4 E547{short_integer} 113m46 113r46 731m7 731r15
+114i4 E549{short_integer} 114m46 114r46 732m7 732r15
+115i4 E435{short_integer} 115m46 115r46 733m7 733r15
+116i4 E534{short_integer} 116m46 116r46 734m7 734r15
+117i4 E262{short_integer} 117m46 117r46 735r10 738m7 738r15
+118i4 E261{short_integer} 118m46 118r46
+119i4 E249{short_integer} 119m46 119r46 739r10 742m7 742r15
+120i4 E248{short_integer} 120m46 120r46
+121i4 E247{short_integer} 121m46 121r46 744r10 747m7 747r15
+122i4 E253{short_integer} 122m46 122r46 743m7 743r15
+123i4 E237{short_integer} 123m46 123r46 748r10 751m7 751r15
+124i4 E365{short_integer} 124m46 124r46 752m7 752r15
+125i4 E387{short_integer} 125m46 125r46 753r10 756m7 756r15
+126i4 E378{short_integer} 126m46 126r46 757m7 757r15
+127i4 E452{short_integer} 127m46 127r46 758r10 761m7 761r15
+128i4 E303{short_integer} 128m46 128r46 763r10 766m7 766r15
+129i4 E305{short_integer} 129m46 129r46 762m7 762r15
+130i4 E293{short_integer} 130m46 130r46 767m7 767r15
+131i4 E289{short_integer} 131m46 131r46 768m7 768r15
+132i4 E295{short_integer} 132m46 132r46 769m7 769r15
+133i4 E291{short_integer} 133m46 133r46 770m7 770r15
+134i4 E297{short_integer} 134m46 134r46 771m7 771r15
+135i4 E287{short_integer} 135m46 135r46 772m7 772r15
+136i4 E299{short_integer} 136m46 136r46 773m7 773r15
+137i4 E443{short_integer} 137m46 137r46 774m7 774r15
+138i4 E374{short_integer} 138m46 138r46 775r10 778m7 778r15
+139i4 E363{short_integer} 139m46 139r46 274m7 274r15 279r13 779r10 782r10
+. 785m7 785r15
+140i4 E376{short_integer} 140m46 140r46 786m7 786r15
+141i4 E279{short_integer} 141m46 141r46 787m7 787r15
+142i4 E476{short_integer} 142m46 142r46 788m7 788r15
+143i4 E482{short_integer} 143m46 143r46 789r10 792m7 792r15
+144i4 E496{short_integer} 144m46 144r46 793r10 796m7 796r15
+145i4 E498{short_integer} 145m46 145r46 797r10 800m7 800r15
+146i4 E500{short_integer} 146m46 146r46 801r10 804m7 804r15
+147i4 E502{short_integer} 147m46 147r46 805r10 808m7 808r15
+148i4 E520{short_integer} 148m46 148r46 809m7 809r15
+149i4 E512{short_integer} 149m46 149r46 269m10 269r18 270r13 810r10 813r10
+. 816m7 816r15
+150i4 E551{short_integer} 150m46 150r46 817m7 817r15
+151i4 E310{short_integer} 151m46 151r46 818r10 821m7 821r15
+152i4 E538{short_integer} 152m46 152r46 260m10 260r18 261r13 822r10 825m7
+. 825r15
+153i4 E486{short_integer} 153m46 153r46 826r10 829m7 829r15
+154i4 E506{short_integer} 154m46 154r46 830r10 833m7 833r15
+155i4 E510{short_integer} 155m46 155r46 834m7 834r15
+156i4 E314{short_integer} 156m46 156r46 835r10 838m7 838r15
+157i4 E301{short_integer} 157m46 157r46 839m7 839r15
+158i4 E307{short_integer} 158m46 158r46 840m7 840r15
+159i4 E232{short_integer} 159m46 159r46 844r10 847m7 847r15
+160i4 E234{short_integer} 160m46 160r46 841r10 848m7 848r15
+161i4 E529{short_integer} 161m46 161r46 243m10 243r18 244r13 252r13 849r10
+. 852r10 855m7 855r15
+162i4 E492{short_integer} 162m46 162r46 856m7 856r15
+163i4 E361{short_integer} 163m46 163r46 869r10 872m7 872r15
+164i4 E504{short_integer} 164m46 164r46 873m7 873r15
+165i4 E494{short_integer} 165m46 165r46 874m7 874r15
+166i4 E490{short_integer} 166m46 166r46 875m7 875r15
+167i4 E514{short_integer} 167m46 167r46 876m7 876r15
+168i4 E516{short_integer} 168m46 168r46 877m7 877r15
+169i4 E488{short_integer} 169m46 169r46 878m7 878r15
+170i4 E518{short_integer} 170m46 170r46 879m7 879r15
+171i4 E484{short_integer} 171m46 171r46 880m7 880r15
+172i4 E508{short_integer} 172m46 172r46 881m7 881r15
+173i4 E347{short_integer} 173m46 173r46 882m7 882r15
+174i4 E480{short_integer} 174m46 174r46 883m7 883r15
+175i4 E464{short_integer} 175m46 175r46 907r10 910m7 910r15
+176i4 E468{short_integer} 176m46 176r46 857r10 884m7 884r15
+177i4 E462{short_integer} 177m46 177r46 911m7 911r15
+178i4 E441{short_integer} 178m46 178r46 912m7 912r15
+179i4 E385{short_integer} 179m46 179r46 913m7 913r15
+180i4 E445{short_integer} 180m46 180r46 885m7 885r15
+181i4 E359{short_integer} 181m46 181r46 886m7 886r15
+182i4 E527{short_integer} 182m46 182r46 887m7 887r15
+183i4 E525{short_integer} 183m46 183r46 888m7 888r15
+184i4 E355{short_integer} 184m46 184r46 889m7 889r15
+185i4 E353{short_integer} 185m46 185r46 890m7 890r15
+186i4 E408{short_integer} 186m46 186r46 914m7 914r15
+187i4 E351{short_integer} 187m46 187r46 891m7 891r15
+188i4 E349{short_integer} 188m46 188r46 892m7 892r15
+189i4 E323{short_integer} 189m46 189r46 860r10 893r10 896m7 896r15
+190i4 E447{short_integer} 190m46 190r46 863r10 897m7 897r15
+191i4 E478{short_integer} 191m46 191r46 898m7 898r15
+192i4 E413{short_integer} 192m46 192r46 866r10 899m7 899r15
+193i4 E382{short_integer} 193m46 193r46 900m7 900r15
+194i4 E325{short_integer} 194m46 194r46 901m7 901r15
+195i4 E345{short_integer} 195m46 195r46 902m7 902r15
+196i4 E458{short_integer} 196m46 196r46 903r10 906m7 906r15
+197i4 E410{short_integer} 197m46 197r46 915r10 918m7 918r15
+198i4 E187{short_integer} 198m46 198r46 234m10 234r18 235r13 919r10 922r10
+. 925m7 925r15
+199i4 E181{short_integer} 199m46 199r46 225m10 225r18 226r13 926r10 929r10
+. 932m7 932r15
+200i4 E543{short_integer} 200m46 200r46 216m10 216r18 217r13 933r10 936m7
+. 936r15
+201i4 E002{short_integer} 201m46 201r46 937m7 937r15
+203a4 Sec_Default_Sized_Stacks(8|45R9) 450m32 450r32
+205a4 Local_Priority_Specific_Dispatching{string} 437r9
+206a4 Local_Interrupt_States{string} 440r27
+208b4 Is_Elaborated{boolean} 369r14 372m7 426r10 429m7
+210U14 finalize_library 210b14 361l8 361t24 374s7
+213U20*F1 214b<ada,ghdlsynth__finalize_body>30 218s13
+222U20*F2 223b<ada,ghdlcomp__finalize_body>30 227s13
+231U20*F3 232b<ada,ghdllocal__finalize_body>30 236s13
+240U20*F4 241b<ada,ghdlmain__finalize_body>30 245s13
+249U20*F5 250b<ada,ghdlmain__finalize_spec>30 253s13
+257U20*F6 258b<ada,vhdl__formatters__finalize_body>30 262s13
+266U20*F7 267b<ada,vhdl__prints__finalize_body>30 271s13
+276U20*F8 277b<ada,elab__vhdl_context__finalize_spec>30 280s13
+285U20*F9 286b<ada,ada__directories__finalize_spec>30 289s13
+294U20*F10 295b<ada,system__regexp__finalize_spec>30 298s13
+303U20*F11 304b<ada,system__pool_global__finalize_spec>30 307s13
+312U20*F12 313b<ada,ada__text_io__finalize_spec>30 316s13
+321U20*F13 322b<ada,ada__strings__unbounded__finalize_spec>30 325s13
+330U20*F14 331b<ada,system__storage_pools__subpools__finalize_spec>30 334s13
+339U20*F15 340b<ada,system__finalization_masters__finalize_spec>30 343s13
+347U20*F16 348b<ada,system__file_io__finalize_body>30 352s13
+356U20*Reraise_Library_Exception_If_Any 357b<ada,__gnat_reraise_library_exception_if_any>33
+. 359s10
+365U17*Runtime_Finalize 366b<c,__gnat_runtime_finalize>25 373s7
+377P9 No_Param_Proc 418r34
+380i7*Main_Priority{integer} 381m25 381r25 430m7
+382i7*Time_Slice_Value{integer} 383m25 383r25 431m7
+384e7*WC_Encoding{character} 385m25 385r25 432m7
+386e7*Locking_Policy{character} 387m25 387r25 433m7
+388e7*Queuing_Policy{character} 389m25 389r25 434m7
+390e7*Task_Dispatching_Policy{character} 391m25 391r25 435m7
+392m7*Priority_Specific_Dispatching{6|67M9} 393m25 393r25 436m7
+394i7*Num_Specific_Dispatching{integer} 395m25 395r25 438m7
+396i7*Main_CPU{integer} 397m25 397r25 439m7
+398m7*Interrupt_States{6|67M9} 399m25 399r25 440m7
+400i7*Num_Interrupt_States{integer} 401m25 401r25 441m7
+402i7*Unreserve_All_Interrupts{integer} 403m25 403r25 442m7
+404i7*Detect_Blocking{integer} 405m25 405r25 443m7
+406i7*Default_Stack_Size{integer} 407m25 407r25 444m7
+408i7*Default_Secondary_Stack_Size{7|58I9} 409m25 409r25 448m7
+410i7*Leap_Seconds_Support{integer} 411m25 411r25 445m7
+412m7*Bind_Env_Addr{6|67M9} 413m25 413r25
+415U17*Runtime_Initialize 415>37 416b<c,__gnat_runtime_initialize>25 452s7
+415i37 Install_Handler{integer}
+418p7*Finalize_Library_Objects{377P9} 419m25 419r25
+420i7*Binder_Sec_Stacks_Count{natural} 421m27 421r27 449m7
+422m7*Default_Sized_SS_Pool{6|67M9} 423m27 423r27 450m7
+X 6 system.ads
+37K9*System 4|3w6 4r6 5r6 5|203r57 203r90 392r39 398r26 408r38 412r23 422r31
+. 448r39 6|156e11
+67M9*Address 5|392r46 398r33 412r30 422r38
+X 7 s-parame.ads
+51K16*Parameters 4|4w13 5|203r97 408r45 448r46 7|198e22
+58I9*Size_Type<long_integer> 5|408r56
+95i4*Runtime_Default_Sec_Stack_Size{58I9} 5|203r108 448r57
+X 8 s-secsta.ads
+37K16*Secondary_Stack 4|5w13 5|203r64 8|430e27
+45R9*SS_Stack 5|203r80 8|330e14
+

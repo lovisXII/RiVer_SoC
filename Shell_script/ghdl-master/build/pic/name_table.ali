@@ -1,0 +1,257 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P SS ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_LOCAL_ALLOCATORS
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_PRAGMAS
+RV NO_IMPLICIT_LOOPS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U name_table%b		name_table.adb		c6d377ef OO PK
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_deallocation%s
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali  ED
+W interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+W logging%s		logging.adb		logging.ali
+Z system%s		system.ads		system.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.concat_6%s	s-conca6.adb		s-conca6.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.img_uns%s	s-imguns.adb		s-imguns.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+W tables%s		tables.adb		tables.ali  ED
+
+U name_table%s		name_table.ads		9450954e BN EE NE OO PK
+W system%s		system.ads		system.ali
+W types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D logging.ads		20220609165545 bfe9ca86 logging%s
+D name_table.ads	20220609165545 555bfbb1 name_table%s
+D name_table.adb	20220609165545 5cea4734 name_table%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-conca3.ads		20210601075304 0b705ca5 system.concat_3%s
+D s-conca4.ads		20210601075304 7e642b20 system.concat_4%s
+D s-conca6.ads		20210601075304 d2c72db2 system.concat_6%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-imgint.ads		20210601075304 02dbe0c2 system.img_int%s
+D s-imguns.ads		20210601075304 9ff43cf7 system.img_uns%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D tables.adb		20220609165545 fe1a89b0 tables%b
+D types.ads		20220609165545 873e82fb types%s
+X 1 ada.ads
+16K9*Ada 20e8 10|16r6 55r32
+X 3 a-uncdea.ads
+20u15*Unchecked_Deallocation 10|16w10 55r36
+X 4 dyn_tables.ads
+34A9*Table_Type(character)<10|28I9>
+37A12*Big_Table_Type{34A9[25|38[10|63]]}<27|70I9>
+43P9*Table_Thin_Ptr(37A12[25|38[10|63]])
+X 6 interfac.ads
+38K9*Interfaces 184e15 10|17w6 150r11
+74M9*Unsigned_32 10|151r13 153r14
+133V13*Rotate_Left{74M9} 10|155s17
+X 8 logging.ads
+17K9*Logging 21e12 10|18w6 18r19
+19U14*Log 10|396s16 397s16
+20U14*Log_Line 10|365s13 391s7 398s16 424s7 425s7 426s7 427s7 429s7 447s16
+X 9 name_table.ads
+26K9*Name_Table 98l5 98e15 10|21b14 453l5 453t15
+31V13*Get_Identifier{27|70I9} 31>29 32r19 10|352b13 355l8 355t22
+31e29 Char{character} 10|352b29 354r55
+38V13*Get_Identifier{27|70I9} 38>29 10|346b13 350l8 350t22
+38a29 Str{string} 10|346b29 349r30 349r44
+41V13*Get_Identifier_With_Len{27|70I9} 41>38 41>61 10|275b13 314l8 314t31
+. 348s14
+41p38 Str{27|61P9} 10|275b38 282r35 290r57 307r50
+41i61 Len{natural} 10|275b61 282r40 289r45 290r62 307r55
+46V13*Image{string} 46>20 10|161b13 176l8 176t13 366s25
+46i20 Id{27|70I9} 10|161b20 163r51 165r24 169r56
+52V13*Get_Address{11|67M9} 52>26 10|180b13 185l8 185t19
+52i26 Id{27|70I9} 10|180b26 182r56
+53V13*Get_Name_Ptr{27|61P9} 53>27 10|187b13 193l8 193t20
+53i27 Id{27|70I9} 10|187b27 189r56
+56V13*Get_Name_Length{natural} 56>30 57r19 10|169s39 195b13 203l8 203t23
+. 289s21 329s21
+56i30 Id{27|70I9} 10|195b30 197r22 198r56 199r57
+61V13*Get_Character{character} 61>28 62r19 10|213b13 217l8 217t21
+61i28 Id{27|70I9} 10|213b28 215r36 216r29
+65V13*Is_Character{boolean} 65>27 66r19 10|165s10 205b13 210l8 210t20 215s22
+65i27 Id{27|70I9} 10|205b27 207r14 209r9
+70V13*Get_Identifier_No_Create{27|70I9} 70>39 10|339b13 343l8 343t32
+70a39 Str{string} 10|339b39 342r30 342r44
+71V13*Get_Identifier_No_Create_With_Len{27|70I9} 72>7 72>30 10|316b13 337l8
+. 337t41 341s14
+72p7 Str{27|61P9} 10|317b7 323r35 330r57
+72i30 Len{natural} 10|317b30 323r40 329r45 330r62
+76V13*Get_Name_Info{27|27I9} 76>28 77r19 10|221b13 224l8 224t21 363s13
+76i28 Id{27|70I9} 10|221b28 223r33
+78U14*Set_Name_Info 78>29 78>43 79r19 10|226b14 229l8 229t21
+78i29 Id{27|70I9} 10|226b29 228r26
+78i43 Info{27|27I9} 10|226b43 228r38
+82V13*Last_Name_Id{27|70I9} 10|377b13 380l8 380t20 425s61
+85U14*Assert_No_Infos 10|358b14 373l8 373t23
+89U14*Initialize 10|104b14 136l8 136t18
+93U14*Finalize 10|138b14 143l8 143t16
+97U14*Disp_Stats 10|418b14 452l8 452t18
+X 10 name_table.adb
+23i4 First_Character_Name_Id{27|70I9} 207r20 209r15 216r34 354r14
+26M9 Hash_Value_Type 33r14 50r22 52r30 148r33 157r14 260r38 278r20 279r20
+. 298r10 319r20 320r20 405r40 428r21
+28I9 Str_Idx<27|27I9> 42r14 75r27 77r26 82r65 84r13 87r41 89r34 173r60 198r26
+. 199r27 238r52 389r15 396r21 426r40
+31R9 Identifier 46e14 65r31 163r13 182r19 189r19 235r11 259r22
+33m7*Hash{26M9} 98m28 113m28 122m31 261r22 288r37 306m35 328r37
+36i7*Next{27|70I9} 100m28 115m28 124m31 262r50 264m20 294r41 308m35 334r41
+. 413r37
+42i7*Name{28I9} 99m28 114m28 123m31 166r48 173r41 173r53 184r46 192r42 198r60
+. 199r65 238r34 238r45 307m35
+45i7*Info{27|27I9} 101m28 116m28 125m31 223r37 228m30 309m35 367r60
+50m4 Hash_Table_Size{26M9} 133m7 135r30 249m7 249r26 251r30 261r32 283r37
+. 298r51 301r40 324r37 428r44
+52A9 Hash_Array(27|70I9)<26M9> 53r34 56r7 135r13 251r13
+53P9 Hash_Array_Acc(52A9) 56r19 60r16 245r24
+55U14 Deallocate[3|20] 142s7 271s7
+60p4 Hash_Table{53P9} 134m7 142m19 142r19 248r25 250m7 264r28 265r16 286r14
+. 308r43 310r7 326r14 410r12 432r16 441r19
+63K12 Names_Table[25|37] 98r7 107r7 113r7 117r22 122r10 141r7 163r32 182r38
+. 189r38 197r27 198r37 199r38 223r14 228r7 235r30 259r41 288r13 294r17 298r27
+. 305r14 306r7 328r13 334r17 362r16 362r37 367r38 379r14 413r15
+71e4 NUL{character} 89r52 109r29 112r29 127r32 394r38
+74K12 Strings_Table[25|37] 86r14 87r7 88r9 89r7 99r36 106r7 109r7 112r7 114r36
+. 121r10 123r39 127r10 140r7 166r23 173r16 184r14 192r10 238r10 392r16 393r16
+. 393r39 394r13 395r20 397r29 426r55
+82V13 Store{28I9} 82b13 82>20 82>43 91l8 91t13 307s43
+82p20 Str{27|61P9} 88r35
+82i43 Len{natural} 86r38 87r50 88r45 89r43
+84i7 Res{28I9} 86m7 87r28 87r35 89r28 90r14
+96U14 Append_Terminator 96b14 102l8 102t25 130s7 311s7
+120e11 C{character} 121r32
+147V13 Compute_Hash{26M9} 147b13 147>27 147>50 158l8 158t20 282s21 323s21
+147p27 Str{27|61P9} 155r61
+147i50 Len{natural} 153r27 154r21
+151m7 Res{6|74M9} 153m7 155m10 155r30 155r40 157r31
+154i11 I{integer} 155r66
+163r7 Ent{31R9} 166r44 173r37 173r49
+169i13 Len{natural} 170r49 173r69
+170A21 Result_Type{string}<integer> 172r20
+182r7 Name_Entry{31R9} 184r35
+189r7 Name_Entry{31R9} 192r31
+198i7 Id_Name{28I9} 202r34
+199i7 Id1_Name{28I9} 202r23
+232V13 Compare_Name_Buffer_With_Name{boolean} 232b13 233>7 233>21 233>44
+. 240l8 240t37 290s21 330s21
+233i7 Id{27|70I9} 235r49
+233p21 Str{27|61P9} 239r11
+233i44 Len{natural} 238r61 239r21
+235r7 Ne{31R9} 238r31 238r42
+243U14 Expand 243b14 272l8 272t14 299s10
+245p7 Old_Hash_Table{53P9} 248m7 254r16 255r16 271m19 271r19
+246i7 Id{27|70I9} 255m10 256r16 259r60 265r43 266m16
+254m11 I{26M9} 255r32
+259r16 Ent{31R9} 261r18 262r46 264r16
+260m16 Hash_Index{26M9} 264r40 265r28
+262i16 Next_Id{27|70I9} 266r22
+278m7 Hash_Value{26M9} 282m7 283r21 288r44 301r24 306r43
+279m7 Hash_Index{26M9} 283m7 286r26 301m10 308r55 310r19
+280i7 Res{27|70I9} 286m7 287r13 288r32 289r38 290r52 292r20 294m10 294r36
+. 305m7 306r26 310r34 313r14
+319m7 Hash_Value{26M9} 323m7 324r21 328r44
+320m7 Hash_Index{26M9} 324m7 326r26
+321i7 Res{27|70I9} 326m7 327r13 328r32 329r38 330r52 332r20 334m10 334r36
+360b7 Err{boolean} 364m13 370r10
+362i11 I<27|27I9> 363r28 365r57 366r32 367r57
+384U14 Dump 385r25 387b14 403l8 403t12
+389i7 First{28I9} 392m7 396r36 397r50 400m13
+393i11 I<27|27I9> 394r33 395r16 397r59 400r22
+405V13 Get_Hash_Entry_Length{natural} 405b13 405>36 416l8 416t29 433s15 442s18
+405m36 H{26M9} 410r24
+407i7 Res{natural} 412m10 412r17 415r14
+408i7 N{27|70I9} 410m7 411r13 413m10 413r34
+420i7 Min{natural} 430m7 434m10 434r30 438r35
+421i7 Max{natural} 431m7 435m10 435r30 438r42
+422i7 N{natural} 433m10 434r35 435r35 442m13 443r16 443r25
+432m11 I{26M9} 433r38
+438A15 Nat_Array(natural)<integer> 439r14
+439a10 S{438A15} 443m13 443r22 445r19 446r16 448r49
+441m14 I{26M9} 442r41
+445i14 I{integer} 446r19 447r48 448r52
+X 11 system.ads
+37K9*System 9|16w6 52r46 10|180r47 11|156e11
+67M9*Address 9|52r53 10|180r54
+X 25 tables.ads
+27+9 Table_Component_Type 10|65r7 76r7
+28E9 Table_Index_Type 10|64r7 75r7
+33*4 Table_Low_Bound{28E9} 10|66r7 77r7
+36i4 Table_Initial{positive} 10|67r7 78r7
+37k9*Tables 10|19w6 63r31 74r33 25|82e11
+44A12*Table_Type{4|34A9[38[10|74]]}<10|28I9> 10|88r23[74]
+48p4*Table{4|43P9[38[10|74]]} 10|87r21[74] 89r21[74] 163r44[63] 166r37[74]
+. 173r30[74] 182r50[63] 184r28[74] 189r50[63] 192r24[74] 198r49[63] 199r50[63]
+. 223r26[63] 228r19[63] 235r42[63] 238r24[74] 259r53[63] 288r25[63] 294r29[63]
+. 306r19[63] 328r25[63] 334r29[63] 367r50[63] 394r27[74] 397r43[74] 413r27[63]
+51U14*Init 10|106s21[74] 107s19[63]
+54i4*First{27|70I9} 10|362r28[63] 392r30[74] 393r30[74] 395r34[74]
+55V13*Last{10|28I9} 10|99s50[74] 114s50[74] 117s34[63] 123s53[74] 197s39[63]
+. 298s39[63] 305s26[63] 362s49[63] 379s26[63] 393s53[74] 426s69[74]
+60U14*Free 10|140s21[74] 141s19[63]
+75U14*Append 10|98s19[63] 109s21[74] 112s21[74] 113s19[63] 121s24[74] 122s22[63]
+. 127s24[74]
+80V13*Allocate{10|28I9} 10|86s28[74]
+X 27 types.ads
+20K9*Types 9|17w6 17r17 27|193e10
+27I9*Int32<integer> 9|76r49 78r49 10|45r14 221r49 226r50 367r25
+34I12*Nat32{27I9} 10|28r24
+61P9*Thin_String_Ptr(string) 9|41r44 53r48 72r13 10|82r26 147r33 187r48 233r27
+. 275r44 317r13
+63V13*To_Thin_String_Ptr[2|20]{61P9} 10|191s14 342s10 349s10
+70I9*Name_Id<27I9> 9|31r53 38r49 42r44 46r24 52r30 53r32 56r34 61r32 65r31
+. 70r60 72r52 76r33 78r34 82r33 10|23r39 36r14 52r59 64r27 66r26 161r25 180r31
+. 187r32 195r35 205r32 213r33 221r33 226r34 233r12 246r12 262r35 276r44 280r13
+. 317r52 321r12 339r60 346r50 352r54 365r42 377r33 408r11 425r46
+75i4*Null_Identifier{70I9} 10|100r36 115r36 117r41 124r39 135r53 251r53 256r22
+. 287r20 327r20 336r14 411r18
+

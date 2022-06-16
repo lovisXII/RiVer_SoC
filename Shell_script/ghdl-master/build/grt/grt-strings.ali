@@ -1,0 +1,73 @@
+V "GNAT Lib v9"
+A -gnatdY
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnatw.X
+A -fPIC
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RR NO_DISPATCH
+RR NO_EXCEPTION_HANDLERS
+RR NO_EXCEPTION_PROPAGATION
+RR NO_FINALIZATION
+RR NO_IO
+RR NO_IMPLICIT_HEAP_ALLOCATIONS
+RR NO_INITIALIZE_SCALARS
+RR NO_SECONDARY_STACK
+RR NO_TASK_HIERARCHY
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_IMPLEMENTATION_RESTRICTIONS
+RV NO_OBSOLESCENT_FEATURES
+RV SPARK_05
+RR MAX_TASKS=0
+
+U grt.strings%b		grt-strings.adb		7fd34106 NE OO PK
+W grt%s			grt.ads			grt.ali
+
+U grt.strings%s		grt-strings.ads		3060137a NE OO PU PK
+W grt%s			grt.ads			grt.ali
+
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-strings.ads	20220609165545 af0b2d86 grt.strings%s
+D grt-strings.adb	20220609165545 d0d86c80 grt.strings%b
+D system.ads		20210601075304 4635ec04 system%s
+D /home/louis/Desktop/Perso/M1_SESI/S2/Projet/RISC-V-project/Shell_script/ghdl-master/build/../src/grt/grt.adc  20220609165545 00000000
+X 1 grt.ads
+23K9*Grt 25e8 2|24r9 56r5 3|24r14 109r5
+X 2 grt-strings.ads
+24K13*Strings 1|23k9 2|56l9 56e16 3|24b18 109l9 109t16
+27e4*NBSP{character} 3|28r29
+30V13*Is_Whitespace{boolean} 30>28 3|25b13 29l8 29t21 34s17 44s17
+30e28 C{character} 3|25b28 28r14 28r25 28r37
+35V13*First_Non_Whitespace_Pos{integer} 35>39 3|31b13 39l8 39t32
+35a39 Str{string} 3|31b39 33r16 34r32
+38V13*Last_Non_Whitespace_Pos{integer} 38>38 3|41b13 49l8 49t31
+38a38 Str{string} 3|41b38 43r28 44r32
+41V13*New_Line_Pos{integer} 41>27 3|51b13 54l8 54t20
+41a27 Line{string} 3|51b27 53r20
+44V13*Find{integer} 44>19 44>33 3|53s14 56b13 64l8 64t12 68s14
+44a19 Str{string} 3|56b19 58r20 59r13
+44e33 Char{character} 3|56b33 59r27
+45V13*Find{integer} 45>19 45>33 45>51 3|65b13 69l8 69t12
+45a19 Str{string} 3|65b19 68r20 68r34
+45e33 Char{character} 3|65b33 68r45
+45i51 Start{positive} 3|65b51 68r25
+51V13*To_Lower{character} 51>23 3|71b13 78l8 78t16
+51e23 C{character} 3|71b23 73r10 74r47 76r17
+54V13*Value{integer} 54>20 3|80b13 98l8 98t13
+54a20 Str{string} 3|80b20 89r28 90r26
+55V13*Value{integer} 55>20 3|90s19 100b13 108l8 108t13
+55e20 Char{character} 3|100b20 102r12 104r35
+X 3 grt-strings.adb
+33i11 I{integer} 34r37 35r20
+43i11 Index{integer} 44r37 45r20
+58i11 Index{integer} 59r18 60r20
+82i7 Decimal{positive} 86m7 94r43 95m10 95r21
+83i7 Value_Tmp{natural} 87m7 94m10 94r23 97r14
+84i7 Digit{integer} 90m10 91r13 94r35
+89i11 Index{integer} 90r31
+

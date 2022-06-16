@@ -1,0 +1,184 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_ACCESS_SUBPROGRAMS
+RV NO_RECURSION
+RV SPARK_05
+
+U vhdl.nodes_walk%b	vhdl-nodes_walk.adb	9013a54a NE OO PK
+Z interfaces%s		interfac.ads		interfac.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.utils%s		vhdl-utils.adb		vhdl-utils.ali
+
+U vhdl.nodes_walk%s	vhdl-nodes_walk.ads	bb813ae9 EE NE OO PK
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-nodes_walk.ads	20220609165545 ad45bbca vhdl.nodes_walk%s
+D vhdl-nodes_walk.adb	20220609165545 7339fe05 vhdl.nodes_walk%b
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+D vhdl-utils.ads	20220609165545 2ee150f7 vhdl.utils%s
+X 16 types.ads
+27I9*Int32<integer>
+X 17 vhdl.ads
+17K9*Vhdl 19e9 23|17r6 17r22 19r9 55r5 24|17r6 17r22 18r6 18r23 20r14 211r5
+X 18 vhdl-errors.ads
+21K14*Errors 130e16 24|18w11 18r28
+26U14*Error_Kind 24|148s13 189s13
+X 21 vhdl-nodes.ads
+24K14*Nodes 9512e15 23|17w11 17r27
+4862n7*Iir_Kind_Design_File{4857E9} 24|139r15
+4981n7*Iir_Kind_Library_Declaration{4857E9} 24|131r15
+5075n7*Iir_Kind_Aggregate{4857E9} 24|111r15
+5107n7*Iir_Kind_Block_Statement{4857E9} 24|162r15
+5108n7*Iir_Kind_If_Generate_Statement{4857E9} 24|175r15
+5110n7*Iir_Kind_For_Generate_Statement{4857E9} 24|168r15
+5111n7*Iir_Kind_Component_Instantiation_Statement{4857E9} 24|159r14
+5113n7*Iir_Kind_Psl_Default_Clock{4857E9} 24|160r14
+5127n7*Iir_Kind_Simple_Signal_Assignment_Statement{4857E9} 24|61r15
+5128n7*Iir_Kind_Conditional_Signal_Assignment_Statement{4857E9} 24|62r14
+5129n7*Iir_Kind_Selected_Waveform_Assignment_Statement{4857E9} 24|63r14
+5130n7*Iir_Kind_Signal_Force_Assignment_Statement{4857E9} 24|64r14
+5131n7*Iir_Kind_Signal_Release_Assignment_Statement{4857E9} 24|65r14
+5132n7*Iir_Kind_Null_Statement{4857E9} 24|66r14
+5133n7*Iir_Kind_Assertion_Statement{4857E9} 24|67r14
+5134n7*Iir_Kind_Report_Statement{4857E9} 24|68r14
+5135n7*Iir_Kind_Wait_Statement{4857E9} 24|69r14
+5136n7*Iir_Kind_Variable_Assignment_Statement{4857E9} 24|74r14
+5137n7*Iir_Kind_Conditional_Variable_Assignment_Statement{4857E9} 24|75r14
+5138n7*Iir_Kind_Return_Statement{4857E9} 24|70r14
+5139n7*Iir_Kind_For_Loop_Statement{4857E9} 24|79r15
+5140n7*Iir_Kind_While_Loop_Statement{4857E9} 24|80r14
+5141n7*Iir_Kind_Next_Statement{4857E9} 24|72r14
+5142n7*Iir_Kind_Exit_Statement{4857E9} 24|73r14
+5143n7*Iir_Kind_Case_Statement{4857E9} 24|83r15
+5144n7*Iir_Kind_Procedure_Call_Statement{4857E9} 24|71r14
+5145n7*Iir_Kind_Break_Statement{4857E9} 24|76r14
+5146n7*Iir_Kind_If_Statement{4857E9} 24|91r15
+5147n7*Iir_Kind_Suspend_State_Statement{4857E9} 24|77r14
+7049E12*Iir_Kinds_Simple_Concurrent_Statement{4857E9} 24|158r15
+7125E12*Iir_Kinds_Sequential_Statement_Ext{4857E9} 24|60r12
+7173I12*Iir{22|21I9} 23|31r42 34r33 37r46 41r49 45r41 48r47 52r55 24|21r33
+. 23r12 35r42 38r49 41r12 55r42 58r15 103r46 106r23 107r15 125r41 127r12
+. 152r47 194r55 198r12
+7174I12*Node{22|21I9} 24|177r21
+7176i4*Null_Iir{7173I12} 24|27r19 45r19 85r28 93r28 113r28
+7177i4*Null_Node{7174I12} 24|181r60
+7184V13*Is_Valid{boolean} 24|133s19 141s19 201s13
+7187V14*"="=7187:69{boolean} 24|27r16 45r16 85r25 93r25 113r25 181r57
+7582V13*Get_Kind{4857E9} 24|60s48 110s12 130s12 157s12
+7617V13*Get_First_Design_Unit{7173I12} 24|140s19
+7671V13*Get_Design_File_Chain{7173I12} 24|132s19
+7932V13*Get_Associated_Expr{7173I12} 24|115s42
+7942V13*Get_Associated_Chain{7173I12} 24|87s19
+8071V13*Get_Concurrent_Statement_Chain{7173I12} 24|166s19 172s19 183s22
+8075V13*Get_Chain{7173I12} 24|30s16 50s16 89s25 117s25 136s22 144s22 206s16
+8169V13*Get_Sequential_Statement_Chain{7173I12} 24|82s16 95s19
+8932V13*Get_Generate_Statement_Body{7173I12} 24|173s22 184s25
+8940V13*Get_Generate_Else_Clause{7173I12} 24|185s25
+8950V13*Get_Else_Clause{7173I12} 24|97s25
+9209V13*Get_Association_Choices_Chain{7173I12} 24|112s22
+9214V13*Get_Case_Statement_Alternative_Chain{7173I12} 24|84s22
+X 22 vhdl-nodes_priv.ads
+21I9*Node_Type<16|27I9>
+X 23 vhdl-nodes_walk.ads
+19K14*Nodes_Walk 17|17k9 23|55l10 55e20 24|20b19 211l10 211t20
+20E9*Walk_Status 29e18 31r54 34r59 38r43 42r47 45r67 49r46 53r47 24|21r59
+. 24r16 35r68 39r47 42r16 55r68 57r16 104r43 108r16 125r67 128r16 153r46
+. 155r16 195r47 197r16
+23n7*Walk_Continue{20E9} 24|24r31 29r30 42r31 47r30 49r30 57r31 88r36 96r36
+. 108r31 116r36 128r31 135r36 143r36 164r25 170r25 181r31 203r23 209r14
+26n7*Walk_Up{20E9}
+29n7*Walk_Abort{20E9}
+31P9*Walk_Cb(20E9) 31>37 34r43 37r56 41r59 45r51 48r57 52r65 24|21r43 35r52
+. 38r59 55r52 103r56 125r51 152r57 194r65
+31i37 El{21|7173I12}
+34V13*Walk_Chain{20E9} 34>25 34>38 24|21b13 33l8 33t18
+34i25 Chain{21|7173I12} 24|21b25 26r13
+34p38 Cb{31P9} 24|21b38 28r20
+37V13*Walk_Assignment_Target{20E9} 37>37 37>51 24|103b13 115s18 123l8 123t30
+37i37 Target{21|7173I12} 24|103b37 106r52
+37p51 Cb{31P9} 24|103b51 115r71 120r23
+41V13*Walk_Sequential_Stmt_Chain{20E9} 41>41 41>54 24|38b13 53l8 53t34 81s23
+. 86s26 94s26
+41i41 Chain{21|7173I12} 24|38b41 44r13
+41p54 Cb{31P9} 24|38b54 46r20 48r46
+45V13*Walk_Design_Units{20E9} 45>32 45>46 24|125b13 134s26 150l8 150t25
+45i32 Parent{21|7173I12} 24|125b32 130r22 132r42 140r42 148r47
+45p46 Cb{31P9} 24|125b46 134r49 142r26
+48V13*Walk_Concurrent_Statement{20E9} 48>40 48>52 24|152b13 192l8 192t33
+. 202s20
+48i40 Stmt{21|7173I12} 24|152b40 157r22 161r31 163r31 166r51 169r31 173r51
+. 179r34 180r22 189r54
+48p52 Cb{31P9} 24|152b52 161r23 163r23 166r58 169r23 173r59 179r26 184r60
+52V13*Walk_Concurrent_Statements_Chain{20E9} 52>47 52>60 24|165s26 171s26
+. 182s29 194b13 210l8 210t40
+52i47 Chain{21|7173I12} 24|194b47 200r13
+52p60 Cb{31P9} 24|194b60 202r51
+X 24 vhdl-nodes_walk.adb
+23i7 El{21|7173I12} 26m7 27r13 28r28 30m10 30r27
+24e7 Status{23|20E9} 28m10 29r20 32r14
+35V13 Walk_Sequential_Stmt{23|20E9} 35>35 35>47 48s20 55b13 101l8 101t28
+35i35 Stmt{21|7173I12} 55b35 60r58 82r48 84r60 92r22
+35p47 Cb{23|31P9} 55b47 82r55 87r49 95r59
+41i7 El{21|7173I12} 44m7 45r13 46r28 48r42 50m10 50r27
+42e7 Status{23|20E9} 46m10 47r20 48m10 49r20 52r14
+57e7 Status{23|20E9} 81m13 86m16 88r26 94m16 96r26 100r14
+58i7 Chain{21|7173I12} 84m13 85r19 87r41 89m16 89r36 92m13 93r19 95r51 97m16
+. 97r42
+106i7 Targ{21|7173I12} 110r22 112r53 120r31
+107i7 Chain{21|7173I12} 112m13 113r19 115r63 117m16 117r36
+108e7 Status{23|20E9} 114m16 116r26 120m13 122r14
+127i7 El{21|7173I12} 132m13 133r29 134r45 136m16 136r33 140m13 141r29 142r34
+. 144m16 144r33
+128e7 Status{23|20E9} 134m16 135r26 138r20 142m16 143r26 146r20
+155e7 Status{23|20E9} 161m13 163m13 164r16 165m16 169m13 170r16 171m16 179m16
+. 181r22 182m19 191r14
+177i16 Cl{21|7174I12} 180m16 181r54 184r54 185m19 185r51
+197e7 Status{23|20E9} 202m10 203r13 204r20
+198i7 El{21|7173I12} 200m7 201r23 202r47 206m10 206r27
+X 27 vhdl-utils.ads
+20K14*Utils 24|17w11 17r27 27|437e15
+233V13*Strip_Reference_Name{21|7173I12} 24|106s30
+

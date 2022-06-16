@@ -1,0 +1,70 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U elab.vhdl_errors%b	elab-vhdl_errors.adb	10aeb095 NE OO PK
+W elab%s		elab.ads		elab.ali
+
+U elab.vhdl_errors%s	elab-vhdl_errors.ads	59f40ac2 EE NE OO PK
+W elab%s		elab.ads		elab.ali
+W errorout%s		errorout.adb		errorout.ali
+W types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D elab.ads		20220609165545 a9643774 elab%s
+D elab-vhdl_errors.ads	20220609165545 1e6ddfc1 elab.vhdl_errors%s
+D elab-vhdl_errors.adb	20220609165545 0ec36f54 elab.vhdl_errors%b
+D errorout.ads		20220609165545 69c3608c errorout%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D types.ads		20220609165545 873e82fb types%s
+X 3 elab.ads
+19K9*Elab 21e9 4|22r9 39r5 5|19r14 58r5
+X 4 elab-vhdl_errors.ads
+22K14*Vhdl_Errors 3|19k9 4|39l10 39e21 5|19b19 58l10 58t21
+23U14*Error_Msg_Elab 23>30 24>30 25>30 5|20b14 26l8 26t22
+23m30 Loc{11|121M9} 5|20b30 25r20
+24a30 Msg{string} 5|21b30 25r25
+25r30 Arg1{6|175R9} 5|22b30 25r36
+26U14*Error_Msg_Elab 26>30 27>30 28>30 5|28b14 34l8 34t22
+26m30 Loc{11|121M9} 5|28b30 33r20
+27a30 Msg{string} 5|29b30 33r25
+28a30 Args{6|176A9} 5|30b30 33r30
+X 6 errorout.ads
+18K9*Errorout 4|20w6 20r20 5|24r32 32r32 6|343e13
+139n7*Msgid_Error{27E9} 5|24r19 32r19
+175R9*Earg_Type 4|25r37 5|22r37 6|311e14
+176A9*Earg_Arr(175R9)<integer> 4|28r37 5|30r37
+179a4*No_Eargs{176A9} 4|28r49 5|30r49
+199V14*"+"{11|135R9} 5|25s19 33s19
+203n47*Elaboration{202E9} 5|24r41 32r41
+208U14*Report_Msg 5|24s7 32s7
+X 7 interfac.ads
+74M9*Unsigned_32
+X 11 types.ads
+20K9*Types 4|19w6 19r17 11|193e10
+39M9*Uns32<7|74M9>
+121M9*Location_Type<39M9> 4|23r36 26r36 5|20r36 28r36
+

@@ -1,0 +1,32 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+
+U synth.ieee%s		synth-ieee.ads		afc3eab4 NE OO PU PK
+W synth%s		synth.ads		synth.ali
+
+D synth.ads		20220609165545 293768fd synth%s
+D synth-ieee.ads	20220609165545 86f48249 synth.ieee%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 synth.ads
+19K9*Synth 21e10 2|19r9 20r17 21r5
+X 2 synth-ieee.ads
+19K15*Ieee 1|19k9 2|20r23 21l11 21e15
+

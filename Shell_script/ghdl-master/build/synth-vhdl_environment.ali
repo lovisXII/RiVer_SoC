@@ -1,0 +1,360 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_EXCEPTIONS
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_RECURSION
+RV NO_SECONDARY_STACK
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV NO_ELABORATION_CODE
+RV SPARK_05
+
+U synth.vhdl_environment%b  synth-vhdl_environment.adb  ca7da372 NE OO PK
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali  ED
+W errorout%s		errorout.adb		errorout.ali
+Z interfaces%s		interfac.ads		interfac.ali
+W name_table%s		name_table.adb		name_table.ali
+W synth%s		synth.ads		synth.ali
+Z synth.environment%s	synth-environment.adb	synth-environment.ali  ED
+Z synth.environment.debug%s  synth-environment-debug.adb  synth-environment-debug.ali  ED
+W synth.errors%s	synth-errors.adb	synth-errors.ali
+W synth.vhdl_context%s	synth-vhdl_context.adb	synth-vhdl_context.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_3%s	s-conca3.adb		s-conca3.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.concat_5%s	s-conca5.adb		s-conca5.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+Z system.secondary_stack%s  s-secsta.adb	s-secsta.ali
+Z tables%s		tables.adb		tables.ali  ED
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+W vhdl.utils%s		vhdl-utils.adb		vhdl-utils.ali
+
+U synth.vhdl_environment%s  synth-vhdl_environment.ads  0bb00f19 EE OO PK
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.tags%s		a-tags.adb		a-tags.ali
+Z ada.text_io%s		a-textio.adb		a-textio.ali
+Z dyn_tables%s		dyn_tables.adb		dyn_tables.ali
+W elab%s		elab.ads		elab.ali
+W elab.vhdl_objtypes%s	elab-vhdl_objtypes.adb	elab-vhdl_objtypes.ali
+Z interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+W netlists%s		netlists.adb		netlists.ali
+W netlists.builders%s	netlists-builders.adb	netlists-builders.ali
+Z netlists.concats%s	netlists-concats.adb	netlists-concats.ali
+Z netlists.dump%s	netlists-dump.adb	netlists-dump.ali
+Z netlists.folds%s	netlists-folds.adb	netlists-folds.ali
+Z netlists.gates%s	netlists-gates.ads	netlists-gates.ali
+Z netlists.gates_ports%s  netlists-gates_ports.adb  netlists-gates_ports.ali
+Z netlists.inference%s	netlists-inference.adb	netlists-inference.ali
+Z netlists.locations%s	netlists-locations.adb	netlists-locations.ali
+Z netlists.utils%s	netlists-utils.adb	netlists-utils.ali
+W synth%s		synth.ads		synth.ali
+W synth.environment%s	synth-environment.adb	synth-environment.ali
+W synth.environment.debug%s  synth-environment-debug.adb  synth-environment-debug.ali
+Z synth.flags%s		synth-flags.ads		synth-flags.ali
+Z system%s		system.ads		system.ali
+Z system.assertions%s	s-assert.adb		s-assert.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_4%s	s-conca4.adb		s-conca4.ali
+Z system.img_enum_new%s	s-imenne.adb		s-imenne.ali
+Z system.img_uns%s	s-imguns.adb		s-imguns.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+Z tables%s		tables.adb		tables.ali
+W types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-except.ads		20210601075304 291912d5 ada.exceptions%s
+D a-finali.ads		20210601075304 bf4f806b ada.finalization%s
+D a-ioexce.ads		20210601075304 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20210601075304 119b8fb3 ada.streams%s
+D a-tags.ads		20210601075304 491b781d ada.tags%s
+D a-textio.ads		20210601075304 881db35a ada.text_io%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D areapools.ads		20220609165545 cfd4bc11 areapools%s
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D elab.ads		20220609165545 a9643774 elab%s
+D elab-memtype.ads	20220609165545 a9d633d1 elab.memtype%s
+D elab-vhdl_context.ads	20220609165545 f2560b0b elab.vhdl_context%s
+D elab-vhdl_objtypes.ads  20220609165545 21a4bc64 elab.vhdl_objtypes%s
+D elab-vhdl_values.ads	20220609165545 8f698c4c elab.vhdl_values%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-c.ads		20220609165545 39ab994c grt.c%s
+D grt-files_operations.ads  20220609165545 a286f262 grt.files_operations%s
+D grt-severity.ads	20220609165545 d7dd9a97 grt.severity%s
+D grt-stdio.ads		20220609165545 9e36ac41 grt.stdio%s
+D grt-types.ads		20220609165545 06085c72 grt.types%s
+D grt-vhdl_types.ads	20220609165545 9d784033 grt.vhdl_types%s
+D hash.ads		20220609165545 aae58d9d hash%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D i-cstrea.ads		20210601075304 e53d8b8e interfaces.c_streams%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D name_table.ads	20220609165545 555bfbb1 name_table%s
+D netlists.ads		20220609165545 b07d7242 netlists%s
+D netlists-builders.ads	20220609165545 8eb44622 netlists.builders%s
+D netlists-concats.ads	20220609165545 f98dffc1 netlists.concats%s
+D netlists-dump.ads	20220609165545 b56b2838 netlists.dump%s
+D netlists-folds.ads	20220609165545 9358abd2 netlists.folds%s
+D netlists-gates.ads	20220609165545 92134467 netlists.gates%s
+D netlists-gates_ports.ads  20220609165545 4b9fee81 netlists.gates_ports%s
+D netlists-inference.ads  20220609165545 1a2b4322 netlists.inference%s
+D netlists-locations.ads  20220609165545 71ab6767 netlists.locations%s
+D netlists-utils.ads	20220609165545 51085a80 netlists.utils%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D synth.ads		20220609165545 293768fd synth%s
+D synth-context.ads	20220609165545 420599ee synth.context%s
+D synth-environment.ads	20220609165545 74639f2f synth.environment%s
+D synth-environment.adb	20220609165545 50f29a4f synth.environment%b
+D synth-environment-debug.ads  20220609165545 10f81384 synth.environment.debug%s
+D synth-environment-debug.adb  20220609165545 ca4c18ea synth.environment.debug%b
+D synth-errors.ads	20220609165545 498d3d39 synth.errors%s
+D synth-flags.ads	20220609165545 5204833a synth.flags%s
+D synth-vhdl_context.ads  20220609165545 6c86b1c6 synth.vhdl_context%s
+D synth-vhdl_environment.ads  20220609165545 ca774481 synth.vhdl_environment%s
+D synth-vhdl_environment.adb  20220609165545 43ceb585 synth.vhdl_environment%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-assert.ads		20210601075304 cd8d2c94 system.assertions%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-conca2.ads		20210601075304 02a0d7d0 system.concat_2%s
+D s-conca3.ads		20210601075304 0b705ca5 system.concat_3%s
+D s-conca4.ads		20210601075304 7e642b20 system.concat_4%s
+D s-conca5.ads		20210601075304 875e432e system.concat_5%s
+D s-crtl.ads		20210601075304 0ebbdb71 system.crtl%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-ficobl.ads		20210601075304 078245e4 system.file_control_block%s
+D s-finmas.ads		20210601075304 7811a767 system.finalization_masters%s
+D s-finroo.ads		20210601075304 4ff27390 system.finalization_root%s
+D s-imenne.ads		20210601075304 614c06c0 system.img_enum_new%s
+D s-imgint.ads		20210601075304 02dbe0c2 system.img_int%s
+D s-imguns.ads		20210601075304 9ff43cf7 system.img_uns%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-pooglo.ads		20210601075304 ede33ef8 system.pool_global%s
+D s-secsta.ads		20210601075304 20bbe636 system.secondary_stack%s
+D s-soflin.ads		20210601075304 a7318a92 system.soft_links%s
+D s-stache.ads		20210601075304 a37c21ec system.stack_checking%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-stoele.ads		20210601075304 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20210601075304 b16154c2 system.storage_pools%s
+D s-traent.ads		20210601075304 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D s-wchcon.ads		20210601075304 1b7d22d2 system.wch_con%s
+D tables.ads		20220609165545 c5cd30a6 tables%s
+D tables.adb		20220609165545 fe1a89b0 tables%b
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-annotations.ads	20220609165545 5b61b848 vhdl.annotations%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+D vhdl-utils.ads	20220609165545 2ee150f7 vhdl.utils%s
+X 13 elab.ads
+19K9*Elab 21e9 55|26r6 26r30 55r22
+X 16 elab-vhdl_objtypes.ads
+28K14*Vhdl_Objtypes 316e23 55|26w11 26r35 55r27
+52R9*Bound_Type 57e14 56|63r63
+53e7*Dir{85|187E9} 56|77r16
+54i7*Left{85|27I9} 56|82r34 90r34
+55i7*Right{85|27I9} 56|80r34 84r31 88r34 92r31
+56m7*Len{85|39M9} 56|82r52 90r52
+61m7*Net_Off{85|39M9} 56|145r45 148r43 151r43 152r53 161r42 163r52 166r53
+. 167r64
+71n7*Type_Bit{69E9} 56|105r15
+72n7*Type_Logic{69E9} 56|106r15
+73n7*Type_Discrete{69E9} 56|107r15
+74n7*Type_Float{69E9} 56|108r15
+75n7*Type_Vector{69E9} 56|119r15
+76n7*Type_Unbounded_Vector{69E9} 56|117r15
+80n7*Type_Slice{69E9} 56|129r15
+81n7*Type_Array{69E9} 56|130r15
+82n7*Type_Unbounded_Array{69E9} 56|115r15
+83n7*Type_Unbounded_Record{69E9} 56|116r15
+84n7*Type_Record{69E9} 56|132r15
+86n7*Type_Access{69E9} 56|114r15
+87n7*Type_File{69E9} 56|112r15
+88n7*Type_Protected{69E9} 56|113r15
+97P9*Type_Acc(96R9) 55|35r13 56|100r41 182r37
+99R9*Rec_El_Type 105e14 56|139r27
+101r7*Offs{60R9} 56|145r40 148r38 151r38 152r48 161r37 163r47 166r48 167r59
+104p7*Typ{97P9} 56|148r56 152r66 164r60 167r41 173r49
+107A9*Rec_El_Array_Type(99R9)<91|6503I9>
+109a7*E{107A9} 56|137r33 139m55
+112P9*Rec_El_Array_Acc(108R9)
+132e20*Kind{69E9} 56|104r16
+147m7*W{85|39M9} 56|32r22 109r37 120r38 121r37 148r60 152r70 164r64 167r45
+. 191r31
+160r13*Abound{52R9} 56|127r62
+170p13*Rec{112P9} 56|137r28 137r29 139r51
+181R9*Memtyp 184e14 55|38r33 40r63 44r42 55r41 56|30r33 35r63 42r42
+182p7*Typ{97P9} 56|32r18
+297V13*Is_Equal{boolean} 55|57r19
+X 18 errorout.ads
+18K9*Errorout 343e13 56|20w6 20r20
+111n7*Warnid_Nowrite{27E9} 56|53r13
+195V14*"+"{175R9} 56|56s35 59s30 59s42 209s36 209s48
+X 19 flists.ads
+21I9*Flist_Type<85|27I9>
+X 28 interfac.ads
+74M9*Unsigned_32
+X 32 name_table.ads
+26K9*Name_Table 98e15 56|19w6 200r25
+46V13*Image{string} 56|200s36
+X 33 netlists.ads
+22K9*Netlists 509e13 55|21w6 21r20 22r6
+110M9*Net<85|39M9> 55|41r34 45r13 56|36r34 43r13
+123M12*Width{85|39M9} 56|63r39 63r51 101r41 102r41 143r31 164r38 168r38 182r53
+. 182r65
+X 34 netlists-builders.ads
+22K18*Builders 283e22 55|22w15 40r35 44r14 56|35r35 42r14
+24P9*Context_Acc(23R9) 55|40r44 44r23 56|35r44 42r23
+X 46 synth.ads
+19K9*Synth 21e10 55|28r6 29r6 31r9 53r23 65r5 56|26r6 26r24 27r6 27r30 29r14
+. 213r5
+X 48 synth-environment.ads
+27+9 Decl_Type 55|54r7
+30+9 Static_Type 55|55r7
+32V18 Is_Equal{boolean} 55|57r7
+33V18 Get_Width{85|39M9} 55|56r7
+34V18 Static_To_Net{33|110M9} 55|58r7
+36V18 Partial_Static_To_Net{33|110M9} 55|59r7
+40U19 Warning_No_Assignment 55|60r7
+42U19 Error_Multiple_Assignments 55|61r7
+44k15*Environment 424e22 55|28w12 29r12 53r29
+X 50 synth-environment-debug.ads
+20k27 Debug 27e28 55|29w24
+X 52 synth-errors.ads
+22K15*Errors 39e17 56|26w12 26r30
+26U14*Error_Msg_Synth 56|208s7
+29U14*Warning_Msg_Synth 56|52s10
+33U14*Warning_Msg_Synth 56|55s10 58s10
+36U14*Info_Msg_Synth 56|111s13 122s16 124s16 131s13 155s25 198s7
+X 54 synth-vhdl_context.ads
+33K15*Vhdl_Context 127e23 56|27w12 27r36
+88V13*Get_Partial_Memtyp_Net{33|110M9} 56|45s14
+90V13*Get_Memtyp_Net{33|110M9} 56|38s14
+X 55 synth-vhdl_environment.ads
+31K15*Vhdl_Environment 46|19k9 55|65l11 65e27 56|29b20 213l11 213t27
+33R9*Decl_Type 36e14 48r14 51r14 54r20 56|49r14 206r14
+34i7*Obj{91|7174I12} 56|53r35 53r70 55r35 56r58 58r35 59r59 208r30 209r31
+. 210r25
+35p7*Typ{16|97P9} 56|210r35
+38V13*Get_Bitwidth{85|39M9} 38>27 56r20 56|30b13 33l8 33t20
+38r27 Val{16|181R9} 56|30b27 32r14
+40V13*Memtyp_To_Net{33|110M9} 40>28 40>57 58r24 56|35b13 39l8 39t21
+40p28 Ctxt{34|24P9} 56|35b28 38r30
+40r57 Val{16|181R9} 56|35b57 38r36
+43V13*Partial_Memtyp_To_Net{33|110M9} 44>7 44>36 44>50 44>63 59r32 56|41b13
+. 46l8 46t29
+44p7 Ctxt{34|24P9} 56|42b7 45r38
+44r36 Val{16|181R9} 56|42b36 45r44
+44m50 Off{85|39M9} 56|42b50 45r49
+44m63 Wd{85|39M9} 56|42b63 45r54
+47U14*Warning_No_Assignment 48>7 48>25 48>44 60r32 56|48b14 61l8 61t29
+48r7 Decl{33R9} 56|49b7 53r30 53r65 55r30 56r53 58r30 59r54
+48m25 First_Off{85|39M9} 56|49b25 51r21 54r24 56r36 59r31
+48m44 Last_Off{85|39M9} 56|49b44 51r10 54r13 59r43
+50U14*Error_Multiple_Assignments 51>7 51>25 51>44 61r37 56|205b14 211l8 211t34
+51r7 Decl{33R9} 56|206b7 208r25 209r26 210r20 210r30
+51m25 First_Off{85|39M9} 56|206b25 209r37 210r40 210r66
+51m44 Last_Off{85|39M9} 56|206b44 209r49 210r51
+53K12*Env[48|44] 64r25
+64K12*Debug[50|20]
+X 56 synth-vhdl_environment.adb
+63V13 Info_Subrange_Vhdl{string} 63b13 63>33 63>46 63>58 95l8 95t26 127s29
+63m33 Off{33|123M12} 80r49 82r59 84r46 88r49 90r59 92r46
+63m46 Wd{33|123M12} 79r16 82r65 87r16 90r65
+63r58 Bnd{16|52R9} 77r12 80r30 82r30 82r48 84r27 88r30 90r30 90r48 92r27
+66V16 Image{string} 66b16 66>23 75l11 75t16 80s23 82s23 84s20 88s23 90s23
+. 92s20
+66i23 V{85|27I9} 68r48 70r13
+68a10 Res{string} 71r20 71r30 73r20
+97U14 Info_Subnet_Vhdl 97b14 97>32 98>32 99>32 100>32 101>32 102>32 170s25
+. 179l8 179t24 199s7
+97m32 Loc{85|121M9} 111r30 122r33 125r20 131r30 156r29 171r29
+98a32 Prefix{string} 111r42 122r45 126r26 131r42 157r35 172r28
+99i32 Otype{91|7174I12} 135r49
+100p32 Typ{16|97P9} 104r12 109r33 120r34 121r33 127r58 137r25 139r47
+101m32 Off{33|123M12} 110r28 121r16 127r49 145r25 148r28 151r28 152r33 161r28
+. 163r62 166r39 167r50
+102m32 Wd{33|123M12} 109r28 120r28 121r28 127r54 145r31 152r39 163r38 168r57
+134i16 Els{91|7232I12} 141r41
+137i20 I<85|27I9> 139r58 141r55
+139r22 El{16|99R9} 145r37 148r35 148r53 151r35 152r45 152r63 161r34 163r44
+. 164r57 166r45 167r38 167r56 173r46
+140i22 Field{91|7174I12} 158r61 172r72 173r38
+142m22 Sub_Off{85|39M9} 162m28 166m28 173r54
+143m22 Sub_Wd{33|123M12} 163m28 164m28 164r49 167m28 168m28 168r49 173r63
+181U14 Info_Subnet 181b14 182>7 182>31 182>47 182>60 203l8 203t19 210s7
+182i7 Decl{91|7174I12} 197r39 200r70 201r46
+182p31 Typ{16|97P9} 186r10 191r27 202r25
+182m47 Off{33|123M12} 191r10 202r30
+182m60 Wd{33|123M12} 191r22 202r35
+184m7 Loc{85|121M9} 197m7 198r24 199r25
+X 85 types.ads
+20K9*Types 55|19w6 19r17 85|193e10
+27I9*Int32<integer> 56|66r27 68r35 80r42 82r41 84r39 88r42 90r41 92r39
+39M9*Uns32<28|74M9> 55|38r48 44r56 44r68 48r37 48r55 51r37 51r55 56|30r48
+. 42r56 42r68 49r37 49r55 142r32 206r37 206r55
+70I9*Name_Id<27I9>
+121M9*Location_Type<39M9> 56|97r41 184r13
+169X4*Internal_Error 56|118r19
+187n28*Dir_To{187E9} 56|78r15
+187n36*Dir_Downto{187E9} 56|86r15
+X 86 vhdl.ads
+17K9*Vhdl 55|24r6 34r13 56|22r6 22r22 23r6 23r23 24r6 99r41 140r39 158r32
+. 172r43 182r14 197r14 200r43 201r25 86|19e9
+X 88 vhdl-errors.ads
+21K14*Errors 56|23w11 23r28 88|130e16
+31V14*"+"{18|175R9} 56|53s64 56s52 59s53 209s25
+35V14*"+"{85|121M9} 56|53s29 55s29 58s29 208s24
+X 91 vhdl-nodes.ads
+24K14*Nodes 55|24w11 34r18 56|22w11 22r27 99r46 140r44 182r19 197r19 200r48
+. 201r30 91|9512e15
+7173I12*Iir{92|21I9}
+7174I12*Node{92|21I9} 55|34r24 56|99r52 140r50 182r25
+7232I12*Iir_Flist{19|21I9[89|19]} 56|134r31
+7246V13*Get_Nth_Element=7247:21{92|21I9} 56|141s24
+7592V13*Get_Location{85|121M9} 56|197s25
+8088V13*Get_Type{7173I12} 56|173s28 201s36
+8366V13*Get_Identifier{85|70I9} 56|200s54
+8554V13*Get_Elements_Declaration_List{7232I12} 56|135s18
+X 92 vhdl-nodes_priv.ads
+21I9*Node_Type<85|27I9>
+X 95 vhdl-utils.ads
+20K14*Utils 56|24w11 158r37 172r48 95|437e15
+22V13*Image_Identifier{string} 56|158s43 172s54
+

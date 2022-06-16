@@ -1,0 +1,139 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV SPARK_05
+
+U synth.source%b	synth-source.adb	4988e9f5 NE OO PK
+W netlists%s		netlists.adb		netlists.ali
+W netlists.locations%s	netlists-locations.adb	netlists-locations.ali
+W synth%s		synth.ads		synth.ali
+
+U synth.source%s	synth-source.ads	3b90a82a BN EE NE OO PK
+W errorout%s		errorout.adb		errorout.ali
+W netlists%s		netlists.adb		netlists.ali
+W synth%s		synth.ads		synth.ali
+W types%s		types.ads		types.ali
+W vhdl%s		vhdl.ads		vhdl.ali
+W vhdl.errors%s		vhdl-errors.adb		vhdl-errors.ali
+W vhdl.nodes%s		vhdl-nodes.adb		vhdl-nodes.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D errorout.ads		20220609165545 69c3608c errorout%s
+D flists.ads		20220609165545 6cac68fe flists%s
+D hash.ads		20220609165545 aae58d9d hash%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D lists.ads		20220609165545 9e7e321b lists%s
+D netlists.ads		20220609165545 b07d7242 netlists%s
+D netlists-locations.ads  20220609165545 71ab6767 netlists.locations%s
+D psl.ads		20220609165545 96551efa psl%s
+D psl-nodes_priv.ads	20220609165545 ead47619 psl.nodes_priv%s
+D psl-types.ads		20220609165545 7950bb4b psl.types%s
+D synth.ads		20220609165545 293768fd synth%s
+D synth-source.ads	20220609165545 389145a1 synth.source%s
+D synth-source.adb	20220609165545 b0cfb971 synth.source%b
+D system.ads		20210601075304 4635ec04 system%s
+D s-auxdec.ads		20210601075304 c61118a9 system.aux_dec%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D s-unstyp.ads		20210601075304 34867c83 system.unsigned_types%s
+D types.ads		20220609165545 873e82fb types%s
+D vhdl.ads		20220609165545 02fc2412 vhdl%s
+D vhdl-errors.ads	20220609165545 608eb072 vhdl.errors%s
+D vhdl-flists.ads	20220609165545 a2a0fb3b vhdl.flists%s
+D vhdl-lists.ads	20220609165545 64adf04c vhdl.lists%s
+D vhdl-nodes.ads	20220609165545 1438a531 vhdl.nodes%s
+D vhdl-nodes_priv.ads	20220609165545 df0d5346 vhdl.nodes_priv%s
+D vhdl-tokens.ads	20220609165545 94d5d1a4 vhdl.tokens%s
+D vhdl-types.ads	20220609165545 15067791 vhdl.types%s
+X 4 errorout.ads
+18K9*Errorout 343e13 15|20w6 32r35
+175R9*Earg_Type 311e14 15|32r44
+X 7 interfac.ads
+74M9*Unsigned_32
+X 9 netlists.ads
+22K9*Netlists 509e13 15|22w6 34r32 37r35 41r41 42r38 16|19w6 19r20 20r6 20r30
+. 49r42 57r41 64r39 69r38
+100M9*Instance<22|39M9> 15|37r44 41r50 16|28r36 41r35 49r51 57r50
+110M9*Net<22|39M9> 15|34r41 42r47 16|23r33 33r32 64r48 69r47
+303V13*Get_Net_Parent{100M9} 16|25s21 66s28
+X 10 netlists-locations.ads
+19K18*Locations 35e23 16|20w15 20r39
+21b4*Flag_Locations{boolean} 16|36r10 44r10 59r10 71r10
+24U14*Set_Location 16|25s7 30s7
+28V13*Get_Location{22|121M9} 16|51s10
+X 14 synth.ads
+19K9*Synth 21e10 15|27r9 43r5 16|22r14 75r5
+X 15 synth-source.ads
+27K15*Source 14|19k9 15|43l11 43e17 16|22b20 75l11 75t17
+28I12*Syn_Src{27|7174I12} 29r26 34r52 37r60 41r66 42r58 16|33r43 41r51 49r67
+. 57r66 64r59 69r58
+29i4*No_Syn_Src{28I12}
+31V14*"+"=31:69{22|121M9}
+31i18 N{27|7173I12}
+32V14*"+"=32:74{4|175R9}
+32i18 N{27|7173I12}
+34U14*Set_Location 34>28 34>46 16|33b14 39l8 39t20
+34m28 N{9|110M9} 16|33b28 37r25
+34i46 Src{28I12} 16|33b37 37r28
+37U14*Set_Location 37>28 37>54 16|41b14 47l8 47t20
+37m28 Inst{9|100M9} 16|41b28 45r25
+37i54 Src{28I12} 16|41b45 45r31
+41U14*Set_Location_Maybe 41>34 41>60 16|57b14 62l8 62t26
+41m34 Inst{9|100M9} 16|57b34 60r31
+41i60 Src{28I12} 16|57b60 60r37
+42U14*Set_Location_Maybe 42>34 42>52 16|69b14 74l8 74t26
+42m34 N{9|110M9} 16|69b34 72r31
+42i52 Src{28I12} 16|69b52 72r34
+X 16 synth-source.adb
+23U14 Set_Location2 23b14 23>29 23>38 26l8 26t21 37s10
+23m29 N{9|110M9} 25r37
+23i38 Loc{27|7174I12} 25r55
+28U14 Set_Location2 28b14 28>29 28>46 31l8 31t21 45s10 54s7
+28m29 Inst{9|100M9} 30r21
+28i46 Loc{27|7174I12} 30r41
+49U14 Set_Location_Maybe2 49b14 49>35 49>61 55l8 55t27 60s10 66s7
+49m35 Inst{9|100M9} 51r24 54r22
+49i61 Src{15|28I12} 54r28
+64U14 Set_Location_Maybe2 64b14 64>35 64>53 67l8 67t27 72s10
+64m35 N{9|110M9} 66r44
+64i53 Src{15|28I12} 66r48
+X 22 types.ads
+20K9*Types 15|19w6 19r17 22|193e10
+27I9*Int32<integer>
+39M9*Uns32<7|74M9>
+121M9*Location_Type<39M9> 15|31r35
+124m4*No_Location{121M9} 16|51r33
+X 23 vhdl.ads
+17K9*Vhdl 15|24r6 24r22 25r6 31r57 32r62 23|19e9
+X 24 vhdl-errors.ads
+21K14*Errors 15|25w11 31r62 32r67 24|130e16
+31V14*"+"{4|175R9} 15|32r75
+35V14*"+"{22|121M9} 15|31r70
+X 27 vhdl-nodes.ads
+24K14*Nodes 15|24w11 24r27 27|9512e15
+7173I12*Iir{28|21I9}
+7174I12*Node{28|21I9} 15|28r23 31r22 32r22 16|23r44 28r52
+7177i4*Null_Node{7174I12} 15|29r37
+7592V13*Get_Location{22|121M9} 16|25s41 30s27
+X 28 vhdl-nodes_priv.ads
+21I9*Node_Type<22|27I9>
+

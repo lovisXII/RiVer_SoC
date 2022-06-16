@@ -1,0 +1,168 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+A -fPIC
+P ZX
+
+RN
+RV NO_ALLOCATORS
+RV NO_LOCAL_ALLOCATORS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_UNCHECKED_DEALLOCATION
+RV NO_DEFAULT_INITIALIZATION
+RV NO_DYNAMIC_SIZED_OBJECTS
+RV SPARK_05
+
+U dyn_maps%b		dyn_maps.adb		1cf759ae NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.unchecked_deallocation%s
+
+U dyn_maps%s		dyn_maps.ads		9714360e BN EE NE OO PK GE
+W dyn_tables%s		dyn_tables.adb		dyn_tables.ali
+W hash%s		hash.adb		hash.ali
+W interfaces%s		interfac.ads		interfac.ali
+Z interfaces.c%s	i-c.adb			i-c.ali
+Z system%s		system.ads		system.ali
+W types%s		types.ads		types.ali
+
+D ada.ads		20210601075304 76789da1 ada%s
+D a-unccon.ads		20210601075304 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20210601075304 eff36322 ada.unchecked_deallocation%s
+D dyn_maps.ads		20220609165545 9791ba06 dyn_maps%s
+D dyn_maps.adb		20220609165545 6495808a dyn_maps%b
+D dyn_tables.ads	20220609165545 2d5e836e dyn_tables%s
+D dyn_tables.adb	20220609165545 25d2221f dyn_tables%b
+D hash.ads		20220609165545 aae58d9d hash%s
+D interfac.ads		20210601075304 5ab55268 interfaces%s
+D i-c.ads		20210601075304 5421119b interfaces.c%s
+D system.ads		20210601075304 4635ec04 system%s
+D s-exctab.ads		20210601075304 54135002 system.exception_table%s
+D s-parame.ads		20210601075304 48ec542b system.parameters%s
+D s-stalib.ads		20210601075304 09bd3940 system.standard_library%s
+D types.ads		20220609165545 873e82fb types%s
+X 1 ada.ads
+16K9*Ada 20e8 5|17r6 20r32
+X 3 a-uncdea.ads
+20u15*Unchecked_Deallocation 5|17w10 20r36
+X 4 dyn_maps.ads
+34+9 Params_Type 45r33 48r34 54r53 72r40 75r55 5|70r33 93r55 103r40
+37+9 Object_Type 48r54 51r37 54r31 84r34 94r14 5|127r16 151r33
+41+9 Value_Type 51r57 87r68 89r57 95r14 5|128r16 158r31 165r57
+45V18 Hash{8|20M9} 45>24 5|99s49 105s48
+45*24 Params{34+9}
+48V18 Build{37+9} 48>25 5|130s17
+48*25 Params{34+9}
+51V18 Build_Value{41+9} 51>31 5|131s17
+51*31 Obj{37+9}
+54V18 Equal{boolean} 54>25 54>44 5|83s45
+54*25 Obj{37+9}
+54*44 Params{34+9}
+56k9*Dyn_Maps 34z9 37z9 41z9 45z18 48z18 51z18 54z18 91E9 113l5 113e13 5|19b14
+. 170l5 170t13
+57R9*Instance 60r31 62r34 72r21 75r36 79r32 83r34 87r31 89r21 108c9 112e14
+. 5|23r31 31r34 39r36 70r14 93r36 103r21 145r32 150r34 157r31 165r21
+60U14*Init 60<20 5|23b14 29l8 29t12
+60r20 Inst{57R9} 5|23b20 25m7 26m7 27m28 27r28 28r43
+62U14*Free 62=20 5|31b14 36l8 36t12
+62r20 Inst{57R9} 5|31b20 33m19 33r19 34m7 35m28 35r28
+64M9*Index_Type<15|39M9> 65r24 66r27 72r63 76r35 79r49 83r52 87r49 89r39
+. 93r14 99r27 103r59 5|42r13 57r36 71r13 74r13 94r35 103r63 145r49 150r52
+. 157r49 165r39
+65m4*No_Index{64M9} 93r28 101r26 5|26r67 28r55 46r64 51r23 79r20 90r14 112r17
+66m4*First_Index{64M9}
+71U14*Get_Index 72=7 72>31 72<53 5|102b14 143l8 143t17
+72r7 Inst{57R9} 5|103b7 109r22 111r35 119r48 119r65 120m18 124r37 134m33
+. 134r33 136r42 139r10 139r63 142r35
+72*31 Params{34+9} 5|103b31 105r54 111r41 130r24
+72m53 Idx{64M9} 5|103b53 111m7 112r10 142m7
+75V13*Get_Index_Soft{64M9} 75>29 75>46 5|93b13 100l8 100t22
+75r29 Inst{57R9} 5|93b29 97r22 99r35
+75*46 Params{34+9} 5|93b46 99r41 99r55
+79V13*Last_Index{64M9} 79>25 5|145b13 148l8 148t18
+79r25 Inst{57R9} 5|145b25 147r35
+83V13*Get_By_Index{37+9} 83>27 83>44 5|150b13 155l8 155t20
+83r27 Inst{57R9} 5|150b27 153r52 154r14
+83m44 Index{64M9} 5|150b44 153r22 154r30
+87V13*Get_Value{41+9} 87>24 87>41 5|157b13 162l8 162t17
+87r24 Inst{57R9} 5|157b24 160r52 161r14
+87m41 Index{64M9} 5|157b41 160r22 161r30
+88U14*Set_Value 89=7 89>31 89>51 5|164b14 169l8 169t17
+89r7 Inst{57R9} 5|165b7 167r52 168r7
+89m31 Index{64M9} 5|165b31 167r22 168r23
+89*51 Val{41+9} 5|165b51 168r37
+91R9 Element_Wrapper 96e14 100r31 5|54r22 81r17
+92m7 Hash{8|20M9} 5|56r22 83r18 135m34
+93m7 Next{64M9} 5|57r54 59m20 86r22 136m34
+94*7 Obj{37+9} 5|83r54 137m34 154r37
+95*7 Val{41+9} 5|138m34 161r37 168m30
+98K12 Wrapper_Tables[6|32] 109r13 5|27r7 28r22 35r7 119r27 134r10 139r42
+. 142r14 147r14 153r31 160r31 167r31
+103A9 Hash_Array(64M9)<8|20M9> 104r34 5|21r7 26r30 46r30
+104P9 Hash_Array_Acc(103A9) 111r20 5|21r19 41r24
+106m4 Initial_Size{8|20M9} 5|25r20 26r47
+109r7 Els{6|51R9[98]} 5|27m33 28r48 35m33 54m51 81m46 119r53 134m38 139r68
+. 142r40 147r40 153r57 154r19 160r57 161r19 167r57 168m12
+110m7 Size{8|20M9} 5|25m12 34m12 45m12 45r25 46r52 56r37 76r42 119r70 124r42
+111p7 Hash_Table{104P9} 5|26m12 33m24 44r30 46m12 59r32 59r33 60r20 60r21
+. 78r18 78r19 97r27 109r27 136r46 136r47 139r14 139r15
+X 5 dyn_maps.adb
+20U14 Deallocate[3|20] 33s7 66s7
+39U14 Expand 39b14 39=22 67l8 67t14 120s10
+39r22 Inst{4|57R9} 44r25 45m7 45r20 46m7 46r47 54r46 56r32 59r28 60r16
+41p7 Old_Hash_Table{4|104P9} 44m7 49r16 50r17 66m19 66r19
+42m7 Idx{4|64M9} 50m10 51r16 54r62 60r48 61m16
+49m11 I<15|39M9> 50r33
+54r16 Ent{4|91R9} 56r18 57r50 59r16
+55m16 Hash_Index{8|20M9} 59r45 60r33
+57m16 Next_Idx{4|64M9} 61r23
+69V13 Get_Index_With_Hash{4|64M9} 69b13 70>7 70>24 70>46 91l8 91t27 99s14
+. 111s14
+70r7 Inst{4|57R9} 76r37 78r14 81r41
+70*24 Params{4|34+9} 83r59
+70m46 Hash_Value{8|20M9} 76r21 83r25
+73m7 Hash_Index{8|20M9} 76m7 78r31
+74m7 Idx{4|64M9} 78m7 79r13 81r57 84r23 86m13
+81r13 E{4|91R9} 83r16 83r52 86r20
+105m7 Hash_Value{8|20M9} 111r49 124r21 135r42
+106m7 Hash_Index{8|20M9} 124m7 136r59 139r27
+127*10 Res{4|37+9} 130m10 131r30 137r41
+128*10 Val{4|41+9} 131m10 138r41
+X 6 dyn_tables.ads
+25+9 Table_Component_Type 4|100r7
+26E9 Table_Index_Type 4|99r7
+31*4 Table_Low_Bound{26E9} 4|101r7
+32k9*Dyn_Tables 4|19w6 98r34 6|104e15
+34A9 Table_Type(4|91R9)<4|64M9>
+37A12 Big_Table_Type{34A9[4|98]}<4|64M9>
+43P9 Table_Thin_Ptr(37A12[4|98])
+51R9 Instance 4|109r28[98]
+54p7 Table{43P9[4|98]} 5|54r54[4|98] 54r55[4|98] 81r49[4|98] 81r50[4|98]
+. 154r22[4|98] 154r23[4|98] 161r22[4|98] 161r23[4|98] 168r15[4|98] 168r16[4|98]
+61U14 Init 5|27s22[4|98]
+65V13 Last{4|64M9} 5|28s37[4|98] 119s42[4|98] 139s57[4|98] 142s29[4|98] 147s29[4|98]
+. 153s46[4|98] 160s46[4|98] 167s46[4|98]
+73U14 Free 5|35s22[4|98]
+88U14 Append 5|134s25[4|98]
+X 8 hash.ads
+19K9*Hash 4|18w6 18r16 8|24e9
+20M9*Hash_Value_Type<15|39M9> 4|45r53 92r14 103r30 106r28 110r14 5|55r38
+. 70r59 73r20 105r29 106r20 119r10
+X 9 interfac.ads
+74M9*Unsigned_32
+X 15 types.ads
+20K9*Types 4|17w6 17r17 15|193e10
+39M9*Uns32<9|74M9> 4|64r27
+

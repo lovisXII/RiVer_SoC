@@ -1,0 +1,35 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+
+U grt.severity%s	grt-severity.ads	48b6a46b NE OO PU PK
+W grt%s			grt.ads			grt.ali
+
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-severity.ads	20220609165545 d7dd9a97 grt.severity%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 grt.ads
+23K9*Grt 25e8 2|24r9 25r17 34r5
+X 2 grt-severity.ads
+24K13*Severity 1|23k9 2|25r21 34l9 34e17
+27i4*Note_Severity{integer}
+28i4*Warning_Severity{integer}
+29i4*Error_Severity{integer}
+30i4*Failure_Severity{integer}
+33i4*None_Severity{integer}
+

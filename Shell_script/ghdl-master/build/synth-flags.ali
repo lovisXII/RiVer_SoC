@@ -1,0 +1,59 @@
+V "GNAT Lib v9"
+A -gnat12
+A -gnaty3
+A -gnatyb
+A -gnatye
+A -gnatyf
+A -gnatyh
+A -gnatyk
+A -gnatym
+A -gnatyr
+A -g
+A -gnatwa
+A -gnatwC
+A -gnatf
+A -gnata
+P ZX
+
+RN
+
+U synth.flags%s		synth-flags.ads		acee7150 NE OO PK
+W grt%s			grt.ads			grt.ali
+W grt.severity%s	grt-severity.ads	grt-severity.ali
+W synth%s		synth.ads		synth.ali
+
+D grt.ads		20220609165545 9f6b3efc grt%s
+D grt-severity.ads	20220609165545 d7dd9a97 grt.severity%s
+D synth.ads		20220609165545 293768fd synth%s
+D synth-flags.ads	20220609165545 5204833a synth.flags%s
+D system.ads		20210601075304 4635ec04 system%s
+X 1 grt.ads
+23K9*Grt 25e8 4|19r6 68r32
+X 2 grt-severity.ads
+24K13*Severity 34e17 4|19w10 68r36
+29i4*Error_Severity{integer} 4|68r45
+X 3 synth.ads
+19K9*Synth 21e10 4|21r9 84r5
+X 4 synth-flags.ads
+21K15*Flags 3|19k9 4|84l11 84e16
+25E9*Name_Encoding 43e7
+29n7*Name_Asis{25E9}
+33n7*Name_Hash{25E9}
+39n7*Name_Index{25E9}
+42n7*Name_Parameters{25E9}
+45b4*Flag_Debug_Noinference{boolean}
+47b4*Flag_Debug_Nocleanup{boolean}
+50b4*Flag_Debug_Nomemory1{boolean}
+52b4*Flag_Debug_Nomemory2{boolean}
+54b4*Flag_Debug_Noexpand{boolean}
+56b4*Flag_Trace_Statements{boolean}
+59b4*Flag_Debug_Elaborate{boolean}
+62b4*Flag_Debug_Init{boolean}
+65i4*Flag_Max_Loop{natural}
+68i4*Severity_Level{integer}
+71b4*Flag_Formal{boolean}
+75b4*Flag_Assert_Cover{boolean}
+78b4*Flag_Assert_As_Assume{boolean}
+81b4*Flag_Assume_As_Assert{boolean}
+83b4*Flag_Verbose{boolean}
+
