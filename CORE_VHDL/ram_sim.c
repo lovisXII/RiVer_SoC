@@ -35,12 +35,15 @@ int main(int argc, char const* argv[]) {
     char   path[30] ;
     char   output[30] ;
     char   test[512] = "> a.out.txt";
+    int nargs = 1;
 
     strcpy(path,argv[1]) ;
 
     if (argc >= 3 && strcmp(argv[2],"-O") == 0) {
+        nargs = 2;
         strcpy(opt,"-02") ;
-    } else if (argc >= 3 && strcmp(argv[2],"--riscof") == 0) {
+    } else if (argc >= 4 && strcmp(argv[2],"--riscof") == 0) {
+        nargs = 3;
         strcpy(signature_name,argv[3]);
         riscof         = 1;
     };
@@ -112,6 +115,7 @@ int main(int argc, char const* argv[]) {
     //     write_mem(4*cur_inst, i);
     //     instr[cur_inst++] = i;
     // }
-    ghdl_main(argc, argv);
+    printf("plop %d\n", nargs);
+    ghdl_main(argc - nargs, &argv[nargs]);
 }
 
