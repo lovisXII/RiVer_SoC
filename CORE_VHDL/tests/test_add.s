@@ -1,7 +1,6 @@
 .section .text
 .global _start
-.global _good
-.global _bad
+
 _start:
     ori x1,x0,10 # x1 = 10 // 1010 
     ori x2,x0,12 # x2 = 12 // 1100
