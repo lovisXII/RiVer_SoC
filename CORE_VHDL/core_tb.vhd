@@ -17,7 +17,7 @@ begin
 end get_mem; 
 attribute foreign of get_mem : function is "VHPIDIRECT get_mem";    
 
-function write_mem(adr : integer; data : integer) return integer is 
+function write_mem(adr : integer; data : integer; byte_select : integer) return integer is 
 begin 
     assert false severity failure;
 end write_mem; 
@@ -144,7 +144,7 @@ variable read0 : integer;
 begin 
     if MCACHE_ADR_VALID_SM = '1' then 
         if MCACHE_STORE_SM = '1' then 
-            read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)));
+            read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)), to_integer(unsigned(byt_sel)));
         elsif MCACHE_LOAD_SM = '1' then 
             MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
         end if; 

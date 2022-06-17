@@ -22,8 +22,10 @@ int get_mem(int a) {
     return 0; 
 }
 
-int write_mem(int a, int data) {
+int write_mem(int a, int data, int byt_sel) {
     int addr1, addr2, addr3, addr4;
+    int tmp = 0; 
+    int mask = 0; 
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
@@ -32,7 +34,19 @@ int write_mem(int a, int data) {
     if (!ram[addr1]) ram[addr1] = calloc(256, sizeof(int*));
     if (!ram[addr1][addr2]) ram[addr1][addr2] = calloc(256, sizeof(int*));
     if (!ram[addr1][addr2][addr3]) ram[addr1][addr2][addr3] = calloc(256, sizeof(int));
-    ram[addr1][addr2][addr3][addr4] = data;
+    if(byt_sel & 0x1) 
+        mask |= 0xFF; 
+    if(byt_sel & 0x2)
+        mask |= 0xFF00;
+    if(byt_sel & 0x4)
+        mask |= 0xFF0000;
+    if(byt_sel & 0x8)
+        mask |= 0xFF000000; 
+    tmp = ram[addr1][addr2][addr3][addr4];
+    tmp &= ~mask; 
+    tmp |= data & mask; 
+    printf("data %x written, mask %x, in mem : %x\n", data, mask, tmp);
+    ram[addr1][addr2][addr3][addr4] = tmp;
     return 0; 
 }
 
@@ -108,7 +122,7 @@ int main(int argc, char const* argv[]) {
 
 
     while(i < structure->size){
-        write_mem(structure->start_adr+i,mem_lw(structure->start_adr+i));
+        write_mem(structure->start_adr+i,mem_lw(structure->start_adr+i), 15);
         i+=4 ;
         j++;
     }

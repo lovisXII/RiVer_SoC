@@ -177,7 +177,8 @@ op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else
 
 r1_valid_se <= '1'; 
 
-op2 <=  OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
+op2 <=  OP2_RD when (RADR2_RD = "000000" or MEM_LOAD_RD = '1' or BLOCK_BP_RD = '1') else
+        OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
         MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
         OP2_RD;
 -- need to verify this bypass
