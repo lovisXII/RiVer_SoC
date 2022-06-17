@@ -65,7 +65,7 @@ int main(int argc, char const* argv[]) {
         strcpy(signature_name,argv[3]);
         riscof         = 1;
     };
-
+    
     char temp_text[512];
     char point = '.' ;
     char *type_of_file = strrchr(path,point) ; 
@@ -114,6 +114,9 @@ int main(int argc, char const* argv[]) {
     }
     Del_Elf32(structure->pObj_struct);
 
+    char **argv_copy ;
+    argv_copy = malloc((argc - nargs+1)*sizeof(char))
+    sprintf(argv_copy,"--vcd=tf.vcd,")
     ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
