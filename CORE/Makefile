@@ -7,7 +7,7 @@ LINKER_ARGS=-rpath=$(SYSTEMC)/lib-linux64
 LIBS=-lsystemc -lm
 C_ARGS=$(INCLUDE_PATH) $(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o EXE/shifter.o EXE/x0_multiplier.o EXE/exec.o MEM/mem.o MEM/x1_multiplier.o REG/reg.o WBK/wbk.o WBK/x2_multiplier.o CSR/csr.o CACHES/icache.o CACHES/dcache.o CACHES/buffercache.o
-LD_SCRIPT= -T seg.ld
+LD_SCRIPT= -T kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: core_tb
