@@ -68,3 +68,11 @@ This project is design as follow :
 # II. Internal Architecture
 
 If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Rapport_PSESI.pdf``.
+
+If you are completly new to processor architecture here's a quick tips to start reading our file, start in the following order :
+* ``CORE/EXEC`` : this stage is responsable of all logic operation done by the processor
+* ``CORE/MEM`` : this stage does the memory access like store and word operation
+* ``CORE/WBK`` : it stores result of an operation to REG
+* ``CORE/REG`` : this is the bank register which contains all the CPU's register which store data used for all operations
+* ``CORE/IFECTH`` : this stage is an interface with the cache, it loads instruction thanks to the PC (program counter) send by DEC
+* ``CORE/DEC`` : this is the most complex file, it contains almost all the processor logic, it decods instructions, does the branch...etc
