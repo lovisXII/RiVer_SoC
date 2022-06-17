@@ -84,4 +84,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run tests
-        run: ls -R
+        run: ls -R ~
