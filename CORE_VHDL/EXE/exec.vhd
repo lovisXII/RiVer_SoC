@@ -177,11 +177,11 @@ op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else
 
 r1_valid_se <= '1'; 
 
-op2 <= OP2_RD; 
--- exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' else 
- --       OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
-  --      MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
-   --     OP2_RD;
+op2 <=  OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
+        MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
+        OP2_RD;
+-- need to verify this bypass
+--exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' else
 
 r2_valid_se <= '1';
 
@@ -189,9 +189,9 @@ bp_mem_data <=  exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_loa
                 MEM_RES_RM when (MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1') else
                 MEM_DATA_RD;
 
-blocked_se <=  '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0') 
-                or    (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0')) else 
-            '0';
+blocked_se <=   '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0') 
+                    or (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0')) else 
+                '0';
 
 -- Output
 RES_RE <= exe_fifo_res;
