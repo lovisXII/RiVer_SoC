@@ -17,11 +17,21 @@ permissions:
   pull-requests: read
 
 jobs:
+  test_action: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: s1
+        run: python --version
+      - name: s2
+        run: pip --version
+
   tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+        submodules: recursive
 
       - name: Cache riscv
         id: cache-riscv
@@ -29,7 +39,7 @@ jobs:
         env:
           cache-name: cache-riscv
         with:
-          # systemC is installed in /usr/local/systemc-2.3.3/
+          # riscv is installed in ~/riscv
           path: ~/riscv
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
@@ -47,7 +57,7 @@ jobs:
         env:
           cache-name: cache-systemc
         with:
-          # systemC is installed in /usr/local/systemc-2.3.3/
+          # systemC is installed in ~/systemc-2.3.3/
           path: ~/systemc-2.3.3/
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
