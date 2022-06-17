@@ -1,4 +1,4 @@
-name: 'Basic tests'
+name: 'riscof tests'
 
 # **What it does**: Run tests 
 # **Why we have it**: To make sure nobody breaks things
@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
       - test_actions
   pull_request:
 
@@ -80,5 +79,43 @@ jobs:
       - name: Build
         run: ./scripts/build_systemc_core.sh
 
-      - name: Run basic tests
-        run: ./scripts/test_systemc_core.sh
+      - name: Cache riscof
+        id: cache-riscof
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-riscof
+        with:
+          path: ~/venv/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-riscof.outputs.cache-hit != 'true' }}
+        name: Install riscof
+        run: 
+          ./scripts/install_riscof.sh
+      
+      - name: Source env
+        run: source ~/venv/bin/activate
+
+      - name: Cache spike
+        id: cache-spike
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-spike
+        with:
+          path: ~/spike/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-spike.outputs.cache-hit != 'true' }}
+        name: Install spike
+        run: 
+          ./scripts/install_spike.sh
+
+      
