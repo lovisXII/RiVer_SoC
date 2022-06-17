@@ -33,7 +33,7 @@ jobs:
       - name: s6
         run: pip3 install git+https://github.com/riscv/riscof.git
 
-  tests:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -79,6 +79,9 @@ jobs:
 
       - name: Build
         run: ./scripts/build_systemc_core.sh
-
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Run tests
         run: ./scripts/test_systemc_core.sh
