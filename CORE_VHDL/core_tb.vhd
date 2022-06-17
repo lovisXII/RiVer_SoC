@@ -132,8 +132,19 @@ IC_STALL_SI <= '0';
 PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 
 process(ADR_SI, ADR_VALID_SI)
+function to_string ( a: std_logic_vector) return string is
+    variable b : string (1 to a'length) := (others => NUL);
+    variable stri : integer := 1; 
+  begin
+    for i in a'range loop
+        b(stri) := std_logic'image(a((i)))(2);  
+    stri := stri+1;
+    end loop;
+  return b;
+  end function;
 begin
     if ADR_VALID_SI = '1' then 
+    report "ADR_SI : " & to_string(ADR_SI); 
         IC_INST_SI <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(ADR_SI))), 32));
     end if; 
 end process; 

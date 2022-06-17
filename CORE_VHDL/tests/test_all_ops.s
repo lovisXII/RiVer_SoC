@@ -44,3 +44,7 @@ _start:
 
     nop
     nop
+_good :
+    nop
+_bad :
+    nop

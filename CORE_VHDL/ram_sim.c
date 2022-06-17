@@ -11,12 +11,14 @@ int*** ram[256];
 
 int get_mem(int a) {
     int addr1, addr2, addr3, addr4;
+    int copy_adr_for_print = a;
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
+        printf("adresse asked : %x, result it %x\n", copy_adr_for_print, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
@@ -45,7 +47,6 @@ int write_mem(int a, int data, int byt_sel) {
     tmp = ram[addr1][addr2][addr3][addr4];
     tmp &= ~mask; 
     tmp |= data & mask; 
-    printf("data %x written, mask %x, in mem : %x\n", data, mask, tmp);
     ram[addr1][addr2][addr3][addr4] = tmp;
     return 0; 
 }
@@ -120,8 +121,9 @@ int main(int argc, char const* argv[]) {
     int *instruction    = malloc(((structure->size)/4)*sizeof(int)) ;
     int *adresses       = malloc(((structure->size)/4)*sizeof(int)) ;
 
-
+    printf("******LOADING INSTRUCTION*****\n");
     while(i < structure->size){
+        printf("%x : %x\n",structure->start_adr+i , mem_lw(structure->start_adr+i)) ;
         write_mem(structure->start_adr+i,mem_lw(structure->start_adr+i), 15);
         i+=4 ;
         j++;
