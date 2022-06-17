@@ -24,6 +24,14 @@ jobs:
         run: python --version
       - name: s2
         run: pip --version
+      - name: s3
+        run: pip install virtualenv
+      - name: s4
+        run: virtualenv venv
+      - name: s5
+        run: source venv/bin/activate
+      - name: s6
+        run: pip3 install git+https://github.com/riscv/riscof.git
 
   tests:
     runs-on: ubuntu-latest
