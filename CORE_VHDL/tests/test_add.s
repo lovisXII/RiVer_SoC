@@ -26,14 +26,3 @@ _start:
     beq x17, x0, _good
     nop
     nop
-
-_good :
-    nop
-_bad :
-    nop
-
-.section .data
-.global _lala
-
-_lala: 
-    addi x3,x1,10

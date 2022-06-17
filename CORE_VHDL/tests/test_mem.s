@@ -2,22 +2,22 @@
 .global _start
 
 _start:
-    ori x1, x0, 15          # r1 = 10
-    ori x2, x0, 4           # r2 = 4
-    ori x3, x0, 5           # r3 = 5
-    ori x24, x0, 2          # r24 = 2
-    addi x4, x2, 50         # r4 = 54
+    addi x1,x0,12
+    ori x1,x0,1953
+    slli x1,x1,6 # x1 = 124992
+    ori x1,x1,20 # x1 = 125012
+    ori x2,x0,84 #less significant byte of 125012
+    sw x1,32(x0)
+    lw x3,32(x0) # x3 = 125012
+    sb x2,36(x0)  
+    lb x4,36(x0) # x4 = 84
+    sub x5,x3,x4 #125012 - 84 = 124928
+    ori x6,x0,61
+    sll x6,x6,11 # sll = 124928
+    bne x5,x6, _bad
+    nop
+    jal x6, _good
     nop
     nop
-    nop
-    nop
-    sw x1, 2(x24)        
-    ori x5, x0, 7           # r5 = 7
-    ori x6, x0, 6           # r6 = 6
-    nop
-    lw x10, 2(x24)       # r10 = 10
-    nop
-    nop
-    sub x11, x10, x2
-    nop
-    nop
+
+
