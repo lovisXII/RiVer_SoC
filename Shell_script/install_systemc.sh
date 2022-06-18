@@ -6,12 +6,12 @@ echo "This script allow you to choose the path where you want to install SystemC
 echo "On other distribution it will be installed in /usr/local/systemc-2.3.3/"
 echo "So if you are running on scientific Linux please enter the path where you want systemC"
 
-if ( $OS = "Linux" ) && ( !lsb_release -a | grep -q Scientific ) then
+if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) then
     if grep -q microsoft /proc/version; then
     echo "Ubuntu on Windows"
         if ( "$1" = "clean" )
         then    
-            echo "rm systemc-2.3.3.gz"
+            echo "rm systemc-2.3.3.gz" 
             sudo rm -f /usr/local/systemc-2.3.3.gz
         else
             echo "Installing systemc for Linux distribution"
@@ -32,7 +32,7 @@ if ( $OS = "Linux" ) && ( !lsb_release -a | grep -q Scientific ) then
         fi
     fi
 fi
-if ( lsb_release -a | grep -q Scientific ) then
+if ( cat /etc/*-release | grep Scientific> /dev/null 2>&1 ) then
   echo "Scientific Linux"
     if ( "$1" = "clean" )
     then    
@@ -56,15 +56,13 @@ if ( lsb_release -a | grep -q Scientific ) then
         make install
     fi
 fi
-if ( "$OS" = Linux ) && ( ! (lsb_release -a | grep -q Scientific) ) && ( ! grep -q microsoft /proc/version ) then
+if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) && ( ! grep -q microsoft /proc/version ) then
   echo "native Linux"
     if ( "$1" = "clean" )
     then    
         echo "systemc-2.3.3 and rm systemc-2.3.3.gz"
         rm -r systemc-2.3.3 && rm systemc-2.3.3.gz
     else
-        if ( "$OS" = Linux )
-        then
             echo "Installing systemc for Linux distribution"
             apt install build-essential make wget git gcc g++ automake
             wget http://www.accellera.org/images/downloads/standards/systemc/systemc-2.3.3.gz
@@ -79,6 +77,5 @@ if ( "$OS" = Linux ) && ( ! (lsb_release -a | grep -q Scientific) ) && ( ! grep 
             ../configure --prefix=/usr/local/systemc-2.3.3/
             make -j$(nproc)
             make install
-        fi
     fi
 fi
