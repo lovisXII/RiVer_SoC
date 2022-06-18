@@ -34,6 +34,7 @@ if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) then
 fi
 if ( cat /etc/*-release | grep Scientific> /dev/null 2>&1 ) then
   echo "Scientific Linux"
+  scl enable devtoolset-8 bash
     if ( "$1" = "clean" )
     then    
         echo "rm systemc-2.3.3.gz"
