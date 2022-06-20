@@ -9,10 +9,9 @@ pluginpath=spike
 ispec=spike/spike_isa.yaml
 pspec=spike/spike_platform.yaml
 target_run=1
-PATH=~/spike/bin:~/riscv/bin
 
 [projet]
 pluginpath=projet
 ispec=projet/projet_isa.yaml
 pspec=projet/projet_platform.yaml
-PATH=../../../../../../../CORE/core_tb:~/riscv/bin
+PATH=../../../../../../../CORE/core_tb
