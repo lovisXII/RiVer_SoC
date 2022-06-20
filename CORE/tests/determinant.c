@@ -10,12 +10,7 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x2,x1 ");
 __asm__("jal x5, main");
 
-void * memcpy( void * destination, const void * source, unsigned int size ) {
-   char* char_source = (char*) source;
-   char* char_dest = (char*) destination;
-   for (int i = 0; i < size; i++) char_dest[i] = char_source[i]; 
-   return destination;
-}
+
 
 int det(int mat[4][4], int n, int* index)
 {
@@ -124,6 +119,7 @@ int det(int mat[4][4], int n, int* index)
 }
 
 int main() {
+    _good();
     int mat[4][4] = { { 1, 0, 2, -1 },
                       { 3, 0, 0, 5 },
                       { 2, 1, 4, -3 },
