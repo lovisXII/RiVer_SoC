@@ -253,9 +253,12 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_STALL_SM(MEM_STALL);
     core_inst.MEM_SIZE_SM(MEM_SIZE_SM);
 
-    core_inst.ADR_SI(IF_ADR);
-    core_inst.ADR_VALID_SI(IF_ADR_VALID);
-    core_inst.IC_INST_SI(IC_INST);
+    core_inst.ADR_SI_S1(IF_ADR);
+    core_inst.ADR_SI_S2(IF_ADR);
+    core_inst.ADR_VALID_SI_S1(IF_ADR_VALID);
+    core_inst.ADR_VALID_SI_S2(IF_ADR_VALID);
+    core_inst.IC_INST_SI_S1(IC_INST);
+    core_inst.IC_INST_SI_S2(IC_INST);
     core_inst.IC_STALL_SI(IC_STALL);
     core_inst.CLK(CLK);
     core_inst.RESET(RESET);
@@ -303,9 +306,9 @@ int sc_main(int argc, char* argv[]) {
     icache_inst.RESET_N(RESET);
     icache_inst.trace(tf);
     //processor side
-    icache_inst.ADR_SI(IF_ADR);
-    icache_inst.ADR_VALID_SI(IF_ADR_VALID);
-    icache_inst.IC_INST_SI(IC_INST);
+    icache_inst.ADR_SI_S1(IF_ADR);
+    icache_inst.ADR_VALID_SI_S1(IF_ADR_VALID);
+    icache_inst.IC_INST_SI_S1(IC_INST);
     icache_inst.IC_STALL_SI(IC_STALL);
     //MP side
     icache_inst.DT(ICACHE_DT);

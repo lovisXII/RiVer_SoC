@@ -25,7 +25,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var.range(207, 176) = CSR_RDATA_SC.read();
         dec2exe_in_var[175]            = csr_wenable_sd.read();
         dec2exe_in_var.range(174, 163) = csr_radr_sd.read();
-        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI.read();
+        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S1.read();
         dec2exe_in_var[130]            = r1_valid_sd.read();
         dec2exe_in_var[129]            = r2_valid_sd.read();
         dec2exe_in_var.range(128, 123) = RADR1_SD.read();
@@ -64,7 +64,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var.range(207, 176) = 0;
         dec2exe_in_var[175]            = 0;
         dec2exe_in_var.range(174, 163) = 0;
-        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI.read();
+        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S1.read();
         dec2exe_in_var[130]            = 0;
         dec2exe_in_var[129]            = 0;
         dec2exe_in_var.range(128, 123) = 0;
@@ -87,6 +87,7 @@ void decod::concat_dec2exe() {
 
     dec2exe_in_sd.write(dec2exe_in_var);
 }
+
 
 void decod::unconcat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_out_var = dec2exe_out_sd.read();
@@ -133,11 +134,27 @@ void decod::unconcat_dec2exe() {
     SLTU_RD.write((bool)dec2exe_out_var[0]);
 }
 
+void decod::concat_dec2if(){
+    sc_bv<dec2if_size> dec2if_in_var;
+    dec2if_in_var.range(63,32) = (sc_bv_base)dec2if_pc_sd_s1 ;
+    dec2if_in_var.range(31,0)  = (sc_bv_base)dec2if_pc_sd_s2 ;
+    dec2if_in_sd = dec2if_in_var ;
+}
+
+
+void decod::unconcat_dec2if(){
+    sc_bv<dec2if_size> dec2if_out_var = dec2if_out_sd;
+
+    PC_RD_s1 = (sc_bv_base)dec2if_out_var.range(63,32) ;
+    PC_RD_S2 = (sc_bv_base)dec2if_out_var.range(31,0)  ;
+
+}
+
 //---------------------------------------------INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
 void decod::decoding_instruction_type() {
-    sc_uint<32> if_ir   = INSTR_RI.read();
+    sc_uint<32> if_ir   = INSTR_RI_S1.read();
     r_type_inst_sd      = (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) != 0b0000001) ? 1 : 0;
     i_type_inst_sd      = (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1 : 0;
     s_type_inst_sd      = if_ir.range(6, 0) == 0b0100011 ? 1 : 0;
@@ -153,7 +170,7 @@ void decod::decoding_instruction_type() {
 //:---------------------------------------------
 
 void decod::decoding_instruction() {
-    sc_uint<32> if_ir = INSTR_RI.read();
+    sc_uint<32> if_ir = INSTR_RI_S1.read();
 
     // R-type Instruction :
 
@@ -414,7 +431,7 @@ void decod::decoding_instruction() {
 //:---------------------------------------------
 // this needs to be done in two steps :
 void decod::pre_reg_read_decoding() {
-    sc_uint<32> if_ir = INSTR_RI.read();
+    sc_uint<32> if_ir = INSTR_RI_S1.read();
     sc_uint<6>  radr1_var;
     sc_uint<6>  radr2_var;
     sc_uint<6>  adr_dest_var;
@@ -554,7 +571,7 @@ void decod::post_reg_read_decoding() {
     bool        dec2exe_wb_var;
     sc_uint<32> dec2exe_op1_var;
     sc_uint<32> dec2exe_op2_var;
-    sc_uint<32> if_ir = INSTR_RI.read();
+    sc_uint<32> if_ir = INSTR_RI_S1.read();
     sc_uint<32> mem_data_var;
     sc_uint<32> offset_branch_var;
     bool        not_jump_var;
@@ -576,7 +593,7 @@ void decod::post_reg_read_decoding() {
             dec2exe_op1_var.range(31, 12) = if_ir.range(31, 12);
             dec2exe_op1_var.range(11, 0)  = 0;
             if (auipc_i_sd)
-                dec2exe_op2_var = PC_IF2DEC_RI.read();
+                dec2exe_op2_var = PC_IF2DEC_RI_S1.read();
             else
                 dec2exe_op2_var = rdata2_sd.read();
         } else {
@@ -922,7 +939,8 @@ void decod::post_reg_read_decoding() {
 
 void decod::pc_inc() {
     sc_uint<32> pc                = READ_PC_SR.read();
-    sc_uint<32> pc_out            = pc;
+    sc_uint<32> pc_out_s1            = pc;
+    sc_uint<32> pc_out_s2            = pc;
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
     bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
     
@@ -930,11 +948,12 @@ void decod::pc_inc() {
     // PC Incrementation
 
     if (!add_offset_to_pc && !dec2if_full_sd ) {
-        pc_out = pc + 4;
+        pc_out_s1 = pc + 4;
+        pc_out_s2 = pc + 8;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
     } else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd) {
-        pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
+        pc_out_s1 = PC_IF2DEC_RI_S1.read() + offset_branch_var;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
     } else {
@@ -944,18 +963,22 @@ void decod::pc_inc() {
 
         DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
     
-    if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
-        dec2if_in_sd.write(pc_out);
-        WRITE_PC_SD.write(pc_out);
-        pc_branch_value_sd = pc_out ;
-        if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+    if (EXCEPTION_SM.read() == 0 ) {
+        dec2if_pc_sd_s1 = pc_out_s1 ;
+        dec2if_pc_sd_s2 = pc_out_s2 ;
+
+        WRITE_PC_SD    = pc_out_s2 ; // PC sent to REG
+        
+        pc_branch_value_sd = pc_out_s1 ; // sent to mem for exception
+        
+        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd = 1;
         } else {
             instruction_access_fault_sd = 0;
         }
     }
     //Instruction adress missaligned exception :
-    if ((pc_out & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
+    if ((pc_out_s1 & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
     {
         instruction_adress_missaligned_sd = 1;
     } 
@@ -978,7 +1001,7 @@ void decod::pc_inc() {
             MTVEC_VALUE_VAR.range(1, 0)  = 0;
 
             if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
-                dec2if_in_sd = MTVEC_VALUE_VAR;
+                dec2if_pc_sd_s1 = MTVEC_VALUE_VAR;
                 WRITE_PC_SD  = MTVEC_VALUE_VAR;
                 WRITE_PC_ENABLE_SD.write(1);
             } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
@@ -986,13 +1009,13 @@ void decod::pc_inc() {
                 // MCAUSE * 4 :
                 MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM.read().range(29, 0);
                 MCAUSE_VAR.range(1, 0)  = 0;
-                dec2if_in_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
+                dec2if_pc_sd_s1.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_ENABLE_SD.write(1);
             }
 
         } else {
-            dec2if_in_sd.write(RETURN_ADRESS_SM.read());
+            dec2if_pc_sd_s1.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
         }          
@@ -1164,12 +1187,12 @@ void decod::trace(sc_trace_file* tf) {
 
     sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));  // Ifecth say to decod if it wants a pop or no
     sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
-    sc_trace(tf, PC_RD, GET_NAME(PC_RD));  // this value must also be sent to REG
+    sc_trace(tf, PC_RD_s1, GET_NAME(PC_RD_s1));  // this value must also be sent to REG
 
     // Interface with IF2DEC :
 
-    sc_trace(tf, PC_IF2DEC_RI, GET_NAME(PC_IF2DEC_RI));
-    sc_trace(tf, INSTR_RI, GET_NAME(INSTR_RI));
+    sc_trace(tf, PC_IF2DEC_RI_S1, GET_NAME(PC_IF2DEC_RI_S1));
+    sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
     sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
     sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));  // Decod says to IFETCH if it wants a pop or no
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
@@ -1235,7 +1258,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, r2_valid_sd, GET_NAME(r2_valid_sd));
     sc_trace(tf, stall_sd, GET_NAME(stall_sd));
     sc_trace(tf, block_in_dec, GET_NAME(block_in_dec));
-    sc_trace(tf, dec2if_in_sd, GET_NAME(dec2if_in_sd));
+    sc_trace(tf, dec2if_pc_sd_s1, GET_NAME(dec2if_pc_sd_s1));
     sc_trace(tf, dec2if_push_sd, GET_NAME(dec2if_push_sd));
     sc_trace(tf, dec2if_empty_sd, GET_NAME(dec2if_empty_sd));
     sc_trace(tf, dec2if_full_sd, GET_NAME(dec2if_full_sd));

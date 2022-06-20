@@ -3,9 +3,12 @@
 #include "../UTIL/fifo.h"
 
 #define dec2exe_size        252
+#define dec2if_size         64
+
 #define start_kernel_adress 0xF0000000
 
 SC_MODULE(decod) {
+
     // Interface with REG :
 
     sc_in<sc_uint<32>> RDATA1_SR;
@@ -45,14 +48,17 @@ SC_MODULE(decod) {
 
     // Interface with DEC2IF :
 
-    sc_in<bool>       DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
+    sc_in<bool>       DEC2IF_POP_SI;    // Ifecth say to decod if it wants a pop or no
     sc_out<bool>      DEC2IF_EMPTY_SD;
-    sc_out<sc_bv<32>> PC_RD;  // this value must also be sent to REG
+    sc_out<sc_bv<32>> PC_RD_s1;          // this value must also be sent to REG
+    sc_out<sc_bv<32>> PC_RD_S2;          // this value must also be sent to REG
 
     // Interface with IF2DEC :
 
-    sc_in<sc_uint<32>> PC_IF2DEC_RI;
-    sc_in<sc_bv<32>>   INSTR_RI;
+    sc_in<sc_uint<32>> PC_IF2DEC_RI_S1;
+    sc_in<sc_uint<32>> PC_IF2DEC_RI_S2;
+    sc_in<sc_bv<32>>   INSTR_RI_S1;
+    sc_in<sc_bv<32>>   INSTR_RI_S2;
     sc_in<bool>        IF2DEC_EMPTY_SI;
     sc_out<bool>       IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>       IF2DEC_FLUSH_SD;
@@ -125,8 +131,8 @@ SC_MODULE(decod) {
 
     // Instance used :
 
-    fifo<32>           dec2if;
-    fifo<dec2exe_size> dec2exe;
+    fifo<dec2if_size>           dec2if;
+    fifo<dec2exe_size>          dec2exe;
 
     // Signals :
 
@@ -138,17 +144,23 @@ SC_MODULE(decod) {
 
     // fifo dec2if :
 
-    sc_signal<sc_bv<32>> dec2if_in_sd;  // pc sent to fifo
+    sc_signal<sc_bv<32>> dec2if_pc_sd_s1;  // pc sent to fifo
+    sc_signal<sc_bv<32>> dec2if_pc_sd_s2;  // pc sent to fifo
     sc_signal<bool>      dec2if_push_sd;
     sc_signal<bool>      dec2if_empty_sd;
     sc_signal<bool>      dec2if_full_sd;
-    sc_signal<sc_bv<32>> dec2if_out_sd;
 
     // fifo dec2exe :
 
     sc_signal<sc_bv<dec2exe_size>> dec2exe_in_sd;
     sc_signal<bool>                dec2exe_push_sd;
     sc_signal<bool>                dec2exe_full_sd;
+
+
+    //fifo dec2if :
+
+    sc_signal<sc_bv<dec2if_size>>         dec2if_in_sd ;
+    sc_signal<sc_bv<dec2if_size>>         dec2if_out_sd ;
 
     // Instruction format type :
 
@@ -307,6 +319,8 @@ SC_MODULE(decod) {
 
     void concat_dec2exe();
     void unconcat_dec2exe();
+    void concat_dec2if();
+    void unconcat_dec2if();
     void decoding_instruction_type();
     void decoding_instruction();
     void pre_reg_read_decoding();
@@ -318,7 +332,7 @@ SC_MODULE(decod) {
 
     SC_CTOR(decod) : dec2if("dec2if"), dec2exe("dec2exe") {
         dec2if.DIN_S(dec2if_in_sd);
-        dec2if.DOUT_R(PC_RD);
+        dec2if.DOUT_R(dec2if_out_sd);
         dec2if.EMPTY_S(dec2if_empty_sd);
         dec2if.FULL_S(dec2if_full_sd);
         dec2if.PUSH_S(dec2if_push_sd);
@@ -344,7 +358,7 @@ SC_MODULE(decod) {
                   << slt_i_sd
 
                   << sltiu_i_sd << sltu_i_sd << RADR1_SD << CSR_RDATA_SC << csr_radr_sd << RADR2_SD << r1_valid_sd
-                  << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd << illegal_instruction_sd
+                  << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI_S1 << csr_wenable_sd << illegal_instruction_sd
                   << instruction_adress_missaligned_sd << env_call_m_mode_sd << block_bp_sd << env_call_s_mode_sd
                   << env_call_u_mode_sd << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd << mul_i_sd
                   << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
@@ -357,11 +371,11 @@ SC_MODULE(decod) {
                   << csr_in_progress << block_in_dec << IF2DEC_EMPTY_SI << dec2exe_full_sd << csr_in_progress;
 
         SC_METHOD(decoding_instruction_type)
-        sensitive << INSTR_RI << READ_PC_SR;
+        sensitive << INSTR_RI_S1 << READ_PC_SR;
         SC_METHOD(decoding_instruction)
-        sensitive << INSTR_RI;
+        sensitive << INSTR_RI_S1;
         SC_METHOD(pre_reg_read_decoding)
-        sensitive << INSTR_RI << r_type_inst_sd << i_type_inst_sd << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd
+        sensitive << INSTR_RI_S1 << r_type_inst_sd << i_type_inst_sd << i_type_inst_sd << s_type_inst_sd << b_type_inst_sd
                   << u_type_inst_sd << j_type_inst_sd << m_type_inst_sd << jalr_type_inst_sd << beq_i_sd << bne_i_sd
                   << blt_i_sd << bge_i_sd << bltu_i_sd << bgeu_i_sd << system_type_inst_sd << csrrw_i_sd << csrrs_i_sd
                   << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << ecall_i_sd << ebreak_i_sd << fence_i_sd
@@ -394,11 +408,11 @@ SC_MODULE(decod) {
 
                   << csrrs_i_sd << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << CSR_RDATA_SC << ecall_i_sd
 
-                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd << sret_i_sd
+                  << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI_S1 << EXCEPTION_SM << mret_i_sd << sret_i_sd
                   << CSR_RDATA_SC;
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << jump_sd << MTVEC_VALUE_RC
-                  << EXCEPTION_SM << PC_IF2DEC_RI << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
+                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
                   << stall_sd;
 
         SC_METHOD(bypasses);

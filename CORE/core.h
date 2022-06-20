@@ -1,17 +1,48 @@
 #include "CSR/csr.h"
 #include "DEC/dec.h"
-#include "EXE/exec.h"
+#include "EXE1/exec.h"
 #include "IFETCH/ifetch.h"
-#include "MEM/mem.h"
+#include "MEM1/mem.h"
 #include "REG/reg.h"
-#include "WBK/wbk.h"
+#include "WBK1/wbk.h"
 #include "systemc.h"
 
-#include "EXE/x0_multiplier.h"
-#include "MEM/x1_multiplier.h"
-#include "WBK/x2_multiplier.h"
+#include "EXE1/x0_multiplier.h"
+#include "MEM1/x1_multiplier.h"
+#include "WBK1/x2_multiplier.h"
 
 SC_MODULE(core) {
+
+
+    // Mcache interface
+
+    sc_out<sc_uint<2>>  MEM_SIZE_SM;
+    sc_out<sc_uint<32>> MCACHE_ADR_SM;
+
+    sc_out<sc_uint<32>> MCACHE_DATA_SM;
+    sc_out<bool>        MCACHE_ADR_VALID_SM;
+    sc_out<bool>        MCACHE_STORE_SM;
+    sc_out<bool>        MCACHE_LOAD_SM;
+    sc_in<sc_uint<32>>  MCACHE_RESULT_SM;
+    sc_in<bool>         MCACHE_STALL_SM;
+
+    // Icache interface
+    sc_out<sc_uint<32>> ADR_SI_S1;
+    sc_out<bool>        ADR_VALID_SI_S1;
+
+    sc_in<sc_bv<32>>    IC_INST_SI_S1;
+
+    sc_out<sc_uint<32>> ADR_SI_S2;
+    sc_out<bool>        ADR_VALID_SI_S2;
+
+    sc_in<sc_bv<32>>    IC_INST_SI_S2;
+    sc_in<bool>         IC_STALL_SI;
+
+    // Debug
+    sc_in<sc_uint<32>>  PC_INIT;
+    sc_out<sc_uint<32>> DEBUG_PC_READ;
+
+
     // Global Interface :
 
     sc_in_clk   CLK;
@@ -22,16 +53,19 @@ SC_MODULE(core) {
 
     sc_signal<bool>      DEC2IF_POP_SI;
     sc_signal<bool>      DEC2IF_EMPTY_SI;
-    sc_signal<sc_bv<32>> PC_RD;
+    sc_signal<sc_bv<32>> PC_RD_S1;
+    sc_signal<sc_bv<32>> PC_RD_S2;
     sc_signal<bool>      EXCEPTION_RI;
 
     // IF2DEC :
 
-    sc_signal<sc_bv<32>>   INSTR_RI;
+    sc_signal<sc_bv<32>>   INSTR_RI_S1;
+    sc_signal<sc_bv<32>>   INSTR_RI_S2;
     sc_signal<bool>        IF2DEC_EMPTY_SI;
     sc_signal<bool>        IF2DEC_POP_SD;
     sc_signal<bool>        IF2DEC_FLUSH_SD;
-    sc_signal<sc_uint<32>> PC_IF2DEC_RI;
+    sc_signal<sc_uint<32>> PC_IF2DEC_RI_S1;
+    sc_signal<sc_uint<32>> PC_IF2DEC_RI_S2;
     // DEC-EXE interface
 
     sc_signal<sc_uint<32>> PC_DEC2EXE_RD;
@@ -195,26 +229,6 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WDATA_SW;
     sc_signal<bool>        WENABLE_SW;
 
-    // Mcache interface
-    sc_out<sc_uint<2>>  MEM_SIZE_SM;
-    sc_out<sc_uint<32>> MCACHE_ADR_SM;
-
-    sc_out<sc_uint<32>> MCACHE_DATA_SM;
-    sc_out<bool>        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM;
-
-    sc_in<sc_uint<32>> MCACHE_RESULT_SM;
-    sc_in<bool>        MCACHE_STALL_SM;
-
-    // Icache interface
-    sc_out<sc_uint<32>> ADR_SI;
-    sc_out<bool>        ADR_VALID_SI;
-
-    sc_in<sc_bv<32>> IC_INST_SI;
-    sc_in<bool>      IC_STALL_SI;
-
-    // Debug
-    sc_in<sc_uint<32>>  PC_INIT;
-    sc_out<sc_uint<32>> DEBUG_PC_READ;
 
     // Pipeline Mode
 
@@ -253,19 +267,25 @@ SC_MODULE(core) {
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
-        ifetch_inst.PC_RD(PC_RD);
-        ifetch_inst.INSTR_RI(INSTR_RI);
+        ifetch_inst.PC_RD_S1(PC_RD_S1);
+        ifetch_inst.PC_RD_S2(PC_RD_S2);
+        ifetch_inst.INSTR_RI_S1(INSTR_RI_S1);
+        ifetch_inst.INSTR_RI_S2(INSTR_RI_S2);
         ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         ifetch_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
         ifetch_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
-        ifetch_inst.ADR_SI(ADR_SI);
-        ifetch_inst.ADR_VALID_SI(ADR_VALID_SI);
+        ifetch_inst.ADR_SI_S1(ADR_SI_S1);
+        ifetch_inst.ADR_SI_S2(ADR_SI_S2);
+        ifetch_inst.ADR_VALID_SI_S1(ADR_VALID_SI_S1);
+        ifetch_inst.ADR_VALID_SI_S2(ADR_VALID_SI_S2);
 
-        ifetch_inst.IC_INST_SI(IC_INST_SI);
+        ifetch_inst.IC_INST_SI_S1(IC_INST_SI_S1);
+        ifetch_inst.IC_INST_SI_S2(IC_INST_SI_S2);
         ifetch_inst.IC_STALL_SI(IC_STALL_SI);
 
-        ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
+        ifetch_inst.PC_IF2DEC_RI_S1(PC_IF2DEC_RI_S1);
+        ifetch_inst.PC_IF2DEC_RI_S2(PC_IF2DEC_RI_S2);
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_SM(EXCEPTION_SM);
@@ -278,10 +298,12 @@ SC_MODULE(core) {
 
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
-        dec_inst.PC_RD(PC_RD);
+        dec_inst.PC_RD_s1(PC_RD_S1);
+        dec_inst.PC_RD_S2(PC_RD_S2);
         dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
-        dec_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
-        dec_inst.INSTR_RI(INSTR_RI);
+        dec_inst.PC_IF2DEC_RI_S1(PC_IF2DEC_RI_S1);
+        dec_inst.INSTR_RI_S1(INSTR_RI_S1);
+        dec_inst.INSTR_RI_S2(INSTR_RI_S2);
         dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
         dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
