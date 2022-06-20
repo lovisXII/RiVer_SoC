@@ -225,10 +225,14 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
     // Icache interface
-    sc_signal<sc_uint<32>> IF_ADR;
-    sc_signal<bool>        IF_ADR_VALID;
+    sc_signal<sc_uint<32>> IF_ADR_S1;
+    sc_signal<bool>        IF_ADR_VALID_S1;
 
-    sc_signal<sc_bv<32>> IC_INST;
+    sc_signal<sc_uint<32>> IF_ADR_S2;
+    sc_signal<bool>        IF_ADR_VALID_S2;
+
+    sc_signal<sc_bv<32>> IC_INST_S1;
+    sc_signal<sc_bv<32>> IC_INST_S2;
     sc_signal<bool>      IC_STALL;
 
 #ifdef ICACHE_ON
@@ -253,12 +257,12 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_STALL_SM(MEM_STALL);
     core_inst.MEM_SIZE_SM(MEM_SIZE_SM);
 
-    core_inst.ADR_SI_S1(IF_ADR);
-    core_inst.ADR_SI_S2(IF_ADR);
-    core_inst.ADR_VALID_SI_S1(IF_ADR_VALID);
-    core_inst.ADR_VALID_SI_S2(IF_ADR_VALID);
-    core_inst.IC_INST_SI_S1(IC_INST);
-    core_inst.IC_INST_SI_S2(IC_INST);
+    core_inst.ADR_SI_S1(IF_ADR_S1);
+    core_inst.ADR_SI_S2(IF_ADR_S2);
+    core_inst.ADR_VALID_SI_S1(IF_ADR_VALID_S1);
+    core_inst.ADR_VALID_SI_S2(IF_ADR_VALID_S2);
+    core_inst.IC_INST_SI_S1(IC_INST_S1);
+    core_inst.IC_INST_SI_S2(IC_INST_S2);
     core_inst.IC_STALL_SI(IC_STALL);
     core_inst.CLK(CLK);
     core_inst.RESET(RESET);
@@ -306,9 +310,9 @@ int sc_main(int argc, char* argv[]) {
     icache_inst.RESET_N(RESET);
     icache_inst.trace(tf);
     //processor side
-    icache_inst.ADR_SI_S1(IF_ADR);
-    icache_inst.ADR_VALID_SI_S1(IF_ADR_VALID);
-    icache_inst.IC_INST_SI_S1(IC_INST);
+    icache_inst.ADR_SI_S1(IF_ADR_S1);
+    icache_inst.ADR_VALID_SI_S1(IF_ADR_VALID_S1);
+    icache_inst.IC_INST_SI_S1(IC_INST_S1);
     icache_inst.IC_STALL_SI(IC_STALL);
     //MP side
     icache_inst.DT(ICACHE_DT);
@@ -484,8 +488,8 @@ int sc_main(int argc, char* argv[]) {
             break;
         }
 #else
-        if_adr       = IF_ADR.read();
-        bool         if_afr_valid = IF_ADR_VALID.read();
+        if_adr       = IF_ADR_S1.read();
+        bool         if_afr_valid = IF_ADR_VALID_S1.read();
 #endif
 
 
@@ -610,7 +614,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifndef ICACHE_ON
         if_result = ram[if_adr];
-        IC_INST.write(if_result);
+        IC_INST_S1.write(if_result);
         IC_STALL.write(false);
 #endif
 

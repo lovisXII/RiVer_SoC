@@ -302,6 +302,7 @@ SC_MODULE(core) {
         dec_inst.PC_RD_S2(PC_RD_S2);
         dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         dec_inst.PC_IF2DEC_RI_S1(PC_IF2DEC_RI_S1);
+        dec_inst.PC_IF2DEC_RI_S2(PC_IF2DEC_RI_S2);
         dec_inst.INSTR_RI_S1(INSTR_RI_S1);
         dec_inst.INSTR_RI_S2(INSTR_RI_S2);
         dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);

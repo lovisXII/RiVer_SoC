@@ -4,16 +4,16 @@
 # useless for you to run this script
 cd ../ && mkdir -p riscof
 
-export TEMPORARY_PATH=$PWD/riscof
+export TEMPORARY_PATH=$PWD/../riscof
 echo "Please run in sudo"
 echo "Installing python"
 
-sudo apt-get install python3.6
-pip3 install --upgrade pip
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.6 -y
-pip3 install --upgrade pip
+# sudo apt-get install python3.6
+# pip3 install --upgrade pip
+# sudo add-apt-repository ppa:deadsnakes/ppa
+# sudo apt-get update
+# sudo apt-get install python3.6 -y
+# pip3 install --upgrade pip
 
 if ( !(riscof > /dev/null 2>&1 ) )
 then
@@ -22,7 +22,7 @@ then
 fi
 echo "Installing GNU Toolchain"
 
-sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+# sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
 if ( !(riscv32-unknown-elf-gcc -v > /dev/null 2>&1) ) 
 then 
     echo "#######################################" 
