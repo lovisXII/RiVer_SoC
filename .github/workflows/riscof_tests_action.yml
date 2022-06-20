@@ -117,5 +117,12 @@ jobs:
         name: Install spike
         run: 
           ./scripts/install_spike.sh
+      
+      - name: Copy riscof config
+        run: 
+          cp scripts/github_config_file riscof/config.ini
+      - name: Run riscof
+        run: 
+          cd riscof/ && ./run_tests.sh
 
       

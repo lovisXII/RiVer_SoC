@@ -1,20 +1,17 @@
 [RISCOF]
 ReferencePlugin=spike
-ReferencePluginPath=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/spike
+ReferencePluginPath=spike
 DUTPlugin=projet
-DUTPluginPath=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/projet
+DUTPluginPath=projet
 
 [spike]
-pluginpath=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/spike
-ispec=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/spike/spike_isa.yaml
-pspec=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/spike/spike_platform.yaml
+pluginpath=spike
+ispec=spike/spike_isa.yaml
+pspec=spike/spike_platform.yaml
 target_run=1
 
-[sail_cSim]
-pluginpath=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/sail_cSim
-
 [projet]
-pluginpath=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/projet
-ispec=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/projet/projet_isa.yaml
-pspec=/home/timo/Documents/Cours/Projet/RISC-V-project/riscof/projet/projet_platform.yaml
-PATH=/home/timo/Documents/Cours/Projet/RISC-V-project/CORE/core_tb
+pluginpath=projet
+ispec=projet/projet_isa.yaml
+pspec=projet/projet_platform.yaml
+PATH=../../../../../../../CORE/core_tb
