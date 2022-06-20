@@ -56,8 +56,8 @@ int sc_main(int argc, char* argv[]) {
     int i;
     for (i = 0; i < 1000; i++) {
         // compute random values for the inputs
-        int in1 = rand();
-        int in2 = rand();
+        int in1 = rand()%10;
+        int in2 = rand()%10;
 
         int div_dout = in1 / in2; 
         cout << "testing: "<<in1<<" / "<<in2 << " = "<<div_dout<<endl;

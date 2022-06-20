@@ -27,11 +27,11 @@ void Diviseur::control()
     {
         case 0:
             busy_se = SELECT_TYPE_OPERATIONS_RD.read() == 0b1000;
-            cout << "starting  divisor = "<< divisor_re.read() 
-                 << "   quotient = " << quotient_re.read()
-                 << "   remainder = " << remainder_re.read() << endl;
-            if(!busy_se && !done_se)
+            if(busy_se)
             {
+                cout << "starting  divisor = "<< divisor_re.read() 
+                     << "   quotient = " << quotient_re.read()
+                     << "   remainder = " << remainder_re.read() << endl;
                 divisor_se = divisor_re.read() >> 1;
 
                 sc_uint<64> quo = quotient_re.read(); 
@@ -39,24 +39,29 @@ void Diviseur::control()
                 quo[0] = 0;
                 quotient_se = quo;
 
+                remainder_se = remainder_re;
+
                 next_state = 1;
+                cout << "  new div go to next state" << endl << endl;;
             }
             else
             {
+                cout << "  nothing new -> loop state" << endl << endl;;
                 next_state = 0;
+                done_se = false;
             }
             shift_cpt_se = 0;
-            cout << "case 0   cu:" <<current_state.read()<<"    ne: "<<next_state.read()<< endl;
+            cout<<"  cu: "<<current_state<<"  ne: "<<next_state<<endl;
         break;
         case 1:
-            if(shift_cpt_se.read() < 31)
+            if(shift_cpt_se.read() < 32)
             {   
-                cout << "divisor = "<< divisor_re.read() 
+                cout << "  divisor = "<< divisor_re.read() 
                  << "   quotient = " << quotient_re.read()
                  << "   remainder = " << remainder_re.read() << endl;
                 if(divisor_se.read() > remainder_se.read())
                 {
-                    cout << "divisor > remainder" << endl;
+                    cout << "    # divisor > remainder" << endl << endl;;
                     divisor_se = divisor_re.read() >> 1;
 
                     sc_uint<64> quo = quotient_re.read(); 
@@ -68,7 +73,7 @@ void Diviseur::control()
                 }
                 else
                 {
-                    cout << "divisor <= remainder" << endl;
+                    cout << "    # divisor <= remainder" << endl << endl;;
                     remainder_se = remainder_re.read() - divisor_re.read();
                     
                     sc_uint<64> quo = quotient_re.read(); 
@@ -85,11 +90,12 @@ void Diviseur::control()
             }
             else
             {
+                cout << "> END of division" << endl << endl;
                 busy_se = false;
                 done_se = true;
 
                 next_state = 0;
-
+                cout << "next: "<<next_state<<endl;
                 if(EXE_CMD_RD.read() == 0 || EXE_CMD_RD.read() == 3)
                 {
                     sc_bv<64> rem = remainder_re.read();
@@ -100,7 +106,7 @@ void Diviseur::control()
                     DIV_RES_SE.write(quotient_re.read());
                 }
             }
-            cout << "case 1" <<"    shift: "<<shift_cpt_se.read()<< endl;
+            cout << "       shifting => "<<shift_cpt_se.read()<<"  cu: "<<current_state<<"  ne: "<<next_state<<endl;
         break;
     }
 

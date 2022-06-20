@@ -24,11 +24,11 @@ SC_MODULE(Diviseur)
 
     // signals :
     sc_signal<sc_biguint<64>> divisor_re;
-    sc_signal<sc_uint<32>> quotient_re;
+    sc_signal<sc_uint<32>>    quotient_re;
     sc_signal<sc_biguint<64>> remainder_re;
 
     sc_signal<sc_biguint<64>> divisor_se;
-    sc_signal<sc_uint<32>> quotient_se;
+    sc_signal<sc_uint<32>>    quotient_se;
     sc_signal<sc_biguint<64>> remainder_se;
 
     sc_signal<bool> busy_se;
@@ -37,7 +37,7 @@ SC_MODULE(Diviseur)
     sc_signal<sc_uint<3>> current_state;
     sc_signal<sc_uint<3>> next_state;
 
-    sc_signal<sc_uint<5>> shift_cpt_se;
+    sc_signal<sc_uint<6>> shift_cpt_se;
 
     void preprocess();
     void control();
@@ -46,7 +46,7 @@ SC_MODULE(Diviseur)
     {
         SC_METHOD(preprocess);
         sensitive << OP1_SE << OP2_SE << SELECT_TYPE_OPERATIONS_RD 
-                  << quotient_se << remainder_se << divisor_se;
+                  << quotient_se << remainder_se << divisor_se << busy_se;
         
         SC_METHOD(control);
         sensitive << CLK.pos();
