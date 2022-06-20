@@ -58,8 +58,8 @@ architecture archi of dec is
 
 constant inc_value : std_logic_vector(31 downto 0) := x"00000004";
 
-signal reset_active_sd : std_logic := '0';
-
+signal reset_sync_sd : std_logic := '0';
+signal resetting_sd : std_logic := '0' ; 
 -- fifo 
 signal dec2if_din, dec2if_dout : std_logic_vector(31 downto 0);
 signal dec2if_full_sd, dec2if_push_sd : std_logic;
@@ -361,18 +361,20 @@ add_offset_to_pc <= jump_sd and not(IF2DEC_EMPTY_SI);
 WRITE_PC_ENABLE_SD  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
                                 or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0')) else 
                         '0';  
+
+-- initialize pc, maybe not the best way to do it, but it works...
 process(clk, reset_n)
 begin 
-    if rising_edge(reset_n) then 
-        reset_active_sd <= '1'; 
-    else 
-        if rising_edge(clk) then 
-            reset_active_sd <= '0'; 
-        end if; 
+    if rising_edge(clk) then 
+        if reset_n = '1' then 
+            reset_sync_sd <= '1'; 
+        end if;
     end if; 
 end process; 
 
-pc  <=  READ_PC_SR when reset_active_sd = '1' else
+resetting_sd <= reset_sync_sd xor reset_n; 
+
+pc  <=  READ_PC_SR when resetting_sd = '1' else
         std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value)) when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
         std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd)) when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1'else 
         x"00000000"; 
