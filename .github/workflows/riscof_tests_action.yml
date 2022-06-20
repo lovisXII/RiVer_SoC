@@ -123,8 +123,6 @@ jobs:
           cp scripts/github_config_file riscof/config.ini
       - name: Run riscof
         run: 
-          ls ~/riscv/bin &&
-          ls ~/spike/bin &&
-          source ~/venv/bin/activate && cd riscof/ && ./run_tests.sh
+          ./test_systemc_core_riscof
 
       
