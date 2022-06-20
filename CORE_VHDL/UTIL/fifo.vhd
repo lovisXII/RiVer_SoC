@@ -15,7 +15,7 @@ end fifo;
 
 architecture archi of fifo is 
 signal data : std_logic_vector(N-1 downto 0);
-signal data_v : std_logic;
+signal data_v : std_logic := '0';
 
 begin 
 

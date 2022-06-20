@@ -58,6 +58,8 @@ architecture archi of dec is
 
 constant inc_value : std_logic_vector(31 downto 0) := x"00000004";
 
+signal reset_active_sd : std_logic := '0';
+
 -- fifo 
 signal dec2if_din, dec2if_dout : std_logic_vector(31 downto 0);
 signal dec2if_full_sd, dec2if_push_sd : std_logic;
@@ -95,13 +97,13 @@ signal wb_sd : std_logic;
 
 -- branch and pc gestion
 signal offset_branch_sd : std_logic_vector(31 downto 0);
-signal inval_adr_dest, invalid_instr, invalid_i, inc_pc, inc_pc_sd, jump_sd : std_logic;
+signal inval_adr_dest, invalid_instr, invalid_i, jump_sd : std_logic;
 signal different_sign : std_logic;
 signal res : std_logic_vector(31 downto 0);
 signal res_compare : std_logic_vector(31 downto 0);
-signal add_offset_to_pc_sd : std_logic;
-signal pc : std_logic_vector(31 downto 0);
-
+signal add_offset_to_pc : std_logic;
+signal pc : std_logic_vector(31 downto 0) := x"00000000";
+signal init_pc : std_logic_vector(31 downto 0); 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
 signal r1_valid_sd, r2_valid_sd : std_logic;
@@ -163,18 +165,22 @@ dec2exe : fifo
 -------------------------
 -- fifo gestion 
 -------------------------
--- dec2if 
-dec2if_push_sd <= not dec2if_full_sd;
+stall_sd    <=  '1' when (((r1_valid_sd = '0' or r2_valid_sd = '0') and (b_type_sd = '1' or jalr_type_sd = '1' or j_type_sd = '1' or block_in_dec = '1')) or IF2DEC_EMPTY_SI = '1' or dec2exe_full_sd = '1')
+                    else 
+                '0'; 
 
 -- if2dec 
-IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall_sd = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
-                 '0'; 
-IF2DEC_FLUSH_SD <= '1' when (add_offset_to_pc_sd = '1') else 
-                   '0'; 
+IF2DEC_POP_SD   <=  not stall_sd; 
+
+IF2DEC_FLUSH_SD <=  '1' when jump_sd = '1' and stall_sd = '0' else  
+                    '0'; 
+
+dec2if_push_sd  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
+                            or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0')) else 
+                    '0';  
 
 -- dec2exe
-dec2exe_push_sd <= '0' when (stall_sd = '1' or dec2exe_full_sd = '1' or IF2DEC_EMPTY_SI = '1') else
-                '1'; 
+dec2exe_push_sd <=  not stall_sd; 
 
 -------------------------
 -- Instruction type 
@@ -326,7 +332,7 @@ res <= dec2exe_op1_sd xor dec2exe_op2_sd;
 res_compare <= std_logic_vector(signed(dec2exe_op1_sd) - signed(dec2exe_op2_sd));
 different_sign <= dec2exe_op1_sd(31) xor dec2exe_op2_sd(31) ;
 
-jump_sd <= '1' when b_type_sd = '1' and ((bne_i_sd = '1' and (res /= x"00000000")) 
+jump_sd <=  '1' when b_type_sd = '1' and ((bne_i_sd = '1' and (res /= x"00000000")) 
                                               or (beq_i_sd = '1' and (res = x"00000000"))
                                               
                                               or (blt_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
@@ -340,44 +346,42 @@ jump_sd <= '1' when b_type_sd = '1' and ((bne_i_sd = '1' and (res /= x"00000000"
 
                                               or (bgeu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
                                               or (different_sign = '0' and res_compare(31) = '0'))))
-                     else '0';
+                else 
+            '0';
                 
-inc_pc <= '1' when ((r_type_sd or i_type_sd or s_type_sd) = '1') else 
-             not(jump_sd) when b_type_sd = '1' else 
-             '0';
-
 inval_adr_dest <= '1' when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else '0';
 
 invalid_i <= '0'; -- idk the need of this signal 
 
 invalid_instr <= invalid_i or IF2DEC_EMPTY_SI; 
 
-inc_pc_sd <= (inc_pc and dec2if_push_sd) or not invalid_instr;
-
-add_offset_to_pc_sd <= not stall_sd and not inc_pc and dec2if_push_sd and not invalid_instr;
+add_offset_to_pc <= jump_sd and not(IF2DEC_EMPTY_SI);
 
 -- PC 
-process(READ_PC_SR, add_offset_to_pc_sd, inc_pc_sd)
+WRITE_PC_ENABLE_SD  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
+                                or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0')) else 
+                        '0';  
+process(clk, reset_n)
 begin 
-    if inc_pc_sd = '1' then 
-        pc <= std_logic_vector(signed(READ_PC_SR) + signed(inc_value)); 
-        WRITE_PC_ENABLE_SD <= '1'; 
-    elsif inc_pc_sd = '0' and add_offset_to_pc_sd = '1' then 
-        pc <= std_logic_vector(signed(READ_PC_SR) - signed(inc_value));
-        WRITE_PC_ENABLE_SD <= '1'; 
+    if rising_edge(reset_n) then 
+        reset_active_sd <= '1'; 
     else 
-    pc <= READ_PC_SR;
-    WRITE_PC_ENABLE_SD <= '0';
+        if rising_edge(clk) then 
+            reset_active_sd <= '0'; 
+        end if; 
     end if; 
 end process; 
 
-WRITE_PC_SD <= pc;
+pc  <=  READ_PC_SR when reset_active_sd = '1' else
+        std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value)) when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
+        std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd)) when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1'else 
+        x"00000000"; 
 
+WRITE_PC_SD <= pc; 
 -------------------------
 -- Bypass
 -------------------------
 block_in_dec <= '1' when (((radr1_sd = rdest_sd) or (radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
-stall_sd <= (not r1_valid_sd or not r2_valid_sd) and (b_type_sd or j_type_sd or jalr_type_sd or block_in_dec);  
 block_bp_sd <= jalr_type_sd;      
 
  
@@ -416,7 +420,7 @@ MEM_LOAD_RD <= mem_load_fifo;
 
 -- fifo  
 -- dec2if 
-dec2if_din <= pc; 
+dec2if_din <= pc;   
 PC_RD <= dec2if_dout; 
 
 -- dec2exe 

@@ -37,15 +37,16 @@ signal reg0, reg1, reg2, reg3, reg4, reg5, reg6, reg7, reg8, reg9, reg10, reg11,
 begin 
 
 process(clk)
-begin 
-    if(rising_edge(clk)) then
-        if reset_n = '0' then
-            registers(32) <= PC_INIT; 
-            -- init all registers except PC to 0
-            for i in 0 to 31 loop 
-                registers(i) <= x"00000000";
-            end loop;
-        else 
+begin        
+    if reset_n = '0' then
+        -- init all registers except PC to 0
+        for i in 0 to 31 loop 
+            registers(i) <= x"00000000";
+        end loop;
+        registers(32) <= PC_INIT; 
+
+    elsif(rising_edge(clk)) then
+
             if WRITE_PC_ENABLE_SD = '1' then 
                 registers(32) <= WRITE_PC_SD; 
             end if;
@@ -56,7 +57,6 @@ begin
                     end if;
                 end if;
             end if;
-        end if;
     end if;
 end process; 
  
