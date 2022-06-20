@@ -193,7 +193,7 @@ int sc_main(int argc, char* argv[]) {
     dec2if_pop.write(1);
     dec2exe_pop.write(1);
 
-    if (dec.adr_dest_sd.read() != 0) { REG_VALID[dec.adr_dest_sd.read()] = 0; }
+    if (dec.adr_dest_sd_s1.read() != 0) { REG_VALID[dec.adr_dest_sd_s1.read()] = 0; }
 
     print_reg(REG);
     affectation_validity(REG_VALID, tab2);
@@ -220,7 +220,7 @@ int sc_main(int argc, char* argv[]) {
     dec2if_pop.write(1);
     dec2exe_pop.write(1);
 
-    if (dec.adr_dest_sd.read() != 0) { REG_VALID[dec.adr_dest_sd.read()] = 0; }
+    if (dec.adr_dest_sd_s1.read() != 0) { REG_VALID[dec.adr_dest_sd_s1.read()] = 0; }
 
     print_reg(REG);
     affectation_validity(REG_VALID, tab2);

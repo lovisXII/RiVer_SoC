@@ -338,8 +338,10 @@ int sc_main(int argc, char* argv[]) {
     int cycles = 0;
     int countdown;
 
-    int if_adr;
-    int if_result;
+    int if_adr_s1;
+    int if_adr_s2;
+    int if_result_s1;
+    int if_result_s2;
     int mem_adr;
     int mem_size;
 
@@ -439,11 +441,11 @@ int sc_main(int argc, char* argv[]) {
                 icache_dta_valid = ICACHE_DTA_VALID.read();
                 if(icache_dta_valid)
                 {
-                    if_adr = ICACHE_A.read();
+                    if_adr_s1 = ICACHE_A.read();
 
-                    ICACHE_DT.write(ram[if_adr]);
-                    //std::cout << "inst 0: " << ram[if_adr] << std::endl;
-                    ICACHE_A.write(if_adr);
+                    ICACHE_DT.write(ram[if_adr_s1]);
+                    //std::cout << "inst 0: " << ram[if_adr_s1] << std::endl;
+                    ICACHE_A.write(if_adr_s1);
                     MP_ACK_ICACHE.write(true);
                     IC_fsm_current_state = IC_SEND_INSTRUCTION_1;
                 }
@@ -453,34 +455,34 @@ int sc_main(int argc, char* argv[]) {
                 }
             break;
             case IC_SEND_INSTRUCTION_1:
-                ICACHE_DT.write(ram[if_adr+4]);
-                ICACHE_A.write(if_adr+4);
+                ICACHE_DT.write(ram[if_adr_s1+4]);
+                ICACHE_A.write(if_adr_s1+4);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU0;
 
-                //std::cout << "inst 1: " << ram[if_adr+4] << std::endl;
+                //std::cout << "inst 1: " << ram[if_adr_s1+4] << std::endl;
             break;
             case IC_CLK_SIMU0:
                 IC_fsm_current_state = IC_SEND_INSTRUCTION_2;
             break;
             case IC_SEND_INSTRUCTION_2:
-                ICACHE_DT.write(ram[if_adr+8]);
-                ICACHE_A.write(if_adr+8);
+                ICACHE_DT.write(ram[if_adr_s1+8]);
+                ICACHE_A.write(if_adr_s1+8);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU1;
 
-                //std::cout << "inst 2: " << ram[if_adr+8] << std::endl;
+                //std::cout << "inst 2: " << ram[if_adr_s1+8] << std::endl;
             break;
             case IC_CLK_SIMU1:
                 IC_fsm_current_state = IC_SEND_INSTRUCTION_3;
             break;
             case IC_SEND_INSTRUCTION_3:
-                ICACHE_DT.write(ram[if_adr+12]);
-                ICACHE_A.write(if_adr+12);
+                ICACHE_DT.write(ram[if_adr_s1+12]);
+                ICACHE_A.write(if_adr_s1+12);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_END_BURST;
 
-                //std::cout << "inst 3: " << ram[if_adr + 12] << std::endl;
+                //std::cout << "inst 3: " << ram[if_adr_s1 + 12] << std::endl;
             break;
             case IC_END_BURST:
                 IC_fsm_current_state = IC_IDLE;
@@ -488,7 +490,8 @@ int sc_main(int argc, char* argv[]) {
             break;
         }
 #else
-        if_adr       = IF_ADR_S1.read();
+        if_adr_s1       = IF_ADR_S1.read();
+        if_adr_s2       = IF_ADR_S2.read();
         bool         if_afr_valid = IF_ADR_VALID_S1.read();
 #endif
 
@@ -613,8 +616,10 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
 #ifndef ICACHE_ON
-        if_result = ram[if_adr];
-        IC_INST_S1.write(if_result);
+        if_result_s1 = ram[if_adr_s1];
+        if_result_s2 = ram[if_adr_s2];
+        IC_INST_S1.write(if_result_s1);
+        IC_INST_S2.write(if_result_s2);
         IC_STALL.write(false);
 #endif
 
