@@ -123,6 +123,6 @@ jobs:
           cp scripts/github_config_file riscof/config.ini
       - name: Run riscof
         run: 
-          ./test_systemc_core_riscof
+          ./scripts/test_systemc_core_riscof.sh
 
       
