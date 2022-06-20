@@ -80,6 +80,9 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, ADR_SI_S1, GET_NAME(ADR_SI_S1));
     sc_trace(tf, ADR_VALID_SI_S1, GET_NAME(ADR_VALID_SI_S1));
     sc_trace(tf, IC_INST_SI_S1, GET_NAME(IC_INST_SI_S1));
+    sc_trace(tf, ADR_SI_S2, GET_NAME(ADR_SI_S2));
+    sc_trace(tf, ADR_VALID_SI_S2, GET_NAME(ADR_VALID_SI_S2));
+    sc_trace(tf, IC_INST_SI_S2, GET_NAME(IC_INST_SI_S2));
     sc_trace(tf, IC_STALL_SI, GET_NAME(IC_STALL_SI));
     sc_trace(tf, DEC2IF_EMPTY_SI, GET_NAME(DEC2IF_EMPTY_SI));
     sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));

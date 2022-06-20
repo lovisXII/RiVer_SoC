@@ -1,3 +1,4 @@
+#pragma once
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
@@ -50,7 +51,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>       DEC2IF_POP_SI;    // Ifecth say to decod if it wants a pop or no
     sc_out<bool>      DEC2IF_EMPTY_SD;
-    sc_out<sc_bv<32>> PC_RD_s1;          // this value must also be sent to REG
+    sc_out<sc_bv<32>> PC_RD_S1;          // this value must also be sent to REG
     sc_out<sc_bv<32>> PC_RD_S2;          // this value must also be sent to REG
 
     // Interface with IF2DEC :
@@ -364,6 +365,12 @@ SC_MODULE(decod) {
                   << mulh_i_sd << mulhsu_i_sd << mulhu_i_sd;
         SC_METHOD(unconcat_dec2exe)
         sensitive << dec2exe_out_sd;
+
+        SC_METHOD(concat_dec2if)
+        sensitive   << dec2if_pc_sd_s1 
+                    << dec2if_pc_sd_s2;
+        SC_METHOD(unconcat_dec2if)
+        sensitive   << dec2if_out_sd ;
 
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
