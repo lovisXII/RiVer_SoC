@@ -8,6 +8,8 @@
 #define if2dec_size  128
 
 SC_MODULE(ifetch) {
+    // FIFO
+    fifo<if2dec_size> fifo_inst;
     // Icache Interface :
 
     sc_in<sc_bv<32>>        IC_INST_SI_S1;  //Instruction sent by the cache/memory
@@ -53,8 +55,6 @@ SC_MODULE(ifetch) {
     sc_in_clk   CLK;
     sc_in<bool>   RESET;
 
-    // FIFO
-    fifo<if2dec_size> fifo_inst;
 
     // Internals signals :
 

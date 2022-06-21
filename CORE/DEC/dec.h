@@ -15,7 +15,6 @@ SC_MODULE(decod) {
     fifo<dec2if_size>     dec2if;
     fifo<dec2exe_size_s1> dec2exe_s1;
     fifo<dec2exe_size_s2> dec2exe_s2;
-
     // Interface with DEC2IF :
 
     sc_in<bool>       DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
