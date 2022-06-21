@@ -116,6 +116,7 @@ signal bpc_instr_in_exe2, bpc_load_in_mem2, bpc_ed2, bpc_md2 : std_logic;
 -- readable signals (output ports)
 signal mem_load_fifo : std_logic;
 signal dec2exe_empty : std_logic;
+signal dec2exe_rdest_fifo : std_logic_vector(5 downto 0);
 
 component fifo
     generic(N : integer);
@@ -332,20 +333,21 @@ res <= dec2exe_op1_sd xor dec2exe_op2_sd;
 res_compare <= std_logic_vector(signed(dec2exe_op1_sd) - signed(dec2exe_op2_sd));
 different_sign <= dec2exe_op1_sd(31) xor dec2exe_op2_sd(31) ;
 
-jump_sd <=  '1' when b_type_sd = '1' and ((bne_i_sd = '1' and (res /= x"00000000")) 
-                                              or (beq_i_sd = '1' and (res = x"00000000"))
+jump_sd <=  '1' when b_type_sd = '1'    and (   (bne_i_sd = '1' and (res /= x"00000000")) 
+                                            
+                                            or  (beq_i_sd = '1' and (res = x"00000000"))
                                               
-                                              or (blt_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
-                                              or (different_sign = '0' and res_compare(31) = '1')))
+                                            or  (blt_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
+                                                    or (different_sign = '0' and res_compare(31) = '1')))
                                               
-                                              or (bltu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op2_sd(31) = '1') 
-                                              or (different_sign = '0' and res_compare(31) = '1')))
+                                            or  (bltu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op2_sd(31) = '1') 
+                                                    or (different_sign = '0' and res_compare(31) = '1')))
 
-                                              or (bge_i_sd = '1' and ((different_sign = '1' and  dec2exe_op2_sd(31) = '1') 
-                                              or (different_sign = '0' and res_compare(31) = '0'))) 
+                                            or  (bge_i_sd = '1' and ((different_sign = '1' and  dec2exe_op2_sd(31) = '1') 
+                                                    or (different_sign = '0' and res_compare(31) = '0'))) 
 
-                                              or (bgeu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
-                                              or (different_sign = '0' and res_compare(31) = '0'))))
+                                            or  (bgeu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
+                                                    or (different_sign = '0' and res_compare(31) = '0'))))
                 else 
             '0';
                 
@@ -383,20 +385,20 @@ WRITE_PC_SD <= pc;
 -------------------------
 -- Bypass
 -------------------------
-block_in_dec <= '1' when (((radr1_sd = rdest_sd) or (radr2_sd = rdest_sd)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
+block_in_dec <= '1' when (((radr1_sd = dec2exe_rdest_fifo) or (radr2_sd = dec2exe_rdest_fifo)) and mem_load_fifo = '1' and dec2exe_empty = '0') else '0';
 block_bp_sd <= jalr_type_sd;      
 
  
 -- Conditions
-bpc_instr_in_exe1   <= '1' when radr1_sd = rdest_sd and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
+bpc_instr_in_exe1   <= '1' when radr1_sd = dec2exe_rdest_fifo and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
 bpc_load_in_mem1    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" else '0';  
 bpc_ed1             <= '1' when radr1_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
 bpc_md1             <= '1' when radr1_sd = BP_DEST_RM and radr1_sd /= "000000" else '0';           
 
-bpc_instr_in_exe2   <= '1' when radr1_sd = rdest_sd and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
-bpc_load_in_mem2    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" else '0';  
-bpc_ed2             <= '1' when radr1_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
-bpc_md2             <= '1' when radr1_sd = BP_DEST_RM and radr1_sd /= "000000" else '0';           
+bpc_instr_in_exe2   <= '1' when radr2_sd = dec2exe_rdest_fifo and dec2exe_empty = '0' and radr2_sd /= "000000" else '0'; 
+bpc_load_in_mem2    <= '1' when radr2_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr2_sd /= "000000" else '0';  
+bpc_ed2             <= '1' when radr2_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr2_sd /= "000000" else '0'; 
+bpc_md2             <= '1' when radr2_sd = BP_DEST_RM and radr2_sd /= "000000" else '0';           
 
 -- Affectations
 rdata1_sd   <=  BP_EXE_RES_RE when bpc_ed1 = '1' else 
@@ -419,6 +421,7 @@ DEC2EXE_EMPTY_SD <= dec2exe_empty;
 RADR1_SR <= radr1_sd;
 RADR2_SR <= radr2_sd;
 MEM_LOAD_RD <= mem_load_fifo; 
+DEST_RD <= dec2exe_rdest_fifo;
 
 -- fifo  
 -- dec2if 
@@ -462,7 +465,7 @@ MEM_STORE_RD <= dec2exe_dout(12);
 MEM_SIGN_EXTEND_RD <= dec2exe_dout(11);
 MEM_SIZE_RD <= dec2exe_dout(10 downto 9);
 SELECT_SHIFT_RD <= dec2exe_dout(8);
-DEST_RD <= dec2exe_dout(7 downto 2);
+dec2exe_rdest_fifo <= dec2exe_dout(7 downto 2);
 SLT_RD <= dec2exe_dout(1);
 SLTU_RD <= dec2exe_dout(0);
 

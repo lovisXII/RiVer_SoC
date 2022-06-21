@@ -33,12 +33,14 @@ _bad:
     ori x10, x0, 1
     nop
     nop
-    j _bad
     nop
+    nop
+    nop
+    nop
+    nop
+    
 
 _good: 
     ori x10, x0, 15
     nop
-    nop
-    j _good
     nop
