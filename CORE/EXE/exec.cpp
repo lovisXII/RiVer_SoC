@@ -295,16 +295,12 @@ void exec::exception() {
 }
 void exec::manage_divider()
 {
-    if(SELECT_TYPE_OPERATIONS_RD.read()==0b1000 && !div_busy_reg_se && !DEC2EXE_EMPTY_SD)
+    if(SELECT_TYPE_OPERATIONS_RD.read()==0b1000 && !DEC2EXE_EMPTY_SD && !DONE_SE)
     {
         START_SE.write(true);
-        div_busy_reg_se = true;
     }
     else
         START_SE.write(false);
-    
-    if(DONE_SE.read())
-        div_busy_reg_se = false;
 }
 void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));  // can contains CSR if CSR_type_operation_RD == 1

@@ -32,14 +32,13 @@ SC_MODULE(Diviseur)
     sc_signal<sc_uint<32>>    quotient_se;
     sc_signal<sc_biguint<64>> reminder_se;
 
-    sc_signal<bool> busy_se;
-    sc_signal<bool> done_se;
-
     sc_signal<sc_uint<3>> current_state;
     sc_signal<sc_uint<3>> next_state;
 
     sc_signal<sc_uint<6>> shift_cpt_se;
     sc_signal<sc_uint<6>> shift_cpt_re;
+
+    sc_signal<bool> sign_reg_se;
 
     //mae
     void new_state();

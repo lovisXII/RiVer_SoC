@@ -20,7 +20,7 @@ _start:
 
     ori x7, x0, 5
     ori x9, x0, 1
-    rem x10, x7, x8
+    rem x10, x8, x7
     bne x10, x9, _bad
     
     j _good
