@@ -38,7 +38,7 @@ int sc_main(int argc, char* argv[]) {
     RESET_N.write(false);  // reset
     sc_start(3, SC_NS);    // wait for 1 cycle
     RESET_N.write(true);   // end of reset
-    for(int j = 0; j <1000; j++){
+    for(int j = 0; j <10; j++){
         int data_in = rand() % 33 ; 
         int write   = rand() % 2 ;
         int read    = rand() % 2 ;

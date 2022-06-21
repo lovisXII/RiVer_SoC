@@ -35,7 +35,9 @@ SC_MODULE(buffer) {
                     << WRITE_S
                     << READ_S
                     << read_ptr 
-                    << write_ptr;
+                    << write_ptr
+                    << full_s
+                    << empty_s;
         reset_signal_is(RESET_N, false);
     }
 };
@@ -47,10 +49,14 @@ void buffer<T>::flags_update() {
         full_s = 0;
     }
     else{
+        cout << sc_time_stamp() << " r_ptr " << read_ptr << endl ;
+        cout << sc_time_stamp() << " w_ptr " << write_ptr << endl ;
         if((write_ptr == read_ptr) && WRITE_S.read()){
+            cout << sc_time_stamp() << " lala " << endl ;
             full_s = 1;
         }
         else{
+            cout << sc_time_stamp() << " ta mere " << endl ;
             full_s = 0;
         }
         if((write_ptr == read_ptr) && READ_S.read()){
