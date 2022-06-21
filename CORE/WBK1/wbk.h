@@ -25,11 +25,11 @@ SC_MODULE(wbk) {
     sc_in<sc_uint<32>> PC_MEM2WBK_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
     sc_in<bool>        CSR_WENABLE_RM;
-    sc_in<sc_uint<2>>  CURRENT_MODE_SM ;
+    sc_in<sc_uint<2>>  CURRENT_MODE_SM;
 
     sc_in<bool>        MULT_INST_RM;
-    sc_in<sc_uint<32>> X2_RES_RX2; 
-    
+    sc_in<sc_uint<32>> X2_RES_RX2;
+
     // Mem2wbk interface
 
     sc_in<bool>  MEM2WBK_EMPTY_SM;

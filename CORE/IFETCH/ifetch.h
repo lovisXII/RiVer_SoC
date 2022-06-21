@@ -28,8 +28,8 @@ SC_MODULE(ifetch) {
 
     sc_in<bool>             IF2DEC_FLUSH_SD;   // allow to flush if2dec in case of a branch
     sc_in<bool>             IF2DEC_POP_SD;
-    sc_in<sc_bv<32>>        PC_RD_S1;          // PC coming to fetch an instruction
-    sc_in<sc_bv<32>>        PC_RD_S2;          // PC coming to fetch an instruction
+    sc_in<sc_bv<32>>        PC_DEC2IF_RD_S1;          // PC coming to fetch an instruction
+    sc_in<sc_bv<32>>        PC_DEC2IF_RD_S2;          // PC coming to fetch an instruction
 
     sc_out<bool>            IF2DEC_EMPTY_SI;
 
@@ -80,7 +80,7 @@ SC_MODULE(ifetch) {
 
         SC_METHOD(fetch_method);
         sensitive << IC_INST_SI_S1 << DEC2IF_EMPTY_SI 
-        << IF2DEC_FULL_SI << PC_RD_S1 
+        << IF2DEC_FULL_SI << PC_DEC2IF_RD_S1 
         << IF2DEC_FLUSH_SD << IC_STALL_SI 
         << RESET
         << EXCEPTION_SM 

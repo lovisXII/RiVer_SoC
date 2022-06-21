@@ -117,17 +117,17 @@ int sc_main(int argc, char* argv[]) {
     dec.READ_PC_SR(read_pc);
     dec.READ_PC_VALID_SD(read_pc_valid);
 
-    dec.OP1_RD(dec2exe_op1);
-    dec.OP2_RD(dec2exe_op2);
-    dec.EXE_CMD_RD(dec2exe_cmd);
-    dec.NEG_OP2_RD(dec2exe_neg_op1);
-    dec.WB_RD(dec2exe_wb);
+    dec.OP1_RD_S1(dec2exe_op1);
+    dec.OP2_RD_S1(dec2exe_op2);
+    dec.EXE_CMD_RD_S1(dec2exe_cmd);
+    dec.NEG_OP2_RD_S1(dec2exe_neg_op1);
+    dec.WB_RD_S1(dec2exe_wb);
 
-    dec.MEM_DATA_RD(mem_data);
-    dec.MEM_LOAD_RD(mem_load);
-    dec.MEM_STORE_RD(mem_store);
-    dec.MEM_SIGN_EXTEND_RD(mem_sign_extend);
-    dec.MEM_SIZE_RD(mem_size);
+    dec.MEM_DATA_RD_S1(mem_data);
+    dec.MEM_LOAD_RD_S1(mem_load);
+    dec.MEM_STORE_RD_S1(mem_store);
+    dec.MEM_SIGN_EXTEND_RD_S1(mem_sign_extend);
+    dec.MEM_SIZE_RD_S1(mem_size);
     dec.SELECT_SHIFT_RD(select_shift);
 
     dec.DEC2IF_POP_SI(dec2if_pop);
@@ -138,8 +138,8 @@ int sc_main(int argc, char* argv[]) {
     dec.IF2DEC_EMPTY_SI(if2dec_empty);
     dec.IF2DEC_POP_SD(if2dec_pop);
 
-    dec.DEC2EXE_POP_SE(dec2exe_pop);
-    dec.DEC2EXE_EMPTY_SD(dec2exe_empty);
+    dec.DEC2EXE_POP_SE_S1(dec2exe_pop);
+    dec.DEC2EXE_EMPTY_SD_S1(dec2exe_empty);
 
     dec.CLK(clk);
     dec.RESET_N(reset_n);

@@ -4,10 +4,15 @@
 // bool REG_VALID[33] ; //bit de validité des registres
 
 void reg::reading_adresses() {
-    RDATA1_SR.write(REG_RR[RADR1_SD_S1.read()]);  // on charge la donnée dans REG[index] dans
-                                               // le port de lecture 1
-    RDATA2_SR.write(REG_RR[RADR2_SD_S1.read()]);  // on charge la donnée dans REG[index] dans
-                                               // le port de lecture 2
+    RDATA1_SR_S1 = REG_RR[RADR1_SD_S1.read()];  // on charge la donnée dans REG[index] dans
+                                                // le port de lecture 1
+    RDATA2_SR_S1 = REG_RR[RADR2_SD_S1.read()];  // on charge la donnée dans REG[index] dans
+                                                // le port de lecture 2
+
+    RDATA1_SR_S2 = REG_RR[RADR1_SD_S2.read()];
+
+    RDATA2_SR_S2 = REG_RR[RADR2_SD_S2.read()];
+
     if (RESET_N.read()) {
         READ_PC_SR.write(REG_RR[32]);
     } else {
@@ -46,8 +51,12 @@ void reg::writing_adresse() {
 void reg::trace(sc_trace_file* tf) {
     sc_trace(tf, RADR1_SD_S1, GET_NAME(RADR1_SD_S1));
     sc_trace(tf, RADR2_SD_S1, GET_NAME(RADR2_SD_S1));
-    sc_trace(tf, RDATA1_SR, GET_NAME(RDATA1_SR));
-    sc_trace(tf, RDATA2_SR, GET_NAME(RDATA2_SR));
+    sc_trace(tf, RDATA1_SR_S1, GET_NAME(RDATA1_SR_S1));
+    sc_trace(tf, RDATA2_SR_S1, GET_NAME(RDATA2_SR_S1));
+    sc_trace(tf, RADR1_SD_S2, GET_NAME(RADR1_SD_S2));
+    sc_trace(tf, RADR2_SD_S2, GET_NAME(RADR2_SD_S2));
+    sc_trace(tf, RDATA1_SR_S2, GET_NAME(RDATA1_SR_S2));
+    sc_trace(tf, RDATA2_SR_S2, GET_NAME(RDATA2_SR_S2));
     sc_trace(tf, WADR_SW, GET_NAME(WADR_SW));
     sc_trace(tf, WENABLE_SW, GET_NAME(WENABLE_SW));
     sc_trace(tf, WDATA_SW, GET_NAME(WDATA_SW));

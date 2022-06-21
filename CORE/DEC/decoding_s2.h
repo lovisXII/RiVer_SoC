@@ -1,10 +1,10 @@
-#include "dec.h"
 #include <systemc.h>
+#include "dec.h"
 //---------------------------------------------INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
 void decod::decoding_instruction_type_s2() {
-    sc_uint<32> if_ir2   = INSTR_RI_S2.read();
+    sc_uint<32> if_ir2     = INSTR_RI_S2.read();
     r_type_inst_sd_s2      = (if_ir2.range(6, 0) == 0b0110011 && if_ir2.range(31, 25) != 0b0000001) ? 1 : 0;
     i_type_inst_sd_s2      = (if_ir2.range(6, 0) == 0b0010011 | if_ir2.range(6, 0) == 0b0000011) ? 1 : 0;
     s_type_inst_sd_s2      = if_ir2.range(6, 0) == 0b0100011 ? 1 : 0;
@@ -282,64 +282,64 @@ void decod::decoding_instruction_s2() {
 // this needs to be done in two steps :
 void decod::pre_reg_read_decoding_s2() {
     sc_uint<32> if_ir2 = INSTR_RI_S2.read();
-    sc_uint<6>  radr1_var;
-    sc_uint<6>  radr2_var;
-    sc_uint<6>  adr_dest_var;
+    sc_uint<6>  radr1_var_s2;
+    sc_uint<6>  radr2_var_s2;
+    sc_uint<6>  adr_dest_var_s2;
 
     // R-type Instruction :
     if (r_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = if_ir2.range(24, 20);
-        adr_dest_var = if_ir2.range(11, 7);
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = if_ir2.range(24, 20);
+        adr_dest_var_s2 = if_ir2.range(11, 7);
         CSR_RADR_SD_S2.write(0);
     }
     // I-type Instruction :
     else if (i_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = 0;
-        adr_dest_var = if_ir2.range(11, 7);
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = 0;
+        adr_dest_var_s2 = if_ir2.range(11, 7);
         CSR_RADR_SD_S2.write(0);
     }
     // S-type Instruction :
     else if (s_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = if_ir2.range(24, 20);
-        adr_dest_var = 0;
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = if_ir2.range(24, 20);
+        adr_dest_var_s2 = 0;
         CSR_RADR_SD_S2.write(0);
     }
     // Branch Instruction :
     else if (b_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = if_ir2.range(24, 20);
-        adr_dest_var = 0;
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = if_ir2.range(24, 20);
+        adr_dest_var_s2 = 0;
         CSR_RADR_SD_S2.write(0);
     }
     // U-type Instruction :
     else if (u_type_inst_sd_s2 == 1) {
-        radr1_var    = 0;
-        adr_dest_var = if_ir2.range(11, 7);
-        radr2_var    = 0;
+        radr1_var_s2    = 0;
+        adr_dest_var_s2 = if_ir2.range(11, 7);
+        radr2_var_s2    = 0;
         CSR_RADR_SD_S2.write(0);
     }
     // J-type Instruction :
     else if (j_type_inst_sd_s2 == 1) {
-        radr1_var    = 0;
-        radr2_var    = 0;
-        adr_dest_var = if_ir2.range(11, 7);
+        radr1_var_s2    = 0;
+        radr2_var_s2    = 0;
+        adr_dest_var_s2 = if_ir2.range(11, 7);
         CSR_RADR_SD_S2.write(0);
     }
     // JALR-type Instruction :
     else if (jalr_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = 0;
-        adr_dest_var = if_ir2.range(11, 7);
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = 0;
+        adr_dest_var_s2 = if_ir2.range(11, 7);
         CSR_RADR_SD_S2.write(0);
     }
     // M-type Instruction :
     else if (m_type_inst_sd_s2 == 1) {
-        radr1_var    = if_ir2.range(19, 15);
-        radr2_var    = if_ir2.range(24, 20);
-        adr_dest_var = if_ir2.range(11, 7);
+        radr1_var_s2    = if_ir2.range(19, 15);
+        radr2_var_s2    = if_ir2.range(24, 20);
+        adr_dest_var_s2 = if_ir2.range(11, 7);
     }
     // system-type Instruction
     else if (system_type_inst_sd_s2 == 1) {
@@ -350,13 +350,13 @@ void decod::pre_reg_read_decoding_s2() {
         if (csrrw_i_sd_s2 || csrrs_i_sd_s2 || csrrc_i_sd_s2 || csrrwi_i_sd_s2 || csrrsi_i_sd_s2 || csrrci_i_sd_s2) {
             CSR_RADR_SD_S2.write(if_ir2.range(31, 20));
             csr_radr_sd_s2  = if_ir2.range(31, 20);
-            radr1_var    = (csrrw_i_sd_s2 | csrrs_i_sd_s2 | csrrc_i_sd_s2) ? if_ir2.range(19, 15) : 0;
-            radr2_var    = 0;
-            adr_dest_var = if_ir2.range(11, 7);
+            radr1_var_s2    = (csrrw_i_sd_s2 | csrrs_i_sd_s2 | csrrc_i_sd_s2) ? if_ir2.range(19, 15) : 0;
+            radr2_var_s2    = 0;
+            adr_dest_var_s2 = if_ir2.range(11, 7);
         } else if (ecall_i_sd_s2 || ebreak_i_sd_s2) {
-            radr1_var    = 0;
-            radr2_var    = 0;
-            adr_dest_var = 0;
+            radr1_var_s2    = 0;
+            radr2_var_s2    = 0;
+            adr_dest_var_s2 = 0;
 
             // Generate the exception corresponding to the right
             // call
@@ -378,9 +378,9 @@ void decod::pre_reg_read_decoding_s2() {
 
         } else if (sret_i_sd_s2 || mret_i_sd_s2) {
             // xRET instruction read the current value of MEPC register
-            radr1_var    = 0;
-            radr2_var    = 0;
-            adr_dest_var = 0;
+            radr1_var_s2    = 0;
+            radr2_var_s2    = 0;
+            adr_dest_var_s2 = 0;
 
             // Exception will be generate in case of mret in wrong mode
 
@@ -395,9 +395,9 @@ void decod::pre_reg_read_decoding_s2() {
     }
     // Default case :
     else {
-        radr1_var    = 0;
-        radr2_var    = 0;
-        adr_dest_var = 0;
+        radr1_var_s2    = 0;
+        radr2_var_s2    = 0;
+        adr_dest_var_s2 = 0;
     }
     if (!ecall_i_sd_s2) {
         env_call_u_mode_sd_s2 = 0;
@@ -405,9 +405,9 @@ void decod::pre_reg_read_decoding_s2() {
         env_call_m_mode_sd_s2 = 0;
     }
     if (!mret_i_sd_s2 | !sret_i_sd_s2) { env_call_wrong_mode_s2 = 0; }
-    RADR1_SD_S2.write(radr1_var);
-    RADR2_SD_S2.write(radr2_var);
-    adr_dest_sd_s2.write(adr_dest_var);
+    RADR1_SD_S2.write(radr1_var_s2);
+    RADR2_SD_S2.write(radr2_var_s2);
+    adr_dest_sd_s2.write(adr_dest_var_s2);
 }
 
 //---------------------------------------------EXE & MEM SIGNAL DETECTION
@@ -478,7 +478,7 @@ void decod::post_reg_read_decoding_s2() {
         dec2exe_wb_var    = 1;
         mem_data_var      = 0;
         offset_branch_var = 0;
-        not_jump_var        = 1;
+        not_jump_var      = 1;
 
         // sub
         exe_neg_op2_sd_s2.write(sub_i_sd_s2 | slt_i_sd_s2 | slti_i_sd_s2 | sltu_i_sd_s2 | sltiu_i_sd_s2);
@@ -486,7 +486,8 @@ void decod::post_reg_read_decoding_s2() {
         // Command for exe
         if (and_i_sd_s2 || andi_i_sd_s2 || srl_i_sd_s2 || srli_i_sd_s2 || mul_i_sd_s2 || div_i_sd_s2)
             exe_cmd_sd_s2.write(1);
-        else if (or_i_sd_s2 || ori_i_sd_s2 || sra_i_sd_s2 || srai_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2 || divu_i_sd_s2)
+        else if (or_i_sd_s2 || ori_i_sd_s2 || sra_i_sd_s2 || srai_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 ||
+                 mulhu_i_sd_s2 || divu_i_sd_s2)
             exe_cmd_sd_s2.write(2);
         else if (xor_i_sd_s2 || xori_i_sd_s2 || rem_i_sd_s2)
             exe_cmd_sd_s2.write(3);
@@ -508,7 +509,7 @@ void decod::post_reg_read_decoding_s2() {
         exe_neg_op2_sd_s2.write(0);
         mem_load_sd_s2.write(0);
         offset_branch_var = 0;
-        not_jump_var        = 1;
+        not_jump_var      = 1;
         dec2exe_op1_var   = rdata1_sd_s2.read();
 
         // The adress is obtained by adding rs2 to the 12 bit immediat sign
@@ -624,7 +625,7 @@ void decod::post_reg_read_decoding_s2() {
             offset_branch_var += rdata1_sd_s2.read() - READ_PC_SR.read() + 4;
             offset_branch_var.range(0, 0) = 0;
             mem_data_var                  = 0;
-            not_jump_var                    = 0;
+            not_jump_var                  = 0;
         } else {
             dec2exe_op1_var = READ_PC_SR.read();
             dec2exe_op2_var = 0x0;  // on va envoyer l'adresse de retour
@@ -640,7 +641,7 @@ void decod::post_reg_read_decoding_s2() {
             offset_branch_var.range(10, 1)  = if_ir2.range(30, 21);
             offset_branch_var.range(0, 0)   = 0;
             mem_data_var                    = 0;
-            not_jump_var                      = 0;
+            not_jump_var                    = 0;
         }
     } else if (system_type_inst_sd_s2 == 1) {
         mem_load_sd_s2.write(0);
@@ -684,7 +685,7 @@ void decod::post_reg_read_decoding_s2() {
             // If instruction are write one, the value of rs2 just
             // erase what's inside the csr
             if (csrrs_i_sd_s2 || csrrc_i_sd_s2 || csrrsi_i_sd_s2 || csrrci_i_sd_s2) {
-                dec2exe_op2_var = CSR_RDATA_SC;
+                dec2exe_op2_var = CSR_RDATA_SC_S1;
             } else {
                 dec2exe_op2_var = 0;
             }
@@ -692,7 +693,7 @@ void decod::post_reg_read_decoding_s2() {
             dec2exe_wb_var    = 1;
             offset_branch_var = 0;
             mem_data_var      = 0;
-            not_jump_var        = 1;
+            not_jump_var      = 1;
 
         } else if (ecall_i_sd_s2 || ebreak_i_sd_s2) {
             csr_wenable_sd_s2.write(0);
@@ -707,7 +708,7 @@ void decod::post_reg_read_decoding_s2() {
             mem_size_sd_s2.write(0);
             offset_branch_var = 0;
             mem_data_var      = 0;
-            not_jump_var        = 1;
+            not_jump_var      = 1;
         } else if (sret_i_sd_s2 || mret_i_sd_s2) {
             csr_wenable_sd_s2.write(0);
             exe_cmd_sd_s2.write(0);
@@ -738,7 +739,7 @@ void decod::post_reg_read_decoding_s2() {
         select_type_operations_sd_s2.write(0b0001);
         offset_branch_var = 0;
         mem_data_var      = 0;
-        not_jump_var        = 1;
+        not_jump_var      = 1;
     } else {
         csr_wenable_sd_s2.write(0);
         exe_cmd_sd_s2.write(0);
@@ -777,9 +778,9 @@ void decod::post_reg_read_decoding_s2() {
     exe_op2_sd_s2.write(dec2exe_op2_var);
     mem_data_sd_s2.write(mem_data_var);
     // inc_pc_sd_s2.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
-    // add_offset_to_pc_sd.write((!stall_sd_s2 && !inc_pc_var && (b_type_inst_sd_s2 || j_type_inst_sd_s2 
+    // add_offset_to_pc_sd.write((!stall_sd_s2 && !inc_pc_var && (b_type_inst_sd_s2 || j_type_inst_sd_s2
     //                             || jalr_type_inst_sd_s2) &&
     //                            dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
     //                           !EXCEPTION_SM);
-    jump_sd_s2 = !not_jump_var ; 
+    jump_sd_s2 = !not_jump_var;
 }

@@ -18,7 +18,7 @@ operation in mem
 
 For store access :
 * byte      : we store the least significant byte of the register in the corresponding part of the adress
-* half-word : same thing but with a half word  
+* half-word : same thing but with a half word
 * word      : the word is directly store inside the memory case
 */
 
@@ -33,7 +33,7 @@ li x1,0x1000F101
 li x2,12
 sb x2,0(x1)
 
-The ram receive the adress 0x1000F101 and ignore the least 2 bits, 
+The ram receive the adress 0x1000F101 and ignore the least 2 bits,
 so it receive 0x1000F100.
 The ram accesses this adress and is informed that a byte access is made
 with the least 2 significant bits equal to 01
@@ -73,13 +73,13 @@ void mem::mem_preprocess() {
     int         size        = MEM_SIZE_RE.read();
     bool        sign_extend = SIGN_EXTEND_RE.read();
     sc_uint<32> din         = MEM_DATA_RE.read();
-    int         adr         ;
+    int         adr;
     sc_uint<32> dout;
     int         range_size;
     int         range_end;
     int         range_start;  // The beginning of the range of din that should actually
                               // be written to the register
-    MEM_SIZE_SM = MEM_SIZE_RE ;
+    MEM_SIZE_SM = MEM_SIZE_RE;
     // Memory slot selection
     switch (EXE_RES_RE.read().range(1, 0)) {
         case 0: range_start = 0; break;
@@ -91,9 +91,9 @@ void mem::mem_preprocess() {
 
     // Size of the data manipulate
     switch (size) {
-        case 2: range_size = 7; break;  //byte
-        case 1: range_size = 15; break; // half word
-        case 0: range_size = 31; break; // word
+        case 2: range_size = 7; break;   // byte
+        case 1: range_size = 15; break;  // half word
+        case 0: range_size = 31; break;  // word
         default: range_size = 31; break;
     }
     range_end = std::min(31, range_start + range_size);
@@ -108,7 +108,7 @@ void mem::mem_preprocess() {
     // adresse : 3, range_start = 24
     // range_end = 7+24 = 31
     // din.range(7,0)
-    //dout.range(31,24)
+    // dout.range(31,24)
     // issue with the store value
     dout.range(range_end, range_start) = din.range(range_size, 0);
 
@@ -117,10 +117,10 @@ void mem::mem_preprocess() {
 
     // The data sent to the actual memory/Icache
     MCACHE_DATA_SM.write(dout);
-    if(STORE_RE)
-        adr = EXE_RES_RE.read() ;
+    if (STORE_RE)
+        adr = EXE_RES_RE.read();
     else
-        adr = EXE_RES_RE.read() & 0xFFFFFFFC ;
+        adr = EXE_RES_RE.read() & 0xFFFFFFFC;
     MCACHE_ADR_SM.write(adr);
     MCACHE_LOAD_SM.write(LOAD_RE.read());
     MCACHE_STORE_SM.write(STORE_RE.read());
@@ -137,9 +137,9 @@ void mem::sign_extend() {
     int         range_size;
     int         range_start;  // The beginning of the range of din that should actually
                               // be written to the register
-    //MEM_SIZE = 0 -> Word
-    //MEM_SIZE = 1 -> Half word
-    //MEM_SIZE = 2 -> byte
+    // MEM_SIZE = 0 -> Word
+    // MEM_SIZE = 1 -> Half word
+    // MEM_SIZE = 2 -> byte
     switch (EXE_RES_RE.read().range(2, 0)) {
         case 0: range_start = 0; break;
         case 1: range_start = 8; break;

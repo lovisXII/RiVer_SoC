@@ -7,8 +7,14 @@ SC_MODULE(reg) {
     sc_in<sc_uint<6>> RADR1_SD_S1;
     sc_in<sc_uint<6>> RADR2_SD_S1;
 
-    sc_out<sc_uint<32>> RDATA1_SR;  // data output read from register
-    sc_out<sc_uint<32>> RDATA2_SR;
+    sc_out<sc_uint<32>> RDATA1_SR_S1;  // data output read from register
+    sc_out<sc_uint<32>> RDATA2_SR_S1;
+
+    sc_in<sc_uint<6>> RADR1_SD_S2;
+    sc_in<sc_uint<6>> RADR2_SD_S2;
+
+    sc_out<sc_uint<32>> RDATA1_SR_S2;  // data output read from register
+    sc_out<sc_uint<32>> RDATA2_SR_S2;
 
     // Writing Port :
 

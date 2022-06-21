@@ -59,18 +59,18 @@ int sc_main(int argc, char* argv[]) {
 
     unit_exec.OP1_SE(op1);
     unit_exec.OP2_SE(op2);
-    unit_exec.MEM_DATA_RD(mem_data);
+    unit_exec.MEM_DATA_RD_S1(mem_data);
     unit_exec.DEST_RD(dest);
     unit_exec.CMD_RD(cmd);
-    unit_exec.MEM_SIZE_RD(mem_size);
-    unit_exec.NEG_OP2_RD(neg_op1);
-    unit_exec.WB_RD(wb);
-    unit_exec.MEM_LOAD_RD(mem_load);
-    unit_exec.MEM_STORE_RD(mem_store);
-    unit_exec.MEM_SIGN_EXTEND_RD(mem_sign_extend);
+    unit_exec.MEM_SIZE_RD_S1(mem_size);
+    unit_exec.NEG_OP2_RD_S1(neg_op1);
+    unit_exec.WB_RD_S1(wb);
+    unit_exec.MEM_LOAD_RD_S1(mem_load);
+    unit_exec.MEM_STORE_RD_S1(mem_store);
+    unit_exec.MEM_SIGN_EXTEND_RD_S1(mem_sign_extend);
     unit_exec.SELECT_SHIFT_RD(select_shift);  // taille fifo entrée : 110
     unit_exec.EXE2MEM_POP_SM(exe2mem_pop);
-    unit_exec.DEC2EXE_EMPTY_SD(dec2exe_empty);
+    unit_exec.DEC2EXE_EMPTY_SD_S1(dec2exe_empty);
 
     unit_exec.EXE_RES_RE(ffout_exe_res);
     unit_exec.MEM_DATA_RE(ffout_mem_data);
@@ -81,7 +81,7 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.MEM_STORE_RE(ffout_mem_store);
     unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend);  // taille fifo sortie : 76
     unit_exec.EXE2MEM_EMPTY_SE(exe2mem_empty);
-    unit_exec.DEC2EXE_POP_SE(dec2exe_pop);
+    unit_exec.DEC2EXE_POP_SE_S1(dec2exe_pop);
 
     unit_exec.CLK(clk);
     unit_exec.RESET(reset);

@@ -5,16 +5,16 @@ void ifetch::fetch_method() {
     sc_bv<if2dec_size> instr_ri_var = instr_ri.read();
     if (EXCEPTION_SM.read() == 0) {
 
-        ADR_SI_S1 = PC_RD_S1.read();
-        ADR_SI_S2 = PC_RD_S2.read();
+        ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
+        ADR_SI_S2 = PC_DEC2IF_RD_S2.read();
 
         // data sent in if2dec
 
         if2dec_in_var.range(127, 96) = (sc_bv_base)IC_INST_SI_S2;
-        if2dec_in_var.range(95, 64)  = (sc_bv_base)PC_RD_S2     ;
+        if2dec_in_var.range(95, 64)  = (sc_bv_base)PC_DEC2IF_RD_S2     ;
 
         if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI_S1 ;
-        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD_S1      ;
+        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1      ;
         
         if2dec_in_si.write(if2dec_in_var);
 
@@ -48,9 +48,9 @@ void ifetch::fetch_method() {
 
         if2dec_in_var.range(63, 32) = nop_encoding;
 
-        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_RD_S1.read();
-        ADR_SI_S1 = PC_RD_S1.read();
-        ADR_SI_S2 = PC_RD_S2.read();
+        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1.read();
+        ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
+        ADR_SI_S2 = PC_DEC2IF_RD_S2.read();
 
 
         if2dec_in_si.write(if2dec_in_var);  
@@ -91,7 +91,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, IF2DEC_PUSH_SI, GET_NAME(IF2DEC_PUSH_SI));
     sc_trace(tf, IF2DEC_FULL_SI, GET_NAME(IF2DEC_FULL_SI));
     sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
-    sc_trace(tf, PC_RD_S1, GET_NAME(PC_RD_S1));
+    sc_trace(tf, PC_DEC2IF_RD_S1, GET_NAME(PC_DEC2IF_RD_S1));
     sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
     sc_trace(tf, PC_IF2DEC_RI_S1, GET_NAME(PC_IF2DEC_RI_S1));
     sc_trace(tf, CLK, GET_NAME(CLK));

@@ -19,8 +19,7 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> MIP_WDATA_RM;
     sc_in<sc_uint<32>> MEPC_WDATA_RM;
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM;
-    sc_in<sc_uint<32>> MTVAL_WDATA_SM ;
-
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM;
 
     sc_out<sc_uint<32>> MEPC_SC;
     sc_out<sc_uint<32>> MSTATUS_RC;
@@ -31,7 +30,7 @@ SC_MODULE(csr) {
     // Output :
 
     sc_in<sc_uint<12>>  CSR_RADR_SD_S1;
-    sc_out<sc_uint<32>> CSR_RDATA_SC;
+    sc_out<sc_uint<32>> CSR_RDATA_SC_S1;
 
     // General Interface :
 

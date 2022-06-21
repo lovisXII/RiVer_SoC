@@ -3,42 +3,40 @@
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
 
-#define x02x1_size          386
+#define x02x1_size 386
 
-SC_MODULE(x0_multiplier)
-{
+SC_MODULE(x0_multiplier) {
     // input :
     sc_in<sc_uint<32>> OP1_SE, OP2_SE;
-    sc_in<sc_uint<2>>  EXE_CMD_RD;
+    sc_in<sc_uint<2>>  EXE_CMD_RD_S1;
     sc_in<bool>        X02X1_POP_SX1;
     sc_in<bool>        DEC2X0_EMPTY_SD;
-    
+
     // output :
     sc_out<sc_bv<384>> RES_RX0;
     sc_out<bool>       SIGNED_OP_RX0;
     sc_out<bool>       CARRY_RX0;
     sc_out<bool>       X02X1_EMPTY_SX0;
 
-    // General interace : 
+    // General interace :
     sc_in_clk   CLK;
     sc_in<bool> RESET;
 
-
     sc_signal<sc_bv<64>> product[34];
-    sc_signal<sc_bv<64>> product_s1[22]; // product of stage 1
-    sc_signal<sc_bv<64>> product_s2[14]; // product of stage 2
-    sc_signal<sc_bv<64>> product_s3[10]; // product of stage 3
-    sc_signal<sc_bv<64>> product_s4[6];  // product of stage 4
-    sc_signal<sc_bv<64>> product_s5[4];  // product of stage 5
+    sc_signal<sc_bv<64>> product_s1[22];  // product of stage 1
+    sc_signal<sc_bv<64>> product_s2[14];  // product of stage 2
+    sc_signal<sc_bv<64>> product_s3[10];  // product of stage 3
+    sc_signal<sc_bv<64>> product_s4[6];   // product of stage 4
+    sc_signal<sc_bv<64>> product_s5[4];   // product of stage 5
 
-    sc_signal<bool>        signed_op;
-    sc_signal<bool>        select_higher_bits_sx0;
-    sc_signal<bool>        carry_sx0;
-    
+    sc_signal<bool> signed_op;
+    sc_signal<bool> select_higher_bits_sx0;
+    sc_signal<bool> carry_sx0;
+
     // fifo x02x1
-    sc_signal<sc_bv<x02x1_size>> x02x1_din_sx0;  
+    sc_signal<sc_bv<x02x1_size>> x02x1_din_sx0;
     sc_signal<sc_bv<x02x1_size>> x02x1_dout_sx0;
-    sc_signal<bool> x02x1_push_sx0, x02x1_full_sx0;
+    sc_signal<bool>              x02x1_push_sx0, x02x1_full_sx0;
 
     fifo<x02x1_size> fifo_inst;
 
@@ -67,7 +65,7 @@ SC_MODULE(x0_multiplier)
     void CSA_17();
     void CSA_18();
 
-    //stage 3 (5 CSA remind product 33)
+    // stage 3 (5 CSA remind product 33)
 
     void CSA_19();
     void CSA_20();
@@ -75,28 +73,26 @@ SC_MODULE(x0_multiplier)
     void CSA_22();
     void CSA_23();
 
-    //stage 4 (3 CSA remind product_s3 9 product 33)
+    // stage 4 (3 CSA remind product_s3 9 product 33)
 
     void CSA_24();
     void CSA_25();
     void CSA_26();
 
-    //stage 5 (2 CSA remind product_s3 9)
+    // stage 5 (2 CSA remind product_s3 9)
 
     void CSA_27();
     void CSA_28();
 
     void bypasses();  // allow the push/pop of fifo exe2mem
 
-    //res => 320bits => 5x64 => M4 M3 M2 M1 M0
+    // res => 320bits => 5x64 => M4 M3 M2 M1 M0
     void manage_fifo();
     void fifo_concat();
     void fifo_unconcat();
-    void trace(sc_trace_file* tf);
+    void trace(sc_trace_file * tf);
 
-    SC_CTOR(x0_multiplier) :
-    fifo_inst("x02x1")
-    {
+    SC_CTOR(x0_multiplier) : fifo_inst("x02x1") {
         fifo_inst.DIN_S(x02x1_din_sx0);
         fifo_inst.DOUT_R(x02x1_dout_sx0);
         fifo_inst.EMPTY_S(X02X1_EMPTY_SX0);
@@ -107,15 +103,15 @@ SC_MODULE(x0_multiplier)
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(operation);
-        sensitive << OP1_SE << OP2_SE << EXE_CMD_RD;
+        sensitive << OP1_SE << OP2_SE << EXE_CMD_RD_S1;
 
-        //stage 1
+        // stage 1
         SC_METHOD(CSA_1);
         sensitive << product[0] << product[1] << product[2];
 
         SC_METHOD(CSA_2);
         sensitive << product[3] << product[4] << product[5];
-        
+
         SC_METHOD(CSA_3);
         sensitive << product[6] << product[7] << product[8];
 
@@ -149,7 +145,7 @@ SC_MODULE(x0_multiplier)
 
         SC_METHOD(CSA_13);
         sensitive << product_s1[3] << product_s1[4] << product_s1[5];
-        
+
         SC_METHOD(CSA_14);
         sensitive << product_s1[6] << product_s1[7] << product_s1[8];
 
@@ -171,7 +167,7 @@ SC_MODULE(x0_multiplier)
 
         SC_METHOD(CSA_20);
         sensitive << product_s2[3] << product_s2[4] << product_s2[5];
-        
+
         SC_METHOD(CSA_21);
         sensitive << product_s2[6] << product_s2[7] << product_s2[8];
 
@@ -181,24 +177,24 @@ SC_MODULE(x0_multiplier)
         SC_METHOD(CSA_23);
         sensitive << product_s2[12] << product_s2[13] << product_s1[21];
 
-        //stage 4
+        // stage 4
         SC_METHOD(CSA_24);
         sensitive << product_s3[0] << product_s3[1] << product_s3[2];
 
         SC_METHOD(CSA_25);
         sensitive << product_s3[3] << product_s3[4] << product_s3[5];
-        
+
         SC_METHOD(CSA_26);
         sensitive << product_s3[6] << product_s3[7] << product_s3[8];
 
-        //stage 5
+        // stage 5
         SC_METHOD(CSA_27);
         sensitive << product_s4[0] << product_s4[1] << product_s4[2];
 
         SC_METHOD(CSA_28);
         sensitive << product_s4[3] << product_s4[4] << product_s4[5];
 
-        //fifo
+        // fifo
         SC_METHOD(fifo_concat);
         sensitive << product_s5[0] << product_s5[1] << product_s5[2] << product_s5[3];
 

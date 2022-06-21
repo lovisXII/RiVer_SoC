@@ -53,8 +53,8 @@ SC_MODULE(core) {
 
     sc_signal<bool>      DEC2IF_POP_SI;
     sc_signal<bool>      DEC2IF_EMPTY_SI;
-    sc_signal<sc_bv<32>> PC_RD_S1;
-    sc_signal<sc_bv<32>> PC_RD_S2;
+    sc_signal<sc_bv<32>> PC_DEC2IF_RD_S1;
+    sc_signal<sc_bv<32>> PC_DEC2IF_RD_S2;
     sc_signal<bool>      EXCEPTION_RI;
 
     // IF2DEC :
@@ -68,25 +68,54 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> PC_IF2DEC_RI_S2;
     // DEC-EXE interface
 
-    sc_signal<sc_uint<32>> PC_DEC2EXE_RD;
-    sc_signal<sc_uint<32>> OP1_RD;
-    sc_signal<sc_uint<32>> OP2_RD;
-    sc_signal<sc_uint<2>>  EXE_CMD_RD;
-    sc_signal<bool>        NEG_OP2_RD;
-    sc_signal<bool>        WB_RD;
-    sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;
-    sc_signal<sc_uint<32>>  PC_BRANCH_VALUE_RD;
+    sc_signal<sc_uint<32>> PC_DEC2EXE_RD_S1;
+    sc_signal<sc_uint<32>> OP1_RD_S1;
+    sc_signal<sc_uint<32>> OP2_RD_S1;
+    sc_signal<sc_uint<2>>  EXE_CMD_RD_S1;
+    sc_signal<bool>        NEG_OP2_RD_S1;
+    sc_signal<bool>        WB_RD_S1;
+    sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S1;
+    sc_signal<sc_uint<32>>  PC_BRANCH_VALUE_RD_S1;
 
-    sc_signal<sc_uint<32>> MEM_DATA_RD;
-    sc_signal<bool>        MEM_LOAD_RD;
-    sc_signal<bool>        MEM_STORE_RD;
-    sc_signal<bool>        MEM_SIGN_EXTEND_RD;
-    sc_signal<sc_uint<2>>  MEM_SIZE_RD;
-    sc_signal<bool>        SLT_RD;
-    sc_signal<bool>        SLTU_RD;
+    sc_signal<sc_uint<32>> MEM_DATA_RD_S1;
+    sc_signal<bool>        MEM_LOAD_RD_S1;
+    sc_signal<bool>        MEM_STORE_RD_S1;
+    sc_signal<bool>        MEM_SIGN_EXTEND_RD_S1;
+    sc_signal<sc_uint<2>>  MEM_SIZE_RD_S1;
+    sc_signal<bool>        SLT_RD_S1;
+    sc_signal<bool>        SLTU_RD_S1;
 
-    sc_signal<bool> DEC2EXE_POP_SE;
-    sc_signal<bool> DEC2EXE_EMPTY_SD;
+
+    // Interface with EXE_S2 :
+
+    sc_signal<sc_uint<32>> OP1_RD_S2;                    
+    sc_signal<sc_uint<32>> OP2_RD_S2;                     
+    sc_signal<sc_uint<2>>  EXE_CMD_RD_S2;                
+    sc_signal<bool>        NEG_OP2_RD_S2;                 
+
+    sc_signal<bool>        WB_RD_S2;                     
+    sc_signal<sc_uint<6>>  EXE_DEST_SD_S2;               
+    sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S2;  
+    sc_signal<bool>        SLT_RD_S2;
+    sc_signal<bool>        SLTU_RD_S2;
+    sc_signal<sc_uint<32>> PC_DEC2EXE_RD_S2;      
+    sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RD_S2;  
+    sc_signal<sc_uint<32>> MEM_DATA_RD_S2;         
+    sc_signal<bool>        MEM_LOAD_RD_S2;   
+    sc_signal<bool>        MEM_STORE_RD_S2;       
+    sc_signal<bool>        MEM_SIGN_EXTEND_RD_S2;
+    sc_signal<sc_uint<2>>  MEM_SIZE_RD_S2;  
+
+    sc_signal<bool> CSR_WENABLE_RD_S2;     
+    sc_signal<sc_uint<12>> CSR_WADR_RD_S2;   
+    sc_signal<sc_uint<32>> CSR_RDATA_RD_S2;  
+    
+
+    sc_signal<bool> DEC2EXE_POP_SE_S1;
+    sc_signal<bool> DEC2EXE_EMPTY_SD_S1;
+
+    sc_signal<bool> DEC2EXE_POP_SE_S2;
+    sc_signal<bool> DEC2EXE_EMPTY_SD_S2;
 
     sc_signal<bool>       BP_R1_VALID_RD;
     sc_signal<bool>       BP_R2_VALID_RD;
@@ -94,9 +123,9 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>> BP_RADR2_RD;
     sc_signal<bool>       BLOCK_BP_RD;
 
-    sc_signal<bool>        CSR_WENABLE_RD;
-    sc_signal<sc_uint<32>> CSR_RDATA_RD;
-    sc_signal<sc_uint<12>> CSR_WADR_RD;
+    sc_signal<bool>        CSR_WENABLE_RD_S1;
+    sc_signal<sc_uint<32>> CSR_RDATA_RD_S1;
+    sc_signal<sc_uint<12>> CSR_WADR_RD_S1;
     sc_signal<bool>        INTERRUPTION_SE;
     sc_signal<bool>        EXCEPTION_RD;
     sc_signal<bool>        ECALL_I_RD;
@@ -109,16 +138,23 @@ SC_MODULE(core) {
 
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD_S1;
-    sc_signal<sc_uint<32>> CSR_RDATA_SC;
+    sc_signal<sc_uint<12>> CSR_RADR_SD_S2;
+    sc_signal<sc_uint<32>> CSR_RDATA_SC_S1;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
-    sc_signal<sc_uint<32>> RDATA1_SR;
-    sc_signal<sc_uint<32>> RDATA2_SR;
+    sc_signal<sc_uint<32>> RDATA1_SR_S1;
+    sc_signal<sc_uint<32>> RDATA2_SR_S1;
 
     sc_signal<sc_uint<6>> RADR1_SD_S1;
     sc_signal<sc_uint<6>> RADR2_SD_S1;
 
-    sc_signal<sc_uint<6>> EXE_DEST_SD;
+    sc_signal<sc_uint<32>> RDATA1_SR_S2;
+    sc_signal<sc_uint<32>> RDATA2_SR_S2;
+
+    sc_signal<sc_uint<6>> RADR1_SD_S2;
+    sc_signal<sc_uint<6>> RADR2_SD_S2;
+
+    sc_signal<sc_uint<6>> EXE_DEST_SD_S1;
 
     sc_signal<sc_uint<32>> READ_PC_SR;
     sc_signal<sc_uint<32>> WRITE_PC_SD;
@@ -267,8 +303,8 @@ SC_MODULE(core) {
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
-        ifetch_inst.PC_RD_S1(PC_RD_S1);
-        ifetch_inst.PC_RD_S2(PC_RD_S2);
+        ifetch_inst.PC_DEC2IF_RD_S1(PC_DEC2IF_RD_S1);
+        ifetch_inst.PC_DEC2IF_RD_S2(PC_DEC2IF_RD_S2);
         ifetch_inst.INSTR_RI_S1(INSTR_RI_S1);
         ifetch_inst.INSTR_RI_S2(INSTR_RI_S2);
         ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
@@ -298,9 +334,9 @@ SC_MODULE(core) {
 
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
-        dec_inst.PC_RD_S1(PC_RD_S1);
-        dec_inst.PC_RD_S2(PC_RD_S2);
-        dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
+        dec_inst.PC_DEC2IF_RD_S1(PC_DEC2IF_RD_S1);
+        dec_inst.PC_DEC2IF_RD_S2(PC_DEC2IF_RD_S2);
+        dec_inst.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         dec_inst.PC_IF2DEC_RI_S1(PC_IF2DEC_RI_S1);
         dec_inst.PC_IF2DEC_RI_S2(PC_IF2DEC_RI_S2);
         dec_inst.INSTR_RI_S1(INSTR_RI_S1);
@@ -309,31 +345,63 @@ SC_MODULE(core) {
         dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
         dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
-        dec_inst.OP1_RD(OP1_RD);
-        dec_inst.OP2_RD(OP2_RD);
-        dec_inst.EXE_CMD_RD(EXE_CMD_RD);
-        dec_inst.NEG_OP2_RD(NEG_OP2_RD);
-        dec_inst.WB_RD(WB_RD);
-        dec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
-        dec_inst.SLT_RD(SLT_RD);
-        dec_inst.SLTU_RD(SLTU_RD);
+        dec_inst.OP1_RD_S1(OP1_RD_S1);
+        dec_inst.OP2_RD_S1(OP2_RD_S1);
+        dec_inst.EXE_CMD_RD_S1(EXE_CMD_RD_S1);
+        dec_inst.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
+        dec_inst.WB_RD_S1(WB_RD_S1);
+        dec_inst.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
+        dec_inst.SLT_RD_S1(SLT_RD_S1);
+        dec_inst.SLTU_RD_S1(SLTU_RD_S1);
 
-        dec_inst.MEM_DATA_RD(MEM_DATA_RD);
-        dec_inst.MEM_LOAD_RD(MEM_LOAD_RD);
-        dec_inst.MEM_STORE_RD(MEM_STORE_RD);
-        dec_inst.MEM_SIGN_EXTEND_RD(MEM_SIGN_EXTEND_RD);
-        dec_inst.MEM_SIZE_RD(MEM_SIZE_RD);
+        dec_inst.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
+        dec_inst.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
+        dec_inst.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
+        dec_inst.MEM_SIGN_EXTEND_RD_S1(MEM_SIGN_EXTEND_RD_S1);
+        dec_inst.MEM_SIZE_RD_S1(MEM_SIZE_RD_S1);
 
-        dec_inst.DEC2EXE_POP_SE(DEC2EXE_POP_SE);
-        dec_inst.DEC2EXE_EMPTY_SD(DEC2EXE_EMPTY_SD);
 
-        dec_inst.RDATA1_SR(RDATA1_SR);
-        dec_inst.RDATA2_SR(RDATA2_SR);
+        dec_inst.OP1_RD_S2(OP1_RD_S2);
+        dec_inst.OP2_RD_S2(OP2_RD_S2);
+        dec_inst.EXE_CMD_RD_S2(EXE_CMD_RD_S2);
+        dec_inst.NEG_OP2_RD_S2(NEG_OP2_RD_S2);
+        dec_inst.WB_RD_S2(WB_RD_S2);
+        dec_inst.EXE_DEST_SD_S2(EXE_DEST_SD_S2);
+        dec_inst.SELECT_TYPE_OPERATIONS_RD_S2(SELECT_TYPE_OPERATIONS_RD_S2);
+        dec_inst.SLT_RD_S2(SLT_RD_S2);
+        dec_inst.SLTU_RD_S2(SLTU_RD_S2);
+        dec_inst.PC_DEC2EXE_RD_S2(PC_DEC2EXE_RD_S2);
+        dec_inst.PC_BRANCH_VALUE_RD_S2(PC_BRANCH_VALUE_RD_S2);
+
+        dec_inst.MEM_DATA_RD_S2(MEM_DATA_RD_S2);
+        dec_inst.MEM_LOAD_RD_S2(MEM_LOAD_RD_S2);
+        dec_inst.MEM_STORE_RD_S2(MEM_STORE_RD_S2);
+        dec_inst.MEM_SIGN_EXTEND_RD_S2(MEM_SIGN_EXTEND_RD_S2);
+        dec_inst.MEM_SIZE_RD_S2(MEM_SIZE_RD_S2);
+        dec_inst.CSR_WENABLE_RD_S2(CSR_WENABLE_RD_S2);
+        dec_inst.CSR_WADR_RD_S2(CSR_WADR_RD_S2);
+        dec_inst.CSR_RDATA_RD_S2(CSR_RDATA_RD_S2);
+
+        dec_inst.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
+        dec_inst.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
+
+        dec_inst.DEC2EXE_POP_SE_S2(DEC2EXE_POP_SE_S2);
+        dec_inst.DEC2EXE_EMPTY_SD_S2(DEC2EXE_EMPTY_SD_S2);
 
         dec_inst.RADR1_SD_S1(RADR1_SD_S1);
         dec_inst.RADR2_SD_S1(RADR2_SD_S1);
 
-        dec_inst.EXE_DEST_SD(EXE_DEST_SD);
+        dec_inst.RDATA1_SR_S1(RDATA1_SR_S1);
+        dec_inst.RDATA2_SR_S1(RDATA2_SR_S1);
+
+        dec_inst.RADR1_SD_S2(RADR1_SD_S2);
+        dec_inst.RADR2_SD_S2(RADR2_SD_S2);
+
+
+        dec_inst.RDATA1_SR_S2(RDATA1_SR_S2);
+        dec_inst.RDATA2_SR_S2(RDATA2_SR_S2);
+
+        dec_inst.EXE_DEST_SD_S1(EXE_DEST_SD_S1);
 
         dec_inst.READ_PC_SR(READ_PC_SR);
         dec_inst.WRITE_PC_SD(WRITE_PC_SD);
@@ -358,11 +426,12 @@ SC_MODULE(core) {
         dec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
         dec_inst.EBREAK_RD(EBREAK_RD);
 
-        dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
-        dec_inst.CSR_WADR_RD(CSR_WADR_RD);
+        dec_inst.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
+        dec_inst.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
         dec_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
-        dec_inst.CSR_RDATA_SC(CSR_RDATA_SC);
-        dec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
+        dec_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
+        dec_inst.CSR_RDATA_SC_S1(CSR_RDATA_SC_S1);
+        dec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);
         dec_inst.EXCEPTION_RD(EXCEPTION_RD);
@@ -384,7 +453,7 @@ SC_MODULE(core) {
         dec_inst.MULT_INST_RD(MULT_INST_RD);
         dec_inst.MULT_INST_RE(MULT_INST_RE);
         dec_inst.MULT_INST_RM(MULT_INST_RM);
-        dec_inst.PC_BRANCH_VALUE_RD(PC_BRANCH_VALUE_RD);
+        dec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
@@ -395,30 +464,30 @@ SC_MODULE(core) {
         exec_inst.OP2_VALID_RD(BP_R2_VALID_RD);
         exec_inst.MEM_DEST_RM(DEST_RM);
         exec_inst.MEM_RES_RM(MEM_RES_RM);
-        exec_inst.OP1_RD(OP1_RD);
-        exec_inst.OP2_RD(OP2_RD);
-        exec_inst.CMD_RD(EXE_CMD_RD);
-        exec_inst.DEST_RD(EXE_DEST_SD);
-        exec_inst.NEG_OP2_RD(NEG_OP2_RD);
-        exec_inst.WB_RD(WB_RD);
-        exec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
+        exec_inst.OP1_RD_S1(OP1_RD_S1);
+        exec_inst.OP2_RD_S1(OP2_RD_S1);
+        exec_inst.CMD_RD(EXE_CMD_RD_S1);
+        exec_inst.DEST_RD(EXE_DEST_SD_S1);
+        exec_inst.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
+        exec_inst.WB_RD_S1(WB_RD_S1);
+        exec_inst.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
         exec_inst.EBREAK_RD(EBREAK_RD);
         exec_inst.EBREAK_RE(EBREAK_RE);
 
         exec_inst.MULT_INST_RD(MULT_INST_RD);
-        exec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
+        exec_inst.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
 
-        exec_inst.MEM_DATA_RD(MEM_DATA_RD);
-        exec_inst.MEM_LOAD_RD(MEM_LOAD_RD);
-        exec_inst.MEM_STORE_RD(MEM_STORE_RD);
-        exec_inst.MEM_SIGN_EXTEND_RD(MEM_SIGN_EXTEND_RD);
-        exec_inst.MEM_SIZE_RD(MEM_SIZE_RD);
-        exec_inst.SLT_RD(SLT_RD);
-        exec_inst.SLTU_RD(SLTU_RD);
+        exec_inst.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
+        exec_inst.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
+        exec_inst.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
+        exec_inst.MEM_SIGN_EXTEND_RD_S1(MEM_SIGN_EXTEND_RD_S1);
+        exec_inst.MEM_SIZE_RD_S1(MEM_SIZE_RD_S1);
+        exec_inst.SLT_RD_S1(SLT_RD_S1);
+        exec_inst.SLTU_RD_S1(SLTU_RD_S1);
 
-        exec_inst.DEC2EXE_POP_SE(DEC2EXE_POP_SE);
-        exec_inst.DEC2EXE_EMPTY_SD(DEC2EXE_EMPTY_SD);
+        exec_inst.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
+        exec_inst.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
 
         exec_inst.EXE_RES_RE(EXE_RES_RE);
         exec_inst.MEM_DATA_RE(MEM_DATA_RE);
@@ -445,12 +514,12 @@ SC_MODULE(core) {
         exec_inst.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
         exec_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
         exec_inst.EXCEPTION_RD(EXCEPTION_RD);
-        exec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
+        exec_inst.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
         exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
-        exec_inst.CSR_WADR_RD(CSR_WADR_RD);
+        exec_inst.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
         exec_inst.CSR_WADR_RE(CSR_WADR_RE);
         exec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
-        exec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
+        exec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
         exec_inst.ENV_CALL_S_MODE_RD(ENV_CALL_S_MODE_RD);
         exec_inst.ENV_CALL_WRONG_MODE_RD(ENV_CALL_WRONG_MODE_RD);
         exec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
@@ -476,7 +545,7 @@ SC_MODULE(core) {
         exec_inst.MRET_RE(MRET_RE);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
-        exec_inst.PC_BRANCH_VALUE_RD(PC_BRANCH_VALUE_RD);
+        exec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
         exec_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         exec_inst.OP1_SE(op1_se);
@@ -492,9 +561,9 @@ SC_MODULE(core) {
 
         x0_multiplier_inst.OP1_SE(op1_se);
         x0_multiplier_inst.OP2_SE(op2_se);
-        x0_multiplier_inst.EXE_CMD_RD(EXE_CMD_RD);
+        x0_multiplier_inst.EXE_CMD_RD_S1(EXE_CMD_RD_S1);
         x0_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
-        x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
+        x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD_S1);
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
         x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
@@ -609,8 +678,13 @@ SC_MODULE(core) {
 
         reg_inst.RADR1_SD_S1(RADR1_SD_S1);
         reg_inst.RADR2_SD_S1(RADR2_SD_S1);
-        reg_inst.RDATA1_SR(RDATA1_SR);
-        reg_inst.RDATA2_SR(RDATA2_SR);
+        reg_inst.RDATA1_SR_S1(RDATA1_SR_S1);
+        reg_inst.RDATA2_SR_S1(RDATA2_SR_S1);
+
+        reg_inst.RADR1_SD_S2(RADR1_SD_S2);
+        reg_inst.RADR2_SD_S2(RADR2_SD_S2);
+        reg_inst.RDATA1_SR_S2(RDATA1_SR_S2);
+        reg_inst.RDATA2_SR_S2(RDATA2_SR_S2);
 
         reg_inst.WADR_SW(WADR_SW);
         reg_inst.WENABLE_SW(WENABLE_SW);
@@ -663,7 +737,7 @@ SC_MODULE(core) {
         csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
 
         csr_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
-        csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+        csr_inst.CSR_RDATA_SC_S1(CSR_RDATA_SC_S1);
 
         csr_inst.EXCEPTION_SM(EXCEPTION_SM);
         csr_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
