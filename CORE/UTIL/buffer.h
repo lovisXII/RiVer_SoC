@@ -16,6 +16,7 @@ SC_MODULE(buffer) {
     sc_out<bool>        FULL_S;
     sc_out<bool>        EMPTY_S;
     sc_out<sc_bv<T>>    DATA_OUT_S;
+    sc_in<bool>         FLUSH_S;
 
     sc_signal<sc_bv<32>>        inside_data_s[depth] ; 
     sc_signal<sc_bv<depth>>     buffer_valid;
