@@ -35,12 +35,7 @@ SC_MODULE(buffer) {
                     << WRITE_S
                     << READ_S
                     << read_ptr 
-                    << write_ptr
-                    << DATA_IN_S;
-        for(int i = 0; i < depth ; i++){
-            sensitive << inside_data_s[i] ;
-        }
-
+                    << write_ptr;
         reset_signal_is(RESET_N, false);
     }
 };
@@ -53,16 +48,16 @@ void buffer<T>::flags_update() {
     }
     else{
         if((write_ptr == read_ptr) && WRITE_S.read()){
-            full_s = true;
+            full_s = 1;
         }
         else{
-            full_s = false;
+            full_s = 0;
         }
         if((write_ptr == read_ptr) && READ_S.read()){
-            empty_s = true;
+            empty_s = 1;
         }
         else{
-            empty_s = false;
+            empty_s = 0;
         }
     }
     FULL_S = full_s ;
@@ -109,7 +104,7 @@ void buffer<T>::function() {
             write_ptr_var = depth-1 ;
         }
         if(read_ptr_var == -1){
-            read_ptr_var = depth-1 ;
+            read_ptr_var = depth-1 ;    
         } 
         read_ptr    = read_ptr_var ;
         write_ptr   = write_ptr_var;
@@ -124,6 +119,8 @@ void buffer<T>::trace(sc_trace_file* tf) {
     sc_trace(tf, WRITE_S, GET_NAME(WRITE_S));
     sc_trace(tf, READ_S, GET_NAME(READ_S));
     sc_trace(tf, FULL_S, GET_NAME(FULL_S));
+    sc_trace(tf, empty_s, GET_NAME(empty_s));
+    sc_trace(tf, full_s, GET_NAME(full_s));
     sc_trace(tf, EMPTY_S, GET_NAME(EMPTY_S));
     sc_trace(tf, DATA_OUT_S, GET_NAME(DATA_OUT_S));
     sc_trace(tf, write_ptr, GET_NAME(write_ptr));
