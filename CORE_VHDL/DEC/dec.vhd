@@ -391,12 +391,12 @@ block_bp_sd <= jalr_type_sd;
  
 -- Conditions
 bpc_instr_in_exe1   <= '1' when radr1_sd = dec2exe_rdest_fifo and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
-bpc_load_in_mem1    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" else '0';  
+bpc_load_in_mem1    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
 bpc_ed1             <= '1' when radr1_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
 bpc_md1             <= '1' when radr1_sd = BP_DEST_RM and radr1_sd /= "000000" else '0';           
 
 bpc_instr_in_exe2   <= '1' when radr2_sd = dec2exe_rdest_fifo and dec2exe_empty = '0' and radr2_sd /= "000000" else '0'; 
-bpc_load_in_mem2    <= '1' when radr2_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr2_sd /= "000000" else '0';  
+bpc_load_in_mem2    <= '1' when radr2_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr2_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
 bpc_ed2             <= '1' when radr2_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr2_sd /= "000000" else '0'; 
 bpc_md2             <= '1' when radr2_sd = BP_DEST_RM and radr2_sd /= "000000" else '0';           
 

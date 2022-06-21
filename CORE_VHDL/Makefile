@@ -1,7 +1,7 @@
 BUILD=build
 SIM_DIR=sim
 TESTS_DIR=tests
-TEST=test_bp_em.s
+TEST=test_bp_md.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 

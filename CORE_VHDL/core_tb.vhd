@@ -163,7 +163,6 @@ begin
         elsif MCACHE_LOAD_SM = '1' then 
             MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
         end if; 
-
     end if; 
 end process;
 
