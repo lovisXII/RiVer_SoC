@@ -13,6 +13,7 @@ void core::trace(sc_trace_file* tf) {
     x0_multiplier_inst.trace(tf);
     x1_multiplier_inst.trace(tf);
     x2_multiplier_inst.trace(tf);
+    divider_inst.trace(tf);
 }
 
 void core::core_method() {

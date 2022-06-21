@@ -7,9 +7,13 @@
 #include "WBK/wbk.h"
 #include "systemc.h"
 
+//Multipliers
 #include "EXE/x0_multiplier.h"
 #include "MEM/x1_multiplier.h"
 #include "WBK/x2_multiplier.h"
+
+//Divider
+#include "EXE/Diviseur.h"
 
 SC_MODULE(core) {
     // Global Interface :
@@ -90,9 +94,16 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
-    //EXE-X0
+    //EXE-X0 OR EXE-DIVISEUR
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
+
+    //EXE DIVIDER
+    sc_signal<bool> START_SE;
+    sc_signal<sc_uint<32>> DIVIDER_RES_OUTPUT;
+    sc_signal<bool> DIV_BUSY_SE;
+    sc_signal<bool> DONE_SE;
+
 
     // X0-X1 interface
     sc_signal<sc_bv<320>> multiplier_out_sx0;
@@ -229,6 +240,7 @@ SC_MODULE(core) {
     wbk    wbk_inst;
     csr    csr_inst;
 
+    Diviseur divider_inst;
 
     x0_multiplier      x0_multiplier_inst;
     x1_multiplier      x1_multiplier_inst;
@@ -241,6 +253,7 @@ SC_MODULE(core) {
           ifetch_inst("ifetch"),
           dec_inst("decod"),
           exec_inst("exec"),
+          divider_inst("Diviseur"),
           x0_multiplier_inst("x0_multiplier"),
           mem_inst("mem"),
           x1_multiplier_inst("x1_multiplier"),
@@ -459,11 +472,26 @@ SC_MODULE(core) {
         exec_inst.OP1_SE(op1_se);
         exec_inst.OP2_SE(op2_se);
 
+        exec_inst.START_SE(START_SE);
+        exec_inst.DIVIDER_RES_OUTPUT(DIVIDER_RES_OUTPUT);
+        exec_inst.DIV_BUSY_SE(DIV_BUSY_SE);
+        exec_inst.DONE_SE(DONE_SE);
+
         exec_inst.MULT_INST_RM(MULT_INST_RM);
         exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
+
+        //Divider
+        divider_inst.OP1_SE(op1_se);
+        divider_inst.OP2_SE(op2_se);
+        divider_inst.START_SE(START_SE);
+        divider_inst.CMD_RD(EXE_CMD_RD);
+        divider_inst.DIVIDER_RES_OUTPUT(DIVIDER_RES_OUTPUT);
+        divider_inst.BUSY_SE(DIV_BUSY_SE);
+        divider_inst.DONE_SE(DONE_SE);
+        divider_inst.CLK(CLK);
 
         //X0 - MULTIPLIER port map :
 

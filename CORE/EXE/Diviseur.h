@@ -10,11 +10,12 @@ SC_MODULE(Diviseur)
     sc_in<sc_uint<32>> OP1_SE;
     sc_in<sc_uint<32>> OP2_SE;
 
-    sc_in<sc_uint<4>> SELECT_TYPE_OPERATIONS_RD;
-    sc_in<sc_uint<2>> EXE_CMD_RD;
+    sc_in<sc_uint<2>>  CMD_RD;
+
+    sc_in<bool>        START_SE;
 
     // output :
-    sc_out<sc_uint<32>> DIV_RES_SE;
+    sc_out<sc_uint<32>> DIVIDER_RES_OUTPUT;
 
     sc_out<bool>        BUSY_SE;
     sc_out<bool>        DONE_SE;
@@ -25,11 +26,11 @@ SC_MODULE(Diviseur)
     // signals :
     sc_signal<sc_biguint<64>> divisor_re;
     sc_signal<sc_uint<32>>    quotient_re;
-    sc_signal<sc_biguint<64>> remainder_re;
+    sc_signal<sc_biguint<64>> reminder_re;
 
     sc_signal<sc_biguint<64>> divisor_se;
     sc_signal<sc_uint<32>>    quotient_se;
-    sc_signal<sc_biguint<64>> remainder_se;
+    sc_signal<sc_biguint<64>> reminder_se;
 
     sc_signal<bool> busy_se;
     sc_signal<bool> done_se;
@@ -38,17 +39,31 @@ SC_MODULE(Diviseur)
     sc_signal<sc_uint<3>> next_state;
 
     sc_signal<sc_uint<6>> shift_cpt_se;
+    sc_signal<sc_uint<6>> shift_cpt_re;
 
-    void preprocess();
-    void control();
+    //mae
+    void new_state();
+    void state_transition();
+    void mae_output();
+
+    void RET();
+
+    void trace(sc_trace_file * tf);
 
     SC_CTOR(Diviseur)
-    {
-        SC_METHOD(preprocess);
-        sensitive << OP1_SE << OP2_SE << SELECT_TYPE_OPERATIONS_RD 
-                  << quotient_se << remainder_se << divisor_se << busy_se;
-        
-        SC_METHOD(control);
+    {        
+        SC_METHOD(new_state);
         sensitive << CLK.pos();
+
+        SC_METHOD(state_transition);
+        sensitive << current_state << START_SE << shift_cpt_re;
+
+        SC_METHOD(mae_output);
+        sensitive << current_state << START_SE << divisor_re
+                  << quotient_re << reminder_re
+                  << OP1_SE << OP2_SE << shift_cpt_re;
+
+        SC_METHOD(RET);
+        sensitive << reminder_se << quotient_se << CMD_RD;
     }
 };

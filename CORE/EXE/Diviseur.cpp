@@ -1,80 +1,87 @@
 #include "Diviseur.h"
 
-void Diviseur::preprocess()
-{
-    if(!busy_se)
-    {
-        remainder_re = (sc_biguint<64>)OP1_SE.read();
-
-        sc_bv<64> div = 0;
-        div.range(63, 32) = OP2_SE.read(); 
-        divisor_re = div;
-
-        quotient_re = 0;
-    }
-    else
-    {
-        divisor_re = divisor_se;
-        quotient_re = quotient_se;
-        remainder_re = remainder_se;
-    }
-}
-void Diviseur::control()
+void Diviseur::new_state()
 {
     current_state = next_state;
-    
+
+    shift_cpt_re = shift_cpt_se;
+
+    divisor_re = divisor_se;
+    quotient_re = quotient_se;
+    reminder_re = reminder_se;
+
+    cout << "End of cycle: "
+         << "   Divisor:   " << divisor_re.read()
+         << "   Quotient:  " << quotient_re.read()
+         << "   reminder: " << reminder_re.read() 
+         << "   shift:  "<<shift_cpt_re.read()
+         << "   next state: "<<current_state<< endl << endl;
+}
+void Diviseur::state_transition()
+{
     switch(current_state.read())
     {
         case 0:
-            busy_se = SELECT_TYPE_OPERATIONS_RD.read() == 0b1000;
-            if(busy_se)
+            if(START_SE)
             {
-                cout << "starting  divisor = "<< divisor_re.read() 
-                     << "   quotient = " << quotient_re.read()
-                     << "   remainder = " << remainder_re.read() << endl;
-                divisor_se = divisor_re.read() >> 1;
-
-                sc_uint<64> quo = quotient_re.read(); 
-                quo <<= 1;
-                quo[0] = 0;
-                quotient_se = quo;
-
-                remainder_se = remainder_re;
-
-                next_state = 1;
-                cout << "  new div go to next state" << endl << endl;;
+                next_state = 0b001;
             }
             else
             {
-                cout << "  nothing new -> loop state" << endl << endl;;
-                next_state = 0;
-                done_se = false;
+                next_state = 0b000;
             }
-            shift_cpt_se = 0;
-            cout<<"  cu: "<<current_state<<"  ne: "<<next_state<<endl;
         break;
         case 1:
-            if(shift_cpt_se.read() < 32)
-            {   
-                cout << "  divisor = "<< divisor_re.read() 
-                 << "   quotient = " << quotient_re.read()
-                 << "   remainder = " << remainder_re.read() << endl;
-                if(divisor_se.read() > remainder_se.read())
+            if(shift_cpt_re.read() == 31)
+                next_state = 0b000;
+            else    
+                next_state = 0b001;          
+        break;
+    }
+}
+void Diviseur::mae_output()
+{
+    //cout << "CURRENT STATE: "<<current_state<<endl;
+    switch(current_state.read())
+    {
+        case 0:// init/idle
+            if(START_SE)
+            {
+                //cout << "START"<<endl;
+                sc_bv<64> div = 0;
+                div.range(62, 31) = OP2_SE.read(); 
+                divisor_se = div;
+
+                quotient_se = 0;
+
+                reminder_se = (sc_biguint<64>)OP1_SE.read();
+                BUSY_SE.write(true);
+            }
+            else
+            {
+                BUSY_SE.write(false);
+            }
+
+            shift_cpt_se = 0;
+            DONE_SE.write(shift_cpt_re.read() == 32);
+        break;
+        case 1: // calculating
+            if(shift_cpt_re.read() <= 31)
+            {
+                if(divisor_re.read() > reminder_re.read())
                 {
-                    cout << "    # divisor > remainder" << endl << endl;;
+                    ////cout << "    # divisor > reminder" << endl << endl;
                     divisor_se = divisor_re.read() >> 1;
 
                     sc_uint<64> quo = quotient_re.read(); 
                     quo <<= 1;
                     quo[0] = 0;
                     quotient_se = quo;
-
-                    next_state = 1;
                 }
                 else
                 {
-                    cout << "    # divisor <= remainder" << endl << endl;;
-                    remainder_se = remainder_re.read() - divisor_re.read();
+                    ////cout << "    # divisor <= reminder" << endl << endl;
+                    reminder_se = reminder_re.read() - divisor_re.read();
                     
                     sc_uint<64> quo = quotient_re.read(); 
                     quo <<= 1;
@@ -83,33 +90,45 @@ void Diviseur::control()
 
                     divisor_se = divisor_re.read() >> 1;
 
-                    next_state = 1;
                 }
-
-                shift_cpt_se = shift_cpt_se.read() + 1;
+                cout << "  -->  divisor = "<< divisor_re.read() 
+                 << "   quotient = " << quotient_re.read()
+                 << "   reminder = " << reminder_re.read() << endl;
+                shift_cpt_se = shift_cpt_re.read() + 1;
             }
-            else
-            {
-                cout << "> END of division" << endl << endl;
-                busy_se = false;
-                done_se = true;
-
-                next_state = 0;
-                cout << "next: "<<next_state<<endl;
-                if(EXE_CMD_RD.read() == 0 || EXE_CMD_RD.read() == 3)
-                {
-                    sc_bv<64> rem = remainder_re.read();
-                    DIV_RES_SE.write((sc_bv_base)rem.range(31, 0));
-                }
-                else
-                {
-                    DIV_RES_SE.write(quotient_re.read());
-                }
-            }
-            cout << "       shifting => "<<shift_cpt_se.read()<<"  cu: "<<current_state<<"  ne: "<<next_state<<endl;
         break;
     }
+}
+void Diviseur::RET()
+{
+    if(CMD_RD.read() == 3 || CMD_RD.read() == 0)
+    {
+        sc_bv<64> rem = reminder_se.read();
+        DIVIDER_RES_OUTPUT.write((sc_bv_base)rem.range(31, 0));
+    }
+    else
+        DIVIDER_RES_OUTPUT.write(quotient_se.read());
+}
 
-    BUSY_SE.write(busy_se);
-    DONE_SE.write(done_se);
+void Diviseur::trace(sc_trace_file * tf)
+{
+    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
+    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+    sc_trace(tf, DIVIDER_RES_OUTPUT, GET_NAME(DIVIDER_RES_OUTPUT));
+    sc_trace(tf, BUSY_SE, GET_NAME(BUSY_SE));
+    sc_trace(tf, DONE_SE, GET_NAME(DONE_SE));
+    sc_trace(tf, START_SE, GET_NAME(START_SE));
+    sc_trace(tf, CLK, GET_NAME(CLK));
+    sc_trace(tf, divisor_re, GET_NAME(divisor_re));
+    sc_trace(tf, quotient_re, GET_NAME(quotient_re));
+    sc_trace(tf, reminder_re, GET_NAME(reminder_re));
+    sc_trace(tf, divisor_se, GET_NAME(divisor_se));
+    sc_trace(tf, quotient_se, GET_NAME(quotient_se));
+    sc_trace(tf, reminder_se, GET_NAME(reminder_se));
+    sc_trace(tf, busy_se, GET_NAME(busy_se));
+    sc_trace(tf, done_se, GET_NAME(done_se));
+    sc_trace(tf, current_state, GET_NAME(current_state));
+    sc_trace(tf, next_state, GET_NAME(next_state));
+    sc_trace(tf, shift_cpt_se, GET_NAME(shift_cpt_se));
+    sc_trace(tf, shift_cpt_re, GET_NAME(shift_cpt_re));
 }
