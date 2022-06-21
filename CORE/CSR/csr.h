@@ -30,7 +30,7 @@ SC_MODULE(csr) {
 
     // Output :
 
-    sc_in<sc_uint<12>>  CSR_RADR_SD;
+    sc_in<sc_uint<12>>  CSR_RADR_SD_S1;
     sc_out<sc_uint<32>> CSR_RDATA_SC;
 
     // General Interface :
@@ -62,7 +62,7 @@ SC_MODULE(csr) {
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_SM << MSTATUS_WDATA_RM
+        sensitive << CSR_WADR_SM << CSR_RADR_SD_S1 << CSR_ENABLE_BEFORE_FIFO_SM << EXCEPTION_SM << MSTATUS_WDATA_RM
                   << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_SM;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];

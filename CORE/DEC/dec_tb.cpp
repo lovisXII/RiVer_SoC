@@ -111,8 +111,8 @@ int sc_main(int argc, char* argv[]) {
     dec.R1_VALID_SD(radr1_valid);
     dec.R2_VALID_SD(radr2_valid);
 
-    dec.RADR1_SD(radr1);
-    dec.RADR2_SD(radr2);
+    dec.RADR1_SD_S1(radr1);
+    dec.RADR2_SD_S1(radr2);
 
     dec.READ_PC_SR(read_pc);
     dec.READ_PC_VALID_SD(read_pc_valid);

@@ -291,49 +291,49 @@ void decod::pre_reg_read_decoding_s2() {
         radr1_var    = if_ir2.range(19, 15);
         radr2_var    = if_ir2.range(24, 20);
         adr_dest_var = if_ir2.range(11, 7);
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // I-type Instruction :
     else if (i_type_inst_sd_s2 == 1) {
         radr1_var    = if_ir2.range(19, 15);
         radr2_var    = 0;
         adr_dest_var = if_ir2.range(11, 7);
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // S-type Instruction :
     else if (s_type_inst_sd_s2 == 1) {
         radr1_var    = if_ir2.range(19, 15);
         radr2_var    = if_ir2.range(24, 20);
         adr_dest_var = 0;
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // Branch Instruction :
     else if (b_type_inst_sd_s2 == 1) {
         radr1_var    = if_ir2.range(19, 15);
         radr2_var    = if_ir2.range(24, 20);
         adr_dest_var = 0;
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // U-type Instruction :
     else if (u_type_inst_sd_s2 == 1) {
         radr1_var    = 0;
         adr_dest_var = if_ir2.range(11, 7);
         radr2_var    = 0;
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // J-type Instruction :
     else if (j_type_inst_sd_s2 == 1) {
         radr1_var    = 0;
         radr2_var    = 0;
         adr_dest_var = if_ir2.range(11, 7);
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // JALR-type Instruction :
     else if (jalr_type_inst_sd_s2 == 1) {
         radr1_var    = if_ir2.range(19, 15);
         radr2_var    = 0;
         adr_dest_var = if_ir2.range(11, 7);
-        CSR_RADR_SD.write(0);
+        CSR_RADR_SD_S2.write(0);
     }
     // M-type Instruction :
     else if (m_type_inst_sd_s2 == 1) {
@@ -348,7 +348,7 @@ void decod::pre_reg_read_decoding_s2() {
         // CSR = (rs2 | 0) operation CSR
         // So CSR must be wbk in rd
         if (csrrw_i_sd_s2 || csrrs_i_sd_s2 || csrrc_i_sd_s2 || csrrwi_i_sd_s2 || csrrsi_i_sd_s2 || csrrci_i_sd_s2) {
-            CSR_RADR_SD.write(if_ir2.range(31, 20));
+            CSR_RADR_SD_S2.write(if_ir2.range(31, 20));
             csr_radr_sd_s2  = if_ir2.range(31, 20);
             radr1_var    = (csrrw_i_sd_s2 | csrrs_i_sd_s2 | csrrc_i_sd_s2) ? if_ir2.range(19, 15) : 0;
             radr2_var    = 0;
@@ -405,8 +405,8 @@ void decod::pre_reg_read_decoding_s2() {
         env_call_m_mode_sd_s2 = 0;
     }
     if (!mret_i_sd_s2 | !sret_i_sd_s2) { env_call_wrong_mode_s2 = 0; }
-    RADR1_SD.write(radr1_var);
-    RADR2_SD.write(radr2_var);
+    RADR1_SD_S2.write(radr1_var);
+    RADR2_SD_S2.write(radr2_var);
     adr_dest_sd_s2.write(adr_dest_var);
 }
 
@@ -432,7 +432,7 @@ void decod::post_reg_read_decoding_s2() {
     if (r_type_inst_sd_s2 || i_type_inst_sd_s2 || u_type_inst_sd_s2 || m_type_inst_sd_s2) {
         csr_wenable_sd_s2.write(0);
         if (i_type_inst_sd_s2) {
-            dec2exe_op1_var = (rdata1_sd.read());
+            dec2exe_op1_var = (rdata1_sd_s2.read());
             if (if_ir2.range(31, 31) == 1) {
                 dec2exe_op2_var.range(31, 12) = 0b11111111111111111111;
             } else {
@@ -443,12 +443,12 @@ void decod::post_reg_read_decoding_s2() {
             dec2exe_op1_var.range(31, 12) = if_ir2.range(31, 12);
             dec2exe_op1_var.range(11, 0)  = 0;
             if (auipc_i_sd_s2)
-                dec2exe_op2_var = PC_IF2DEC_RI_S1.read();
+                dec2exe_op2_var = PC_IF2DEC_RI_S2.read();
             else
-                dec2exe_op2_var = rdata2_sd.read();
+                dec2exe_op2_var = rdata2_sd_s2.read();
         } else {
-            dec2exe_op1_var = (rdata1_sd.read());
-            dec2exe_op2_var = (rdata2_sd.read());
+            dec2exe_op1_var = (rdata1_sd_s2.read());
+            dec2exe_op2_var = (rdata2_sd_s2.read());
         }
 
         if (lw_i_sd_s2 | lh_i_sd_s2 | lhu_i_sd_s2 | lb_i_sd_s2 | lbu_i_sd_s2) {
@@ -509,7 +509,7 @@ void decod::post_reg_read_decoding_s2() {
         mem_load_sd_s2.write(0);
         offset_branch_var = 0;
         not_jump_var        = 1;
-        dec2exe_op1_var   = rdata1_sd.read();
+        dec2exe_op1_var   = rdata1_sd_s2.read();
 
         // The adress is obtained by adding rs2 to the 12 bit immediat sign
         // extended
@@ -522,7 +522,7 @@ void decod::post_reg_read_decoding_s2() {
         dec2exe_op2_var.range(11, 5) = if_ir2.range(31, 25);
         dec2exe_op2_var.range(4, 0)  = if_ir2.range(11, 7);
 
-        mem_data_var = rdata2_sd.read();
+        mem_data_var = rdata2_sd_s2.read();
 
         // STORE :
 
@@ -565,8 +565,8 @@ void decod::post_reg_read_decoding_s2() {
 
         /*BRANCH CONDITION GESTION : */
 
-        dec2exe_op1_var = rdata1_sd.read();
-        dec2exe_op2_var = rdata2_sd.read();
+        dec2exe_op1_var = rdata1_sd_s2.read();
+        dec2exe_op2_var = rdata2_sd_s2.read();
         sc_uint<33> res_comparaison;
         res_comparaison     = dec2exe_op1_var - dec2exe_op2_var;
         bool different_sign = dec2exe_op1_var[31] ^ dec2exe_op2_var[31];
@@ -621,7 +621,7 @@ void decod::post_reg_read_decoding_s2() {
                 offset_branch_var.range(31, 12) = 0b00000000000000000000;
             }
             offset_branch_var.range(11, 0) = if_ir2.range(31, 20);
-            offset_branch_var += rdata1_sd.read() - READ_PC_SR.read() + 4;
+            offset_branch_var += rdata1_sd_s2.read() - READ_PC_SR.read() + 4;
             offset_branch_var.range(0, 0) = 0;
             mem_data_var                  = 0;
             not_jump_var                    = 0;
@@ -654,7 +654,7 @@ void decod::post_reg_read_decoding_s2() {
         // So CSR must be wbk in rd
         if (csrrw_i_sd_s2 || csrrs_i_sd_s2 || csrrc_i_sd_s2 || csrrwi_i_sd_s2 || csrrsi_i_sd_s2 || csrrci_i_sd_s2) {
             csr_wenable_sd_s2.write(1);
-            sc_uint<32> rdata1_signal_sd = rdata1_sd;  // loading value of rs2
+            sc_uint<32> rdata1_signal_sd = rdata1_sd_s2;  // loading value of rs2
             if (csrrc_i_sd_s2 || csrrci_i_sd_s2) {
                 exe_neg_op2_sd_s2.write(0);
                 exe_cmd_sd_s2.write(1);
@@ -670,9 +670,9 @@ void decod::post_reg_read_decoding_s2() {
 
             if (csrrw_i_sd_s2 | csrrc_i_sd_s2 | csrrs_i_sd_s2) {
                 if (!csrrc_i_sd_s2)
-                    dec2exe_op1_var = rdata1_sd;
+                    dec2exe_op1_var = rdata1_sd_s2;
                 else
-                    dec2exe_op1_var = ~rdata1_sd.read();
+                    dec2exe_op1_var = ~rdata1_sd_s2.read();
             } else {
                 if (!csrrci_i_sd_s2)
                     dec2exe_op1_var = if_ir2.range(19, 15);

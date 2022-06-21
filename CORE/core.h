@@ -108,15 +108,15 @@ SC_MODULE(core) {
     sc_signal<bool>        ENV_CALL_M_MODE_RD;
 
     // DEC-CSR interface
-    sc_signal<sc_uint<12>> CSR_RADR_SD;
+    sc_signal<sc_uint<12>> CSR_RADR_SD_S1;
     sc_signal<sc_uint<32>> CSR_RDATA_SC;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
     sc_signal<sc_uint<32>> RDATA2_SR;
 
-    sc_signal<sc_uint<6>> RADR1_SD;
-    sc_signal<sc_uint<6>> RADR2_SD;
+    sc_signal<sc_uint<6>> RADR1_SD_S1;
+    sc_signal<sc_uint<6>> RADR2_SD_S1;
 
     sc_signal<sc_uint<6>> EXE_DEST_SD;
 
@@ -330,8 +330,8 @@ SC_MODULE(core) {
         dec_inst.RDATA1_SR(RDATA1_SR);
         dec_inst.RDATA2_SR(RDATA2_SR);
 
-        dec_inst.RADR1_SD(RADR1_SD);
-        dec_inst.RADR2_SD(RADR2_SD);
+        dec_inst.RADR1_SD_S1(RADR1_SD_S1);
+        dec_inst.RADR2_SD_S1(RADR2_SD_S1);
 
         dec_inst.EXE_DEST_SD(EXE_DEST_SD);
 
@@ -360,7 +360,7 @@ SC_MODULE(core) {
 
         dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
         dec_inst.CSR_WADR_RD(CSR_WADR_RD);
-        dec_inst.CSR_RADR_SD(CSR_RADR_SD);
+        dec_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
         dec_inst.CSR_RDATA_SC(CSR_RDATA_SC);
         dec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
@@ -607,8 +607,8 @@ SC_MODULE(core) {
         x1_multiplier_inst.RESET(RESET);
         // REG port map :
 
-        reg_inst.RADR1_SD(RADR1_SD);
-        reg_inst.RADR2_SD(RADR2_SD);
+        reg_inst.RADR1_SD_S1(RADR1_SD_S1);
+        reg_inst.RADR2_SD_S1(RADR2_SD_S1);
         reg_inst.RDATA1_SR(RDATA1_SR);
         reg_inst.RDATA2_SR(RDATA2_SR);
 
@@ -662,7 +662,7 @@ SC_MODULE(core) {
         csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);
         csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
 
-        csr_inst.CSR_RADR_SD(CSR_RADR_SD);
+        csr_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
         csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
 
         csr_inst.EXCEPTION_SM(EXCEPTION_SM);

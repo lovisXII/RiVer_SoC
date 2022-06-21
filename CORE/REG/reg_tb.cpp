@@ -47,8 +47,8 @@ int sc_main(int argc, char* argv[]) {
     // Port Map :
     // Reading Port :
 
-    reg_inst.RADR1_SD(radr1);
-    reg_inst.RADR2_SD(radr2);
+    reg_inst.RADR1_SD_S1(radr1);
+    reg_inst.RADR2_SD_S1(radr2);
 
     reg_inst.RDATA1_SR(radr1_data);
     reg_inst.RDATA2_SR(radr2_data);

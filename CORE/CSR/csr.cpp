@@ -45,7 +45,7 @@ void csr::writing_csr() {
 }
 
 void csr::reading_csr() {
-    switch (CSR_RADR_SD.read()) {
+    switch (CSR_RADR_SD_S1.read()) {
         case 0xF11: CSR_RDATA_SC.write(csr_rc[0]); break;
         case 0xF12: CSR_RDATA_SC.write(csr_rc[1]); break;
         case 0xF13: CSR_RDATA_SC.write(csr_rc[2]); break;
@@ -83,7 +83,7 @@ void csr::trace(sc_trace_file* tf) {
 
     // Output :
 
-    sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));
+    sc_trace(tf, CSR_RADR_SD_S1, GET_NAME(CSR_RADR_SD_S1));
     sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));
 
     // General Interface :

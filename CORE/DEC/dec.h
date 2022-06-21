@@ -17,8 +17,13 @@ SC_MODULE(decod) {
 
     sc_in<sc_uint<32>> READ_PC_SR;  // value of r32 which is pc coming from REG
 
-    sc_out<sc_uint<6>>  RADR1_SD;  // adress of rs
-    sc_out<sc_uint<6>>  RADR2_SD;  // adress of rt
+    sc_out<sc_uint<6>>  RADR1_SD_S1;  // adress of rs
+    sc_out<sc_uint<6>>  RADR2_SD_S1;  // adress of rt
+
+
+    sc_out<sc_uint<6>>  RADR1_SD_S2;  // adress of rs
+    sc_out<sc_uint<6>>  RADR2_SD_S2;  // adress of rt
+
     sc_out<sc_uint<32>> WRITE_PC_SD;
     sc_out<bool>        WRITE_PC_ENABLE_SD;
 
@@ -77,7 +82,8 @@ SC_MODULE(decod) {
     sc_in<bool> MULT_INST_RM;
     // Interface with CSR :
 
-    sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
+    sc_out<sc_uint<12>> CSR_RADR_SD_S1;   // CSR adress sent to CSR to get data
+    sc_out<sc_uint<12>> CSR_RADR_SD_S2;   // CSR adress sent to CSR to get data
     sc_in<sc_uint<32>>  CSR_RDATA_SC;  // data read from CSR
 
     // Bypasses
@@ -137,8 +143,10 @@ SC_MODULE(decod) {
 
     // Signals :
 
-    sc_signal<sc_uint<32>> rdata1_sd;
-    sc_signal<sc_uint<32>> rdata2_sd;
+    sc_signal<sc_uint<32>> rdata1_sd_s1;
+    sc_signal<sc_uint<32>> rdata2_sd_s1;
+    sc_signal<sc_uint<32>> rdata1_sd_s2;
+    sc_signal<sc_uint<32>> rdata2_sd_s2;
     sc_signal<bool>        r1_valid_sd;
     sc_signal<bool>        r2_valid_sd;
     sc_signal<bool>        block_in_dec;
@@ -521,7 +529,7 @@ SC_MODULE(decod) {
                   << mem_sign_extend_sd_s1 << mem_size_sd_s1 << select_type_operations_sd_s1 << adr_dest_sd_s1 << slti_i_sd_s1
                   << slt_i_sd_s1
 
-                  << sltiu_i_sd_s1 << sltu_i_sd_s1 << RADR1_SD << CSR_RDATA_SC << csr_radr_sd_s1 << RADR2_SD << r1_valid_sd
+                  << sltiu_i_sd_s1 << sltu_i_sd_s1 << RADR1_SD_S1 << CSR_RDATA_SC << csr_radr_sd_s1 << RADR2_SD_S1 << r1_valid_sd
                   << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1 << illegal_instruction_sd_s1
                   << instruction_adress_missaligned_sd_s1 << env_call_m_mode_sd_s1 << block_bp_sd_s1 << env_call_s_mode_sd_s1
                   << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1 << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1
@@ -590,7 +598,7 @@ SC_MODULE(decod) {
 
                   << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1 << dec2exe_push_sd
 
-                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1 << csrrw_i_sd_s1
+                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1 << csrrw_i_sd_s1
 
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << CSR_RDATA_SC << ecall_i_sd_s1
 
@@ -621,7 +629,7 @@ SC_MODULE(decod) {
 
                   << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1 << dec2exe_push_sd
 
-                  << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1 << csrrw_i_sd_s1
+                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1 << csrrw_i_sd_s1
 
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << CSR_RDATA_SC << ecall_i_sd_s1
 
@@ -636,9 +644,9 @@ SC_MODULE(decod) {
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE
 
-                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD << EXE_DEST_SD
+                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_SD
 
-                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
+                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
 
                   << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
         reset_signal_is(RESET_N, false);

@@ -4,8 +4,8 @@
 SC_MODULE(reg) {
     // Reading Port :
 
-    sc_in<sc_uint<6>> RADR1_SD;
-    sc_in<sc_uint<6>> RADR2_SD;
+    sc_in<sc_uint<6>> RADR1_SD_S1;
+    sc_in<sc_uint<6>> RADR2_SD_S1;
 
     sc_out<sc_uint<32>> RDATA1_SR;  // data output read from register
     sc_out<sc_uint<32>> RDATA2_SR;
@@ -38,7 +38,7 @@ SC_MODULE(reg) {
 
     SC_CTOR(reg) {
         SC_METHOD(reading_adresses);
-        sensitive << RADR1_SD << RADR2_SD << RESET_N;
+        sensitive << RADR1_SD_S1 << RADR2_SD_S1 << RESET_N;
         for (int i = 0; i < 33; i++)
             sensitive << REG_RR[i];
         SC_CTHREAD(writing_adresse, reg::CLK.pos());
