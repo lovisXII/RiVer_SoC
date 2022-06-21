@@ -64,6 +64,6 @@ SC_MODULE(Diviseur)
                   << OP1_SE << OP2_SE << shift_cpt_re;
 
         SC_METHOD(RET);
-        sensitive << reminder_se << quotient_se << CMD_RD;
+        sensitive << reminder_re << quotient_re << CMD_RD;
     }
 };

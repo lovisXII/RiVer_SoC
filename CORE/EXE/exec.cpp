@@ -442,6 +442,8 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
 
     sc_trace(tf, BLOCK_BP_RD, GET_NAME(BLOCK_BP_RD));
+
+    sc_trace(tf, div_busy_reg_se, GET_NAME(div_busy_reg_se));
     
     alu_inst.trace(tf);
     shifter_inst.trace(tf);

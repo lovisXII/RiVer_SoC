@@ -103,11 +103,11 @@ void Diviseur::RET()
 {
     if(CMD_RD.read() == 3 || CMD_RD.read() == 0)
     {
-        sc_bv<64> rem = reminder_se.read();
+        sc_bv<64> rem = reminder_re.read();
         DIVIDER_RES_OUTPUT.write((sc_bv_base)rem.range(31, 0));
     }
     else
-        DIVIDER_RES_OUTPUT.write(quotient_se.read());
+        DIVIDER_RES_OUTPUT.write(quotient_re.read());
 }
 
 void Diviseur::trace(sc_trace_file * tf)
