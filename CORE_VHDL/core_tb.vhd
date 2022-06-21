@@ -29,6 +29,17 @@ begin
 end get_startpc;
 attribute foreign of get_startpc : function is "VHPIDIRECT get_startpc";
 
+function to_string ( a: std_logic_vector) return string is
+variable b : string (1 to a'length) := (others => NUL);
+variable stri : integer := 1; 
+begin
+    for i in a'range loop
+        b(stri) := std_logic'image(a((i)))(2);  
+        stri := stri+1;
+    end loop;
+    return b;
+end function;
+
 -- global interface
 signal clk : std_logic := '1';
 signal reset_n : std_logic := '0';
@@ -112,12 +123,15 @@ core0 : core
 
 
 clk_gen : process
-begin 
+begin         
     clk <= '0'; 
     wait for 5 ns; 
     clk <= '1'; 
     CYCLES <= CYCLES + 1; 
     wait for 5 ns; 
+    if CYCLES = 1 then 
+        assert false report "simulation begin" severity note; 
+    end if; 
     if CYCLES = NCYCLES then 
         assert false report "end of simulation" severity note; 
         wait; 
@@ -131,17 +145,7 @@ MCACHE_STALL_SM <= '0';
 IC_STALL_SI <= '0';
 PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 
-process(ADR_SI, ADR_VALID_SI)
-function to_string ( a: std_logic_vector) return string is
-    variable b : string (1 to a'length) := (others => NUL);
-    variable stri : integer := 1; 
-  begin
-    for i in a'range loop
-        b(stri) := std_logic'image(a((i)))(2);  
-    stri := stri+1;
-    end loop;
-  return b;
-  end function;
+icache : process(ADR_SI, ADR_VALID_SI)
 begin
     if ADR_VALID_SI = '1' then 
     report "ADR_SI : " & to_string(ADR_SI); 
@@ -150,7 +154,7 @@ begin
 end process; 
 
 
-mem_access : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM)
+dcache : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
 variable read0 : integer;
 begin 
     if MCACHE_ADR_VALID_SM = '1' then 

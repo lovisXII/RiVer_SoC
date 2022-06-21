@@ -11,14 +11,14 @@ int*** ram[256];
 
 int get_mem(int a) {
     int addr1, addr2, addr3, addr4;
-    int copy_adr_for_print = a;
+    int adr = a;
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        printf("adresse asked : %x, result it %x\n", copy_adr_for_print, ram[addr1][addr2][addr3][addr4]);
+        printf("[get mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
@@ -27,7 +27,8 @@ int get_mem(int a) {
 int write_mem(int a, int data, int byt_sel) {
     int addr1, addr2, addr3, addr4;
     int tmp = 0; 
-    int mask = 0; 
+    int mask = 0;
+    int adr = a;  
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
@@ -48,6 +49,7 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= data & mask; 
     ram[addr1][addr2][addr3][addr4] = tmp;
+    printf("[write mem] : at @ %x writting %x\n", adr, tmp);
     return 0; 
 }
 
