@@ -116,6 +116,7 @@ jobs:
       - if: ${{ steps.cache-spike.outputs.cache-hit != 'true' }}
         name: Install spike
         run: 
+          sudo apt-get install device-tree-compiler &&
           ./scripts/install_spike.sh
       
       - name: Copy riscof config
