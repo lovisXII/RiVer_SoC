@@ -27,3 +27,11 @@ _labelx :
     nop
     nop
     j _good
+
+_good: 
+    nop
+    nop
+
+_bad: 
+    nop
+    nop

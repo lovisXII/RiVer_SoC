@@ -96,7 +96,8 @@ signal mem_size_sd : std_logic_vector(1 downto 0);
 signal wb_sd : std_logic;
 
 -- branch and pc gestion
-signal offset_branch_sd : std_logic_vector(31 downto 0);
+signal offset_branch_sd, offset_branch_j, offset_branch_jalr, jalr_offset, offset_branch_b : std_logic_vector(31 downto 0);
+signal jalr_offset_calc : std_logic_vector(31 downto 0);
 signal inval_adr_dest, invalid_instr, invalid_i, jump_sd : std_logic;
 signal different_sign : std_logic;
 signal res : std_logic_vector(31 downto 0);
@@ -284,7 +285,6 @@ dec2exe_op2_sd <= rdata2_sd when ((r_type_sd  or b_type_sd or (u_type_sd and not
                op2_i_type_sd when i_type_sd = '1' else
                op2_s_type_sd when s_type_sd = '1' else
                PC_IF2DEC_RI when auipc_i_sd = '1' else 
-               READ_PC_SR when ((j_type_sd or jalr_type_sd) = '1') else 
                x"00000000";
 
 -------------------------
@@ -318,16 +318,33 @@ mem_sign_extend_sd <= '1' when (((lh_i_sd and lhu_i_sd )= '1') or ((lb_i_sd and 
                       '0';
 
 -------------------------
--- Branch and PC
+-- Branch offset
 -------------------------
-offset_branch_sd(31 downto 13) <=   (others => INSTR_RI(31)) when b_type_sd = '1' else 
-                                    (others => '0');
+offset_branch_b(31 downto 12)   <=  (others => INSTR_RI(31)); 
+offset_branch_b(11)             <=  INSTR_RI(7);
+offset_branch_b(10 downto 5)    <=  INSTR_RI(30 downto 25);
+offset_branch_b(4 downto 1)     <=  INSTR_RI(11 downto 8);
+offset_branch_b(0)              <=  INSTR_RI(0);
 
-offset_branch_sd(12) <= INSTR_RI(31) when b_type_sd = '1' else '0';
-offset_branch_sd(11) <= INSTR_RI(7) when b_type_sd = '1' else '0';
-offset_branch_sd(10 downto 5) <= INSTR_RI(30 downto 25) when b_type_sd = '1' else "000000";
-offset_branch_sd(4 downto 1) <= INSTR_RI(11 downto 8) when b_type_sd = '1' else "0000";
-offset_branch_sd(0) <= '0'; 
+offset_branch_j(31 downto 20)   <=  (others => INSTR_RI(31));
+offset_branch_j(19 downto 12)   <=  INSTR_RI(19 downto 12);
+offset_branch_j(11)             <=  INSTR_RI(20);
+offset_branch_j(10 downto 1)    <=  INSTR_RI(30 downto 21);
+offset_branch_j(0)              <=  '0';
+
+jalr_offset(31 downto 12)       <=  (others => INSTR_RI(31));
+jalr_offset(11 downto 0)        <=  INSTR_RI(31 downto 20);
+
+jalr_offset_calc    <=  std_logic_vector(signed(jalr_offset) + signed(rdata1_sd) - signed(READ_PC_SR) + signed(inc_value)); 
+
+offset_branch_jalr(31 downto 1) <=  jalr_offset_calc(31 downto 1);
+offset_branch_jalr(0)           <=  '0';
+
+offset_branch_sd    <=  offset_branch_b when b_type_sd = '1' else 
+                        offset_branch_j when j_type_sd = '1' else
+                        offset_branch_jalr when jalr_type_sd = '1' else 
+                        x"00000000";
+
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
 res_compare <= std_logic_vector(signed(dec2exe_op1_sd) - signed(dec2exe_op2_sd));
@@ -349,7 +366,7 @@ jump_sd <=  '1' when b_type_sd = '1'    and (   (bne_i_sd = '1' and (res /= x"00
                                             or  (bgeu_i_sd = '1' and ((different_sign = '1' and  dec2exe_op1_sd(31) = '1') 
                                                     or (different_sign = '0' and res_compare(31) = '0'))))
                 else 
-            '0';
+            (j_type_sd or jalr_type_sd);
                 
 inval_adr_dest <= '1' when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else '0';
 
