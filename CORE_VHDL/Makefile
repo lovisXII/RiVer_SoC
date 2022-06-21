@@ -1,7 +1,7 @@
 BUILD=build
 SIM_DIR=sim
 TESTS_DIR=tests
-APP=test_branch.s
+TEST=test_bp.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -18,7 +18,7 @@ view: run
 	gtkwave $(SIM_DIR)/$(TB).vcd
 
 run: core_tb 
-	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(APP) --vcd=$(TB).vcd
+	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(TEST) --vcd=$(TB).vcd
 
 core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb

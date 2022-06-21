@@ -28,3 +28,17 @@ _start:
     bne  x2, x4, _bad
     j _good
     nop
+
+_bad: 
+    ori x10, x0, 1
+    nop
+    nop
+    j _bad
+    nop
+
+_good: 
+    ori x10, x0, 15
+    nop
+    nop
+    j _good
+    nop
