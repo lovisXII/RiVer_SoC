@@ -51,7 +51,7 @@ _good :
     nop
     nop
 _bad :
-    ori x10, x0, 2047
+    ori x10, x0, 256
     nop
     nop
     nop

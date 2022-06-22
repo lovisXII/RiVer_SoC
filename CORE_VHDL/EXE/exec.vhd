@@ -150,13 +150,15 @@ exe2mem : fifo
 alu_op2 <= not op2 when NEG_OP2_RD = '1' else op2; 
 
 -- SLT / SLTU oper 
-slt_res <=  x"00000000" when (op1(31) = '1' and op2(31) = '0') else 
-            x"00000001" when (op1(31) = '0' and op2(31) = '1') else
-            (x"0000000"&"000"&not(alu_res(31)));
-
-sltu_res <= x"00000001" when (op1(31) = '1' and op2(31) = '0') else
+slt_res <=  x"00000001" when (op1(31) = '1' and op2(31) = '0') else 
             x"00000000" when (op1(31) = '0' and op2(31) = '1') else
-            (x"0000000"&"000"&not(alu_res(31)));
+            x"00000000" when (op1 = op2)                       else
+            (x"0000000"&"000"&(alu_res(31)));
+
+sltu_res <= x"00000000" when (op1(31) = '1' and op2(31) = '0') else
+            x"00000001" when (op1(31) = '0' and op2(31) = '1') else
+            x"00000000" when (op1 = op2)                       else
+            (x"0000000"&"000"&(alu_res(31)));
 
 -- exe result selection
 exe_res <=  shifter_res when SELECT_SHIFT_RD = '1' else 

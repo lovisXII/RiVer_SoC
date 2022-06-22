@@ -272,7 +272,7 @@ dec2exe_op1_sd <= rdata1_sd when ((r_type_sd or i_type_sd or s_type_sd or b_type
                x"00000000";
 
 -- Operand 2 selection
-op2_i_type_sd(31 downto 12) <=  x"FFFFF" when RDATA2_SR(31) = '1' else 
+op2_i_type_sd(31 downto 12) <=  x"FFFFF" when INSTR_RI(31) = '1' else 
                                 x"00000";
 op2_i_type_sd(11 downto 0)  <= INSTR_RI(31 downto 20);
 
