@@ -20,4 +20,3 @@ if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) then
   fi
   rm -f riscv32-unknown-elf.gcc-10.2.0.rv32i.ilp32.newlib.tar.gz
 fi
-

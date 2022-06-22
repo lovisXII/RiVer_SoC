@@ -88,6 +88,7 @@ fi
 
 ################### CONFIG SETUP ################### 
 
+<<<<<<< HEAD
 cd $TEMPORARY_PATH 
 if ! [ -f "config.ini" ] 
 then
@@ -113,4 +114,33 @@ then
     pspec=$PWD/RISC-V-project/riscof/projet/projet_platform.yaml
     PATH=$PWD/RISC-V-project/CORE/core_tb">>config.ini
 fi
+=======
+cd $TEMPORARY_PATH/riscof
+if [ -f config.ini ]
+then 
+    echo "config.ini exist, removing it"
+    rm config.ini
+fi
+echo "Creating config.ini in $TEMPORARY_PATH/riscof"
+echo "
+[RISCOF]
+ReferencePlugin=spike
+ReferencePluginPath=$PWD/riscof/spike
+DUTPlugin=projet
+DUTPluginPath=$PWD/riscof/projet
+[spike]
+pluginpath=$PWD/riscof/spike
+ispec=$PWD/riscof/spike/spike_isa.yaml
+pspec=$PWD/riscof/spike/spike_platform.yaml
+target_run=1
+[sail_cSim]
+pluginpath=$PWD/riscof/sail_cSim
+[projet]
+pluginpath=$PWD/riscof/projet
+ispec=$PWD/riscof/projet/projet_isa.yaml
+pspec=$PWD/riscof/projet/projet_platform.yaml
+PATH=$PWD/CORE/core_tb">>config.ini 
+
+
+>>>>>>> 6884fe6c (update before change branch)
 riscof --verbose info arch-test --clone
