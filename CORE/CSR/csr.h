@@ -19,19 +19,23 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> MIP_WDATA_RM;
     sc_in<sc_uint<32>> MEPC_WDATA_RM;
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM;
-    sc_in<sc_uint<32>> MTVAL_WDATA_SM ;
-
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM;
+    sc_in<sc_uint<32>> EXTERNAL_INTERRUPT_SB;
 
     sc_out<sc_uint<32>> MEPC_SC;
     sc_out<sc_uint<32>> MSTATUS_RC;
     sc_out<sc_uint<32>> MTVEC_VALUE_RC;
     sc_out<sc_uint<32>> MIP_VALUE_RC;
+    sc_out<sc_uint<32>> MIE_VALUE_RC;
     sc_out<sc_uint<32>> MCAUSE_SC;
 
     // Output :
 
     sc_in<sc_uint<12>>  CSR_RADR_SD;
     sc_out<sc_uint<32>> CSR_RDATA_SC;
+    sc_out<bool>        TIMER_CONFIG_WB_SC;
+    sc_out<bool>        TIMER_DIVIDER_WB_SC;
+    sc_in<sc_uint<64>>  TIME_RT;
 
     // General Interface :
 

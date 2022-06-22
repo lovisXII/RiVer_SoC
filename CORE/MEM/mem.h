@@ -21,7 +21,7 @@ SC_MODULE(mem) {
 
     sc_in<sc_uint<32>> MCACHE_RESULT_SM;
     sc_in<bool>        MCACHE_STALL_SM;
-    sc_out<sc_uint<2>> MEM_SIZE_SM ;
+    sc_out<sc_uint<2>> MEM_SIZE_SM;
     // Exe Interface :
 
     sc_in<sc_uint<32>> EXE_RES_RE;
@@ -31,8 +31,8 @@ SC_MODULE(mem) {
 
     sc_in<sc_uint<32>> PC_EXE2MEM_RE;
     sc_in<bool>        WB_RE;
-    sc_in<bool>        SIGN_EXTEND_RE;  // taille fifo entrée : 74
-    sc_in<bool>        LOAD_RE, STORE_RE;//15
+    sc_in<bool>        SIGN_EXTEND_RE;     // taille fifo entrée : 74
+    sc_in<bool>        LOAD_RE, STORE_RE;  // 15
     sc_in<bool>        MULT_INST_RE;
 
     sc_in<bool>        CSR_WENABLE_RE;
@@ -53,7 +53,7 @@ SC_MODULE(mem) {
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_in<bool> MRET_RE;  // 31
 
-    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE ;
+    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE;
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
@@ -63,7 +63,7 @@ SC_MODULE(mem) {
 
     sc_in<bool>  EXE2MEM_EMPTY_SE;
     sc_out<bool> EXE2MEM_POP_SM;
-    
+
     // mem2wbk interface
 
     sc_in<bool>         MEM2WBK_POP_SW;  // 35
@@ -111,6 +111,7 @@ SC_MODULE(mem) {
     sc_in<sc_uint<32>>  MSTATUS_RC;  // 57
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
+    sc_in<sc_uint<32>>  MIE_VALUE_RC;
 
     // Internal signals
 
@@ -160,15 +161,8 @@ SC_MODULE(mem) {
         SC_METHOD(fifo_gestion);
         sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
         SC_METHOD(mem_preprocess);
-        sensitive   << WB_RE 
-                    << LOAD_RE 
-                    << MEM_SIZE_RE 
-                    << MCACHE_RESULT_SM 
-                    << EXE_RES_RE 
-                    << MEM_DATA_RE 
-                    << STORE_RE
-                    << SIGN_EXTEND_RE
-                    << EXE2MEM_EMPTY_SE;
+        sensitive << WB_RE << LOAD_RE << MEM_SIZE_RE << MCACHE_RESULT_SM << EXE_RES_RE << MEM_DATA_RE << STORE_RE
+                  << SIGN_EXTEND_RE << EXE2MEM_EMPTY_SE;
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
         SC_METHOD(csr_exception);
