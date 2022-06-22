@@ -57,20 +57,12 @@ SC_MODULE(buffer) {
     sc_signal<bool>             empty_s;
     
     void write();
-    void read() ;
     void flags_update();
     void trace(sc_trace_file * tf);
     
     SC_CTOR(buffer) 
     {
         SC_CTHREAD(write, buffer::CLK.pos());
-        SC_METHOD(read)
-        sensitive   << read_ptr_s1
-                    << read_ptr_s2
-                    <<  RESET_N;
-        for(int i = 0 ; i < depth ; i++){
-            sensitive << inside_data_s[i] ;
-        }
         SC_METHOD(flags_update);
         sensitive   << RESET_N  
                     << WRITE_S
@@ -78,7 +70,8 @@ SC_MODULE(buffer) {
                     << read_ptr_s1 
                     << write_ptr
                     << buffer_valid
-                    << CLK.pos();
+                    << full_s
+                    << empty_s;
         reset_signal_is(RESET_N, false);
     }
 };
@@ -129,6 +122,8 @@ void buffer<T>::write() {
     read_ptr_s1        = depth-1;
     read_ptr_s2        = depth-2;
     buffer_valid    = 0 ;
+    DATA_OUT_S_S1 = 0;
+    DATA_OUT_S_S2 = 0;
 
     wait(3);
     while (1) {
@@ -146,23 +141,11 @@ void buffer<T>::write() {
         sc_bv<depth>  mask_s1   = 0;
         sc_bv<depth>  mask_s2   = 0;
 
+        DATA_OUT_S_S1 = inside_data_s[read_ptr_var_s1] ;
+        DATA_OUT_S_S2 = inside_data_s[read_ptr_var_s2] ;
         
-
-        cerr << "############################################## " << endl ;
-        cerr << sc_time_stamp() << " write " << write << endl ;
-        cerr << sc_time_stamp() << " read_s1 " << write << endl ;
-        cerr << sc_time_stamp() << " read_s2 " << read_s2 << endl ;
-        cerr << endl ;
-        cerr << sc_time_stamp() << " write_ptr_var " << write_ptr_var << endl ;
-        cerr << sc_time_stamp() << " read_ptr_var_s1 " << read_ptr_var_s1 << endl ;
-        cerr << sc_time_stamp() << " read_ptr_var_s2 " << read_ptr_var_s2 << endl ;
-        cerr << endl ;
-        cerr << sc_time_stamp() << " empty_s " << empty_s << endl ;
-        cerr << sc_time_stamp() << " full_s " << full_s << endl ;
-        cerr << endl ;
         if(!read_s1 && !read_s2 && write && !full_s) // only write
         {
-            cerr << sc_time_stamp() << " first case " << endl ;
             inside_data_s[write_ptr_var]    = DATA_IN_S_S1 ;
             inside_data_s[write_ptr_var-1]  = DATA_IN_S_S2 ;
 
@@ -173,21 +156,16 @@ void buffer<T>::write() {
         }
         else if(read_s1 && !read_s2 && !write && !empty_s) // read only one inst
         {
-            cerr << sc_time_stamp() << " 2 case " << endl ;
-
             mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
-            mask_s2 = 0b1 << depth - (read_ptr_var_s2 + 1);
 
             read_ptr_var_s1 --;
             read_ptr_var_s2 --;
         }
         else if (read_s1 && !read_s2 && write) // read only 1 inst and write
         {
-            cerr << sc_time_stamp() << " 3 case " << endl ;
             if(!empty_s)
             {
                 mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
-                mask_s2 = 0b1 << depth - (read_ptr_var_s2 + 1);
 
                 read_ptr_var_s1 --;
                 read_ptr_var_s2 --;
@@ -203,25 +181,16 @@ void buffer<T>::write() {
                 write_ptr_var -=2 ;
             }
         }
-        else if (read_s1 && read_s2 && !write && !empty_s){
-            
-                cerr << sc_time_stamp() << " 4 case " << endl ;
+        else if (read_s1 && read_s2 && !write && !empty_s)
+        {
                 mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
                 mask_s2 = 0b1 << depth - (read_ptr_var_s2 + 1);
 
                 read_ptr_var_s1 -=  2 ;
                 read_ptr_var_s2 -=  2 ;
         }
-        else if(read_s1 && read_s2 && write){
-            cerr << sc_time_stamp() << " 5 case " << endl ;
-            if(!empty_s)
-            {
-                mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
-                mask_s2 = 0b1 << depth - (read_ptr_var_s2 + 1);
-
-                read_ptr_var_s1 -=  2 ;
-                read_ptr_var_s2 -=  2 ;
-            }
+        else if(read_s1 && read_s2 && write)
+        {
             if(!full_s){
 
                 inside_data_s[write_ptr_var]    = DATA_IN_S_S1 ;
@@ -232,13 +201,28 @@ void buffer<T>::write() {
 
                 write_ptr_var -=2;
             }
+            if(!empty_s)
+            {
+                mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
+                mask_s2 = 0b1 << depth - (read_ptr_var_s2 + 1);
+
+                read_ptr_var_s1 -=  2 ;
+                read_ptr_var_s2 -=  2 ;
+            }
+
         }
+        
         if(write_ptr_var == -1){
             write_ptr_var = depth-1 ;
         }
+
         if(read_ptr_var_s1 == -1){
             read_ptr_var_s1 = depth-1 ;    
         } 
+        else if(read_ptr_var_s1 == -2){
+            read_ptr_var_s1 = depth - 1;
+        }
+        
         if(read_ptr_var_s2 == -2 ){
             read_ptr_var_s2 = depth-2 ;    
         } 
@@ -255,28 +239,10 @@ void buffer<T>::write() {
         read_ptr_s2         = read_ptr_var_s2 ;
         write_ptr           = write_ptr_var;
         
-        cerr << "############################################## " << endl ;
         wait(1);
     }
 }
 
-template <int T>
-void buffer<T>::read()
-{
-    // This will allow to always have the data on the output
-    int read_ptr_var_s1     = read_ptr_s1;
-    int read_ptr_var_s2     = read_ptr_s2;
-
-    if(RESET_N.read())
-    {
-        DATA_OUT_S_S1 = inside_data_s[read_ptr_var_s1] ;
-        DATA_OUT_S_S2 = inside_data_s[read_ptr_var_s2] ;
-    }
-    else{
-        DATA_OUT_S_S1 = 0;
-        DATA_OUT_S_S2 = 0;
-    }
-}
 template <int T>
 void buffer<T>::trace(sc_trace_file* tf) {
     sc_trace(tf, CLK, GET_NAME(CLK));

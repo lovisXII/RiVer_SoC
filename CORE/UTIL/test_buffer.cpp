@@ -1,6 +1,7 @@
 #include <systemc.h>
 #include <string>
 #include "buffer.h"
+#include <stdlib.h>
 
 using namespace std;
 
