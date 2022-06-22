@@ -9,10 +9,10 @@ OBJECTS=test_buffer.o
 
 all: test_buffer
 
-test_buffer: $(OBJECTS) 
+test_buffer: $(OBJECTS)  buffer.h
 	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
-$(OBJECTS): test_buffer.cpp 
+$(OBJECTS): test_buffer.cpp buffer.h 
 	$(CC) -c $< $(C_ARGS) -o $@
 
 clean: 
