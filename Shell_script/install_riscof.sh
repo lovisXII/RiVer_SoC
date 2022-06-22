@@ -2,28 +2,37 @@
 # This script allow you to setup the riscof test frimework
 # You will need it if you really want to test our design, otherwise it will be
 # useless for you to run this script
-cd ../ && mkdir -p riscof
 
-export TEMPORARY_PATH=$PWD/riscof
+export TEMPORARY_PATH=$PWD/../riscof
+cd $TEMPORARY_PATH
+################### PYTHON SETUP ################### 
+
 echo "Please run in sudo"
 echo "Installing python"
 
-sudo apt-get install python3.6
-pip3 install --upgrade pip
-sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt-get update
-sudo apt-get install python3.6 -y
-pip3 install --upgrade pip
+# sudo apt-get install python3.6
+# pip3 install --upgrade pip
+# sudo add-apt-repository ppa:deadsnakes/ppa
+# sudo apt-get update
+# sudo apt-get install python3.6 -y
+# pip3 install --upgrade pip
 
-if ( !(riscof > /dev/null 2>&1 ) )
+
+################### RISCOF SETUP ################### 
+
+if [ ! [ riscof > /dev/null 2>&1 ] ]
 then
     echo "Installing riscof"
     pip3 install git+https://github.com/riscv/riscof.git
 fi
+
+
+################### GNU-TOOLCHAIN SETUP ################### 
+
 echo "Installing GNU Toolchain"
 
-sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
-if ( !(riscv32-unknown-elf-gcc -v > /dev/null 2>&1) ) 
+# sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
+if [ ! [ riscv32-unknown-elf-gcc -v > /dev/null 2>&1 ] ] 
 then 
     echo "#######################################" 
     echo "#######################################"
@@ -35,19 +44,15 @@ then
     echo "#######################################"
     echo "#######################################"
     echo "Launching install_riscv to install riscv compiler" 
-    ./install_riscv.sh
+    sudo ./install_riscv.sh
 else
     echo "gnu toolchain is already installed and setup in the bashrc"
 fi
 
-if ( (spike -v > /dev/null 2>&1) ) 
+################### SPIKE SETUP ################### 
+
+if [ ! [ spike -v > /dev/null 2>&1 ] ] 
 then
-    echo "Installing spike"
-    if ( (-d /opt/spike/bin)) 
-    then
-        echo "export $PATH=/opt/spike/bin:$PATH" >> ~/.bashrc
-        source ~/.bashrc      
-    else
         echo "Unlucky you, spike isn't installed : Installing spike"
         echo "#######################################" 
         echo "#######################################"
@@ -68,7 +73,6 @@ then
         sudo make install #sudo is required depending on the path chosen in the previous setup
         echo "export $PATH=/opt/spike/bin:$PATH" >> ~/.bashrc
         source ~/.bashrc
-    fi
 else 
     echo "#######################################" 
     echo "#######################################"
@@ -80,8 +84,12 @@ else
     echo "#######################################"
     echo "#######################################"
 fi
-cd $TEMPORARY_PATH && riscof setup --dutname=spike
-if ( !(-f config.ini) ) 
+
+
+################### CONFIG SETUP ################### 
+
+cd $TEMPORARY_PATH 
+if ! [ -f "config.ini" ] 
 then
     echo "
     [RISCOF]
