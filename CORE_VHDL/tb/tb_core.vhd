@@ -1,10 +1,6 @@
 library ieee; 
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.numeric_std.all;
-
-library std; 
-use std.textio.all;
 
 
 entity tb_core is 
@@ -13,7 +9,8 @@ end tb_core;
 architecture simu of tb_core is 
 
 -- global interface
-signal clk, reset_n : std_logic := '0';
+signal clk : std_logic := '1';
+signal reset_n : std_logic := '0';
 
 -- Mcache interface
 signal MCACHE_RESULT_SM : std_logic_vector(31 downto 0);
@@ -22,6 +19,7 @@ signal MCACHE_STALL_SM : std_logic;
 signal MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : std_logic;
 signal MCACHE_DATA_SM : std_logic_vector(31 downto 0);
 signal MCACHE_ADR_SM : std_logic_vector(31 downto 0);
+signal byt_sel : std_logic_vector(3 downto 0);
 
 -- Icache interface
 signal IC_INST_SI : std_logic_vector(31 downto 0);
@@ -31,39 +29,41 @@ signal ADR_SI : std_logic_vector(31 downto 0);
 signal ADR_VALID_SI : std_logic; 
 
 -- Debug 
-signal PC_INIT : std_logic_vector(31 downto 0);
-signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
+signal PC_INIT, DEBUG_PC_READ : std_logic_vector(31 downto 0) := x"00000000";
 
--- file
-signal eof : std_logic := '0';
-file program : text;
-constant filename : string := "../../CORE/a.out.txt";
+component core
+    port(
+        -- global interface
+        clk, reset_n : in std_logic;
 
+        -- Mcache interface
+        MCACHE_RESULT_SM : in std_logic_vector(31 downto 0);
+        MCACHE_STALL_SM : in std_logic;
+
+        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
+        MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
+        MCACHE_ADR_SM : out std_logic_vector(31 downto 0);
+        byt_sel : out std_logic_vector(3 downto 0);
+
+        -- Icache interface
+        IC_INST_SI : in std_logic_vector(31 downto 0);
+        IC_STALL_SI : in std_logic; 
+
+        ADR_SI : out std_logic_vector(31 downto 0);
+        ADR_VALID_SI : out std_logic; 
+
+        -- Debug 
+        PC_INIT : in std_logic_vector(31 downto 0);
+        DEBUG_PC_READ : out std_logic_vector(31 downto 0)
+    );
+end component; 
 
 begin 
 
-process 
-begin 
+clk <= not clk after 5 ns; 
+reset_n <= '0', '1' after 6 ns; 
 
-read_file : process 
-variable fstatus : file_open_status; 
-variable file_line : line; 
-variable var_instr : std_logic_vector(31 downto 0); 
-variable end_of_line : boolean; 
-
-begin 
-    file_open(fstatus, program, filename, read_mode);
-    wait until reset_n = '1'; 
-    while not endfile(program) loop 
-        wait until clk = '1'; 
-        hreadline(program, inline); 
-        read(inline, char, end_of_line);
-    end loop;
-    wait;
-end process; 
-            
-
-core0 : entity work.core 
+core0 : core
     port map(
         -- global interface
         clk, reset_n,
@@ -75,7 +75,7 @@ core0 : entity work.core
         MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM,
         MCACHE_DATA_SM,
         MCACHE_ADR_SM,
-
+        byt_sel, 
         -- Icache interface
         IC_INST_SI,
         IC_STALL_SI, 
@@ -88,15 +88,10 @@ core0 : entity work.core
         DEBUG_PC_READ
     );
 
-clk <= not clk after 5 ns; 
-reset_n <= '0', '1' after 10 ns;
+MCACHE_RESULT_SM <= x"00000000"; 
+MCACHE_STALL_SM  <= '0'; 
 
-MCACHE_RESULT_SM <= x"0C0C0C0C";
-MCACHE_STALL_SM <= '0';
 
-IC_INST_SI <= x"00408113"; -- 0000 0000 0100 0000 1000 0001 0001 0011 addi r2, r1, 4
-IC_STALL_SI <= '0';
-
-PC_INIT <= x"AAAAAAAA";
+IC_INST_SI  <= x"0180006f";
 
 end simu; 

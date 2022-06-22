@@ -146,10 +146,17 @@ IC_STALL_SI <= '0';
 PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 
 icache : process(ADR_SI, ADR_VALID_SI)
+variable adr_int : integer; 
+variable inst_int : integer; 
+variable intermed : unsigned(ADR_SI'range); 
 begin
     if ADR_VALID_SI = '1' then 
-    report "ADR_SI : " & to_string(ADR_SI); 
-        IC_INST_SI <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(ADR_SI))), 32));
+        report "ADR_SI length = " & integer'image(ADR_SI'length);
+        report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
+        intermed    := unsigned(ADR_SI); 
+        adr_int     := to_integer(intermed);
+        inst_int    := get_mem(adr_int);
+        IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
     end if; 
 end process; 
 
