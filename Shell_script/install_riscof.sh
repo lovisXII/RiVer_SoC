@@ -89,6 +89,7 @@ fi
 ################### CONFIG SETUP ################### 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 cd $TEMPORARY_PATH 
 if ! [ -f "config.ini" ] 
 then
@@ -115,6 +116,8 @@ then
     PATH=$PWD/RISC-V-project/CORE/core_tb">>config.ini
 fi
 =======
+=======
+>>>>>>> 6884fe6c (update before change branch)
 cd $TEMPORARY_PATH/riscof
 if [ -f config.ini ]
 then 
@@ -142,5 +145,8 @@ pspec=$PWD/riscof/projet/projet_platform.yaml
 PATH=$PWD/CORE/core_tb">>config.ini 
 
 
+<<<<<<< HEAD
+>>>>>>> 6884fe6c (update before change branch)
+=======
 >>>>>>> 6884fe6c (update before change branch)
 riscof --verbose info arch-test --clone
