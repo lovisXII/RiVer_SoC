@@ -44,15 +44,10 @@ _start:
 
     nop
     nop
-_good :
-    ori x10, x0, 255
-    nop
-    nop
-    nop
-    nop
 _bad :
-    ori x10, x0, 256
     nop
     nop
+
+_good :
     nop
-    
+    nop

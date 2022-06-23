@@ -298,7 +298,7 @@ alu_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd) = '1
                 "11" when ((xor_i_sd or xori_i_sd) = '1') else 
                 "00";
 
-select_shift_sd <= sll_i_sd or slli_i_sd or srl_i_sd or sra_i_sd or srai_i_sd;
+select_shift_sd <= sll_i_sd or slli_i_sd or srl_i_sd or srli_i_sd or sra_i_sd or srai_i_sd;
 
 
 wb_sd <=  r_type_sd or i_type_sd or u_type_sd or b_type_sd or j_type_sd or jalr_type_sd;
