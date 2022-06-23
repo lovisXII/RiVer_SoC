@@ -324,7 +324,7 @@ offset_branch_b(31 downto 12)   <=  (others => INSTR_RI(31));
 offset_branch_b(11)             <=  INSTR_RI(7);
 offset_branch_b(10 downto 5)    <=  INSTR_RI(30 downto 25);
 offset_branch_b(4 downto 1)     <=  INSTR_RI(11 downto 8);
-offset_branch_b(0)              <=  INSTR_RI(0);
+offset_branch_b(0)              <=  '0';
 
 offset_branch_j(31 downto 20)   <=  (others => INSTR_RI(31));
 offset_branch_j(19 downto 12)   <=  INSTR_RI(19 downto 12);

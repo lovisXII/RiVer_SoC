@@ -11,11 +11,11 @@ end core_tb;
 architecture simu of core_tb is 
 
 -- functions 
-function get_mem(adr : integer) return integer is 
+function read_mem(adr : integer) return integer is 
 begin 
     assert false severity failure;
-end get_mem; 
-attribute foreign of get_mem : function is "VHPIDIRECT get_mem";    
+end read_mem; 
+attribute foreign of read_mem : function is "VHPIDIRECT read_mem";    
 
 function write_mem(adr : integer; data : integer; byte_select : integer) return integer is 
 begin 
@@ -29,6 +29,18 @@ begin
 end get_startpc;
 attribute foreign of get_startpc : function is "VHPIDIRECT get_startpc";
 
+function get_good(a : integer) return integer is 
+begin 
+    assert false severity failure; 
+end get_good; 
+attribute foreign of get_good : function is  "VHPIDIRECT get_good";
+
+function get_bad(a : integer) return integer is 
+begin 
+    assert false severity failure; 
+end get_bad; 
+attribute foreign of get_bad : function is  "VHPIDIRECT get_bad";
+
 function to_string ( a: std_logic_vector) return string is
 variable b : string (1 to a'length) := (others => NUL);
 variable stri : integer := 1; 
@@ -40,6 +52,9 @@ begin
     return b;
 end function;
 
+------------------------------
+-- core signals instance
+------------------------------
 -- global interface
 signal clk : std_logic := '1';
 signal reset_n : std_logic := '0';
@@ -63,9 +78,6 @@ signal ADR_VALID_SI : std_logic;
 -- Debug 
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
-
-constant NCYCLES : integer := 100; 
-signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 
 component core
     port(
@@ -94,7 +106,15 @@ component core
     );
 end component; 
 
+-- Simulation 
+constant NCYCLES : integer := 100; 
+signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
+signal good_adr, bad_adr : std_logic_vector(31 downto 0);
+signal end_simu : std_logic := '0'; 
 begin 
+
+good_adr    <=  std_logic_vector(to_unsigned(get_good(0), 32));
+bad_adr     <=  std_logic_vector(to_unsigned(get_bad(0), 32));
 
 core0 : core
     port map(
@@ -132,8 +152,12 @@ begin
     if CYCLES = 1 then 
         assert false report "simulation begin" severity note; 
     end if; 
-    if CYCLES = NCYCLES then 
+    if end_simu = '1' then 
         assert false report "end of simulation" severity note; 
+        wait; 
+    end if; 
+    if CYCLES = NCYCLES then 
+        assert false report "end of simulation (timeout)" severity note; 
         wait; 
     end if; 
 end process; 
@@ -151,12 +175,22 @@ variable inst_int : integer;
 variable intermed : unsigned(ADR_SI'range); 
 begin
     if ADR_VALID_SI = '1' then 
-        report "ADR_SI length = " & integer'image(ADR_SI'length);
-        report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
-        intermed    := unsigned(ADR_SI); 
-        adr_int     := to_integer(intermed);
-        inst_int    := get_mem(adr_int);
-        IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+        assert ADR_SI /= bad_adr report "Test failed" severity failure;
+
+        if ADR_SI = good_adr then 
+            assert false report "Test success" severity note; 
+            end_simu <= '1';  
+            
+        else
+            --report "ADR_SI length = " & integer'image(ADR_SI'length);
+            --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
+            intermed    := unsigned(ADR_SI); 
+            adr_int     := to_integer(intermed);
+            inst_int    := read_mem(adr_int);
+            IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+
+        end if; 
+
     end if; 
 end process; 
 
@@ -168,7 +202,7 @@ begin
         if MCACHE_STORE_SM = '1' then 
             read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)), to_integer(unsigned(byt_sel)));
         elsif MCACHE_LOAD_SM = '1' then 
-            MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
+            MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(read_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
         end if; 
     end if; 
 end process;

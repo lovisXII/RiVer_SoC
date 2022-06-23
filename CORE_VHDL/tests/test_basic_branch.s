@@ -12,14 +12,18 @@ _start:
     nop 
     nop
     nop
-    beq x1, x4, _noice 
+    beq x1, x4, _good
     ori x3, x0, 1       # not exec 
+    j _bad
     nop
     nop
     nop
 
-_noice: 
-    ori x3, x0, 255     # x3 = FF  
+_bad: 
     nop
     nop
+
+_good:
     nop
+    nop
+

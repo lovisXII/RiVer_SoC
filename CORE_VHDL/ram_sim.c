@@ -1,15 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
-# include "elfio.h"
+#include "elfio.h"
 
 int start_pc;
 int *instruction;
 int *adr_instr; 
 int NB_INSTR; 
 
+int good_adr = 0; 
+int bad_adr = 0; 
+
 int*** ram[256];
 
-int get_mem(int a) {
+int read_mem(int a) {
     int addr1, addr2, addr3, addr4;
     int adr = a;
     a = a >> 2; 
@@ -18,7 +21,7 @@ int get_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        printf("[get mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
+        printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
@@ -55,6 +58,14 @@ int write_mem(int a, int data, int byt_sel) {
 
 int get_startpc(int z) {
     return start_pc; 
+}
+
+int get_good(int z) {
+    return good_adr; 
+}
+
+int get_bad(int z) {
+    return bad_adr; 
 }
 
 extern int ghdl_main(int argc, char const* argv[]);
@@ -117,6 +128,9 @@ int main(int argc, char const* argv[]) {
 
     printf("Start Adress : %x\n",structure->start_adr) ;
     start_pc = (structure->start_adr);
+    good_adr = mem_goodadr();
+    bad_adr  = mem_badadr();
+
     int i = 0;
     int j = 0 ;
 
