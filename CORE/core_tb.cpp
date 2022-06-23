@@ -13,7 +13,7 @@ using namespace ELFIO;
 
 //#define ICACHE_ON
 //#define DCACHE_ON
-//#define DEBUG_MAX_ITERATIONS
+#define DEBUG_MAX_ITERATIONS 
 
 #ifdef ICACHE_ON
 
@@ -338,7 +338,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifdef DEBUG_MAX_ITERATIONS
     int cpt = 0;
-    while (cpt < 200) { cpt++;
+    while (cpt < 100000) { cpt++;
 #else
     while (1) {
 #endif
@@ -501,10 +501,10 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(1);
         }
-        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
+        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
             countdown = 20;
-            cout << "countdown value : " << countdown << endl ;
+            cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
@@ -515,10 +515,9 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
             
-            int j = 0;
             for (int i = begin_signature; i < end_signature; i += 4){
-                cout <<"i:"<<j<< " adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
-                j++;
+                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
+                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
@@ -563,8 +562,8 @@ int sc_main(int argc, char* argv[]) {
                     ram[mem_adr] = temporary_value | temporary_store_value ;
                     break ;
                 case 2 :
-                //cout << "byte access 3d case at adr : " << mem_adr << endl ;
-                //cout << "value to be store " << std::hex << temporary_store_value << endl ;
+                cout << "byte access 3d case at adr : " << mem_adr << endl ;
+                cout << "value to be store " << std::hex << temporary_store_value << endl ;
                     temporary_store_value = temporary_store_value & 0x00FF0000 ;
                     temporary_value = 0xFF00FFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;
@@ -573,7 +572,7 @@ int sc_main(int argc, char* argv[]) {
                     temporary_store_value = temporary_store_value & 0xFF000000 ;
                     temporary_value = 0x00FFFFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;
-                    //cout << ram[mem_adr] << endl ;
+                    cout << ram[mem_adr] << endl ;
                     break ;
                 default:
                     break;
@@ -599,13 +598,7 @@ int sc_main(int argc, char* argv[]) {
             }
             else//access in word
             {
-                ram[mem_adr] = mem_data;
-            }
-
-            if(mem_adr == 0xdeadbeef)
-            {
-                cout << mem_adr << " : " << ram[mem_adr] <<"  pc: "<<pc_adr<< endl;
-            }
+                ram[mem_adr] = mem_data;}
         }
         mem_result = ram[mem_adr];
         MEM_RESULT.write(mem_result);
