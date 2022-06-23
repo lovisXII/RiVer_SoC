@@ -135,8 +135,8 @@ int sc_main(int argc, char* argv[]) {
     dec.PC_RD(dec2if_pc);
 
     dec.INSTR_RI(if_ir);
-    dec.IF2DEC_EMPTY_SI(if2dec_empty);
-    dec.IF2DEC_POP_SD(if2dec_pop);
+    dec.IF2DEC_EMPTY_SI_S1(if2dec_empty);
+    dec.IF2DEC_POP_SD_S1(if2dec_pop);
 
     dec.DEC2EXE_POP_SE_S1(dec2exe_pop);
     dec.DEC2EXE_EMPTY_SD_S1(dec2exe_empty);

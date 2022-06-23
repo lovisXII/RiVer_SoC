@@ -28,9 +28,9 @@ SC_MODULE(decod) {
     sc_in<sc_uint<32>> PC_IF2DEC_RI_S2;
     sc_in<sc_bv<32>>   INSTR_RI_S1;
     sc_in<sc_bv<32>>   INSTR_RI_S2;
-    sc_in<bool>        IF2DEC_EMPTY_SI;
-    sc_out<bool>       IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
-    sc_out<bool>       IF2DEC_FLUSH_SD;
+    sc_in<bool>        IF2DEC_EMPTY_SI_S1;
+    sc_out<bool>       IF2DEC_POP_SD_S1;  // Decod says to IFETCH if it wants a pop or no
+    sc_out<bool>       IF2DEC_FLUSH_SD_S1;
 
     // Interface with CSR :
 
@@ -590,7 +590,7 @@ SC_MODULE(decod) {
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd << r2_valid_sd
                   << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE
-                  << BP_EXE2MEM_EMPTY_SE << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI << dec2exe_full_sd_s1
+                  << BP_EXE2MEM_EMPTY_SE << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
                   << csr_in_progress_s1;
 
         SC_METHOD(decoding_instruction_type_s1)
@@ -630,7 +630,7 @@ SC_MODULE(decod) {
                   << m_type_inst_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1 << mulhu_i_sd_s1 << div_i_sd_s1
                   << divu_i_sd_s1 << rem_i_sd_s1 << remu_i_sd_s1
 
-                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI << dec2if_push_sd
+                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI_S1 << dec2if_push_sd
                   << READ_PC_SR
 
                   << stall_sd_s1 << dec2if_push_sd << add_i_sd_s1 << slt_i_sd_s1 << sltu_i_sd_s1 << and_i_sd_s1
@@ -669,7 +669,7 @@ SC_MODULE(decod) {
                   << m_type_inst_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1 << mulhu_i_sd_s1 << div_i_sd_s1
                   << divu_i_sd_s1 << rem_i_sd_s1 << remu_i_sd_s1
 
-                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI << dec2if_push_sd
+                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI_S1 << dec2if_push_sd
                   << READ_PC_SR
 
                   << stall_sd_s1 << dec2if_push_sd << add_i_sd_s1 << slt_i_sd_s1 << sltu_i_sd_s1 << and_i_sd_s1
@@ -701,7 +701,7 @@ SC_MODULE(decod) {
 
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd_s1 << inc_pc_sd_s1 << jump_sd_s1 << MTVEC_VALUE_RC
-                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
+                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM
                   << stall_sd_s1;
 
         SC_METHOD(bypasses);

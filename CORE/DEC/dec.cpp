@@ -158,7 +158,7 @@ void decod::pc_inc() {
     sc_uint<32> pc_out_s1            = pc;
     sc_uint<32> pc_out_s2            = pc;
     sc_uint<32> offset_branch_var = offset_branch_sd_s1.read();
-    bool add_offset_to_pc = jump_sd_s1.read() && !IF2DEC_EMPTY_SI ;
+    bool add_offset_to_pc = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
     
 
     // PC Incrementation
@@ -239,8 +239,8 @@ void decod::pc_inc() {
         
         // IF2DEC Gestion
         
-        IF2DEC_POP_SD.write(1);
-        IF2DEC_FLUSH_SD.write(0);
+        IF2DEC_POP_SD_S1.write(1);
+        IF2DEC_FLUSH_SD_S1.write(0);
 
         // DEC2EXE Gestion
 
@@ -252,14 +252,14 @@ void decod::pc_inc() {
         // IF2DEC Gestion
         
         if (jump_sd_s1.read() && !stall_sd_s1) {
-            IF2DEC_POP_SD.write(1);
-            IF2DEC_FLUSH_SD.write(1);
+            IF2DEC_POP_SD_S1.write(1);
+            IF2DEC_FLUSH_SD_S1.write(1);
         } else if (!jump_sd_s1 && !stall_sd_s1) {
-            IF2DEC_POP_SD.write(1);
-            IF2DEC_FLUSH_SD.write(0);
+            IF2DEC_POP_SD_S1.write(1);
+            IF2DEC_FLUSH_SD_S1.write(0);
         } else {
-            IF2DEC_POP_SD.write(0);
-            IF2DEC_FLUSH_SD.write(0);
+            IF2DEC_POP_SD_S1.write(0);
+            IF2DEC_FLUSH_SD_S1.write(0);
         }
 
         // DEC2EXE Gestion
@@ -354,7 +354,7 @@ void decod::stall_method() {
     csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
     stall_sd_s1        = (csr_in_progress_s1 || ((!r1_valid_sd || !r2_valid_sd) &&
                       (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
-                      || IF2DEC_EMPTY_SI || dec2exe_full_sd_s1);
+                      || IF2DEC_EMPTY_SI_S1 || dec2exe_full_sd_s1);
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS
@@ -421,9 +421,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_IF2DEC_RI_S1, GET_NAME(PC_IF2DEC_RI_S1));
     sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
     sc_trace(tf, INSTR_RI_S2, GET_NAME(INSTR_RI_S2));
-    sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
-    sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));  // Decod says to IFETCH if it wants a pop or no
-    sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
+    sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
+    sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));  // Decod says to IFETCH if it wants a pop or no
+    sc_trace(tf, IF2DEC_FLUSH_SD_S1, GET_NAME(IF2DEC_FLUSH_SD_S1));
 
     // Interface with DEC2EXE
 

@@ -770,7 +770,7 @@ void decod::post_reg_read_decoding_s1() {
     } else if (system_type_inst_sd_s1)
         if (if_ir_s1.range(14, 12) == 4) illegal_inst_s1 = true;
 
-    illegal_inst_s1 = illegal_inst_s1 && !IF2DEC_EMPTY_SI.read();
+    illegal_inst_s1 = illegal_inst_s1 && !IF2DEC_EMPTY_SI_S1.read();
 
     illegal_instruction_sd_s1.write(illegal_inst_s1);
     block_bp_sd_s1.write(jalr_type_inst_sd_s1);
@@ -779,10 +779,10 @@ void decod::post_reg_read_decoding_s1() {
     exe_op1_sd_s1.write(dec2exe_op1_var_s1);
     exe_op2_sd_s1.write(dec2exe_op2_var_s1);
     mem_data_sd_s1.write(mem_data_var_s1);
-    // inc_pc_sd_s1.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
+    // inc_pc_sd_s1.write(((inc_pc_var || IF2DEC_EMPTY_SI_S1) && dec2if_push_sd.read()) && !EXCEPTION_SM);
     // add_offset_to_pc_sd.write((!stall_sd_s1 && !inc_pc_var && (b_type_inst_sd_s1 || j_type_inst_sd_s1
     //                             || jalr_type_inst_sd_s1) &&
-    //                            dec2if_push_sd.read() && !illegal_inst_s1 && !IF2DEC_EMPTY_SI) &&
+    //                            dec2if_push_sd.read() && !illegal_inst_s1 && !IF2DEC_EMPTY_SI_S1) &&
     //                           !EXCEPTION_SM);
     jump_sd_s1 = !not_jump_var_s1;
 }

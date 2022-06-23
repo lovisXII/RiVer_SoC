@@ -35,7 +35,7 @@ architecture archi of core is
 signal DEC2IF_EMPTY_SD, DEC2IF_POP_SI : std_logic; 
 
 -- if2dec  
-signal IF2DEC_FLUSH_SD, IF2DEC_POP_SD, IF2DEC_EMPTY_SI : std_logic;
+signal IF2DEC_FLUSH_SD_S1, IF2DEC_POP_SD_S1, IF2DEC_EMPTY_SI_S1 : std_logic;
 signal PC_RD, INSTR_RI, PC_IF2DEC_RI : std_logic_vector(31 downto 0);
 
 -- dec2exe 
@@ -104,9 +104,9 @@ component ifetch
         DEC2IF_POP_SI : out std_logic;
 
         -- if2dec interface 
-        IF2DEC_FLUSH_SD : in std_logic;
-        IF2DEC_POP_SD : in std_logic; 
-        IF2DEC_EMPTY_SI : out std_logic; 
+        IF2DEC_FLUSH_SD_S1 : in std_logic;
+        IF2DEC_POP_SD_S1 : in std_logic; 
+        IF2DEC_EMPTY_SI_S1 : out std_logic; 
 
         PC_RD : in std_logic_vector(31 downto 0);
         INSTR_RI : out std_logic_vector(31 downto 0);
@@ -145,9 +145,9 @@ component dec
 
         -- if2dec interface
         INSTR_RI, PC_IF2DEC_RI : in std_logic_vector(31 downto 0);
-        IF2DEC_EMPTY_SI : in std_logic;
-        IF2DEC_POP_SD : out std_logic;
-        IF2DEC_FLUSH_SD : out std_logic;
+        IF2DEC_EMPTY_SI_S1 : in std_logic;
+        IF2DEC_POP_SD_S1 : out std_logic;
+        IF2DEC_FLUSH_SD_S1 : out std_logic;
 
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
@@ -306,9 +306,9 @@ ifetch_i : ifetch
         DEC2IF_POP_SI,
 
         -- if2dec interface 
-        IF2DEC_FLUSH_SD,
-        IF2DEC_POP_SD, 
-        IF2DEC_EMPTY_SI, 
+        IF2DEC_FLUSH_SD_S1,
+        IF2DEC_POP_SD_S1, 
+        IF2DEC_EMPTY_SI_S1, 
 
         PC_RD,
         INSTR_RI,
@@ -346,9 +346,9 @@ dec_i : dec
 
         -- if2dec interface
         INSTR_RI, PC_IF2DEC_RI,
-        IF2DEC_EMPTY_SI,
-        IF2DEC_POP_SD,
-        IF2DEC_FLUSH_SD,
+        IF2DEC_EMPTY_SI_S1,
+        IF2DEC_POP_SD_S1,
+        IF2DEC_FLUSH_SD_S1,
 
         -- dec2exe interface
         DEC2EXE_POP_SE,

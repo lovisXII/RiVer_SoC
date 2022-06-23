@@ -33,9 +33,9 @@ entity dec is
 
         -- if2dec interface
         INSTR_RI, PC_IF2DEC_RI : in std_logic_vector(31 downto 0);
-        IF2DEC_EMPTY_SI : in std_logic;
-        IF2DEC_POP_SD : out std_logic;
-        IF2DEC_FLUSH_SD : out std_logic;
+        IF2DEC_EMPTY_SI_S1 : in std_logic;
+        IF2DEC_POP_SD_S1 : out std_logic;
+        IF2DEC_FLUSH_SD_S1 : out std_logic;
 
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
@@ -167,13 +167,13 @@ dec2exe : fifo
 dec2if_push_sd <= not dec2if_full_sd;
 
 -- if2dec 
-IF2DEC_POP_SD <= '1' when (add_offset_to_pc_sd = '1' or (stall_sd = '0' and IF2DEC_EMPTY_SI = '0' and dec2exe_full_sd = '0')) else 
+IF2DEC_POP_SD_S1 <= '1' when (add_offset_to_pc_sd = '1' or (stall_sd = '0' and IF2DEC_EMPTY_SI_S1 = '0' and dec2exe_full_sd = '0')) else 
                  '0'; 
-IF2DEC_FLUSH_SD <= '1' when (add_offset_to_pc_sd = '1') else 
+IF2DEC_FLUSH_SD_S1 <= '1' when (add_offset_to_pc_sd = '1') else 
                    '0'; 
 
 -- dec2exe
-dec2exe_push_sd <= '0' when (stall_sd = '1' or dec2exe_full_sd = '1' or IF2DEC_EMPTY_SI = '1') else
+dec2exe_push_sd <= '0' when (stall_sd = '1' or dec2exe_full_sd = '1' or IF2DEC_EMPTY_SI_S1 = '1') else
                 '1'; 
 
 -------------------------
@@ -350,7 +350,7 @@ inval_adr_dest <= '1' when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or
 
 invalid_i <= '0'; -- idk the need of this signal 
 
-invalid_instr <= invalid_i or IF2DEC_EMPTY_SI; 
+invalid_instr <= invalid_i or IF2DEC_EMPTY_SI_S1; 
 
 inc_pc_sd <= (inc_pc and dec2if_push_sd) or not invalid_instr;
 

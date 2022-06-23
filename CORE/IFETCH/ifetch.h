@@ -3,13 +3,17 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
+#include "../UTIL/buffer.h"
 
 #define nop_encoding 0x0000013
-#define if2dec_size  128
-
+#define if2dec_size  64 //(pc+inst)
+#define if2dec_depth 2
 SC_MODULE(ifetch) {
     // FIFO
-    fifo<if2dec_size> fifo_inst;
+    
+    buffer<if2dec_size,if2dec_depth> buffer_inst_1 ;
+    buffer<if2dec_size, if2dec_depth> buffer_inst_2 ;
+
     // Icache Interface :
 
     sc_in<sc_bv<32>>        IC_INST_SI_S1;  //Instruction sent by the cache/memory
@@ -28,12 +32,17 @@ SC_MODULE(ifetch) {
 
     // if2dec interface
 
-    sc_in<bool>             IF2DEC_FLUSH_SD;   // allow to flush if2dec in case of a branch
-    sc_in<bool>             IF2DEC_POP_SD;
+    sc_in<bool>             IF2DEC_FLUSH_SD_S1;   // allow to flush if2dec in case of a branch
+    sc_in<bool>             IF2DEC_FLUSH_SD_S2;
+    
+    sc_in<bool>             IF2DEC_POP_SD_S1;
+    sc_in<bool>             IF2DEC_POP_SD_S2;
+
     sc_in<sc_bv<32>>        PC_DEC2IF_RD_S1;          // PC coming to fetch an instruction
     sc_in<sc_bv<32>>        PC_DEC2IF_RD_S2;          // PC coming to fetch an instruction
 
-    sc_out<bool>            IF2DEC_EMPTY_SI;
+    sc_out<bool>            IF2DEC_EMPTY_SI_S1;
+    sc_out<bool>            IF2DEC_EMPTY_SI_S2;
 
     sc_out<sc_bv<32>>       INSTR_RI_S1;      // instruction sent to if2dec
     sc_out<sc_bv<32>>       INSTR_RI_S2;      // instruction sent to if2dec
@@ -58,30 +67,49 @@ SC_MODULE(ifetch) {
 
     // Internals signals :
 
-    sc_signal<bool>                 IF2DEC_PUSH_SI;
-    sc_signal<bool>                 IF2DEC_FULL_SI;
-    sc_signal<sc_bv<if2dec_size>>   if2dec_in_si;
-    sc_signal<sc_bv<if2dec_size>>   instr_ri;  // instruction sent to if2dec
+    sc_signal<bool>                 if2dec_push_si_s1;
+    sc_signal<bool>                 if2dec_full_si_s1;
+    sc_signal<bool>                 if2dec_push_si_s2;
+    sc_signal<bool>                 if2dec_full_si_s2;
+    sc_signal<sc_bv<if2dec_size>>   if2dec_in_si_s1;
+    sc_signal<sc_bv<if2dec_size>>   instr_ri_s1;  // instruction sent to if2dec
+   
+    sc_signal<sc_bv<if2dec_size>>   if2dec_in_si_s2;
+    sc_signal<sc_bv<if2dec_size>>   instr_ri_s2;  // instruction sent to if2dec
 
     
     void fetch_method();
     void trace(sc_trace_file * tf);
     void exception();
     
-    SC_CTOR(ifetch) : fifo_inst("if2dec") {
-        fifo_inst.DIN_S(if2dec_in_si);
-        fifo_inst.DOUT_R(instr_ri);
-        fifo_inst.EMPTY_S(IF2DEC_EMPTY_SI);
-        fifo_inst.FULL_S(IF2DEC_FULL_SI);
-        fifo_inst.PUSH_S(IF2DEC_PUSH_SI);
-        fifo_inst.POP_S(IF2DEC_POP_SD);
-        fifo_inst.CLK(CLK);
-        fifo_inst.RESET_N(RESET);
+    SC_CTOR(ifetch) : buffer_inst_1("if2dec_s1"), buffer_inst_2("if2dec_s2") {
+
+        // Buffer 1 port map :
+
+        buffer_inst_1.DIN_S(if2dec_in_si_s1);
+        buffer_inst_1.DOUT_R(instr_ri_s1);
+        buffer_inst_1.EMPTY_S(IF2DEC_EMPTY_SI_S1);
+        buffer_inst_1.FULL_S(if2dec_full_si_s1);
+        buffer_inst_1.PUSH_S(if2dec_push_si_s1);
+        buffer_inst_1.POP_S(IF2DEC_POP_SD_S1);
+        buffer_inst_1.CLK(CLK);
+        buffer_inst_1.RESET_N(RESET);
+
+        // Buffer 2 port map :
+
+        buffer_inst_2.DIN_S(if2dec_in_si_s2);
+        buffer_inst_2.DOUT_R(instr_ri_s2);
+        buffer_inst_2.EMPTY_S(IF2DEC_EMPTY_SI_S2);
+        buffer_inst_2.FULL_S(if2dec_full_si_s2);
+        buffer_inst_2.PUSH_S(if2dec_push_si_s2);
+        buffer_inst_2.POP_S(IF2DEC_POP_SD_S2);
+        buffer_inst_2.CLK(CLK);
+        buffer_inst_2.RESET_N(RESET); 
 
         SC_METHOD(fetch_method);
         sensitive << IC_INST_SI_S1 << DEC2IF_EMPTY_SI 
-        << IF2DEC_FULL_SI << PC_DEC2IF_RD_S1 
-        << IF2DEC_FLUSH_SD << IC_STALL_SI 
+        << if2dec_full_si_s1 << PC_DEC2IF_RD_S1 
+        << IF2DEC_FLUSH_SD_S1 << IC_STALL_SI 
         << RESET
         << EXCEPTION_SM 
         << MRET_SM 

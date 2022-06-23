@@ -14,7 +14,7 @@ signal IC_STALL_SI, ADR_VALID_SI : std_logic;
 
 signal DEC2IF_EMPTY_SI, DEC2IF_POP_SI : std_logic; 
 
-signal IF2DEC_FLUSH_SI, IF2DEC_POP_SI, IF2DEC_EMPTY_SI : std_logic;
+signal IF2DEC_FLUSH_SI, IF2DEC_POP_SI, IF2DEC_EMPTY_SI_S1 : std_logic;
 
 signal PC_SI, INSTR_SI : std_logic_vector(31 downto 0);
 
@@ -23,7 +23,7 @@ begin
 ifetch_i : entity work.ifetch
     port map(clk, reset_n, IC_INST_SI, IC_STALL_SI, ADR_SI, ADR_VALID_SI,
             DEC2IF_EMPTY_SI, DEC2IF_POP_SI, IF2DEC_FLUSH_SI, 
-            IF2DEC_POP_SI, IF2DEC_EMPTY_SI, PC_SI, INSTR_SI
+            IF2DEC_POP_SI, IF2DEC_EMPTY_SI_S1, PC_SI, INSTR_SI
             );
 
 

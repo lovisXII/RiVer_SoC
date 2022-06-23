@@ -61,9 +61,12 @@ SC_MODULE(core) {
 
     sc_signal<sc_bv<32>>   INSTR_RI_S1;
     sc_signal<sc_bv<32>>   INSTR_RI_S2;
-    sc_signal<bool>        IF2DEC_EMPTY_SI;
-    sc_signal<bool>        IF2DEC_POP_SD;
-    sc_signal<bool>        IF2DEC_FLUSH_SD;
+    sc_signal<bool>        IF2DEC_EMPTY_SI_S1;
+    sc_signal<bool>        IF2DEC_POP_SD_S1;
+    sc_signal<bool>        IF2DEC_FLUSH_SD_S1;
+    sc_signal<bool>        IF2DEC_EMPTY_SI_S2;
+    sc_signal<bool>        IF2DEC_POP_SD_S2;
+    sc_signal<bool>        IF2DEC_FLUSH_SD_S2;
     sc_signal<sc_uint<32>> PC_IF2DEC_RI_S1;
     sc_signal<sc_uint<32>> PC_IF2DEC_RI_S2;
     // DEC-EXE interface
@@ -307,9 +310,13 @@ SC_MODULE(core) {
         ifetch_inst.PC_DEC2IF_RD_S2(PC_DEC2IF_RD_S2);
         ifetch_inst.INSTR_RI_S1(INSTR_RI_S1);
         ifetch_inst.INSTR_RI_S2(INSTR_RI_S2);
-        ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
-        ifetch_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
-        ifetch_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
+        ifetch_inst.IF2DEC_EMPTY_SI_S1(IF2DEC_EMPTY_SI_S1);
+        ifetch_inst.IF2DEC_POP_SD_S1(IF2DEC_POP_SD_S1);
+        ifetch_inst.IF2DEC_FLUSH_SD_S1(IF2DEC_FLUSH_SD_S1);
+
+        ifetch_inst.IF2DEC_EMPTY_SI_S2(IF2DEC_EMPTY_SI_S2);
+        ifetch_inst.IF2DEC_POP_SD_S2(IF2DEC_POP_SD_S2);
+        ifetch_inst.IF2DEC_FLUSH_SD_S2(IF2DEC_FLUSH_SD_S2);
 
         ifetch_inst.ADR_SI_S1(ADR_SI_S1);
         ifetch_inst.ADR_SI_S2(ADR_SI_S2);
@@ -329,6 +336,10 @@ SC_MODULE(core) {
         ifetch_inst.MRET_SM(MRET_SM);
         ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
+ 
+
+
+
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
 
@@ -341,9 +352,9 @@ SC_MODULE(core) {
         dec_inst.PC_IF2DEC_RI_S2(PC_IF2DEC_RI_S2);
         dec_inst.INSTR_RI_S1(INSTR_RI_S1);
         dec_inst.INSTR_RI_S2(INSTR_RI_S2);
-        dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
-        dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
-        dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
+        dec_inst.IF2DEC_EMPTY_SI_S1(IF2DEC_EMPTY_SI_S1);
+        dec_inst.IF2DEC_POP_SD_S1(IF2DEC_POP_SD_S1);
+        dec_inst.IF2DEC_FLUSH_SD_S1(IF2DEC_FLUSH_SD_S1);
 
         dec_inst.OP1_RD_S1(OP1_RD_S1);
         dec_inst.OP2_RD_S1(OP2_RD_S1);

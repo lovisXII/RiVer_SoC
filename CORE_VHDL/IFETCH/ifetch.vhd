@@ -18,9 +18,9 @@ entity ifetch is
         DEC2IF_POP_SI : out std_logic;
 
         -- if2dec interface 
-        IF2DEC_FLUSH_SD : in std_logic;
-        IF2DEC_POP_SD : in std_logic; 
-        IF2DEC_EMPTY_SI : out std_logic; 
+        IF2DEC_FLUSH_SD_S1 : in std_logic;
+        IF2DEC_POP_SD_S1 : in std_logic; 
+        IF2DEC_EMPTY_SI_S1 : out std_logic; 
 
         PC_RD : in std_logic_vector(31 downto 0);
         INSTR_RI : out std_logic_vector(31 downto 0);
@@ -58,18 +58,18 @@ if2dec : fifo
         DIN(63 downto 32) => IC_INST_SI,
         DIN(31 downto 0) => PC_RD, 
         PUSH => if2dec_push_si, 
-        POP => IF2DEC_POP_SD,
+        POP => IF2DEC_POP_SD_S1,
         FULL => if2dec_full_si, 
-        EMPTY => IF2DEC_EMPTY_SI, 
+        EMPTY => IF2DEC_EMPTY_SI_S1, 
         DOUT(63 downto 32) => INSTR_RI, 
         DOUT(31 downto 0) => PC_IF2DEC_RI
     );
 
 stall_si <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SI;
 
-if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD = '0' else '0'; 
-DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
-ADR_VALID_SI <= not DEC2IF_EMPTY_SI when IF2DEC_FLUSH_SD = '0' else '0';
+if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD_S1 = '0' else '0'; 
+DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD_S1 = '0' else '1';
+ADR_VALID_SI <= not DEC2IF_EMPTY_SI when IF2DEC_FLUSH_SD_S1 = '0' else '0';
 
 ADR_SI <= PC_RD;
 
