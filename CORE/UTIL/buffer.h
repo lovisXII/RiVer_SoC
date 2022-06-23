@@ -81,9 +81,8 @@ void buffer<size_data, depth>::flags_update() {
         full_s = 0;
     }
     else{
-        sc_bv<depth> test_full = 0xFFFFFFFF ;
-        test_full <<= (32-depth);
-
+        unsigned int test_full = 0xFFFFFFFF ;
+        test_full >>= (32-depth);
         if((buffer_valid.read() == test_full) && !POP_S.read() )
         {
             full_s = 1;

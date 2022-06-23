@@ -1,8 +1,10 @@
 #include "ifetch.h"
 
 void ifetch::fetch_method() {
-    sc_bv<if2dec_size> if2dec_in_var;
-    sc_bv<if2dec_size> instr_ri_var = instr_ri_s1.read();
+    sc_bv<if2dec_size> if2dec_in_var_s1;
+    sc_bv<if2dec_size> if2dec_in_var_s2;
+    sc_bv<if2dec_size> instr_ri_var_s1 = instr_ri_s1.read();
+    sc_bv<if2dec_size> instr_ri_var_s2 = instr_ri_s2.read();
     if (EXCEPTION_SM.read() == 0) {
 
         ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
@@ -10,22 +12,23 @@ void ifetch::fetch_method() {
 
         // data sent in if2dec
 
-        if2dec_in_var.range(127, 96) = (sc_bv_base)IC_INST_SI_S2;
-        if2dec_in_var.range(95, 64)  = (sc_bv_base)PC_DEC2IF_RD_S2     ;
+        if2dec_in_var_s2.range(63, 32) = (sc_bv_base)IC_INST_SI_S2;
+        if2dec_in_var_s2.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S2     ;
 
-        if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI_S1 ;
-        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1      ;
+        if2dec_in_var_s1.range(63, 32) = (sc_bv_base)IC_INST_SI_S1 ;
+        if2dec_in_var_s1.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1      ;
         
-        if2dec_in_si_s1.write(if2dec_in_var);
+        if2dec_in_si_s2    = if2dec_in_var_s2;
+        if2dec_in_si_s1    = if2dec_in_var_s1;
 
         // data coming out from if2dec :
         
         
-        INSTR_RI_S2     = (sc_bv_base)instr_ri_var.range(127, 96);
-        PC_IF2DEC_RI_S2 = (sc_bv_base)instr_ri_var.range(95, 64) ;
+        INSTR_RI_S2     = (sc_bv_base)if2dec_in_var_s2.range(63, 32);
+        PC_IF2DEC_RI_S2 = (sc_bv_base)if2dec_in_var_s2.range(31, 0) ;
         
-        INSTR_RI_S1     = (sc_bv_base)instr_ri_var.range(63, 32) ;
-        PC_IF2DEC_RI_S1 = (sc_bv_base)instr_ri_var.range(31, 0)  ;
+        INSTR_RI_S1     = (sc_bv_base)instr_ri_var_s1.range(63, 32) ;
+        PC_IF2DEC_RI_S1 = (sc_bv_base)instr_ri_var_s1.range(31, 0)  ;
 
         if (IF2DEC_FLUSH_SD_S1.read()) {
             if2dec_push_si_s1.write(false);
@@ -46,19 +49,19 @@ void ifetch::fetch_method() {
         // Pipeline pass in M-mode
         // Fifo send nop instruction 
 
-        if2dec_in_var.range(63, 32) = nop_encoding;
+        if2dec_in_var_s1.range(63, 32) = nop_encoding;
 
-        if2dec_in_var.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1.read();
+        if2dec_in_var_s1.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1.read();
         ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
         ADR_SI_S2 = PC_DEC2IF_RD_S2.read();
 
 
-        if2dec_in_si_s1.write(if2dec_in_var);  
+        if2dec_in_si_s1.write(if2dec_in_var_s1);  
         
         // data coming out from if2dec :
 
-        INSTR_RI_S1.write((sc_bv_base)instr_ri_var.range(63, 32));
-        PC_IF2DEC_RI_S1.write((sc_bv_base)instr_ri_var.range(31, 0));
+        INSTR_RI_S1.write((sc_bv_base)instr_ri_var_s1.range(63, 32));
+        PC_IF2DEC_RI_S1.write((sc_bv_base)instr_ri_var_s1.range(31, 0));
         if2dec_push_si_s1.write(true);
         DEC2IF_POP_SI.write(true);
         ADR_VALID_SI_S1.write(false);
@@ -89,15 +92,22 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, IF2DEC_FLUSH_SD_S1, GET_NAME(IF2DEC_FLUSH_SD_S1));
     sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));
     sc_trace(tf, if2dec_push_si_s1, GET_NAME(if2dec_push_si_s1));
+    sc_trace(tf, if2dec_push_si_s2, GET_NAME(if2dec_push_si_s2));
     sc_trace(tf, if2dec_full_si_s1, GET_NAME(if2dec_full_si_s1));
+    sc_trace(tf, if2dec_full_si_s2, GET_NAME(if2dec_full_si_s2));
     sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
+    sc_trace(tf, IF2DEC_EMPTY_SI_S2, GET_NAME(IF2DEC_EMPTY_SI_S2));
     sc_trace(tf, PC_DEC2IF_RD_S1, GET_NAME(PC_DEC2IF_RD_S1));
+    sc_trace(tf, PC_DEC2IF_RD_S2, GET_NAME(PC_DEC2IF_RD_S2));
     sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
+    sc_trace(tf, INSTR_RI_S2, GET_NAME(INSTR_RI_S2));
     sc_trace(tf, PC_IF2DEC_RI_S1, GET_NAME(PC_IF2DEC_RI_S1));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET, GET_NAME(RESET));
     sc_trace(tf, if2dec_in_si_s1, GET_NAME(if2dec_in_si_s1));
+    sc_trace(tf, if2dec_in_si_s2, GET_NAME(if2dec_in_si_s2));
     sc_trace(tf, instr_ri_s1, GET_NAME(instr_ri_s1));
+    sc_trace(tf, instr_ri_s2, GET_NAME(instr_ri_s2));
     sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));

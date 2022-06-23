@@ -34,7 +34,6 @@ int sc_main(int argc, char* argv[]) {
 
     buffer_inst.PUSH_S(PUSH_S) ;
     buffer_inst.POP_S(READ_S_S1) ;
-    buffer_inst.FLUSH_S(FLUSH_S) ;
 
     buffer_inst.FULL_S(FULL_S) ;
     buffer_inst.EMPTY_S(EMPTY_S) ;
