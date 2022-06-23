@@ -15,15 +15,15 @@ int main()
     int nbr1, nbr2 ;
     int pgcd, i;
 	
-	nbr1 = 3 ;
-    nbr2 = 7 ;
+	nbr1 = 5121;
+    nbr2 = 891;
     
     for(i=1; i <= nbr1 && i <= nbr2; ++i)
     {
         if(nbr1%i == 0 && nbr2%i == 0)
             pgcd = i;
     }
-	if(pgcd == 1)
+	if(pgcd == 9)
     {
         _good() ;
     }

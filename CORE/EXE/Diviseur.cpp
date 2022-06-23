@@ -50,12 +50,14 @@ void Diviseur::mae_output()
                 sc_uint<32> op2 = OP2_SE.read();
                 sc_uint<32> op1 = OP1_SE.read();
 
-                sign_reg_se = op2[31] ^ op1[31];
+                bool signed_inst = CMD_RD.read() == 3 && CMD_RD.read() == 1;
 
-                if(op1[31])
+                sign_reg_se = (op2[31] ^ op1[31]) & signed_inst;
+
+                if(op1[31] && signed_inst)
                     op1 = (~op1) + 1;
                 
-                if(op2[31])
+                if(op2[31] && signed_inst)
                     op2 = (~op2) + 1;
 
                 sc_bv<64> div = 0;

@@ -28,7 +28,7 @@ int sc_main(int argc, char* argv[]) {
     Diviseur unit_divider("Diviseur");
 
     // declare signals
-    sc_signal<sc_uint<32>> op1, op2, quo, rem;
+    sc_signal<sc_uint<32>> op1, op2, res;
     sc_signal<sc_uint<4>>  op;
     sc_signal<sc_uint<2>>  cmd;
 
@@ -43,7 +43,7 @@ int sc_main(int argc, char* argv[]) {
     unit_divider.CMD_RD(cmd);
     unit_divider.START_SE(start);
 
-    unit_divider.DIVIDER_RES_OUTPUT(quo);
+    unit_divider.DIVIDER_RES_OUTPUT(res);
 
     unit_divider.BUSY_SE(busy);
     unit_divider.DONE_SE(done);
@@ -56,17 +56,17 @@ int sc_main(int argc, char* argv[]) {
 
     int select_op = 8;
     int i;
-    cmd = 1;
-    for (i = 0; i < 10000; i++) {
+    cmd = 0; // remu
+    for (i = 1; i < 100000; i++) {
         // compute random values for the inputs
-        int in1 = rand()%10+1;
+        int in1 = rand()%i+1;
         int in2 = rand()%10+1;
-
+/*
         int sign1 = rand()%2?-1:1; 
         in1 *= sign1;
         int sign2 = rand()%2?-1:1; 
         in2 *= sign2;
-
+*/
         int real_quo = in1 / in2; 
         int real_rem = in1 - in2*(in1 / in2);
 
@@ -85,7 +85,7 @@ int sc_main(int argc, char* argv[]) {
         }while(!done);
 
         // check is result is right
-        if (sc_uint<32>(quo) != real_quo) {
+        if (sc_uint<32>(res) != real_rem) {
             cout << "Test failed !" << endl;
 
             cout << "op1 : ";
@@ -96,16 +96,8 @@ int sc_main(int argc, char* argv[]) {
             print_bits(in2);
             cout << endl;
 
-            cout << "quotient : ";
-            print_bits((int)quo.read());
-            cout << endl;
-
-            cout << "real quo : ";
-            print_bits(real_quo);
-            cout << endl;
-
-            cout << "reminder : ";
-            print_bits((int)rem.read());
+            cout << "rem result : ";
+            print_bits((int)res.read());
             cout << endl;
 
             cout << "real rem : ";

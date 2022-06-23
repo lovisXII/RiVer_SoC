@@ -504,7 +504,7 @@ int sc_main(int argc, char* argv[]) {
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
             cerr << "inside if : " << endl ; 
             countdown = 20;
-            cout << "coutndown value : " << countdown << endl ;
+            cout << "countdown value : " << countdown << endl ;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
@@ -515,9 +515,10 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
             
+            int j = 0;
             for (int i = begin_signature; i < end_signature; i += 4){
-                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                cout <<"i:"<<j<< " adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                j++;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
@@ -598,7 +599,13 @@ int sc_main(int argc, char* argv[]) {
             }
             else//access in word
             {
-                ram[mem_adr] = mem_data;}
+                ram[mem_adr] = mem_data;
+            }
+
+            if(mem_adr == 0xdeadbeef)
+            {
+                cout << mem_adr << " : " << ram[mem_adr] <<"  pc: "<<pc_adr<< endl;
+            }
         }
         mem_result = ram[mem_adr];
         MEM_RESULT.write(mem_result);
