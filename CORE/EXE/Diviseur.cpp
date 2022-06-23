@@ -50,7 +50,7 @@ void Diviseur::mae_output()
                 sc_uint<32> op2 = OP2_SE.read();
                 sc_uint<32> op1 = OP1_SE.read();
 
-                bool signed_inst = CMD_RD.read() == 3 && CMD_RD.read() == 1;
+                bool signed_inst = CMD_RD.read() == 3 || CMD_RD.read() == 1;
 
                 sign_reg_se = (op2[31] ^ op1[31]) & signed_inst;
 
@@ -151,4 +151,5 @@ void Diviseur::trace(sc_trace_file * tf)
     sc_trace(tf, shift_cpt_se, GET_NAME(shift_cpt_se));
     sc_trace(tf, shift_cpt_re, GET_NAME(shift_cpt_re));
     sc_trace(tf, sign_reg_se, GET_NAME(sign_reg_se));
+    sc_trace(tf, CMD_RD, GET_NAME(CMD_RD));
 }
