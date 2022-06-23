@@ -24,8 +24,8 @@ void ifetch::fetch_method() {
         // data coming out from if2dec :
         
         
-        INSTR_RI_S2     = (sc_bv_base)if2dec_in_var_s2.range(63, 32);
-        PC_IF2DEC_RI_S2 = (sc_bv_base)if2dec_in_var_s2.range(31, 0) ;
+        INSTR_RI_S2     = (sc_bv_base)instr_ri_var_s2.range(63, 32);
+        PC_IF2DEC_RI_S2 = (sc_bv_base)instr_ri_var_s2.range(31, 0) ;
         
         INSTR_RI_S1     = (sc_bv_base)instr_ri_var_s1.range(63, 32) ;
         PC_IF2DEC_RI_S1 = (sc_bv_base)instr_ri_var_s1.range(31, 0)  ;
@@ -37,8 +37,9 @@ void ifetch::fetch_method() {
         } else {
             // stall if the memory stalls, if we can't push to dec, or have no value
             // of pc to pop from dec
-            bool stall = IC_STALL_SI.read() || if2dec_full_si_s1.read() || DEC2IF_EMPTY_SI.read() ;
+            bool stall = IC_STALL_SI.read() || if2dec_full_si_s1.read() || if2dec_full_si_s2 || DEC2IF_EMPTY_SI.read() ;
             if2dec_push_si_s1.write(!stall);
+            if2dec_push_si_s2.write(!stall);
             DEC2IF_POP_SI.write(!stall);
             ADR_VALID_SI_S1.write(!DEC2IF_EMPTY_SI.read());
         }
@@ -49,22 +50,35 @@ void ifetch::fetch_method() {
         // Pipeline pass in M-mode
         // Fifo send nop instruction 
 
-        if2dec_in_var_s1.range(63, 32) = nop_encoding;
+        if2dec_in_var_s2.range(63, 32) = nop_encoding;
+        if2dec_in_var_s2.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S2.read();
 
+        if2dec_in_var_s1.range(63, 32) = nop_encoding;
         if2dec_in_var_s1.range(31, 0)  = (sc_bv_base)PC_DEC2IF_RD_S1.read();
+        
         ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
         ADR_SI_S2 = PC_DEC2IF_RD_S2.read();
 
 
         if2dec_in_si_s1.write(if2dec_in_var_s1);  
+        if2dec_in_si_s2.write(if2dec_in_var_s2);  
         
         // data coming out from if2dec :
 
         INSTR_RI_S1.write((sc_bv_base)instr_ri_var_s1.range(63, 32));
         PC_IF2DEC_RI_S1.write((sc_bv_base)instr_ri_var_s1.range(31, 0));
+
+
+        INSTR_RI_S2.write((sc_bv_base)instr_ri_var_s2.range(63, 32));
+        PC_IF2DEC_RI_S2.write((sc_bv_base)instr_ri_var_s2.range(31, 0));
+
         if2dec_push_si_s1.write(true);
+        if2dec_push_si_s2.write(true);
+
         DEC2IF_POP_SI.write(true);
+        
         ADR_VALID_SI_S1.write(false);
+        ADR_VALID_SI_S2.write(false);
     }
 
 }

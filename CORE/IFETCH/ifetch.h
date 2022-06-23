@@ -107,9 +107,19 @@ SC_MODULE(ifetch) {
         buffer_inst_2.RESET_N(RESET); 
 
         SC_METHOD(fetch_method);
-        sensitive << IC_INST_SI_S1 << DEC2IF_EMPTY_SI 
-        << if2dec_full_si_s1 << PC_DEC2IF_RD_S1 
-        << IF2DEC_FLUSH_SD_S1 << IC_STALL_SI 
+        sensitive 
+        << IC_INST_SI_S1 
+        << IC_INST_SI_S2 
+        << instr_ri_s1
+        << instr_ri_s2
+        << DEC2IF_EMPTY_SI 
+        << if2dec_full_si_s1 
+        << if2dec_full_si_s2 
+        << PC_DEC2IF_RD_S1  
+        << PC_DEC2IF_RD_S2 
+        << IF2DEC_FLUSH_SD_S1 
+        << IF2DEC_FLUSH_SD_S2 
+        << IC_STALL_SI 
         << RESET
         << EXCEPTION_SM 
         << MRET_SM 

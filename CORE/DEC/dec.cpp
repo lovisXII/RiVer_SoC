@@ -1,7 +1,31 @@
 #include "decoding_s1.h"
 #include "decoding_s2.h"
 
-// ---------------------------------------------DECODING INSTRUCTION
+
+// ---------------------------------------------CHEKING DEPENDENCIES
+// :---------------------------------------------
+
+
+void decod::dependencies(){
+    sc_uint<6> radr1_sd_s2 = RADR1_SD_S2 ; 
+    sc_uint<6> radr2_sd_s2 = RADR2_SD_S2 ;
+    bool load = lw_i_sd_s1 || lh_i_sd_s1 || lb_i_sd_s1 ;
+
+    if(adr_dest_sd_s1 == radr1_sd_s2 || adr_dest_sd_s1 == radr2_sd_s2 )
+    {
+        reg_dependencies_sd = true ;
+    }
+    else if((lw_i_sd_s1 && lw_i_sd_s2) || (lh_i_sd_s1 && lh_i_sd_s2) ||
+    (lb_i_sd_s1 && lb_i_sd_s2) || (sw_i_sd_s1 && sw_i_sd_s2) || 
+    (sh_i_sd_s1 && sh_i_sd_s2) || (sb_i_sd_s1 && sb_i_sd_s2)){
+        reg_dependencies_sd = true ;
+    }
+    else{
+        reg_dependencies_sd = false ;
+    }
+}
+
+// ---------------------------------------------FIFO LOADING
 // :---------------------------------------------
 
 void decod::concat_dec2exe() {
@@ -253,12 +277,15 @@ void decod::pc_inc() {
         
         if (jump_sd_s1.read() && !stall_sd_s1) {
             IF2DEC_POP_SD_S1.write(1);
+            IF2DEC_POP_SD_S2.write(1);
             IF2DEC_FLUSH_SD_S1.write(1);
         } else if (!jump_sd_s1 && !stall_sd_s1) {
             IF2DEC_POP_SD_S1.write(1);
+            IF2DEC_POP_SD_S2.write(1);
             IF2DEC_FLUSH_SD_S1.write(0);
         } else {
             IF2DEC_POP_SD_S1.write(0);
+            IF2DEC_POP_SD_S2.write(0);
             IF2DEC_FLUSH_SD_S1.write(0);
         }
 

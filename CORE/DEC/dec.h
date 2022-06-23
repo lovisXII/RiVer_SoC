@@ -30,6 +30,7 @@ SC_MODULE(decod) {
     sc_in<sc_bv<32>>   INSTR_RI_S2;
     sc_in<bool>        IF2DEC_EMPTY_SI_S1;
     sc_out<bool>       IF2DEC_POP_SD_S1;  // Decod says to IFETCH if it wants a pop or no
+    sc_out<bool>       IF2DEC_POP_SD_S2;
     sc_out<bool>       IF2DEC_FLUSH_SD_S1;
 
     // Interface with CSR :
@@ -519,6 +520,13 @@ SC_MODULE(decod) {
     sc_signal<bool> env_call_m_mode_sd_s2;
     sc_signal<bool> env_call_wrong_mode_s2;
 
+    // Super-scalar parameters :
+
+    sc_signal<bool> reg_dependencies_sd ; 
+
+    // FSM parameters :
+
+
     void concat_dec2exe();
     void unconcat_dec2exe();
     void concat_dec2if();
@@ -534,6 +542,11 @@ SC_MODULE(decod) {
     void pc_inc();
     void bypasses();
     void stall_method();
+    void dependencies() ;
+
+    //FSM :
+
+
     void trace(sc_trace_file * tf);
 
     SC_CTOR(decod) : dec2if("dec2if"), dec2exe_s1("dec2exe_s1"), dec2exe_s2("dec2exe_s2") {
@@ -563,6 +576,11 @@ SC_MODULE(decod) {
         dec2exe_s2.POP_S(DEC2EXE_POP_SE_S2);
         dec2exe_s2.CLK(CLK);
         dec2exe_s2.RESET_N(RESET_N);
+
+        SC_METHOD(dependencies)
+        sensitive << adr_dest_sd_s1
+                  << RADR1_SD_S2
+                  << RADR2_SD_S2 ;
 
         SC_METHOD(concat_dec2exe)
         sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
