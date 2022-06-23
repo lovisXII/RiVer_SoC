@@ -4,6 +4,7 @@
 #include "IFETCH/ifetch.h"
 #include "MEM/mem.h"
 #include "REG/reg.h"
+#include "TIMER/timer.h"
 #include "WBK/wbk.h"
 #include "systemc.h"
 
@@ -41,7 +42,7 @@ SC_MODULE(core) {
     sc_signal<bool>        NEG_OP2_RD;
     sc_signal<bool>        WB_RD;
     sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;
-    sc_signal<sc_uint<32>>  PC_BRANCH_VALUE_RD;
+    sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RD;
 
     sc_signal<sc_uint<32>> MEM_DATA_RD;
     sc_signal<bool>        MEM_LOAD_RD;
@@ -90,7 +91,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
-    //EXE-X0
+    // EXE-X0
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
 
@@ -147,10 +148,10 @@ SC_MODULE(core) {
     sc_signal<bool> MULT_INST_RE;
     sc_signal<bool> MULT_INST_RM;
     // X1-X2 interface
-    sc_signal<sc_bv<128>> multiplier_out_sx1;
-    sc_signal<sc_uint<32>>  multiplier_out_sx2;
-    sc_signal<bool>       signed_op_rx1;
-    sc_signal<bool>       x12x2_EMPTY_SX1, x12x2_POP_SX2;
+    sc_signal<sc_bv<128>>  multiplier_out_sx1;
+    sc_signal<sc_uint<32>> multiplier_out_sx2;
+    sc_signal<bool>        signed_op_rx1;
+    sc_signal<bool>        x12x2_EMPTY_SX1, x12x2_POP_SX2;
 
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
@@ -177,6 +178,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MSTATUS_RC;
     sc_signal<sc_uint<32>> MTVEC_VALUE_RC;
     sc_signal<sc_uint<32>> MIP_VALUE_RC;
+    sc_signal<sc_uint<32>> MIE_VALUE_RC;
     sc_signal<sc_uint<32>> MTVAL_WDATA_SM;
     sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
 
@@ -194,6 +196,14 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>>  WADR_SW;
     sc_signal<sc_uint<32>> WDATA_SW;
     sc_signal<bool>        WENABLE_SW;
+
+    // Timer interface
+    sc_signal<bool>        TIMER_CONFIG_WB_SC;
+    sc_signal<bool>        TIMER_DIVIDER_WB_SC;
+    sc_signal<sc_uint<32>> DATA_SC;
+    sc_signal<sc_uint<64>> TIME_RT;
+    sc_signal<bool>        TIMER_INT_ST;
+    sc_signal<bool>        ACK_SP;
 
     // Mcache interface
     sc_out<sc_uint<2>>  MEM_SIZE_SM;
@@ -228,17 +238,17 @@ SC_MODULE(core) {
     reg    reg_inst;
     wbk    wbk_inst;
     csr    csr_inst;
+    timer  timer_inst;
 
-
-    x0_multiplier      x0_multiplier_inst;
-    x1_multiplier      x1_multiplier_inst;
-    x2_multiplier      x2_multiplier_inst;
+    x0_multiplier x0_multiplier_inst;
+    x1_multiplier x1_multiplier_inst;
+    x2_multiplier x2_multiplier_inst;
 
     void core_method();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(core) : 
-          ifetch_inst("ifetch"),
+    SC_CTOR(core)
+        : ifetch_inst("ifetch"),
           dec_inst("decod"),
           exec_inst("exec"),
           x0_multiplier_inst("x0_multiplier"),
@@ -247,7 +257,8 @@ SC_MODULE(core) {
           wbk_inst("wbk"),
           x2_multiplier_inst("x2_multiplier"),
           reg_inst("reg"),
-          csr_inst("csr") {
+          csr_inst("csr"),
+          timer_inst("timer") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
 
@@ -465,7 +476,7 @@ SC_MODULE(core) {
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-        //X0 - MULTIPLIER port map :
+        // X0 - MULTIPLIER port map :
 
         x0_multiplier_inst.OP1_SE(op1_se);
         x0_multiplier_inst.OP2_SE(op2_se);
@@ -510,7 +521,7 @@ SC_MODULE(core) {
         mem_inst.MCACHE_ADR_VALID_SM(MCACHE_ADR_VALID_SM);
         mem_inst.MCACHE_STORE_SM(MCACHE_STORE_SM);
         mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);  // 19
-        mem_inst.MEM_SIZE_SM(MEM_SIZE_SM);  
+        mem_inst.MEM_SIZE_SM(MEM_SIZE_SM);
 
         mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
         mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);
@@ -559,16 +570,17 @@ SC_MODULE(core) {
         mem_inst.MEPC_SC(MEPC_SC);
         mem_inst.MSTATUS_RC(MSTATUS_RC);
         mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
-        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
-        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);  // 54
+        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
+        mem_inst.MIE_VALUE_RC(MIE_VALUE_RC);
+        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);  // 55
-        mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);  
+        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         mem_inst.CLK(CLK);
-        mem_inst.RESET(RESET);  // 58
+        mem_inst.RESET(RESET);
 
-        //X1 - MULTIPLIER port map :
+        // X1 - MULTIPLIER port map :
 
         x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
         x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
@@ -617,14 +629,14 @@ SC_MODULE(core) {
 
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         wbk_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
-        
+
         wbk_inst.MULT_INST_RM(MULT_INST_RM);
         wbk_inst.X2_RES_RX2(multiplier_out_sx2);
 
         wbk_inst.CLK(CLK);
         wbk_inst.RESET(RESET);
 
-        //X1 - MULTIPLIER port map :
+        // X1 - MULTIPLIER port map :
 
         x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
         x2_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
@@ -652,10 +664,27 @@ SC_MODULE(core) {
         csr_inst.MSTATUS_RC(MSTATUS_RC);
         csr_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
+        csr_inst.MIE_VALUE_RC(MIE_VALUE_RC);
         csr_inst.MCAUSE_SC(MCAUSE_SC);
         csr_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
+        csr_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
+        csr_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
+        csr_inst.TIME_RT(TIME_RT);
+        csr_inst.TIMER_INT_ST(TIMER_INT_ST);
+        csr_inst.ACK_SP(ACK_SP);
+
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
+
+        timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
+        timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
+        timer_inst.DATA_SC(CSR_WDATA_SM);
+        timer_inst.TIME_RT(TIME_RT);
+        timer_inst.TIMER_INT_ST(TIMER_INT_ST);
+        timer_inst.ACK_SP(ACK_SP);
+
+        timer_inst.CLK(CLK);
+        timer_inst.RESET(RESET);
     }
 };
