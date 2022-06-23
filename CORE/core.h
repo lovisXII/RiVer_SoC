@@ -4,6 +4,7 @@
 #include "IFETCH/ifetch.h"
 #include "MEM/mem.h"
 #include "REG/reg.h"
+#include "TIMER/timer.h"
 #include "WBK/wbk.h"
 #include "systemc.h"
 
@@ -196,6 +197,14 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WDATA_SW;
     sc_signal<bool>        WENABLE_SW;
 
+    // Timer interface
+    sc_signal<bool>        TIMER_CONFIG_WB_SC;
+    sc_signal<bool>        TIMER_DIVIDER_WB_SC;
+    sc_signal<sc_uint<32>> DATA_SC;
+    sc_signal<sc_uint<64>> TIME_RT;
+    sc_signal<bool>        TIMER_INT_ST;
+    sc_signal<bool>        ACK_SP;
+
     // Mcache interface
     sc_out<sc_uint<2>>  MEM_SIZE_SM;
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
@@ -229,6 +238,7 @@ SC_MODULE(core) {
     reg    reg_inst;
     wbk    wbk_inst;
     csr    csr_inst;
+    timer  timer_inst;
 
     x0_multiplier x0_multiplier_inst;
     x1_multiplier x1_multiplier_inst;
@@ -247,7 +257,8 @@ SC_MODULE(core) {
           wbk_inst("wbk"),
           x2_multiplier_inst("x2_multiplier"),
           reg_inst("reg"),
-          csr_inst("csr") {
+          csr_inst("csr"),
+          timer_inst("timer") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
 
@@ -559,15 +570,15 @@ SC_MODULE(core) {
         mem_inst.MEPC_SC(MEPC_SC);
         mem_inst.MSTATUS_RC(MSTATUS_RC);
         mem_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
-        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
-        mem_inst.MIE_VALUE_RC(MIE_VALUE_RC);      // 54
-        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);  // 54
+        mem_inst.MIP_VALUE_RC(MIP_VALUE_RC);
+        mem_inst.MIE_VALUE_RC(MIE_VALUE_RC);
+        mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);  // 55
+        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
         mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         mem_inst.CLK(CLK);
-        mem_inst.RESET(RESET);  // 58
+        mem_inst.RESET(RESET);
 
         // X1 - MULTIPLIER port map :
 
@@ -657,7 +668,23 @@ SC_MODULE(core) {
         csr_inst.MCAUSE_SC(MCAUSE_SC);
         csr_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
+        csr_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
+        csr_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
+        csr_inst.TIME_RT(TIME_RT);
+        csr_inst.TIMER_INT_ST(TIMER_INT_ST);
+        csr_inst.ACK_SP(ACK_SP);
+
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
+
+        timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
+        timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
+        timer_inst.DATA_SC(CSR_WDATA_SM);
+        timer_inst.TIME_RT(TIME_RT);
+        timer_inst.TIMER_INT_ST(TIMER_INT_ST);
+        timer_inst.ACK_SP(ACK_SP);
+
+        timer_inst.CLK(CLK);
+        timer_inst.RESET(RESET);
     }
 };

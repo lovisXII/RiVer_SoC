@@ -39,6 +39,13 @@ void csr::writing_csr() {
             }
         }
 
+        if (TIMER_INT_ST.read()) {
+            ACK_SP     = 1;
+            csr_rc[11] = csr_rc[11].read() & (1 << 7);
+        } else {
+            ACK_SP = 0;
+        }
+
         if (EXCEPTION_SM.read()) {
             csr_rc[3]  = MSTATUS_WDATA_RM.read();
             csr_rc[11] = MIP_WDATA_RM.read();
@@ -46,7 +53,6 @@ void csr::writing_csr() {
             csr_rc[9]  = MCAUSE_WDATA_SM.read();
             csr_rc[10] = MTVAL_WDATA_SM;
         }
-        csr_rc[11] = csr_rc[11].read() | EXTERNAL_INTERRUPT_SB.read();
         wait(1);
     }
 }
