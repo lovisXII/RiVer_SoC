@@ -5,8 +5,8 @@ NOC='\033[0m'
 export PATH=$PATH:$HOME/riscv/bin
 cd CORE
 for file in $(ls tests); do 
-    timeout 40s ./CORE/core_tb CORE/tests/$file >/dev/null 2>&1
     printf "Test ${file} non opt..." 
+    timeout 40s ./CORE/core_tb CORE/tests/$file >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -14,8 +14,8 @@ for file in $(ls tests); do
         printf "${RED} failed\n${NOC}"
         exit -1
     fi
-    timeout 40s ./CORE/core_tb CORE/tests/$file -O >/dev/null 2>&1
     printf "Test ${file} opt..." 
+    timeout 40s ./CORE/core_tb CORE/tests/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
