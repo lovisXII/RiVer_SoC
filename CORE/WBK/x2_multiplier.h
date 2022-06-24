@@ -7,7 +7,7 @@ SC_MODULE(x2_multiplier)
     // Input :
     sc_in<sc_bv<128>> IN_RX1;
     sc_in<bool> SELECT_HIGHER_BITS_RX1;
-    sc_in<bool> CARRY_RX1;
+    sc_in<bool> SIGNED_RES_RX1;
 
     sc_in<bool> X12X2_EMPTY_SX1;
 
@@ -21,37 +21,18 @@ SC_MODULE(x2_multiplier)
 
     sc_signal<sc_bv<64>> a;
     sc_signal<sc_bv<64>> b;
-    sc_signal<bool> S[64];
-    sc_signal<bool> G[64];
-    sc_signal<bool> P[64];
-
-    sc_signal<bool> c[64];
 
     sc_signal<sc_bv<64>> result;
 
-    void pre_process();
-    //modified full adder
-    void MFA_0();
-    void C_gen_1();
-
-    void RES();
+    void process();
 
     void manage_fifo();
     void trace(sc_trace_file* tf);
 
     SC_CTOR(x2_multiplier)
     {
-        SC_METHOD(pre_process);
-        sensitive << IN_RX1 << CARRY_RX1;
-
-
-        SC_METHOD(MFA_0);
-        sensitive << a << b << c[0];
-        SC_METHOD(C_gen_1);
-        sensitive << G[0] << P[0] << c[0];
-
-        SC_METHOD(RES);
-        sensitive << result << SELECT_HIGHER_BITS_RX1;
+        SC_METHOD(process);
+        sensitive << IN_RX1 << SIGNED_RES_RX1 << SELECT_HIGHER_BITS_RX1;
 
         SC_METHOD(manage_fifo);
         sensitive << X12X2_EMPTY_SX1;

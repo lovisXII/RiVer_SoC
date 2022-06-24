@@ -10,14 +10,14 @@ SC_MODULE(x1_multiplier)
     // input :
     sc_in<sc_bv<320>> IN_RX0;
     sc_in<bool>       SELECT_HIGHER_BITS_RX0;
-    sc_in<bool>       CARRY_RX0;
+    sc_in<bool>       SIGNED_RES_RX0;
     sc_in<bool>       X02X1_EMPTY_SX0;
     sc_in<bool>       X12X2_POP_SX2;
 
     // output :
     sc_out<sc_bv<128>>        RES_RX1;
     sc_out<bool>              SELECT_HIGHER_BITS_RX1;
-    sc_out<bool>              CARRY_RX1;
+    sc_out<bool>              SIGNED_RES_RX1;
     sc_out<bool>              X12X2_EMPTY_SX1;
     sc_out<bool>              X02X1_POP_SX1;
 
@@ -90,7 +90,7 @@ SC_MODULE(x1_multiplier)
         sensitive << x12x2_full_sx1 << X02X1_EMPTY_SX0;
 
         SC_METHOD(fifo_concat);
-        sensitive << SELECT_HIGHER_BITS_RX0 << product_s8[0] << product_s8[1] << CARRY_RX0;
+        sensitive << SELECT_HIGHER_BITS_RX0 << product_s8[0] << product_s8[1] << SIGNED_RES_RX0;
 
         SC_METHOD(fifo_unconcat);
         sensitive << x12x2_dout_sx1;

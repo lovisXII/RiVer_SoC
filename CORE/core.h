@@ -109,8 +109,8 @@ SC_MODULE(core) {
     sc_signal<sc_bv<320>> multiplier_out_sx0;
     sc_signal<bool>       select_higher_bits_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
-    sc_signal<bool>       carry_rx0;
-    sc_signal<bool>       carry_rx1;
+    sc_signal<bool>       SIGNED_RES_RX0;
+    sc_signal<bool>       SIGNED_RES_RX1;
     // EXE-MEM interface
     sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE;
     sc_signal<sc_uint<32>> EXE_RES_RE;
@@ -503,7 +503,7 @@ SC_MODULE(core) {
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
         x0_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
-        x0_multiplier_inst.CARRY_RX0(carry_rx0);
+        x0_multiplier_inst.SIGNED_RES_RX0(SIGNED_RES_RX0);
         x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
 
         x0_multiplier_inst.CLK(CLK);
@@ -600,11 +600,11 @@ SC_MODULE(core) {
 
         x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
         x1_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
-        x1_multiplier_inst.CARRY_RX0(carry_rx0);
+        x1_multiplier_inst.SIGNED_RES_RX0(SIGNED_RES_RX0);
         x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
         x1_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
-        x1_multiplier_inst.CARRY_RX1(carry_rx1);
+        x1_multiplier_inst.SIGNED_RES_RX1(SIGNED_RES_RX1);
         x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
         x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
         x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
@@ -656,7 +656,7 @@ SC_MODULE(core) {
 
         x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
         x2_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
-        x2_multiplier_inst.CARRY_RX1(carry_rx1);
+        x2_multiplier_inst.SIGNED_RES_RX1(SIGNED_RES_RX1);
         x2_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x2_multiplier_inst.RES_RX2(multiplier_out_sx2);
         x2_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);

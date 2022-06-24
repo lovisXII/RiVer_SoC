@@ -1,41 +1,27 @@
 #include "x2_multiplier.h"
 
-void x2_multiplier::pre_process()
+void x2_multiplier::process()
 {
     sc_bv<128> in = IN_RX1.read();
-    a = in.range(63, 0);
-    b = in.range(127, 64);
+    sc_biguint<64> a = (sc_bv<64>)in.range(63, 0);
+    sc_biguint<64> b = (sc_bv<64>)in.range(127, 64);
 
-    c[0] = CARRY_RX1.read();
-}
-void x2_multiplier::MFA_0()
-{
-    sc_biguint<64> a_ = (sc_bv<64>)a;
-    sc_biguint<64> b_ = (sc_bv<64>)b;
-    sc_biguint<64> add = a_ + b_;
-
+    sc_bv<64> add = a + b;
     result = add;
-    
-    /*sc_bv<64> a_ = (sc_bv<64>)a;
-    sc_bv<64> b_ = (sc_bv<64>)b;
-    
-    P[0] = (bool)a_[0] ^ (bool)b_[0];
-    G[0] = (bool)a_[0] & (bool)b_[0];
-    S[0] = ((bool)a_[0] ^ (bool)b_[0]) ^ c[0];*/
-}
-void x2_multiplier::C_gen_1()
-{
-    c[1] = G[0] + (P[0] & c[0]);
-}
-
-void x2_multiplier::RES()
-{
-    sc_bv<64> res = result;
+    /*if(SIGNED_RES_RX1.read())
+    {
+        int i;
+        for(i = 63; i >= 0; i--)
+            if(add[i] == 1)
+                break;
+        for(; i < 64; i++)
+            add[i] = 1;
+    }*/
 
     if(SELECT_HIGHER_BITS_RX1)
-        RES_RX2.write((sc_bv_base)res.range(63, 32));
+        RES_RX2.write((sc_bv_base)add.range(63, 32));
     else
-        RES_RX2.write((sc_bv_base)res.range(31, 0));
+        RES_RX2.write((sc_bv_base)add.range(31, 0));
 }
 void x2_multiplier::manage_fifo() 
 {

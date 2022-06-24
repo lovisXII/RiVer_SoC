@@ -13,7 +13,7 @@ using namespace ELFIO;
 
 //#define ICACHE_ON
 //#define DCACHE_ON
-#define DEBUG_MAX_ITERATIONS 
+//#define DEBUG_MAX_ITERATIONS 
 
 #ifdef ICACHE_ON
 
@@ -515,9 +515,11 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
             
+            int j = 1;
             for (int i = begin_signature; i < end_signature; i += 4){
                 // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                cout <<dec<<j<<hex<< ": adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                j++;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;

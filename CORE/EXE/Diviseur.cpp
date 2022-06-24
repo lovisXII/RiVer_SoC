@@ -22,7 +22,7 @@ void Diviseur::state_transition()
     switch(current_state.read())
     {
         case 0:
-            if(START_SE)
+            if(START_SE && OP2_SE.read() != 0)
             {
                 next_state = 0b001;
             }
@@ -47,34 +47,49 @@ void Diviseur::mae_output()
         case 0:// init/idle
             if(START_SE)
             {
-                sc_uint<32> op2 = OP2_SE.read();
-                sc_uint<32> op1 = OP1_SE.read();
+                if(OP2_SE.read() != 0)
+                {
+                    sc_uint<32> op2 = OP2_SE.read();
+                    sc_uint<32> op1 = OP1_SE.read();
 
-                bool signed_inst = CMD_RD.read() == 3 || CMD_RD.read() == 1;
+                    bool signed_inst = CMD_RD.read() == 3 || CMD_RD.read() == 1;
 
-                sign_reg_se = (op2[31] ^ op1[31]) & signed_inst;
+                    quotient_sign_se = (op2[31] ^ op1[31]) & signed_inst;
+                    reminder_sign_se = op1[31] & signed_inst;
 
-                if(op1[31] && signed_inst)
-                    op1 = (~op1) + 1;
-                
-                if(op2[31] && signed_inst)
-                    op2 = (~op2) + 1;
+                    if(op1[31] && signed_inst)
+                        op1 = (~op1) + 1;
 
-                sc_bv<64> div = 0;
-                div.range(62, 31) = op2; 
-                divisor_se = div;
+                    if(op2[31] && signed_inst)
+                        op2 = (~op2) + 1;
 
-                quotient_se = 0;
+                    sc_bv<64> div = 0;
+                    div.range(62, 31) = op2; 
+                    divisor_se = div;
 
-                reminder_se = (sc_biguint<64>)op1;
-                BUSY_SE.write(true);
+                    quotient_se = 0;
+
+                    reminder_se = (sc_biguint<64>)op1;
+                    BUSY_SE.write(true);
+                    shift_cpt_se = 0;
+                }
+                else
+                {
+                    quotient_sign_se = false;
+                    reminder_sign_se = false;
+                    reminder_se = (sc_biguint<64>)OP1_SE.read();
+                    quotient_se = 0xFFFFFFFF;
+                    DONE_SE.write(true);
+                    BUSY_SE.write(true);
+                    shift_cpt_se = 32;
+                }
             }
             else
             {
                 BUSY_SE.write(false);
+                shift_cpt_se = 0;
             }
 
-            shift_cpt_se = 0;
             DONE_SE.write(shift_cpt_re.read() == 32);
         break;
         case 1: // calculating
@@ -116,7 +131,7 @@ void Diviseur::RET()
     if(CMD_RD.read() == 3 || CMD_RD.read() == 0)
     {
         sc_uint<32> rem = (sc_bv_base)((sc_bv<64>)reminder_re.read()).range(31, 0);
-        if(sign_reg_se)
+        if(reminder_sign_se)
             rem = (~rem)+1;
 
         DIVIDER_RES_OUTPUT.write(rem);
@@ -124,7 +139,7 @@ void Diviseur::RET()
     else
     {
         sc_uint<32> quo = quotient_re.read();
-        if(sign_reg_se)
+        if(quotient_sign_se)
             quo = (~quo) + 1;
 
         DIVIDER_RES_OUTPUT.write(quo);
@@ -150,6 +165,6 @@ void Diviseur::trace(sc_trace_file * tf)
     sc_trace(tf, next_state, GET_NAME(next_state));
     sc_trace(tf, shift_cpt_se, GET_NAME(shift_cpt_se));
     sc_trace(tf, shift_cpt_re, GET_NAME(shift_cpt_re));
-    sc_trace(tf, sign_reg_se, GET_NAME(sign_reg_se));
+    sc_trace(tf, quotient_sign_se, GET_NAME(quotient_sign_se));
     sc_trace(tf, CMD_RD, GET_NAME(CMD_RD));
 }

@@ -27,12 +27,15 @@ void x0_multiplier::operation()
 
     if((EXE_CMD_RD.read() == 2 || EXE_CMD_RD.read() == 1) && (op1[31] == 1 && op2[31] == 1))
     {
-        carry_sx0 = 1;
         op1 = (~op1) + 1;
         op2 = (~op2) + 1;
+        signed_type = false;
     }
+
+    if(signed_type && (op1[31] != op2[31]))
+        signed_res_sx0 = true;
     else
-        carry_sx0 = 0;
+        signed_res_sx0 = false;
     
     // generating partial product
     for(int i = 0; i < 32; i++)
@@ -318,7 +321,7 @@ void x0_multiplier::CSA_27()
 void x0_multiplier::fifo_concat() {
     sc_bv<x02x1_size> ff_din;
     ff_din[321]            = select_higher_bits_sx0;
-    ff_din[320]            = carry_sx0;   
+    ff_din[320]            = signed_res_sx0;   
     ff_din.range(319, 256) = (sc_bv_base)product_s3[9];
     ff_din.range(255, 192) = (sc_bv_base)product_s5[3];
     ff_din.range(191, 128) = (sc_bv_base)product_s5[2];
@@ -331,7 +334,7 @@ void x0_multiplier::fifo_unconcat()
 {
     sc_bv<x02x1_size> ff_dout = x02x1_dout_sx0.read();
     SELECT_HIGHER_BITS_RX0.write((bool)ff_dout[321]);
-    CARRY_RX0.write((bool)ff_dout[320]);
+    SIGNED_RES_RX0.write((bool)ff_dout[320]);
     RES_RX0.write(ff_dout.range(319, 0));
 }
 void x0_multiplier::manage_fifo() 
@@ -349,7 +352,8 @@ void x0_multiplier::trace(sc_trace_file* tf)
     sc_trace(tf, x02x1_din_sx0, GET_NAME(x02x1_din_sx0));
     sc_trace(tf, x02x1_dout_sx0, GET_NAME(x02x1_dout_sx0));
 
-    sc_trace(tf, CARRY_RX0, GET_NAME(CARRY_RX0));
+    sc_trace(tf, signed_res_sx0, GET_NAME(signed_res_sx0));
+    sc_trace(tf, SIGNED_RES_RX0, GET_NAME(SIGNED_RES_RX0));
     sc_trace(tf, SELECT_HIGHER_BITS_RX0, GET_NAME(SELECT_HIGHER_BITS_RX0));
     sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));
     sc_trace(tf, select_higher_bits_sx0, GET_NAME(select_higher_bits_sx0));

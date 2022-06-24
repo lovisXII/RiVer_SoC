@@ -38,7 +38,8 @@ SC_MODULE(Diviseur)
     sc_signal<sc_uint<6>> shift_cpt_se;
     sc_signal<sc_uint<6>> shift_cpt_re;
 
-    sc_signal<bool> sign_reg_se;
+    sc_signal<bool> quotient_sign_se;
+    sc_signal<bool> reminder_sign_se;
 
     //mae
     void new_state();
@@ -55,7 +56,7 @@ SC_MODULE(Diviseur)
         sensitive << CLK.pos();
 
         SC_METHOD(state_transition);
-        sensitive << current_state << START_SE << shift_cpt_re;
+        sensitive << current_state << START_SE << shift_cpt_re << OP2_SE;
 
         SC_METHOD(mae_output);
         sensitive << current_state << START_SE << divisor_re

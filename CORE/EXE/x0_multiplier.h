@@ -16,7 +16,7 @@ SC_MODULE(x0_multiplier)
     // output :
     sc_out<sc_bv<320>> RES_RX0;
     sc_out<bool>       SELECT_HIGHER_BITS_RX0;
-    sc_out<bool>       CARRY_RX0;
+    sc_out<bool>       SIGNED_RES_RX0;
     sc_out<bool>       X02X1_EMPTY_SX0;
 
     // General interace : 
@@ -32,7 +32,7 @@ SC_MODULE(x0_multiplier)
 
     sc_signal<bool>        signed_op;
     sc_signal<bool>        select_higher_bits_sx0;
-    sc_signal<bool>        carry_sx0;
+    sc_signal<bool>        signed_res_sx0;
     
     // fifo x02x1
     sc_signal<sc_bv<x02x1_size>> x02x1_din_sx0;  
@@ -193,7 +193,8 @@ SC_MODULE(x0_multiplier)
 
         //fifo
         SC_METHOD(fifo_concat);
-        sensitive << product_s5[0] << product_s5[1] << product_s5[2] << product_s5[3] << select_higher_bits_sx0 << carry_sx0;
+        sensitive << product_s5[0] << product_s5[1] << product_s5[2] 
+                  << product_s5[3] << select_higher_bits_sx0 << signed_res_sx0;
 
         SC_METHOD(fifo_unconcat);
         sensitive << x02x1_dout_sx0;

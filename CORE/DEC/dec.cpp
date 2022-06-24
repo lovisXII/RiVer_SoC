@@ -139,7 +139,7 @@ void decod::unconcat_dec2exe() {
 void decod::decoding_instruction_type() {
     sc_uint<32> if_ir   = INSTR_RI.read();
     r_type_inst_sd      = (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) != 0b0000001) ? 1 : 0;
-    i_type_inst_sd      = (if_ir.range(6, 0) == 0b0010011 | if_ir.range(6, 0) == 0b0000011) ? 1 : 0;
+    i_type_inst_sd      = (if_ir.range(6, 0) == 0b0010011 || if_ir.range(6, 0) == 0b0000011) ? 1 : 0;
     s_type_inst_sd      = if_ir.range(6, 0) == 0b0100011 ? 1 : 0;
     b_type_inst_sd      = if_ir.range(6, 0) == 0b1100011 ? 1 : 0;
     u_type_inst_sd      = (if_ir.range(6, 0) == 0b0110111 || if_ir.range(6, 0) == 0b0010111) ? 1 : 0;
