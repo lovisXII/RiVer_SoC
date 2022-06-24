@@ -40,6 +40,7 @@ SC_MODULE(decod) {
     sc_out<sc_uint<12>> CSR_RADR_SD_S1;   // CSR adress sent to CSR to get data
     sc_out<sc_uint<12>> CSR_RADR_SD_S2;   // CSR adress sent to CSR to get data
     sc_in<sc_uint<32>>  CSR_RDATA_SC_S1;  // data read from CSR
+    sc_in<sc_uint<32>>  CSR_RDATA_SC_S2;  // data read from CSR
 
     // Interface with REG :
 
@@ -528,8 +529,12 @@ SC_MODULE(decod) {
     sc_signal<bool> reg_dependencies_sd ; 
     sc_signal<bool> flushing_inst_s2 ;
 
-    void concat_dec2exe();
-    void unconcat_dec2exe();
+    void concat_dec2exe_s1();
+    void unconcat_dec2exe_s1();
+    
+    void concat_dec2exe_s2() ;
+    void unconcat_dec2exe_s2();
+    
     void concat_dec2if();
     void unconcat_dec2if();
     void decoding_instruction_type_s1();
@@ -582,7 +587,7 @@ SC_MODULE(decod) {
         sensitive << adr_dest_sd_s1
                   << RADR1_SD_S2
                   << RADR2_SD_S2 ;
-        SC_METHOD(concat_dec2exe)
+        SC_METHOD(concat_dec2exe_s1)
         sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
                   << exe_wb_sd_s1
 
@@ -597,9 +602,28 @@ SC_MODULE(decod) {
                   << block_bp_sd_s1 << env_call_s_mode_sd_s1 << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1
                   << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1
                   << mulhu_i_sd_s1;
-        SC_METHOD(unconcat_dec2exe)
+
+
+        SC_METHOD(concat_dec2exe_s2)
+        sensitive << dec2exe_in_sd_s2 << exe_op1_sd_s2 << exe_op2_sd_s2 << exe_cmd_sd_s2 << exe_neg_op2_sd_s2
+                  << exe_wb_sd_s2
+
+                  << mem_data_sd_s2 << mem_load_sd_s2 << mem_store_sd_s2
+
+                  << mem_sign_extend_sd_s2 << mem_size_sd_s2 << select_type_operations_sd_s2 << adr_dest_sd_s2
+                  << slti_i_sd_s2 << slt_i_sd_s2
+
+                  << sltiu_i_sd_s2 << sltu_i_sd_s2 << RADR1_SD_S2 << CSR_RDATA_SC_S2 << csr_radr_sd_s2 << RADR2_SD_S2
+                  << r1_valid_sd << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
+                  << illegal_instruction_sd_s2 << instruction_adress_missaligned_sd_s2 << env_call_m_mode_sd_s2
+                  << block_bp_sd_s2 << env_call_s_mode_sd_s2 << env_call_u_mode_sd_s2 << env_call_wrong_mode_s2
+                  << mret_i_sd_s2 << instruction_access_fault_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2
+                  << mulhu_i_sd_s2;
+        SC_METHOD(unconcat_dec2exe_s1)
         sensitive << dec2exe_out_sd_s1;
 
+        SC_METHOD(unconcat_dec2exe_s2)
+        sensitive << dec2exe_out_sd_s2;
         SC_METHOD(concat_dec2if)
         sensitive << dec2if_pc_sd_s1 << dec2if_pc_sd_s2;
         SC_METHOD(unconcat_dec2if)

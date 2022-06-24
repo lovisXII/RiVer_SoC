@@ -143,6 +143,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<12>> CSR_RADR_SD_S1;
     sc_signal<sc_uint<12>> CSR_RADR_SD_S2;
     sc_signal<sc_uint<32>> CSR_RDATA_SC_S1;
+    sc_signal<sc_uint<32>> CSR_RDATA_SC_S2;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR_S1;
@@ -445,6 +446,7 @@ SC_MODULE(core) {
         dec_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
         dec_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
         dec_inst.CSR_RDATA_SC_S1(CSR_RDATA_SC_S1);
+        dec_inst.CSR_RDATA_SC_S2(CSR_RDATA_SC_S2);
         dec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);

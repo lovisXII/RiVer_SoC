@@ -9,19 +9,24 @@ void decod::dependencies(){
     sc_uint<6> radr1_sd_s2 = RADR1_SD_S2 ; 
     sc_uint<6> radr2_sd_s2 = RADR2_SD_S2 ;
 
-    if(adr_dest_sd_s1 == radr1_sd_s2 || adr_dest_sd_s1 == radr2_sd_s2 )
-    {
-        reg_dependencies_sd = true ;
-    }
-    else{
-        reg_dependencies_sd = false ;
+    // Need to add the case where there is store dependencies
+    // addi x2,x0,10
+    // sw x2, 0(x2)
+    if(adr_dest_sd_s1.read() != 0){
+        if(adr_dest_sd_s1 == radr1_sd_s2 || adr_dest_sd_s1 == radr2_sd_s2 )
+        {
+            reg_dependencies_sd = true ;
+        }
+        else{
+            reg_dependencies_sd = false ;
+        }
     }
 }
 
 // ---------------------------------------------FIFO LOADING
 // :---------------------------------------------
 
-void decod::concat_dec2exe() {
+void decod::concat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_in_var;
     if (EXCEPTION_SM.read() == 0) {
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s1;  
@@ -105,8 +110,91 @@ void decod::concat_dec2exe() {
     dec2exe_in_sd_s1= dec2exe_in_var;
 }
 
+void decod::concat_dec2exe_s2() {
+    sc_bv<dec2exe_size_s2> dec2exe_in_var;
+    if (EXCEPTION_SM.read() == 0) {
+        dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
+        dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
+        dec2exe_in_var[218] = ebreak_i_sd_s2;
+        dec2exe_in_var[217] = instruction_access_fault_sd_s2;  
+        dec2exe_in_var[216] = mret_i_sd_s2;            
+        dec2exe_in_var[215] = block_bp_sd_s2;
+        dec2exe_in_var[214] = illegal_instruction_sd_s2 || instruction_adress_missaligned_sd_s2 || env_call_u_mode_sd_s2 ||
+                              env_call_m_mode_sd_s2 || env_call_s_mode_sd_s2 || env_call_wrong_mode_s2 || mret_i_sd_s2 ||
+                              instruction_access_fault_sd_s2 || ebreak_i_sd_s2;  // tells if there is an exception
+        dec2exe_in_var[213]            = env_call_wrong_mode_s2.read();
+        dec2exe_in_var[212]            = env_call_u_mode_sd_s2.read();
+        dec2exe_in_var[211]            = illegal_instruction_sd_s2.read();
+        dec2exe_in_var[210]            = instruction_adress_missaligned_sd_s2.read();
+        dec2exe_in_var[209]            = env_call_m_mode_sd_s2.read();
+        dec2exe_in_var[208]            = env_call_s_mode_sd_s2.read();
+        dec2exe_in_var.range(207, 176) = CSR_RDATA_SC_S2.read();
+        dec2exe_in_var[175]            = csr_wenable_sd_s2.read();
+        dec2exe_in_var.range(174, 163) = csr_radr_sd_s2.read();
+        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S2.read();
+        dec2exe_in_var[130]            = r1_valid_sd.read();
+        dec2exe_in_var[129]            = r2_valid_sd.read();
+        dec2exe_in_var.range(128, 123) = RADR1_SD_S2.read();
+        dec2exe_in_var.range(122, 117) = RADR2_SD_S2.read();
+        dec2exe_in_var.range(116, 115) = exe_cmd_sd_s2.read();
+        dec2exe_in_var.range(114, 83)  = exe_op1_sd_s2.read();
+        dec2exe_in_var.range(82, 51)   = exe_op2_sd_s2.read();
+        dec2exe_in_var[50]             = exe_neg_op2_sd_s2.read();
+        dec2exe_in_var[49]             = exe_wb_sd_s2.read();
 
-void decod::unconcat_dec2exe() {
+        dec2exe_in_var.range(48, 17) = mem_data_sd_s2.read();
+
+        dec2exe_in_var[16] = mem_load_sd_s2.read();
+        dec2exe_in_var[15] = mem_store_sd_s2.read();
+
+        dec2exe_in_var[14]           = mem_sign_extend_sd_s2.read();
+        dec2exe_in_var.range(13, 12) = mem_size_sd_s2.read();
+        dec2exe_in_var.range(11, 8)  = select_type_operations_sd_s2.read();
+        dec2exe_in_var.range(7, 2)   = adr_dest_sd_s2.read();
+        dec2exe_in_var[1]            = slt_i_sd_s2.read() | slti_i_sd_s2.read();
+        dec2exe_in_var[0]            = sltu_i_sd_s2.read() | sltiu_i_sd_s2.read();
+    } else {
+        dec2exe_in_var.range(251,220)  = 0;
+        dec2exe_in_var[219]            = 0;
+        dec2exe_in_var[218]            = 0; 
+        dec2exe_in_var[217]            = 0;  
+        dec2exe_in_var[216]            = 0;            
+        dec2exe_in_var[215]            = 0;
+        dec2exe_in_var[214]            = 0;  // tells if there is an exception
+        dec2exe_in_var[213]            = 0;
+        dec2exe_in_var[212]            = 0;
+        dec2exe_in_var[211]            = 0;
+        dec2exe_in_var[210]            = 0;
+        dec2exe_in_var[209]            = 0;
+        dec2exe_in_var[208]            = 0;
+        dec2exe_in_var.range(207, 176) = 0;
+        dec2exe_in_var[175]            = 0;
+        dec2exe_in_var.range(174, 163) = 0;
+        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S2.read();
+        dec2exe_in_var[130]            = 0;
+        dec2exe_in_var[129]            = 0;
+        dec2exe_in_var.range(128, 123) = 0;
+        dec2exe_in_var.range(122, 117) = 0;
+        dec2exe_in_var.range(116, 115) = 0;
+        dec2exe_in_var.range(114, 83)  = 0;
+        dec2exe_in_var.range(82, 51)   = 0;
+        dec2exe_in_var[50]             = 0;
+        dec2exe_in_var[49]             = 0;
+        dec2exe_in_var.range(48, 17)   = 0;
+        dec2exe_in_var[16]             = 0;
+        dec2exe_in_var[15]             = 0;
+        dec2exe_in_var[14]             = 0;
+        dec2exe_in_var.range(13, 12)   = 0;
+        dec2exe_in_var.range(11, 8)    = 0;
+        dec2exe_in_var.range(7, 2)     = 0;
+        dec2exe_in_var[1]              = 0;
+        dec2exe_in_var[0]              = 0;
+    }
+
+    dec2exe_in_sd_s2= dec2exe_in_var;
+}
+
+void decod::unconcat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_out_var = dec2exe_out_sd_s1.read();
 
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
@@ -638,6 +726,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_in_progress_s1, GET_NAME(csr_in_progress_s1));
     sc_trace(tf, mret_i_sd_s1, GET_NAME(mret_i_sd_s1));
     sc_trace(tf, sret_i_sd_s1, GET_NAME(sret_i_sd_s1));
+    sc_trace(tf, reg_dependencies_sd, GET_NAME(reg_dependencies_sd));
 
     // PC gestion :
 
