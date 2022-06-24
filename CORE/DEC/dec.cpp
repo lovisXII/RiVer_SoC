@@ -428,14 +428,11 @@ void decod::bypasses() {
 
 void decod::stall_method() {
     csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
-    stall_sd_s1        = (csr_in_progress_s1 || ((!r1_valid_sd || !r2_valid_sd) &&
+    stall_sd_s1        = ((csr_in_progress_s1 || csr_in_progress_s2) || ((!r1_valid_sd || !r2_valid_sd) &&
                       (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
                       || IF2DEC_EMPTY_SI_S1 || dec2exe_full_sd_s1);
 
     //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
-    stall_sd_s2         = (csr_in_progress_s2 || ((!r1_valid_sd || !r2_valid_sd) &&
-                      (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec))
-                      || IF2DEC_EMPTY_SI_S2 || dec2exe_full_sd_s2);
 
 }
 
