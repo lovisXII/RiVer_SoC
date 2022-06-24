@@ -239,6 +239,10 @@ void decod::unconcat_dec2exe_s1() {
     SLTU_RD_S1.write((bool)dec2exe_out_var[0]);
 }
 
+void decod::unconcat_dec2exe_s2(){
+    
+}
+
 void decod::concat_dec2if(){
     sc_bv<dec2if_size> dec2if_in_var;
     dec2if_in_var.range(63,32) = (sc_bv_base)dec2if_pc_sd_s1 ;
@@ -349,17 +353,17 @@ void decod::pc_inc() {
             sc_uint<32> WRITE_PC_VAR;
             sc_uint<32> MTVEC_VALUE_VAR;
 
-            MTVEC_VALUE_VAR.range(31, 2) = MTVEC_VALUE_RC.read().range(31, 2);
+            MTVEC_VALUE_VAR.range(31, 2) = MTVEC_VALUE_RC_S1.read().range(31, 2);
             MTVEC_VALUE_VAR.range(1, 0)  = 0;
 
-            if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
+            if (MTVEC_VALUE_RC_S1.read().range(1, 0) == 0) {  // direct
                 dec2if_pc_sd_s1 = MTVEC_VALUE_VAR;
                 WRITE_PC_SD  = MTVEC_VALUE_VAR;
                 WRITE_PC_ENABLE_SD= 1;
-            } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
+            } else if (MTVEC_VALUE_RC_S1.read().range(1, 0) == 1) {  // vectorise
                 sc_uint<32> MCAUSE_VAR;
                 // MCAUSE * 4 :
-                MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM.read().range(29, 0);
+                MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM_S1.read().range(29, 0);
                 MCAUSE_VAR.range(1, 0)  = 0;
                 dec2if_pc_sd_s1.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
@@ -469,7 +473,7 @@ void decod::bypasses() {
     {  // bypass M->D
         r1_valid_sd= true;
         if (CSR_WENABLE_RM.read())
-            rdata1_sd_s1.write(CSR_RDATA_RM.read());
+            rdata1_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
             rdata1_sd_s1.write(BP_MEM_RES_RM.read());
     } 
@@ -501,7 +505,7 @@ void decod::bypasses() {
     } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) {  // bypass M->D
         r2_valid_sd= true;
         if (CSR_WENABLE_RM.read())
-            rdata2_sd_s1.write(CSR_RDATA_RM.read());
+            rdata2_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
             rdata2_sd_s1.write(BP_MEM_RES_RM.read());
     } else {  // no bypass
@@ -619,7 +623,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WENABLE_RE_S1, GET_NAME(CSR_WENABLE_RE_S1));
     sc_trace(tf, CSR_RDATA_RE_S1, GET_NAME(CSR_RDATA_RE_S1));
     sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
-    sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
+    sc_trace(tf, CSR_RDATA_RM_S1, GET_NAME(CSR_RDATA_RM_S1));
 
     sc_trace(tf, BP_R1_VALID_RD, GET_NAME(BP_R1_VALID_RD));
     sc_trace(tf, BP_R2_VALID_RD, GET_NAME(BP_R2_VALID_RD));
@@ -643,7 +647,7 @@ void decod::trace(sc_trace_file* tf) {
     // General Interface :
 
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
-    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
+    sc_trace(tf, MTVEC_VALUE_RC_S1, GET_NAME(MTVEC_VALUE_RC_S1));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
@@ -869,7 +873,7 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf, env_call_u_mode_sd_s1, GET_NAME(env_call_u_mode_sd_s1));
     sc_trace(tf, instruction_access_fault_sd_s1, GET_NAME(instruction_access_fault_sd_s1));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD_S1, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S1));
-    sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
+    sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, env_call_wrong_mode_s1, GET_NAME(env_call_wrong_mode_s1));
     sc_trace(tf, PC_BRANCH_VALUE_RD_S1, GET_NAME(PC_BRANCH_VALUE_RD_S1));
     sc_trace(tf, pc_branch_value_sd_s1, GET_NAME(pc_branch_value_sd_s1));

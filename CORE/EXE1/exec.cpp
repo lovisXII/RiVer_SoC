@@ -171,18 +171,18 @@ void exec::fifo_unconcat() {
     CSR_WADR_RE.write((sc_bv_base)ff_dout.range(120, 109));
     CSR_RDATA_RE_S1.write((sc_bv_base)ff_dout.range(152, 121));
     ENV_CALL_S_MODE_RE_S1.write((bool)ff_dout[153]);
-    ENV_CALL_WRONG_MODE_RE.write((bool)ff_dout[154]);
+    ENV_CALL_WRONG_MODE_RE_S1.write((bool)ff_dout[154]);
     ILLEGAL_INSTRUCTION_RE_S1.write((bool)ff_dout[155]);
     INSTRUCTION_ADRESS_MISSALIGNED_RE_S1.write((bool)ff_dout[156]);
-    EENV_CALL_U_MODE_RE_S1.write((bool)ff_dout[157]);
+    ENV_CALL_U_MODE_RE_S1.write((bool)ff_dout[157]);
     ENV_CALL_M_MODE_RE_S1.write((bool)ff_dout[158]);
     EXCEPTION_RE_S1.write((bool)ff_dout[159]);
     LOAD_ADRESS_MISSALIGNED_RE_S1.write((bool)ff_dout[160]);
     LOAD_ACCESS_FAULT_RE_S1.write((bool)ff_dout[161]);
-    MRET_RE.write((bool)ff_dout[162]);
+    MRET_RE_S1.write((bool)ff_dout[162]);
     STORE_ADRESS_MISSALIGNED_RE_S1.write((bool)ff_dout[163]);
     STORE_ACCESS_FAULT_RE_S1.write((bool)ff_dout[164]);
-    INSTRUCTION_ACCESS_FAULT_RE.write((bool)ff_dout[165]);
+    INSTRUCTION_ACCESS_FAULT_RE_S1.write((bool)ff_dout[165]);
     EBREAK_RE.write((bool)ff_dout[166]);
     MULT_INST_RE_S1.write((bool)ff_dout[167]);
     PC_BRANCH_VALUE_RE_S1.write((sc_bv_base)ff_dout.range(168, 199));
@@ -212,14 +212,14 @@ void exec::bypasses() {
         r1_valid_se = true;
     } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE) {
         op1_se.write(EXE_RES_RE_S1.read());
-        r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE;
+        r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
     } else if (MEM_DEST_RM.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM) {
-        op1_se.write(CSR_RDATA_RM.read());
+        op1_se.write(CSR_RDATA_RM_S1.read());
         r1_valid_se = true;
     } else if (MEM_DEST_RM.read() == RADR1_RD_S1.read()) {
-        op1_se.write(MEM_RES_RM.read());
+        op1_se.write(MEM_RES_RM_S1.read());
         r1_valid_se = !MULT_INST_RM_S1 || BP_MEM2WBK_EMPTY_SM_S1;
-    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
+    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE_S1) {
         blocked_var = true;
         r1_valid_se = true;
     } else {
@@ -242,23 +242,23 @@ void exec::bypasses() {
             r2_valid_se = true;
         } else {
             op2_se.write(bp_value);
-            r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE;
+            r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
         }
     } else if (MEM_DEST_RM.read() == RADR2_RD_S1.read()) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM)
-            bp_value = CSR_RDATA_RM;
+            bp_value = CSR_RDATA_RM_S1;
         else
-            bp_value = MEM_RES_RM;
+            bp_value = MEM_RES_RM_S1;
         if (MEM_STORE_RD_S1.read()) {
-            bp_mem_data_var = MEM_RES_RM.read();
+            bp_mem_data_var = MEM_RES_RM_S1.read();
             op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
         } else {
-            op2_se.write(MEM_RES_RM.read());
+            op2_se.write(MEM_RES_RM_S1.read());
             r2_valid_se = !MULT_INST_RM_S1 || BP_MEM2WBK_EMPTY_SM_S1;
         }
-    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
+    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE_S1) {
         blocked_var = true;
         r2_valid_se = true;
     } else {
@@ -332,8 +332,8 @@ void exec::trace(sc_trace_file* tf) {
         tf, LOAD_ADRESS_MISSALIGNED_RE_S1, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE_S1));  // adress from store/load isn't aligned
     sc_trace(tf, LOAD_ACCESS_FAULT_RE_S1,
              GET_NAME(LOAD_ACCESS_FAULT_RE_S1));  // trying to access memory in wrong mode
-    sc_trace(tf, EENV_CALL_U_MODE_RE_S1, GET_NAME(EENV_CALL_U_MODE_RE_S1));
-    sc_trace(tf, ENV_CALL_WRONG_MODE_RE, GET_NAME(ENV_CALL_WRONG_MODE_RE));
+    sc_trace(tf, ENV_CALL_U_MODE_RE_S1, GET_NAME(ENV_CALL_U_MODE_RE_S1));
+    sc_trace(tf, ENV_CALL_WRONG_MODE_RE_S1, GET_NAME(ENV_CALL_WRONG_MODE_RE_S1));
     sc_trace(tf, ILLEGAL_INSTRUCTION_RE_S1, GET_NAME(ILLEGAL_INSTRUCTION_RE_S1));  // accessing stuff in wrong mode
     sc_trace(tf,
              INSTRUCTION_ADRESS_MISSALIGNED_RE_S1,
@@ -356,9 +356,9 @@ void exec::trace(sc_trace_file* tf) {
     // bypasses
 
     sc_trace(tf, MEM_DEST_RM, GET_NAME(MEM_DEST_RM));
-    sc_trace(tf, MEM_RES_RM, GET_NAME(MEM_RES_RM));
+    sc_trace(tf, MEM_RES_RM_S1, GET_NAME(MEM_RES_RM_S1));
     sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
-    sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
+    sc_trace(tf, CSR_RDATA_RM_S1, GET_NAME(CSR_RDATA_RM_S1));
 
     // Genral Interface :
 
@@ -378,7 +378,7 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, MEM_SIGN_EXTEND_RE, GET_NAME(MEM_SIGN_EXTEND_RE));
     sc_trace(tf, MEM_LOAD_RE, GET_NAME(MEM_LOAD_RE));
     sc_trace(tf, MEM_STORE_RE, GET_NAME(MEM_STORE_RE));
-    sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
+    sc_trace(tf, EXE2MEM_EMPTY_SE_S1, GET_NAME(EXE2MEM_EMPTY_SE_S1));
     sc_trace(tf, DEC2EXE_POP_SE_S1, GET_NAME(DEC2EXE_POP_SE_S1));
 
     sc_trace(tf, CSR_WENABLE_RE_S1, GET_NAME(CSR_WENABLE_RE_S1));
@@ -411,10 +411,10 @@ void exec::trace(sc_trace_file* tf) {
 
     sc_trace(tf, exception_se, GET_NAME(exception_se));
     sc_trace(tf, MRET_RD_S1, GET_NAME(MRET_RD_S1));
-    sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
+    sc_trace(tf, MRET_RE_S1, GET_NAME(MRET_RE_S1));
     sc_trace(tf, store_access_fault_se, GET_NAME(store_access_fault_se));
     sc_trace(tf, store_adress_missaligned_se, GET_NAME(store_adress_missaligned_se));
-    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));
+    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE_S1, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE_S1));
     sc_trace(
         tf, load_adress_missaligned_se, GET_NAME(load_adress_missaligned_se));  // adress from store/load isn't aligned
     sc_trace(tf, load_access_fault_se, GET_NAME(load_access_fault_se));

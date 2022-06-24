@@ -140,7 +140,7 @@ SC_MODULE(decod) {
     sc_in<bool>        CSR_WENABLE_RE_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RE_S1;
     sc_in<bool>        CSR_WENABLE_RM;
-    sc_in<sc_uint<32>> CSR_RDATA_RM;
+    sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
 
     sc_out<bool>       BP_R1_VALID_RD;
     sc_out<bool>       BP_R2_VALID_RD;
@@ -171,8 +171,8 @@ SC_MODULE(decod) {
     // General Interface :
 
     sc_in<bool>        EXCEPTION_SM;
-    sc_in<sc_uint<32>> MTVEC_VALUE_RC;
-    sc_in<sc_uint<32>> MCAUSE_WDATA_SM;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RC_S1;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
     sc_in<bool>        MRET_SM;
@@ -742,8 +742,8 @@ SC_MODULE(decod) {
                   << CSR_RDATA_SC_S1;
 
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd_s1 << inc_pc_sd_s1 << jump_sd_s1 << MTVEC_VALUE_RC
-                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM
+        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd_s1 << inc_pc_sd_s1 << jump_sd_s1 << MTVEC_VALUE_RC_S1
+                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM_S1
                   << stall_sd_s1;
 
         SC_METHOD(bypasses);

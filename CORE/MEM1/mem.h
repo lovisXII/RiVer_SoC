@@ -48,10 +48,10 @@ SC_MODULE(mem) {
     sc_in<bool> STORE_ACCESS_FAULT_RE_S1;
     sc_in<bool> ENV_CALL_S_MODE_RE_S1;
     sc_in<bool> ENV_CALL_M_MODE_RE_S1;
-    sc_in<bool> EENV_CALL_U_MODE_RE_S1;
-    sc_in<bool> ENV_CALL_WRONG_MODE_RE;
-    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
-    sc_in<bool> MRET_RE;  // 31
+    sc_in<bool> ENV_CALL_U_MODE_RE_S1;
+    sc_in<bool> ENV_CALL_WRONG_MODE_RE_S1;
+    sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE_S1;
+    sc_in<bool> MRET_RE_S1;  // 31
 
     sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE_S1;
 
@@ -61,12 +61,12 @@ SC_MODULE(mem) {
 
     // exe2mem interface :
 
-    sc_in<bool>  EXE2MEM_EMPTY_SE;
+    sc_in<bool>  EXE2MEM_EMPTY_SE_S1;
     sc_out<bool> EXE2MEM_POP_SM_S1;
 
     // mem2wbk interface
 
-    sc_in<bool>         MEM2WBK_POP_SW;  // 35
+    sc_in<bool>         MEM2WBK_POP_SW_S1;  // 35
     sc_signal<bool>     mem2wbk_push_sm;
     sc_signal<bool>     mem2wbk_full_sm;
     sc_out<bool>        MEM2WBK_EMPTY_SM;
@@ -74,10 +74,10 @@ SC_MODULE(mem) {
     sc_out<bool>        CSR_WENABLE_RM;  // 38
 
     // WBK interface
-    sc_out<sc_uint<32>> MEM_RES_RM;
-    sc_out<sc_uint<6>>  DEST_RM;
-    sc_out<bool>        WB_RM;
-    sc_out<sc_uint<32>> CSR_RDATA_RM;
+    sc_out<sc_uint<32>> MEM_RES_RM_S1;
+    sc_out<sc_uint<6>>  DEST_RM_S1;
+    sc_out<bool>        WB_RM_S1;
+    sc_out<sc_uint<32>> CSR_RDATA_RM_S1;
     sc_out<bool>        MULT_INST_RM_S1;
     // Global Interface :
 
@@ -98,19 +98,19 @@ SC_MODULE(mem) {
     sc_in<bool> EBREAK_RE;
     // CSR Interface :
 
-    sc_out<sc_uint<12>> CSR_WADR_SM;
-    sc_out<sc_uint<32>> CSR_WDATA_SM;
-    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
+    sc_out<sc_uint<12>> CSR_WADR_SM_S1;
+    sc_out<sc_uint<32>> CSR_WDATA_SM_S1;
+    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM_S1;
 
-    sc_out<sc_uint<32>> MSTATUS_WDATA_RM;
-    sc_out<sc_uint<32>> MIP_WDATA_RM;
-    sc_out<sc_uint<32>> MEPC_WDATA_RM;
-    sc_out<sc_uint<32>> MCAUSE_WDATA_SM;
-    sc_out<sc_uint<32>> MTVAL_WDATA_SM;
-    sc_in<sc_uint<32>>  MEPC_SC;
-    sc_in<sc_uint<32>>  MSTATUS_RC;  // 57
-    sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
-    sc_in<sc_uint<32>>  MIP_VALUE_RC;
+    sc_out<sc_uint<32>> MSTATUS_WDATA_RM_S1;
+    sc_out<sc_uint<32>> MIP_WDATA_RM_S1;
+    sc_out<sc_uint<32>> MEPC_WDATA_RM_S1;
+    sc_out<sc_uint<32>> MCAUSE_WDATA_SM_S1;
+    sc_out<sc_uint<32>> MTVAL_WDATA_SM_S1;
+    sc_in<sc_uint<32>>  MEPC_SC_S1;
+    sc_in<sc_uint<32>>  MSTATUS_RC_S1;  // 57
+    sc_in<sc_uint<32>>  MTVEC_VALUE_RC_S1;
+    sc_in<sc_uint<32>>  MIP_VALUE_RC_S1;
 
     // Internal signals
 
@@ -148,7 +148,7 @@ SC_MODULE(mem) {
         fifo_inst.EMPTY_S(MEM2WBK_EMPTY_SM);
         fifo_inst.FULL_S(mem2wbk_full_sm);
         fifo_inst.PUSH_S(mem2wbk_push_sm);
-        fifo_inst.POP_S(MEM2WBK_POP_SW);
+        fifo_inst.POP_S(MEM2WBK_POP_SW_S1);
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
@@ -158,18 +158,18 @@ SC_MODULE(mem) {
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
-        sensitive << MCACHE_STALL_SM_S1 << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
+        sensitive << MCACHE_STALL_SM_S1 << mem2wbk_full_sm << EXE2MEM_EMPTY_SE_S1 << wb_sm;
         SC_METHOD(mem_preprocess);
         sensitive << WB_RE_S1 << LOAD_RE_S1 << MEM_SIZE_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << MEM_DATA_RE_S1 << STORE_RE_S1
-                  << SIGN_EXTEND_RE_S1 << EXE2MEM_EMPTY_SE;
+                  << SIGN_EXTEND_RE_S1 << EXE2MEM_EMPTY_SE_S1;
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE_S1 << SIGN_EXTEND_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << LOAD_RE_S1;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
-                  << INSTRUCTION_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
-                  << EENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
-                  << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE
-                  << EXCEPTION_SM << ENV_CALL_WRONG_MODE_RE << BUS_ERROR_SX << EXCEPTION_SM << RESET << MSTATUS_RC
-                  << EXE_RES_RE_S1 << MEPC_SC;
+        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC_S1 << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
+                  << INSTRUCTION_ACCESS_FAULT_RE_S1 << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
+                  << ENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
+                  << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE_S1
+                  << EXCEPTION_SM << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM << RESET << MSTATUS_RC_S1
+                  << EXE_RES_RE_S1 << MEPC_SC_S1;
     }
 };

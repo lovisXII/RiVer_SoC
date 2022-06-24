@@ -80,7 +80,7 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.MEM_LOAD_RE(ffout_mem_load);
     unit_exec.MEM_STORE_RE(ffout_mem_store);
     unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend);  // taille fifo sortie : 76
-    unit_exec.EXE2MEM_EMPTY_SE(exe2mem_empty);
+    unit_exec.EXE2MEM_EMPTY_SE_S1(exe2mem_empty);
     unit_exec.DEC2EXE_POP_SE_S1(dec2exe_pop);
 
     unit_exec.CLK(clk);

@@ -19,11 +19,11 @@ SC_MODULE(wbk) {
 
     // Mem Interface :
 
-    sc_in<sc_uint<32>> MEM_RES_RM;
-    sc_in<sc_uint<6>>  DEST_RM;
-    sc_in<bool>        WB_RM;
+    sc_in<sc_uint<32>> MEM_RES_RM_S1;
+    sc_in<sc_uint<6>>  DEST_RM_S1;
+    sc_in<bool>        WB_RM_S1;
     sc_in<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_in<sc_uint<32>> CSR_RDATA_RM;
+    sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
     sc_in<bool>        CSR_WENABLE_RM;
     sc_in<sc_uint<2>>  CURRENT_MODE_SM_S1;
 
@@ -33,7 +33,7 @@ SC_MODULE(wbk) {
     // Mem2wbk interface
 
     sc_in<bool>  MEM2WBK_EMPTY_SM;
-    sc_out<bool> MEM2WBK_POP_SW;
+    sc_out<bool> MEM2WBK_POP_SW_S1;
 
     // Global Interface :
 
@@ -50,6 +50,6 @@ SC_MODULE(wbk) {
     void trace(sc_trace_file * tf);
     SC_CTOR(wbk) {
         SC_METHOD(wbk_method);
-        sensitive << MEM_RES_RM << DEST_RM << WB_RM << MEM2WBK_EMPTY_SM << X2_RES_RX2 << MULT_INST_RM_S1;
+        sensitive << MEM_RES_RM_S1 << DEST_RM_S1 << WB_RM_S1 << MEM2WBK_EMPTY_SM << X2_RES_RX2 << MULT_INST_RM_S1;
     }
 };
