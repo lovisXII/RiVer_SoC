@@ -53,7 +53,7 @@ SC_MODULE(mem) {
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_in<bool> MRET_RE;  // 31
 
-    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE;
+    sc_in<sc_uint<32>> PC_BRANCH_VALUE_RE_S1;
 
     // Bus Interface : // No bus in our implemation but can be use for further use
 
@@ -62,7 +62,7 @@ SC_MODULE(mem) {
     // exe2mem interface :
 
     sc_in<bool>  EXE2MEM_EMPTY_SE;
-    sc_out<bool> EXE2MEM_POP_SM;
+    sc_out<bool> EXE2MEM_POP_SM_S1;
 
     // mem2wbk interface
 
@@ -78,11 +78,11 @@ SC_MODULE(mem) {
     sc_out<sc_uint<6>>  DEST_RM;
     sc_out<bool>        WB_RM;
     sc_out<sc_uint<32>> CSR_RDATA_RM;
-    sc_out<bool>        MULT_INST_RM;
+    sc_out<bool>        MULT_INST_RM_S1;
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM;
-    sc_out<sc_uint<2>>  CURRENT_MODE_SM;
+    sc_out<sc_uint<2>>  CURRENT_MODE_SM_S1;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM;
     sc_out<bool>        MRET_SM;  // 46
 

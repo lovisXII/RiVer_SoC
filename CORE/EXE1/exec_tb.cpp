@@ -60,8 +60,8 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.OP1_SE(op1);
     unit_exec.OP2_SE(op2);
     unit_exec.MEM_DATA_RD_S1(mem_data);
-    unit_exec.DEST_RD(dest);
-    unit_exec.CMD_RD(cmd);
+    unit_exec.DEST_RD_S1(dest);
+    unit_exec.CMD_RD_S1(cmd);
     unit_exec.MEM_SIZE_RD_S1(mem_size);
     unit_exec.NEG_OP2_RD_S1(neg_op1);
     unit_exec.WB_RD_S1(wb);
@@ -69,7 +69,7 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.MEM_STORE_RD_S1(mem_store);
     unit_exec.MEM_SIGN_EXTEND_RD_S1(mem_sign_extend);
     unit_exec.SELECT_SHIFT_RD(select_shift);  // taille fifo entrée : 110
-    unit_exec.EXE2MEM_POP_SM(exe2mem_pop);
+    unit_exec.EXE2MEM_POP_SM_S1(exe2mem_pop);
     unit_exec.DEC2EXE_EMPTY_SD_S1(dec2exe_empty);
 
     unit_exec.EXE_RES_RE(ffout_exe_res);
@@ -191,19 +191,19 @@ int sc_main(int argc, char* argv[]) {
                 test_passed = false;
             }
         }
-        if (select_shift_ && unit_exec.CMD_RD.read() == 0) {
+        if (select_shift_ && unit_exec.CMD_RD_S1.read() == 0) {
             if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ << unit_exec.shift_val_se.read()))) {
                 cerr << "error sur sll" << endl;
                 test_passed = false;
             }
         }
-        if (select_shift_ && unit_exec.CMD_RD.read() == 1) {
+        if (select_shift_ && unit_exec.CMD_RD_S1.read() == 1) {
             if (unit_exec.exe_res_se.read() != (sc_uint<32>)((((unsigned int)op1_) >> unit_exec.shift_val_se.read()))) {
                 cerr << "error sra" << endl;
                 test_passed = false;
             }
         }
-        if (select_shift_ && unit_exec.CMD_RD.read() == 2) {
+        if (select_shift_ && unit_exec.CMD_RD_S1.read() == 2) {
             if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ >> unit_exec.shift_val_se.read()))) {
                 cerr << "error srl" << endl;
                 test_passed = false;

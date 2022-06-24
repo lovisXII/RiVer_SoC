@@ -61,13 +61,13 @@ void mem::mem2wbk_unconcat() {
     PC_MEM2WBK_RM.write((sc_bv_base)ff_dout.range(73, 38));
     CSR_WENABLE_RM.write((bool)ff_dout[74]);
     CSR_RDATA_RM.write((sc_bv_base)ff_dout.range(106, 75));
-    MULT_INST_RM.write((bool)ff_dout[107]);
+    MULT_INST_RM_S1.write((bool)ff_dout[107]);
 }
 
 void mem::fifo_gestion() {
     bool stall = MCACHE_STALL_SM.read() || mem2wbk_full_sm.read() || EXE2MEM_EMPTY_SE.read();
     mem2wbk_push_sm.write(!stall);
-    EXE2MEM_POP_SM.write(!stall);
+    EXE2MEM_POP_SM_S1.write(!stall);
 }
 void mem::mem_preprocess() {
     int         size        = MEM_SIZE_RE.read();
@@ -175,7 +175,7 @@ void mem::csr_exception() {
     EXCEPTION_SM            = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
-    if (!RESET) CURRENT_MODE_SM = 3;
+    if (!RESET) CURRENT_MODE_SM_S1 = 3;
 
     if (!EXCEPTION_SM) {
         if (CSR_WENABLE_RE.read()) {
@@ -197,7 +197,7 @@ void mem::csr_exception() {
         bool machine_interrupt_enable = mstatus_new[3];
         if (BUS_ERROR_SX) {       // load access fault
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -210,7 +210,7 @@ void mem::csr_exception() {
             // MCAUSE_WDATA_SM.write(5);
         } else if (ENV_CALL_WRONG_MODE_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -223,10 +223,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(24);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (MRET_RE) {
             save_restore_sm = 0;
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 1;
 
@@ -236,7 +236,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            CURRENT_MODE_SM = 0;  // Retrun in user mode
+            CURRENT_MODE_SM_S1 = 0;  // Retrun in user mode
 
             // loading return value (main) from EPC to PC :
             // The adress will be send to ifetch
@@ -250,7 +250,7 @@ void mem::csr_exception() {
             MRET_SM        = MRET_RE;
         } else if (STORE_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -263,10 +263,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(7);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (LOAD_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -279,10 +279,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(5);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (STORE_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -295,10 +295,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(6);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (LOAD_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -311,10 +311,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = EXE_RES_RE;
             MCAUSE_WDATA_SM.write(4);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (ENV_CALL_M_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -327,10 +327,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(11);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (ENV_CALL_S_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -343,10 +343,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(9);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (ENV_CALL_U_MODE_RE) {
             save_restore_sm = 1;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -359,10 +359,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(8);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (EBREAK_RE) {
             save_restore_sm = 1;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -375,10 +375,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = PC_EXE2MEM_RE;
             MCAUSE_WDATA_SM.write(3);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -389,12 +389,12 @@ void mem::csr_exception() {
             MSTATUS_WDATA_RM          = mstatus_new;
 
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = PC_BRANCH_VALUE_RE;
+            MTVAL_WDATA_SM = PC_BRANCH_VALUE_RE_S1;
             MCAUSE_WDATA_SM.write(0);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (ILLEGAL_INSTRUCTION_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -407,10 +407,10 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(2);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         } else if (INSTRUCTION_ACCESS_FAULT_RE) {
             save_restore_sm = 0;  // Need to save context
-            mpp_sm          = CURRENT_MODE_SM;
+            mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
             mie_sm          = 0;               // No interruption during exception gestion
 
@@ -423,7 +423,7 @@ void mem::csr_exception() {
             MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(1);
-            CURRENT_MODE_SM = 3;
+            CURRENT_MODE_SM_S1 = 3;
         }
         if (!MRET_RE.read()) MRET_SM = 0;
     }
@@ -446,7 +446,7 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, LOAD_RE, GET_NAME(LOAD_RE));
     sc_trace(tf, STORE_RE, GET_NAME(STORE_RE));
     sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
-    sc_trace(tf, EXE2MEM_POP_SM, GET_NAME(EXE2MEM_POP_SM));
+    sc_trace(tf, EXE2MEM_POP_SM_S1, GET_NAME(EXE2MEM_POP_SM_S1));
     sc_trace(tf, MEM2WBK_POP_SW, GET_NAME(MEM2WBK_POP_SW));
     sc_trace(tf, mem2wbk_push_sm, GET_NAME(mem2wbk_push_sm));
     sc_trace(tf, mem2wbk_full_sm, GET_NAME(mem2wbk_full_sm));
@@ -490,15 +490,15 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
-    sc_trace(tf, MULT_INST_RM, GET_NAME(MULT_INST_RM));
+    sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
     // sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
-    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
+    sc_trace(tf, CURRENT_MODE_SM_S1, GET_NAME(CURRENT_MODE_SM_S1));
     sc_trace(tf, MRET_RE, GET_NAME(MRET_RE));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
-    sc_trace(tf, PC_BRANCH_VALUE_RE, GET_NAME(PC_BRANCH_VALUE_RE));
+    sc_trace(tf, PC_BRANCH_VALUE_RE_S1, GET_NAME(PC_BRANCH_VALUE_RE_S1));
     sc_trace(tf, STORE_ACCESS_FAULT_RE, GET_NAME(STORE_ACCESS_FAULT_RE));
     sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE, GET_NAME(STORE_ADRESS_MISSALIGNED_RE));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));

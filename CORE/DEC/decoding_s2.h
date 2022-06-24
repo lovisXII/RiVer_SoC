@@ -361,11 +361,11 @@ void decod::pre_reg_read_decoding_s2() {
             // Generate the exception corresponding to the right
             // call
 
-            if (CURRENT_MODE_SM.read() == 0 && ecall_i_sd_s2) {
+            if (CURRENT_MODE_SM_S1.read() == 0 && ecall_i_sd_s2) {
                 env_call_u_mode_sd_s2 = 1;
                 env_call_s_mode_sd_s2 = 0;
                 env_call_m_mode_sd_s2 = 0;
-            } else if (ecall_i_sd_s2 && CURRENT_MODE_SM.read() == 3) {
+            } else if (ecall_i_sd_s2 && CURRENT_MODE_SM_S1.read() == 3) {
                 env_call_u_mode_sd_s2 = 0;
                 env_call_s_mode_sd_s2 = 0;
                 env_call_m_mode_sd_s2 = 1;
@@ -384,9 +384,9 @@ void decod::pre_reg_read_decoding_s2() {
 
             // Exception will be generate in case of mret in wrong mode
 
-            if (mret_i_sd_s2 && CURRENT_MODE_SM.read() != 3) {
+            if (mret_i_sd_s2 && CURRENT_MODE_SM_S1.read() != 3) {
                 env_call_wrong_mode_s2 = 1;
-            } else if (sret_i_sd_s2 && CURRENT_MODE_SM.read() != 2)
+            } else if (sret_i_sd_s2 && CURRENT_MODE_SM_S1.read() != 2)
                 env_call_s_mode_sd_s2 = 1;
             else {
                 env_call_wrong_mode_s2 = 0;

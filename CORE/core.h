@@ -124,20 +124,20 @@ SC_MODULE(core) {
     sc_signal<bool>       BP_R2_VALID_RD;
     sc_signal<sc_uint<6>> BP_RADR1_RD;
     sc_signal<sc_uint<6>> BP_RADR2_RD;
-    sc_signal<bool>       BLOCK_BP_RD;
+    sc_signal<bool>       BLOCK_BP_RD_S1;
 
     sc_signal<bool>        CSR_WENABLE_RD_S1;
     sc_signal<sc_uint<32>> CSR_RDATA_RD_S1;
     sc_signal<sc_uint<12>> CSR_WADR_RD_S1;
     sc_signal<bool>        INTERRUPTION_SE;
-    sc_signal<bool>        EXCEPTION_RD;
+    sc_signal<bool>        EXCEPTION_RD_S1;
     sc_signal<bool>        ECALL_I_RD;
     sc_signal<bool>        EBREAK_RD;
     sc_signal<bool>        EBREAK_RE;
-    sc_signal<bool>        ILLEGAL_INSTRUCTION_RD;  // accessing stuff in wrong mode
-    sc_signal<bool>        ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
-    sc_signal<bool>        ENV_CALL_U_MODE_RD;
-    sc_signal<bool>        ENV_CALL_M_MODE_RD;
+    sc_signal<bool>        ILLEGAL_INSTRUCTION_RD_S1;  // accessing stuff in wrong mode
+    sc_signal<bool>        ADRESS_MISSALIGNED_RD_S1;   // branch offset is misaligned
+    sc_signal<bool>        ENV_CALL_U_MODE_RD_S1;
+    sc_signal<bool>        ENV_CALL_M_MODE_RD_S1;
 
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD_S1;
@@ -175,7 +175,7 @@ SC_MODULE(core) {
     sc_signal<bool>       carry_rx0;
     sc_signal<bool>       carry_rx1;
     // EXE-MEM interface
-    sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE;
+    sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE_S1;
     sc_signal<sc_uint<32>> EXE_RES_RE;
     sc_signal<sc_uint<32>> MEM_DATA_RE;
     sc_signal<sc_uint<6>>  DEST_RE;
@@ -185,7 +185,7 @@ SC_MODULE(core) {
     sc_signal<bool>        MEM_LOAD_RE, MEM_STORE_RE;
     sc_signal<bool>        MEM_MULT_RE, MULT_SEL_HIGH_RE;
 
-    sc_signal<bool> EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM;
+    sc_signal<bool> EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM_S1;
     sc_signal<bool> CSR_WENABLE_RE;
     sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
     sc_signal<bool> MACHINE_TIMER_INTERRUPT_SX;
@@ -209,17 +209,17 @@ SC_MODULE(core) {
     sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
     sc_signal<bool> ENV_CALL_S_MODE_RE;
     sc_signal<bool> ENV_CALL_M_MODE_RE;
-    sc_signal<bool> ENV_CALL_S_MODE_RD;
-    sc_signal<bool> ENV_CALL_WRONG_MODE_RD;
-    sc_signal<bool> MRET_RD;
+    sc_signal<bool> ENV_CALL_S_MODE_RD_S1;
+    sc_signal<bool> ENV_CALL_WRONG_MODE_RD_S1;
+    sc_signal<bool> MRET_RD_S1;
     sc_signal<bool> ENV_CALL_WRONG_MODE_RE;
     sc_signal<bool> ENV_CALL_U_MODE_RE;
     sc_signal<bool> MRET_RE;
-    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD;
+    sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD_S1;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;
-    sc_signal<bool> MULT_INST_RD;
+    sc_signal<bool> MULT_INST_RD_S1;
     sc_signal<bool> MULT_INST_RE;
-    sc_signal<bool> MULT_INST_RM;
+    sc_signal<bool> MULT_INST_RM_S1;
     // X1-X2 interface
     sc_signal<sc_bv<128>> multiplier_out_sx1;
     sc_signal<sc_uint<32>>  multiplier_out_sx2;
@@ -272,7 +272,7 @@ SC_MODULE(core) {
 
     // Pipeline Mode
 
-    sc_signal<sc_uint<2>> CURRENT_MODE_SM;
+    sc_signal<sc_uint<2>> CURRENT_MODE_SM_S1;
 
     // Stage instanciation
     decod  dec_inst;
@@ -333,7 +333,7 @@ SC_MODULE(core) {
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_SM(EXCEPTION_SM);
-        ifetch_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        ifetch_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         ifetch_inst.MRET_SM(MRET_SM);
         ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
@@ -427,7 +427,7 @@ SC_MODULE(core) {
         dec_inst.BP_DEST_RM(DEST_RM);
         dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
         dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        dec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        dec_inst.BP_MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM);
 
         dec_inst.BP_R1_VALID_RD(BP_R1_VALID_RD);
         dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);
@@ -450,47 +450,47 @@ SC_MODULE(core) {
         dec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);
-        dec_inst.EXCEPTION_RD(EXCEPTION_RD);
-        dec_inst.ENV_CALL_S_MODE_RD(ENV_CALL_S_MODE_RD);
-        dec_inst.ENV_CALL_WRONG_MODE_RD(ENV_CALL_WRONG_MODE_RD);
-        dec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
-        dec_inst.ADRESS_MISSALIGNED_RD(ADRESS_MISSALIGNED_RD);    // branch offset is misaligned
-        dec_inst.ENV_CALL_U_MODE_RD(ENV_CALL_U_MODE_RD);
-        dec_inst.ENV_CALL_M_MODE_RD(ENV_CALL_M_MODE_RD);
+        dec_inst.EXCEPTION_RD_S1(EXCEPTION_RD_S1);
+        dec_inst.ENV_CALL_S_MODE_RD_S1(ENV_CALL_S_MODE_RD_S1);
+        dec_inst.ENV_CALL_WRONG_MODE_RD_S1(ENV_CALL_WRONG_MODE_RD_S1);
+        dec_inst.ILLEGAL_INSTRUCTION_RD_S1(ILLEGAL_INSTRUCTION_RD_S1);  // accessing stuff in wrong mode
+        dec_inst.ADRESS_MISSALIGNED_RD_S1(ADRESS_MISSALIGNED_RD_S1);    // branch offset is misaligned
+        dec_inst.ENV_CALL_U_MODE_RD_S1(ENV_CALL_U_MODE_RD_S1);
+        dec_inst.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
         dec_inst.EXCEPTION_SM(EXCEPTION_SM);
         dec_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         dec_inst.MRET_SM(MRET_SM);
-        dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        dec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
-        dec_inst.MRET_RD(MRET_RD);
+        dec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
+        dec_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        dec_inst.MRET_RD_S1(MRET_RD_S1);
         dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
-        dec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
+        dec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         dec_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
-        dec_inst.MULT_INST_RD(MULT_INST_RD);
+        dec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
         dec_inst.MULT_INST_RE(MULT_INST_RE);
-        dec_inst.MULT_INST_RM(MULT_INST_RM);
+        dec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         dec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
-        exec_inst.RADR1_RD(BP_RADR1_RD);
-        exec_inst.RADR2_RD(BP_RADR2_RD);
-        exec_inst.OP1_VALID_RD(BP_R1_VALID_RD);
-        exec_inst.OP2_VALID_RD(BP_R2_VALID_RD);
+        exec_inst.RADR1_RD_S1(BP_RADR1_RD);
+        exec_inst.RADR2_RD_S1(BP_RADR2_RD);
+        exec_inst.OP1_VALID_RD_S1(BP_R1_VALID_RD);
+        exec_inst.OP2_VALID_RD_S1(BP_R2_VALID_RD);
         exec_inst.MEM_DEST_RM(DEST_RM);
         exec_inst.MEM_RES_RM(MEM_RES_RM);
         exec_inst.OP1_RD_S1(OP1_RD_S1);
         exec_inst.OP2_RD_S1(OP2_RD_S1);
-        exec_inst.CMD_RD(EXE_CMD_RD_S1);
-        exec_inst.DEST_RD(EXE_DEST_SD_S1);
+        exec_inst.CMD_RD_S1(EXE_CMD_RD_S1);
+        exec_inst.DEST_RD_S1(EXE_DEST_SD_S1);
         exec_inst.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
         exec_inst.WB_RD_S1(WB_RD_S1);
         exec_inst.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
         exec_inst.EBREAK_RD(EBREAK_RD);
         exec_inst.EBREAK_RE(EBREAK_RE);
 
-        exec_inst.MULT_INST_RD(MULT_INST_RD);
+        exec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
         exec_inst.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
 
@@ -517,7 +517,7 @@ SC_MODULE(core) {
         exec_inst.MULT_INST_RE(MULT_INST_RE);
         exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        exec_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
+        exec_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
 
         exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
@@ -529,20 +529,20 @@ SC_MODULE(core) {
         exec_inst.MACHINE_SOFTWARE_INTERRUPT_SE(MACHINE_SOFTWARE_INTERRUPT_SE);
         exec_inst.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
         exec_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
-        exec_inst.EXCEPTION_RD(EXCEPTION_RD);
+        exec_inst.EXCEPTION_RD_S1(EXCEPTION_RD_S1);
         exec_inst.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
         exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
         exec_inst.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
         exec_inst.CSR_WADR_RE(CSR_WADR_RE);
         exec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
         exec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
-        exec_inst.ENV_CALL_S_MODE_RD(ENV_CALL_S_MODE_RD);
-        exec_inst.ENV_CALL_WRONG_MODE_RD(ENV_CALL_WRONG_MODE_RD);
-        exec_inst.ILLEGAL_INSTRUCTION_RD(ILLEGAL_INSTRUCTION_RD);  // accessing stuff in wrong mode
-        exec_inst.ADRESS_MISSALIGNED_RD(ADRESS_MISSALIGNED_RD);    // branch offset is misaligned
-        exec_inst.ENV_CALL_U_MODE_RD(ENV_CALL_U_MODE_RD);
-        exec_inst.ENV_CALL_M_MODE_RD(ENV_CALL_M_MODE_RD);
-        exec_inst.MRET_RD(MRET_RD);
+        exec_inst.ENV_CALL_S_MODE_RD_S1(ENV_CALL_S_MODE_RD_S1);
+        exec_inst.ENV_CALL_WRONG_MODE_RD_S1(ENV_CALL_WRONG_MODE_RD_S1);
+        exec_inst.ILLEGAL_INSTRUCTION_RD_S1(ILLEGAL_INSTRUCTION_RD_S1);  // accessing stuff in wrong mode
+        exec_inst.ADRESS_MISSALIGNED_RD_S1(ADRESS_MISSALIGNED_RD_S1);    // branch offset is misaligned
+        exec_inst.ENV_CALL_U_MODE_RD_S1(ENV_CALL_U_MODE_RD_S1);
+        exec_inst.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
+        exec_inst.MRET_RD_S1(MRET_RD_S1);
 
         exec_inst.EXCEPTION_RE(EXCEPTION_RE);
         exec_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
@@ -556,19 +556,19 @@ SC_MODULE(core) {
         exec_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);
         exec_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
         exec_inst.EXCEPTION_SM(EXCEPTION_SM);
-        exec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
-        exec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        exec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
+        exec_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         exec_inst.MRET_RE(MRET_RE);
-        exec_inst.INSTRUCTION_ACCESS_FAULT_RD(INSTRUCTION_ACCESS_FAULT_RD);
+        exec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         exec_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
         exec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
-        exec_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
+        exec_inst.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);
 
         exec_inst.OP1_SE(op1_se);
         exec_inst.OP2_SE(op2_se);
 
-        exec_inst.MULT_INST_RM(MULT_INST_RM);
-        exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        exec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
+        exec_inst.BP_MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -601,9 +601,9 @@ SC_MODULE(core) {
         mem_inst.LOAD_RE(MEM_LOAD_RE);
         mem_inst.STORE_RE(MEM_STORE_RE);
         mem_inst.MULT_INST_RE(MULT_INST_RE);
-        mem_inst.MULT_INST_RM(MULT_INST_RM);
+        mem_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         mem_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        mem_inst.EXE2MEM_POP_SM(EXE2MEM_POP_SM);
+        mem_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
 
         mem_inst.MEM_RES_RM(MEM_RES_RM);
         mem_inst.DEST_RM(DEST_RM);
@@ -655,7 +655,7 @@ SC_MODULE(core) {
         mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
 
         mem_inst.EXCEPTION_SM(EXCEPTION_SM);
-        mem_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        mem_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         mem_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         mem_inst.MRET_SM(MRET_SM);
 
@@ -671,7 +671,7 @@ SC_MODULE(core) {
         mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);  // 54
 
         mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);  // 55
-        mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);  
+        mem_inst.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);  
 
         mem_inst.CLK(CLK);
         mem_inst.RESET(RESET);  // 58
@@ -729,9 +729,9 @@ SC_MODULE(core) {
         wbk_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        wbk_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        wbk_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         
-        wbk_inst.MULT_INST_RM(MULT_INST_RM);
+        wbk_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         wbk_inst.X2_RES_RX2(multiplier_out_sx2);
 
         wbk_inst.CLK(CLK);

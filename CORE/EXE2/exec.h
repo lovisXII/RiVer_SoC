@@ -15,8 +15,8 @@ SC_MODULE(exec) {
 
     sc_in<sc_uint<32>> OP1_RD_S1;  // can contains CSR if CSR_type_operation_RD == 1
     sc_in<sc_uint<32>> OP2_RD_S1;
-    sc_in<bool>        OP1_VALID_RD_S1;
-    sc_in<bool>        OP2_VALID_RD_S1;
+    sc_in<bool>        OP1_VALID_RD;
+    sc_in<bool>        OP2_VALID_RD;
     sc_in<sc_uint<6>>  RADR1_RD_S1;
     sc_in<sc_uint<6>>  RADR2_RD_S1;
     sc_in<bool>        BLOCK_BP_RD_S1;
@@ -224,10 +224,10 @@ SC_MODULE(exec) {
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD_S1 << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << exception_se << blocked
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD_S1 << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked
                   << r1_valid_se << r2_valid_se;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD_S1
+        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD_S1
                   << CSR_WENABLE_RE << BLOCK_BP_RD_S1 << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
                   << RADR2_RD_S1 << OP1_RD_S1 << OP2_RD_S1 << exception_se << MEM_DATA_RD_S1 << MEM_STORE_RD_S1
                   << MULT_INST_RE << MULT_INST_RM_S1 << BP_MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE;

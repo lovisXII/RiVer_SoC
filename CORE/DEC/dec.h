@@ -122,10 +122,10 @@ SC_MODULE(decod) {
     sc_signal<sc_bv<dec2exe_size_s1>> dec2exe_out_sd_s2;
 
     // Multiplications signals
-    sc_out<bool> MULT_INST_RD;
+    sc_out<bool> MULT_INST_RD_S1;
 
     sc_in<bool> MULT_INST_RE;
-    sc_in<bool> MULT_INST_RM;
+    sc_in<bool> MULT_INST_RM_S1;
 
     // Bypasses
 
@@ -133,7 +133,7 @@ SC_MODULE(decod) {
     sc_in<sc_uint<32>> BP_EXE_RES_RE;
     sc_in<bool>        BP_MEM_LOAD_RE;
     sc_in<bool>        BP_EXE2MEM_EMPTY_SE;
-    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
+    sc_in<bool>        BP_MEM2WBK_EMPTY_SM_S1;
     sc_in<sc_uint<6>>  BP_DEST_RM;
     sc_in<sc_uint<32>> BP_MEM_RES_RM;
 
@@ -146,23 +146,23 @@ SC_MODULE(decod) {
     sc_out<bool>       BP_R2_VALID_RD;
     sc_out<sc_uint<6>> BP_RADR1_RD;
     sc_out<sc_uint<6>> BP_RADR2_RD;
-    sc_out<bool>       BLOCK_BP_RD;
+    sc_out<bool>       BLOCK_BP_RD_S1;
 
     // Exception/Interruption :
 
     sc_in<bool> EXCEPTION_RI;  // this signal will be at 0 considering there is no exception in IFETCH
 
-    sc_out<bool>      ILLEGAL_INSTRUCTION_RD;  // instruction doesnt exist
-    sc_out<bool>      ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
-    sc_out<bool>      ENV_CALL_U_MODE_RD;
-    sc_out<bool>      ENV_CALL_M_MODE_RD;
-    sc_out<bool>      ENV_CALL_S_MODE_RD;
-    sc_out<bool>      ENV_CALL_WRONG_MODE_RD;
-    sc_out<bool>      INSTRUCTION_ACCESS_FAULT_RD;
-    sc_out<bool>      MRET_RD;
-    sc_out<bool>      EXCEPTION_RD;
+    sc_out<bool>      ILLEGAL_INSTRUCTION_RD_S1;  // instruction doesnt exist
+    sc_out<bool>      ADRESS_MISSALIGNED_RD_S1;   // branch offset is misaligned
+    sc_out<bool>      ENV_CALL_U_MODE_RD_S1;
+    sc_out<bool>      ENV_CALL_M_MODE_RD_S1;
+    sc_out<bool>      ENV_CALL_S_MODE_RD_S1;
+    sc_out<bool>      ENV_CALL_WRONG_MODE_RD_S1;
+    sc_out<bool>      INSTRUCTION_ACCESS_FAULT_RD_S1;
+    sc_out<bool>      MRET_RD_S1;
+    sc_out<bool>      EXCEPTION_RD_S1;
     sc_out<bool>      EBREAK_RD;
-    sc_in<sc_uint<2>> CURRENT_MODE_SM;
+    sc_in<sc_uint<2>> CURRENT_MODE_SM_S1;
 
     // Interruption :
 
@@ -653,7 +653,7 @@ SC_MODULE(decod) {
                   << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1
                   << bgeu_i_sd_s1 << system_type_inst_sd_s1 << csrrw_i_sd_s1 << csrrs_i_sd_s1 << csrrc_i_sd_s1
                   << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << ecall_i_sd_s1 << ebreak_i_sd_s1
-                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM;
+                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM_S1;
 
         SC_METHOD(pre_reg_read_decoding_s2)
         sensitive << INSTR_RI_S2 << r_type_inst_sd_s1 << i_type_inst_sd_s1 << i_type_inst_sd_s1 << s_type_inst_sd_s1
@@ -661,7 +661,7 @@ SC_MODULE(decod) {
                   << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1
                   << bgeu_i_sd_s1 << system_type_inst_sd_s1 << csrrw_i_sd_s1 << csrrs_i_sd_s1 << csrrc_i_sd_s1
                   << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << ecall_i_sd_s1 << ebreak_i_sd_s1
-                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM;
+                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM_S1;
 
         SC_METHOD(post_reg_read_decoding_s1)
         sensitive << i_type_inst_sd_s1 << s_type_inst_sd_s1 << b_type_inst_sd_s1 << u_type_inst_sd_s1
@@ -751,9 +751,9 @@ SC_MODULE(decod) {
 
                   << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_SD_S1
 
-                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
+                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM_S1
 
-                  << DEC2EXE_EMPTY_SD_S1 << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
+                  << DEC2EXE_EMPTY_SD_S1 << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM_S1;
         reset_signal_is(RESET_N, false);
     }
 };

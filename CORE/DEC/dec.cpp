@@ -198,18 +198,18 @@ void decod::unconcat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_out_var = dec2exe_out_sd_s1.read();
 
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
-    MULT_INST_RD.write((bool)dec2exe_out_var[219]);
+    MULT_INST_RD_S1.write((bool)dec2exe_out_var[219]);
     EBREAK_RD.write((bool)dec2exe_out_var[218]);
-    INSTRUCTION_ACCESS_FAULT_RD.write((bool)dec2exe_out_var[217]);
-    MRET_RD.write((bool)dec2exe_out_var[216]);
-    BLOCK_BP_RD.write((bool)dec2exe_out_var[215]);
-    EXCEPTION_RD.write((bool)dec2exe_out_var[214]);
-    ENV_CALL_WRONG_MODE_RD.write((bool)dec2exe_out_var[213]);
-    ENV_CALL_U_MODE_RD.write((bool)dec2exe_out_var[212]);
-    ILLEGAL_INSTRUCTION_RD.write((bool)dec2exe_out_var[211]);
-    ADRESS_MISSALIGNED_RD.write((bool)dec2exe_out_var[210]);
-    ENV_CALL_M_MODE_RD.write((bool)dec2exe_out_var[209]);
-    ENV_CALL_S_MODE_RD.write((bool)dec2exe_out_var[208]);
+    INSTRUCTION_ACCESS_FAULT_RD_S1.write((bool)dec2exe_out_var[217]);
+    MRET_RD_S1.write((bool)dec2exe_out_var[216]);
+    BLOCK_BP_RD_S1.write((bool)dec2exe_out_var[215]);
+    EXCEPTION_RD_S1.write((bool)dec2exe_out_var[214]);
+    ENV_CALL_WRONG_MODE_RD_S1.write((bool)dec2exe_out_var[213]);
+    ENV_CALL_U_MODE_RD_S1.write((bool)dec2exe_out_var[212]);
+    ILLEGAL_INSTRUCTION_RD_S1.write((bool)dec2exe_out_var[211]);
+    ADRESS_MISSALIGNED_RD_S1.write((bool)dec2exe_out_var[210]);
+    ENV_CALL_M_MODE_RD_S1.write((bool)dec2exe_out_var[209]);
+    ENV_CALL_S_MODE_RD_S1.write((bool)dec2exe_out_var[208]);
     CSR_RDATA_RD_S1.write((sc_bv_base)dec2exe_out_var.range(207, 176));
     CSR_WENABLE_RD_S1.write((bool)dec2exe_out_var[175]);
     CSR_WADR_RD_S1.write((sc_bv_base)dec2exe_out_var.range(174, 163));
@@ -309,12 +309,12 @@ void decod::pc_inc() {
         pc_branch_value_sd_s1 = pc_out_s1 ; // sent to mem for exception
         pc_branch_value_sd_s2 = pc_out_s2 ;
 
-        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM_S1.read() != 3) {
             instruction_access_fault_sd_s1 = 1;
         } else {
             instruction_access_fault_sd_s1 = 0;
         }
-        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM_S1.read() != 3) {
             instruction_access_fault_sd_s2 = 1;
         } else {
             instruction_access_fault_sd_s2 = 0;
@@ -453,7 +453,7 @@ void decod::bypasses() {
     { // dont bypass if mul instruction didnt finish
         r1_valid_sd= false;
     } 
-    else if(RADR1_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read())
+    else if(RADR1_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read())
     { // dont bypass if mul instruction didnt finish
         r1_valid_sd= false;
     } 
@@ -465,7 +465,7 @@ void decod::bypasses() {
         else
             rdata1_sd_s1.write(BP_EXE_RES_RE.read());
     } 
-    else if (RADR1_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) 
+    else if (RADR1_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) 
     {  // bypass M->D
         r1_valid_sd= true;
         if (CSR_WENABLE_RM.read())
@@ -490,7 +490,7 @@ void decod::bypasses() {
         r2_valid_sd= false;
     } else if(RADR2_SD_S1.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
         r2_valid_sd= false;
-    } else if(RADR2_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()){ // dont bypass if mul instruction didnt finish
+    } else if(RADR2_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read()){ // dont bypass if mul instruction didnt finish
         r2_valid_sd= false;
     } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
         r2_valid_sd= true;
@@ -498,7 +498,7 @@ void decod::bypasses() {
             rdata2_sd_s1.write(CSR_RDATA_RE.read());
         else
             rdata2_sd_s1.write(BP_EXE_RES_RE.read());
-    } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) {  // bypass M->D
+    } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) {  // bypass M->D
         r2_valid_sd= true;
         if (CSR_WENABLE_RM.read())
             rdata2_sd_s1.write(CSR_RDATA_RM.read());
@@ -597,7 +597,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, DEC2EXE_POP_SE_S1, GET_NAME(DEC2EXE_POP_SE_S1));
     sc_trace(tf, DEC2EXE_EMPTY_SD_S1, GET_NAME(DEC2EXE_EMPTY_SD_S1));
     sc_trace(tf, dec2exe_out_sd_s1, GET_NAME(dec2exe_out_sd_s1));
-    sc_trace(tf, MULT_INST_RD, GET_NAME(MULT_INST_RD));
+    sc_trace(tf, MULT_INST_RD_S1, GET_NAME(MULT_INST_RD_S1));
     
     // Interface with CSR :
 
@@ -610,11 +610,11 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
     sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME(BP_MEM_LOAD_RE));
     sc_trace(tf, BP_EXE2MEM_EMPTY_SE, GET_NAME(BP_EXE2MEM_EMPTY_SE));
-    sc_trace(tf, BP_MEM2WBK_EMPTY_SM, GET_NAME(BP_MEM2WBK_EMPTY_SM));
+    sc_trace(tf, BP_MEM2WBK_EMPTY_SM_S1, GET_NAME(BP_MEM2WBK_EMPTY_SM_S1));
     sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
     sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
     sc_trace(tf, MULT_INST_RE, GET_NAME(MULT_INST_RE));
-    sc_trace(tf, MULT_INST_RM, GET_NAME(MULT_INST_RM));
+    sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
     
     sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
     sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
@@ -632,14 +632,14 @@ void decod::trace(sc_trace_file* tf) {
              EXCEPTION_RI,
              GET_NAME(EXCEPTION_RI));  // this signal will be at 0 considering there is no exception in IFETCH
 
-    sc_trace(tf, ENV_CALL_U_MODE_RD, GET_NAME(ENV_CALL_U_MODE_RD));
-    sc_trace(tf, ENV_CALL_WRONG_MODE_RD, GET_NAME(ENV_CALL_WRONG_MODE_RD));
-    sc_trace(tf, ILLEGAL_INSTRUCTION_RD, GET_NAME(ILLEGAL_INSTRUCTION_RD));  // instruction doesnt exist
-    sc_trace(tf, ADRESS_MISSALIGNED_RD, GET_NAME(ADRESS_MISSALIGNED_RD));    // branch offset is misaligned
-    sc_trace(tf, ENV_CALL_S_MODE_RD, GET_NAME(ENV_CALL_S_MODE_RD));
-    sc_trace(tf, ENV_CALL_M_MODE_RD, GET_NAME(ENV_CALL_M_MODE_RD));
+    sc_trace(tf, ENV_CALL_U_MODE_RD_S1, GET_NAME(ENV_CALL_U_MODE_RD_S1));
+    sc_trace(tf, ENV_CALL_WRONG_MODE_RD_S1, GET_NAME(ENV_CALL_WRONG_MODE_RD_S1));
+    sc_trace(tf, ILLEGAL_INSTRUCTION_RD_S1, GET_NAME(ILLEGAL_INSTRUCTION_RD_S1));  // instruction doesnt exist
+    sc_trace(tf, ADRESS_MISSALIGNED_RD_S1, GET_NAME(ADRESS_MISSALIGNED_RD_S1));    // branch offset is misaligned
+    sc_trace(tf, ENV_CALL_S_MODE_RD_S1, GET_NAME(ENV_CALL_S_MODE_RD_S1));
+    sc_trace(tf, ENV_CALL_M_MODE_RD_S1, GET_NAME(ENV_CALL_M_MODE_RD_S1));
 
-    sc_trace(tf, EXCEPTION_RD, GET_NAME(EXCEPTION_RD));
+    sc_trace(tf, EXCEPTION_RD_S1, GET_NAME(EXCEPTION_RD_S1));
     // General Interface :
 
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
@@ -862,13 +862,13 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
              GET_NAME(instruction_adress_missaligned_sd_s2));  // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd_s2, GET_NAME(env_call_m_mode_sd_s2));
     sc_trace(tf, env_call_s_mode_sd_s2, GET_NAME(env_call_s_mode_sd_s2));
-    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
-    sc_trace(tf, MRET_RD, GET_NAME(MRET_RD));
+    sc_trace(tf, CURRENT_MODE_SM_S1, GET_NAME(CURRENT_MODE_SM_S1));
+    sc_trace(tf, MRET_RD_S1, GET_NAME(MRET_RD_S1));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, env_call_u_mode_sd_s1, GET_NAME(env_call_u_mode_sd_s1));
     sc_trace(tf, instruction_access_fault_sd_s1, GET_NAME(instruction_access_fault_sd_s1));
-    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD));
+    sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD_S1, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S1));
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, env_call_wrong_mode_s1, GET_NAME(env_call_wrong_mode_s1));
     sc_trace(tf, PC_BRANCH_VALUE_RD_S1, GET_NAME(PC_BRANCH_VALUE_RD_S1));
