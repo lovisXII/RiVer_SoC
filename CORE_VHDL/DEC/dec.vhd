@@ -167,7 +167,15 @@ dec2exe : fifo
 -------------------------
 -- fifo gestion 
 -------------------------
-stall_sd    <=  '1' when (((r1_valid_sd = '0' or r2_valid_sd = '0') and (b_type_sd = '1' or jalr_type_sd = '1' or j_type_sd = '1' or block_in_dec = '1')) or IF2DEC_EMPTY_SI = '1' or dec2exe_full_sd = '1')
+stall_sd    <=  '1' when    (
+                                (
+                                    (r1_valid_sd = '0' or r2_valid_sd = '0') 
+                                    and 
+                                    (b_type_sd = '1' or jalr_type_sd = '1' or j_type_sd = '1' or block_in_dec = '1')
+                                ) 
+                                or 
+                                IF2DEC_EMPTY_SI = '1' or dec2exe_full_sd = '1'
+                            )
                     else 
                 '0'; 
 

@@ -107,14 +107,15 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 122; 
+constant NCYCLES : integer := 300; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 signal good_adr, bad_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
+
 begin 
 
-good_adr    <=  std_logic_vector(to_unsigned(get_good(0), 32));
-bad_adr     <=  std_logic_vector(to_unsigned(get_bad(0), 32));
+good_adr    <=  std_logic_vector(to_signed(get_good(0), 32));
+bad_adr     <=  std_logic_vector(to_signed(get_bad(0), 32));
 
 core0 : core
     port map(
@@ -167,7 +168,7 @@ reset_n <= '0', '1' after 6 ns;
 MCACHE_STALL_SM <= '0';
 
 IC_STALL_SI <= '0';
-PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
+PC_INIT <= std_logic_vector(to_signed(get_startpc(0), 32));
 
 icache : process(ADR_SI, ADR_VALID_SI)
 variable adr_int : integer; 
@@ -198,7 +199,7 @@ begin
 end process; 
 
 
-dcache : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
+dcache : process(clk, MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
 variable read0      : integer; -- ignore 
 variable adr_u      : signed(MCACHE_ADR_SM'range); 
 variable adr_int    : integer := 0;
@@ -207,22 +208,27 @@ variable data_int   : integer := 0;
 variable byt_sel_u  : signed(byt_sel'range);
 variable byt_sel_i  : integer := 0;
 begin 
-    if MCACHE_ADR_VALID_SM = '1' then 
-        adr_u       := signed(MCACHE_ADR_SM);
-        --report "adr : " & to_string(MCACHE_ADR_SM);
-        --report "intermed range = (" & integer'image(adr_u'left) & " downto " & integer'image(adr_u'right) &  ")";
-        adr_int     := to_integer(adr_u);
-        --report "adr int = " & integer'image(adr_int); 
-        if MCACHE_STORE_SM = '1' then 
-            data_u      := signed(MCACHE_DATA_SM);
-            data_int    := to_integer(data_u);
-            byt_sel_u   := signed(byt_sel);
-            byt_sel_i   := to_integer(byt_sel_u);
-            read0 := write_mem(adr_int, data_int, byt_sel_i);
-        elsif MCACHE_LOAD_SM = '1' then 
-            MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
+    adr_u       := signed(MCACHE_ADR_SM);
+    adr_int     := to_integer(adr_u);
+    data_u      := signed(MCACHE_DATA_SM);
+    data_int    := to_integer(data_u);
+    byt_sel_u   := signed(byt_sel);
+    byt_sel_i   := to_integer(byt_sel_u);
+
+    if reset_n = '0' then 
+    -- hoping to find a better solution to avoid not wanted mem access
+    elsif falling_edge(clk) then 
+        if MCACHE_ADR_VALID_SM = '1' then 
+            if MCACHE_STORE_SM = '1' then  
+                read0 := write_mem(adr_int, data_int, byt_sel_i);
+            elsif MCACHE_LOAD_SM = '1' then 
+                MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
+            else 
+                assert false report "Adr mem access valid but no command" severity error; 
+            end if; 
         end if; 
     end if; 
+
 end process;
 
 end simu;
