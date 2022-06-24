@@ -44,12 +44,12 @@ void mem::mem2wbk_concat() {
     sc_bv<mem2wbk_size> ff_din;
 
     ff_din.range(31, 0)   = data_sm.read();
-    ff_din.range(36, 32)  = DEST_RE.read();
+    ff_din.range(36, 32)  = DEST_RE_S1.read();
     ff_din[37]            = wb_sm.read();
-    ff_din.range(73, 38)  = PC_EXE2MEM_RE.read();
-    ff_din[74]            = CSR_WENABLE_RE.read();
-    ff_din.range(106, 75) = CSR_RDATA_RE.read();
-    ff_din[107]           = MULT_INST_RE.read();
+    ff_din.range(73, 38)  = PC_EXE2MEM_RE_S1.read();
+    ff_din[74]            = CSR_WENABLE_RE_S1.read();
+    ff_din.range(106, 75) = CSR_RDATA_RE_S1.read();
+    ff_din[107]           = MULT_INST_RE_S1.read();
     mem2wbk_din_sm.write(ff_din);
 }
 void mem::mem2wbk_unconcat() {
@@ -65,23 +65,23 @@ void mem::mem2wbk_unconcat() {
 }
 
 void mem::fifo_gestion() {
-    bool stall = MCACHE_STALL_SM.read() || mem2wbk_full_sm.read() || EXE2MEM_EMPTY_SE.read();
+    bool stall = MCACHE_STALL_SM_S1.read() || mem2wbk_full_sm.read() || EXE2MEM_EMPTY_SE.read();
     mem2wbk_push_sm.write(!stall);
     EXE2MEM_POP_SM_S1.write(!stall);
 }
 void mem::mem_preprocess() {
-    int         size        = MEM_SIZE_RE.read();
-    bool        sign_extend = SIGN_EXTEND_RE.read();
-    sc_uint<32> din         = MEM_DATA_RE.read();
+    int         size        = MEM_SIZE_RE_S1.read();
+    bool        sign_extend = SIGN_EXTEND_RE_S1.read();
+    sc_uint<32> din         = MEM_DATA_RE_S1.read();
     int         adr;
     sc_uint<32> dout;
     int         range_size;
     int         range_end;
     int         range_start;  // The beginning of the range of din that should actually
                               // be written to the register
-    MEM_SIZE_SM = MEM_SIZE_RE;
+    MEM_SIZE_SM_S1 = MEM_SIZE_RE_S1;
     // Memory slot selection
-    switch (EXE_RES_RE.read().range(1, 0)) {
+    switch (EXE_RES_RE_S1.read().range(1, 0)) {
         case 0: range_start = 0; break;
         case 1: range_start = 8; break;
         case 2: range_start = 16; break;
@@ -113,26 +113,26 @@ void mem::mem_preprocess() {
     dout.range(range_end, range_start) = din.range(range_size, 0);
 
     // Whether the register bank shoudl actually write the data
-    wb_sm.write(WB_RE.read() || LOAD_RE.read());
+    wb_sm.write(WB_RE_S1.read() || LOAD_RE_S1.read());
 
     // The data sent to the actual memory/Icache
-    MCACHE_DATA_SM.write(dout);
-    if (STORE_RE)
-        adr = EXE_RES_RE.read();
+    MCACHE_DATA_SM_S1.write(dout);
+    if (STORE_RE_S1)
+        adr = EXE_RES_RE_S1.read();
     else
-        adr = EXE_RES_RE.read() & 0xFFFFFFFC;
-    MCACHE_ADR_SM.write(adr);
-    MCACHE_LOAD_SM.write(LOAD_RE.read());
-    MCACHE_STORE_SM.write(STORE_RE.read());
-    MCACHE_ADR_VALID_SM.write(!EXE2MEM_EMPTY_SE.read());
-    // MCACHE_MEM_SIZE_SM.write(MEM_SIZE_RE.read());
+        adr = EXE_RES_RE_S1.read() & 0xFFFFFFFC;
+    MCACHE_ADR_SM_S1.write(adr);
+    MCACHE_LOAD_SM_S1.write(LOAD_RE_S1.read());
+    MCACHE_STORE_SM_S1.write(STORE_RE_S1.read());
+    MCACHE_ADR_VALID_SM_S1.write(!EXE2MEM_EMPTY_SE.read());
+    // MCACHE_MEM_SIZE_SM.write(MEM_SIZE_RE_S1.read());
 }
 
 void mem::sign_extend() {
     // sign extend
-    int         size        = MEM_SIZE_RE.read();
-    bool        sign_extend = SIGN_EXTEND_RE.read();
-    sc_uint<32> din         = MCACHE_RESULT_SM.read();
+    int         size        = MEM_SIZE_RE_S1.read();
+    bool        sign_extend = SIGN_EXTEND_RE_S1.read();
+    sc_uint<32> din         = MCACHE_RESULT_SM_S1.read();
     sc_uint<32> dout;
     int         range_size;
     int         range_start;  // The beginning of the range of din that should actually
@@ -140,7 +140,7 @@ void mem::sign_extend() {
     // MEM_SIZE = 0 -> Word
     // MEM_SIZE = 1 -> Half word
     // MEM_SIZE = 2 -> byte
-    switch (EXE_RES_RE.read().range(2, 0)) {
+    switch (EXE_RES_RE_S1.read().range(2, 0)) {
         case 0: range_start = 0; break;
         case 1: range_start = 8; break;
         case 2: range_start = 16; break;
@@ -164,23 +164,23 @@ void mem::sign_extend() {
     dout.range(range_size, 0) = din.range(range_end, range_start);
 
     // Choose which data should be written to the register
-    if (LOAD_RE.read()) {
+    if (LOAD_RE_S1.read()) {
         data_sm.write(dout);
     } else {
-        data_sm.write(EXE_RES_RE.read());
+        data_sm.write(EXE_RES_RE_S1.read());
     }
 }
 
 void mem::csr_exception() {
-    EXCEPTION_SM            = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
+    EXCEPTION_SM            = EXCEPTION_RE_S1.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     if (!RESET) CURRENT_MODE_SM_S1 = 3;
 
     if (!EXCEPTION_SM) {
-        if (CSR_WENABLE_RE.read()) {
-            CSR_WADR_SM.write(CSR_WADR_SE.read());
-            CSR_WDATA_SM.write(EXE_RES_RE.read());
+        if (CSR_WENABLE_RE_S1.read()) {
+            CSR_WADR_SM.write(CSR_WADR_SE_S1.read());
+            CSR_WDATA_SM.write(EXE_RES_RE_S1.read());
             CSR_ENABLE_BEFORE_FIFO_SM.write(true);
         } else {
             CSR_WADR_SM.write(0);
@@ -220,7 +220,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(24);
             CURRENT_MODE_SM_S1 = 3;
@@ -245,10 +245,10 @@ void mem::csr_exception() {
 
             // Informing IFETCH that a return instruction have been received
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MRET_SM        = MRET_RE;
-        } else if (STORE_ACCESS_FAULT_RE) {
+        } else if (STORE_ACCESS_FAULT_RE_S1) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -260,11 +260,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE;
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
+            MTVAL_WDATA_SM = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM.write(7);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (LOAD_ACCESS_FAULT_RE) {
+        } else if (LOAD_ACCESS_FAULT_RE_S1) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -276,11 +276,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE;
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
+            MTVAL_WDATA_SM = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM.write(5);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (STORE_ADRESS_MISSALIGNED_RE) {
+        } else if (STORE_ADRESS_MISSALIGNED_RE_S1) {
             save_restore_sm = 0;
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -292,11 +292,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE;
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
+            MTVAL_WDATA_SM = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM.write(6);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (LOAD_ADRESS_MISSALIGNED_RE) {
+        } else if (LOAD_ADRESS_MISSALIGNED_RE_S1) {
             save_restore_sm = 0;
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -308,11 +308,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = EXE_RES_RE;
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
+            MTVAL_WDATA_SM = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM.write(4);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (ENV_CALL_M_MODE_RE) {
+        } else if (ENV_CALL_M_MODE_RE_S1) {
             save_restore_sm = 1;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -324,11 +324,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(11);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (ENV_CALL_S_MODE_RE) {
+        } else if (ENV_CALL_S_MODE_RE_S1) {
             save_restore_sm = 1;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -340,11 +340,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(9);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (ENV_CALL_U_MODE_RE) {
+        } else if (EENV_CALL_U_MODE_RE_S1) {
             save_restore_sm = 1;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -356,7 +356,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(8);
             CURRENT_MODE_SM_S1 = 3;
@@ -372,11 +372,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
-            MTVAL_WDATA_SM = PC_EXE2MEM_RE;
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
+            MTVAL_WDATA_SM = PC_EXE2MEM_RE_S1;
             MCAUSE_WDATA_SM.write(3);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE) {
+        } else if (INSTRUCTION_ADRESS_MISSALIGNED_RE_S1) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -388,11 +388,11 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = PC_BRANCH_VALUE_RE_S1;
             MCAUSE_WDATA_SM.write(0);
             CURRENT_MODE_SM_S1 = 3;
-        } else if (ILLEGAL_INSTRUCTION_RE) {
+        } else if (ILLEGAL_INSTRUCTION_RE_S1) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
             mpie_sm         = mstatus_new[3];  // reading precedent value of MIE
@@ -404,7 +404,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(2);
             CURRENT_MODE_SM_S1 = 3;
@@ -420,7 +420,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM = 0;
             MCAUSE_WDATA_SM.write(1);
             CURRENT_MODE_SM_S1 = 3;
@@ -430,21 +430,21 @@ void mem::csr_exception() {
 }
 
 void mem::trace(sc_trace_file* tf) {
-    sc_trace(tf, MCACHE_ADR_SM, GET_NAME(MCACHE_ADR_SM));  // adress in memory
-    sc_trace(tf, MCACHE_DATA_SM, GET_NAME(MCACHE_DATA_SM));
-    sc_trace(tf, MCACHE_ADR_VALID_SM, GET_NAME(MCACHE_ADR_VALID_SM));
-    sc_trace(tf, MCACHE_STORE_SM, GET_NAME(MCACHE_STORE_SM));
-    sc_trace(tf, MCACHE_LOAD_SM, GET_NAME(MCACHE_LOAD_SM));
-    sc_trace(tf, MCACHE_RESULT_SM, GET_NAME(MCACHE_RESULT_SM));
-    sc_trace(tf, MCACHE_STALL_SM, GET_NAME(MCACHE_STALL_SM));
-    sc_trace(tf, EXE_RES_RE, GET_NAME(EXE_RES_RE));
-    sc_trace(tf, MEM_DATA_RE, GET_NAME(MEM_DATA_RE));
-    sc_trace(tf, DEST_RE, GET_NAME(DEST_RE));
-    sc_trace(tf, MEM_SIZE_RE, GET_NAME(MEM_SIZE_RE));
-    sc_trace(tf, WB_RE, GET_NAME(WB_RE));
-    sc_trace(tf, SIGN_EXTEND_RE, GET_NAME(SIGN_EXTEND_RE));
-    sc_trace(tf, LOAD_RE, GET_NAME(LOAD_RE));
-    sc_trace(tf, STORE_RE, GET_NAME(STORE_RE));
+    sc_trace(tf, MCACHE_ADR_SM_S1, GET_NAME(MCACHE_ADR_SM_S1));  // adress in memory
+    sc_trace(tf, MCACHE_DATA_SM_S1, GET_NAME(MCACHE_DATA_SM_S1));
+    sc_trace(tf, MCACHE_ADR_VALID_SM_S1, GET_NAME(MCACHE_ADR_VALID_SM_S1));
+    sc_trace(tf, MCACHE_STORE_SM_S1, GET_NAME(MCACHE_STORE_SM_S1));
+    sc_trace(tf, MCACHE_LOAD_SM_S1, GET_NAME(MCACHE_LOAD_SM_S1));
+    sc_trace(tf, MCACHE_RESULT_SM_S1, GET_NAME(MCACHE_RESULT_SM_S1));
+    sc_trace(tf, MCACHE_STALL_SM_S1, GET_NAME(MCACHE_STALL_SM_S1));
+    sc_trace(tf, EXE_RES_RE_S1, GET_NAME(EXE_RES_RE_S1));
+    sc_trace(tf, MEM_DATA_RE_S1, GET_NAME(MEM_DATA_RE_S1));
+    sc_trace(tf, DEST_RE_S1, GET_NAME(DEST_RE_S1));
+    sc_trace(tf, MEM_SIZE_RE_S1, GET_NAME(MEM_SIZE_RE_S1));
+    sc_trace(tf, WB_RE_S1, GET_NAME(WB_RE_S1));
+    sc_trace(tf, SIGN_EXTEND_RE_S1, GET_NAME(SIGN_EXTEND_RE_S1));
+    sc_trace(tf, LOAD_RE_S1, GET_NAME(LOAD_RE_S1));
+    sc_trace(tf, STORE_RE_S1, GET_NAME(STORE_RE_S1));
     sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
     sc_trace(tf, EXE2MEM_POP_SM_S1, GET_NAME(EXE2MEM_POP_SM_S1));
     sc_trace(tf, MEM2WBK_POP_SW, GET_NAME(MEM2WBK_POP_SW));
@@ -460,27 +460,27 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_sm, GET_NAME(wb_sm));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET, GET_NAME(RESET));
-    sc_trace(tf, CSR_WENABLE_RE, GET_NAME(CSR_WENABLE_RE));
-    sc_trace(tf, CSR_WADR_SE, GET_NAME(CSR_WADR_SE));
-    sc_trace(tf, CSR_RDATA_RE, GET_NAME(CSR_RDATA_RE));
+    sc_trace(tf, CSR_WENABLE_RE_S1, GET_NAME(CSR_WENABLE_RE_S1));
+    sc_trace(tf, CSR_WADR_SE_S1, GET_NAME(CSR_WADR_SE_S1));
+    sc_trace(tf, CSR_RDATA_RE_S1, GET_NAME(CSR_RDATA_RE_S1));
     sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
     sc_trace(tf, CSR_RDATA_RM, GET_NAME(CSR_RDATA_RM));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
     sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
-    sc_trace(tf, EXCEPTION_RE, GET_NAME(EXCEPTION_RE));
+    sc_trace(tf, EXCEPTION_RE_S1, GET_NAME(EXCEPTION_RE_S1));
     sc_trace(
-        tf, LOAD_ADRESS_MISSALIGNED_RE, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE));  // adress from store/load isn't aligned
-    sc_trace(tf, LOAD_ACCESS_FAULT_RE,
-             GET_NAME(LOAD_ACCESS_FAULT_RE));  // trying to access memory in wrong mode
-    sc_trace(tf, ENV_CALL_U_MODE_RE, GET_NAME(ENV_CALL_U_MODE_RE));
+        tf, LOAD_ADRESS_MISSALIGNED_RE_S1, GET_NAME(LOAD_ADRESS_MISSALIGNED_RE_S1));  // adress from store/load isn't aligned
+    sc_trace(tf, LOAD_ACCESS_FAULT_RE_S1,
+             GET_NAME(LOAD_ACCESS_FAULT_RE_S1));  // trying to access memory in wrong mode
+    sc_trace(tf, EENV_CALL_U_MODE_RE_S1, GET_NAME(EENV_CALL_U_MODE_RE_S1));
     sc_trace(tf, ENV_CALL_WRONG_MODE_RE, GET_NAME(ENV_CALL_WRONG_MODE_RE));
-    sc_trace(tf, ILLEGAL_INSTRUCTION_RE, GET_NAME(ILLEGAL_INSTRUCTION_RE));  // accessing stuff in wrong mode
+    sc_trace(tf, ILLEGAL_INSTRUCTION_RE_S1, GET_NAME(ILLEGAL_INSTRUCTION_RE_S1));  // accessing stuff in wrong mode
     sc_trace(tf,
-             INSTRUCTION_ADRESS_MISSALIGNED_RE,
-             GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE));  // branch offset is misaligned
-    sc_trace(tf, ENV_CALL_S_MODE_RE, GET_NAME(ENV_CALL_S_MODE_RE));
-    sc_trace(tf, ENV_CALL_M_MODE_RE, GET_NAME(ENV_CALL_M_MODE_RE));
+             INSTRUCTION_ADRESS_MISSALIGNED_RE_S1,
+             GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1));  // branch offset is misaligned
+    sc_trace(tf, ENV_CALL_S_MODE_RE_S1, GET_NAME(ENV_CALL_S_MODE_RE_S1));
+    sc_trace(tf, ENV_CALL_M_MODE_RE_S1, GET_NAME(ENV_CALL_M_MODE_RE_S1));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
@@ -497,10 +497,10 @@ void mem::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
-    sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+    sc_trace(tf, MEM_SIZE_SM_S1, GET_NAME(MEM_SIZE_SM_S1));
     sc_trace(tf, PC_BRANCH_VALUE_RE_S1, GET_NAME(PC_BRANCH_VALUE_RE_S1));
-    sc_trace(tf, STORE_ACCESS_FAULT_RE, GET_NAME(STORE_ACCESS_FAULT_RE));
-    sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE, GET_NAME(STORE_ADRESS_MISSALIGNED_RE));
+    sc_trace(tf, STORE_ACCESS_FAULT_RE_S1, GET_NAME(STORE_ACCESS_FAULT_RE_S1));
+    sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE_S1, GET_NAME(STORE_ADRESS_MISSALIGNED_RE_S1));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RE, GET_NAME(INSTRUCTION_ACCESS_FAULT_RE));
     fifo_inst.trace(tf);
 }

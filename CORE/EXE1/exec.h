@@ -59,16 +59,16 @@ SC_MODULE(exec) {
     sc_in<bool> MRET_RD_S1;
     sc_in<bool> EBREAK_RD;
 
-    sc_out<bool> EXCEPTION_RE;
-    sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE;  // adress from store/load isn't aligned
-    sc_out<bool> LOAD_ACCESS_FAULT_RE;        // trying to access memory in wrong mode
-    sc_out<bool> STORE_ADRESS_MISSALIGNED_RE;
-    sc_out<bool> STORE_ACCESS_FAULT_RE;
-    sc_out<bool> ILLEGAL_INSTRUCTION_RE;             // accessing stuff in wrong mode
-    sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
-    sc_out<bool> ENV_CALL_S_MODE_RE;
-    sc_out<bool> ENV_CALL_M_MODE_RE;
-    sc_out<bool> ENV_CALL_U_MODE_RE;
+    sc_out<bool> EXCEPTION_RE_S1;
+    sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE_S1;  // adress from store/load isn't aligned
+    sc_out<bool> LOAD_ACCESS_FAULT_RE_S1;        // trying to access memory in wrong mode
+    sc_out<bool> STORE_ADRESS_MISSALIGNED_RE_S1;
+    sc_out<bool> STORE_ACCESS_FAULT_RE_S1;
+    sc_out<bool> ILLEGAL_INSTRUCTION_RE_S1;             // accessing stuff in wrong mode
+    sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE_S1;  // branch offset is misaligned
+    sc_out<bool> ENV_CALL_S_MODE_RE_S1;
+    sc_out<bool> ENV_CALL_M_MODE_RE_S1;
+    sc_out<bool> EENV_CALL_U_MODE_RE_S1;
     sc_out<bool> ENV_CALL_WRONG_MODE_RE;
     sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_out<bool> MRET_RE;
@@ -100,22 +100,22 @@ SC_MODULE(exec) {
 
     // Fifo exe2mem interface :
 
-    sc_out<sc_uint<32>> EXE_RES_RE;
-    sc_out<sc_uint<32>> MEM_DATA_RE;
-    sc_out<sc_uint<6>>  DEST_RE;
-    sc_out<sc_uint<2>>  MEM_SIZE_RE;
-    sc_out<sc_uint<32>> PC_EXE2MEM_RE;
+    sc_out<sc_uint<32>> EXE_RES_RE_S1;
+    sc_out<sc_uint<32>> MEM_DATA_RE_S1;
+    sc_out<sc_uint<6>>  DEST_RE_S1;
+    sc_out<sc_uint<2>>  MEM_SIZE_RE_S1;
+    sc_out<sc_uint<32>> PC_EXE2MEM_RE_S1;
 
-    sc_out<bool> WB_RE, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
+    sc_out<bool> WB_RE_S1, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
     sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
-    sc_out<bool> MULT_INST_RE;      // multiplication instruction
+    sc_out<bool> MULT_INST_RE_S1;      // multiplication instruction
     sc_out<bool> MULT_SEL_HIGH_RE;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE_S1;
 
-    sc_out<bool>        CSR_WENABLE_RE;
+    sc_out<bool>        CSR_WENABLE_RE_S1;
     sc_out<sc_uint<12>> CSR_WADR_RE;
-    sc_out<sc_uint<32>> CSR_RDATA_RE;
+    sc_out<sc_uint<32>> CSR_RDATA_RE_S1;
 
     // Internals signals :
 
@@ -227,10 +227,10 @@ SC_MODULE(exec) {
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD_S1 << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << exception_se << blocked
                   << r1_valid_se << r2_valid_se;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD_S1
-                  << CSR_WENABLE_RE << BLOCK_BP_RD_S1 << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
+        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM << MEM_RES_RM << DEST_RE_S1 << EXE_RES_RE_S1 << RADR1_RD_S1
+                  << CSR_WENABLE_RE_S1 << BLOCK_BP_RD_S1 << DEST_RE_S1 << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
                   << RADR2_RD_S1 << OP1_RD_S1 << OP2_RD_S1 << exception_se << MEM_DATA_RD_S1 << MEM_STORE_RD_S1
-                  << MULT_INST_RE << MULT_INST_RM_S1 << BP_MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE;
+                  << MULT_INST_RE_S1 << MULT_INST_RM_S1 << BP_MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE;
         SC_METHOD(exception);
         sensitive << WB_RD_S1 << MEM_LOAD_RD_S1 << MEM_STORE_RD_S1 << WB_RD_S1 << EXCEPTION_RD_S1
                   << load_adress_missaligned_se << exception_se << load_access_fault_se << store_access_fault_se

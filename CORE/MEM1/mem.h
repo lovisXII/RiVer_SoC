@@ -15,40 +15,40 @@ MEM_SIZE = 10  -> acces in byte
 SC_MODULE(mem) {
     // Mcache Interface :
 
-    sc_out<sc_uint<32>> MCACHE_ADR_SM;  // adress in memory
-    sc_out<sc_uint<32>> MCACHE_DATA_SM;
-    sc_out<bool>        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM;
+    sc_out<sc_uint<32>> MCACHE_ADR_SM_S1;  // adress in memory
+    sc_out<sc_uint<32>> MCACHE_DATA_SM_S1;
+    sc_out<bool>        MCACHE_ADR_VALID_SM_S1, MCACHE_STORE_SM_S1, MCACHE_LOAD_SM_S1;
 
-    sc_in<sc_uint<32>> MCACHE_RESULT_SM;
-    sc_in<bool>        MCACHE_STALL_SM;
-    sc_out<sc_uint<2>> MEM_SIZE_SM;
+    sc_in<sc_uint<32>> MCACHE_RESULT_SM_S1;
+    sc_in<bool>        MCACHE_STALL_SM_S1;
+    sc_out<sc_uint<2>> MEM_SIZE_SM_S1;
     // Exe Interface :
 
-    sc_in<sc_uint<32>> EXE_RES_RE;
-    sc_in<sc_uint<32>> MEM_DATA_RE;
-    sc_in<sc_uint<6>>  DEST_RE;
-    sc_in<sc_uint<2>>  MEM_SIZE_RE;
+    sc_in<sc_uint<32>> EXE_RES_RE_S1;
+    sc_in<sc_uint<32>> MEM_DATA_RE_S1;
+    sc_in<sc_uint<6>>  DEST_RE_S1;
+    sc_in<sc_uint<2>>  MEM_SIZE_RE_S1;
 
-    sc_in<sc_uint<32>> PC_EXE2MEM_RE;
-    sc_in<bool>        WB_RE;
-    sc_in<bool>        SIGN_EXTEND_RE;     // taille fifo entrée : 74
-    sc_in<bool>        LOAD_RE, STORE_RE;  // 15
-    sc_in<bool>        MULT_INST_RE;
+    sc_in<sc_uint<32>> PC_EXE2MEM_RE_S1;
+    sc_in<bool>        WB_RE_S1;
+    sc_in<bool>        SIGN_EXTEND_RE_S1;     // taille fifo entrée : 74
+    sc_in<bool>        LOAD_RE_S1, STORE_RE_S1;  // 15
+    sc_in<bool>        MULT_INST_RE_S1;
 
-    sc_in<bool>        CSR_WENABLE_RE;
-    sc_in<sc_uint<12>> CSR_WADR_SE;
-    sc_in<sc_uint<32>> CSR_RDATA_RE;
+    sc_in<bool>        CSR_WENABLE_RE_S1;
+    sc_in<sc_uint<12>> CSR_WADR_SE_S1;
+    sc_in<sc_uint<32>> CSR_RDATA_RE_S1;
 
-    sc_in<bool> EXCEPTION_RE;
-    sc_in<bool> LOAD_ADRESS_MISSALIGNED_RE;         // adress from store/load isn't aligned
-    sc_in<bool> LOAD_ACCESS_FAULT_RE;               // trying to access memory in wrong mode
-    sc_in<bool> ILLEGAL_INSTRUCTION_RE;             // accessing stuff in wrong mode
-    sc_in<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
-    sc_in<bool> STORE_ADRESS_MISSALIGNED_RE;
-    sc_in<bool> STORE_ACCESS_FAULT_RE;
-    sc_in<bool> ENV_CALL_S_MODE_RE;
-    sc_in<bool> ENV_CALL_M_MODE_RE;
-    sc_in<bool> ENV_CALL_U_MODE_RE;
+    sc_in<bool> EXCEPTION_RE_S1;
+    sc_in<bool> LOAD_ADRESS_MISSALIGNED_RE_S1;         // adress from store/load isn't aligned
+    sc_in<bool> LOAD_ACCESS_FAULT_RE_S1;               // trying to access memory in wrong mode
+    sc_in<bool> ILLEGAL_INSTRUCTION_RE_S1;             // accessing stuff in wrong mode
+    sc_in<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE_S1;  // branch offset is misaligned
+    sc_in<bool> STORE_ADRESS_MISSALIGNED_RE_S1;
+    sc_in<bool> STORE_ACCESS_FAULT_RE_S1;
+    sc_in<bool> ENV_CALL_S_MODE_RE_S1;
+    sc_in<bool> ENV_CALL_M_MODE_RE_S1;
+    sc_in<bool> EENV_CALL_U_MODE_RE_S1;
     sc_in<bool> ENV_CALL_WRONG_MODE_RE;
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_in<bool> MRET_RE;  // 31
@@ -153,23 +153,23 @@ SC_MODULE(mem) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(mem2wbk_concat);
-        sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << mret_sm
+        sensitive << data_sm << DEST_RE_S1 << wb_sm << CSR_WENABLE_RE_S1 << CSR_RDATA_RE_S1 << exception_sm << mret_sm
                   << return_adress_sm;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);
-        sensitive << MCACHE_STALL_SM << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
+        sensitive << MCACHE_STALL_SM_S1 << mem2wbk_full_sm << EXE2MEM_EMPTY_SE << wb_sm;
         SC_METHOD(mem_preprocess);
-        sensitive << WB_RE << LOAD_RE << MEM_SIZE_RE << MCACHE_RESULT_SM << EXE_RES_RE << MEM_DATA_RE << STORE_RE
-                  << SIGN_EXTEND_RE << EXE2MEM_EMPTY_SE;
+        sensitive << WB_RE_S1 << LOAD_RE_S1 << MEM_SIZE_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << MEM_DATA_RE_S1 << STORE_RE_S1
+                  << SIGN_EXTEND_RE_S1 << EXE2MEM_EMPTY_SE;
         SC_METHOD(sign_extend);
-        sensitive << MEM_SIZE_RE << SIGN_EXTEND_RE << MCACHE_RESULT_SM << EXE_RES_RE << LOAD_RE;
+        sensitive << MEM_SIZE_RE_S1 << SIGN_EXTEND_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << LOAD_RE_S1;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE << CSR_WENABLE_RE << MIP_VALUE_RC << PC_EXE2MEM_RE << CSR_WADR_SE << EXE_RES_RE
-                  << INSTRUCTION_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE << INSTRUCTION_ADRESS_MISSALIGNED_RE
-                  << ENV_CALL_U_MODE_RE << ENV_CALL_S_MODE_RE << ENV_CALL_M_MODE_RE << LOAD_ADRESS_MISSALIGNED_RE
-                  << STORE_ADRESS_MISSALIGNED_RE << LOAD_ACCESS_FAULT_RE << STORE_ACCESS_FAULT_RE << MRET_RE
+        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
+                  << INSTRUCTION_ACCESS_FAULT_RE << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
+                  << EENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
+                  << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE
                   << EXCEPTION_SM << ENV_CALL_WRONG_MODE_RE << BUS_ERROR_SX << EXCEPTION_SM << RESET << MSTATUS_RC
-                  << EXE_RES_RE << MEPC_SC;
+                  << EXE_RES_RE_S1 << MEPC_SC;
     }
 };

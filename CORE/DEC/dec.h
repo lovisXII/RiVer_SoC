@@ -124,7 +124,7 @@ SC_MODULE(decod) {
     // Multiplications signals
     sc_out<bool> MULT_INST_RD_S1;
 
-    sc_in<bool> MULT_INST_RE;
+    sc_in<bool> MULT_INST_RE_S1;
     sc_in<bool> MULT_INST_RM_S1;
 
     // Bypasses
@@ -137,8 +137,8 @@ SC_MODULE(decod) {
     sc_in<sc_uint<6>>  BP_DEST_RM;
     sc_in<sc_uint<32>> BP_MEM_RES_RM;
 
-    sc_in<bool>        CSR_WENABLE_RE;
-    sc_in<sc_uint<32>> CSR_RDATA_RE;
+    sc_in<bool>        CSR_WENABLE_RE_S1;
+    sc_in<sc_uint<32>> CSR_RDATA_RE_S1;
     sc_in<bool>        CSR_WENABLE_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
 
@@ -631,7 +631,7 @@ SC_MODULE(decod) {
 
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd << r2_valid_sd
-                  << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE
+                  << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE_S1
                   << BP_EXE2MEM_EMPTY_SE << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
                   << csr_in_progress_s1;
 
@@ -751,7 +751,7 @@ SC_MODULE(decod) {
 
                   << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_SD_S1
 
-                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM_S1
+                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE_S1 << MULT_INST_RM_S1
 
                   << DEC2EXE_EMPTY_SD_S1 << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM_S1;
         reset_signal_is(RESET_N, false);

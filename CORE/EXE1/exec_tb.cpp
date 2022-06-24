@@ -72,11 +72,11 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.EXE2MEM_POP_SM_S1(exe2mem_pop);
     unit_exec.DEC2EXE_EMPTY_SD_S1(dec2exe_empty);
 
-    unit_exec.EXE_RES_RE(ffout_exe_res);
-    unit_exec.MEM_DATA_RE(ffout_mem_data);
-    unit_exec.DEST_RE(ffout_dest);
-    unit_exec.MEM_SIZE_RE(ffout_mem_size);
-    unit_exec.WB_RE(ffout_wb);
+    unit_exec.EXE_RES_RE_S1(ffout_exe_res);
+    unit_exec.MEM_DATA_RE_S1(ffout_mem_data);
+    unit_exec.DEST_RE_S1(ffout_dest);
+    unit_exec.MEM_SIZE_RE_S1(ffout_mem_size);
+    unit_exec.WB_RE_S1(ffout_wb);
     unit_exec.MEM_LOAD_RE(ffout_mem_load);
     unit_exec.MEM_STORE_RE(ffout_mem_store);
     unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend);  // taille fifo sortie : 76

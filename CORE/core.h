@@ -16,15 +16,15 @@ SC_MODULE(core) {
 
     // Mcache interface
 
-    sc_out<sc_uint<2>>  MEM_SIZE_SM;
-    sc_out<sc_uint<32>> MCACHE_ADR_SM;
+    sc_out<sc_uint<2>>  MEM_SIZE_SM_S1;
+    sc_out<sc_uint<32>> MCACHE_ADR_SM_S1;
 
-    sc_out<sc_uint<32>> MCACHE_DATA_SM;
-    sc_out<bool>        MCACHE_ADR_VALID_SM;
-    sc_out<bool>        MCACHE_STORE_SM;
-    sc_out<bool>        MCACHE_LOAD_SM;
-    sc_in<sc_uint<32>>  MCACHE_RESULT_SM;
-    sc_in<bool>         MCACHE_STALL_SM;
+    sc_out<sc_uint<32>> MCACHE_DATA_SM_S1;
+    sc_out<bool>        MCACHE_ADR_VALID_SM_S1;
+    sc_out<bool>        MCACHE_STORE_SM_S1;
+    sc_out<bool>        MCACHE_LOAD_SM_S1;
+    sc_in<sc_uint<32>>  MCACHE_RESULT_SM_S1;
+    sc_in<bool>         MCACHE_STALL_SM_S1;
 
     // Icache interface
     sc_out<sc_uint<32>> ADR_SI_S1;
@@ -176,17 +176,17 @@ SC_MODULE(core) {
     sc_signal<bool>       carry_rx1;
     // EXE-MEM interface
     sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE_S1;
-    sc_signal<sc_uint<32>> EXE_RES_RE;
-    sc_signal<sc_uint<32>> MEM_DATA_RE;
-    sc_signal<sc_uint<6>>  DEST_RE;
-    sc_signal<sc_uint<2>>  MEM_SIZE_RE;
-    sc_signal<sc_uint<32>> PC_EXE2MEM_RE;
+    sc_signal<sc_uint<32>> EXE_RES_RE_S1;
+    sc_signal<sc_uint<32>> MEM_DATA_RE_S1;
+    sc_signal<sc_uint<6>>  DEST_RE_S1;
+    sc_signal<sc_uint<2>>  MEM_SIZE_RE_S1;
+    sc_signal<sc_uint<32>> PC_EXE2MEM_RE_S1;
     sc_signal<bool>        MEM_WB, MEM_SIGN_EXTEND_RE;
     sc_signal<bool>        MEM_LOAD_RE, MEM_STORE_RE;
     sc_signal<bool>        MEM_MULT_RE, MULT_SEL_HIGH_RE;
 
     sc_signal<bool> EXE2MEM_EMPTY_SE, EXE2MEM_POP_SM_S1;
-    sc_signal<bool> CSR_WENABLE_RE;
+    sc_signal<bool> CSR_WENABLE_RE_S1;
     sc_signal<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
     sc_signal<bool> MACHINE_TIMER_INTERRUPT_SX;
     sc_signal<bool> MACHINE_EXTERNAL_INTERRUPT_SX;
@@ -195,30 +195,30 @@ SC_MODULE(core) {
     sc_signal<bool>        MACHINE_TIMER_INTERRUPT_SE;
     sc_signal<bool>        MACHINE_EXTERNAL_INTERRUPT_SE;
     sc_signal<sc_uint<12>> CSR_WADR_RE;
-    sc_signal<sc_uint<32>> CSR_RDATA_RE;
+    sc_signal<sc_uint<32>> CSR_RDATA_RE_S1;
 
-    sc_signal<bool> EXCEPTION_RE;
-    sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE;  // adress from store/load isn't aligned
-    sc_signal<bool> LOAD_ACCESS_FAULT_RE;        // trying to access memory in wrong mode
+    sc_signal<bool> EXCEPTION_RE_S1;
+    sc_signal<bool> LOAD_ADRESS_MISSALIGNED_RE_S1;  // adress from store/load isn't aligned
+    sc_signal<bool> LOAD_ACCESS_FAULT_RE_S1;        // trying to access memory in wrong mode
 
-    sc_signal<bool> STORE_ADRESS_MISSALIGNED_RE;
-    sc_signal<bool> STORE_ACCESS_FAULT_RE;
+    sc_signal<bool> STORE_ADRESS_MISSALIGNED_RE_S1;
+    sc_signal<bool> STORE_ACCESS_FAULT_RE_S1;
     sc_signal<bool> ECALL_I_RE;
     sc_signal<bool> EBREAK_I_RE;
-    sc_signal<bool> ILLEGAL_INSTRUCTION_RE;             // accessing stuff in wrong mode
-    sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE;  // branch offset is misaligned
-    sc_signal<bool> ENV_CALL_S_MODE_RE;
-    sc_signal<bool> ENV_CALL_M_MODE_RE;
+    sc_signal<bool> ILLEGAL_INSTRUCTION_RE_S1;             // accessing stuff in wrong mode
+    sc_signal<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE_S1;  // branch offset is misaligned
+    sc_signal<bool> ENV_CALL_S_MODE_RE_S1;
+    sc_signal<bool> ENV_CALL_M_MODE_RE_S1;
     sc_signal<bool> ENV_CALL_S_MODE_RD_S1;
     sc_signal<bool> ENV_CALL_WRONG_MODE_RD_S1;
     sc_signal<bool> MRET_RD_S1;
     sc_signal<bool> ENV_CALL_WRONG_MODE_RE;
-    sc_signal<bool> ENV_CALL_U_MODE_RE;
+    sc_signal<bool> EENV_CALL_U_MODE_RE_S1;
     sc_signal<bool> MRET_RE;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RD_S1;
     sc_signal<bool> INSTRUCTION_ACCESS_FAULT_RE;
     sc_signal<bool> MULT_INST_RD_S1;
-    sc_signal<bool> MULT_INST_RE;
+    sc_signal<bool> MULT_INST_RE_S1;
     sc_signal<bool> MULT_INST_RM_S1;
     // X1-X2 interface
     sc_signal<sc_bv<128>> multiplier_out_sx1;
@@ -422,8 +422,8 @@ SC_MODULE(core) {
         dec_inst.WRITE_PC_SD(WRITE_PC_SD);
         dec_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE_SD);
 
-        dec_inst.BP_DEST_RE(DEST_RE);
-        dec_inst.BP_EXE_RES_RE(EXE_RES_RE);
+        dec_inst.BP_DEST_RE(DEST_RE_S1);
+        dec_inst.BP_EXE_RES_RE(EXE_RES_RE_S1);
         dec_inst.BP_DEST_RM(DEST_RM);
         dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
         dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
@@ -435,8 +435,8 @@ SC_MODULE(core) {
         dec_inst.BP_RADR2_RD(BP_RADR2_RD);
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
 
-        dec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
-        dec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        dec_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
+        dec_inst.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
         dec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         dec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
         dec_inst.EBREAK_RD(EBREAK_RD);
@@ -467,7 +467,7 @@ SC_MODULE(core) {
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         dec_inst.MCAUSE_WDATA_SM(MCAUSE_WDATA_SM);
         dec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
-        dec_inst.MULT_INST_RE(MULT_INST_RE);
+        dec_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
         dec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         dec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
 
@@ -492,7 +492,7 @@ SC_MODULE(core) {
 
         exec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
         exec_inst.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
-        exec_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
+        exec_inst.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
 
         exec_inst.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
         exec_inst.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
@@ -505,16 +505,16 @@ SC_MODULE(core) {
         exec_inst.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
         exec_inst.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
 
-        exec_inst.EXE_RES_RE(EXE_RES_RE);
-        exec_inst.MEM_DATA_RE(MEM_DATA_RE);
-        exec_inst.DEST_RE(DEST_RE);
-        exec_inst.MEM_SIZE_RE(MEM_SIZE_RE);
+        exec_inst.EXE_RES_RE_S1(EXE_RES_RE_S1);
+        exec_inst.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
+        exec_inst.DEST_RE_S1(DEST_RE_S1);
+        exec_inst.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
 
-        exec_inst.WB_RE(MEM_WB);
+        exec_inst.WB_RE_S1(MEM_WB);
         exec_inst.MEM_SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
         exec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
-        exec_inst.MULT_INST_RE(MULT_INST_RE);
+        exec_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
         exec_inst.MULT_SEL_HIGH_RE(MULT_SEL_HIGH_RE);
         exec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         exec_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
@@ -531,10 +531,10 @@ SC_MODULE(core) {
         exec_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
         exec_inst.EXCEPTION_RD_S1(EXCEPTION_RD_S1);
         exec_inst.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
-        exec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        exec_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
         exec_inst.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
         exec_inst.CSR_WADR_RE(CSR_WADR_RE);
-        exec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        exec_inst.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
         exec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
         exec_inst.ENV_CALL_S_MODE_RD_S1(ENV_CALL_S_MODE_RD_S1);
         exec_inst.ENV_CALL_WRONG_MODE_RD_S1(ENV_CALL_WRONG_MODE_RD_S1);
@@ -544,17 +544,17 @@ SC_MODULE(core) {
         exec_inst.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
         exec_inst.MRET_RD_S1(MRET_RD_S1);
 
-        exec_inst.EXCEPTION_RE(EXCEPTION_RE);
-        exec_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
-        exec_inst.LOAD_ACCESS_FAULT_RE(LOAD_ACCESS_FAULT_RE);
-        exec_inst.STORE_ADRESS_MISSALIGNED_RE(STORE_ADRESS_MISSALIGNED_RE);
-        exec_inst.STORE_ACCESS_FAULT_RE(STORE_ACCESS_FAULT_RE);
+        exec_inst.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
+        exec_inst.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
+        exec_inst.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
         exec_inst.ENV_CALL_WRONG_MODE_RE(ENV_CALL_WRONG_MODE_RE);
-        exec_inst.ENV_CALL_U_MODE_RE(ENV_CALL_U_MODE_RE);
-        exec_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
-        exec_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE(INSTRUCTION_ADRESS_MISSALIGNED_RE);
-        exec_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);
-        exec_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
+        exec_inst.EENV_CALL_U_MODE_RE_S1(EENV_CALL_U_MODE_RE_S1);
+        exec_inst.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
+        exec_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);
+        exec_inst.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
         exec_inst.EXCEPTION_SM(EXCEPTION_SM);
         exec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
         exec_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
@@ -591,16 +591,16 @@ SC_MODULE(core) {
 
         // MEM port map :
 
-        mem_inst.EXE_RES_RE(EXE_RES_RE);  // 0
-        mem_inst.MEM_DATA_RE(MEM_DATA_RE);
-        mem_inst.DEST_RE(DEST_RE);
-        mem_inst.MEM_SIZE_RE(MEM_SIZE_RE);
+        mem_inst.EXE_RES_RE_S1(EXE_RES_RE_S1);  // 0
+        mem_inst.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
+        mem_inst.DEST_RE_S1(DEST_RE_S1);
+        mem_inst.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
 
-        mem_inst.WB_RE(MEM_WB);
-        mem_inst.SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
-        mem_inst.LOAD_RE(MEM_LOAD_RE);
-        mem_inst.STORE_RE(MEM_STORE_RE);
-        mem_inst.MULT_INST_RE(MULT_INST_RE);
+        mem_inst.WB_RE_S1(MEM_WB);
+        mem_inst.SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE);
+        mem_inst.LOAD_RE_S1(MEM_LOAD_RE);
+        mem_inst.STORE_RE_S1(MEM_STORE_RE);
+        mem_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
         mem_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         mem_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         mem_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
@@ -613,42 +613,42 @@ SC_MODULE(core) {
         mem_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
         mem_inst.MEM2WBK_POP_SW(MEM2WBK_POP_SW);
 
-        mem_inst.MCACHE_ADR_SM(MCACHE_ADR_SM);
-        mem_inst.MCACHE_DATA_SM(MCACHE_DATA_SM);
-        mem_inst.MCACHE_ADR_VALID_SM(MCACHE_ADR_VALID_SM);
-        mem_inst.MCACHE_STORE_SM(MCACHE_STORE_SM);
-        mem_inst.MCACHE_LOAD_SM(MCACHE_LOAD_SM);  // 19
-        mem_inst.MEM_SIZE_SM(MEM_SIZE_SM);  
+        mem_inst.MCACHE_ADR_SM_S1(MCACHE_ADR_SM_S1);
+        mem_inst.MCACHE_DATA_SM_S1(MCACHE_DATA_SM_S1);
+        mem_inst.MCACHE_ADR_VALID_SM_S1(MCACHE_ADR_VALID_SM_S1);
+        mem_inst.MCACHE_STORE_SM_S1(MCACHE_STORE_SM_S1);
+        mem_inst.MCACHE_LOAD_SM_S1(MCACHE_LOAD_SM_S1);  // 19
+        mem_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);  
 
-        mem_inst.MCACHE_RESULT_SM(MCACHE_RESULT_SM);
-        mem_inst.MCACHE_STALL_SM(MCACHE_STALL_SM);
+        mem_inst.MCACHE_RESULT_SM_S1(MCACHE_RESULT_SM_S1);
+        mem_inst.MCACHE_STALL_SM_S1(MCACHE_STALL_SM_S1);
 
-        mem_inst.PC_EXE2MEM_RE(PC_EXE2MEM_RE);
+        mem_inst.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
         mem_inst.PC_MEM2WBK_RM(PC_MEM2WBK_RM);
 
         mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         mem_inst.MACHINE_SOFTWARE_INTERRUPT_SE(MACHINE_SOFTWARE_INTERRUPT_SE);
         mem_inst.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
         mem_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
-        mem_inst.CSR_WADR_SE(CSR_WADR_RE);
+        mem_inst.CSR_WADR_SE_S1(CSR_WADR_RE);
         mem_inst.CSR_WADR_SM(CSR_WADR_SM);
-        mem_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
+        mem_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
         mem_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         mem_inst.CSR_WDATA_SM(CSR_WDATA_SM);
         mem_inst.CSR_RDATA_RM(CSR_RDATA_RM);
-        mem_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        mem_inst.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
 
-        mem_inst.EXCEPTION_RE(EXCEPTION_RE);
-        mem_inst.LOAD_ADRESS_MISSALIGNED_RE(LOAD_ADRESS_MISSALIGNED_RE);
-        mem_inst.LOAD_ACCESS_FAULT_RE(LOAD_ACCESS_FAULT_RE);
-        mem_inst.STORE_ADRESS_MISSALIGNED_RE(STORE_ADRESS_MISSALIGNED_RE);
-        mem_inst.STORE_ACCESS_FAULT_RE(STORE_ACCESS_FAULT_RE);
-        mem_inst.ENV_CALL_U_MODE_RE(ENV_CALL_U_MODE_RE);
+        mem_inst.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
+        mem_inst.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
+        mem_inst.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
+        mem_inst.EENV_CALL_U_MODE_RE_S1(EENV_CALL_U_MODE_RE_S1);
         mem_inst.ENV_CALL_WRONG_MODE_RE(ENV_CALL_WRONG_MODE_RE);
-        mem_inst.ILLEGAL_INSTRUCTION_RE(ILLEGAL_INSTRUCTION_RE);
-        mem_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE(INSTRUCTION_ADRESS_MISSALIGNED_RE);
-        mem_inst.ENV_CALL_S_MODE_RE(ENV_CALL_S_MODE_RE);  // 39
-        mem_inst.ENV_CALL_M_MODE_RE(ENV_CALL_M_MODE_RE);
+        mem_inst.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
+        mem_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);  // 39
+        mem_inst.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
         mem_inst.MRET_RE(MRET_RE);
         mem_inst.INSTRUCTION_ACCESS_FAULT_RE(INSTRUCTION_ACCESS_FAULT_RE);
 

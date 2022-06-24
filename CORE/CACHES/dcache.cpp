@@ -11,7 +11,7 @@ void dcache::miss_detection() {
     // Assignation of MEM_SIZE, just to do an interface
     // with the core
 
-    MEM_SIZE_SC = MEM_SIZE_SM;
+    MEM_SIZE_SC = MEM_SIZE_SM_S1;
     /*std::cout << "tag : " << address_tag
               << "    index : " << address_index.read()
               << "    tag0 : " << w0_TAG[address_index.read()]
@@ -222,7 +222,7 @@ void dcache::trace(sc_trace_file* tf) {
 
     sc_trace(tf, mp_address_tag, GET_NAME(mp_address_tag));
     sc_trace(tf, mp_address_index, GET_NAME(mp_address_index));
-    sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+    sc_trace(tf, MEM_SIZE_SM_S1, GET_NAME(MEM_SIZE_SM_S1));
     sc_trace(tf, MEM_SIZE_SC, GET_NAME(MEM_SIZE_SC));
 
     for (int i = 0; i < 128; i++) {

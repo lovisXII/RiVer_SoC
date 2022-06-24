@@ -203,7 +203,7 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<32>> MEM_ADR;
     sc_signal<sc_uint<32>> MEM_DATA;
     sc_signal<bool>        MEM_ADR_VALID, MEM_STORE, MEM_LOAD;
-    sc_signal<sc_uint<2>>  MEM_SIZE_SM;
+    sc_signal<sc_uint<2>>  MEM_SIZE_SM_S1;
 
     sc_signal<sc_uint<32>> MEM_RESULT;
     sc_signal<bool>        MEM_STALL;
@@ -245,14 +245,14 @@ int sc_main(int argc, char* argv[]) {
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
 
-    core_inst.MCACHE_ADR_SM(MEM_ADR);
-    core_inst.MCACHE_DATA_SM(MEM_DATA);
-    core_inst.MCACHE_ADR_VALID_SM(MEM_ADR_VALID);
-    core_inst.MCACHE_STORE_SM(MEM_STORE);
-    core_inst.MCACHE_LOAD_SM(MEM_LOAD);
-    core_inst.MCACHE_RESULT_SM(MEM_RESULT);
-    core_inst.MCACHE_STALL_SM(MEM_STALL);
-    core_inst.MEM_SIZE_SM(MEM_SIZE_SM);
+    core_inst.MCACHE_ADR_SM_S1(MEM_ADR);
+    core_inst.MCACHE_DATA_SM_S1(MEM_DATA);
+    core_inst.MCACHE_ADR_VALID_SM_S1(MEM_ADR_VALID);
+    core_inst.MCACHE_STORE_SM_S1(MEM_STORE);
+    core_inst.MCACHE_LOAD_SM_S1(MEM_LOAD);
+    core_inst.MCACHE_RESULT_SM_S1(MEM_RESULT);
+    core_inst.MCACHE_STALL_SM_S1(MEM_STALL);
+    core_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);
 
     core_inst.ADR_SI_S1(IF_ADR_S1);
     core_inst.ADR_SI_S2(IF_ADR_S2);
@@ -279,7 +279,7 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.DATA_SM(MEM_DATA);
     dcache_inst.LOAD_SM(MEM_LOAD);
     dcache_inst.STORE_SM(MEM_STORE);
-    dcache_inst.MEM_SIZE_SM(MEM_SIZE_SM);
+    dcache_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);
     dcache_inst.MEM_SIZE_SC(MEM_SIZE_SC);
     dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
     dcache_inst.DATA_SC(MEM_RESULT);
@@ -412,7 +412,7 @@ int sc_main(int argc, char* argv[]) {
         }
 #else
         mem_adr                    = MEM_ADR.read() & 0XfffffffC;  // removing the least 2 significant bits
-        mem_size                   = MEM_SIZE_SM.read();
+        mem_size                   = MEM_SIZE_SM_S1.read();
         bool         mem_adr_valid = MEM_ADR_VALID.read();
         unsigned int mem_data      = MEM_DATA.read();
         bool         mem_store     = MEM_STORE.read();
