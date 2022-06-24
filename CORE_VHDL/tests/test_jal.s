@@ -18,3 +18,11 @@ _func :
     nop
     nop
     nop
+
+_bad: 
+    nop
+    nop
+
+_good: 
+    nop
+    nop

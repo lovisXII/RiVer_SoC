@@ -14,6 +14,17 @@ int modulo(int a, int b){
     while(a >= b) a -= b;
     return a ;
 }
+
+void _bad() {
+    __asm__("nop");
+    __asm__("nop");
+}
+
+void _good() {
+    __asm__("nop");
+    __asm__("nop");
+}
+
 int main()
 {
     int nbr1, nbr2 ;

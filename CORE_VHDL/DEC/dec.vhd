@@ -68,7 +68,7 @@ signal dec2exe_din, dec2exe_dout : std_logic_vector(128 downto 0);
 signal dec2exe_full_sd, dec2exe_push_sd : std_logic;
 
 -- Instructions
-signal r_type_sd, i_type_sd, s_type_sd, b_type_sd, u_type_sd, j_type_sd, jalr_type_sd : std_logic;
+signal r_type_sd, i_type_sd, s_type_sd, b_type_sd, u_type_sd, j_type_sd, jalr_type_sd, jal_type_sd : std_logic;
 signal load_type_sd, nmem_type_sd : std_logic;
 
 signal add_i_sd, sub_i_sd, slt_i_sd, sltu_i_sd, and_i_sd, or_i_sd, xor_i_sd, sll_i_sd, srl_i_sd, sra_i_sd : std_logic;
@@ -259,7 +259,7 @@ radr1_sd <= '0'&INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_s
 radr2_sd <= '0'&INSTR_RI(24 downto 20) when ((r_type_sd or s_type_sd or b_type_sd) = '1') else
             "000000";
 
-rdest_sd <= '0'&INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or s_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
+rdest_sd <= '0'&INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
             "000000";
 
 -- Operand 1 selection
@@ -272,12 +272,10 @@ dec2exe_op1_sd <= rdata1_sd when ((r_type_sd or i_type_sd or s_type_sd or b_type
                x"00000000";
 
 -- Operand 2 selection
-op2_i_type_sd(31 downto 12) <=  x"FFFFF" when INSTR_RI(31) = '1' else 
-                                x"00000";
+op2_i_type_sd(31 downto 12) <=  (others => INSTR_RI(31));                            
 op2_i_type_sd(11 downto 0)  <= INSTR_RI(31 downto 20);
 
-op2_s_type_sd(31 downto 12) <=  x"FFFFF" when RDATA2_SR(31) = '1' else 
-                                x"00000";
+op2_s_type_sd(31 downto 12) <=  (others => INSTR_RI(31));
 op2_s_type_sd(11 downto 5)  <= INSTR_RI(31 downto 25);
 op2_s_type_sd(4 downto 0)   <= INSTR_RI(11 downto 7);
 

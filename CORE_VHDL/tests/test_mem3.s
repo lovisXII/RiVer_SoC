@@ -10,3 +10,12 @@ _start:
     lw x3,4(x0) 
     beq x2,x3,_good
     nop 
+    j _bad
+
+_bad: 
+    nop
+    nop
+
+_good: 
+    nop
+    nop

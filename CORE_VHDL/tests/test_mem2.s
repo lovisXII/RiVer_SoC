@@ -8,7 +8,17 @@ _start:
     lbu x3,4(x0) 
     addi x4, x0, 0xE4
     beq x3,x4,_good
+    j _bad
     nop 
+    nop
+
+_bad: 
+    nop
+    nop
+
+_good: 
+    nop
+    nop
 
 
 

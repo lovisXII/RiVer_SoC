@@ -107,7 +107,7 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 100; 
+constant NCYCLES : integer := 122; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 signal good_adr, bad_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
@@ -172,19 +172,22 @@ PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
 icache : process(ADR_SI, ADR_VALID_SI)
 variable adr_int : integer; 
 variable inst_int : integer; 
-variable intermed : unsigned(ADR_SI'range); 
+variable intermed : signed(ADR_SI'range); 
 begin
     if ADR_VALID_SI = '1' then 
-        assert ADR_SI /= bad_adr report "Test failed" severity failure;
-
-        if ADR_SI = good_adr then 
+        if ADR_SI = bad_adr then 
+            assert false report "Test failed" severity error; 
+            --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
+            end_simu <= '1';
+        
+        elsif ADR_SI = good_adr then 
             assert false report "Test success" severity note; 
             end_simu <= '1';  
-            
+
         else
             --report "ADR_SI length = " & integer'image(ADR_SI'length);
             --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
-            intermed    := unsigned(ADR_SI); 
+            intermed    := signed(ADR_SI); 
             adr_int     := to_integer(intermed);
             inst_int    := read_mem(adr_int);
             IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
@@ -196,13 +199,28 @@ end process;
 
 
 dcache : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
-variable read0 : integer;
+variable read0      : integer; -- ignore 
+variable adr_u      : signed(MCACHE_ADR_SM'range); 
+variable adr_int    : integer := 0;
+variable data_u     : signed(MCACHE_DATA_SM'range);
+variable data_int   : integer := 0;
+variable byt_sel_u  : signed(byt_sel'range);
+variable byt_sel_i  : integer := 0;
 begin 
     if MCACHE_ADR_VALID_SM = '1' then 
+        adr_u       := signed(MCACHE_ADR_SM);
+        --report "adr : " & to_string(MCACHE_ADR_SM);
+        --report "intermed range = (" & integer'image(adr_u'left) & " downto " & integer'image(adr_u'right) &  ")";
+        adr_int     := to_integer(adr_u);
+        --report "adr int = " & integer'image(adr_int); 
         if MCACHE_STORE_SM = '1' then 
-            read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)), to_integer(unsigned(byt_sel)));
+            data_u      := signed(MCACHE_DATA_SM);
+            data_int    := to_integer(data_u);
+            byt_sel_u   := signed(byt_sel);
+            byt_sel_i   := to_integer(byt_sel_u);
+            read0 := write_mem(adr_int, data_int, byt_sel_i);
         elsif MCACHE_LOAD_SM = '1' then 
-            MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(read_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
+            MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
         end if; 
     end if; 
 end process;

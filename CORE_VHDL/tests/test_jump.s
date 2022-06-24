@@ -11,3 +11,11 @@ _loop :
     bne x8,x9,_loop
     beq x8,x9,_good
     nop
+
+_bad: 
+    nop
+    nop
+
+_good: 
+    nop
+    nop
