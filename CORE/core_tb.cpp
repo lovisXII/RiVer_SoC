@@ -146,40 +146,40 @@ int sc_main(int argc, char* argv[]) {
 
                 symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
                 if (name == "_reset") {
-                    cout << "Found reset" << endl;
                     reset_adr = value - 4;  // minus 4 to acount for init inc_pc
+                    cout << "Found reset at adr "<< std::hex << reset_adr << endl;
                 }
                 if (name == "_start") {
-                    cout << "Found start" << endl;
                     start_adr = value - 4;  // minus 4 to acount for init inc_pc
+                    cout << "Found start at adr " << std::hex << start_adr << endl;
                 }
                 if (name == "_bad") {
-                    cout << "Found bad" << endl;
                     bad_adr = value;
+                    cout << "Found bad at adr " << std::hex << bad_adr << endl;
                 }
                 if (name == "_good") {
-                    cout << "Found good" << endl;
                     good_adr = value;
+                    cout << "Found good at adr " << std::hex << good_adr << endl;
                 }
                 if (name == "_exception_occur") {
-                    cout << "Found exception_occur" << endl;
                     exception_occur = value;
+                    cout << "Found exception_occur at adr " << std::hex << exception_occur << endl;
                 }
                 if (name == "rvtest_code_end") {
-                    cout << "Found rvtest_code_end" << endl;
                     rvtest_code_end = value;
+                    cout << "Found rvtest_code_end at adr " << std::hex << rvtest_code_end << endl;
                 }
                 if (name == "rvtest_entry_point") {
-                    cout << "Found rvtest_entry_point" << endl;
                     reset_adr = value - 4;
+                    cout << "Found rvtest_entry_point at adr " << std::hex << reset_adr << endl;
                 }
                 if (name == "begin_signature") {
-                    cout << "Found begin_signature" << endl;
                     begin_signature = value;
+                    cout << "Found begin_signature at adr " << std::hex << begin_signature << endl;
                 }
                 if (name == "end_signature") {
-                    cout << "Found end_signature" << endl;
                     end_signature = value;
+                    cout << "Found end_signature at adr " << std::hex << end_signature << endl;
                 }
             }
         }
@@ -326,7 +326,10 @@ int sc_main(int argc, char* argv[]) {
     cout << "Reseting...";
 
     RESET.write(false);  // reset
-    PC_RESET.write(reset_adr);
+    
+    //PC_RESET.write(reset_adr);
+    PC_RESET.write(start_adr);
+    
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
     cerr << "done." << endl;

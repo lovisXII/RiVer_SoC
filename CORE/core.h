@@ -353,9 +353,11 @@ SC_MODULE(core) {
         dec_inst.INSTR_RI_S1(INSTR_RI_S1);
         dec_inst.INSTR_RI_S2(INSTR_RI_S2);
         dec_inst.IF2DEC_EMPTY_SI_S1(IF2DEC_EMPTY_SI_S1);
+        dec_inst.IF2DEC_EMPTY_SI_S2(IF2DEC_EMPTY_SI_S2);
         dec_inst.IF2DEC_POP_SD_S1(IF2DEC_POP_SD_S1);
         dec_inst.IF2DEC_POP_SD_S2(IF2DEC_POP_SD_S2);
         dec_inst.IF2DEC_FLUSH_SD_S1(IF2DEC_FLUSH_SD_S1);
+        dec_inst.IF2DEC_FLUSH_SD_S2(IF2DEC_FLUSH_SD_S2);
 
         dec_inst.OP1_RD_S1(OP1_RD_S1);
         dec_inst.OP2_RD_S1(OP2_RD_S1);

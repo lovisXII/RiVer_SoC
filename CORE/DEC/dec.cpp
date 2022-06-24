@@ -5,19 +5,12 @@
 // ---------------------------------------------CHEKING DEPENDENCIES
 // :---------------------------------------------
 
-
 void decod::dependencies(){
     sc_uint<6> radr1_sd_s2 = RADR1_SD_S2 ; 
     sc_uint<6> radr2_sd_s2 = RADR2_SD_S2 ;
-    bool load = lw_i_sd_s1 || lh_i_sd_s1 || lb_i_sd_s1 ;
 
     if(adr_dest_sd_s1 == radr1_sd_s2 || adr_dest_sd_s1 == radr2_sd_s2 )
     {
-        reg_dependencies_sd = true ;
-    }
-    else if((lw_i_sd_s1 && lw_i_sd_s2) || (lh_i_sd_s1 && lh_i_sd_s2) ||
-    (lb_i_sd_s1 && lb_i_sd_s2) || (sw_i_sd_s1 && sw_i_sd_s2) || 
-    (sh_i_sd_s1 && sh_i_sd_s2) || (sb_i_sd_s1 && sb_i_sd_s2)){
         reg_dependencies_sd = true ;
     }
     else{
@@ -109,7 +102,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[0]              = 0;
     }
 
-    dec2exe_in_sd_s1.write(dec2exe_in_var);
+    dec2exe_in_sd_s1= dec2exe_in_var;
 }
 
 
@@ -181,22 +174,38 @@ void decod::pc_inc() {
     sc_uint<32> pc                = READ_PC_SR.read();
     sc_uint<32> pc_out_s1            = pc;
     sc_uint<32> pc_out_s2            = pc;
-    sc_uint<32> offset_branch_var = offset_branch_sd_s1.read();
-    bool add_offset_to_pc = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
+    sc_uint<32> offset_branch_var_s1 = offset_branch_sd_s1.read();
+    sc_uint<32> offset_branch_var_s2 = offset_branch_sd_s2.read();
+    
+    bool add_offset_to_pc_s1 = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
+    bool add_offset_to_pc_s2 = jump_sd_s2.read() && !IF2DEC_EMPTY_SI_S2 ;
     
 
     // PC Incrementation
+    // 3 possibilities :
+    //  - no branch
+    //  - branch only in  s1
+    //  - branch only in s2
+    //  - branch in s1 and s2 -> s1 prio
 
-    if (!add_offset_to_pc && !dec2if_full_sd ) {
+    if (!add_offset_to_pc_s1 && !add_offset_to_pc_s2 && !dec2if_full_sd ) {//no branch
         pc_out_s1 = pc + 4;
         pc_out_s2 = pc + 8;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
-    } else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd_s1) {
-        pc_out_s1 = PC_IF2DEC_RI_S1.read() + offset_branch_var;
+    } else if (add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd_s1) {//branch in s1 -> prio
+        pc_out_s1 = PC_IF2DEC_RI_S1.read() + offset_branch_var_s1;
+        pc_out_s2 = PC_IF2DEC_RI_S1.read() + offset_branch_var_s1 + 4;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
-    } else {
+    } 
+    else if(add_offset_to_pc_s2 && !add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd_s2){// branch only in s2
+        pc_out_s1 = PC_IF2DEC_RI_S2.read() + offset_branch_var_s2;
+        pc_out_s2 = PC_IF2DEC_RI_S2.read() + offset_branch_var_s2 + 4 ;
+        WRITE_PC_ENABLE_SD = 1 ;
+        dec2if_push_sd = 1;
+    }
+    else {
         WRITE_PC_ENABLE_SD  = 0;
         dec2if_push_sd      = 0;
     }
@@ -210,12 +219,19 @@ void decod::pc_inc() {
         WRITE_PC_SD    = pc_out_s2 ; // PC sent to REG
         
         pc_branch_value_sd_s1 = pc_out_s1 ; // sent to mem for exception
-        
-        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        pc_branch_value_sd_s2 = pc_out_s2 ;
+
+        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s1 = 1;
         } else {
             instruction_access_fault_sd_s1 = 0;
         }
+        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+            instruction_access_fault_sd_s2 = 1;
+        } else {
+            instruction_access_fault_sd_s2 = 0;
+        }
+        
     }
     //Instruction adress missaligned exception :
     if ((pc_out_s1 & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
@@ -224,6 +240,14 @@ void decod::pc_inc() {
     } 
     else{
         instruction_adress_missaligned_sd_s1 = 0;
+    }
+    //Instruction adress missaligned exception :
+    if ((pc_out_s2 & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
+    {
+        instruction_adress_missaligned_sd_s2 = 1;
+    } 
+    else{
+        instruction_adress_missaligned_sd_s2 = 0;
     }
 
     // Exception & fifo gestion
@@ -243,7 +267,7 @@ void decod::pc_inc() {
             if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
                 dec2if_pc_sd_s1 = MTVEC_VALUE_VAR;
                 WRITE_PC_SD  = MTVEC_VALUE_VAR;
-                WRITE_PC_ENABLE_SD.write(1);
+                WRITE_PC_ENABLE_SD= 1;
             } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
                 sc_uint<32> MCAUSE_VAR;
                 // MCAUSE * 4 :
@@ -251,50 +275,75 @@ void decod::pc_inc() {
                 MCAUSE_VAR.range(1, 0)  = 0;
                 dec2if_pc_sd_s1.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
-                WRITE_PC_ENABLE_SD.write(1);
+                WRITE_PC_ENABLE_SD= 1;
             }
 
         } else {
             dec2if_pc_sd_s1.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
-            WRITE_PC_ENABLE_SD.write(1);
+            WRITE_PC_ENABLE_SD= 1;
         }          
             
         
         // IF2DEC Gestion
         
-        IF2DEC_POP_SD_S1.write(1);
-        IF2DEC_FLUSH_SD_S1.write(0);
+        IF2DEC_POP_SD_S1= 1;
+        IF2DEC_POP_SD_S2= 1;
+        IF2DEC_FLUSH_SD_S1= 0;
+        IF2DEC_FLUSH_SD_S2= 0;
 
         // DEC2EXE Gestion
 
-        dec2exe_push_sd_s1.write(1);
-
+        dec2exe_push_sd_s1= 1;
+        dec2exe_push_sd_s2= 1;
+            
     }
     else{
         
         // IF2DEC Gestion
         
-        if (jump_sd_s1.read() && !stall_sd_s1) {
-            IF2DEC_POP_SD_S1.write(1);
-            IF2DEC_POP_SD_S2.write(1);
-            IF2DEC_FLUSH_SD_S1.write(1);
-        } else if (!jump_sd_s1 && !stall_sd_s1) {
-            IF2DEC_POP_SD_S1.write(1);
-            IF2DEC_POP_SD_S2.write(1);
-            IF2DEC_FLUSH_SD_S1.write(0);
-        } else {
-            IF2DEC_POP_SD_S1.write(0);
-            IF2DEC_POP_SD_S2.write(0);
-            IF2DEC_FLUSH_SD_S1.write(0);
+        if (jump_sd_s1.read() && !stall_sd_s1) //jump_s1 prio 
+        {
+            IF2DEC_POP_SD_S1 = 1;
+            IF2DEC_POP_SD_S2= 1;
+            IF2DEC_FLUSH_SD_S1= 1;
+            IF2DEC_FLUSH_SD_S2= 1;
+        } 
+        else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
+        {
+            IF2DEC_POP_SD_S1= 1;
+            IF2DEC_POP_SD_S2= 1;
+            IF2DEC_FLUSH_SD_S1= 0;
+            IF2DEC_FLUSH_SD_S2= 0;
+        } 
+        else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s2) //jump s2
+        {
+            IF2DEC_POP_SD_S1= 1;
+            IF2DEC_POP_SD_S2= 1;
+            IF2DEC_FLUSH_SD_S1= 0;
+            IF2DEC_FLUSH_SD_S2= 0;
+
+        }
+        else {
+            IF2DEC_POP_SD_S1= 0;
+            IF2DEC_POP_SD_S2= 0;
+            IF2DEC_FLUSH_SD_S1= 0;
         }
 
-        // DEC2EXE Gestion
+        // DEC2EXE_S1 Gestion
         
         if (stall_sd_s1) {
-            dec2exe_push_sd_s1.write(0);
+            dec2exe_push_sd_s1= 0;
         } else {
-            dec2exe_push_sd_s1.write(1);
+            dec2exe_push_sd_s1= 1;
+        }
+
+        // DEC2EXE_S2 Gestion
+
+        if (stall_sd_s2) {
+            dec2exe_push_sd_s2 = 0;
+        } else {
+            dec2exe_push_sd_s2 = 1;
         }
     }
 }
@@ -302,27 +351,27 @@ void decod::pc_inc() {
 void decod::bypasses() {
     if (RADR1_SD_S1.read() == 0) {  // ignore r0
         rdata1_sd_s1.write(RDATA1_SR_S1.read());
-        r1_valid_sd.write(true);
+        r1_valid_sd= true;
     } 
     else if (RADR1_SD_S1.read() == EXE_DEST_SD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read()) 
     {  // dont bypass if instr is currently in exe
-        r1_valid_sd.write(false);
+        r1_valid_sd= false;
     } 
     else if (RADR1_SD_S1.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
     {  // dont bypass if load instr is currently in mem
-        r1_valid_sd.write(false);
+        r1_valid_sd= false;
     } 
     else if(RADR1_SD_S1.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read())
     { // dont bypass if mul instruction didnt finish
-        r1_valid_sd.write(false);
+        r1_valid_sd= false;
     } 
     else if(RADR1_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read())
     { // dont bypass if mul instruction didnt finish
-        r1_valid_sd.write(false);
+        r1_valid_sd= false;
     } 
     else if (RADR1_SD_S1.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
     {  // bypass E->D
-        r1_valid_sd.write(true);
+        r1_valid_sd= true;
         if (CSR_WENABLE_RE.read())
             rdata1_sd_s1.write(CSR_RDATA_RE.read());
         else
@@ -330,45 +379,45 @@ void decod::bypasses() {
     } 
     else if (RADR1_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) 
     {  // bypass M->D
-        r1_valid_sd.write(true);
+        r1_valid_sd= true;
         if (CSR_WENABLE_RM.read())
             rdata1_sd_s1.write(CSR_RDATA_RM.read());
         else
             rdata1_sd_s1.write(BP_MEM_RES_RM.read());
     } 
     else {  // no bypass
-        r1_valid_sd.write(true);
+        r1_valid_sd= true;
         rdata1_sd_s1.write(RDATA1_SR_S1.read());
     }
 
     if (RADR2_SD_S1.read() == 0) {  // ignore r0
         rdata2_sd_s1.write(RDATA2_SR_S1.read());
-        r2_valid_sd.write(true);
+        r2_valid_sd= true;
     } else if (RADR2_SD_S1.read() == EXE_DEST_SD_S1.read() &&
                !DEC2EXE_EMPTY_SD_S1.read()) {  // dont bypass if instr is currently in exe
-        r2_valid_sd.write(false);
+        r2_valid_sd= false;
     } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
                !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
                                         // currently in mem
-        r2_valid_sd.write(false);
+        r2_valid_sd= false;
     } else if(RADR2_SD_S1.read() == BP_DEST_RE.read() && MULT_INST_RE && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
-        r2_valid_sd.write(false);
+        r2_valid_sd= false;
     } else if(RADR2_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM && !BP_MEM2WBK_EMPTY_SM.read()){ // dont bypass if mul instruction didnt finish
-        r2_valid_sd.write(false);
+        r2_valid_sd= false;
     } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
-        r2_valid_sd.write(true);
+        r2_valid_sd= true;
         if (CSR_WENABLE_RE.read())
             rdata2_sd_s1.write(CSR_RDATA_RE.read());
         else
             rdata2_sd_s1.write(BP_EXE_RES_RE.read());
     } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM.read()) {  // bypass M->D
-        r2_valid_sd.write(true);
+        r2_valid_sd= true;
         if (CSR_WENABLE_RM.read())
             rdata2_sd_s1.write(CSR_RDATA_RM.read());
         else
             rdata2_sd_s1.write(BP_MEM_RES_RM.read());
     } else {  // no bypass
-        r2_valid_sd.write(true);
+        r2_valid_sd= true;
         rdata2_sd_s1.write(RDATA2_SR_S1.read());
     }
     // When a load is in exe, we can block the pipeline now
@@ -382,6 +431,12 @@ void decod::stall_method() {
     stall_sd_s1        = (csr_in_progress_s1 || ((!r1_valid_sd || !r2_valid_sd) &&
                       (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
                       || IF2DEC_EMPTY_SI_S1 || dec2exe_full_sd_s1);
+
+    //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE && !BP_EXE2MEM_EMPTY_SE);
+    stall_sd_s2         = (csr_in_progress_s2 || ((!r1_valid_sd || !r2_valid_sd) &&
+                      (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec))
+                      || IF2DEC_EMPTY_SI_S2 || dec2exe_full_sd_s2);
+
 }
 
 //---------------------------------------------METHOD TO TRACE SIGNALS

@@ -1,7 +1,7 @@
 BUILD=build
 SIM_DIR=sim
 TESTS_DIR=tests
-APP=test_bytsel.s
+APP?=test_bytsel.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -11,7 +11,8 @@ SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
 
-
+test :
+	echo $(APP)
 all: view
 
 view: run
