@@ -25,18 +25,23 @@ void x0_multiplier::operation()
 
     select_higher_bits_sx0 = (EXE_CMD_RD.read() != 1);
 
-    if((EXE_CMD_RD.read() == 2 || EXE_CMD_RD.read() == 1) && (op1[31] == 1 && op2[31] == 1))
+    if(EXE_CMD_RD.read() == 2 || EXE_CMD_RD.read() == 1)
     {
-        op1 = (~op1) + 1;
-        op2 = (~op2) + 1;
-        signed_type = false;
+        if(op1[31] == 1 && op2[31] == 1)
+        {
+            op1 = (~op1) + 1;
+            op2 = (~op2) + 1;
+            signed_type = false;
+            signed_res_sx0 = false;
+        }
+        else if(op1[31] == 0 && op2[31] == 1)
+        {
+            sc_uint<32> tmp = op1;
+            op1 = op2;
+            op2 = tmp;
+        }
     }
-
-    if(signed_type && (op1[31] != op2[31]))
-        signed_res_sx0 = true;
-    else
-        signed_res_sx0 = false;
-    
+        
     // generating partial product
     for(int i = 0; i < 32; i++)
     {

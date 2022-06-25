@@ -6,17 +6,11 @@ void x2_multiplier::process()
     sc_biguint<64> a = (sc_bv<64>)in.range(63, 0);
     sc_biguint<64> b = (sc_bv<64>)in.range(127, 64);
 
-    sc_bv<64> add = a + b;
+    sc_bv<64> add;
+    
+    add = a + b;
+
     result = add;
-    /*if(SIGNED_RES_RX1.read())
-    {
-        int i;
-        for(i = 63; i >= 0; i--)
-            if(add[i] == 1)
-                break;
-        for(; i < 64; i++)
-            add[i] = 1;
-    }*/
 
     if(SELECT_HIGHER_BITS_RX1)
         RES_RX2.write((sc_bv_base)add.range(63, 32));
