@@ -4,8 +4,8 @@
 #include <string>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-#include "alu.h"
-#include "shifter.h"
+#include "../UTIL/alu.h"
+#include "../UTIL/shifter.h"
 
 #define exe2mem_size        200
 #define start_kernel_adress 0xF0000000
@@ -175,8 +175,8 @@ SC_MODULE(exec_s2) {
           fifo_inst("exe2mem") {
         // ALU port map :
 
-        alu_inst.OP1_SE_S2(op1_se_s2);
-        alu_inst.OP2_SE_S2(alu_in_op2_se);
+        alu_inst.OP1_SE_S1(op1_se_s2);
+        alu_inst.OP2_SE_S1(alu_in_op2_se);
         alu_inst.CMD_SE(CMD_RD_S2);
         alu_inst.CIN_SE(NEG_OP2_RD_S2);
         alu_inst.RES_SE(alu_out_se);

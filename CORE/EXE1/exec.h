@@ -4,8 +4,8 @@
 #include <string>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-#include "alu.h"
-#include "shifter.h"
+#include "../UTIL/alu.h"
+#include "../UTIL/shifter.h"
 
 #define exe2mem_size        200
 #define start_kernel_adress 0xF0000000

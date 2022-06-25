@@ -4,9 +4,9 @@
 #include "MEM1/mem.h"
 #include "WBK1/wbk.h"
 
-#include "EXE2/exec.h"
-#include "MEM2/mem.h"
-#include "WBK2/wbk.h"
+// #include "EXE2/exec.h"
+// #include "MEM2/mem.h"
+// #include "WBK2/wbk.h"
 
 #include "CSR/csr.h"
 #include "REG/reg.h"
@@ -26,9 +26,9 @@ SC_MODULE(core) {
     exec_s1     exec_inst_s1;
     mem_s1      mem_inst_s1;
     wbk_s1      wbk_inst_s1;
-    exec_s2     exec_inst_s2;
-    mem_s2      mem_inst_s2;
-    wbk_s2      wbk_inst_s2;
+    // exec_s2     exec_inst_s2;
+    // mem_s2      mem_inst_s2;
+    // wbk_s2      wbk_inst_s2;
     reg         reg_inst;
     csr         csr_inst;
     

@@ -6,7 +6,7 @@ LINK_PATH=-L $(SYSTEMC)/lib-linux64
 LINKER_ARGS=-rpath=$(SYSTEMC)/lib-linux64 
 LIBS=-lsystemc -lm
 C_ARGS=$(INCLUDE_PATH) $(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
-OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE1/alu.o EXE1/shifter.o EXE1/x0_multiplier.o EXE1/exec.o MEM1/mem.o MEM1/x1_multiplier.o REG/reg.o WBK1/wbk.o WBK1/x2_multiplier.o CSR/csr.o CACHES/icache.o CACHES/dcache.o CACHES/buffercache.o
+OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE1/x0_multiplier.o EXE1/exec.o MEM1/mem.o MEM1/x1_multiplier.o REG/reg.o WBK1/wbk.o WBK1/x2_multiplier.o CSR/csr.o CACHES/icache.o CACHES/dcache.o CACHES/buffercache.o
 LD_SCRIPT= -T kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 

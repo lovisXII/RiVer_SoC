@@ -17,7 +17,7 @@ SC_MODULE(mem_s2) {
 
     sc_out<sc_uint<32>> MCACHE_ADR_SM_S2;  // adress in memory
     sc_out<sc_uint<32>> MCACHE_DATA_SM_S2;
-    sc_out<bool>        MCACHE_ADR_VALID_SM_S2, ;
+    sc_out<bool>        MCACHE_ADR_VALID_SM_S2;
     sc_out<bool>        MCACHE_STORE_SM_S2;
     sc_out<bool>        MCACHE_LOAD_SM_S2;
     sc_in<sc_uint<32>> MCACHE_RESULT_SM_S2;
