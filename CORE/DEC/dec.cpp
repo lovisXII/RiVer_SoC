@@ -199,7 +199,7 @@ void decod::unconcat_dec2exe_s1() {
 
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD_S1.write((bool)dec2exe_out_var[219]);
-    EBREAK_RD.write((bool)dec2exe_out_var[218]);
+    EBREAK_RD_S1.write((bool)dec2exe_out_var[218]);
     INSTRUCTION_ACCESS_FAULT_RD_S1.write((bool)dec2exe_out_var[217]);
     MRET_RD_S1.write((bool)dec2exe_out_var[216]);
     BLOCK_BP_RD_S1.write((bool)dec2exe_out_var[215]);
@@ -472,7 +472,7 @@ void decod::bypasses() {
     else if (RADR1_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) 
     {  // bypass M->D
         r1_valid_sd= true;
-        if (CSR_WENABLE_RM.read())
+        if (CSR_WENABLE_RM_S1.read())
             rdata1_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
             rdata1_sd_s1.write(BP_MEM_RES_RM.read());
@@ -504,7 +504,7 @@ void decod::bypasses() {
             rdata2_sd_s1.write(BP_EXE_RES_RE.read());
     } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) {  // bypass M->D
         r2_valid_sd= true;
-        if (CSR_WENABLE_RM.read())
+        if (CSR_WENABLE_RM_S1.read())
             rdata2_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
             rdata2_sd_s1.write(BP_MEM_RES_RM.read());
@@ -622,7 +622,7 @@ void decod::trace(sc_trace_file* tf) {
     
     sc_trace(tf, CSR_WENABLE_RE_S1, GET_NAME(CSR_WENABLE_RE_S1));
     sc_trace(tf, CSR_RDATA_RE_S1, GET_NAME(CSR_RDATA_RE_S1));
-    sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf, CSR_WENABLE_RM_S1, GET_NAME(CSR_WENABLE_RM_S1));
     sc_trace(tf, CSR_RDATA_RM_S1, GET_NAME(CSR_RDATA_RM_S1));
 
     sc_trace(tf, BP_R1_VALID_RD, GET_NAME(BP_R1_VALID_RD));

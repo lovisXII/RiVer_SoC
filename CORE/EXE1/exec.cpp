@@ -2,8 +2,8 @@
 #include "alu.h"
 #include "shifter.h"
 
-void exec::preprocess_op() {
-    sc_uint<32> op1 = op1_se.read();
+void exec_s1::preprocess_op() {
+    sc_uint<32> op1 = op1_se_s1.read();
     sc_uint<32> op2 = op2_se.read();
     if (NEG_OP2_RD_S1.read()) {
         alu_in_op2_se.write(~op2);
@@ -12,41 +12,41 @@ void exec::preprocess_op() {
     }
     shift_val_se.write(op2.range(4, 0));
 
-    OP1_SE.write(op1_se);
-    OP2_SE.write(op2_se);
+    OP1_SE_S1.write(op1_se_s1);
+    OP2_SE_S1.write(op2_se);
 }
 
-void exec::select_exec_res() {
+void exec_s1::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
 
     /*if (SELECT_TYPE_OPERATIONS_RD_S1.read() == 0b1000)
     {
-        exe_res_se.write(divider_out_se);
+        exe_res_se_s1.write(divider_out_se);
     }
     else */
     if (SELECT_TYPE_OPERATIONS_RD_S1.read() == 0b0010) {
-        exe_res_se.write(shifter_out_se);
+        exe_res_se_s1.write(shifter_out_se);
     } else if (SELECT_TYPE_OPERATIONS_RD_S1.read() == 0b0001) {
         if (SLT_RD_S1.read()) {
-            if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
-                exe_res_se.write(1);
-            } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
-                exe_res_se.write(0);
-            } else if (op1_se.read() == op2_se.read()) {
-                exe_res_se.write(0);
+            if (op1_se_s1.read()[31] == 1 && op2_se.read()[31] == 0) {
+                exe_res_se_s1.write(1);
+            } else if (op1_se_s1.read()[31] == 0 && op2_se.read()[31] == 1) {
+                exe_res_se_s1.write(0);
+            } else if (op1_se_s1.read() == op2_se.read()) {
+                exe_res_se_s1.write(0);
             } else {
-                exe_res_se.write((bool)alu_out_se.read()[31]);
+                exe_res_se_s1.write((bool)alu_out_se.read()[31]);
             }
         } else if (SLTU_RD_S1.read()) {
-            if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
-                exe_res_se.write(0);
-            } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
-                exe_res_se.write(1);
-            } else if (op1_se.read() == op2_se.read()) {
-                exe_res_se.write(0);
+            if (op1_se_s1.read()[31] == 1 && op2_se.read()[31] == 0) {
+                exe_res_se_s1.write(0);
+            } else if (op1_se_s1.read()[31] == 0 && op2_se.read()[31] == 1) {
+                exe_res_se_s1.write(1);
+            } else if (op1_se_s1.read() == op2_se.read()) {
+                exe_res_se_s1.write(0);
             } else {
-                exe_res_se.write((bool)alu_out_se.read()[31]);
+                exe_res_se_s1.write((bool)alu_out_se.read()[31]);
             }
         } else {
             if (MEM_LOAD_RD_S1.read() || MEM_STORE_RD_S1.read()) {
@@ -86,15 +86,15 @@ void exec::select_exec_res() {
                 store_adress_missaligned_se = 0;
                 store_access_fault_se       = 0;
             }
-            exe_res_se.write(alu_out_se);
+            exe_res_se_s1.write(alu_out_se);
         }
     }
 }
 
-void exec::fifo_concat() {
+void exec_s1::fifo_concat() {
     sc_bv<exe2mem_size> ff_din;
     if (EXCEPTION_SM.read() == 0) {
-        ff_din.range(31, 0)    = exe_res_se.read();
+        ff_din.range(31, 0)    = exe_res_se_s1.read();
         ff_din.range(63, 32)   = bp_mem_data_sd.read();
         ff_din.range(69, 64)   = DEST_RD_S1.read();
         ff_din.range(71, 70)   = MEM_SIZE_RD_S1.read();
@@ -119,7 +119,7 @@ void exec::fifo_concat() {
         ff_din[163]            = store_adress_missaligned_se;
         ff_din[164]            = store_access_fault_se;
         ff_din[165]            = INSTRUCTION_ACCESS_FAULT_RD_S1;
-        ff_din[166]            = EBREAK_RD;
+        ff_din[166]            = EBREAK_RD_S1;
         ff_din[167]            = MULT_INST_RD_S1.read();
         ff_din.range(168, 199) = PC_BRANCH_VALUE_RD_S1.read();
 
@@ -154,18 +154,18 @@ void exec::fifo_concat() {
         ff_din.range(168, 199) = 0;
     }
 
-    exe2mem_din_se.write(ff_din);
+    exe2mem_din_se_s1.write(ff_din);
 }
-void exec::fifo_unconcat() {
-    sc_bv<exe2mem_size> ff_dout = exe2mem_dout_se.read();
+void exec_s1::fifo_unconcat() {
+    sc_bv<exe2mem_size> ff_dout = exe2mem_dout_se_s1.read();
     EXE_RES_RE_S1.write((sc_bv_base)ff_dout.range(31, 0));
     MEM_DATA_RE_S1.write((sc_bv_base)ff_dout.range(63, 32));
     DEST_RE_S1.write((sc_bv_base)ff_dout.range(69, 64));
     MEM_SIZE_RE_S1.write((sc_bv_base)ff_dout.range(71, 70));
     WB_RE_S1.write((bool)ff_dout[72]);
-    MEM_LOAD_RE.write((bool)ff_dout[73]);
-    MEM_STORE_RE.write((bool)ff_dout[74]);
-    MEM_SIGN_EXTEND_RE.write((bool)ff_dout[75]);
+    MEM_LOAD_RE_S1.write((bool)ff_dout[73]);
+    MEM_STORE_RE_S1.write((bool)ff_dout[74]);
+    MEM_SIGN_EXTEND_RE_S1.write((bool)ff_dout[75]);
     PC_EXE2MEM_RE_S1.write((sc_bv_base)ff_dout.range(107, 76));
     CSR_WENABLE_RE_S1.write((bool)ff_dout[108]);
     CSR_WADR_RE.write((sc_bv_base)ff_dout.range(120, 109));
@@ -183,12 +183,12 @@ void exec::fifo_unconcat() {
     STORE_ADRESS_MISSALIGNED_RE_S1.write((bool)ff_dout[163]);
     STORE_ACCESS_FAULT_RE_S1.write((bool)ff_dout[164]);
     INSTRUCTION_ACCESS_FAULT_RE_S1.write((bool)ff_dout[165]);
-    EBREAK_RE.write((bool)ff_dout[166]);
+    EBREAK_RE_S1.write((bool)ff_dout[166]);
     MULT_INST_RE_S1.write((bool)ff_dout[167]);
     PC_BRANCH_VALUE_RE_S1.write((sc_bv_base)ff_dout.range(168, 199));
 }
 
-void exec::manage_fifo() {
+void exec_s1::manage_fifo() {
     bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD_S1.read() || blocked.read() || !r1_valid_se || !r2_valid_se;
     if (stall) {
         exe2mem_push_se.write(false);
@@ -200,37 +200,37 @@ void exec::manage_fifo() {
     stall_se = stall;
 }
 
-void exec::bypasses() {
+void exec_s1::bypasses() {
     bool        blocked_var     = false;
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD_S1.read();
 
     if (RADR1_RD_S1.read() == 0 || BLOCK_BP_RD_S1.read()) {
-        op1_se.write(OP1_RD_S1.read());
+        op1_se_s1.write(OP1_RD_S1.read());
         r1_valid_se = true;
     } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1) {
-        op1_se.write(CSR_RDATA_RE_S1.read());
+        op1_se_s1.write(CSR_RDATA_RE_S1.read());
         r1_valid_se = true;
-    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE) {
-        op1_se.write(EXE_RES_RE_S1.read());
+    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1) {
+        op1_se_s1.write(EXE_RES_RE_S1.read());
         r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
-    } else if (MEM_DEST_RM.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM) {
-        op1_se.write(CSR_RDATA_RM_S1.read());
+    } else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S1) {
+        op1_se_s1.write(CSR_RDATA_RM_S1.read());
         r1_valid_se = true;
-    } else if (MEM_DEST_RM.read() == RADR1_RD_S1.read()) {
-        op1_se.write(MEM_RES_RM_S1.read());
+    } else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read()) {
+        op1_se_s1.write(MEM_RES_RM_S1.read());
         r1_valid_se = !MULT_INST_RM_S1 || BP_MEM2WBK_EMPTY_SM_S1;
-    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE_S1) {
+    } else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) {
         blocked_var = true;
         r1_valid_se = true;
     } else {
-        op1_se.write(OP1_RD_S1.read());
+        op1_se_s1.write(OP1_RD_S1.read());
         r1_valid_se = true;
     }
 
     if (RADR2_RD_S1.read() == 0 || MEM_LOAD_RD_S1.read() || BLOCK_BP_RD_S1.read()) {
         op2_se.write(OP2_RD_S1.read());
         r2_valid_se = true;
-    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE) {
+    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE_S1)
             bp_value = CSR_RDATA_RE_S1;
@@ -244,9 +244,9 @@ void exec::bypasses() {
             op2_se.write(bp_value);
             r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
         }
-    } else if (MEM_DEST_RM.read() == RADR2_RD_S1.read()) {
+    } else if (MEM_DEST_RM_S1.read() == RADR2_RD_S1.read()) {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RM)
+        if (CSR_WENABLE_RM_S1)
             bp_value = CSR_RDATA_RM_S1;
         else
             bp_value = MEM_RES_RM_S1;
@@ -258,7 +258,7 @@ void exec::bypasses() {
             op2_se.write(MEM_RES_RM_S1.read());
             r2_valid_se = !MULT_INST_RM_S1 || BP_MEM2WBK_EMPTY_SM_S1;
         }
-    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE_S1) {
+    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) {
         blocked_var = true;
         r2_valid_se = true;
     } else {
@@ -269,7 +269,7 @@ void exec::bypasses() {
     blocked.write(blocked_var);
 }
 
-void exec::exception() {
+void exec_s1::exception() {
     exception_se = EXCEPTION_RD_S1 | load_adress_missaligned_se | load_access_fault_se | store_access_fault_se |
                    store_adress_missaligned_se;
 
@@ -292,7 +292,7 @@ void exec::exception() {
     }
 }
 
-void exec::trace(sc_trace_file* tf) {
+void exec_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, OP1_RD_S1, GET_NAME(OP1_RD_S1));  // can contains CSR if CSR_type_operation_RD == 1
     sc_trace(tf, OP2_RD_S1, GET_NAME(OP2_RD_S1));
     sc_trace(tf, OP1_VALID_RD_S1, GET_NAME(OP1_VALID_RD_S1));
@@ -349,15 +349,15 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SX, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SX));
     sc_trace(tf, MACHINE_TIMER_INTERRUPT_SX, GET_NAME(MACHINE_TIMER_INTERRUPT_SX));
     sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SX, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SX));
-    sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SE, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SE));
+    sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SE_S1, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SE_S1));
     sc_trace(tf, MACHINE_TIMER_INTERRUPT_SE, GET_NAME(MACHINE_TIMER_INTERRUPT_SE));
     sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SE, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SE));
 
     // bypasses
 
-    sc_trace(tf, MEM_DEST_RM, GET_NAME(MEM_DEST_RM));
+    sc_trace(tf, MEM_DEST_RM_S1, GET_NAME(MEM_DEST_RM_S1));
     sc_trace(tf, MEM_RES_RM_S1, GET_NAME(MEM_RES_RM_S1));
-    sc_trace(tf, CSR_WENABLE_RM, GET_NAME(CSR_WENABLE_RM));
+    sc_trace(tf, CSR_WENABLE_RM_S1, GET_NAME(CSR_WENABLE_RM_S1));
     sc_trace(tf, CSR_RDATA_RM_S1, GET_NAME(CSR_RDATA_RM_S1));
 
     // Genral Interface :
@@ -375,9 +375,9 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_EXE2MEM_RE_S1, GET_NAME(PC_EXE2MEM_RE_S1));
 
     sc_trace(tf, WB_RE_S1, GET_NAME(WB_RE_S1));
-    sc_trace(tf, MEM_SIGN_EXTEND_RE, GET_NAME(MEM_SIGN_EXTEND_RE));
-    sc_trace(tf, MEM_LOAD_RE, GET_NAME(MEM_LOAD_RE));
-    sc_trace(tf, MEM_STORE_RE, GET_NAME(MEM_STORE_RE));
+    sc_trace(tf, MEM_SIGN_EXTEND_RE_S1, GET_NAME(MEM_SIGN_EXTEND_RE_S1));
+    sc_trace(tf, MEM_LOAD_RE_S1, GET_NAME(MEM_LOAD_RE_S1));
+    sc_trace(tf, MEM_STORE_RE_S1, GET_NAME(MEM_STORE_RE_S1));
     sc_trace(tf, EXE2MEM_EMPTY_SE_S1, GET_NAME(EXE2MEM_EMPTY_SE_S1));
     sc_trace(tf, DEC2EXE_POP_SE_S1, GET_NAME(DEC2EXE_POP_SE_S1));
 
@@ -387,12 +387,12 @@ void exec::trace(sc_trace_file* tf) {
 
     // Internals signals :
 
-    sc_trace(tf, exe_res_se, GET_NAME(exe_res_se));
+    sc_trace(tf, exe_res_se_s1, GET_NAME(exe_res_se_s1));
 
-    sc_trace(tf, exe2mem_din_se, GET_NAME(exe2mem_din_se));  // concatenation of exe_res, mem_data...etc
-    sc_trace(tf, exe2mem_dout_se, GET_NAME(exe2mem_dout_se));
+    sc_trace(tf, exe2mem_din_se_s1, GET_NAME(exe2mem_din_se_s1));  // concatenation of exe_res, mem_data...etc
+    sc_trace(tf, exe2mem_dout_se_s1, GET_NAME(exe2mem_dout_se_s1));
 
-    sc_trace(tf, op1_se, GET_NAME(op1_se));
+    sc_trace(tf, op1_se_s1, GET_NAME(op1_se_s1));
     sc_trace(tf, op2_se, GET_NAME(op2_se));
     sc_trace(tf, alu_in_op2_se, GET_NAME(alu_in_op2_se));
     sc_trace(tf, alu_out_se, GET_NAME(alu_out_se));
@@ -424,8 +424,8 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, r2_valid_se, GET_NAME(r2_valid_se));
     sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
 
-    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
-    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+    sc_trace(tf, OP1_SE_S1, GET_NAME(OP1_SE_S1));
+    sc_trace(tf, OP2_SE_S1, GET_NAME(OP2_SE_S1));
 
     sc_trace(tf, BLOCK_BP_RD_S1, GET_NAME(BLOCK_BP_RD_S1));
 

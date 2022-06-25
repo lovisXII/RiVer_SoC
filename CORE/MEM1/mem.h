@@ -12,13 +12,14 @@ MEM_SIZE = 01 -> access in half word
 MEM_SIZE = 10  -> acces in byte
 
 */
-SC_MODULE(mem) {
+SC_MODULE(mem_s1) {
     // Mcache Interface :
 
     sc_out<sc_uint<32>> MCACHE_ADR_SM_S1;  // adress in memory
     sc_out<sc_uint<32>> MCACHE_DATA_SM_S1;
-    sc_out<bool>        MCACHE_ADR_VALID_SM_S1, MCACHE_STORE_SM_S1, MCACHE_LOAD_SM_S1;
-
+    sc_out<bool>        MCACHE_ADR_VALID_SM_S1 ;
+    sc_out<bool>        MCACHE_STORE_SM_S1;
+    sc_out<bool>        MCACHE_LOAD_SM_S1;
     sc_in<sc_uint<32>> MCACHE_RESULT_SM_S1;
     sc_in<bool>        MCACHE_STALL_SM_S1;
     sc_out<sc_uint<2>> MEM_SIZE_SM_S1;
@@ -67,11 +68,9 @@ SC_MODULE(mem) {
     // mem2wbk interface
 
     sc_in<bool>         MEM2WBK_POP_SW_S1;  // 35
-    sc_signal<bool>     mem2wbk_push_sm;
-    sc_signal<bool>     mem2wbk_full_sm;
-    sc_out<bool>        MEM2WBK_EMPTY_SM;
-    sc_out<sc_uint<32>> PC_MEM2WBK_RM;
-    sc_out<bool>        CSR_WENABLE_RM;  // 38
+    sc_out<bool>        MEM2WBK_EMPTY_SM_S1;
+    sc_out<sc_uint<32>> PC_MEM2WBK_RM_S1;
+    sc_out<bool>        CSR_WENABLE_RM_S1;  // 38
 
     // WBK interface
     sc_out<sc_uint<32>> MEM_RES_RM_S1;
@@ -92,10 +91,10 @@ SC_MODULE(mem) {
     // Interruption :
 
     sc_in<bool> INTERRUPTION_SE;
-    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SE;
+    sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S1;
     sc_in<bool> MACHINE_TIMER_INTERRUPT_SE;
     sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
-    sc_in<bool> EBREAK_RE;
+    sc_in<bool> EBREAK_RE_S1;
     // CSR Interface :
 
     sc_out<sc_uint<12>> CSR_WADR_SM_S1;
@@ -113,6 +112,9 @@ SC_MODULE(mem) {
     sc_in<sc_uint<32>>  MIP_VALUE_RC_S1;
 
     // Internal signals
+
+    sc_signal<bool>     mem2wbk_push_sm;
+    sc_signal<bool>     mem2wbk_full_sm;
 
     sc_signal<sc_bv<mem2wbk_size>> mem2wbk_din_sm;
     sc_signal<sc_bv<mem2wbk_size>> mem2wbk_dout_sm;
@@ -142,10 +144,10 @@ SC_MODULE(mem) {
     void csr_exception();
     void trace(sc_trace_file * tf);
 
-    SC_CTOR(mem) : fifo_inst("mem2wbk") {
+    SC_CTOR(mem_s1) : fifo_inst("mem2wbk") {
         fifo_inst.DIN_S(mem2wbk_din_sm);
         fifo_inst.DOUT_R(mem2wbk_dout_sm);
-        fifo_inst.EMPTY_S(MEM2WBK_EMPTY_SM);
+        fifo_inst.EMPTY_S(MEM2WBK_EMPTY_SM_S1);
         fifo_inst.FULL_S(mem2wbk_full_sm);
         fifo_inst.PUSH_S(mem2wbk_push_sm);
         fifo_inst.POP_S(MEM2WBK_POP_SW_S1);

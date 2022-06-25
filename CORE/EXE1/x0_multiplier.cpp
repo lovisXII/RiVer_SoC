@@ -14,8 +14,8 @@ void x0_multiplier::operation() {
     // |    ----------------------------------------     |   (-A)*B = !A * B + B | | | |
     // +-------------------------------------------------+-------------------------------------------+
 
-    sc_uint<32> op1 = OP1_SE;
-    sc_uint<32> op2 = OP2_SE;
+    sc_uint<32> op1 = OP1_SE_S1;
+    sc_uint<32> op2 = OP2_SE_S1;
 
     // signed extension
 
@@ -221,8 +221,8 @@ void x0_multiplier::manage_fifo() {
 void x0_multiplier::trace(sc_trace_file* tf) {
     sc_trace(tf, x02x1_full_sx0, GET_NAME(x02x1_full_sx0));
     sc_trace(tf, DEC2X0_EMPTY_SD, GET_NAME(DEC2X0_EMPTY_SD));
-    sc_trace(tf, OP1_SE, GET_NAME(OP1_SE));
-    sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
+    sc_trace(tf, OP1_SE_S1, GET_NAME(OP1_SE_S1));
+    sc_trace(tf, OP2_SE_S1, GET_NAME(OP2_SE_S1));
     sc_trace(tf, RES_RX0, GET_NAME(RES_RX0));
     sc_trace(tf, x02x1_din_sx0, GET_NAME(x02x1_din_sx0));
     sc_trace(tf, x02x1_dout_sx0, GET_NAME(x02x1_dout_sx0));

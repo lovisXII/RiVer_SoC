@@ -33,12 +33,12 @@ void reg::writing_adresse() {
             REG_RR[32].write(WRITE_PC_SD);  // we write the data into the
                                             // register from the written adress
         }
-        if (not(WADR_SW.read() == 32 && WRITE_PC_ENABLE_SD.read())) {
-            if (WADR_SW.read() != 0)  // si on cherche à écrire dans le registre 0 on ne fait rien
+        if (not(WADR_SW_S1.read() == 32 && WRITE_PC_ENABLE_SD.read())) {
+            if (WADR_SW_S1.read() != 0)  // si on cherche à écrire dans le registre 0 on ne fait rien
             {
-                if (WENABLE_SW.read())  // if the register written is valid
+                if (WENABLE_SW_S1.read())  // if the register written is valid
                 {
-                    REG_RR[WADR_SW.read()].write(WDATA_SW);  // we write the data into the register from
+                    REG_RR[WADR_SW_S1.read()].write(WDATA_SW_S1);  // we write the data into the register from
                                                              // the written adress
                 }
             }
@@ -57,9 +57,9 @@ void reg::trace(sc_trace_file* tf) {
     sc_trace(tf, RADR2_SD_S2, GET_NAME(RADR2_SD_S2));
     sc_trace(tf, RDATA1_SR_S2, GET_NAME(RDATA1_SR_S2));
     sc_trace(tf, RDATA2_SR_S2, GET_NAME(RDATA2_SR_S2));
-    sc_trace(tf, WADR_SW, GET_NAME(WADR_SW));
-    sc_trace(tf, WENABLE_SW, GET_NAME(WENABLE_SW));
-    sc_trace(tf, WDATA_SW, GET_NAME(WDATA_SW));
+    sc_trace(tf, WADR_SW_S1, GET_NAME(WADR_SW_S1));
+    sc_trace(tf, WENABLE_SW_S1, GET_NAME(WENABLE_SW_S1));
+    sc_trace(tf, WDATA_SW_S1, GET_NAME(WDATA_SW_S1));
     sc_trace(tf, READ_PC_SR, GET_NAME(READ_PC_SR));
     sc_trace(tf, WRITE_PC_SD, GET_NAME(WRITE_PC_SD));
     sc_trace(tf, WRITE_PC_ENABLE_SD, GET_NAME(WRITE_PC_ENABLE_SD));

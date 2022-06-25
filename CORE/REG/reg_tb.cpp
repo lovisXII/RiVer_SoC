@@ -52,9 +52,9 @@ int sc_main(int argc, char* argv[]) {
 
     reg_inst.RDATA1_SR(radr1_data);
     reg_inst.RDATA2_SR(radr2_data);
-    reg_inst.WADR_SW(wadr1);
-    reg_inst.WENABLE_SW(wadr1_valid);
-    reg_inst.WDATA_SW(wadr1_data);
+    reg_inst.WADR_SW_S1(wadr1);
+    reg_inst.WENABLE_SW_S1(wadr1_valid);
+    reg_inst.WDATA_SW_S1(wadr1_data);
 
     // PC Gestion :
 

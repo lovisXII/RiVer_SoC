@@ -7,7 +7,7 @@
 
 SC_MODULE(x0_multiplier) {
     // input :
-    sc_in<sc_uint<32>> OP1_SE, OP2_SE;
+    sc_in<sc_uint<32>> OP1_SE_S1, OP2_SE_S1;
     sc_in<sc_uint<2>>  EXE_CMD_RD_S1;
     sc_in<bool>        X02X1_POP_SX1;
     sc_in<bool>        DEC2X0_EMPTY_SD;
@@ -103,7 +103,7 @@ SC_MODULE(x0_multiplier) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(operation);
-        sensitive << OP1_SE << OP2_SE << EXE_CMD_RD_S1;
+        sensitive << OP1_SE_S1 << OP2_SE_S1 << EXE_CMD_RD_S1;
 
         // stage 1
         SC_METHOD(CSA_1);

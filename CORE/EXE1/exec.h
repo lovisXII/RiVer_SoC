@@ -10,7 +10,7 @@
 #define exe2mem_size        200
 #define start_kernel_adress 0xF0000000
 
-SC_MODULE(exec) {
+SC_MODULE(exec_s1) {
     // Input/Output of EXE :
 
     sc_in<sc_uint<32>> OP1_RD_S1;  // can contains CSR if CSR_type_operation_RD == 1
@@ -57,7 +57,7 @@ SC_MODULE(exec) {
     sc_in<bool> ENV_CALL_WRONG_MODE_RD_S1;
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RD_S1;
     sc_in<bool> MRET_RD_S1;
-    sc_in<bool> EBREAK_RD;
+    sc_in<bool> EBREAK_RD_S1;
 
     sc_out<bool> EXCEPTION_RE_S1;
     sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE_S1;  // adress from store/load isn't aligned
@@ -72,21 +72,21 @@ SC_MODULE(exec) {
     sc_out<bool> ENV_CALL_WRONG_MODE_RE_S1;
     sc_out<bool> INSTRUCTION_ACCESS_FAULT_RE_S1;
     sc_out<bool> MRET_RE_S1;
-    sc_out<bool> EBREAK_RE;
+    sc_out<bool> EBREAK_RE_S1;
 
-    sc_out<sc_uint<32>> OP1_SE;
-    sc_out<sc_uint<32>> OP2_SE;
+    sc_out<sc_uint<32>> OP1_SE_S1;
+    sc_out<sc_uint<32>> OP2_SE_S1;
     // Interruption :
 
-    sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE;
+    sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S1;
     sc_out<bool> MACHINE_TIMER_INTERRUPT_SE;
     sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
     sc_out<bool> INTERRUPTION_SE;
     // bypasses
 
-    sc_in<sc_uint<6>>  MEM_DEST_RM;
+    sc_in<sc_uint<6>>  MEM_DEST_RM_S1;
     sc_in<sc_uint<32>> MEM_RES_RM_S1;
-    sc_in<bool>        CSR_WENABLE_RM;
+    sc_in<bool>        CSR_WENABLE_RM_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
 
     // General Interface :
@@ -106,10 +106,10 @@ SC_MODULE(exec) {
     sc_out<sc_uint<2>>  MEM_SIZE_RE_S1;
     sc_out<sc_uint<32>> PC_EXE2MEM_RE_S1;
 
-    sc_out<bool> WB_RE_S1, MEM_SIGN_EXTEND_RE;  // taille fifo sortie : 7
-    sc_out<bool> MEM_LOAD_RE, MEM_STORE_RE;
+    sc_out<bool> WB_RE_S1, MEM_SIGN_EXTEND_RE_S1;  // taille fifo sortie : 7
+    sc_out<bool> MEM_LOAD_RE_S1, MEM_STORE_RE_S1;
     sc_out<bool> MULT_INST_RE_S1;      // multiplication instruction
-    sc_out<bool> MULT_SEL_HIGH_RE;  // select higher bits of multiplication
+    sc_out<bool> MULT_SEL_HIGH_RE_S1;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE_S1, DEC2EXE_POP_SE_S1;
 
@@ -119,12 +119,12 @@ SC_MODULE(exec) {
 
     // Internals signals :
 
-    sc_signal<sc_uint<32>> exe_res_se;
+    sc_signal<sc_uint<32>> exe_res_se_s1;
 
-    sc_signal<sc_bv<exe2mem_size>> exe2mem_din_se;  // concatenation of exe_res, mem_data...etc
-    sc_signal<sc_bv<exe2mem_size>> exe2mem_dout_se;
+    sc_signal<sc_bv<exe2mem_size>> exe2mem_din_se_s1;  // concatenation of exe_res, mem_data...etc
+    sc_signal<sc_bv<exe2mem_size>> exe2mem_dout_se_s1;
 
-    sc_signal<sc_uint<32>> op1_se;
+    sc_signal<sc_uint<32>> op1_se_s1;
     sc_signal<sc_uint<32>> op2_se;
     sc_signal<sc_uint<32>> alu_in_op2_se;
     sc_signal<sc_uint<32>> alu_out_se;
@@ -168,38 +168,38 @@ SC_MODULE(exec) {
     void exception();
 
     void trace(sc_trace_file * tf);
-    SC_CTOR(exec)
+    SC_CTOR(exec_s1)
         : alu_inst("alu"),
           shifter_inst("shifter"),
           // divider_inst("divider"),
           fifo_inst("exe2mem") {
         // ALU port map :
 
-        alu_inst.OP1_SE(op1_se);
-        alu_inst.OP2_SE(alu_in_op2_se);
+        alu_inst.OP1_SE_S1(op1_se_s1);
+        alu_inst.OP2_SE_S1(alu_in_op2_se);
         alu_inst.CMD_SE(CMD_RD_S1);
         alu_inst.CIN_SE(NEG_OP2_RD_S1);
         alu_inst.RES_SE(alu_out_se);
 
         // Shifter port map :
 
-        shifter_inst.DIN_SE(op1_se);
+        shifter_inst.DIN_SE(op1_se_s1);
         shifter_inst.SHIFT_VAL_SE(shift_val_se);
         shifter_inst.CMD_SE(CMD_RD_S1);
         shifter_inst.DOUT_SE(shifter_out_se);
 
         // DIVIDER port map :
 
-        /*divider_inst.OP1_SE(op1_se);
-        divider_inst.OP2_SE(alu_in_op2_se);
+        /*divider_inst.OP1_SE_S1(op1_se_s1);
+        divider_inst.OP2_SE_S1(alu_in_op2_se);
         divider_inst.CMD_SE(CMD_RD_S1);
         divider_inst.CIN_SE(NEG_OP2_RD_S1);
         divider_inst.RES_SE(divider_out_se);*/
 
         // fifo port map
 
-        fifo_inst.DIN_S(exe2mem_din_se);
-        fifo_inst.DOUT_R(exe2mem_dout_se);
+        fifo_inst.DIN_S(exe2mem_din_se_s1);
+        fifo_inst.DOUT_R(exe2mem_dout_se_s1);
         fifo_inst.EMPTY_S(EXE2MEM_EMPTY_SE_S1);
         fifo_inst.FULL_S(exe2mem_full_se);
         fifo_inst.PUSH_S(exe2mem_push_se);
@@ -208,27 +208,27 @@ SC_MODULE(exec) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << op1_se << NEG_OP2_RD_S1 << op2_se;
+        sensitive << op1_se_s1 << NEG_OP2_RD_S1 << op2_se;
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD_S1 << SLTU_RD_S1
                   << SELECT_TYPE_OPERATIONS_RD_S1 << CURRENT_MODE_SM_S1 << MEM_LOAD_RD_S1 << MEM_STORE_RD_S1
                   << exception_se << RESET;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD_S1 << MEM_SIZE_RD_S1 << MEM_LOAD_RD_S1 << MEM_SIGN_EXTEND_RD_S1
-                  << MEM_STORE_RD_S1 << WB_RD_S1 << exe_res_se << mem_load_re << mem_store_re << wb_re
+                  << MEM_STORE_RD_S1 << WB_RD_S1 << exe_res_se_s1 << mem_load_re << mem_store_re << wb_re
                   << CSR_WENABLE_RD_S1 << CSR_WADR_RD_S1 << CSR_RDATA_RD_S1 << ILLEGAL_INSTRUCTION_RD_S1
                   << ADRESS_MISSALIGNED_RD_S1 << ENV_CALL_U_MODE_RD_S1 << ENV_CALL_M_MODE_RD_S1 << exception_se
                   << load_adress_missaligned_se << load_access_fault_se << store_access_fault_se
                   << store_adress_missaligned_se << EXCEPTION_SM << MRET_RD_S1 << INSTRUCTION_ACCESS_FAULT_RD_S1
                   << MULT_INST_RD_S1;
         SC_METHOD(fifo_unconcat);
-        sensitive << exe2mem_dout_se;
+        sensitive << exe2mem_dout_se_s1;
         SC_METHOD(manage_fifo);
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD_S1 << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << exception_se << blocked
                   << r1_valid_se << r2_valid_se;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM << MEM_RES_RM_S1 << DEST_RE_S1 << EXE_RES_RE_S1 << RADR1_RD_S1
-                  << CSR_WENABLE_RE_S1 << BLOCK_BP_RD_S1 << DEST_RE_S1 << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM_S1
+        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM_S1 << MEM_RES_RM_S1 << DEST_RE_S1 << EXE_RES_RE_S1 << RADR1_RD_S1
+                  << CSR_WENABLE_RE_S1 << BLOCK_BP_RD_S1 << DEST_RE_S1 << MEM_LOAD_RE_S1 << CSR_WENABLE_RM_S1 << CSR_RDATA_RM_S1
                   << RADR2_RD_S1 << OP1_RD_S1 << OP2_RD_S1 << exception_se << MEM_DATA_RD_S1 << MEM_STORE_RD_S1
                   << MULT_INST_RE_S1 << MULT_INST_RM_S1 << BP_MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE_S1;
         SC_METHOD(exception);

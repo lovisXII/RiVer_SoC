@@ -28,7 +28,7 @@ int sc_main(int argc, char* argv[]) {
     tf = sc_create_vcd_trace_file("tf");
     cout << "Testing component \"Exec\"..." << endl;
 
-    exec unit_exec("exec");
+    exec_s1 unit_exec("exec_s1");
 
     // sc_trace_file* file = sc_create_vcd_trace_file("trace");
 
@@ -57,8 +57,8 @@ int sc_main(int argc, char* argv[]) {
 
     // Port Map :
 
-    unit_exec.OP1_SE(op1);
-    unit_exec.OP2_SE(op2);
+    unit_exec.OP1_SE_S1(op1);
+    unit_exec.OP2_SE_S1(op2);
     unit_exec.MEM_DATA_RD_S1(mem_data);
     unit_exec.DEST_RD_S1(dest);
     unit_exec.CMD_RD_S1(cmd);
@@ -77,9 +77,9 @@ int sc_main(int argc, char* argv[]) {
     unit_exec.DEST_RE_S1(ffout_dest);
     unit_exec.MEM_SIZE_RE_S1(ffout_mem_size);
     unit_exec.WB_RE_S1(ffout_wb);
-    unit_exec.MEM_LOAD_RE(ffout_mem_load);
-    unit_exec.MEM_STORE_RE(ffout_mem_store);
-    unit_exec.MEM_SIGN_EXTEND_RE(ffout_mem_sign_extend);  // taille fifo sortie : 76
+    unit_exec.MEM_LOAD_RE_S1(ffout_mem_load);
+    unit_exec.MEM_STORE_RE_S1(ffout_mem_store);
+    unit_exec.MEM_SIGN_EXTEND_RE_S1(ffout_mem_sign_extend);  // taille fifo sortie : 76
     unit_exec.EXE2MEM_EMPTY_SE_S1(exe2mem_empty);
     unit_exec.DEC2EXE_POP_SE_S1(dec2exe_pop);
 
@@ -168,43 +168,43 @@ int sc_main(int argc, char* argv[]) {
         sc_start(1, SC_NS);
 
         if (cmd_ == 0 && select_shift_ == 0) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ + op2_))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ + op2_))) {
                 cerr << "error sur +" << endl;
                 test_passed = false;
             }
         }
         if (cmd_ == 1 && select_shift_ == 0) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ && op2_))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ && op2_))) {
                 cerr << "error sur &&" << endl;
                 test_passed = false;
             }
         }
         if (cmd_ == 2 && select_shift_ == 0) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ | op2_))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ | op2_))) {
                 cerr << "error sur |" << endl;
                 test_passed = false;
             }
         }
         if (cmd_ == 3 && select_shift_ == 0) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ ^ op2_))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ ^ op2_))) {
                 cerr << "error sur ^" << endl;
                 test_passed = false;
             }
         }
         if (select_shift_ && unit_exec.CMD_RD_S1.read() == 0) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ << unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ << unit_exec.shift_val_se.read()))) {
                 cerr << "error sur sll" << endl;
                 test_passed = false;
             }
         }
         if (select_shift_ && unit_exec.CMD_RD_S1.read() == 1) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((((unsigned int)op1_) >> unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((((unsigned int)op1_) >> unit_exec.shift_val_se.read()))) {
                 cerr << "error sra" << endl;
                 test_passed = false;
             }
         }
         if (select_shift_ && unit_exec.CMD_RD_S1.read() == 2) {
-            if (unit_exec.exe_res_se.read() != (sc_uint<32>)((op1_ >> unit_exec.shift_val_se.read()))) {
+            if (unit_exec.exe_res_se_s1.read() != (sc_uint<32>)((op1_ >> unit_exec.shift_val_se.read()))) {
                 cerr << "error srl" << endl;
                 test_passed = false;
             }

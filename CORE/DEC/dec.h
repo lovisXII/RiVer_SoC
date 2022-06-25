@@ -139,7 +139,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>        CSR_WENABLE_RE_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RE_S1;
-    sc_in<bool>        CSR_WENABLE_RM;
+    sc_in<bool>        CSR_WENABLE_RM_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
 
     sc_out<bool>       BP_R1_VALID_RD;
@@ -161,7 +161,7 @@ SC_MODULE(decod) {
     sc_out<bool>      INSTRUCTION_ACCESS_FAULT_RD_S1;
     sc_out<bool>      MRET_RD_S1;
     sc_out<bool>      EXCEPTION_RD_S1;
-    sc_out<bool>      EBREAK_RD;
+    sc_out<bool>      EBREAK_RD_S1;
     sc_in<sc_uint<2>> CURRENT_MODE_SM_S1;
 
     // Interruption :
