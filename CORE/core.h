@@ -1,10 +1,16 @@
-#include "CSR/csr.h"
+#include "IFETCH/ifetch.h"
 #include "DEC/dec.h"
 #include "EXE1/exec.h"
-#include "IFETCH/ifetch.h"
 #include "MEM1/mem.h"
-#include "REG/reg.h"
 #include "WBK1/wbk.h"
+
+#include "EXE2/exec.h"
+#include "MEM2/mem.h"
+#include "WBK2/wbk.h"
+
+#include "CSR/csr.h"
+#include "REG/reg.h"
+
 #include "systemc.h"
 
 #include "EXE1/x0_multiplier.h"
@@ -12,14 +18,20 @@
 #include "WBK1/x2_multiplier.h"
 
 SC_MODULE(core) {
+    
     // Stage instanciation
-    decod  dec_inst;
-    exec_s1   exec_inst;
-    ifetch ifetch_inst;
-    mem_s1    mem_inst;
-    reg    reg_inst;
-    wbk_s1    wbk_inst;
-    csr    csr_inst;
+    
+    ifetch      ifetch_inst;
+    decod       dec_inst;
+    exec_s1     exec_inst_s1;
+    mem_s1      mem_inst_s1;
+    wbk_s1      wbk_inst_s1;
+    exec_s2     exec_inst_s2;
+    mem_s2      mem_inst_s2;
+    wbk_s2      wbk_inst_s2;
+    reg         reg_inst;
+    csr         csr_inst;
+    
 
 
     x0_multiplier      x0_multiplier_inst;
@@ -294,11 +306,11 @@ SC_MODULE(core) {
     SC_CTOR(core) : 
           ifetch_inst("ifetch"),
           dec_inst("decod"),
-          exec_inst("exec_s1"),
+          exec_inst_s1("exec_s1"),
           x0_multiplier_inst("x0_multiplier"),
-          mem_inst("mem"),
+          mem_inst_s1("mem"),
           x1_multiplier_inst("x1_multiplier"),
-          wbk_inst("wbk"),
+          wbk_inst_s1("wbk"),
           x2_multiplier_inst("x2_multiplier"),
           reg_inst("reg"),
           csr_inst("csr") {
@@ -474,104 +486,106 @@ SC_MODULE(core) {
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
-        exec_inst.RADR1_RD_S1(BP_RADR1_RD);
-        exec_inst.RADR2_RD_S1(BP_RADR2_RD);
-        exec_inst.OP1_VALID_RD_S1(BP_R1_VALID_RD);
-        exec_inst.OP2_VALID_RD_S1(BP_R2_VALID_RD);
-        exec_inst.MEM_DEST_RM_S1(DEST_RM_S1);
-        exec_inst.MEM_RES_RM_S1(MEM_RES_RM_S1);
-        exec_inst.OP1_RD_S1(OP1_RD_S1);
-        exec_inst.OP2_RD_S1(OP2_RD_S1);
-        exec_inst.CMD_RD_S1(EXE_CMD_RD_S1);
-        exec_inst.DEST_RD_S1(EXE_DEST_SD_S1);
-        exec_inst.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
-        exec_inst.WB_RD_S1(WB_RD_S1);
-        exec_inst.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
-        exec_inst.EBREAK_RD_S1(EBREAK_RD_S1);
-        exec_inst.EBREAK_RE_S1(EBREAK_RE_S1);
+        exec_inst_s1.RADR1_RD_S1(BP_RADR1_RD);
+        exec_inst_s1.RADR2_RD_S1(BP_RADR2_RD);
+        exec_inst_s1.OP1_VALID_RD_S1(BP_R1_VALID_RD);
+        exec_inst_s1.OP2_VALID_RD_S1(BP_R2_VALID_RD);
+        exec_inst_s1.MEM_DEST_RM_S1(DEST_RM_S1);
+        exec_inst_s1.MEM_RES_RM_S1(MEM_RES_RM_S1);
+        exec_inst_s1.OP1_RD_S1(OP1_RD_S1);
+        exec_inst_s1.OP2_RD_S1(OP2_RD_S1);
+        exec_inst_s1.CMD_RD_S1(EXE_CMD_RD_S1);
+        exec_inst_s1.DEST_RD_S1(EXE_DEST_SD_S1);
+        exec_inst_s1.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
+        exec_inst_s1.WB_RD_S1(WB_RD_S1);
+        exec_inst_s1.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
+        exec_inst_s1.EBREAK_RD_S1(EBREAK_RD_S1);
+        exec_inst_s1.EBREAK_RE_S1(EBREAK_RE_S1);
 
-        exec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
-        exec_inst.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
-        exec_inst.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
+        exec_inst_s1.MULT_INST_RD_S1(MULT_INST_RD_S1);
+        exec_inst_s1.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
+        exec_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
 
-        exec_inst.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
-        exec_inst.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
-        exec_inst.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
-        exec_inst.MEM_SIGN_EXTEND_RD_S1(MEM_SIGN_EXTEND_RD_S1);
-        exec_inst.MEM_SIZE_RD_S1(MEM_SIZE_RD_S1);
-        exec_inst.SLT_RD_S1(SLT_RD_S1);
-        exec_inst.SLTU_RD_S1(SLTU_RD_S1);
+        exec_inst_s1.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
+        exec_inst_s1.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
+        exec_inst_s1.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
+        exec_inst_s1.MEM_SIGN_EXTEND_RD_S1(MEM_SIGN_EXTEND_RD_S1);
+        exec_inst_s1.MEM_SIZE_RD_S1(MEM_SIZE_RD_S1);
+        exec_inst_s1.SLT_RD_S1(SLT_RD_S1);
+        exec_inst_s1.SLTU_RD_S1(SLTU_RD_S1);
 
-        exec_inst.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
-        exec_inst.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
+        exec_inst_s1.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
+        exec_inst_s1.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
 
-        exec_inst.EXE_RES_RE_S1(EXE_RES_RE_S1);
-        exec_inst.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
-        exec_inst.DEST_RE_S1(DEST_RE_S1);
-        exec_inst.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
+        exec_inst_s1.EXE_RES_RE_S1(EXE_RES_RE_S1);
+        exec_inst_s1.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
+        exec_inst_s1.DEST_RE_S1(DEST_RE_S1);
+        exec_inst_s1.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
 
-        exec_inst.WB_RE_S1(MEM_WB);
-        exec_inst.MEM_SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE_S1);
-        exec_inst.MEM_LOAD_RE_S1(MEM_LOAD_RE_S1);
-        exec_inst.MEM_STORE_RE_S1(MEM_STORE_RE_S1);
-        exec_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
-        exec_inst.MULT_SEL_HIGH_RE_S1(MULT_SEL_HIGH_RE_S1);
-        exec_inst.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
-        exec_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
+        exec_inst_s1.WB_RE_S1(MEM_WB);
+        exec_inst_s1.MEM_SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE_S1);
+        exec_inst_s1.MEM_LOAD_RE_S1(MEM_LOAD_RE_S1);
+        exec_inst_s1.MEM_STORE_RE_S1(MEM_STORE_RE_S1);
+        exec_inst_s1.MULT_INST_RE_S1(MULT_INST_RE_S1);
+        exec_inst_s1.MULT_SEL_HIGH_RE_S1(MULT_SEL_HIGH_RE_S1);
+        exec_inst_s1.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
+        exec_inst_s1.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
 
-        exec_inst.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
-        exec_inst.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
+        exec_inst_s1.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
+        exec_inst_s1.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
 
-        exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        exec_inst.MACHINE_SOFTWARE_INTERRUPT_SX(MACHINE_SOFTWARE_INTERRUPT_SX);
-        exec_inst.MACHINE_TIMER_INTERRUPT_SX(MACHINE_TIMER_INTERRUPT_SX);
-        exec_inst.MACHINE_EXTERNAL_INTERRUPT_SX(MACHINE_EXTERNAL_INTERRUPT_SX);
-        exec_inst.MACHINE_SOFTWARE_INTERRUPT_SE_S1(MACHINE_SOFTWARE_INTERRUPT_SE_S1);
-        exec_inst.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
-        exec_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
-        exec_inst.EXCEPTION_RD_S1(EXCEPTION_RD_S1);
-        exec_inst.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
-        exec_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
-        exec_inst.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
-        exec_inst.CSR_WADR_RE(CSR_WADR_RE);
-        exec_inst.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
-        exec_inst.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
-        exec_inst.ENV_CALL_S_MODE_RD_S1(ENV_CALL_S_MODE_RD_S1);
-        exec_inst.ENV_CALL_WRONG_MODE_RD_S1(ENV_CALL_WRONG_MODE_RD_S1);
-        exec_inst.ILLEGAL_INSTRUCTION_RD_S1(ILLEGAL_INSTRUCTION_RD_S1);  // accessing stuff in wrong mode
-        exec_inst.ADRESS_MISSALIGNED_RD_S1(ADRESS_MISSALIGNED_RD_S1);    // branch offset is misaligned
-        exec_inst.ENV_CALL_U_MODE_RD_S1(ENV_CALL_U_MODE_RD_S1);
-        exec_inst.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
-        exec_inst.MRET_RD_S1(MRET_RD_S1);
+        exec_inst_s1.INTERRUPTION_SE(INTERRUPTION_SE);
+        exec_inst_s1.MACHINE_SOFTWARE_INTERRUPT_SX(MACHINE_SOFTWARE_INTERRUPT_SX);
+        exec_inst_s1.MACHINE_TIMER_INTERRUPT_SX(MACHINE_TIMER_INTERRUPT_SX);
+        exec_inst_s1.MACHINE_EXTERNAL_INTERRUPT_SX(MACHINE_EXTERNAL_INTERRUPT_SX);
+        exec_inst_s1.MACHINE_SOFTWARE_INTERRUPT_SE_S1(MACHINE_SOFTWARE_INTERRUPT_SE_S1);
+        exec_inst_s1.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
+        exec_inst_s1.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
+        exec_inst_s1.EXCEPTION_RD_S1(EXCEPTION_RD_S1);
+        exec_inst_s1.CSR_WENABLE_RD_S1(CSR_WENABLE_RD_S1);
+        exec_inst_s1.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
+        exec_inst_s1.CSR_WADR_RD_S1(CSR_WADR_RD_S1);
+        exec_inst_s1.CSR_WADR_RE(CSR_WADR_RE);
+        exec_inst_s1.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
+        exec_inst_s1.CSR_RDATA_RD_S1(CSR_RDATA_RD_S1);
+        exec_inst_s1.ENV_CALL_S_MODE_RD_S1(ENV_CALL_S_MODE_RD_S1);
+        exec_inst_s1.ENV_CALL_WRONG_MODE_RD_S1(ENV_CALL_WRONG_MODE_RD_S1);
+        exec_inst_s1.ILLEGAL_INSTRUCTION_RD_S1(ILLEGAL_INSTRUCTION_RD_S1);  // accessing stuff in wrong mode
+        exec_inst_s1.ADRESS_MISSALIGNED_RD_S1(ADRESS_MISSALIGNED_RD_S1);    // branch offset is misaligned
+        exec_inst_s1.ENV_CALL_U_MODE_RD_S1(ENV_CALL_U_MODE_RD_S1);
+        exec_inst_s1.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
+        exec_inst_s1.MRET_RD_S1(MRET_RD_S1);
 
-        exec_inst.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
-        exec_inst.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
-        exec_inst.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
-        exec_inst.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
-        exec_inst.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
-        exec_inst.ENV_CALL_WRONG_MODE_RE_S1(ENV_CALL_WRONG_MODE_RE_S1);
-        exec_inst.ENV_CALL_U_MODE_RE_S1(ENV_CALL_U_MODE_RE_S1);
-        exec_inst.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
-        exec_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
-        exec_inst.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);
-        exec_inst.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
-        exec_inst.EXCEPTION_SM(EXCEPTION_SM);
-        exec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
-        exec_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
-        exec_inst.MRET_RE_S1(MRET_RE_S1);
-        exec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
-        exec_inst.INSTRUCTION_ACCESS_FAULT_RE_S1(INSTRUCTION_ACCESS_FAULT_RE_S1);
-        exec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
-        exec_inst.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);
+        exec_inst_s1.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
+        exec_inst_s1.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst_s1.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
+        exec_inst_s1.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst_s1.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
+        exec_inst_s1.ENV_CALL_WRONG_MODE_RE_S1(ENV_CALL_WRONG_MODE_RE_S1);
+        exec_inst_s1.ENV_CALL_U_MODE_RE_S1(ENV_CALL_U_MODE_RE_S1);
+        exec_inst_s1.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
+        exec_inst_s1.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
+        exec_inst_s1.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);
+        exec_inst_s1.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
+        exec_inst_s1.EXCEPTION_SM(EXCEPTION_SM);
+        exec_inst_s1.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
+        exec_inst_s1.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        exec_inst_s1.MRET_RE_S1(MRET_RE_S1);
+        exec_inst_s1.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
+        exec_inst_s1.INSTRUCTION_ACCESS_FAULT_RE_S1(INSTRUCTION_ACCESS_FAULT_RE_S1);
+        exec_inst_s1.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
+        exec_inst_s1.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);
 
-        exec_inst.OP1_SE_S1(op1_se_s1);
-        exec_inst.OP2_SE_S1(op2_se);
+        exec_inst_s1.OP1_SE_S1(op1_se_s1);
+        exec_inst_s1.OP2_SE_S1(op2_se);
 
-        exec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
-        exec_inst.BP_MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
+        exec_inst_s1.MULT_INST_RM_S1(MULT_INST_RM_S1);
+        exec_inst_s1.BP_MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
 
-        exec_inst.CLK(CLK);
-        exec_inst.RESET(RESET);
+        exec_inst_s1.CLK(CLK);
+        exec_inst_s1.RESET(RESET);
+
+
 
         //X0 - MULTIPLIER port map :
 
@@ -591,90 +605,90 @@ SC_MODULE(core) {
 
         // MEM port map :
 
-        mem_inst.EXE_RES_RE_S1(EXE_RES_RE_S1);  // 0
-        mem_inst.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
-        mem_inst.DEST_RE_S1(DEST_RE_S1);
-        mem_inst.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
+        mem_inst_s1.EXE_RES_RE_S1(EXE_RES_RE_S1);  // 0
+        mem_inst_s1.MEM_DATA_RE_S1(MEM_DATA_RE_S1);
+        mem_inst_s1.DEST_RE_S1(DEST_RE_S1);
+        mem_inst_s1.MEM_SIZE_RE_S1(MEM_SIZE_RE_S1);
 
-        mem_inst.WB_RE_S1(MEM_WB);
-        mem_inst.SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE_S1);
-        mem_inst.LOAD_RE_S1(MEM_LOAD_RE_S1);
-        mem_inst.STORE_RE_S1(MEM_STORE_RE_S1);
-        mem_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
-        mem_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
-        mem_inst.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
-        mem_inst.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
+        mem_inst_s1.WB_RE_S1(MEM_WB);
+        mem_inst_s1.SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE_S1);
+        mem_inst_s1.LOAD_RE_S1(MEM_LOAD_RE_S1);
+        mem_inst_s1.STORE_RE_S1(MEM_STORE_RE_S1);
+        mem_inst_s1.MULT_INST_RE_S1(MULT_INST_RE_S1);
+        mem_inst_s1.MULT_INST_RM_S1(MULT_INST_RM_S1);
+        mem_inst_s1.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
+        mem_inst_s1.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
 
-        mem_inst.MEM_RES_RM_S1(MEM_RES_RM_S1);
-        mem_inst.DEST_RM_S1(DEST_RM_S1);
-        mem_inst.WB_RM_S1(WB_RM_S1);
-        mem_inst.EBREAK_RE_S1(EBREAK_RE_S1);
+        mem_inst_s1.MEM_RES_RM_S1(MEM_RES_RM_S1);
+        mem_inst_s1.DEST_RM_S1(DEST_RM_S1);
+        mem_inst_s1.WB_RM_S1(WB_RM_S1);
+        mem_inst_s1.EBREAK_RE_S1(EBREAK_RE_S1);
 
-        mem_inst.MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
-        mem_inst.MEM2WBK_POP_SW_S1(MEM2WBK_POP_SW_S1);
+        mem_inst_s1.MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
+        mem_inst_s1.MEM2WBK_POP_SW_S1(MEM2WBK_POP_SW_S1);
 
-        mem_inst.MCACHE_ADR_SM_S1(MCACHE_ADR_SM_S1);
-        mem_inst.MCACHE_DATA_SM_S1(MCACHE_DATA_SM_S1);
-        mem_inst.MCACHE_ADR_VALID_SM_S1(MCACHE_ADR_VALID_SM_S1);
-        mem_inst.MCACHE_STORE_SM_S1(MCACHE_STORE_SM_S1);
-        mem_inst.MCACHE_LOAD_SM_S1(MCACHE_LOAD_SM_S1);  // 19
-        mem_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);  
+        mem_inst_s1.MCACHE_ADR_SM_S1(MCACHE_ADR_SM_S1);
+        mem_inst_s1.MCACHE_DATA_SM_S1(MCACHE_DATA_SM_S1);
+        mem_inst_s1.MCACHE_ADR_VALID_SM_S1(MCACHE_ADR_VALID_SM_S1);
+        mem_inst_s1.MCACHE_STORE_SM_S1(MCACHE_STORE_SM_S1);
+        mem_inst_s1.MCACHE_LOAD_SM_S1(MCACHE_LOAD_SM_S1);  // 19
+        mem_inst_s1.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);  
 
-        mem_inst.MCACHE_RESULT_SM_S1(MCACHE_RESULT_SM_S1);
-        mem_inst.MCACHE_STALL_SM_S1(MCACHE_STALL_SM_S1);
+        mem_inst_s1.MCACHE_RESULT_SM_S1(MCACHE_RESULT_SM_S1);
+        mem_inst_s1.MCACHE_STALL_SM_S1(MCACHE_STALL_SM_S1);
 
-        mem_inst.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
-        mem_inst.PC_MEM2WBK_RM_S1(PC_MEM2WBK_RM_S1);
+        mem_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
+        mem_inst_s1.PC_MEM2WBK_RM_S1(PC_MEM2WBK_RM_S1);
 
-        mem_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        mem_inst.MACHINE_SOFTWARE_INTERRUPT_SE_S1(MACHINE_SOFTWARE_INTERRUPT_SE_S1);
-        mem_inst.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
-        mem_inst.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
-        mem_inst.CSR_WADR_SE_S1(CSR_WADR_RE);
-        mem_inst.CSR_WADR_SM_S1(CSR_WADR_SM_S1);
-        mem_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
-        mem_inst.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
-        mem_inst.CSR_WDATA_SM_S1(CSR_WDATA_SM_S1);
-        mem_inst.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
-        mem_inst.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
+        mem_inst_s1.INTERRUPTION_SE(INTERRUPTION_SE);
+        mem_inst_s1.MACHINE_SOFTWARE_INTERRUPT_SE_S1(MACHINE_SOFTWARE_INTERRUPT_SE_S1);
+        mem_inst_s1.MACHINE_TIMER_INTERRUPT_SE(MACHINE_TIMER_INTERRUPT_SE);
+        mem_inst_s1.MACHINE_EXTERNAL_INTERRUPT_SE(MACHINE_EXTERNAL_INTERRUPT_SE);
+        mem_inst_s1.CSR_WADR_SE_S1(CSR_WADR_RE);
+        mem_inst_s1.CSR_WADR_SM_S1(CSR_WADR_SM_S1);
+        mem_inst_s1.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
+        mem_inst_s1.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
+        mem_inst_s1.CSR_WDATA_SM_S1(CSR_WDATA_SM_S1);
+        mem_inst_s1.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
+        mem_inst_s1.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
 
-        mem_inst.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
-        mem_inst.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
-        mem_inst.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
-        mem_inst.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
-        mem_inst.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
-        mem_inst.ENV_CALL_U_MODE_RE_S1(ENV_CALL_U_MODE_RE_S1);
-        mem_inst.ENV_CALL_WRONG_MODE_RE_S1(ENV_CALL_WRONG_MODE_RE_S1);
-        mem_inst.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
-        mem_inst.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
-        mem_inst.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);  // 39
-        mem_inst.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
-        mem_inst.MRET_RE_S1(MRET_RE_S1);
-        mem_inst.INSTRUCTION_ACCESS_FAULT_RE_S1(INSTRUCTION_ACCESS_FAULT_RE_S1);
+        mem_inst_s1.EXCEPTION_RE_S1(EXCEPTION_RE_S1);
+        mem_inst_s1.LOAD_ADRESS_MISSALIGNED_RE_S1(LOAD_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst_s1.LOAD_ACCESS_FAULT_RE_S1(LOAD_ACCESS_FAULT_RE_S1);
+        mem_inst_s1.STORE_ADRESS_MISSALIGNED_RE_S1(STORE_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst_s1.STORE_ACCESS_FAULT_RE_S1(STORE_ACCESS_FAULT_RE_S1);
+        mem_inst_s1.ENV_CALL_U_MODE_RE_S1(ENV_CALL_U_MODE_RE_S1);
+        mem_inst_s1.ENV_CALL_WRONG_MODE_RE_S1(ENV_CALL_WRONG_MODE_RE_S1);
+        mem_inst_s1.ILLEGAL_INSTRUCTION_RE_S1(ILLEGAL_INSTRUCTION_RE_S1);
+        mem_inst_s1.INSTRUCTION_ADRESS_MISSALIGNED_RE_S1(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1);
+        mem_inst_s1.ENV_CALL_S_MODE_RE_S1(ENV_CALL_S_MODE_RE_S1);  // 39
+        mem_inst_s1.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
+        mem_inst_s1.MRET_RE_S1(MRET_RE_S1);
+        mem_inst_s1.INSTRUCTION_ACCESS_FAULT_RE_S1(INSTRUCTION_ACCESS_FAULT_RE_S1);
 
-        mem_inst.BUS_ERROR_SX(BUS_ERROR_SX);
+        mem_inst_s1.BUS_ERROR_SX(BUS_ERROR_SX);
 
-        mem_inst.EXCEPTION_SM(EXCEPTION_SM);
-        mem_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
-        mem_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
-        mem_inst.MRET_SM(MRET_SM);
+        mem_inst_s1.EXCEPTION_SM(EXCEPTION_SM);
+        mem_inst_s1.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        mem_inst_s1.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
+        mem_inst_s1.MRET_SM(MRET_SM);
 
-        mem_inst.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
-        mem_inst.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
-        mem_inst.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
-        mem_inst.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
+        mem_inst_s1.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
+        mem_inst_s1.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
+        mem_inst_s1.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
+        mem_inst_s1.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
 
-        mem_inst.MEPC_SC_S1(MEPC_SC_S1);
-        mem_inst.MSTATUS_RC_S1(MSTATUS_RC_S1);
-        mem_inst.MTVEC_VALUE_RC_S1(MTVEC_VALUE_RC_S1);
-        mem_inst.MIP_VALUE_RC_S1(MIP_VALUE_RC_S1);      // 54
-        mem_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
+        mem_inst_s1.MEPC_SC_S1(MEPC_SC_S1);
+        mem_inst_s1.MSTATUS_RC_S1(MSTATUS_RC_S1);
+        mem_inst_s1.MTVEC_VALUE_RC_S1(MTVEC_VALUE_RC_S1);
+        mem_inst_s1.MIP_VALUE_RC_S1(MIP_VALUE_RC_S1);      // 54
+        mem_inst_s1.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM_S1(CSR_ENABLE_BEFORE_FIFO_SM_S1);  // 55
-        mem_inst.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);  
+        mem_inst_s1.CSR_ENABLE_BEFORE_FIFO_SM_S1(CSR_ENABLE_BEFORE_FIFO_SM_S1);  // 55
+        mem_inst_s1.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);  
 
-        mem_inst.CLK(CLK);
-        mem_inst.RESET(RESET);  // 58
+        mem_inst_s1.CLK(CLK);
+        mem_inst_s1.RESET(RESET);  // 58
 
         //X1 - MULTIPLIER port map :
 
@@ -714,28 +728,28 @@ SC_MODULE(core) {
         reg_inst.CLK(CLK);
         reg_inst.RESET_N(RESET);
 
-        wbk_inst.MEM_RES_RM_S1(MEM_RES_RM_S1);
-        wbk_inst.DEST_RM_S1(DEST_RM_S1);
-        wbk_inst.WB_RM_S1(WB_RM_S1);
-        wbk_inst.MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
-        wbk_inst.MEM2WBK_POP_SW_S1(MEM2WBK_POP_SW_S1);
+        wbk_inst_s1.MEM_RES_RM_S1(MEM_RES_RM_S1);
+        wbk_inst_s1.DEST_RM_S1(DEST_RM_S1);
+        wbk_inst_s1.WB_RM_S1(WB_RM_S1);
+        wbk_inst_s1.MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
+        wbk_inst_s1.MEM2WBK_POP_SW_S1(MEM2WBK_POP_SW_S1);
 
-        wbk_inst.WADR_SW_S1(WADR_SW_S1);
-        wbk_inst.WDATA_SW_S1(WDATA_SW_S1);
-        wbk_inst.WENABLE_SW_S1(WENABLE_SW_S1);
-        wbk_inst.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
-        wbk_inst.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
+        wbk_inst_s1.WADR_SW_S1(WADR_SW_S1);
+        wbk_inst_s1.WDATA_SW_S1(WDATA_SW_S1);
+        wbk_inst_s1.WENABLE_SW_S1(WENABLE_SW_S1);
+        wbk_inst_s1.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
+        wbk_inst_s1.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
 
-        wbk_inst.PC_MEM2WBK_RM_S1(PC_MEM2WBK_RM_S1);
+        wbk_inst_s1.PC_MEM2WBK_RM_S1(PC_MEM2WBK_RM_S1);
 
-        wbk_inst.INTERRUPTION_SE(INTERRUPTION_SE);
-        wbk_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        wbk_inst_s1.INTERRUPTION_SE(INTERRUPTION_SE);
+        wbk_inst_s1.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         
-        wbk_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
-        wbk_inst.X2_RES_RX2(multiplier_out_sx2);
+        wbk_inst_s1.MULT_INST_RM_S1(MULT_INST_RM_S1);
+        wbk_inst_s1.X2_RES_RX2(multiplier_out_sx2);
 
-        wbk_inst.CLK(CLK);
-        wbk_inst.RESET(RESET);
+        wbk_inst_s1.CLK(CLK);
+        wbk_inst_s1.RESET(RESET);
 
         //X1 - MULTIPLIER port map :
 
