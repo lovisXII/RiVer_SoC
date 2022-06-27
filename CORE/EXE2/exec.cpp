@@ -1,6 +1,4 @@
 #include "exec.h"
-#include "alu.h"
-#include "shifter.h"
 
 void exec_s2::preprocess_op() {
     sc_uint<32> op1 = op1_se_s2.read();
