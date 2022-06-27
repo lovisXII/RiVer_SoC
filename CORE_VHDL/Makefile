@@ -39,4 +39,4 @@ exception.o : exception.s
 
 
 clean:
-	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb 
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.out *.out.txt
