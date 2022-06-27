@@ -54,7 +54,6 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= data & mask; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("[write mem] : at @ %x writting %x\n", adr, tmp);
     return 0; 
 }
 
@@ -70,7 +69,7 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
-extern int ghdl_main(int argc, char const* argv[]);
+// extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -126,7 +125,7 @@ int main(int argc, char const* argv[]) {
     FILE_READ* structure = (FILE_READ*)malloc(sizeof(FILE_READ));
     structure = Read_Elf32(output);
       
-    printf("Number of Instruction : %x\n", (structure->size)/4) ;
+    printf("Number of Instruction : %d\n", (structure->size)/4) ;
 
     printf("Start Adress : %x\n",structure->start_adr) ;
     start_pc = (structure->start_adr);
@@ -140,15 +139,19 @@ int main(int argc, char const* argv[]) {
     int *adresses       = malloc(((structure->size)/4)*sizeof(int)) ;
 
     printf("******LOADING INSTRUCTION*****\n");
-    while(i < structure->size){
-        printf("%x : %x\n",structure->start_adr+i , mem_lw(structure->start_adr+i)) ;
-        write_mem(structure->start_adr+i,mem_lw(structure->start_adr+i), 15);
-        i+=4 ;
-        j++;
+    // Sections loading
+    Elf32_Obj *pObj = structure->pObj_struct;
+
+    for (int i=0; i< pObj->Head.e_shnum; i++)
+    {
+        for(int j = 0 ; j < (pObj->size[i]); j+=4){     
+            printf("%8x : %8x\n",(pObj->Section_Hdr[i]->sh_addr)+j, mem_lw(pObj->Section_Hdr[i]->sh_addr+j)) ;
+            write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15);
+        }
     }
     Del_Elf32(structure->pObj_struct);
 
-    ghdl_main(argc - nargs, &argv[nargs]);
+    // ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 
