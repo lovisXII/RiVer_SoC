@@ -15,6 +15,15 @@ int bad_adr = 0;
 
 int*** ram[256];
 
+//riscof parameters
+
+int begin_signature = 0 ;
+int end_signature = 0;
+int signature_size = 0 ;
+int rvtest_code_end = 0;
+int **signature_value ;
+FILE   *riscof_signature ;
+
 int read_mem(int a) {
     int addr1, addr2, addr3, addr4;
     int adr = a;
@@ -24,13 +33,34 @@ int read_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
+        //printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
 }
 
-int end_simulation(int result) {
-    exit(result);
+int end_simulation(int result, int riscof_enable) {
+    if(!riscof_enable)
+        exit(result);
+    else{
+        if(begin_signature && end_signature)
+        {    
+            signature_size = (end_signature - begin_signature)/4 ;
+            signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
+            for(int i = 0 ; i < signature_size ; i++)
+            {
+                signature_value[i] = read_mem(begin_signature+i*4) ;
+                fprintf(riscof_signature,"%x\n",signature_value[i]) ;
+            }
+        }
+        exit(result);
+    }
+    
+}
+
+int get_end_riscof(int z)
+{
+    return rvtest_code_end ;
 }
 
 int write_mem(int a, int data, int byt_sel) {
@@ -58,6 +88,7 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= data & mask; 
     ram[addr1][addr2][addr3][addr4] = tmp;
+    printf("[write mem] : at @ %x writting %x\n", adr, tmp);
     return 0; 
 }
 
@@ -78,7 +109,6 @@ extern int ghdl_main(int argc, char const* argv[]);
 
 int main(int argc, char const* argv[]) {
     
-    FILE   *riscof_signature ;
     char   signature_name[20] ="";
     char   opt[20] = "";
     int    riscof = 0 ;
@@ -86,12 +116,7 @@ int main(int argc, char const* argv[]) {
     char   output[30] ;
     char   test[512] = "> a.out.txt";
     int nargs = 1;
-    int begin_signature = 0 ;
-    int end_signature = 0;
-    int rvtest_code_end = 0;
     int rvtest_entry_point = 0;
-    int signature_size = 0 ;
-    int **signature_value ;
 
 
     strcpy(path,argv[1]) ;
@@ -193,16 +218,7 @@ int main(int argc, char const* argv[]) {
         start_pc = (structure->start_adr);
         
     printf("Start Adress : %x\n",start_pc) ;
-    if(begin_signature && end_signature)
-    {    
-        signature_size = (end_signature - begin_signature)/4 ;
-        signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
-        for(int i = 0 ; i < signature_size ; i++)
-        {
-            signature_value[i] = read_mem(begin_signature+i*4) ;
-            fprintf(riscof_signature,"%x\n",signature_value[i]) ;
-        }
-    }
+
     ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }

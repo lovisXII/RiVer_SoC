@@ -41,11 +41,17 @@ begin
 end get_bad; 
 attribute foreign of get_bad : function is  "VHPIDIRECT get_bad";
 
-function end_simulation(result : integer) return integer is 
+function end_simulation(result : integer; riscof_enable : integer) return integer is 
 begin
     assert false severity failure; 
 end end_simulation; 
 attribute foreign of end_simulation : function is  "VHPIDIRECT end_simulation";
+
+function get_end_riscof(z : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_end_riscof; 
+attribute foreign of get_end_riscof : function is "VHPIDIRECT get_end_riscof";    
 
 function to_string ( a: std_logic_vector) return string is
 variable b : string (1 to a'length) := (others => NUL);
@@ -115,7 +121,7 @@ end component;
 -- Simulation 
 constant NCYCLES : integer := 100000; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
-signal good_adr, bad_adr : std_logic_vector(31 downto 0);
+signal good_adr, bad_adr, riscof_end : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
 signal result : integer := 0;  
 
@@ -123,7 +129,7 @@ begin
 
 good_adr    <=  std_logic_vector(to_signed(get_good(0), 32));
 bad_adr     <=  std_logic_vector(to_signed(get_bad(0), 32));
-
+riscof_end <=  std_logic_vector(to_signed(get_end_riscof(0), 32));
 core0 : core
     port map(
         -- global interface
@@ -157,21 +163,26 @@ begin
     clk <= '0'; 
     wait for 5 ns; 
     clk <= '1'; 
-    CYCLES <= CYCLES + 1; 
+    --  CYCLES <= CYCLES + 1; 
     wait for 5 ns; 
-    if CYCLES = 1 then 
-        assert false report "simulation begin" severity note; 
-    end if; 
-    if end_simu = '1' then 
-        assert false report "end of simulation" severity note; 
-        r0 := end_simulation(result);
-        wait; 
-    end if; 
-    if CYCLES = NCYCLES then 
-        assert false report "end of simulation (timeout)" severity note; 
-        r0 := end_simulation(un);
-        wait; 
-    end if; 
+    -- if CYCLES = 1 then 
+    --     assert false report "simulation begin" severity note; 
+    -- end if; 
+    -- if end_simu = '1' then 
+    --     assert false report "end of simulation" severity note; 
+    --     r0 := end_simulation(result,un);
+    --     wait; 
+    -- end if; 
+    -- if CYCLES = NCYCLES then 
+    --     assert false report "end of simulation (timeout)" severity note; 
+    --     r0 := end_simulation(un,un);
+       -- wait; 
+    --end if;
+    
+    if ADR_SI = riscof_end then   
+    report "end riscof test" severity note; 
+        r0 := end_simulation(0,1);
+    end if;
 end process; 
 
 reset_n <= '0', '1' after 6 ns;
