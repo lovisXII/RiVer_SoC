@@ -1,7 +1,7 @@
-/*      
+    
 extern void _bad();
 extern void _good();
-*/
+
 __asm__(".section .text") ;
 __asm__(".global _start") ;
 
@@ -14,17 +14,6 @@ __asm__("jal x5, main");
 int modulo(int a, int b){
     while(a >= b) a -= b;
     return a ;
-}
-
-
-void _bad() {
-    __asm__("ori x20, x0, 0x0CC");
-    __asm__("nop");
-}
-
-void _good() {
-    __asm__("nop");
-    __asm__("nop");
 }
 
 int main()

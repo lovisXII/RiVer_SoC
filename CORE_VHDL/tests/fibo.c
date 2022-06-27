@@ -1,3 +1,6 @@
+extern void _bad();
+extern void _good();
+
 __asm__(".section .text") ;
 __asm__(".global _start") ;
 
@@ -16,16 +19,6 @@ int fib(int n) {
     else {
         return fib(n-1) + fib(n-2);
     }
-}
-
-void _bad() {
-    __asm__("nop");
-    __asm__("nop");
-}
-
-void _good() {
-    __asm__("nop");
-    __asm__("nop");
 }
 
 int main() {

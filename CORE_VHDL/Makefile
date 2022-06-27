@@ -2,7 +2,7 @@ BUILD=build
 SIM_DIR=sim
 RISC=riscv32-unknown-elf-gcc
 TESTS_DIR=tests
-TEST=pgcd.c
+TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -20,8 +20,9 @@ view: run
 	gtkwave $(SIM_DIR)/$(TB).vcd
 
 run: core_tb exception.o
+	cp app.ld exception.o sim/
 	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(TEST) --vcd=$(TB).vcd
-
+	
 core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
