@@ -1,4 +1,4 @@
-.section .text
+.section text
 .global _good
 .global _bad
 .global _exception_occur
