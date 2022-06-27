@@ -68,7 +68,7 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
-extern int ghdl_main(int argc, char const* argv[]);
+// extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -102,14 +102,14 @@ int main(int argc, char const* argv[]) {
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
                 path);
         system((char*)temp);
         strcpy(output,"a.out") ;
@@ -146,7 +146,7 @@ int main(int argc, char const* argv[]) {
     }
     Del_Elf32(structure->pObj_struct);
 
-    ghdl_main(argc - nargs, &argv[nargs]);
+    // ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 

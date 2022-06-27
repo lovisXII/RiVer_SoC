@@ -12,9 +12,15 @@ __asm__("jal x5, main");
 __asm__("nop");
 __asm__("nop");
 
+void nothing() {
+    __asm__("nop");
+    __asm__("nop");
+}
+
 void _bad() {
     __asm__("nop");
     __asm__("nop");
+    __asm__("addi x20, x0, 1")
 }
 void _good() {
     __asm__("nop");
@@ -28,6 +34,12 @@ int somme(int a)
 }
 
 int main() {
-    if (somme(0) == 0) _good();
-    _bad();
+    if (somme(0) == 0) {
+        nothing();
+        _good();    
+    } else {
+        nothing();
+        _bad();
+    }
+    return 0;
 }

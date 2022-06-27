@@ -107,11 +107,11 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 300; 
+constant NCYCLES : integer := 10000; 
 signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 signal good_adr, bad_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
-
+signal bad : std_logic := '0'; 
 begin 
 
 good_adr    <=  std_logic_vector(to_signed(get_good(0), 32));
@@ -179,7 +179,8 @@ begin
         if ADR_SI = bad_adr then 
             assert false report "Test failed" severity error; 
             --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
-            end_simu <= '1';
+            end_simu <= '0';
+            bad <= '1'; 
         
         elsif ADR_SI = good_adr then 
             assert false report "Test success" severity note; 

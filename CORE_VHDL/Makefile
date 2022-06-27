@@ -1,7 +1,8 @@
 BUILD=build
 SIM_DIR=sim
+RISC=riscv32-unknown-elf-gcc
 TESTS_DIR=tests
-TEST=test_mem.s		
+TEST=pgcd.c
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -10,14 +11,15 @@ MODS=$(TB) $(COMPONENTS)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
-
+LD_SCRIPT= -T kernel.ld
+RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: view
 
 view: run
 	gtkwave $(SIM_DIR)/$(TB).vcd
 
-run: core_tb 
+run: core_tb exception.o
 	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(TEST) --vcd=$(TB).vcd
 
 core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
@@ -34,6 +36,10 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
+
+exception.o : exception.s 
+	$(RISC) $(RISC_FLAGS) $^ -o $@
+
 
 clean:
 	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb 

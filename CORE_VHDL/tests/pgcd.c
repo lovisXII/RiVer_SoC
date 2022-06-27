@@ -1,6 +1,7 @@
+/*      
 extern void _bad();
 extern void _good();
-
+*/
 __asm__(".section .text") ;
 __asm__(".global _start") ;
 
@@ -15,8 +16,9 @@ int modulo(int a, int b){
     return a ;
 }
 
+
 void _bad() {
-    __asm__("nop");
+    __asm__("ori x20, x0, 0x0CC");
     __asm__("nop");
 }
 
