@@ -1,4 +1,3 @@
-    
 extern void _bad();
 extern void _good();
 
@@ -15,7 +14,6 @@ int modulo(int a, int b){
     while(a >= b) a -= b;
     return a ;
 }
-
 int main()
 {
     int nbr1, nbr2 ;

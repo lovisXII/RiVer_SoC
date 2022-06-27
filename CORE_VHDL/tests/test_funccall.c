@@ -1,7 +1,6 @@
-/*
 extern void _bad();
 extern void _good();
-*/
+
 __asm__(".section .text") ;
 __asm__(".global _start") ;
 
@@ -16,18 +15,6 @@ int somme(int* a)
 {
     return (*a)++ ;
 }
-
-
-void _bad() {
-    __asm__("nop");
-    __asm__("nop");
-}
-
-void _good() {
-    __asm__("nop");
-    __asm__("nop");
-}
-
 int main() {
     int a = 3;
     int b = 4;

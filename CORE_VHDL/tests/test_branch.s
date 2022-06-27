@@ -4,10 +4,9 @@
 _start:
     addi x1,x0,1254
     bge x0,x0,_good
-    ori x2, x0, 1
+    nop
 
-_good :
-    ori x2, x0, 15
+
 
 # 10134:	00e7c863          	blt	a5,a4,10144 <main+0x88>
 # 0 000000 01110 01111 100 1000 0 1100011

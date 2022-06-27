@@ -23,7 +23,6 @@ int read_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
@@ -69,7 +68,7 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
-// extern int ghdl_main(int argc, char const* argv[]);
+extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -151,7 +150,7 @@ int main(int argc, char const* argv[]) {
     }
     Del_Elf32(structure->pObj_struct);
 
-    // ghdl_main(argc - nargs, &argv[nargs]);
+    ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 

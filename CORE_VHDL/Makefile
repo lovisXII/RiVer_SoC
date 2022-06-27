@@ -1,7 +1,6 @@
 BUILD=build
 SIM_DIR=sim
 RISC=riscv32-unknown-elf-gcc
-TESTS_DIR=tests
 TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
@@ -14,14 +13,11 @@ CC=gcc
 LD_SCRIPT= -T kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
-all: view
-
-view: run
-	gtkwave $(SIM_DIR)/$(TB).vcd
+all: run
 
 run: core_tb exception.o
 	cp app.ld exception.o sim/
-	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(TEST) --vcd=$(TB).vcd
+	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd
 	
 core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
