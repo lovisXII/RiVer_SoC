@@ -68,6 +68,10 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
+int end_simulation(int result) {
+    exit(result);
+}
+
 extern int ghdl_main(int argc, char const* argv[]);
 
 

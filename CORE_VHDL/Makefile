@@ -20,7 +20,7 @@ run: core_tb exception.o
 	cp app.ld exception.o sim/
 	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd
 
-core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o warning
+core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
 $(BUILD)/ram_sim.o :
@@ -35,7 +35,7 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
-exception.o : exception.s warning
+exception.o : exception.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 
 warning :
