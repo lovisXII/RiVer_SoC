@@ -3,7 +3,7 @@
 #include "../UTIL/fifo.h"
 
 #define dec2exe_size        252
-#define start_kernel_adress 0x80000000
+#define start_kernel_adress 0xF0000000
 
 SC_MODULE(decod) {
     // Interface with REG :

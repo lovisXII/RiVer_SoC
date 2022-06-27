@@ -236,7 +236,7 @@ void mem::csr_exception() {
             mstatus_new[3]            = mie_sm;
             MSTATUS_WDATA_RM          = mstatus_new;
 
-            CURRENT_MODE_SM = 0;  // Retrun in user mode
+            CURRENT_MODE_SM = 0;  // Return in user mode
 
             // loading return value (main) from EPC to PC :
             // The adress will be send to ifetch
