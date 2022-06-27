@@ -2,6 +2,7 @@
 #pragma GCC optimize ("O0")
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "elfio.h"
 
 int start_pc;
@@ -68,11 +69,12 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
-extern int ghdl_main(int argc, char const* argv[]);
+// extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
-
+    
+    FILE   *riscof_signature ;
     char   signature_name[20] ="";
     char   opt[20] = "";
     int    riscof = 0 ;
@@ -80,8 +82,16 @@ int main(int argc, char const* argv[]) {
     char   output[30] ;
     char   test[512] = "> a.out.txt";
     int nargs = 1;
+    int begin_signature = 0 ;
+    int end_signature = 0;
+    int rvtest_code_end = 0;
+    int rvtest_entry_point = 0;
+    int signature_size = 0 ;
+    int **signature_value ;
+
 
     strcpy(path,argv[1]) ;
+    strcpy(output,argv[1]) ;
 
     // Receiving arguments
     
@@ -94,12 +104,26 @@ int main(int argc, char const* argv[]) {
         riscof         = 1;
     };
 
+    // Getting riscof signature file name :
+
+    if(strcmp(signature_name,"") !=0){
+        riscof_signature = fopen(signature_name,"w") ;
+        if( riscof_signature == NULL)
+        {
+            fprintf(stderr, "error while opening %s\n", signature_name);
+            exit(1) ;
+        }
+        else{
+            fprintf(stderr, "Opening %s was successfull\n", signature_name);
+        }
+    }
+
     char temp_text[512];
     char point = '.' ;
     char *type_of_file = strrchr(path,point) ; 
 
     // Generation of executable file
-    printf("inside c file\n");
+
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
         sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
@@ -126,8 +150,6 @@ int main(int argc, char const* argv[]) {
       
     printf("Number of Instruction : %d\n", (structure->size)/4) ;
 
-    printf("Start Adress : %x\n",structure->start_adr) ;
-    start_pc = (structure->start_adr);
     good_adr = mem_goodadr();
     bad_adr  = mem_badadr();
 
@@ -144,13 +166,40 @@ int main(int argc, char const* argv[]) {
     for (int i=0; i< pObj->Head.e_shnum; i++)
     {
         for(int j = 0 ; j < (pObj->size[i]); j+=4){     
-            printf("%8x : %8x\n",(pObj->Section_Hdr[i]->sh_addr)+j, mem_lw(pObj->Section_Hdr[i]->sh_addr+j)) ;
+            //printf("%8x : %8x\n",(pObj->Section_Hdr[i]->sh_addr)+j, mem_lw(pObj->Section_Hdr[i]->sh_addr+j)) ;
             write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15);
         }
     }
-    Del_Elf32(structure->pObj_struct);
 
-    ghdl_main(argc - nargs, &argv[nargs]);
+    if(Elf32_SymAdr(pObj,&begin_signature,"begin_signature")==0)
+        fprintf(stderr, "Found begin_signature at : 0x%8x\n", begin_signature);
+   
+    if(Elf32_SymAdr(pObj,&rvtest_code_end,"rvtest_code_end")==0)
+        fprintf(stderr, "Found rvtest_code_end at : 0x%8x\n", rvtest_code_end);
+   
+    if(Elf32_SymAdr(pObj,&rvtest_entry_point,"rvtest_entry_point")==0)
+            fprintf(stderr, "Found rvtest_entry_point at : 0x%8x\n", rvtest_entry_point);
+   
+    if(Elf32_SymAdr(pObj,&end_signature,"end_signature")==0)
+                fprintf(stderr, "Found end_signature at : 0x%8x\n", end_signature);
+   
+    if(rvtest_entry_point)
+        start_pc = rvtest_entry_point;
+    else
+        start_pc = (structure->start_adr);
+        
+    printf("Start Adress : %x\n",start_pc) ;
+    if(begin_signature && end_signature)
+    {    
+        signature_size = (end_signature - begin_signature)/4 ;
+        signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
+        for(int i = 0 ; i < signature_size ; i++)
+        {
+            signature_value[i] = read_mem(begin_signature+i*4) ;
+            fprintf(riscof_signature,"%x\n",signature_value[i]) ;
+        }
+    }
+    // ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 
