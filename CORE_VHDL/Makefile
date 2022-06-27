@@ -16,10 +16,11 @@ RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 all: run
 
 run: core_tb exception.o
+
 	cp app.ld exception.o sim/
 	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd
-	
-core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
+
+core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o warning
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
 $(BUILD)/ram_sim.o :
@@ -34,9 +35,13 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
-exception.o : exception.s 
+exception.o : exception.s warning
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 
-
+warning :
+	@echo
+	@echo Please dont forget to give an argument when doing make, otherwise it could segfault
+	@echo You have to do : make TEST=pth_to_the_test/test_name
+	@echo
 clean:
 	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.out *.out.txt
