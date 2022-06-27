@@ -1,3 +1,5 @@
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 #include <stdio.h>
 #include <stdlib.h>
 #include "elfio.h"
@@ -99,22 +101,9 @@ int main(int argc, char const* argv[]) {
     char *type_of_file = strrchr(path,point) ; 
 
     // Generation of executable file
-   char cwd[200];
-   if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       printf("Current working dir: %s\n", cwd);
-   } else {
-       perror("getcwd() error");
-       return 1;
-   }
     printf("inside c file\n");
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-           if (getcwd(cwd, sizeof(cwd)) != NULL) {
-       printf("Current working dir: %s\n", cwd);
-   } else {
-       perror("getcwd() error");
-       return 1;
-   }
         sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
                 path);
         system((char*)temp);

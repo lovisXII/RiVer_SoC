@@ -15,7 +15,7 @@ SECTIONS
     {
         *(.text)
     }
-    . =0x20000000 ;
+    . = 0x110054 ;
     seg_result :
     {
         *(.result)

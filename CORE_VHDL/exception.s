@@ -1,4 +1,4 @@
-.section result
+.section .result
 .global _good
 .global _bad
 
