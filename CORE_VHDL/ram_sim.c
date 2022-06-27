@@ -29,6 +29,10 @@ int read_mem(int a) {
     return 0; 
 }
 
+int end_simulation(int result) {
+    exit(result);
+}
+
 int write_mem(int a, int data, int byt_sel) {
     int addr1, addr2, addr3, addr4;
     int tmp = 0; 
@@ -69,7 +73,7 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
-// extern int ghdl_main(int argc, char const* argv[]);
+extern int ghdl_main(int argc, char const* argv[]);
 
 
 int main(int argc, char const* argv[]) {
@@ -199,7 +203,7 @@ int main(int argc, char const* argv[]) {
             fprintf(riscof_signature,"%x\n",signature_value[i]) ;
         }
     }
-    // ghdl_main(argc - nargs, &argv[nargs]);
+    ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
 
