@@ -10,11 +10,10 @@ void dcache::adresse_parcer()
 
 void dcache::miss_detection()
 {
-
     // Assignation of MEM_SIZE, just to do an interface 
     //with the core
 
-    MEM_SIZE_SC = MEM_SIZE_SM ;
+    //MEM_SIZE_SC = MEM_SIZE_SM ;
   /*std::cout << "tag : " << address_tag 
             << "    index : " << address_index.read() 
             << "    tag0 : " << w0_TAG[address_index.read()]
@@ -75,11 +74,14 @@ void dcache::transition()
     {
       case IDLE:
         miss = !way0_hit && !way1_hit;
-        write_b = (LOAD_SM.read() || STORE_SM.read()) && VALID_ADR_SM.read() && !full && miss;
+        write_b = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
         dta_v = (LOAD_SM.read() || STORE_SM.read()) && !full && VALID_ADR_SM.read();
       
         if(LOAD_SM.read() && VALID_ADR_SM.read())
         {
+          adr_sc = DATA_ADR_SM.read();
+          dt_sc = DATA_SM.read();
+
           if(miss && full)
           {
             fsm_current_state = WAIT_BUFF_READ;
@@ -107,28 +109,94 @@ void dcache::transition()
             STALL_SC.write(false);            
           }
 
+          sc_uint<32> dt = DATA_SM;
+          sc_uint<32> adr = DATA_ADR_SM;
+          sc_uint<32> data_mask;
+
+
+          int mask = adr & 0x00000003;
+          adr_sc = adr & 0xFFFFFFFB;
+          if(MEM_SIZE_SM.read() == 2)
+          {
+            switch(mask)
+            {
+              case 0:
+                data_mask = 0x000000FF;
+              break;
+              case 1:
+                data_mask = 0x0000FF00;
+              break;
+              case 2:
+                data_mask = 0x00FF0000;
+              break;
+              case 3:
+                data_mask = 0xFF000000;
+              break;
+            }
+          }
+          else if(MEM_SIZE_SM.read() == 2)
+          {
+            switch(mask)
+            {
+              case 0:
+                data_mask = 0x0000FFFF;
+              break;
+              case 1:
+                data_mask = 0xFFFF0000;
+              break;
+            }
+          }
+          else
+          {
+            data_mask = 0xFFFFFFFF;
+          }
+          data_mask_sc = data_mask;
           if(miss)
           {
             if(LRU_bit_check[address_index.read()])
             {
-              w0_word[address_index.read()][address_offset.read()/4] = DATA_SM.read();
+              sc_uint<32> dt = w0_word[address_index.read()][address_offset.read()/4];
+              dt = dt & (~data_mask);
+              dt = dt | (DATA_SM.read() & data_mask);
+
+              w0_word[address_index.read()][address_offset.read()/4] = dt;
               w0_TAG[address_index.read()] = address_tag.read();
               w0_LINE_VALIDATE[address_index.read()] = true;
+
+              dt_sc  = dt;
             }
             else
             {
-              w1_word[address_index.read()][address_offset.read()/4] = DATA_SM.read();
+              sc_uint<32> dt = w1_word[address_index.read()][address_offset.read()/4];
+              dt = dt & (~data_mask);
+              dt = dt | (DATA_SM.read() & data_mask);
+
+              w1_word[address_index.read()][address_offset.read()/4] = dt;
               w1_TAG[address_index.read()] = address_tag.read();
               w1_LINE_VALIDATE[address_index.read()] = true;
+
+              dt_sc  = dt;
             }
           }
           else if(way0_hit)
           {
-            w0_word[address_index.read()][address_offset.read()/4] = DATA_SM.read();
+            sc_uint<32> dt = w0_word[address_index.read()][address_offset.read()/4];
+            dt = dt & (~data_mask);
+            dt = dt | (DATA_SM.read() & data_mask);
+
+            w0_word[address_index.read()][address_offset.read()/4] = dt;
+
+            dt_sc  = dt;
           }
           else if(way1_hit)
           {
-            w1_word[address_index.read()][address_offset.read()/4] = DATA_SM.read();
+            sc_uint<32> dt = w1_word[address_index.read()][address_offset.read()/4];
+            dt = dt & (~data_mask);
+            dt = dt | (DATA_SM.read() & data_mask);
+
+            w1_word[address_index.read()][address_offset.read()/4] = dt;
+
+            dt_sc  = dt;
           }
         } 
         break;
@@ -291,7 +359,10 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, mp_address_tag, GET_NAME(mp_address_tag));
   sc_trace(tf, mp_address_index, GET_NAME(mp_address_index));
   sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
-  sc_trace(tf, MEM_SIZE_SC, GET_NAME(MEM_SIZE_SC));
+
+  sc_trace(tf, data_mask_sc, GET_NAME(data_mask_sc));
+  sc_trace(tf, adr_sc, GET_NAME(adr_sc));
+  sc_trace(tf, dt_sc, GET_NAME(dt_sc));
 
   for (int i = 0; i < 128; i++) {
     std::string icname = "DCACHE_";
