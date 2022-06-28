@@ -180,8 +180,8 @@ DEC2EXE_POP_SE <= not stall_se;
 r1_valid_se <= '1'; 
 r2_valid_se <= '1';
 
-bpc_disable1    <= '1' when RADR1_RD = "00000" or BLOCK_BP_RD = '1' else '0'; 
-bpc_disable2    <= '1' when RADR2_RD = "00000" or BLOCK_BP_RD = '1' or MEM_LOAD_RD = '1' else '0'; 
+bpc_disable1    <= '1' when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else '0'; 
+bpc_disable2    <= '1' when RADR2_RD = "000000" or BLOCK_BP_RD = '1' or MEM_LOAD_RD = '1' else '0'; 
 
 bpc_ee1 <=  '1' when exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '0' and bpc_disable1 = '0' else '0';
 bpc_me1 <=  '1' when MEM_DEST_RM = RADR1_RD and bpc_disable1 = '0' else '0'; 
@@ -208,8 +208,8 @@ bpc_me2 <=  '1' when MEM_DEST_RM = RADR2_RD and bpc_disable2 = '0' else '0';
 
 
 
-bp_mem_data <=  exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0') else 
-                MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else
+bp_mem_data <=  exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and bpc_disable2 = '0') else 
+                MEM_RES_RM when (MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' and bpc_disable2 = '0') else
                 MEM_DATA_RD;
 
 op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else 
