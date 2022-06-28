@@ -8,14 +8,19 @@ entity ram is
         adr : in std_logic_vector(29 downto 0);
         byt_sel : in std_logic_vector(3 downto 0);
         data_w : in std_logic_vector(31 downto 0);
-        data_r : out std_logic_vector(31 downto 0)
+        wen    : in std_logic; 
+        data_r : out std_logic_vector(31 downto 0);
+        
+        -- testing
+        leds : out std_logic_vector(3 downto 0)
+        
     );
 end ram; 
 
 architecture archi of ram is 
 constant SIZE : integer := (1024);
-type tab is array(0 to SIZE-1) of std_logic_vector(7 downto 0);
-signal ram0, ram1, ram2, ram3 : tab; 
+type ram_t is array(0 to SIZE-1) of std_logic_vector(7 downto 0);
+signal ram0, ram1, ram2, ram3 : ram_t; 
 
 begin 
 
@@ -30,18 +35,25 @@ begin
                 ram3(i) <= x"00";
             end loop; 
         else 
-        if byt_sel(0) = '1' then 
-                ram0(to_integer(unsigned(adr)))     <= data_w(7 downto 0); end if; 
-            if byt_sel(1) = '1' then 
-                ram1(to_integer(unsigned(adr)+1))   <= data_w(15 downto 8); end if; 
-            if byt_sel(2) = '1' then  
-                ram2(to_integer(unsigned(adr)+2))   <= data_w(23 downto 16); end if; 
-            if byt_sel(3) = '1' then 
-                ram3(to_integer(unsigned(adr)+3))   <= data_w(31 downto 24); end if; 
+            if wen = '1' then 
+                if byt_sel(0) = '1' then 
+                        ram0(to_integer(unsigned(adr)))     <= data_w(7 downto 0); end if; 
+                    if byt_sel(1) = '1' then 
+                        ram1(to_integer(unsigned(adr)+1))   <= data_w(15 downto 8); end if; 
+                    if byt_sel(2) = '1' then  
+                        ram2(to_integer(unsigned(adr)+2))   <= data_w(23 downto 16); end if; 
+                    if byt_sel(3) = '1' then 
+                        ram3(to_integer(unsigned(adr)+3))   <= data_w(31 downto 24); end if; 
+                end if;
         end if; 
     end if; 
 end process; 
 
 data_r <= ram3(to_integer(unsigned(adr)+3)) & ram2(to_integer(unsigned(adr)+2)) & ram1(to_integer(unsigned(adr)+1)) & ram0(to_integer(unsigned(adr)));
+
+leds(0) <= ram0(0)(0);
+leds(1) <= ram1(0)(0);
+leds(2) <= ram2(0)(0);
+leds(3) <= ram3(0)(0); 
 
 end archi; 

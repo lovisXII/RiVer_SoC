@@ -126,13 +126,13 @@ int main(int argc, char const* argv[]) {
     strcpy(output,argv[1]) ;
 
     // Receiving arguments
-    
     if (argc >= 3 && strcmp(argv[2],"-O") == 0) {
         nargs = 2;
         strcpy(opt,"-02") ;
     } else if (argc >= 4 && strcmp(argv[2],"--riscof") == 0) {
         nargs = 3;
         strcpy(signature_name,argv[3]);
+        printf("riscof enabled ramsim\n");
         riscof         = 1;
     };
 

@@ -199,7 +199,7 @@ r_type_sd <= '1' when INSTR_RI(6 downto 0) = "0110011" else '0';
 i_type_sd <= '1' when (INSTR_RI(6 downto 0) = "0010011" or INSTR_RI(6 downto 0) = "0000011") else '0';
 s_type_sd <= '1' when INSTR_RI(6 downto 0) = "0100011" else '0';
 b_type_sd <= '1' when INSTR_RI(6 downto 0) = "1100011" else '0';
-u_type_sd <= '1' when INSTR_RI(6 downto 0) = "0110111" else '0';
+u_type_sd <= '1' when INSTR_RI(6 downto 0) = "0110111" or INSTR_RI(6 downto 0) = "0010111" else '0';
 j_type_sd <= '1' when INSTR_RI(6 downto 0) = "1101111" else '0';
 jalr_type_sd    <= '1' when INSTR_RI(6 downto 0) = "1100111" else '0';
 load_type_sd    <= '1' when INSTR_RI(6 downto 0) = "0000011" else '0';

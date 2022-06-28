@@ -208,7 +208,7 @@ variable adr_int : integer;
 variable inst_int : integer; 
 variable intermed : signed(ADR_SI'range); 
 begin
-    if riscof_end = (riscof_end'range => '0') then
+    if riscof_end_adr = (riscof_end_adr'range => '0') then
         if ADR_VALID_SI = '1' then 
             if ADR_SI = bad_adr then 
                 assert false report "Test failed" severity error; 
@@ -234,7 +234,7 @@ begin
         end if; 
     else 
         if ADR_VALID_SI = '1' then 
-            if ADR_SI = riscof_end then 
+            if ADR_SI = riscof_end_adr then 
                 assert false report "Test success" severity note; 
                 result <= 0 ;
                 end_simu <= '1';  
