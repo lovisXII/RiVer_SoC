@@ -50,7 +50,7 @@ int end_simulation(int result, int riscof_enable) {
             for(int i = 0 ; i < signature_size ; i++)
             {
                 signature_value[i] = read_mem(begin_signature+i*4) ;
-                fprintf(riscof_signature,"%x\n",signature_value[i]) ;
+                fprintf(riscof_signature,"%08x\n",signature_value[i]) ;
             }
         }
         exit(result);
