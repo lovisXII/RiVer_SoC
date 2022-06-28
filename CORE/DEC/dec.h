@@ -237,6 +237,8 @@ SC_MODULE(decod) {
     sc_signal<bool> rem_i_sd;
     sc_signal<bool> remu_i_sd;
 
+    sc_signal<bool> dependence_on_mult;
+
     // Kernel instruction :
 
     sc_signal<bool> csrrw_i_sd;
@@ -352,9 +354,22 @@ SC_MODULE(decod) {
         sensitive << dec2exe_out_sd;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << r1_valid_sd << r2_valid_sd
-                  << csr_wenable_sd << DEC2EXE_EMPTY_SD << CSR_WENABLE_RD << CSR_WENABLE_RE << BP_EXE2MEM_EMPTY_SE
-                  << csr_in_progress << block_in_dec << IF2DEC_EMPTY_SI << dec2exe_full_sd << csr_in_progress;
+        sensitive   << b_type_inst_sd 
+                    << jalr_type_inst_sd 
+                    << j_type_inst_sd 
+                    << r1_valid_sd 
+                    << r2_valid_sd
+                    << csr_wenable_sd 
+                    << DEC2EXE_EMPTY_SD 
+                    << CSR_WENABLE_RD 
+                    << CSR_WENABLE_RE 
+                    << BP_EXE2MEM_EMPTY_SE
+                    << csr_in_progress
+                    << block_in_dec 
+                    << IF2DEC_EMPTY_SI
+                    << dec2exe_full_sd
+                    << csr_in_progress
+                    << dependence_on_mult;
 
         SC_METHOD(decoding_instruction_type)
         sensitive << INSTR_RI << READ_PC_SR;

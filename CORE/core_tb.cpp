@@ -11,9 +11,9 @@
 using namespace std;
 using namespace ELFIO;
 
-//#define ICACHE_ON
-//#define DCACHE_ON
-//#define DEBUG_MAX_ITERATIONS
+#define ICACHE_ON
+#define DCACHE_ON
+//#define DEBUG_MAX_ITERATIONS 
 
 #ifdef ICACHE_ON
 
@@ -217,7 +217,7 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool> DCACHE_DTA_VALID;
     sc_signal<sc_uint<32>> DCACHE_DT;
     sc_signal<sc_uint<32>> DCACHE_A;
-    sc_signal<sc_uint<2>>  MEM_SIZE_SC;
+    //sc_signal<sc_uint<2>>  MEM_SIZE_SC;
 
     sc_signal<sc_uint<32>> MP_DT;
     sc_signal<sc_uint<32>> MP_A;
@@ -276,7 +276,7 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.LOAD_SM(MEM_LOAD);
     dcache_inst.STORE_SM(MEM_STORE);
     dcache_inst.MEM_SIZE_SM(MEM_SIZE_SM);
-    dcache_inst.MEM_SIZE_SC(MEM_SIZE_SC);
+    //dcache_inst.MEM_SIZE_SC(MEM_SIZE_SC);
     dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
     dcache_inst.DATA_SC(MEM_RESULT);
     dcache_inst.STALL_SC(MEM_STALL);
@@ -338,7 +338,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifdef DEBUG_MAX_ITERATIONS
     int cpt = 0;
-    while (cpt < 200) { cpt++;
+    while (cpt < 100000) { cpt++;
 #else
     while (1) {
 #endif
@@ -357,10 +357,7 @@ int sc_main(int argc, char* argv[]) {
                 {
                     if(read)
                     {
-                        mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
-
-                        std::cout << "start reading  adr: "
-                                  << mem_adr << std::endl;
+                        mem_adr = DCACHE_A.read();// & 0xFFFFFFF0;
 
                         MP_DT.write(ram[mem_adr]);
                         MP_A.write(mem_adr);
@@ -375,9 +372,6 @@ int sc_main(int argc, char* argv[]) {
                         mem_adr = DCACHE_A.read();
                         int data = DCACHE_DT.read();
                         ram[mem_adr] = data;
-
-                        std::cout << "store " << ram[mem_adr] 
-                                  << " at " <<  mem_adr << std::endl;
                     }
                 }       
                 else
@@ -501,7 +495,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(1);
         }
-        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 20000))) {
+        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
             countdown = 20;
             cout << "coutndown value : " << countdown << endl ;
@@ -515,9 +509,11 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
             
+            int j = 1;
             for (int i = begin_signature; i < end_signature; i += 4){
                 // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                cout <<dec<<j<<hex<< ": adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+                j++;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
@@ -562,8 +558,6 @@ int sc_main(int argc, char* argv[]) {
                     ram[mem_adr] = temporary_value | temporary_store_value ;
                     break ;
                 case 2 :
-                cout << "byte access 3d case at adr : " << mem_adr << endl ;
-                cout << "value to be store " << std::hex << temporary_store_value << endl ;
                     temporary_store_value = temporary_store_value & 0x00FF0000 ;
                     temporary_value = 0xFF00FFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;

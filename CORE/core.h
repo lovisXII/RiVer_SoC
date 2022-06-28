@@ -8,9 +8,13 @@
 #include "WBK/wbk.h"
 #include "systemc.h"
 
+//Multipliers
 #include "EXE/x0_multiplier.h"
 #include "MEM/x1_multiplier.h"
 #include "WBK/x2_multiplier.h"
+
+//Divider
+#include "EXE/Diviseur.h"
 
 SC_MODULE(core) {
     // Global Interface :
@@ -91,16 +95,23 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WRITE_PC_SD;
     sc_signal<bool>        WRITE_PC_ENABLE_SD;
 
-    // EXE-X0
+    //EXE-X0 OR EXE-DIVISEUR
     sc_signal<sc_uint<32>> op1_se;
     sc_signal<sc_uint<32>> op2_se;
 
+    //EXE DIVIDER
+    sc_signal<bool> START_SE;
+    sc_signal<sc_uint<32>> DIVIDER_RES_OUTPUT;
+    sc_signal<bool> DIV_BUSY_SE;
+    sc_signal<bool> DONE_SE;
+
+
     // X0-X1 interface
-    sc_signal<sc_bv<384>> multiplier_out_sx0;
-    sc_signal<bool>       signed_op_rx0;
+    sc_signal<sc_bv<320>> multiplier_out_sx0;
+    sc_signal<bool>       select_higher_bits_rx0;
     sc_signal<bool>       x02x1_EMPTY_SX0, x02x1_POP_SX1;
-    sc_signal<bool>       carry_rx0;
-    sc_signal<bool>       carry_rx1;
+    sc_signal<bool>       SIGNED_RES_RX0;
+    sc_signal<bool>       SIGNED_RES_RX1;
     // EXE-MEM interface
     sc_signal<sc_uint<32>> PC_BRANCH_VALUE_RE;
     sc_signal<sc_uint<32>> EXE_RES_RE;
@@ -148,10 +159,10 @@ SC_MODULE(core) {
     sc_signal<bool> MULT_INST_RE;
     sc_signal<bool> MULT_INST_RM;
     // X1-X2 interface
-    sc_signal<sc_bv<128>>  multiplier_out_sx1;
-    sc_signal<sc_uint<32>> multiplier_out_sx2;
-    sc_signal<bool>        signed_op_rx1;
-    sc_signal<bool>        x12x2_EMPTY_SX1, x12x2_POP_SX2;
+    sc_signal<sc_bv<128>> multiplier_out_sx1;
+    sc_signal<sc_uint<32>>  multiplier_out_sx2;
+    sc_signal<bool>       select_higher_bits_rx1;
+    sc_signal<bool>       x12x2_EMPTY_SX1, x12x2_POP_SX2;
 
     // MEM-WBK interface
     sc_signal<sc_uint<32>> MEM_RES_RM;
@@ -240,9 +251,11 @@ SC_MODULE(core) {
     csr    csr_inst;
     timer  timer_inst;
 
-    x0_multiplier x0_multiplier_inst;
-    x1_multiplier x1_multiplier_inst;
-    x2_multiplier x2_multiplier_inst;
+    Diviseur divider_inst;
+
+    x0_multiplier      x0_multiplier_inst;
+    x1_multiplier      x1_multiplier_inst;
+    x2_multiplier      x2_multiplier_inst;
 
     void core_method();
 
@@ -251,6 +264,7 @@ SC_MODULE(core) {
         : ifetch_inst("ifetch"),
           dec_inst("decod"),
           exec_inst("exec"),
+          divider_inst("Diviseur"),
           x0_multiplier_inst("x0_multiplier"),
           mem_inst("mem"),
           x1_multiplier_inst("x1_multiplier"),
@@ -470,13 +484,28 @@ SC_MODULE(core) {
         exec_inst.OP1_SE(op1_se);
         exec_inst.OP2_SE(op2_se);
 
+        exec_inst.START_SE(START_SE);
+        exec_inst.DIVIDER_RES_OUTPUT(DIVIDER_RES_OUTPUT);
+        exec_inst.DIV_BUSY_SE(DIV_BUSY_SE);
+        exec_inst.DONE_SE(DONE_SE);
+
         exec_inst.MULT_INST_RM(MULT_INST_RM);
         exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 
-        // X0 - MULTIPLIER port map :
+        //Divider
+        divider_inst.OP1_SE(op1_se);
+        divider_inst.OP2_SE(op2_se);
+        divider_inst.START_SE(START_SE);
+        divider_inst.CMD_RD(EXE_CMD_RD);
+        divider_inst.DIVIDER_RES_OUTPUT(DIVIDER_RES_OUTPUT);
+        divider_inst.BUSY_SE(DIV_BUSY_SE);
+        divider_inst.DONE_SE(DONE_SE);
+        divider_inst.CLK(CLK);
+
+        //X0 - MULTIPLIER port map :
 
         x0_multiplier_inst.OP1_SE(op1_se);
         x0_multiplier_inst.OP2_SE(op2_se);
@@ -485,8 +514,8 @@ SC_MODULE(core) {
         x0_multiplier_inst.DEC2X0_EMPTY_SD(DEC2EXE_EMPTY_SD);
 
         x0_multiplier_inst.RES_RX0(multiplier_out_sx0);
-        x0_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
-        x0_multiplier_inst.CARRY_RX0(carry_rx0);
+        x0_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
+        x0_multiplier_inst.SIGNED_RES_RX0(SIGNED_RES_RX0);
         x0_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
 
         x0_multiplier_inst.CLK(CLK);
@@ -583,12 +612,12 @@ SC_MODULE(core) {
         // X1 - MULTIPLIER port map :
 
         x1_multiplier_inst.IN_RX0(multiplier_out_sx0);
-        x1_multiplier_inst.SIGNED_OP_RX0(signed_op_rx0);
-        x1_multiplier_inst.CARRY_RX0(carry_rx0);
+        x1_multiplier_inst.SELECT_HIGHER_BITS_RX0(select_higher_bits_rx0);
+        x1_multiplier_inst.SIGNED_RES_RX0(SIGNED_RES_RX0);
         x1_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x1_multiplier_inst.RES_RX1(multiplier_out_sx1);
-        x1_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
-        x1_multiplier_inst.CARRY_RX1(carry_rx1);
+        x1_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
+        x1_multiplier_inst.SIGNED_RES_RX1(SIGNED_RES_RX1);
         x1_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);
         x1_multiplier_inst.X02X1_EMPTY_SX0(x02x1_EMPTY_SX0);
         x1_multiplier_inst.X02X1_POP_SX1(x02x1_POP_SX1);
@@ -639,8 +668,8 @@ SC_MODULE(core) {
         // X1 - MULTIPLIER port map :
 
         x2_multiplier_inst.IN_RX1(multiplier_out_sx1);
-        x2_multiplier_inst.SIGNED_OP_RX1(signed_op_rx1);
-        x2_multiplier_inst.CARRY_RX1(carry_rx1);
+        x2_multiplier_inst.SELECT_HIGHER_BITS_RX1(select_higher_bits_rx1);
+        x2_multiplier_inst.SIGNED_RES_RX1(SIGNED_RES_RX1);
         x2_multiplier_inst.X12X2_POP_SX2(x12x2_POP_SX2);
         x2_multiplier_inst.RES_RX2(multiplier_out_sx2);
         x2_multiplier_inst.X12X2_EMPTY_SX1(x12x2_EMPTY_SX1);

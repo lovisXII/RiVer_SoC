@@ -20,11 +20,11 @@ void exec::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
 
-    /*if (SELECT_TYPE_OPERATIONS_RD.read() == 0b1000)
+    if (SELECT_TYPE_OPERATIONS_RD.read() == 0b1000)
     {
-        exe_res_se.write(divider_out_se);
+        exe_res_se.write(DIVIDER_RES_OUTPUT.read());
     }
-    else */
+    else
     if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0010) {
         exe_res_se.write(shifter_out_se);
     } else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0001) {
@@ -190,7 +190,8 @@ void exec::fifo_unconcat() {
 }
 
 void exec::manage_fifo() {
-    bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read() || !r1_valid_se || !r2_valid_se;
+    bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read() 
+                 || !r1_valid_se || !r2_valid_se || DIV_BUSY_SE.read();
     if (stall) {
         exe2mem_push_se.write(false);
         DEC2EXE_POP_SE.write(false);
@@ -231,7 +232,7 @@ void exec::bypasses() {
     if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read() || BLOCK_BP_RD.read()) {
         op2_se.write(OP2_RD.read());
         r2_valid_se = true;
-    } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE) {
+    } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE && !MULT_INST_RE) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE)
             bp_value = CSR_RDATA_RE;
@@ -243,9 +244,9 @@ void exec::bypasses() {
             r2_valid_se = true;
         } else {
             op2_se.write(bp_value);
-            r2_valid_se = !MULT_INST_RE || EXE2MEM_EMPTY_SE;
+            r2_valid_se = true;
         }
-    } else if (MEM_DEST_RM.read() == RADR2_RD.read()) {
+    } else if (MEM_DEST_RM.read() == RADR2_RD.read() && !MULT_INST_RM) {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM)
             bp_value = CSR_RDATA_RM;
@@ -257,7 +258,7 @@ void exec::bypasses() {
             r2_valid_se = true;
         } else {
             op2_se.write(MEM_RES_RM.read());
-            r2_valid_se = !MULT_INST_RM || BP_MEM2WBK_EMPTY_SM;
+            r2_valid_se = true;
         }
     } else if (DEST_RE.read() == RADR2_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
@@ -292,7 +293,15 @@ void exec::exception() {
         mem_store_re.write(MEM_STORE_RD.read());
     }
 }
-
+void exec::manage_divider()
+{
+    if(SELECT_TYPE_OPERATIONS_RD.read()==0b1000 && !DEC2EXE_EMPTY_SD && !DONE_SE)
+    {
+        START_SE.write(true);
+    }
+    else
+        START_SE.write(false);
+}
 void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));  // can contains CSR if CSR_type_operation_RD == 1
     sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));
@@ -429,6 +438,8 @@ void exec::trace(sc_trace_file* tf) {
     sc_trace(tf, OP2_SE, GET_NAME(OP2_SE));
 
     sc_trace(tf, BLOCK_BP_RD, GET_NAME(BLOCK_BP_RD));
+
+    sc_trace(tf, div_busy_reg_se, GET_NAME(div_busy_reg_se));
     
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
