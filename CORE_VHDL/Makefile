@@ -1,7 +1,7 @@
 BUILD=build
 SIM_DIR=sim
-TESTS_DIR=tests
-TEST=test_basic_jump.s
+RISC=riscv32-unknown-elf-gcc
+TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
@@ -10,17 +10,17 @@ MODS=$(TB) $(COMPONENTS)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
+LD_SCRIPT= -T kernel.ld
+RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
+all: run
 
-all: view
+run: core_tb exception.o
 
-view: run
-	gtkwave $(SIM_DIR)/$(TB).vcd
+	cp app.ld exception.o sim/
+	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd
 
-run: core_tb 
-	cd $(SIM_DIR) && ../$(TB) ../$(TESTS_DIR)/$(TEST) --vcd=$(TB).vcd
-
-core_tb : $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o
+core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
 $(BUILD)/ram_sim.o :
@@ -35,5 +35,13 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
+exception.o : exception.s
+	$(RISC) $(RISC_FLAGS) $^ -o $@
+
+warning :
+	@echo
+	@echo Please dont forget to give an argument when doing make, otherwise it could segfault
+	@echo You have to do : make TEST=pth_to_the_test/test_name
+	@echo
 clean:
-	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb 
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.out *.out.txt

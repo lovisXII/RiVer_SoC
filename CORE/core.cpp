@@ -10,6 +10,7 @@ void core::trace(sc_trace_file* tf) {
     wbk_inst.trace(tf);
     reg_inst.trace(tf);
     csr_inst.trace(tf);
+    timer_inst.trace(tf);
     x0_multiplier_inst.trace(tf);
     x1_multiplier_inst.trace(tf);
     x2_multiplier_inst.trace(tf);

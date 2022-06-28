@@ -11,11 +11,11 @@ end core_tb;
 architecture simu of core_tb is 
 
 -- functions 
-function get_mem(adr : integer) return integer is 
+function read_mem(adr : integer) return integer is 
 begin 
     assert false severity failure;
-end get_mem; 
-attribute foreign of get_mem : function is "VHPIDIRECT get_mem";    
+end read_mem; 
+attribute foreign of read_mem : function is "VHPIDIRECT read_mem";    
 
 function write_mem(adr : integer; data : integer; byte_select : integer) return integer is 
 begin 
@@ -29,6 +29,36 @@ begin
 end get_startpc;
 attribute foreign of get_startpc : function is "VHPIDIRECT get_startpc";
 
+function get_good(a : integer) return integer is 
+begin 
+    assert false severity failure; 
+end get_good; 
+attribute foreign of get_good : function is  "VHPIDIRECT get_good";
+
+function get_bad(a : integer) return integer is 
+begin 
+    assert false severity failure; 
+end get_bad; 
+attribute foreign of get_bad : function is  "VHPIDIRECT get_bad";
+
+function end_simulation(result : integer; riscof_enable : integer) return integer is 
+begin
+    assert false severity failure; 
+end end_simulation; 
+attribute foreign of end_simulation : function is  "VHPIDIRECT end_simulation";
+
+function get_riscof_en(z : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_riscof_en; 
+attribute foreign of get_riscof_en : function is "VHPIDIRECT get_riscof_en";    
+
+function get_end_riscof(z : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_end_riscof; 
+attribute foreign of get_end_riscof : function is "VHPIDIRECT get_end_riscof";    
+
 function to_string ( a: std_logic_vector) return string is
 variable b : string (1 to a'length) := (others => NUL);
 variable stri : integer := 1; 
@@ -40,6 +70,9 @@ begin
     return b;
 end function;
 
+------------------------------
+-- core signals instance
+------------------------------
 -- global interface
 signal clk : std_logic := '1';
 signal reset_n : std_logic := '0';
@@ -63,9 +96,6 @@ signal ADR_VALID_SI : std_logic;
 -- Debug 
 signal PC_INIT : std_logic_vector(31 downto 0);
 signal DEBUG_PC_READ : std_logic_vector(31 downto 0);
-
-constant NCYCLES : integer := 100; 
-signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
 
 component core
     port(
@@ -94,7 +124,22 @@ component core
     );
 end component; 
 
+-- Simulation 
+constant NCYCLES : integer := 100000; 
+signal CYCLES : integer := 0; 
+signal good_adr, bad_adr: std_logic_vector(31 downto 0);
+signal end_simu : std_logic := '0'; 
+signal result : integer := 0;  
+
+-- riscof
+signal riscof_en : integer := 0; 
+signal riscof_end_adr : std_logic_vector(31 downto 0);
 begin 
+
+good_adr        <=  std_logic_vector(to_signed(get_good(0), 32));
+bad_adr         <=  std_logic_vector(to_signed(get_bad(0), 32));
+riscof_en       <=  get_riscof_en(0);
+riscof_end_adr  <=  std_logic_vector(to_signed(get_end_riscof(0), 32));
 
 core0 : core
     port map(
@@ -123,6 +168,8 @@ core0 : core
 
 
 clk_gen : process
+variable r0 : integer;
+variable un : integer := 1;
 begin         
     clk <= '0'; 
     wait for 5 ns; 
@@ -131,11 +178,22 @@ begin
     wait for 5 ns; 
     if CYCLES = 1 then 
         assert false report "simulation begin" severity note; 
+        if riscof_en = 1 then 
+            assert false report "riscof enabled" severity note; 
+        end if; 
     end if; 
-    if CYCLES = NCYCLES then 
+    if end_simu = '1' then 
         assert false report "end of simulation" severity note; 
+        r0 := end_simulation(result,un);
         wait; 
     end if; 
+    --if CYCLES = NCYCLES then 
+    --    assert false report "end of simulation (timeout)" severity note; 
+    --    r0 := end_simulation(un,un);
+    --   -- wait; 
+    --end if;
+    
+
 end process; 
 
 reset_n <= '0', '1' after 6 ns;
@@ -143,34 +201,73 @@ reset_n <= '0', '1' after 6 ns;
 MCACHE_STALL_SM <= '0';
 
 IC_STALL_SI <= '0';
-PC_INIT <= std_logic_vector(to_unsigned(get_startpc(0), 32));
+PC_INIT <= std_logic_vector(to_signed(get_startpc(0), 32));
 
 icache : process(ADR_SI, ADR_VALID_SI)
 variable adr_int : integer; 
 variable inst_int : integer; 
-variable intermed : unsigned(ADR_SI'range); 
+variable intermed : signed(ADR_SI'range); 
 begin
     if ADR_VALID_SI = '1' then 
-        report "ADR_SI length = " & integer'image(ADR_SI'length);
-        report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
-        intermed    := unsigned(ADR_SI); 
-        adr_int     := to_integer(intermed);
-        inst_int    := get_mem(adr_int);
-        IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+        if ADR_SI = bad_adr and riscof_en = 0 then 
+            assert false report "Test failed" severity error; 
+            --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
+            result <= 1;
+            end_simu <= '1';
+        
+        elsif ADR_SI = good_adr and riscof_en = 0 then 
+            assert false report "Test success" severity note; 
+            result <= 0;
+            end_simu <= '1'; 
+            
+        elsif ADR_SI = riscof_end_adr and riscof_en = 1 then   
+            report "end of riscof test" severity note; 
+            result <= 0; 
+            end_simu <= '1'; 
+
+        else
+            --report "ADR_SI length = " & integer'image(ADR_SI'length);
+            --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
+            intermed    := signed(ADR_SI); 
+            adr_int     := to_integer(intermed);
+            inst_int    := read_mem(adr_int);
+            IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+
+        end if;
     end if; 
 end process; 
 
 
-dcache : process(MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
-variable read0 : integer;
+dcache : process(clk, MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM, MCACHE_DATA_SM, MCACHE_ADR_SM, byt_sel)
+variable read0      : integer; -- ignore 
+variable adr_u      : signed(MCACHE_ADR_SM'range); 
+variable adr_int    : integer := 0;
+variable data_u     : signed(MCACHE_DATA_SM'range);
+variable data_int   : integer := 0;
+variable byt_sel_u  : signed(byt_sel'range);
+variable byt_sel_i  : integer := 0;
 begin 
-    if MCACHE_ADR_VALID_SM = '1' then 
-        if MCACHE_STORE_SM = '1' then 
-            read0 := write_mem(to_integer(unsigned(MCACHE_ADR_SM)), to_integer(unsigned(MCACHE_DATA_SM)), to_integer(unsigned(byt_sel)));
-        elsif MCACHE_LOAD_SM = '1' then 
-            MCACHE_RESULT_SM <= std_logic_vector(to_unsigned(get_mem(to_integer(unsigned(MCACHE_ADR_SM))), 32));
+    adr_u       := signed(MCACHE_ADR_SM);
+    adr_int     := to_integer(adr_u);
+    data_u      := signed(MCACHE_DATA_SM);
+    data_int    := to_integer(data_u);
+    byt_sel_u   := signed(byt_sel);
+    byt_sel_i   := to_integer(byt_sel_u);
+
+    if reset_n = '0' then 
+    -- hoping to find a better solution to avoid not wanted mem access
+    elsif falling_edge(clk) then 
+        if MCACHE_ADR_VALID_SM = '1' then 
+            if MCACHE_STORE_SM = '1' then  
+                read0 := write_mem(adr_int, data_int, byt_sel_i);
+            elsif MCACHE_LOAD_SM = '1' then 
+                MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
+            else 
+                assert false report "Adr mem access valid but no command" severity error; 
+            end if; 
         end if; 
     end if; 
+
 end process;
 
 end simu;

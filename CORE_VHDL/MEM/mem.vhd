@@ -106,7 +106,7 @@ MCACHE_DATA_SM <= MEM_DATA_RE;
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;
-MCACHE_ADR_VALID_SM <= not EXE2MEM_EMPTY_SM;
+MCACHE_ADR_VALID_SM <= (not EXE2MEM_EMPTY_SM) and (STORE_RE or LOAD_RE);
 
 -- sign extend and load size 
 load_byte(31 downto 8)  <=  x"000000" when SIGN_EXTEND_RE = '0' else 

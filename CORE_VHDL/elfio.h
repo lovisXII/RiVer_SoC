@@ -21,6 +21,7 @@ typedef struct Elf32_Obj_{
 	//.symtab section :
 	Elf32_Shdr 	*SecSymHdr;
 	char 		*SymName;
+	size_t		**size;
 }Elf32_Obj;
 
 
@@ -45,6 +46,8 @@ static Seg *TabSeg = NULL;
 
 uint32_t GoodAdr;
 uint32_t BadAdr;
+uint32_t StartAdr;
+uint32_t KernelAdr;
 
 uint32_t mem_goodadr()
 {
@@ -191,6 +194,7 @@ FILE_READ* Read_Elf32(char *file_name)
 		pObj->Section_name 	= calloc((pObj->Head.e_shnum)*sizeof(char),(pObj->Head.e_shnum)*sizeof(char)) ;
 		pObj->Section_Hdr	= calloc((pObj->Head.e_shnum)*sizeof(Elf32_Shdr),(pObj->Head.e_shnum)*sizeof(Elf32_Shdr));
 		pObj->Sec			= calloc((pObj->Head.e_shnum)*sizeof(uint32_t),(pObj->Head.e_shnum)*sizeof(uint32_t));
+		pObj->size			= calloc((pObj->Head.e_shnum)*sizeof(size_t),(pObj->Head.e_shnum)*sizeof(size_t));
 
 		printf("**********Starting mem initialization**********\n") ;
 
@@ -229,22 +233,25 @@ FILE_READ* Read_Elf32(char *file_name)
 
 		printf("**********Loading Segments into memory **********\n") ;
 		// Sections loading
+		// The size will contain the total value of each section
+		// A size of 4 means there is only one instruction inside the section
 		for (int i=0; i< pObj->Head.e_shnum; i++)
 		{
 			if(pObj->Section_Hdr[i]->sh_addr != 0)
 			{
 				if(mem_add_seg(pObj->Section_Hdr[i]->sh_addr, pObj->Section_Hdr[i]->sh_size, pObj->Sec[i]) == 1){
-					fprintf(stdout, "Chargement du segment %s adr = 0x%8x\n", pObj->Section_name[i], pObj->Section_Hdr[i]->sh_addr);
-					size+= (uint32_t) pObj->Section_Hdr[i]->sh_size;
+					fprintf(stdout, "Chargement du segment %s adr = 0x%8x, total size : 0x%x\n"
+					, pObj->Section_name[i], pObj->Section_Hdr[i]->sh_addr,pObj->Section_Hdr[i]->sh_size);
+					pObj->size[i] = (size_t) pObj->Section_Hdr[i]->sh_size;
 				}
 				else{
 					printf("Failed to load segment %s adr = 0x%8x\n", pObj->Section_name[i], pObj->Section_Hdr[i]->sh_addr);
 					exit(1) ;
 				}
 			}
-			if(strcmp(pObj->Section_name[i],".text") == 0)
+			if(strcmp(pObj->Section_name[i],"seg_text") == 0)
 				adr_start = (uint32_t) pObj->Section_Hdr[i]->sh_addr;
-			if(strcmp(pObj->Section_name[i],".kernel") == 0)
+			if(strcmp(pObj->Section_name[i],"seg_kernel") == 0)
 				adr_kernel = (uint32_t) pObj->Section_Hdr[i]->sh_addr;
 		}
 
@@ -256,7 +263,10 @@ FILE_READ* Read_Elf32(char *file_name)
 		if (Elf32_SymAdr(pObj, &BadAdr, "_bad") == 0){
 			fprintf(stderr, "Found _bad at : 0x%8x\n", BadAdr);
 		}
-
+		if (Elf32_SymAdr(pObj, &StartAdr, "_start") == 0){
+			fprintf(stderr, "Found _start at : 0x%8x\n", StartAdr);
+		}
+		
 		return_structure->start_adr 		= adr_start  ;
 		return_structure->kernel_start_adr 	= adr_kernel ;
 		return_structure->size				= size ;
