@@ -163,26 +163,26 @@ begin
     clk <= '0'; 
     wait for 5 ns; 
     clk <= '1'; 
-    --  CYCLES <= CYCLES + 1; 
+     CYCLES <= CYCLES + 1; 
     wait for 5 ns; 
-    -- if CYCLES = 1 then 
-    --     assert false report "simulation begin" severity note; 
-    -- end if; 
-    -- if end_simu = '1' then 
-    --     assert false report "end of simulation" severity note; 
-    --     r0 := end_simulation(result,un);
-    --     wait; 
-    -- end if; 
-    -- if CYCLES = NCYCLES then 
-    --     assert false report "end of simulation (timeout)" severity note; 
-    --     r0 := end_simulation(un,un);
-       -- wait; 
-    --end if;
-    
-    if ADR_SI = riscof_end then   
-    report "end riscof test" severity note; 
-        r0 := end_simulation(0,1);
+    if CYCLES = 1 then 
+        assert false report "simulation begin" severity note; 
+    end if; 
+    if end_simu = '1' then 
+        assert false report "end of simulation" severity note; 
+        r0 := end_simulation(result,un);
+        wait; 
+    end if; 
+    if CYCLES = NCYCLES then 
+        assert false report "end of simulation (timeout)" severity note; 
+        r0 := end_simulation(un,un);
+       wait; 
     end if;
+    
+    -- if ADR_SI = riscof_end then   
+    -- report "end riscof test" severity note; 
+    --     r0 := end_simulation(0,1);
+    -- end if;
 end process; 
 
 reset_n <= '0', '1' after 6 ns;
@@ -197,29 +197,44 @@ variable adr_int : integer;
 variable inst_int : integer; 
 variable intermed : signed(ADR_SI'range); 
 begin
-    if ADR_VALID_SI = '1' then 
-        if ADR_SI = bad_adr then 
-            assert false report "Test failed" severity error; 
-            --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
-            result <= 1;
-            end_simu <= '1';
-        
-        elsif ADR_SI = good_adr then 
-            assert false report "Test success" severity note; 
-            result <= 0;
-            end_simu <= '1';  
+    if riscof_end = (riscof_end'range => '0') then
+        if ADR_VALID_SI = '1' then 
+            if ADR_SI = bad_adr then 
+                assert false report "Test failed" severity error; 
+                --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
+                result <= 1;
+                end_simu <= '1';
+            
+            elsif ADR_SI = good_adr then 
+                assert false report "Test success" severity note; 
+                result <= 0;
+                end_simu <= '1';  
 
-        else
-            --report "ADR_SI length = " & integer'image(ADR_SI'length);
-            --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
-            intermed    := signed(ADR_SI); 
-            adr_int     := to_integer(intermed);
-            inst_int    := read_mem(adr_int);
-            IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+            else
+                --report "ADR_SI length = " & integer'image(ADR_SI'length);
+                --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
+                intermed    := signed(ADR_SI); 
+                adr_int     := to_integer(intermed);
+                inst_int    := read_mem(adr_int);
+                IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+
+            end if; 
 
         end if; 
-
-    end if; 
+    else 
+        if ADR_VALID_SI = '1' then 
+            if ADR_SI = riscof_end then 
+                assert false report "Test success" severity note; 
+                result <= 0 ;
+                end_simu <= '1';  
+            else
+                intermed    := signed(ADR_SI); 
+                adr_int     := to_integer(intermed);
+                inst_int    := read_mem(adr_int);
+                IC_INST_SI  <= std_logic_vector(to_signed(inst_int, 32));
+            end if;
+        end if;
+    end if;
 end process; 
 
 
