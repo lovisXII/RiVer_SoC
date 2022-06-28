@@ -134,6 +134,8 @@ signal result : integer := 0;
 -- riscof
 signal riscof_en : integer := 0; 
 signal riscof_end_adr : std_logic_vector(31 downto 0);
+signal cpt_end : integer := 0;
+signal riscof_end : integer := 0;
 begin 
 
 good_adr        <=  std_logic_vector(to_signed(get_good(0), 32));
@@ -179,10 +181,13 @@ begin
     if CYCLES = 1 then 
         assert false report "simulation begin" severity note; 
     end if; 
-    if end_simu = '1' then 
+    if end_simu = '1' or cpt_end = 3 then 
         assert false report "end of simulation" severity note; 
         r0 := end_simulation(result,un);
         wait; 
+    end if; 
+    if riscof_end = 1 then 
+        cpt_end <= cpt_end + 1;
     end if; 
     if CYCLES = NCYCLES then 
         assert false report "end of simulation (timeout)" severity note; 
@@ -214,7 +219,8 @@ begin
                 assert false report "Test failed" severity error; 
                 --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
                 result <= 1;
-                end_simu <= '1';
+                end_simu <= '1';  
+
             
             elsif ADR_SI = good_adr then 
                 assert false report "Test success" severity note; 
@@ -237,7 +243,7 @@ begin
             if ADR_SI = riscof_end_adr then 
                 assert false report "Test success" severity note; 
                 result <= 0 ;
-                end_simu <= '1';  
+                riscof_end <= 1;
             else
                 intermed    := signed(ADR_SI); 
                 adr_int     := to_integer(intermed);
