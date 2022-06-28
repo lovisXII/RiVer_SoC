@@ -113,18 +113,17 @@ extern int ghdl_main(int argc, char const* argv[]);
 
 int main(int argc, char const* argv[]) {
     
-    char   signature_name[20] ="";
+    char   signature_name[200] ="";
     char   opt[20] = "";
-    char   path[30] ;
-    char   output[30] ;
+    char   input_file[50] ;
+    char   output[50] ;
     char   test[512] = "> a.out.txt";
     int nargs = 1;
     int rvtest_entry_point = 0;
 
 
-    strcpy(path,argv[1]) ;
+    strcpy(input_file,argv[1]) ;
     strcpy(output,argv[1]) ;
-
     // Receiving arguments
     if (argc >= 3 && strcmp(argv[2],"-O") == 0) {
         nargs = 2;
@@ -132,9 +131,8 @@ int main(int argc, char const* argv[]) {
     } else if (argc >= 4 && strcmp(argv[2],"--riscof") == 0) {
         nargs = 3;
         strcpy(signature_name,argv[3]);
-        printf("riscof enabled ramsim\n");
         riscof         = 1;
-    };
+    }
 
     // Getting riscof signature file name :
 
@@ -152,31 +150,30 @@ int main(int argc, char const* argv[]) {
 
     char temp_text[512];
     char point = '.' ;
-    char *type_of_file = strrchr(path,point) ; 
+    char *type_of_file = strrchr(input_file,point) ; 
 
     // Generation of executable file
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
         sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
-                path);
+                input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
         sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
-                path);
+                input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
-
     sprintf(temp_text, "riscv32-unknown-elf-objdump -D %s", output);
     strcat(temp_text, test);
     system((char*)temp_text);
 
     // Reading elf file, parsing it and getting sections and segments
-
+    
     FILE_READ* structure = (FILE_READ*)malloc(sizeof(FILE_READ));
     structure = Read_Elf32(output);
       
