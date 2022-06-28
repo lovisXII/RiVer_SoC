@@ -16,13 +16,13 @@ int bad_adr = 0;
 int*** ram[256];
 
 //riscof parameters
-
+int riscof = 0 ;
 int begin_signature = 0 ;
 int end_signature = 0;
 int signature_size = 0 ;
 int rvtest_code_end = 0;
 int **signature_value ;
-FILE   *riscof_signature ;
+FILE *riscof_signature ;
 
 int read_mem(int a) {
     int addr1, addr2, addr3, addr4;
@@ -56,11 +56,6 @@ int end_simulation(int result, int riscof_enable) {
         exit(result);
     }
     
-}
-
-int get_end_riscof(int z)
-{
-    return rvtest_code_end ;
 }
 
 int write_mem(int a, int data, int byt_sel) {
@@ -104,6 +99,15 @@ int get_bad(int z) {
     return bad_adr; 
 }
 
+int get_riscof_en(int z) {
+    return riscof;
+}
+
+int get_end_riscof(int z) {
+    return rvtest_code_end;
+}
+
+
 extern int ghdl_main(int argc, char const* argv[]);
 
 
@@ -111,7 +115,6 @@ int main(int argc, char const* argv[]) {
     
     char   signature_name[20] ="";
     char   opt[20] = "";
-    int    riscof = 0 ;
     char   path[30] ;
     char   output[30] ;
     char   test[512] = "> a.out.txt";
