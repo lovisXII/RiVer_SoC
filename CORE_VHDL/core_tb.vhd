@@ -47,6 +47,12 @@ begin
 end end_simulation; 
 attribute foreign of end_simulation : function is  "VHPIDIRECT end_simulation";
 
+function get_riscof_en(z : integer) return integer is 
+begin 
+    assert false severity failure;
+end get_riscof_en; 
+attribute foreign of get_riscof_en : function is "VHPIDIRECT get_riscof_en";    
+
 function get_end_riscof(z : integer) return integer is 
 begin 
     assert false severity failure;
@@ -120,16 +126,21 @@ end component;
 
 -- Simulation 
 constant NCYCLES : integer := 100000; 
-signal CYCLES : integer range 0 to NCYCLES+1 := 0; 
-signal good_adr, bad_adr, riscof_end : std_logic_vector(31 downto 0);
+signal CYCLES : integer := 0; 
+signal good_adr, bad_adr: std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
 signal result : integer := 0;  
 
+-- riscof
+signal riscof_en : integer := 0; 
+signal riscof_end_adr : std_logic_vector(31 downto 0);
 begin 
 
-good_adr    <=  std_logic_vector(to_signed(get_good(0), 32));
-bad_adr     <=  std_logic_vector(to_signed(get_bad(0), 32));
-riscof_end <=  std_logic_vector(to_signed(get_end_riscof(0), 32));
+good_adr        <=  std_logic_vector(to_signed(get_good(0), 32));
+bad_adr         <=  std_logic_vector(to_signed(get_bad(0), 32));
+riscof_en       <=  get_riscof_en(0);
+riscof_end_adr  <=  std_logic_vector(to_signed(get_end_riscof(0), 32));
+
 core0 : core
     port map(
         -- global interface

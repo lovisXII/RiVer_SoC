@@ -39,7 +39,7 @@ SC_MODULE(dcache)
   sc_out<sc_uint<32>> DATA_SC;
   sc_out<bool> STALL_SC;               // if stall donc miss else hit
 // interface MP
-  sc_out<sc_uint<2>> MEM_SIZE_SC;
+  //sc_out<sc_uint<2>> MEM_SIZE_SC;
   sc_out<bool> DTA_VALID_SC;         // data or/and adresse valid
   sc_out<bool> READ_SC, WRITE_SC;
 
@@ -88,6 +88,10 @@ SC_MODULE(dcache)
   sc_signal<bool> write_buff, read_buff;
   sc_signal<bool> full, empty;
 
+  sc_signal<sc_uint<32>> adr_sc;
+  sc_signal<sc_uint<32>> dt_sc;
+
+  sc_signal<sc_uint<32>> data_mask_sc;
 //FMS signal debug
   sc_signal<sc_uint<3>> fsm_state;
 
@@ -108,9 +112,11 @@ SC_MODULE(dcache)
     sensitive << DATA_ADR_SM;
 
     SC_METHOD(miss_detection);
-    sensitive << address_tag 
-              << MEM_SIZE_SM
-              << address_index << address_offset << STALL_SC << CLK;
+    sensitive << address_tag
+              << address_index 
+              << address_offset 
+              << STALL_SC 
+              << CLK;
               
       
     SC_THREAD(transition);
@@ -123,8 +129,8 @@ SC_MODULE(dcache)
     buffcache_inst.CLK(CLK);
     buffcache_inst.WRITE_OBUFF(write_buff);
     buffcache_inst.READ_OBUFF(read_buff);
-    buffcache_inst.DATA_C(DATA_SM);
-    buffcache_inst.ADR_C(DATA_ADR_SM);
+    buffcache_inst.DATA_C(dt_sc);
+    buffcache_inst.ADR_C(adr_sc);
     buffcache_inst.STORE_C(STORE_SM);
     buffcache_inst.LOAD_C(LOAD_SM);
     buffcache_inst.FULL(full);

@@ -155,7 +155,7 @@ SC_MODULE(mem) {
 
         SC_METHOD(mem2wbk_concat);
         sensitive << data_sm << DEST_RE << wb_sm << CSR_WENABLE_RE << CSR_RDATA_RE << exception_sm << mret_sm
-                  << return_adress_sm;
+                  << return_adress_sm << MULT_INST_RE;
         SC_METHOD(mem2wbk_unconcat);
         sensitive << mem2wbk_dout_sm;
         SC_METHOD(fifo_gestion);

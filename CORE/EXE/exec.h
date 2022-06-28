@@ -74,8 +74,15 @@ SC_MODULE(exec) {
     sc_out<bool> MRET_RE;
     sc_out<bool> EBREAK_RE;
 
+    //DIVIDER AND X0 STAGE
     sc_out<sc_uint<32>> OP1_SE;
     sc_out<sc_uint<32>> OP2_SE;
+    sc_out<bool>        START_SE;
+
+    sc_in<sc_uint<32>> DIVIDER_RES_OUTPUT;
+    sc_in<bool> DIV_BUSY_SE;
+    sc_in<bool> DONE_SE;
+
     // Interruption :
 
     sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE;
@@ -144,6 +151,8 @@ SC_MODULE(exec) {
     sc_signal<bool> stall_se;
     sc_signal<bool> r1_valid_se;
     sc_signal<bool> r2_valid_se;
+
+    sc_signal<bool> div_busy_reg_se;
     // Exception :
 
     sc_signal<bool> exception_se;
@@ -155,7 +164,6 @@ SC_MODULE(exec) {
 
     alu     alu_inst;
     shifter shifter_inst;
-    // divider          divider_inst;
     fifo<exe2mem_size> fifo_inst;
 
     void preprocess_op();    // send op2 or ~op2 in ALU_IN_OP2
@@ -167,11 +175,12 @@ SC_MODULE(exec) {
     void bypasses();  // allow the push/pop of fifo exe2mem
     void exception();
 
+    void manage_divider(); // management of start signal which gonna turn on the divider
+
     void trace(sc_trace_file * tf);
     SC_CTOR(exec)
         : alu_inst("alu"),
           shifter_inst("shifter"),
-          // divider_inst("divider"),
           fifo_inst("exe2mem") {
         // ALU port map :
 
@@ -188,14 +197,6 @@ SC_MODULE(exec) {
         shifter_inst.CMD_SE(CMD_RD);
         shifter_inst.DOUT_SE(shifter_out_se);
 
-        // DIVIDER port map :
-
-        /*divider_inst.OP1_SE(op1_se);
-        divider_inst.OP2_SE(alu_in_op2_se);
-        divider_inst.CMD_SE(CMD_RD);
-        divider_inst.CIN_SE(NEG_OP2_RD);
-        divider_inst.RES_SE(divider_out_se);*/
-
         // fifo port map
 
         fifo_inst.DIN_S(exe2mem_din_se);
@@ -211,7 +212,7 @@ SC_MODULE(exec) {
         sensitive << op1_se << NEG_OP2_RD << op2_se;
         SC_METHOD(select_exec_res);
         sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD << SLTU_RD << SELECT_TYPE_OPERATIONS_RD
-                  << CURRENT_MODE_SM << MEM_LOAD_RD << MEM_STORE_RD << exception_se << RESET;
+                  << CURRENT_MODE_SM << MEM_LOAD_RD << MEM_STORE_RD << exception_se << RESET << DIVIDER_RES_OUTPUT;
         SC_METHOD(fifo_concat);
         sensitive << bp_mem_data_sd << DEST_RD << MEM_SIZE_RD << MEM_LOAD_RD << MEM_SIGN_EXTEND_RD << MEM_STORE_RD
                   << WB_RD << exe_res_se << mem_load_re << mem_store_re << wb_re << CSR_WENABLE_RD << CSR_WADR_RD
@@ -222,15 +223,26 @@ SC_MODULE(exec) {
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << OP1_VALID_RD << OP2_VALID_RD << exception_se << blocked
-                  << r1_valid_se << r2_valid_se;
+        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD 
+                  << OP1_VALID_RD << OP2_VALID_RD 
+                  << exception_se << blocked 
+                  << r1_valid_se << r2_valid_se 
+                  << DIV_BUSY_SE;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
-                  << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE << CSR_WENABLE_RM << CSR_RDATA_RM
-                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD << MEM_STORE_RD << MULT_INST_RE
-                  << MULT_INST_RM << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
+        sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM 
+                  << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
+                  << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE 
+                  << CSR_WENABLE_RM << CSR_RDATA_RM
+                  << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD
+                  << MEM_STORE_RD << MULT_INST_RE << MULT_INST_RM 
+                  << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
         SC_METHOD(exception);
-        sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD << EXCEPTION_RD << load_adress_missaligned_se
-                  << exception_se << load_access_fault_se << store_access_fault_se << store_adress_missaligned_se;
+        sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD 
+                  << EXCEPTION_RD << load_adress_missaligned_se
+                  << exception_se << load_access_fault_se << store_access_fault_se 
+                  << store_adress_missaligned_se;
+
+        SC_METHOD(manage_divider);
+        sensitive << DONE_SE << SELECT_TYPE_OPERATIONS_RD << DEC2EXE_EMPTY_SD;
     }
 };

@@ -12,18 +12,13 @@ __asm__("jal x5, main");
 
 int main()
 {
-    int nbr1, nbr2 ;
-    int pgcd, i;
-	
-	nbr1 = 5121;
-    nbr2 = 891;
-    
-    for(i=1; i <= nbr1 && i <= nbr2; ++i)
+    int a = 150000000;
+    while(a > 1)
     {
-        if(nbr1%i == 0 && nbr2%i == 0)
-            pgcd = i;
+        a /= 2;
     }
-	if(pgcd == 9)
+
+	if(a == 1)
     {
         _good() ;
     }
