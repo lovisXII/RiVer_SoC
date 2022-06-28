@@ -44,7 +44,7 @@ signal stall_sm, wb : std_logic;
 signal load_data : std_logic_vector(31 downto 0);
 signal load_byte, load_halfword, load_word : std_logic_vector(31 downto 0);
 
-signal data_sm : std_logic_vector(31 downto 0);
+signal data_sm, data_store_sm, data_byte_store_sm, data_half_store_sm : std_logic_vector(31 downto 0);
 
 signal byt_sel_sm : std_logic_vector(3 downto 0);
 
@@ -101,8 +101,19 @@ wb <= WB_RE or LOAD_RE;
 mem2wbk_push <= (not stall_sm) and wb;
 EXE2MEM_POP_SM <= not stall_sm;
 
+
+data_byte_store_sm(31 downto 8)     <= (others => '0');
+data_byte_store_sm(7 downto 0)      <= MEM_DATA_RE(7 downto 0);
+
+data_half_store_sm(31 downto 16)    <= (others => '0');
+data_half_store_sm(15 downto 0)     <= MEM_DATA_RE(15 downto 0);
+
+data_store_sm       <=  data_byte_store_sm when MEM_SIZE_RE = "10" else 
+                        data_half_store_sm when MEM_SIZE_RE = "01" else 
+                        MEM_DATA_RE;
+
 -- Mcache 
-MCACHE_DATA_SM <= MEM_DATA_RE; 
+MCACHE_DATA_SM <= data_store_sm; 
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;

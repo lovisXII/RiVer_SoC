@@ -320,8 +320,8 @@ mem_size_sd <=  "00" when ((lw_i_sd or sw_i_sd)= '1') else              -- word 
                 "10" when ((lb_i_sd or lbu_i_sd or sb_i_sd) = '1') else -- byte size
                 "11";                                                   -- not a mem access
  
-mem_sign_extend_sd <= '1' when (((lh_i_sd and lhu_i_sd )= '1') or ((lb_i_sd and lbu_i_sd) = '1')) else
-                      '0';
+mem_sign_extend_sd <= lh_i_sd or lb_i_sd; 
+
 
 -------------------------
 -- Branch offset

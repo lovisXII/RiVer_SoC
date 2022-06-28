@@ -63,6 +63,7 @@ int write_mem(int a, int data, int byt_sel) {
     int tmp = 0; 
     int mask = 0;
     int adr = a;  
+    int dataw = data; 
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
