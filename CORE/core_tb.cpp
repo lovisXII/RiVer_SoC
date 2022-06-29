@@ -11,7 +11,7 @@
 using namespace std;
 using namespace ELFIO;
 
-//#define ICACHE_ON
+#define ICACHE_ON
 //#define DCACHE_ON
 //#define DEBUG_MAX_ITERATIONS 
 
@@ -357,7 +357,7 @@ int sc_main(int argc, char* argv[]) {
                 {
                     if(read)
                     {
-                        mem_adr = DCACHE_A.read();// & 0xFFFFFFF0;
+                        mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
 
                         MP_DT.write(ram[mem_adr]);
                         MP_A.write(mem_adr);

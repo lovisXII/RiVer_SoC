@@ -57,7 +57,7 @@ SC_MODULE(buffercache)
     SC_CTOR(buffercache)
     {
         SC_METHOD(fifo);
-        sensitive << CLK.neg() << WRITE_OBUFF.pos();
+        sensitive << CLK.pos() << WRITE_OBUFF.pos();
 
         SC_METHOD(bufferfull);
         sensitive << buff0_VALIDATE << buff1_VALIDATE;
