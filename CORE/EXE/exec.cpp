@@ -20,15 +20,23 @@ void exec::select_exec_res() {
     sc_uint<32> alu_out     = alu_out_se.read();
     sc_uint<32> shifter_out = shifter_out_se.read();
 
+    load_adress_missaligned_se.write(0);
+    load_access_fault_se.write(0);
+    store_adress_missaligned_se = 0;
+    store_access_fault_se       = 0;
+
     if (SELECT_TYPE_OPERATIONS_RD.read() == 0b1000)
     {
         exe_res_se.write(DIVIDER_RES_OUTPUT.read());
     }
-    else
-    if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0010) {
+    else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0010) 
+    {
         exe_res_se.write(shifter_out_se);
-    } else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0001) {
-        if (SLT_RD.read()) {
+    } 
+    else if (SELECT_TYPE_OPERATIONS_RD.read() == 0b0001) 
+    {
+        if (SLT_RD.read()) 
+        {
             if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
                 exe_res_se.write(1);
             } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
@@ -38,7 +46,8 @@ void exec::select_exec_res() {
             } else {
                 exe_res_se.write((bool)alu_out_se.read()[31]);
             }
-        } else if (SLTU_RD.read()) {
+        } else if (SLTU_RD.read()) 
+        {
             if (op1_se.read()[31] == 1 && op2_se.read()[31] == 0) {
                 exe_res_se.write(0);
             } else if (op1_se.read()[31] == 0 && op2_se.read()[31] == 1) {
@@ -48,7 +57,9 @@ void exec::select_exec_res() {
             } else {
                 exe_res_se.write((bool)alu_out_se.read()[31]);
             }
-        } else {
+        } 
+        else 
+        {
             if (MEM_LOAD_RD.read() || MEM_STORE_RD.read()) {
                 //MEM_SIZE = 0 -> Word
                 //MEM_SIZE = 1 -> Half word
