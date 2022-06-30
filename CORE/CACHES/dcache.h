@@ -122,7 +122,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM;
+    sensitive << DATA_ADR_SM << A_SP;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
@@ -137,7 +137,7 @@ SC_MODULE(dcache)
     SC_METHOD(state_transition);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(mae_output);
-    sensitive << CLK.neg() << RESET_N;
+    sensitive << CLK.neg() << RESET_N << mp_address_tag << mp_address_index << mp_address_offset;
 
     reset_signal_is(RESET_N, false);
 

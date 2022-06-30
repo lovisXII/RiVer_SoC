@@ -6,6 +6,11 @@ void dcache::adresse_parcer()
   address_tag.write(DT_A_SM.range(31,11));
   address_index.write(DT_A_SM.range(10,4));
   address_offset.write(DT_A_SM.range(3,0));
+
+  sc_uint<32> DT_A_SP = A_SP.read();
+  mp_address_tag.write(DT_A_SP.range(31,11));
+  mp_address_index.write(DT_A_SP.range(10,4));
+  mp_address_offset.write(DT_A_SP.range(3,0));
 }
 
 void dcache::miss_detection()
@@ -147,7 +152,7 @@ void dcache::mae_output()
             break;
           }
         }
-        else if(MEM_SIZE_SM.read() == 2)
+        else if(MEM_SIZE_SM.read() == 1)
         {
           switch(mask)
           {

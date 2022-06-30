@@ -12,7 +12,7 @@ using namespace std;
 using namespace ELFIO;
 
 #define ICACHE_ON
-//#define DCACHE_ON
+#define DCACHE_ON
 //#define DEBUG_MAX_ITERATIONS 
 
 #ifdef ICACHE_ON
