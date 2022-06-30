@@ -125,7 +125,7 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 100000; 
+constant NCYCLES : integer := 10000000; 
 signal CYCLES : integer := 0; 
 signal good_adr, bad_adr: std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
@@ -241,7 +241,7 @@ begin
     else 
         if ADR_VALID_SI = '1' then 
             if ADR_SI = riscof_end_adr then 
-                assert false report "Test success" severity note; 
+                assert false report "RISCOF test end" severity note; 
                 result <= 0 ;
                 riscof_end <= 1;
             else
@@ -261,14 +261,14 @@ variable adr_u      : signed(MCACHE_ADR_SM'range);
 variable adr_int    : integer := 0;
 variable data_u     : signed(MCACHE_DATA_SM'range);
 variable data_int   : integer := 0;
-variable byt_sel_u  : signed(byt_sel'range);
+variable byt_sel_u  : unsigned(byt_sel'range);
 variable byt_sel_i  : integer := 0;
 begin 
     adr_u       := signed(MCACHE_ADR_SM);
     adr_int     := to_integer(adr_u);
     data_u      := signed(MCACHE_DATA_SM);
     data_int    := to_integer(data_u);
-    byt_sel_u   := signed(byt_sel);
+    byt_sel_u   := unsigned(byt_sel);
     byt_sel_i   := to_integer(byt_sel_u);
 
     if reset_n = '0' then 
