@@ -42,7 +42,7 @@ SC_MODULE(wbk_s2) {
 
     // Interruption :
 
-    sc_in<bool> INTERRUPTION_SE;
+    sc_in<bool> INTERRUPTION_SE_S2;
 
     // FIFO
 

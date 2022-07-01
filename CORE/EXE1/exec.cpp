@@ -505,7 +505,7 @@ void exec_s1::fifo_unconcat() {
     MEM_SIGN_EXTEND_RE_S1.write((bool)ff_dout[75]);
     PC_EXE2MEM_RE_S1.write((sc_bv_base)ff_dout.range(107, 76));
     CSR_WENABLE_RE_S1.write((bool)ff_dout[108]);
-    CSR_WADR_RE.write((sc_bv_base)ff_dout.range(120, 109));
+    CSR_WADR_RE_S1.write((sc_bv_base)ff_dout.range(120, 109));
     CSR_RDATA_RE_S1.write((sc_bv_base)ff_dout.range(152, 121));
     ENV_CALL_S_MODE_RE_S1.write((bool)ff_dout[153]);
     ENV_CALL_WRONG_MODE_RE_S1.write((bool)ff_dout[154]);
@@ -613,9 +613,9 @@ void exec_s1::exception() {
     if (MACHINE_SOFTWARE_INTERRUPT_SX | MACHINE_TIMER_INTERRUPT_SX | MACHINE_EXTERNAL_INTERRUPT_SX)
     // in case of interrupt or exception have to inform other stage
     {
-        INTERRUPTION_SE.write(1);
+        INTERRUPTION_SE_S1.write(1);
     } else {
-        INTERRUPTION_SE.write(0);
+        INTERRUPTION_SE_S1.write(0);
     }
 
     if (exception_se.read()) {
@@ -682,13 +682,13 @@ void exec_s1::trace(sc_trace_file* tf) {
 
     // Interruption :
 
-    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
     sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SX, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SX));
     sc_trace(tf, MACHINE_TIMER_INTERRUPT_SX, GET_NAME(MACHINE_TIMER_INTERRUPT_SX));
     sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SX, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SX));
     sc_trace(tf, MACHINE_SOFTWARE_INTERRUPT_SE_S1, GET_NAME(MACHINE_SOFTWARE_INTERRUPT_SE_S1));
-    sc_trace(tf, MACHINE_TIMER_INTERRUPT_SE, GET_NAME(MACHINE_TIMER_INTERRUPT_SE));
-    sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SE, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SE));
+    sc_trace(tf, MACHINE_TIMER_INTERRUPT_SE_S1, GET_NAME(MACHINE_TIMER_INTERRUPT_SE_S1));
+    sc_trace(tf, MACHINE_EXTERNAL_INTERRUPT_SE_S1, GET_NAME(MACHINE_EXTERNAL_INTERRUPT_SE_S1));
 
     // bypasses
 
@@ -719,7 +719,7 @@ void exec_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, DEC2EXE_POP_SE_S1, GET_NAME(DEC2EXE_POP_SE_S1));
 
     sc_trace(tf, CSR_WENABLE_RE_S1, GET_NAME(CSR_WENABLE_RE_S1));
-    sc_trace(tf, CSR_WADR_RE, GET_NAME(CSR_WADR_RE));
+    sc_trace(tf, CSR_WADR_RE_S1, GET_NAME(CSR_WADR_RE_S1));
     sc_trace(tf, CSR_RDATA_RE_S1, GET_NAME(CSR_RDATA_RE_S1));
 
     // Internals signals :

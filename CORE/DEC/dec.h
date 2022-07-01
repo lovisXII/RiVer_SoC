@@ -166,7 +166,7 @@ SC_MODULE(decod) {
 
     // Interruption :
 
-    sc_in<bool> INTERRUPTION_SE;
+    sc_in<bool> INTERRUPTION_SE_S1;
 
     // General Interface :
 

@@ -62,22 +62,25 @@ SC_MODULE(exec_s2) {
     sc_in<bool>        OP2_VALID_RD_S2;
     sc_in<sc_uint<6>>  RADR1_RD_S2;
     sc_in<sc_uint<6>>  RADR2_RD_S2;
-    sc_in<bool>        BLOCK_BP_RD_S2;
+    sc_in<bool>        BLOCK_BP_RD_S2;//6
 
     sc_in<sc_uint<32>> PC_DEC2EXE_RD_S2;
     sc_in<sc_uint<32>> MEM_DATA_RD_S2;
     sc_in<sc_uint<6>>  DEST_RD_S2;
     sc_in<sc_uint<2>>  CMD_RD_S2;
     sc_in<sc_uint<2>>  MEM_SIZE_RD_S2;
-    sc_in<bool>        NEG_OP2_RD_S2, WB_RD_S2;
+    sc_in<bool>        NEG_OP2_RD_S2;
+    sc_in<bool>        WB_RD_S2;
     sc_in<bool>        MEM_SIGN_EXTEND_RD_S2;
     sc_in<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S2;  // taille fifo entrée : 110
-    sc_in<bool>        MEM_LOAD_RD_S2, MEM_STORE_RD_S2;
+    sc_in<bool>        MEM_LOAD_RD_S2;
+    sc_in<bool>        MEM_STORE_RD_S2;//17
 
     sc_in<bool> EXE2MEM_POP_SM_S2;
     sc_in<bool> MULT_INST_RD_S2;
-    sc_in<bool> DEC2EXE_EMPTY_SD_S2;
-    sc_in<bool> SLT_RD_S2, SLTU_RD_S2;
+    sc_in<bool> DEC2EXE_EMPTY_SD_S2;//20
+    sc_in<bool> SLT_RD_S2;
+    sc_in<bool> SLTU_RD_S2;
 
     sc_in<bool>        CSR_WENABLE_RD_S2;
     sc_in<sc_uint<12>> CSR_WADR_RD_S2;
@@ -100,7 +103,7 @@ SC_MODULE(exec_s2) {
     sc_in<bool> ENV_CALL_WRONG_MODE_RD_S2;
     sc_in<bool> INSTRUCTION_ACCESS_FAULT_RD_S2;
     sc_in<bool> MRET_RD_S2;
-    sc_in<bool> EBREAK_RD_S2;
+    sc_in<bool> EBREAK_RD_S2;//40
 
     sc_out<bool> EXCEPTION_RE_S2;
     sc_out<bool> LOAD_ADRESS_MISSALIGNED_RE_S2;  // adress from store/load isn't aligned
@@ -109,7 +112,7 @@ SC_MODULE(exec_s2) {
     sc_out<bool> STORE_ACCESS_FAULT_RE_S2;
     sc_out<bool> ILLEGAL_INSTRUCTION_RE_S2;             // accessing stuff in wrong mode
     sc_out<bool> INSTRUCTION_ADRESS_MISSALIGNED_RE_S2;  // branch offset is misaligned
-    sc_out<bool> ENV_CALL_S_MODE_REEBREAK_RD_S2_S2;
+    sc_out<bool> ENV_CALL_S_MODE_RE_S2;
     sc_out<bool> ENV_CALL_M_MODE_RE_S2;
     sc_out<bool> ENV_CALL_U_MODE_RE_S2;
     sc_out<bool> ENV_CALL_WRONG_MODE_RE_S2;
@@ -118,13 +121,13 @@ SC_MODULE(exec_s2) {
     sc_out<bool> EBREAK_RE_S2;
 
     sc_out<sc_uint<32>> OP1_SE_S2;
-    sc_out<sc_uint<32>> OP2_SE_S2;
+    sc_out<sc_uint<32>> OP2_SE_S2;//56
     // Interruption :
 
     sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S2;
-    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE;
-    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
-    sc_out<bool> INTERRUPTION_SE;
+    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE_S2;
+    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE_S2;
+    sc_out<bool> INTERRUPTION_SE_S2;//60
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM_S2;
@@ -144,21 +147,24 @@ SC_MODULE(exec_s2) {
     // Fifo exe2mem interface :
 
     sc_out<sc_uint<32>> EXE_RES_RE_S2;
-    sc_out<sc_uint<32>> MEM_DATA_RE_S2;
+    sc_out<sc_uint<32>> MEM_DATA_RE_S2;//72
     sc_out<sc_uint<6>>  DEST_RE_S2;
     sc_out<sc_uint<2>>  MEM_SIZE_RE_S2;
     sc_out<sc_uint<32>> PC_EXE2MEM_RE_S2;
 
-    sc_out<bool> WB_RE_S2, MEM_SIGN_EXTEND_RE_S2;  // taille fifo sortie : 7
-    sc_out<bool> MEM_LOAD_RE_S2, MEM_STORE_RE_S2;
+    sc_out<bool> WB_RE_S2;
+    sc_out<bool> MEM_SIGN_EXTEND_RE_S2;  // taille fifo sortie : 7
+    sc_out<bool> MEM_LOAD_RE_S2;
+    sc_out<bool> MEM_STORE_RE_S2;
     sc_out<bool> MULT_INST_RE_S2;      // multiplication instruction
     sc_out<bool> MULT_SEL_HIGH_RE_S2;  // select higher bits of multiplication
 
-    sc_out<bool> EXE2MEM_EMPTY_SE_S2, DEC2EXE_POP_SE_S2;
+    sc_out<bool> EXE2MEM_EMPTY_SE_S2;//82
+    sc_out<bool> DEC2EXE_POP_SE_S2;
 
     sc_out<bool>        CSR_WENABLE_RE_S2;
-    sc_out<sc_uint<12>> CSR_WADR_RE;
-    sc_out<sc_uint<32>> CSR_RDATA_RE_S2;
+    sc_out<sc_uint<12>> CSR_WADR_RE_S2;
+    sc_out<sc_uint<32>> CSR_RDATA_RE_S2;//86
 
     // Internals signals :
 

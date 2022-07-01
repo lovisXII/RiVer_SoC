@@ -124,7 +124,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, instr_ri_s2, GET_NAME(instr_ri_s2));
     sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
-    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     buffer_inst_1.trace(tf);
     buffer_inst_2.trace(tf);

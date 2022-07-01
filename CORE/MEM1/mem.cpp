@@ -465,7 +465,7 @@ void mem_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_RDATA_RE_S1, GET_NAME(CSR_RDATA_RE_S1));
     sc_trace(tf, CSR_WENABLE_RM_S1, GET_NAME(CSR_WENABLE_RM_S1));
     sc_trace(tf, CSR_RDATA_RM_S1, GET_NAME(CSR_RDATA_RM_S1));
-    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
     sc_trace(tf, CSR_WADR_SM_S1, GET_NAME(CSR_WADR_SM_S1));
     sc_trace(tf, CSR_WDATA_SM_S1, GET_NAME(CSR_WDATA_SM_S1));
     sc_trace(tf, EXCEPTION_RE_S1, GET_NAME(EXCEPTION_RE_S1));

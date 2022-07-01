@@ -123,9 +123,9 @@ SC_MODULE(exec_s1) {
     // Interruption :
 
     sc_out<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S1;
-    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE;
-    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
-    sc_out<bool> INTERRUPTION_SE;
+    sc_out<bool> MACHINE_TIMER_INTERRUPT_SE_S1;
+    sc_out<bool> MACHINE_EXTERNAL_INTERRUPT_SE_S1;
+    sc_out<bool> INTERRUPTION_SE_S1;
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM_S1;
@@ -158,7 +158,7 @@ SC_MODULE(exec_s1) {
     sc_out<bool> EXE2MEM_EMPTY_SE_S1, DEC2EXE_POP_SE_S1;
 
     sc_out<bool>        CSR_WENABLE_RE_S1;
-    sc_out<sc_uint<12>> CSR_WADR_RE;
+    sc_out<sc_uint<12>> CSR_WADR_RE_S1;
     sc_out<sc_uint<32>> CSR_RDATA_RE_S1;
 
     // Internals signals :

@@ -650,7 +650,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, MTVEC_VALUE_RC_S1, GET_NAME(MTVEC_VALUE_RC_S1));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
-    sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
+    sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
     sc_trace(tf, rdata1_sd_s1, GET_NAME(rdata1_sd_s1));
     sc_trace(tf, rdata2_sd_s1, GET_NAME(rdata2_sd_s1));
     sc_trace(tf, r1_valid_sd, GET_NAME(r1_valid_sd));

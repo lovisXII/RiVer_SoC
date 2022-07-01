@@ -90,10 +90,10 @@ SC_MODULE(mem_s2) {
 
     // Interruption :
 
-    sc_in<bool> INTERRUPTION_SE;
+    sc_in<bool> INTERRUPTION_SE_S2;
     sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S2;
-    sc_in<bool> MACHINE_TIMER_INTERRUPT_SE;
-    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE;
+    sc_in<bool> MACHINE_TIMER_INTERRUPT_SE_S1;
+    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE_S1;
     sc_in<bool> EBREAK_RE_S2;
     // CSR Interface :
 
