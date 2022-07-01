@@ -615,8 +615,8 @@ exec_i : exec
 
         OP1_RD              => OP1_RD, 
         OP2_RD              => OP2_RD,
-        RADR1_RD            => RADR1_RD, 
-        RADR2_RD            => RADR2_RD,
+        RADR1_RD            => BP_RADR1_RD, 
+        RADR2_RD            => BP_RADR2_RD,
         MEM_DATA_RD         => MEM_DATA_RD,
         DEST_RD             => DEST_RD,
         CMD_RD              => CMD_RD,

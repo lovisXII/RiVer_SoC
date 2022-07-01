@@ -75,17 +75,17 @@ int write_mem(int a, int data, int byt_sel) {
 
     switch(byt_sel) {
         // store byte
-        case 1:     dataw = data            & ~(0xFFFFFF00);  printf("sb 1 ");  break;
-        case 2:     dataw = (data << 8)     & ~(0xFFFF00FF);  printf("sb 2 ");  break;
-        case 4:     dataw = (data << 16)    & ~(0xFF00FFFF);  printf("sb 4 ");  break;
-        case 8:     dataw = (data << 24)    & ~(0x00FFFFFF);  printf("sb 8 ");  break;
+        case 1:     dataw = data            & ~(0xFFFFFF00);    break;
+        case 2:     dataw = (data << 8)     & ~(0xFFFF00FF);    break;
+        case 4:     dataw = (data << 16)    & ~(0xFF00FFFF);    break;
+        case 8:     dataw = (data << 24)    & ~(0x00FFFFFF);    break;
         // store half word 
-        case 3:     dataw = data            & ~(0xFFFF0000);  printf("sh 1 ");  break;
-        case 12:    dataw = (data << 16)    & ~(0x0000FFFF);  printf("sh 2 ");  break;
+        case 3:     dataw = data            & ~(0xFFFF0000);    break;
+        case 12:    dataw = (data << 16)    & ~(0x0000FFFF);    break;
         // store word
-        case 15:    dataw = data;        printf("sw ");                       break;
+        case 15:    dataw = data;                               break;
 
-        default:    dataw = 0;               printf("wtf ");                   break; 
+        default:    dataw = 0;                                  break; 
     }
 
     if(byt_sel & 0x1) 
