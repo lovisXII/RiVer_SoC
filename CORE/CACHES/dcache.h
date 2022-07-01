@@ -46,6 +46,7 @@ SC_MODULE(dcache)
 // interface MP
   sc_out<bool> DTA_VALID_SC;
   sc_out<bool> READ_SC, WRITE_SC;
+  sc_out<sc_uint<2>> SIZE_SC;
 
   // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
   // la MP ou du CACHE
@@ -146,17 +147,18 @@ SC_MODULE(dcache)
     buffcache_inst.CLK(CLK);
     buffcache_inst.WRITE_OBUFF(write_buff);
     buffcache_inst.READ_OBUFF(read_buff);
-    buffcache_inst.DATA_C(dt_sc);
-    buffcache_inst.ADR_C(adr_sc);
+    buffcache_inst.DATA_C(DATA_SM);
+    buffcache_inst.ADR_C(DATA_ADR_SM);
     buffcache_inst.STORE_C(STORE_SM);
     buffcache_inst.LOAD_C(LOAD_SM);
+    buffcache_inst.SIZE_C(MEM_SIZE_SM);
     buffcache_inst.FULL(full);
     buffcache_inst.EMPTY(empty);
     buffcache_inst.DATA_MP(DT_SC);
     buffcache_inst.ADR_MP(A_SC);
     buffcache_inst.STORE_MP(WRITE_SC);
     buffcache_inst.LOAD_MP(READ_SC);
-    
+    buffcache_inst.SIZE_MP(SIZE_SC);
   }
 };
 

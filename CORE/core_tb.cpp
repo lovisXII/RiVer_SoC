@@ -217,7 +217,7 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool> DCACHE_DTA_VALID;
     sc_signal<sc_uint<32>> DCACHE_DT;
     sc_signal<sc_uint<32>> DCACHE_A;
-    //sc_signal<sc_uint<2>>  MEM_SIZE_SC;
+    sc_signal<sc_uint<2>>  SIZE_SC;
 
     sc_signal<sc_uint<32>> MP_DT;
     sc_signal<sc_uint<32>> MP_A;
@@ -276,7 +276,6 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.LOAD_SM(MEM_LOAD);
     dcache_inst.STORE_SM(MEM_STORE);
     dcache_inst.MEM_SIZE_SM(MEM_SIZE_SM);
-    //dcache_inst.MEM_SIZE_SC(MEM_SIZE_SC);
     dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
     dcache_inst.DATA_SC(MEM_RESULT);
     dcache_inst.STALL_SC(MEM_STALL);
@@ -289,6 +288,7 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.DT_SP(MP_DT);
     dcache_inst.A_SP(MP_A);
     dcache_inst.SLAVE_ACK_SP(MP_ACK_DCACHE);
+    dcache_inst.SIZE_SC(SIZE_SC);
 
     DC_FSM DC_fsm_current_state = DC_IDLE;
 
@@ -355,7 +355,6 @@ int sc_main(int argc, char* argv[]) {
             case DC_IDLE:
                 if(dcache_dta_valid)
                 {
-                    cout <<sc_time_stamp()<< " VALID"<<endl;
                     if(read)
                     {
                         mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
@@ -370,16 +369,71 @@ int sc_main(int argc, char* argv[]) {
 
                     if(write)
                     {
-                        mem_adr = DCACHE_A.read();
-                        int data = DCACHE_DT.read();
-                        ram[mem_adr] = data;
-                        cout << " write  "<<data << "   at "<< mem_adr<<endl;
+                        mem_adr = DCACHE_A.read() & 0xFFFFFFFC;
+                        mem_size = SIZE_SC.read();
+                        
+                        int temporary_value = ram[mem_adr] ; 
+                        unsigned int temporary_store_value = DCACHE_DT.read();
+
+                        if(mem_size == 2)//access in byte
+                        {
+                            // doing a mask on the least 2 significant bits
+                            int mask_adr = DCACHE_A.read() & 0x00000003 ;
+                            // The switch will allow to keep only the bits we want to store
+                            switch (mask_adr)
+                            {
+                            case 0 :
+                                temporary_store_value = temporary_store_value & 0x000000FF ;
+                                temporary_value = 0xFFFFFF00 & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;
+                            case 1 :
+                                temporary_store_value = temporary_store_value & 0x0000FF00 ;
+                                temporary_value = 0xFFFF00FF & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;
+                            case 2 :
+                                temporary_store_value = temporary_store_value & 0x00FF0000 ;
+                                temporary_value = 0xFF00FFFF & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;
+                            case 3 :      
+                                temporary_store_value = temporary_store_value & 0xFF000000 ;
+                                temporary_value = 0x00FFFFFF & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;
+                            default:
+                                break;
+                            }
+                        }
+                        else if(mem_size == 1){//access in half word
+                            int mask_adr = DCACHE_A.read() & 0x00000003 ;
+                            cout << sc_time_stamp() << "  " << mask_adr << "   " <<mem_adr<<"    "<<temporary_store_value<<endl;
+                            switch (mask_adr)
+                            {
+                            case 0 :
+                                temporary_store_value = temporary_store_value & 0x0000FFFF ;
+                                temporary_value = 0xFFFF0000 & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;
+                            case 2 :          
+                                temporary_store_value = temporary_store_value & 0xFFFF0000 ;
+                                temporary_value = 0x00000FFFF & temporary_value ;
+                                ram[mem_adr] = temporary_value | temporary_store_value ;
+                                break ;      
+                            default:
+                                break;
+                            }
+                        }
+                        else//access in word
+                        {
+                            ram[mem_adr] = DCACHE_DT.read();
+                        }
                     }
                 }       
                 else
                 {
                     MP_ACK_DCACHE.write(false);
-                    cout <<sc_time_stamp()<< " NOT VALID"<<endl;
                 }
             break;
             case DC_CLK_SIMU0:

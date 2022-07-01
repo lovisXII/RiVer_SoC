@@ -20,6 +20,7 @@ void buffercache::fifo()
                 buff0_STORE.write(STORE_C.read());
                 buff0_LOAD.write(LOAD_C.read());
                 buff0_VALIDATE.write(STORE_C.read() || LOAD_C.read());
+                buff0_SIZE.write(SIZE_C.read());
 
                 buffer_LRU.write(0b01);
             }
@@ -30,6 +31,7 @@ void buffercache::fifo()
                 buff1_STORE.write(STORE_C.read());
                 buff1_LOAD.write(LOAD_C.read());
                 buff1_VALIDATE.write(STORE_C.read() || LOAD_C.read());
+                buff1_SIZE.write(SIZE_C.read());
 
                 buffer_LRU.write(0b10);
             }
@@ -50,6 +52,7 @@ void buffercache::fifo()
                 ADR_MP.write(buff1_DATA_ADR.read());
                 STORE_MP.write(buff1_STORE.read());
                 LOAD_MP.write(buff1_LOAD.read());
+                SIZE_MP.write(buff1_SIZE.read());
 
                 buff1_VALIDATE.write(false);
                 buff_readed.write(0b0001);
@@ -60,6 +63,7 @@ void buffercache::fifo()
                 ADR_MP.write(buff0_DATA_ADR.read());
                 STORE_MP.write(buff0_STORE.read());
                 LOAD_MP.write(buff0_LOAD.read());
+                SIZE_MP.write(buff0_SIZE.read());
 
                 buff0_VALIDATE.write(false);
                 buff_readed.write(0b0010);
@@ -71,6 +75,7 @@ void buffercache::fifo()
             ADR_MP.write(buff0_DATA_ADR.read());
             STORE_MP.write(buff0_STORE.read());
             LOAD_MP.write(buff0_LOAD.read());
+            SIZE_MP.write(buff0_SIZE.read());
 
             buff0_VALIDATE.write(false);
             buff_readed.write(0b0100);
@@ -81,6 +86,7 @@ void buffercache::fifo()
             ADR_MP.write(buff1_DATA_ADR.read());
             STORE_MP.write(buff1_STORE.read());
             LOAD_MP.write(buff1_LOAD.read());
+            SIZE_MP.write(buff1_SIZE.read());
 
             buff1_VALIDATE.write(false);
             buff_readed.write(0b1000);
@@ -129,12 +135,14 @@ void buffercache::trace(sc_trace_file* tf)
     sc_trace(tf, buff0_STORE, GET_NAME(buff0_STORE));
     sc_trace(tf, buff0_LOAD, GET_NAME(buff0_LOAD));
     sc_trace(tf, buff0_VALIDATE, GET_NAME(buff0_VALIDATE));
+    sc_trace(tf, buff0_SIZE, GET_NAME(buff0_SIZE));
 
     sc_trace(tf, buff1_DATA, GET_NAME(buff1_DATA));
     sc_trace(tf, buff1_DATA_ADR, GET_NAME(buff1_DATA_ADR));
     sc_trace(tf, buff1_STORE, GET_NAME(buff1_STORE));
     sc_trace(tf, buff1_LOAD, GET_NAME(buff1_LOAD));
     sc_trace(tf, buff1_VALIDATE, GET_NAME(buff1_VALIDATE));
+    sc_trace(tf, buff1_SIZE, GET_NAME(buff1_SIZE));
 
     //debug
     sc_trace(tf, buff_readed, GET_NAME(buff_readed));

@@ -92,11 +92,8 @@ void dcache::mae_output()
       read_buff = true;
       write_buff = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
       DTA_VALID_SC = !empty;
-      if(LOAD_SM.read() && VALID_ADR_SM.read())
-      {
-        adr_sc = DATA_ADR_SM.read();
-      }
-      else if(STORE_SM.read() && VALID_ADR_SM.read())
+      
+      if(STORE_SM.read() && VALID_ADR_SM.read())
       {
         // DATA MASK
         sc_uint<32> dt = DATA_SM;
@@ -153,7 +150,6 @@ void dcache::mae_output()
             w0_word[address_index.read()][address_offset.read()/4] = dt;
             w0_TAG[address_index.read()] = address_tag.read();
             w0_LINE_VALIDATE[address_index.read()] = true;
-            dt_sc  = dt;
           }
           else
           {
@@ -163,7 +159,6 @@ void dcache::mae_output()
             w1_word[address_index.read()][address_offset.read()/4] = dt;
             w1_TAG[address_index.read()] = address_tag.read();
             w1_LINE_VALIDATE[address_index.read()] = true;
-            dt_sc  = dt;
           }
         }
         else if(way0_hit)
@@ -172,7 +167,6 @@ void dcache::mae_output()
           dt = dt & (~data_mask);
           dt = dt | (DATA_SM.read() & data_mask);
           w0_word[address_index.read()][address_offset.read()/4] = dt;
-          dt_sc  = dt;
         }
         else if(way1_hit)
         {
@@ -180,7 +174,6 @@ void dcache::mae_output()
           dt = dt & (~data_mask);
           dt = dt | (DATA_SM.read() & data_mask);
           w1_word[address_index.read()][address_offset.read()/4] = dt;
-          dt_sc  = dt;
         }
       } 
       break;
@@ -213,29 +206,29 @@ void dcache::mae_output()
       }
       write_buff = false;
       break;
-      case UPDT:
-        read_buff = true;
-        if(!SLAVE_ACK_SP.read())
+    case UPDT:
+      read_buff = true;
+      if(!SLAVE_ACK_SP.read())
+      {
+        LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
+      }
+      else
+      {
+        sc_uint<32> DT_A_MP = A_SP.read();
+        if(DT_A_MP.range(3,0) == (mp_last_addr_offset.read() + 4))
         {
-          LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
-        }
-        else
-        {
-          sc_uint<32> DT_A_MP = A_SP.read();
-          if(DT_A_MP.range(3,0) == (mp_last_addr_offset.read() + 4))
+          mp_last_addr_offset = DT_A_MP.range(3,0);
+          if(LRU_bit_check[DT_A_MP.range(10,4)])
           {
-            mp_last_addr_offset = DT_A_MP.range(3,0);
-            if(LRU_bit_check[DT_A_MP.range(10,4)])
-            {
-              w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-            }
-            else
-            {
-              w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-            }
+            w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
+          }
+          else
+          {
+            w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
           }
         }
-      break;
+      }
+    break;
   }
 }
 void dcache::trace(sc_trace_file* tf)
@@ -283,6 +276,7 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, mp_address_tag, GET_NAME(mp_address_tag));
   sc_trace(tf, mp_address_index, GET_NAME(mp_address_index));
   sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+  sc_trace(tf, SIZE_SC, GET_NAME(SIZE_SC));
 
   sc_trace(tf, DTA_VALID_SC, GET_NAME(DTA_VALID_SC));
 
