@@ -80,7 +80,7 @@ stall_si <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SD;
 
 if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD = '0' else '0'; 
 DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
-ADR_VALID_SI <= not DEC2IF_EMPTY_SD when IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM  = '0' else '0';
+ADR_VALID_SI <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0') else '0';
 
 ADR_SI <= PC_RD;
 

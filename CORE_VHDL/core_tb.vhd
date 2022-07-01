@@ -179,7 +179,11 @@ begin
      CYCLES <= CYCLES + 1; 
     wait for 5 ns; 
     if CYCLES = 1 then 
-        assert false report "simulation begin" severity note; 
+        if riscof_en = 1 then 
+            assert false report "RISCOF simulation begin" severity note; 
+        else
+            assert false report "simulation begin" severity note; 
+        end if;
     end if; 
     if end_simu = '1' or cpt_end = 3 then 
         assert false report "end of simulation" severity note; 

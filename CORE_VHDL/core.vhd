@@ -92,7 +92,7 @@ signal BLOCK_BP_RD : std_logic;
 signal CSR_WADR_SM         : std_logic_vector(11 downto 0);
 signal CSR_WDATA_SM        : std_logic_vector(31 downto 0);
 signal CSR_ENABLE_SM, CSR_WENABLE_RD : std_logic;
-signal EXCEPTION_SM        : std_logic;
+signal EXCEPTION_SM        : std_logic := '0';
 signal MSTATUS_WDATA_RM    : std_logic_vector(31 downto 0);
 signal MIP_WDATA_RM        : std_logic_vector(31 downto 0);
 signal MEPC_WDATA_RM       : std_logic_vector(31 downto 0);

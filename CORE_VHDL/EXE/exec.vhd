@@ -43,7 +43,7 @@ entity exec is
 
         -- CSR 
         CSR_ENABLE_RD : in std_logic;
-        CSR_WADR_RD   : in std_logic_vector(12 downto 0);
+        CSR_WADR_RD   : in std_logic_vector(11 downto 0);
         CSR_RDATA_RD  : in std_logic_vector(31 downto 0);
 
         -- Exception 

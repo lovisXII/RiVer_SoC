@@ -195,4 +195,7 @@ byt_sel     <=  byt_sel_sm;
 data_sm <= load_data when LOAD_RE = '1' else 
         RES_RE;
 
+
+EXCEPTION_SM <= '0';
+
 end archi;
