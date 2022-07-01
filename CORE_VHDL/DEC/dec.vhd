@@ -9,7 +9,7 @@ entity dec is
 
         -- Reg interface
         RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
-        RADR1_SR, RADR2_SR : out std_logic_vector(5 downto 0);
+        REG_ADR1_SD, REG_ADR2_SD : out std_logic_vector(5 downto 0);
         WRITE_PC_SD : out std_logic_vector(31 downto 0);
         WRITE_PC_ENABLE_SD : out std_logic;
         READ_PC_SR : in std_logic_vector(31 downto 0);
@@ -23,8 +23,15 @@ entity dec is
         SELECT_SHIFT_RD : out std_logic;
         SLT_RD, SLTU_RD : out std_logic;    
         MEM_DATA_RD : out std_logic_vector(31 downto 0);
-        MEM_LOAD_RD , MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
+        MEM_LOAD_RD, MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
         MEM_SIZE_RD : out std_logic_vector(1 downto 0);
+
+        PC_DEC2EXE_RD : out std_logic_vector(31 downto 0);
+        PC_BRANCH_VALUE_RD : out std_logic_vector(31 downto 0);
+
+        CSR_WENABLE_RD  : out std_logic; 
+        CSR_WADR_RD     : out std_logic_vector(11 downto 0);
+        CSR_RDATA_RD    : out std_logic_vector(31 downto 0);
 
         -- dec2if interface
         DEC2IF_POP_SI : in std_logic; 
@@ -50,7 +57,29 @@ entity dec is
         BP_MEM_RES_RM : in std_logic_vector(31 downto 0);
         BP_R1_VALID_RD, BP_R2_VALID_RD : out std_logic;
         BP_RADR1_RD, BP_RADR2_RD : out std_logic_vector(5 downto 0);    
-        BLOCK_BP_RD : out std_logic
+        BLOCK_BP_RD : out std_logic;
+
+        CSR_WENABLE_RE, CSR_WENABLE_RM : in std_logic;
+        CSR_RDATA_RE, CSR_RDATA_RM : in std_logic_vector(31 downto 0);
+
+        -- Exception 
+        EXCEPTION_RI : in std_logic;
+        ILLEGAL_INSTRUCTION_RD : out std_logic;
+        ADRESS_MISALIGNED_RD : out std_logic; 
+        ENV_CALL_U_MODE_RD, ENV_CALL_M_MODE_RD, ENV_CALL_S_MODE_RD : out std_logic; 
+        ENV_CALL_WRONG_MODE_RD : out std_logic;
+        INSTRUCTION_ACCESS_FAULT_RD : out std_logic;
+        MRET_RD : out std_logic;
+        EXCEPTION_RD : out std_logic;
+        EBREAK_RD : out std_logic; 
+        
+        CURRENT_MODE_SM : in std_logic_vector(1 downto 0);
+        EXCEPTION_SM    : in std_logic;
+        MTVEC_VALUE_RC  : in std_logic_vector(31 downto 0);
+        MCAUSE_WDATA_SM : in std_logic_vector(31 downto 0);
+        MRET_SM         : in std_logic;
+        RETURN_ADRESS_SM : in std_logic_vector(31 downto 0)
+
     );
 end dec;
 
@@ -441,8 +470,8 @@ r2_valid_sd <=  not(bpc_instr_in_exe2 or bpc_load_in_mem2);
 -------------------------
 -- affectation 
 DEC2EXE_EMPTY_SD <= dec2exe_empty; 
-RADR1_SR <= radr1_sd;
-RADR2_SR <= radr2_sd;
+REG_ADR1_SD <= radr1_sd;
+REG_ADR2_SD <= radr2_sd;
 MEM_LOAD_RD <= mem_load_fifo; 
 DEST_RD <= dec2exe_rdest_fifo;
 

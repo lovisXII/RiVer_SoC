@@ -20,19 +20,60 @@ entity mem is
         MEM_SIZE_RE : in std_logic_vector(1 downto 0);
         WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
 
+        PC_EXE2MEM_RE : std_logic_vector(31 downto 0);
+
         -- exe2mem interface
-        EXE2MEM_EMPTY_SM : in std_logic;
+        EXE2MEM_EMPTY_SE : in std_logic;
         EXE2MEM_POP_SM : out std_logic;
 
         -- mem2wbk interface
-        MEM2WBK_POP_SM : in std_logic;
+        MEM2WBK_POP_SW : in std_logic;
         MEM2WBK_EMPTY_SM : out std_logic;
         
         -- Wbk interface
         MEM_RES_RM : out std_logic_vector(31 downto 0);
         MEM_DEST_RM : out std_logic_vector(5 downto 0);
         MEM_SIZE_RM : out std_logic_vector(1 downto 0);
-        WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic
+        WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic;
+
+        -- CSR 
+        CSR_WENABLE_RE  : in std_logic;
+        CSR_WADR_RE     : in std_logic_vector(11 downto 0);
+        CSR_RDATA_RE    : in std_logic_vector(31 downto 0);
+
+        CSR_WADR_SM     : out std_logic_vector(11 downto 0);
+        CSR_WDATA_SM    : out std_logic_vector(31 downto 0);
+        CSR_ENABLE_SM   : out std_logic; 
+
+        MSTATUS_WDATA_RM    : out std_logic_vector(31 downto 0);
+        MIP_WDATA_RM        : out std_logic_vector(31 downto 0);
+        MEPC_WDATA_RM       : out std_logic_vector(31 downto 0);
+        MCAUSE_WDATA_SM     : out std_logic_vector(31 downto 0);
+        MTVAL_WDATA_SM      : out std_logic_vector(31 downto 0);
+
+        MEPC_SC             : in std_logic_vector(31 downto 0);
+        MSTATUS_RC          : in std_logic_vector(31 downto 0);
+        MTVEC_VALUE_RC      : in std_logic_vector(31 downto 0);
+        MIP_VALUE_RC        : in std_logic_vector(31 downto 0);
+        MIE_VALUE_RC        : in std_logic_vector(31 downto 0);
+
+        -- Exception 
+        EXCEPTION_RE    : in std_logic;
+        LOAD_ADRESS_MISALIGNED_RE, LOAD_ACCESS_FAULT_RE, ILLEGAL_INSTRUCTION_RE : in std_logic;
+        INSTRUCTION_ADRESS_MISALIGNED_RE, INSTRUCTION_ACCESS_FAULT_RE : in std_logic;
+        STORE_ADRESS_MISALIGNED_RE, STORE_ACCESS_FAULT_RE : in std_logic;
+        ENV_CALL_U_MODE_RE, ENV_CALL_S_MODE_RE, ENV_CALL_M_MODE_RE : in std_logic;
+        ENV_CALL_WRONG_MODE_RE : in std_logic;
+        MRET_RE : in std_logic;
+
+        PC_BRANCH_VALUE_RE : in std_logic_vector(31 downto 0);
+
+        BUS_ERROR_SX : in std_logic;
+
+        EXCEPTION_SM : out std_logic;
+        CURRENT_MODE_SM : out std_logic_vector(1 downto 0);
+        RETURN_ADRESS_SM : out std_logic_vector(31 downto 0);
+        MRET_SM : out std_logic
     ); 
 end mem;
 
@@ -73,7 +114,7 @@ mem2wbk : fifo
         reset_n => reset_n,
         DIN => mem2wbk_din, 
         PUSH => mem2wbk_push,
-        POP => MEM2WBK_POP_SM, 
+        POP => MEM2WBK_POP_SW, 
         FULL => mem2wbk_full, 
         EMPTY => MEM2WBK_EMPTY_SM, 
         DOUT => mem2wbk_dout
@@ -96,7 +137,7 @@ SIGN_EXTEND_RM <= mem2wbk_dout(41);
 LOAD_RM <= mem2wbk_dout(42);
 
 -- fifo manage 
-stall_sm <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SM;
+stall_sm <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SE;
 wb <= WB_RE or LOAD_RE;
 mem2wbk_push <= (not stall_sm) and wb;
 EXE2MEM_POP_SM <= not stall_sm;
@@ -117,7 +158,7 @@ MCACHE_DATA_SM <= data_store_sm;
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;
-MCACHE_ADR_VALID_SM <= (not EXE2MEM_EMPTY_SM) and (STORE_RE or LOAD_RE);
+MCACHE_ADR_VALID_SM <= (not EXE2MEM_EMPTY_SE) and (STORE_RE or LOAD_RE);
 
 -- sign extend and load size 
 load_byte(31 downto 8)  <=  x"000000" when SIGN_EXTEND_RE = '0' else 

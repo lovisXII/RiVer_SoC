@@ -32,10 +32,45 @@ entity exec is
         EXE2MEM_EMPTY_SE : out std_logic;
         DEC2EXE_POP_SE : out std_logic; 
 
+        PC_EXE2MEM_RE : out std_logic_vector(31 downto 0);
+
         -- bypasses 
         BLOCK_BP_RD : in std_logic;
         MEM_DEST_RM : in std_logic_vector(5 downto 0); 
-        MEM_RES_RM : in std_logic_vector(31 downto 0)
+        MEM_RES_RM : in std_logic_vector(31 downto 0);
+        CSR_WENABLE_RM : in std_logic;
+        CSR_RDATA_RM : in std_logic_vector(31 downto 0);
+
+        -- CSR 
+        CSR_ENABLE_RD : in std_logic;
+        CSR_WADR_RD   : in std_logic_vector(12 downto 0);
+        CSR_RDATA_RD  : in std_logic_vector(31 downto 0);
+
+        -- Exception 
+        EXCEPTION_SM    : in std_logic;
+        EXCEPTION_RD    : in std_logic;
+        CURRENT_MODE_SM : in std_logic_vector(1 downto 0);
+        PC_BRANCH_VALUE_RD : in std_logic_vector(31 downto 0);
+        PC_BRANCH_VALUE_RE : out std_logic_vector(31 downto 0);
+
+        ILLEGAL_INSTRUCTION_RD, ADRESS_MISALIGNED_RD, INSTRUCTION_ACCESS_FAULT_RD : in std_logic; 
+        ENV_CALL_U_MODE_RD, ENV_CALL_S_MODE_RD, ENV_CALL_M_MODE_RD : in std_logic;
+        ENV_CALL_WRONG_MODE_RD : in std_logic;
+        MRET_RD : in std_logic;
+        EBREAK_RD : in std_logic;
+
+        EXCEPTION_RE    : out std_logic;
+        ILLEGAL_INSTRUCTION_RE, ADRESS_MISALIGNED_RE, INSTRUCTION_ACCESS_FAULT_RE : out std_logic; 
+        ENV_CALL_U_MODE_RE, ENV_CALL_S_MODE_RE, ENV_CALL_M_MODE_RE : out std_logic;
+        ENV_CALL_WRONG_MODE_RE : out std_logic;
+        LOAD_ADRESS_MISALIGNED_RE, LOAD_ACCESS_FAULT_RE : out std_logic;
+        STORE_ADRESS_MISALIGNED_RE, STORE_ACCESS_FAULT_RE : out std_logic;
+        MRET_RE : out std_logic;
+        EBREAK_RE : out std_logic;
+
+        CSR_WENABLE_RE  : out std_logic;
+        CSR_WADR_RE     : out std_logic_vector(11 downto 0);
+        CSR_RDATA_RE    : out std_logic_vector(31 downto 0)
     );
 end exec; 
 
