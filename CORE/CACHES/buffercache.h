@@ -60,7 +60,7 @@ SC_MODULE(buffercache)
         sensitive << CLK.pos() << WRITE_OBUFF.pos();
 
         SC_METHOD(bufferfull);
-        sensitive << buff0_VALIDATE << buff1_VALIDATE;
+        sensitive << CLK.pos();
 
         reset_signal_is(RESET_N, false);
     }

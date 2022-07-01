@@ -355,6 +355,7 @@ int sc_main(int argc, char* argv[]) {
             case DC_IDLE:
                 if(dcache_dta_valid)
                 {
+                    cout <<sc_time_stamp()<< " VALID"<<endl;
                     if(read)
                     {
                         mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
@@ -372,10 +373,14 @@ int sc_main(int argc, char* argv[]) {
                         mem_adr = DCACHE_A.read();
                         int data = DCACHE_DT.read();
                         ram[mem_adr] = data;
+                        cout << " write  "<<data << "   at "<< mem_adr<<endl;
                     }
                 }       
                 else
+                {
                     MP_ACK_DCACHE.write(false);
+                    cout <<sc_time_stamp()<< " NOT VALID"<<endl;
+                }
             break;
             case DC_CLK_SIMU0:
                 DC_fsm_current_state = DC_SEND_DTA_1;

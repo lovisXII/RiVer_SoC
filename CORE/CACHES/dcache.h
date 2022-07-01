@@ -24,10 +24,8 @@
 typedef enum // MAE STATES
   {
     IDLE = 0,
-    WAIT_BUFF_READ = 1,
     WAIT_MEM = 2,
-    UPDT = 3,
-    WAIT_BUFF_WRITE = 4
+    UPDT = 3
   } states_fsm;
 
 SC_MODULE(dcache)
@@ -129,15 +127,17 @@ SC_MODULE(dcache)
               << address_index 
               << address_offset 
               << LOAD_SM
-              << STALL_SC
+              << STORE_SM
               << way0_hit
-              << way1_hit;
+              << way1_hit
+              << CLK.neg();
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(mae_output);
-    sensitive << CLK.neg() << RESET_N << mp_address_tag << mp_address_index << mp_address_offset;
+    sensitive << CLK.neg() << RESET_N << mp_address_tag 
+              << mp_address_index << mp_address_offset;
 
     reset_signal_is(RESET_N, false);
 

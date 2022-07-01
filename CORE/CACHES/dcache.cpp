@@ -40,6 +40,7 @@ void dcache::miss_detection()
     way1_hit = false;
   
   miss = (!way0_hit) & (!way1_hit);
+  STALL_SC.write((miss && LOAD_SM) || (STORE_SM && full));
 }
 void dcache::new_state()
 {
@@ -55,28 +56,18 @@ void dcache::state_transition()
     case IDLE:
       if(LOAD_SM.read() && VALID_ADR_SM.read())
       {
-        if(miss && full)
-          future_state = WAIT_BUFF_READ;
-        else if(miss && !full)
+        if(miss && !full)
           future_state = WAIT_MEM;
         else
           future_state = IDLE;
       }
       else if(STORE_SM.read() && VALID_ADR_SM.read())
       {
-        if(full)
-          future_state = WAIT_BUFF_WRITE;
-        else
+        if(!full)
           future_state = IDLE;
       }
       else
         future_state = IDLE;
-    break;
-    case WAIT_BUFF_READ:
-      if(full)
-        future_state = WAIT_BUFF_READ;
-      else
-        future_state = WAIT_MEM;
     break;
     case WAIT_MEM:
       if(SLAVE_ACK_SP.read())
@@ -90,13 +81,8 @@ void dcache::state_transition()
       else
         future_state = IDLE;
     break;
-    case WAIT_BUFF_WRITE:
-      if(full)
-        future_state = WAIT_BUFF_WRITE;
-      else
-        future_state = IDLE;
-    break;
   }
+
 }
 void dcache::mae_output()
 {
@@ -105,35 +91,20 @@ void dcache::mae_output()
     case IDLE:
       read_buff = true;
       write_buff = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
-      DTA_VALID_SC = (LOAD_SM.read() || STORE_SM.read()) && !full && VALID_ADR_SM.read();
+      DTA_VALID_SC = !empty;
       if(LOAD_SM.read() && VALID_ADR_SM.read())
       {
         adr_sc = DATA_ADR_SM.read();
-        if(miss && full)
-          STALL_SC.write(true);
-        else if(miss && !full)
-          STALL_SC.write(true);
-        else if(!miss)
-          STALL_SC.write(false);
       }
       else if(STORE_SM.read() && VALID_ADR_SM.read())
       {
-        if(full)
-        {
-          STALL_SC.write(true);
-        }
-        else
-        {
-          STALL_SC.write(false);            
-        }
-
         // DATA MASK
-
         sc_uint<32> dt = DATA_SM;
         sc_uint<32> adr = DATA_ADR_SM;
         sc_uint<32> data_mask;
         int mask = adr & 0x00000003;
         adr_sc = adr & 0xFFFFFFFC;
+
         if(MEM_SIZE_SM.read() == 2)
         {
           switch(mask)
@@ -213,11 +184,6 @@ void dcache::mae_output()
         }
       } 
       break;
-    case WAIT_BUFF_READ:
-      read_buff = true;
-      if(!full)
-        DTA_VALID_SC = true;
-      break;
     case WAIT_MEM:
       if(SLAVE_ACK_SP.read())
       {
@@ -251,7 +217,6 @@ void dcache::mae_output()
         read_buff = true;
         if(!SLAVE_ACK_SP.read())
         {
-          STALL_SC.write(false);
           LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
         }
         else
@@ -269,14 +234,6 @@ void dcache::mae_output()
               w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
             }
           }
-        }
-      break;
-      case WAIT_BUFF_WRITE:
-        read_buff = true;
-        if(!full)
-        {
-          DTA_VALID_SC = true;
-          write_buff = true;
         }
       break;
   }
@@ -326,6 +283,8 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, mp_address_tag, GET_NAME(mp_address_tag));
   sc_trace(tf, mp_address_index, GET_NAME(mp_address_index));
   sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+
+  sc_trace(tf, DTA_VALID_SC, GET_NAME(DTA_VALID_SC));
 
   sc_trace(tf, data_mask_sc, GET_NAME(data_mask_sc));
   sc_trace(tf, adr_sc, GET_NAME(adr_sc));
