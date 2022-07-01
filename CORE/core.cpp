@@ -6,6 +6,7 @@ void core::trace(sc_trace_file* tf) {
     ifetch_inst.trace(tf);
     dec_inst.trace(tf);
     exec_inst_s1.trace(tf);
+    exec_inst_s2.trace(tf);
     mem_inst_s1.trace(tf);
     wbk_inst_s1.trace(tf);
     reg_inst.trace(tf);
