@@ -17,6 +17,7 @@ SC_MODULE(buffercache)
     sc_in<sc_uint<32>> ADR_C;
     sc_in<bool> STORE_C;
     sc_in<bool> LOAD_C;
+    sc_in<sc_uint<2>> SIZE_C;
 
     //OUTPUT
     //TO DCACHE
@@ -28,6 +29,7 @@ SC_MODULE(buffercache)
     sc_out<sc_uint<32>> ADR_MP;
     sc_out<bool> STORE_MP;
     sc_out<bool> LOAD_MP;
+    sc_out<sc_uint<2>> SIZE_MP;
 
     //signals
     // buffers
@@ -37,6 +39,7 @@ SC_MODULE(buffercache)
     sc_signal<sc_uint<32>> buff0_DATA_ADR;
     sc_signal<bool> buff0_STORE;
     sc_signal<bool> buff0_LOAD;
+    sc_signal<sc_uint<2>> buff0_SIZE;
     sc_signal<bool> buff0_VALIDATE;  // data valid on buffer
 
     //buff1
@@ -44,6 +47,7 @@ SC_MODULE(buffercache)
     sc_signal<sc_uint<32>> buff1_DATA_ADR;
     sc_signal<bool> buff1_STORE;
     sc_signal<bool> buff1_LOAD;
+    sc_signal<sc_uint<2>> buff1_SIZE;
     sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
 
     //debug
@@ -57,10 +61,10 @@ SC_MODULE(buffercache)
     SC_CTOR(buffercache)
     {
         SC_METHOD(fifo);
-        sensitive << CLK.neg() << WRITE_OBUFF.pos();
+        sensitive << CLK.pos() << WRITE_OBUFF.pos();
 
         SC_METHOD(bufferfull);
-        sensitive << buff0_VALIDATE << buff1_VALIDATE;
+        sensitive << CLK.pos();
 
         reset_signal_is(RESET_N, false);
     }

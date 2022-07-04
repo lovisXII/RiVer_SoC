@@ -6,18 +6,15 @@ void dcache::adresse_parcer()
   address_tag.write(DT_A_SM.range(31,11));
   address_index.write(DT_A_SM.range(10,4));
   address_offset.write(DT_A_SM.range(3,0));
+
+  sc_uint<32> DT_A_SP = A_SP.read();
+  mp_address_tag.write(DT_A_SP.range(31,11));
+  mp_address_index.write(DT_A_SP.range(10,4));
+  mp_address_offset.write(DT_A_SP.range(3,0));
 }
 
 void dcache::miss_detection()
 {
-    // Assignation of MEM_SIZE, just to do an interface 
-    //with the core
-
-    //MEM_SIZE_SC = MEM_SIZE_SM ;
-  /*std::cout << "tag : " << address_tag 
-            << "    index : " << address_index.read() 
-            << "    tag0 : " << w0_TAG[address_index.read()]
-            << "    tag1 : " << w1_TAG[address_index.read()] << std::endl;*/
   // COMPARE HIT WAY0
   if(address_tag == w0_TAG[address_index.read()])
   {
@@ -26,7 +23,6 @@ void dcache::miss_detection()
     {
       DATA_SC.write(w0_word[address_index.read()][address_offset.read()/4]);
     }
-    
   }
   else
     way0_hit = false;
@@ -35,8 +31,6 @@ void dcache::miss_detection()
   if(address_tag == w1_TAG[address_index.read()])
   {
     way1_hit = w1_LINE_VALIDATE[address_index.read()];
-
-    //std::cout << "    -> " << way1_hit << std::endl;
     if(LOAD_SM.read() && way1_hit)
     {
       DATA_SC.write(w1_word[address_index.read()][address_offset.read()/4]);
@@ -44,277 +38,199 @@ void dcache::miss_detection()
   }
   else
     way1_hit = false;
+  
+  miss = (!way0_hit) & (!way1_hit);
+  STALL_SC.write((miss && LOAD_SM) || (STORE_SM && full));
 }
-
-void dcache::transition()
+void dcache::new_state()
 {
-  typedef enum // MAE STATES
+  if(RESET_N)
+    current_state = future_state;
+  else
+    current_state = IDLE;
+}
+void dcache::state_transition()
+{ 
+  switch(current_state.read())
   {
-    IDLE,
-    WAIT_BUFF_READ,
-    WAIT_MEM,
-    UPDT,
-    WAIT_BUFF_WRITE,
-    ERROR
-  } states_fsm;
+    case IDLE:
+      if(LOAD_SM.read() && VALID_ADR_SM.read())
+      {
+        if(miss && !full)
+          future_state = WAIT_MEM;
+        else
+          future_state = IDLE;
+      }
+      else if(STORE_SM.read() && VALID_ADR_SM.read())
+      {
+        if(!full)
+          future_state = IDLE;
+      }
+      else
+        future_state = IDLE;
+    break;
+    case WAIT_MEM:
+      if(SLAVE_ACK_SP.read())
+        future_state = UPDT;
+      else
+        future_state = WAIT_MEM;
+    break;
+    case UPDT:
+      if(SLAVE_ACK_SP.read())
+        future_state = UPDT;
+      else
+        future_state = IDLE;
+    break;
+  }
 
-  states_fsm fsm_current_state = IDLE;
-    
-  bool dta_v;
-  bool write_b;
-  bool read_b;
-  bool miss;
-  int burst_cpt;
-  while(1)
+}
+void dcache::mae_output()
+{
+  switch(current_state.read())
   {
-    dta_v = false;
-    write_b = false;
-    read_b = true;
-    switch(fsm_current_state)
-    {
-      case IDLE:
-        miss = !way0_hit && !way1_hit;
-        write_b = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
-        dta_v = (LOAD_SM.read() || STORE_SM.read()) && !full && VALID_ADR_SM.read();
+    case IDLE:
+      read_buff = true;
+      write_buff = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
+      DTA_VALID_SC = !empty;
       
-        if(LOAD_SM.read() && VALID_ADR_SM.read())
-        {
-          adr_sc = DATA_ADR_SM.read();
-          dt_sc = DATA_SM.read();
+      if(STORE_SM.read() && VALID_ADR_SM.read())
+      {
+        // DATA MASK
+        sc_uint<32> dt = DATA_SM;
+        sc_uint<32> adr = DATA_ADR_SM;
+        sc_uint<32> data_mask;
+        int mask = adr & 0x00000003;
+        adr_sc = adr & 0xFFFFFFFC;
 
-          if(miss && full)
+        if(MEM_SIZE_SM.read() == 2)
+        {
+          switch(mask)
           {
-            fsm_current_state = WAIT_BUFF_READ;
-            STALL_SC.write(true);
-          }
-          else if(miss && !full)
-          {
-            fsm_current_state = WAIT_MEM;
-            STALL_SC.write(true);
-          }
-          else if(!miss)
-          {
-            STALL_SC.write(false);
+            case 0:
+              data_mask = 0x000000FF;
+            break;
+            case 1:
+              data_mask = 0x0000FF00;
+            break;
+            case 2:
+              data_mask = 0x00FF0000;
+            break;
+            case 3:
+              data_mask = 0xFF000000;
+            break;
           }
         }
-        else if(STORE_SM.read() && VALID_ADR_SM.read())
+        else if(MEM_SIZE_SM.read() == 1)
         {
-          if(full)
+          switch(mask)
           {
-            fsm_current_state = WAIT_BUFF_WRITE;
-            STALL_SC.write(true);
+            case 0:
+              data_mask = 0x0000FFFF;
+            break;
+            case 1:
+              data_mask = 0xFFFF0000;
+            break;
           }
-          else
-          {
-            STALL_SC.write(false);            
-          }
+        }
+        else
+        {
+          data_mask = 0xFFFFFFFF;
+        }
+        data_mask_sc = data_mask;
 
-          sc_uint<32> dt = DATA_SM;
-          sc_uint<32> adr = DATA_ADR_SM;
-          sc_uint<32> data_mask;
+        // STORE BITS WITH MASK
 
-
-          int mask = adr & 0x00000003;
-          adr_sc = adr & 0xFFFFFFFB;
-          if(MEM_SIZE_SM.read() == 2)
-          {
-            switch(mask)
-            {
-              case 0:
-                data_mask = 0x000000FF;
-              break;
-              case 1:
-                data_mask = 0x0000FF00;
-              break;
-              case 2:
-                data_mask = 0x00FF0000;
-              break;
-              case 3:
-                data_mask = 0xFF000000;
-              break;
-            }
-          }
-          else if(MEM_SIZE_SM.read() == 2)
-          {
-            switch(mask)
-            {
-              case 0:
-                data_mask = 0x0000FFFF;
-              break;
-              case 1:
-                data_mask = 0xFFFF0000;
-              break;
-            }
-          }
-          else
-          {
-            data_mask = 0xFFFFFFFF;
-          }
-          data_mask_sc = data_mask;
-          if(miss)
-          {
-            if(LRU_bit_check[address_index.read()])
-            {
-              sc_uint<32> dt = w0_word[address_index.read()][address_offset.read()/4];
-              dt = dt & (~data_mask);
-              dt = dt | (DATA_SM.read() & data_mask);
-
-              w0_word[address_index.read()][address_offset.read()/4] = dt;
-              w0_TAG[address_index.read()] = address_tag.read();
-              w0_LINE_VALIDATE[address_index.read()] = true;
-
-              dt_sc  = dt;
-            }
-            else
-            {
-              sc_uint<32> dt = w1_word[address_index.read()][address_offset.read()/4];
-              dt = dt & (~data_mask);
-              dt = dt | (DATA_SM.read() & data_mask);
-
-              w1_word[address_index.read()][address_offset.read()/4] = dt;
-              w1_TAG[address_index.read()] = address_tag.read();
-              w1_LINE_VALIDATE[address_index.read()] = true;
-
-              dt_sc  = dt;
-            }
-          }
-          else if(way0_hit)
+        if(miss)
+        {
+          if(LRU_bit_check[address_index.read()])
           {
             sc_uint<32> dt = w0_word[address_index.read()][address_offset.read()/4];
             dt = dt & (~data_mask);
             dt = dt | (DATA_SM.read() & data_mask);
-
             w0_word[address_index.read()][address_offset.read()/4] = dt;
-
-            dt_sc  = dt;
+            w0_TAG[address_index.read()] = address_tag.read();
+            w0_LINE_VALIDATE[address_index.read()] = true;
           }
-          else if(way1_hit)
+          else
           {
             sc_uint<32> dt = w1_word[address_index.read()][address_offset.read()/4];
             dt = dt & (~data_mask);
             dt = dt | (DATA_SM.read() & data_mask);
-
             w1_word[address_index.read()][address_offset.read()/4] = dt;
-
-            dt_sc  = dt;
+            w1_TAG[address_index.read()] = address_tag.read();
+            w1_LINE_VALIDATE[address_index.read()] = true;
           }
-        } 
-        break;
-      case WAIT_BUFF_READ:
-        if(!full)
-        {
-          dta_v = true;
-
-          fsm_current_state = WAIT_MEM;
         }
-        break;
-        case WAIT_MEM:
-        //std::cout << "dcache : WAIT MEME" << std::endl;
-
-        if(SLAVE_ACK_SP.read())
+        else if(way0_hit)
         {
-          dta_v = false;
-          read_b = false;
-
-          //parse adresse from  RAM
-          sc_uint<32> DT_A_MP = A_SP.read();
-
+          sc_uint<32> dt = w0_word[address_index.read()][address_offset.read()/4];
+          dt = dt & (~data_mask);
+          dt = dt | (DATA_SM.read() & data_mask);
+          w0_word[address_index.read()][address_offset.read()/4] = dt;
+        }
+        else if(way1_hit)
+        {
+          sc_uint<32> dt = w1_word[address_index.read()][address_offset.read()/4];
+          dt = dt & (~data_mask);
+          dt = dt | (DATA_SM.read() & data_mask);
+          w1_word[address_index.read()][address_offset.read()/4] = dt;
+        }
+      } 
+      break;
+    case WAIT_MEM:
+      if(SLAVE_ACK_SP.read())
+      {
+        DTA_VALID_SC = false;
+        read_buff = false;
+        sc_uint<32> DT_A_MP = A_SP.read();
+        if(LRU_bit_check[DT_A_MP.range(10,4)])
+        {
+          w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
+          w0_TAG[DT_A_MP.range(10,4)] = DT_A_MP.range(31,11);
+          w0_LINE_VALIDATE[DT_A_MP.range(10,4)] = true;
+        }
+        else
+        {
+          w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
+          w1_TAG[DT_A_MP.range(10,4)] = DT_A_MP.range(31,11);
+          w1_LINE_VALIDATE[DT_A_MP.range(10,4)] = true;
+        }
+        
+        mp_last_addr_offset = mp_address_offset;
+      }
+      else
+      {
+        DTA_VALID_SC = true;
+        read_buff = true;
+        burst_cpt = 0;
+      }
+      write_buff = false;
+      break;
+    case UPDT:
+      read_buff = true;
+      if(!SLAVE_ACK_SP.read())
+      {
+        LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
+      }
+      else
+      {
+        sc_uint<32> DT_A_MP = A_SP.read();
+        if(DT_A_MP.range(3,0) == (mp_last_addr_offset.read() + 4))
+        {
+          mp_last_addr_offset = DT_A_MP.range(3,0);
           if(LRU_bit_check[DT_A_MP.range(10,4)])
           {
             w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-            w0_TAG[DT_A_MP.range(10,4)] = DT_A_MP.range(31,11);
-            w0_LINE_VALIDATE[DT_A_MP.range(10,4)] = true;
           }
           else
           {
             w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-            w1_TAG[DT_A_MP.range(10,4)] = DT_A_MP.range(31,11);
-            w1_LINE_VALIDATE[DT_A_MP.range(10,4)] = true;
           }
-          
-          mp_last_addr_offset = mp_address_offset;
-
-          fsm_current_state = UPDT;
         }
-        else
-        {
-          read_b = true;
-          dta_v = true;
-
-          burst_cpt = 0;
-        }
-        write_b = false;
-        break;
-        case UPDT:
-          if(!SLAVE_ACK_SP.read())
-          {
-            STALL_SC.write(false);
-
-            LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
-
-            fsm_current_state = IDLE;
-          }
-          else
-          {
-            //parse adresse from  RAM
-            sc_uint<32> DT_A_MP = A_SP.read();
-
-            if(DT_A_MP.range(3,0) == (mp_last_addr_offset.read() + 4))
-            {
-              mp_last_addr_offset = DT_A_MP.range(3,0);
-              if(LRU_bit_check[DT_A_MP.range(10,4)])
-              {
-                w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-              }
-              else
-              {
-                w1_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_SP.read();
-              }
-            }
-          }
-        break;
-        case WAIT_BUFF_WRITE:
-        if(!full)
-        {
-          dta_v = true;
-          write_b = true;
-
-          fsm_current_state = IDLE;
-        }
-        break;
-        case ERROR:
-          std::cout << "WTF" << std::endl;
-        break;
-    }
-    DTA_VALID_SC.write(dta_v);
-    write_buff.write(write_b);
-    read_buff.write(read_b);
-    //debug
-    switch(fsm_current_state)
-    {
-      case IDLE:
-        fsm_state.write(0);
-      break;
-      case WAIT_BUFF_READ:
-        fsm_state.write(1);
-      break;
-      case WAIT_MEM:
-        fsm_state.write(2);
-      break;
-      case UPDT:
-        fsm_state.write(3);
-      break;
-      case WAIT_BUFF_WRITE:
-        fsm_state.write(4);
-      break;
-      case ERROR:
-        fsm_state.write(5);
-      break;
-    }
-    wait();
+      }
+    break;
   }
 }
-
 void dcache::trace(sc_trace_file* tf)
 {
   sc_trace(tf, CLK, GET_NAME(CLK));
@@ -331,7 +247,6 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, STALL_SC, GET_NAME(STALL_SC));
 
   // interfaz bus
-  sc_trace(tf, DTA_VALID_SC, GET_NAME(DTA_VALID_SC));
   sc_trace(tf, READ_SC, GET_NAME(READ_SC)); 
   sc_trace(tf, WRITE_SC, GET_NAME(WRITE_SC));
   sc_trace(tf, DT_SC, GET_NAME(DT_SC));
@@ -343,11 +258,13 @@ void dcache::trace(sc_trace_file* tf)
   // signals
   sc_trace(tf, way0_hit, GET_NAME(way0_hit));
   sc_trace(tf, way1_hit, GET_NAME(way1_hit));
+  sc_trace(tf, miss, GET_NAME(miss));
 
   sc_trace(tf, full, GET_NAME(full));
   sc_trace(tf, empty, GET_NAME(empty));
 
-  sc_trace(tf, fsm_state, GET_NAME(fsm_state));
+  sc_trace(tf, current_state, GET_NAME(current_state));
+  sc_trace(tf, future_state, GET_NAME(future_state));
 
   sc_trace(tf, write_buff, GET_NAME(write_buff));
   sc_trace(tf, read_buff, GET_NAME(read_buff));
@@ -359,6 +276,9 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, mp_address_tag, GET_NAME(mp_address_tag));
   sc_trace(tf, mp_address_index, GET_NAME(mp_address_index));
   sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+  sc_trace(tf, SIZE_SC, GET_NAME(SIZE_SC));
+
+  sc_trace(tf, DTA_VALID_SC, GET_NAME(DTA_VALID_SC));
 
   sc_trace(tf, data_mask_sc, GET_NAME(data_mask_sc));
   sc_trace(tf, adr_sc, GET_NAME(adr_sc));

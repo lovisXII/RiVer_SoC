@@ -21,7 +21,12 @@
 
 #define WAY_SIZE 128
 
-
+typedef enum // MAE STATES
+  {
+    IDLE = 0,
+    WAIT_MEM = 2,
+    UPDT = 3
+  } states_fsm;
 
 SC_MODULE(dcache)
 {
@@ -39,9 +44,9 @@ SC_MODULE(dcache)
   sc_out<sc_uint<32>> DATA_SC;
   sc_out<bool> STALL_SC;               // if stall donc miss else hit
 // interface MP
-  //sc_out<sc_uint<2>> MEM_SIZE_SC;
-  sc_out<bool> DTA_VALID_SC;         // data or/and adresse valid
+  sc_out<bool> DTA_VALID_SC;
   sc_out<bool> READ_SC, WRITE_SC;
+  sc_out<sc_uint<2>> SIZE_SC;
 
   // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
   // la MP ou du CACHE
@@ -66,6 +71,7 @@ SC_MODULE(dcache)
 
   sc_signal<bool> way0_hit;
   sc_signal<bool> way1_hit;
+  sc_signal<bool> miss;
   
   sc_signal<sc_uint<32>> selected_data;
 
@@ -91,13 +97,19 @@ SC_MODULE(dcache)
   sc_signal<sc_uint<32>> adr_sc;
   sc_signal<sc_uint<32>> dt_sc;
 
+  int burst_cpt;
   sc_signal<sc_uint<32>> data_mask_sc;
 //FMS signal debug
-  sc_signal<sc_uint<3>> fsm_state;
+  sc_signal<sc_uint<3>> current_state;
+  sc_signal<sc_uint<3>> future_state;
 
   void adresse_parcer();
+
   void miss_detection();
-  void transition();
+
+  void new_state();
+  void state_transition();
+  void mae_output();
 
   void buffer_manager();
 
@@ -109,18 +121,24 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM;
+    sensitive << DATA_ADR_SM << A_SP;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
               << address_index 
               << address_offset 
-              << STALL_SC 
-              << CLK;
-              
-      
-    SC_THREAD(transition);
-    sensitive << CLK.neg() << SLAVE_ACK_SP << A_SP;
+              << LOAD_SM
+              << STORE_SM
+              << way0_hit
+              << way1_hit
+              << CLK.neg();
+    SC_METHOD(new_state);
+    sensitive << CLK.neg() << RESET_N;
+    SC_METHOD(state_transition);
+    sensitive << CLK.neg() << RESET_N;
+    SC_METHOD(mae_output);
+    sensitive << CLK.neg() << RESET_N << mp_address_tag 
+              << mp_address_index << mp_address_offset;
 
     reset_signal_is(RESET_N, false);
 
@@ -129,17 +147,18 @@ SC_MODULE(dcache)
     buffcache_inst.CLK(CLK);
     buffcache_inst.WRITE_OBUFF(write_buff);
     buffcache_inst.READ_OBUFF(read_buff);
-    buffcache_inst.DATA_C(dt_sc);
-    buffcache_inst.ADR_C(adr_sc);
+    buffcache_inst.DATA_C(DATA_SM);
+    buffcache_inst.ADR_C(DATA_ADR_SM);
     buffcache_inst.STORE_C(STORE_SM);
     buffcache_inst.LOAD_C(LOAD_SM);
+    buffcache_inst.SIZE_C(MEM_SIZE_SM);
     buffcache_inst.FULL(full);
     buffcache_inst.EMPTY(empty);
     buffcache_inst.DATA_MP(DT_SC);
     buffcache_inst.ADR_MP(A_SC);
     buffcache_inst.STORE_MP(WRITE_SC);
     buffcache_inst.LOAD_MP(READ_SC);
-    
+    buffcache_inst.SIZE_MP(SIZE_SC);
   }
 };
 

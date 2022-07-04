@@ -4,7 +4,7 @@ RISC=riscv32-unknown-elf-gcc
 TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
-COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk UTIL/fifo 
+COMPONENTS=core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec MEM/mem REG/reg WBK/wbk CSR/csr UTIL/fifo 
 TB=core_tb
 MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))
@@ -13,7 +13,7 @@ CC=gcc
 LD_SCRIPT= -T kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
-all: run
+all: run		
 
 run: core_tb exception.o
 

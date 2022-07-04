@@ -63,6 +63,7 @@ int write_mem(int a, int data, int byt_sel) {
     int tmp = 0; 
     int mask = 0;
     int adr = a;  
+    int dataw; 
     a = a >> 2; 
     addr1 = a & 0xFF; 
     addr2 = (a >> 8) & 0xFF; 
@@ -71,6 +72,22 @@ int write_mem(int a, int data, int byt_sel) {
     if (!ram[addr1]) ram[addr1] = calloc(256, sizeof(int*));
     if (!ram[addr1][addr2]) ram[addr1][addr2] = calloc(256, sizeof(int*));
     if (!ram[addr1][addr2][addr3]) ram[addr1][addr2][addr3] = calloc(256, sizeof(int));
+
+    switch(byt_sel) {
+        // store byte
+        case 1:     dataw = data            & ~(0xFFFFFF00);    break;
+        case 2:     dataw = (data << 8)     & ~(0xFFFF00FF);    break;
+        case 4:     dataw = (data << 16)    & ~(0xFF00FFFF);    break;
+        case 8:     dataw = (data << 24)    & ~(0x00FFFFFF);    break;
+        // store half word 
+        case 3:     dataw = data            & ~(0xFFFF0000);    break;
+        case 12:    dataw = (data << 16)    & ~(0x0000FFFF);    break;
+        // store word
+        case 15:    dataw = data;                               break;
+
+        default:    dataw = 0;                                  break; 
+    }
+
     if(byt_sel & 0x1) 
         mask |= 0xFF; 
     if(byt_sel & 0x2)
@@ -78,14 +95,15 @@ int write_mem(int a, int data, int byt_sel) {
     if(byt_sel & 0x4)
         mask |= 0xFF0000;
     if(byt_sel & 0x8)
-        mask |= 0xFF000000; 
+        mask |= 0xFF000000;
+
     tmp = ram[addr1][addr2][addr3][addr4];
     tmp &= ~mask; 
-    tmp |= data & mask; 
+    tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("[write mem] : at @ %x writting %x\n", adr, tmp);
+    //printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
     return 0; 
-}
+}   
 
 int get_startpc(int z) {
     return start_pc; 

@@ -15,6 +15,11 @@ entity wbk is
         SIGN_EXTEND_RM : in std_logic;
         LOAD_RM : in std_logic;
 
+        PC_MEM2WBK_RM   : in std_logic_vector(31 downto 0);
+        CSR_RDATA_RM    : in std_logic_vector(31 downto 0);
+        CSR_WENABLE_RM  : in std_logic;
+        CURRENT_MODE_SM : in std_logic_vector(1 downto 0);
+
         -- mem2wbk interface
         MEM2WBK_EMPTY_SM : in std_logic;
         MEM2WBK_POP_SW : out std_logic;

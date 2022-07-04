@@ -9,4 +9,5 @@ _start:
     sw x3,4(x0) 
     lw x3,4(x0) 
     beq x2,x3,_good
+    j _bad
     nop 
