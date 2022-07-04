@@ -472,6 +472,10 @@ void decod::pc_inc() {
 }
 
 void decod::bypasses() {
+
+    r1_valid_sd_s2 = 1 ;
+    r2_valid_sd_s2 = 1 ;
+
     if (RADR1_SD_S1.read() == 0) {  // ignore r0
         rdata1_sd_s1.write(RDATA1_SR_S1.read());
         r1_valid_sd_s1= true;
@@ -689,6 +693,8 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, rdata2_sd_s1, GET_NAME(rdata2_sd_s1));
     sc_trace(tf, r1_valid_sd_s1, GET_NAME(r1_valid_sd_s1));
     sc_trace(tf, r2_valid_sd_s1, GET_NAME(r2_valid_sd_s1));
+    sc_trace(tf, r1_valid_sd_s2, GET_NAME(r1_valid_sd_s2));
+    sc_trace(tf, r2_valid_sd_s2, GET_NAME(r2_valid_sd_s2));
     sc_trace(tf, stall_sd_s1, GET_NAME(stall_sd_s1));
     sc_trace(tf, block_in_dec, GET_NAME(block_in_dec));
     sc_trace(tf, dec2if_push_sd, GET_NAME(dec2if_push_sd));
