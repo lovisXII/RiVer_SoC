@@ -627,6 +627,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
     sc_trace(tf, INSTR_RI_S2, GET_NAME(INSTR_RI_S2));
     sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
+    sc_trace(tf, IF2DEC_EMPTY_SI_S2, GET_NAME(IF2DEC_EMPTY_SI_S2));
     sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));  // Decod says to IFETCH if it wants a pop or no
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     // Interface with DEC2EXE

@@ -32,7 +32,7 @@ SC_MODULE(buffer) {
 
     sc_in<bool>         PUSH_S;
     sc_in<bool>         POP_S; 
-
+    sc_in<bool>         FLUSH_S;
     sc_out<bool>        FULL_S;
     sc_out<bool>        EMPTY_S;
 
@@ -66,6 +66,7 @@ SC_MODULE(buffer) {
         }
         SC_METHOD(flags_update);
         sensitive   << RESET_N 
+                    << FLUSH_S
                     << POP_S
                     << buffer_valid 
                     << empty_s
@@ -127,62 +128,63 @@ void buffer<size_data, depth>::write() {
         sc_bv<depth>  mask_s1   = 0;
 
         
-
-        // cerr << "############################################## " << endl ;
-        // cerr << sc_time_stamp() << " write " << write << endl ;
-        // cerr << sc_time_stamp() << " read " << write << endl ;
-        // cerr << sc_time_stamp() << " read_s2 " << read_s2 << endl ;
-        // cerr << endl ;
-        // cerr << sc_time_stamp() << " write_ptr_var " << write_ptr_var << endl ;
-        // cerr << sc_time_stamp() << " read_ptr_var_s1 " << read_ptr_var_s1 << endl ;1 && !read_s2 && write && !full_s) // only write
-        if(!read && write && !full_s)
+        if(!FLUSH_S.read())
         {
-            // cerr << sc_time_stamp() << " first case " << endl ;
-            inside_data_s[write_ptr_var]    = DIN_S ;
-
-            mask_s1 = 0b1 << depth - (write_ptr_var + 1);
-            write_ptr_var -- ;
-        }
-        else if(read && !write && !empty_s) // read only one inst
-        {
-            // cerr << sc_time_stamp() << " 2 case " << endl ;
-
-            mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
-
-            read_ptr_var_s1 --;
-        }
-        else if (read && write) // read only 1 inst and write
-        {
-            // cerr << sc_time_stamp() << " 3 case " << endl ;
-            if(!empty_s)
+            if(!read && write && !full_s)
             {
+                // cerr << sc_time_stamp() << " first case " << endl ;
+                inside_data_s[write_ptr_var]    = DIN_S ;
+
+                mask_s1 = 0b1 << depth - (write_ptr_var + 1);
+                write_ptr_var -- ;
+            }
+            else if(read && !write && !empty_s) // read only one inst
+            {
+                // cerr << sc_time_stamp() << " 2 case " << endl ;
+
                 mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
 
                 read_ptr_var_s1 --;
             }
-            if(!full_s){
+            else if (read && write) // read only 1 inst and write
+            {
+                // cerr << sc_time_stamp() << " 3 case " << endl ;
+                if(!empty_s)
+                {
+                    mask_s1 |= 0b1 << depth - (read_ptr_var_s1 + 1);
 
-                inside_data_s[write_ptr_var]    = DIN_S ;
+                    read_ptr_var_s1 --;
+                }
+                if(!full_s){
 
-                mask_s1 = 0b1 << depth - (write_ptr_var + 1);
+                    inside_data_s[write_ptr_var]    = DIN_S ;
 
-                write_ptr_var -- ;
+                    mask_s1 |= 0b1 << depth - (write_ptr_var + 1);
+
+                    write_ptr_var -- ;
+                }
             }
+
+            if(write_ptr_var == -1){
+                write_ptr_var = depth-1 ;
+            }
+            if(read_ptr_var_s1 == -1){
+                read_ptr_var_s1 = depth-1 ;    
+            } 
+
+            buffer_valid_var   ^= mask_s1 ;
+
+            buffer_valid = buffer_valid_var ;
+            
+            read_ptr         = read_ptr_var_s1 ;
+            write_ptr           = write_ptr_var;
+        }
+        else{
+            read_ptr = 0 ;
+            write_ptr = 0 ;
+            buffer_valid = 0;
         }
 
-        if(write_ptr_var == -1){
-            write_ptr_var = depth-1 ;
-        }
-        if(read_ptr_var_s1 == -1){
-            read_ptr_var_s1 = depth-1 ;    
-        } 
-
-        buffer_valid_var   ^= mask_s1 ;
-
-        buffer_valid = buffer_valid_var ;
-        
-        read_ptr         = read_ptr_var_s1 ;
-        write_ptr           = write_ptr_var;
         
         wait(1);
     }

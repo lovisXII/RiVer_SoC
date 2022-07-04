@@ -91,6 +91,7 @@ SC_MODULE(ifetch) {
         buffer_inst_1.FULL_S(if2dec_full_si_s1);
         buffer_inst_1.PUSH_S(if2dec_push_si_s1);
         buffer_inst_1.POP_S(IF2DEC_POP_SD_S1);
+        buffer_inst_1.FLUSH_S(IF2DEC_FLUSH_SD);
         buffer_inst_1.CLK(CLK);
         buffer_inst_1.RESET_N(RESET);
 
@@ -102,6 +103,7 @@ SC_MODULE(ifetch) {
         buffer_inst_2.FULL_S(if2dec_full_si_s2);
         buffer_inst_2.PUSH_S(if2dec_push_si_s2);
         buffer_inst_2.POP_S(IF2DEC_POP_SD_S2);
+        buffer_inst_2.FLUSH_S(IF2DEC_FLUSH_SD);
         buffer_inst_2.CLK(CLK);
         buffer_inst_2.RESET_N(RESET); 
 
