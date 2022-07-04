@@ -68,7 +68,7 @@ SC_MODULE(decod) {
     sc_out<sc_uint<2>>  EXE_CMD_RD_S1;                 // value of the command sent to exe
     sc_out<bool>        NEG_OP2_RD_S1;                 // allow to take not(op2) to do substraction
     sc_out<bool>        WB_RD_S1;                      // say if we plan to wbk the value of rd or no
-    sc_out<sc_uint<6>>  EXE_DEST_SD_S1;                // the destination register
+    sc_out<sc_uint<6>>  EXE_DEST_RD_S1;                // the destination register
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S1;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD_S1;
     sc_out<bool>        SLTU_RD_S1;
@@ -94,7 +94,7 @@ SC_MODULE(decod) {
                                         // substraction for example
 
     sc_out<bool>        WB_RD_S2;                      // say if we plan to wbk the value of rd or no
-    sc_out<sc_uint<6>>  EXE_DEST_SD_S2;                // the destination register
+    sc_out<sc_uint<6>>  EXE_DEST_RD_S2;                // the destination register
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S2;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD_S2;
     sc_out<bool>        SLTU_RD_S2;
@@ -765,7 +765,7 @@ SC_MODULE(decod) {
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR_S1 << RDATA2_SR_S1 << BP_DEST_RE << BP_EXE_RES_RE
 
-                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_SD_S1
+                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_RD_S1
 
                   << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE_S1 << MULT_INST_RM_S1
 

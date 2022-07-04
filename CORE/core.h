@@ -133,7 +133,7 @@ SC_MODULE(core) {
     sc_signal<bool>        NEG_OP2_RD_S2;                 
 
     sc_signal<bool>        WB_RD_S2;                     
-    sc_signal<sc_uint<6>>  EXE_DEST_SD_S2;               
+    sc_signal<sc_uint<6>>  EXE_DEST_RD_S2;               
     sc_signal<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S2;  
     sc_signal<bool>        SLT_RD_S2;
     sc_signal<bool>        SLTU_RD_S2;
@@ -251,7 +251,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>> RADR1_SD_S2;
     sc_signal<sc_uint<6>> RADR2_SD_S2;
 
-    sc_signal<sc_uint<6>> EXE_DEST_SD_S1;
+    sc_signal<sc_uint<6>> EXE_DEST_RD_S1;
 
     sc_signal<sc_uint<32>> READ_PC_SR;
     sc_signal<sc_uint<32>> WRITE_PC_SD;
@@ -493,7 +493,7 @@ SC_MODULE(core) {
         dec_inst.EXE_CMD_RD_S2(EXE_CMD_RD_S2);
         dec_inst.NEG_OP2_RD_S2(NEG_OP2_RD_S2);
         dec_inst.WB_RD_S2(WB_RD_S2);
-        dec_inst.EXE_DEST_SD_S2(EXE_DEST_SD_S2);
+        dec_inst.EXE_DEST_RD_S2(EXE_DEST_RD_S2);
         dec_inst.SELECT_TYPE_OPERATIONS_RD_S2(SELECT_TYPE_OPERATIONS_RD_S2);
         dec_inst.SLT_RD_S2(SLT_RD_S2);
         dec_inst.SLTU_RD_S2(SLTU_RD_S2);
@@ -528,7 +528,7 @@ SC_MODULE(core) {
         dec_inst.RDATA1_SR_S2(RDATA1_SR_S2);
         dec_inst.RDATA2_SR_S2(RDATA2_SR_S2);
 
-        dec_inst.EXE_DEST_SD_S1(EXE_DEST_SD_S1);
+        dec_inst.EXE_DEST_RD_S1(EXE_DEST_RD_S1);
 
         dec_inst.READ_PC_SR(READ_PC_SR);
         dec_inst.WRITE_PC_SD(WRITE_PC_SD);
@@ -615,7 +615,7 @@ SC_MODULE(core) {
         exec_inst_s1.OP1_RD_S1(OP1_RD_S1);
         exec_inst_s1.OP2_RD_S1(OP2_RD_S1);
         exec_inst_s1.CMD_RD_S1(EXE_CMD_RD_S1);
-        exec_inst_s1.DEST_RD_S1(EXE_DEST_SD_S1);
+        exec_inst_s1.DEST_RD_S1(EXE_DEST_RD_S1);
         exec_inst_s1.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
         exec_inst_s1.WB_RD_S1(WB_RD_S1);
         exec_inst_s1.SELECT_TYPE_OPERATIONS_RD_S1(SELECT_TYPE_OPERATIONS_RD_S1);
@@ -717,7 +717,7 @@ SC_MODULE(core) {
         exec_inst_s2.OP1_RD_S2(OP1_RD_S2);
         exec_inst_s2.OP2_RD_S2(OP2_RD_S2);
         exec_inst_s2.CMD_RD_S2(EXE_CMD_RD_S2);
-        exec_inst_s2.DEST_RD_S2(EXE_DEST_SD_S2);
+        exec_inst_s2.DEST_RD_S2(EXE_DEST_RD_S2);
         exec_inst_s2.NEG_OP2_RD_S2(NEG_OP2_RD_S2);
         exec_inst_s2.WB_RD_S2(WB_RD_S2);
         exec_inst_s2.SELECT_TYPE_OPERATIONS_RD_S2(SELECT_TYPE_OPERATIONS_RD_S2);

@@ -1,42 +1,40 @@
-    sc_bv<dec2exe_size_s2> dec2exe_out_var = dec2exe_out_sd_s2.read();
+    sc_trace(tf,PC_BRANCH_VALUE_RD_S2, GET_NAME(PC_BRANCH_VALUE_RD_S2));
+    sc_trace(tf,MULT_INST_RD_S2, GET_NAME(MULT_INST_RD_S2));
+    sc_trace(tf,EBREAK_RD_S2, GET_NAME(EBREAK_RD_S2));
+    sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RD_S2, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S2));
+    sc_trace(tf,MRET_RD_S2, GET_NAME(MRET_RD_S2));
+    sc_trace(tf,BLOCK_BP_RD_S2, GET_NAME(BLOCK_BP_RD_S2));
+    sc_trace(tf,EXCEPTION_RD_S2, GET_NAME(EXCEPTION_RD_S2));
+    sc_trace(tf,ENV_CALL_WRONG_MODE_RD_S2, GET_NAME(ENV_CALL_WRONG_MODE_RD_S2));
+    sc_trace(tf,ENV_CALL_U_MODE_RD_S2, GET_NAME(ENV_CALL_U_MODE_RD_S2));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RD_S2, GET_NAME(ILLEGAL_INSTRUCTION_RD_S2));
+    sc_trace(tf,ADRESS_MISSALIGNED_RD_S2, GET_NAME(ADRESS_MISSALIGNED_RD_S2));
+    sc_trace(tf,ENV_CALL_M_MODE_RD_S2, GET_NAME(ENV_CALL_M_MODE_RD_S2));
+    sc_trace(tf,ENV_CALL_S_MODE_RD_S2, GET_NAME(ENV_CALL_S_MODE_RD_S2));
+    sc_trace(tf,CSR_RDATA_RD_S2, GET_NAME(CSR_RDATA_RD_S2));
+    sc_trace(tf,CSR_WENABLE_RD_S2, GET_NAME(CSR_WENABLE_RD_S2));
+    sc_trace(tf,CSR_WADR_RD_S2, GET_NAME(CSR_WADR_RD_S2));
+    sc_trace(tf,PC_DEC2EXE_RD_S2, GET_NAME(PC_DEC2EXE_RD_S2));
+    sc_trace(tf,BP_R1_VALID_RD_S2, GET_NAME(BP_R1_VALID_RD_S2));
+    sc_trace(tf,BP_R2_VALID_RD_S2, GET_NAME(BP_R2_VALID_RD_S2));
 
-    PC_BRANCH_VALUE_RD_S2.write((sc_bv_base)dec2exe_out_var.range(251, 220));
-    MULT_INST_RD_S2.write((bool)dec2exe_out_var[219]);
-    EBREAK_RD_S2.write((bool)dec2exe_out_var[218]);
-    INSTRUCTION_ACCESS_FAULT_RD_S2.write((bool)dec2exe_out_var[217]);
-    MRET_RD_S2.write((bool)dec2exe_out_var[216]);
-    BLOCK_BP_RD_S2.write((bool)dec2exe_out_var[215]);
-    EXCEPTION_RD_S2.write((bool)dec2exe_out_var[214]);
-    ENV_CALL_WRONG_MODE_RD_S2.write((bool)dec2exe_out_var[213]);
-    ENV_CALL_U_MODE_RD_S2.write((bool)dec2exe_out_var[212]);
-    ILLEGAL_INSTRUCTION_RD_S2.write((bool)dec2exe_out_var[211]);
-    ADRESS_MISSALIGNED_RD_S2.write((bool)dec2exe_out_var[210]);
-    ENV_CALL_M_MODE_RD_S2.write((bool)dec2exe_out_var[209]);
-    ENV_CALL_S_MODE_RD_S2.write((bool)dec2exe_out_var[208]);
-    CSR_RDATA_RD_S2.write((sc_bv_base)dec2exe_out_var.range(207, 176));
-    CSR_WENABLE_RD_S2.write((bool)dec2exe_out_var[175]);
-    CSR_WADR_RD_S2.write((sc_bv_base)dec2exe_out_var.range(174, 163));
-    PC_DEC2EXE_RD_S2.write((sc_bv_base)dec2exe_out_var.range(162, 131));
-    BP_R1_VALID_RD_S1.write((bool)dec2exe_out_var[130]);
-    BP_R2_VALID_RD_S1.write((bool)dec2exe_out_var[129]);
+    sc_trace(tf,BP_RADR1_RD_S2, GET_NAME(BP_RADR1_RD_S2));
+    sc_trace(tf,BP_RADR2_RD_S2, GET_NAME(BP_RADR2_RD_S2));
 
-    BP_RADR1_RD_S1.write((sc_bv_base)dec2exe_out_var.range(128, 123));
-    BP_RADR2_RD_S1.write((sc_bv_base)dec2exe_out_var.range(122, 117));
+    sc_trace(tf,EXE_CMD_RD_S2, GET_NAME(EXE_CMD_RD_S2));
+    sc_trace(tf,OP1_RD_S2, GET_NAME(OP1_RD_S2));
+    sc_trace(tf,OP2_RD_S2, GET_NAME(OP2_RD_S2));
+    sc_trace(tf,NEG_OP2_RD_S2, GET_NAME(NEG_OP2_RD_S2));
+    sc_trace(tf,WB_RD_S2, GET_NAME(WB_RD_S2));
 
-    EXE_CMD_RD_S2.write((sc_bv_base)dec2exe_out_var.range(116, 115));
-    OP1_RD_S2.write((sc_bv_base)dec2exe_out_var.range(114, 83));
-    OP2_RD_S2.write((sc_bv_base)dec2exe_out_var.range(82, 51));
-    NEG_OP2_RD_S2.write((bool)dec2exe_out_var[50]);
-    WB_RD_S2.write((bool)dec2exe_out_var[49]);
+    sc_trace(tf,MEM_DATA_RD_S2, GET_NAME(MEM_DATA_RD_S2));
 
-    MEM_DATA_RD_S2.write((sc_bv_base)dec2exe_out_var.range(48, 17));
+    sc_trace(tf,MEM_LOAD_RD_S2, GET_NAME(MEM_LOAD_RD_S2));
+    sc_trace(tf,MEM_STORE_RD_S2, GET_NAME(MEM_STORE_RD_S2));
 
-    MEM_LOAD_RD_S2.write((bool)dec2exe_out_var[16]);
-    MEM_STORE_RD_S2.write((bool)dec2exe_out_var[15]);
-
-    MEM_SIGN_EXTEND_RD_S2.write((bool)dec2exe_out_var[14]);
-    MEM_SIZE_RD_S2.write((sc_bv_base)dec2exe_out_var.range(13, 12));
-    SELECT_TYPE_OPERATIONS_RD_S2.write((sc_bv_base)dec2exe_out_var.range(11, 8));
-    EXE_DEST_SD_S2.write((sc_bv_base)dec2exe_out_var.range(7, 2));
-    SLT_RD_S2.write((bool)dec2exe_out_var[1]);
-    SLTU_RD_S2.write((bool)dec2exe_out_var[0]);
+    sc_trace(tf,MEM_SIGN_EXTEND_RD_S2, GET_NAME(MEM_SIGN_EXTEND_RD_S2));
+    sc_trace(tf,MEM_SIZE_RD_S2, GET_NAME(MEM_SIZE_RD_S2));
+    sc_trace(tf,SELECT_TYPE_OPERATIONS_RD_S2, GET_NAME(SELECT_TYPE_OPERATIONS_RD_S2));
+    sc_trace(tf,EXE_DEST_RD_S2, GET_NAME(EXE_DEST_RD_S2));
+    sc_trace(tf,SLT_RD_S2, GET_NAME(SLT_RD_S2));
+    sc_trace(tf,SLTU_RD_S2, GET_NAME(SLTU_RD_S2));

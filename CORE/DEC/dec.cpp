@@ -234,7 +234,7 @@ void decod::unconcat_dec2exe_s1() {
     MEM_SIGN_EXTEND_RD_S1.write((bool)dec2exe_out_var[14]);
     MEM_SIZE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(13, 12));
     SELECT_TYPE_OPERATIONS_RD_S1.write((sc_bv_base)dec2exe_out_var.range(11, 8));
-    EXE_DEST_SD_S1.write((sc_bv_base)dec2exe_out_var.range(7, 2));
+    EXE_DEST_RD_S1.write((sc_bv_base)dec2exe_out_var.range(7, 2));
     SLT_RD_S1.write((bool)dec2exe_out_var[1]);
     SLTU_RD_S1.write((bool)dec2exe_out_var[0]);
 }
@@ -279,7 +279,7 @@ void decod::unconcat_dec2exe_s2(){
     MEM_SIGN_EXTEND_RD_S2.write((bool)dec2exe_out_var[14]);
     MEM_SIZE_RD_S2.write((sc_bv_base)dec2exe_out_var.range(13, 12));
     SELECT_TYPE_OPERATIONS_RD_S2.write((sc_bv_base)dec2exe_out_var.range(11, 8));
-    EXE_DEST_SD_S2.write((sc_bv_base)dec2exe_out_var.range(7, 2));
+    EXE_DEST_RD_S2.write((sc_bv_base)dec2exe_out_var.range(7, 2));
     SLT_RD_S2.write((bool)dec2exe_out_var[1]);
     SLTU_RD_S2.write((bool)dec2exe_out_var[0]);
 }
@@ -486,7 +486,7 @@ void decod::bypasses() {
         rdata1_sd_s1.write(RDATA1_SR_S1.read());
         r1_valid_sd= true;
     } 
-    else if (RADR1_SD_S1.read() == EXE_DEST_SD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read()) 
+    else if (RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read()) 
     {  // dont bypass if instr is currently in exe
         r1_valid_sd= false;
     } 
@@ -526,7 +526,7 @@ void decod::bypasses() {
     if (RADR2_SD_S1.read() == 0) {  // ignore r0
         rdata2_sd_s1.write(RDATA2_SR_S1.read());
         r2_valid_sd= true;
-    } else if (RADR2_SD_S1.read() == EXE_DEST_SD_S1.read() &&
+    } else if (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() &&
                !DEC2EXE_EMPTY_SD_S1.read()) {  // dont bypass if instr is currently in exe
         r2_valid_sd= false;
     } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
@@ -555,8 +555,8 @@ void decod::bypasses() {
     }
     // When a load is in exe, we can block the pipeline now
     // Avoid an issue with load - load - add sequence
-    block_in_dec.write((RADR1_SD_S1.read() == EXE_DEST_SD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()) ||
-                       (RADR2_SD_S1.read() == EXE_DEST_SD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()));
+    block_in_dec.write((RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()) ||
+                       (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()));
 }
 
 void decod::stall_method() {
@@ -601,7 +601,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, NEG_OP2_RD_S1, GET_NAME(NEG_OP2_RD_S1));    // say if we take the opposite of the op1 to do a
                                                        // substraction for example
     sc_trace(tf, WB_RD_S1, GET_NAME(WB_RD_S1));              // say if we plan to wbk the value of rd or no
-    sc_trace(tf, EXE_DEST_SD_S1, GET_NAME(EXE_DEST_SD_S1));  // the destination register
+    sc_trace(tf, EXE_DEST_RD_S1, GET_NAME(EXE_DEST_RD_S1));  // the destination register
     sc_trace(tf, SELECT_TYPE_OPERATIONS_RD_S1, GET_NAME(SELECT_TYPE_OPERATIONS_RD_S1));  // taille fifo entrée : 110
     sc_trace(tf, SLT_RD_S1, GET_NAME(SLT_RD_S1));
     sc_trace(tf, SLTU_RD_S1, GET_NAME(SLTU_RD_S1));
@@ -918,4 +918,44 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf, env_call_wrong_mode_s1, GET_NAME(env_call_wrong_mode_s1));
     sc_trace(tf, PC_BRANCH_VALUE_RD_S1, GET_NAME(PC_BRANCH_VALUE_RD_S1));
     sc_trace(tf, pc_branch_value_sd_s1, GET_NAME(pc_branch_value_sd_s1));
+    sc_trace(tf,PC_BRANCH_VALUE_RD_S2, GET_NAME(PC_BRANCH_VALUE_RD_S2));
+    sc_trace(tf,MULT_INST_RD_S2, GET_NAME(MULT_INST_RD_S2));
+    sc_trace(tf,EBREAK_RD_S2, GET_NAME(EBREAK_RD_S2));
+    sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RD_S2, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S2));
+    sc_trace(tf,MRET_RD_S2, GET_NAME(MRET_RD_S2));
+    sc_trace(tf,BLOCK_BP_RD_S2, GET_NAME(BLOCK_BP_RD_S2));
+    sc_trace(tf,EXCEPTION_RD_S2, GET_NAME(EXCEPTION_RD_S2));
+    sc_trace(tf,ENV_CALL_WRONG_MODE_RD_S2, GET_NAME(ENV_CALL_WRONG_MODE_RD_S2));
+    sc_trace(tf,ENV_CALL_U_MODE_RD_S2, GET_NAME(ENV_CALL_U_MODE_RD_S2));
+    sc_trace(tf,ILLEGAL_INSTRUCTION_RD_S2, GET_NAME(ILLEGAL_INSTRUCTION_RD_S2));
+    sc_trace(tf,ADRESS_MISSALIGNED_RD_S2, GET_NAME(ADRESS_MISSALIGNED_RD_S2));
+    sc_trace(tf,ENV_CALL_M_MODE_RD_S2, GET_NAME(ENV_CALL_M_MODE_RD_S2));
+    sc_trace(tf,ENV_CALL_S_MODE_RD_S2, GET_NAME(ENV_CALL_S_MODE_RD_S2));
+    sc_trace(tf,CSR_RDATA_RD_S2, GET_NAME(CSR_RDATA_RD_S2));
+    sc_trace(tf,CSR_WENABLE_RD_S2, GET_NAME(CSR_WENABLE_RD_S2));
+    sc_trace(tf,CSR_WADR_RD_S2, GET_NAME(CSR_WADR_RD_S2));
+    sc_trace(tf,PC_DEC2EXE_RD_S2, GET_NAME(PC_DEC2EXE_RD_S2));
+    sc_trace(tf,BP_R1_VALID_RD_S2, GET_NAME(BP_R1_VALID_RD_S2));
+    sc_trace(tf,BP_R2_VALID_RD_S2, GET_NAME(BP_R2_VALID_RD_S2));
+
+    sc_trace(tf,BP_RADR1_RD_S2, GET_NAME(BP_RADR1_RD_S2));
+    sc_trace(tf,BP_RADR2_RD_S2, GET_NAME(BP_RADR2_RD_S2));
+
+    sc_trace(tf,EXE_CMD_RD_S2, GET_NAME(EXE_CMD_RD_S2));
+    sc_trace(tf,OP1_RD_S2, GET_NAME(OP1_RD_S2));
+    sc_trace(tf,OP2_RD_S2, GET_NAME(OP2_RD_S2));
+    sc_trace(tf,NEG_OP2_RD_S2, GET_NAME(NEG_OP2_RD_S2));
+    sc_trace(tf,WB_RD_S2, GET_NAME(WB_RD_S2));
+
+    sc_trace(tf,MEM_DATA_RD_S2, GET_NAME(MEM_DATA_RD_S2));
+
+    sc_trace(tf,MEM_LOAD_RD_S2, GET_NAME(MEM_LOAD_RD_S2));
+    sc_trace(tf,MEM_STORE_RD_S2, GET_NAME(MEM_STORE_RD_S2));
+
+    sc_trace(tf,MEM_SIGN_EXTEND_RD_S2, GET_NAME(MEM_SIGN_EXTEND_RD_S2));
+    sc_trace(tf,MEM_SIZE_RD_S2, GET_NAME(MEM_SIZE_RD_S2));
+    sc_trace(tf,SELECT_TYPE_OPERATIONS_RD_S2, GET_NAME(SELECT_TYPE_OPERATIONS_RD_S2));
+    sc_trace(tf,EXE_DEST_RD_S2, GET_NAME(EXE_DEST_RD_S2));
+    sc_trace(tf,SLT_RD_S2, GET_NAME(SLT_RD_S2));
+    sc_trace(tf,SLTU_RD_S2, GET_NAME(SLTU_RD_S2));
 }
