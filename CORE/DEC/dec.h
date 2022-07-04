@@ -170,13 +170,13 @@ SC_MODULE(decod) {
 
     // General Interface :
 
-    sc_in<bool>        EXCEPTION_SM;
+    sc_in<bool>        EXCEPTION_SM_S1;
     sc_in<sc_uint<32>> MTVEC_VALUE_RC_S1;
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
-    sc_in<bool>        MRET_SM;
-    sc_in<sc_uint<32>> RETURN_ADRESS_SM;
+    sc_in<bool>        MRET_SM_S1;
+    sc_in<sc_uint<32>> RETURN_ADRESS_SM_S1;
 
     // Signals :
 
@@ -597,7 +597,7 @@ SC_MODULE(decod) {
                   << slti_i_sd_s1 << slt_i_sd_s1
 
                   << sltiu_i_sd_s1 << sltu_i_sd_s1 << RADR1_SD_S1 << CSR_RDATA_SC_S1 << csr_radr_sd_s1 << RADR2_SD_S1
-                  << r1_valid_sd << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1
+                  << r1_valid_sd << EXCEPTION_SM_S1 << r2_valid_sd << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1
                   << illegal_instruction_sd_s1 << instruction_adress_missaligned_sd_s1 << env_call_m_mode_sd_s1
                   << block_bp_sd_s1 << env_call_s_mode_sd_s1 << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1
                   << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1
@@ -614,7 +614,7 @@ SC_MODULE(decod) {
                   << slti_i_sd_s2 << slt_i_sd_s2
 
                   << sltiu_i_sd_s2 << sltu_i_sd_s2 << RADR1_SD_S2 << CSR_RDATA_SC_S2 << csr_radr_sd_s2 << RADR2_SD_S2
-                  << r1_valid_sd << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
+                  << r1_valid_sd << EXCEPTION_SM_S1 << r2_valid_sd << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
                   << illegal_instruction_sd_s2 << instruction_adress_missaligned_sd_s2 << env_call_m_mode_sd_s2
                   << block_bp_sd_s2 << env_call_s_mode_sd_s2 << env_call_u_mode_sd_s2 << env_call_wrong_mode_s2
                   << mret_i_sd_s2 << instruction_access_fault_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2
@@ -699,7 +699,7 @@ SC_MODULE(decod) {
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
                   << CSR_RDATA_SC_S1 << ecall_i_sd_s1
 
-                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM << mret_i_sd_s1 << sret_i_sd_s1
+                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM_S1 << mret_i_sd_s1 << sret_i_sd_s1
                   << CSR_RDATA_SC_S1;
 
         SC_METHOD(post_reg_read_decoding_s2)
@@ -738,12 +738,12 @@ SC_MODULE(decod) {
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
                   << CSR_RDATA_SC_S1 << ecall_i_sd_s1
 
-                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM << mret_i_sd_s1 << sret_i_sd_s1
+                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM_S1 << mret_i_sd_s1 << sret_i_sd_s1
                   << CSR_RDATA_SC_S1;
 
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd_s1 << inc_pc_sd_s1 << jump_sd_s1 << MTVEC_VALUE_RC_S1
-                  << EXCEPTION_SM << PC_IF2DEC_RI_S1 << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM_S1
+                  << EXCEPTION_SM_S1 << PC_IF2DEC_RI_S1 << MRET_SM_S1 << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM_S1
                   << stall_sd_s1;
 
         SC_METHOD(bypasses);

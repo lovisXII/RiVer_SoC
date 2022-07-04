@@ -200,10 +200,14 @@ int sc_main(int argc, char* argv[]) {
     sc_trace_file* tf;
     tf = sc_create_vcd_trace_file("tf");
 
-    sc_signal<sc_uint<32>> MEM_ADR;
-    sc_signal<sc_uint<32>> MEM_DATA;
-    sc_signal<bool>        MEM_ADR_VALID, MEM_STORE, MEM_LOAD;
+    sc_signal<sc_uint<32>> MEM_ADR_S1;
+    sc_signal<sc_uint<32>> MEM_DATA_S1;
+    sc_signal<sc_uint<32>> MEM_ADR_S2;
+    sc_signal<sc_uint<32>> MEM_DATA_S2;
+    sc_signal<bool>        MEM_ADR_VALID_S1, MEM_STORE_S1, MEM_LOAD_S1;
+    sc_signal<bool>        MEM_ADR_VALID_S2, MEM_STORE_S2, MEM_LOAD_S2;
     sc_signal<sc_uint<2>>  MEM_SIZE_SM_S1;
+    sc_signal<sc_uint<2>>  MEM_SIZE_SM_S2;
 
     sc_signal<sc_uint<32>> MEM_RESULT;
     sc_signal<bool>        MEM_STALL;
@@ -245,14 +249,23 @@ int sc_main(int argc, char* argv[]) {
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
 
-    core_inst.MCACHE_ADR_SM_S1(MEM_ADR);
-    core_inst.MCACHE_DATA_SM_S1(MEM_DATA);
-    core_inst.MCACHE_ADR_VALID_SM_S1(MEM_ADR_VALID);
-    core_inst.MCACHE_STORE_SM_S1(MEM_STORE);
-    core_inst.MCACHE_LOAD_SM_S1(MEM_LOAD);
+    core_inst.MCACHE_ADR_SM_S1(MEM_ADR_S1);
+    core_inst.MCACHE_DATA_SM_S1(MEM_DATA_S1);
+    core_inst.MCACHE_ADR_VALID_SM_S1(MEM_ADR_VALID_S1);
+    core_inst.MCACHE_STORE_SM_S1(MEM_STORE_S1);
+    core_inst.MCACHE_LOAD_SM_S1(MEM_LOAD_S1);
     core_inst.MCACHE_RESULT_SM_S1(MEM_RESULT);
     core_inst.MCACHE_STALL_SM_S1(MEM_STALL);
     core_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);
+
+    core_inst.MCACHE_ADR_SM_S2(MEM_ADR_S2);
+    core_inst.MCACHE_DATA_SM_S2(MEM_DATA_S2);
+    core_inst.MCACHE_ADR_VALID_SM_S2(MEM_ADR_VALID_S2);
+    core_inst.MCACHE_STORE_SM_S2(MEM_STORE_S2);
+    core_inst.MCACHE_LOAD_SM_S2(MEM_LOAD_S2);
+    core_inst.MCACHE_RESULT_SM_S2(MEM_RESULT);
+    core_inst.MCACHE_STALL_SM_S2(MEM_STALL);
+    core_inst.MEM_SIZE_SM_S2(MEM_SIZE_SM_S2);
 
     core_inst.ADR_SI_S1(IF_ADR_S1);
     core_inst.ADR_SI_S2(IF_ADR_S2);
@@ -275,13 +288,13 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.RESET_N(RESET);
     dcache_inst.trace(tf);
     // processor side
-    dcache_inst.DATA_ADR_SM(MEM_ADR);
-    dcache_inst.DATA_SM(MEM_DATA);
-    dcache_inst.LOAD_SM(MEM_LOAD);
-    dcache_inst.STORE_SM(MEM_STORE);
+    dcache_inst.DATA_ADR_SM(MEM_ADR_S1);
+    dcache_inst.DATA_SM(MEM_DATA_S1);
+    dcache_inst.LOAD_SM(MEM_LOAD_S1);
+    dcache_inst.STORE_SM(MEM_STORE_S1);
     dcache_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);
     dcache_inst.MEM_SIZE_SC(MEM_SIZE_SC);
-    dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
+    dcache_inst.VALID_ADR_SM(MEM_ADR_VALID_S1);
     dcache_inst.DATA_SC(MEM_RESULT);
     dcache_inst.STALL_SC(MEM_STALL);
     // MP side
@@ -411,12 +424,12 @@ int sc_main(int argc, char* argv[]) {
                 break;
         }
 #else
-        mem_adr                    = MEM_ADR.read() & 0XfffffffC;  // removing the least 2 significant bits
+        mem_adr                    = MEM_ADR_S1.read() & 0XfffffffC;  // removing the least 2 significant bits
         mem_size                   = MEM_SIZE_SM_S1.read();
-        bool         mem_adr_valid = MEM_ADR_VALID.read();
-        unsigned int mem_data      = MEM_DATA.read();
-        bool         mem_store     = MEM_STORE.read();
-        bool         mem_load      = MEM_LOAD.read();
+        bool         mem_adr_valid = MEM_ADR_VALID_S1.read();
+        unsigned int mem_data      = MEM_DATA_S1.read();
+        bool         mem_store     = MEM_STORE_S1.read();
+        bool         mem_load      = MEM_LOAD_S1.read();
         unsigned int mem_result;
 #endif
 
@@ -532,7 +545,7 @@ int sc_main(int argc, char* argv[]) {
             unsigned int temporary_store_value = mem_data;
             if (mem_size == 2) {  // access in byte
                 // doing a mask on the least 2 significant bits
-                int mask_adr = MEM_ADR.read() & 0x00000003;
+                int mask_adr = MEM_ADR_S1.read() & 0x00000003;
                 // The switch will allow to keep only the bits we want to store
                 switch (mask_adr) {
                     case 0:
@@ -561,7 +574,7 @@ int sc_main(int argc, char* argv[]) {
                     default: break;
                 }
             } else if (mem_size == 1) {  // access in half word
-                int mask_adr = MEM_ADR.read() & 0x00000003;
+                int mask_adr = MEM_ADR_S1.read() & 0x00000003;
                 switch (mask_adr) {
                     case 0:
                         temporary_store_value = temporary_store_value & 0x0000FFFF;

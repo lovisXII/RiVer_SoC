@@ -430,7 +430,7 @@ void exec_s1::select_exec_res() {
 
 void exec_s1::fifo_concat() {
     sc_bv<exe2mem_size> ff_din;
-    if (EXCEPTION_SM.read() == 0) {
+    if (EXCEPTION_SM_S1.read() == 0) {
         ff_din.range(31, 0)    = exe_res_se_s1.read();
         ff_din.range(63, 32)   = bp_mem_data_sd.read();
         ff_din.range(69, 64)   = DEST_RD_S1.read();
@@ -699,7 +699,7 @@ void exec_s1::trace(sc_trace_file* tf) {
 
     // Genral Interface :
 
-    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
+    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET, GET_NAME(RESET));
 

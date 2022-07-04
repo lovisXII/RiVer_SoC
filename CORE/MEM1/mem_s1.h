@@ -80,10 +80,10 @@ SC_MODULE(mem_s1) {
     sc_out<bool>        MULT_INST_RM_S1;
     // Global Interface :
 
-    sc_out<bool>        EXCEPTION_SM;
+    sc_out<bool>        EXCEPTION_SM_S1;
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S1;
-    sc_out<sc_uint<32>> RETURN_ADRESS_SM;
-    sc_out<bool>        MRET_SM;  // 46
+    sc_out<sc_uint<32>> RETURN_ADRESS_SM_S1;
+    sc_out<bool>        MRET_SM_S1;  // 46
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
@@ -171,7 +171,7 @@ SC_MODULE(mem_s1) {
                   << INSTRUCTION_ACCESS_FAULT_RE_S1 << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
                   << ENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
                   << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE_S1
-                  << EXCEPTION_SM << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM << RESET << MSTATUS_RC_S1
+                  << EXCEPTION_SM_S1 << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM_S1 << RESET << MSTATUS_RC_S1
                   << EXE_RES_RE_S1 << MEPC_SC_S1;
     }
 };

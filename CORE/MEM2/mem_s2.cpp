@@ -172,12 +172,12 @@ void mem_s2::sign_extend() {
 }
 
 void mem_s2::csr_exception() {
-    EXCEPTION_SM            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
+    EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC_S2.read();
 
     if (!RESET) CURRENT_MODE_SM_S2 = 3;
 
-    if (!EXCEPTION_SM) {
+    if (!EXCEPTION_SM_S2) {
         if (CSR_WENABLE_RE_S2.read()) {
             CSR_WADR_SM_S2.write(CSR_WADR_SE_S2.read());
             CSR_WDATA_SM_S2.write(EXE_RES_RE_S2.read());
@@ -187,7 +187,7 @@ void mem_s2::csr_exception() {
             CSR_WDATA_SM_S2.write(0);
             CSR_ENABLE_BEFORE_FIFO_SM_S2.write(0);
         }
-        MRET_SM = 0;
+        MRET_SM_S2 = 0;
     } else {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
@@ -241,13 +241,13 @@ void mem_s2::csr_exception() {
             // loading return value (main) from EPC to PC :
             // The adress will be send to ifetch
 
-            RETURN_ADRESS_SM = MEPC_SC_S2;
+            RETURN_ADRESS_SM_S2 = MEPC_SC_S2;
 
             // Informing IFETCH that a return instruction have been received
 
             MEPC_WDATA_RM_S2.write(PC_EXE2MEM_RE_S2.read());
             MTVAL_WDATA_SM_S2 = 0;
-            MRET_SM        = MRET_RE_S2;
+            MRET_SM_S2        = MRET_RE_S2;
         } else if (STORE_ACCESS_FAULT_RE_S2) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S2;
@@ -425,7 +425,7 @@ void mem_s2::csr_exception() {
             MCAUSE_WDATA_SM_S2.write(1);
             CURRENT_MODE_SM_S2 = 3;
         }
-        if (!MRET_RE_S2.read()) MRET_SM = 0;
+        if (!MRET_RE_S2.read()) MRET_SM_S2 = 0;
     }
 }
 
@@ -482,7 +482,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, ENV_CALL_S_MODE_RE_S2, GET_NAME(ENV_CALL_S_MODE_RE_S2));
     sc_trace(tf, ENV_CALL_M_MODE_RE_S2, GET_NAME(ENV_CALL_M_MODE_RE_S2));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
-    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
+    sc_trace(tf, EXCEPTION_SM_S2, GET_NAME(EXCEPTION_SM_S2));
     sc_trace(tf, MSTATUS_WDATA_RM_S2, GET_NAME(MSTATUS_WDATA_RM_S2));
     sc_trace(tf, MIP_WDATA_RM_S2, GET_NAME(MIP_WDATA_RM_S2));
     sc_trace(tf, MEPC_WDATA_RM_S2, GET_NAME(MEPC_WDATA_RM_S2));
@@ -494,8 +494,8 @@ void mem_s2::trace(sc_trace_file* tf) {
     // sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));
     sc_trace(tf, CURRENT_MODE_SM_S2, GET_NAME(CURRENT_MODE_SM_S2));
     sc_trace(tf, MRET_RE_S2, GET_NAME(MRET_RE_S2));
-    sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
-    sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
+    sc_trace(tf, MRET_SM_S2, GET_NAME(MRET_SM_S2));
+    sc_trace(tf, RETURN_ADRESS_SM_S2, GET_NAME(RETURN_ADRESS_SM_S2));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     sc_trace(tf, MEM_SIZE_SM_S2, GET_NAME(MEM_SIZE_SM_S2));
     sc_trace(tf, PC_BRANCH_VALUE_RE_S2, GET_NAME(PC_BRANCH_VALUE_RE_S2));

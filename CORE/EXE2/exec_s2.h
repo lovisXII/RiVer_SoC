@@ -137,7 +137,7 @@ SC_MODULE(exec_s2) {
 
     // General Interface :
 
-    sc_in<bool> EXCEPTION_SM;
+    sc_in<bool> EXCEPTION_SM_S1;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
     sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
@@ -268,7 +268,7 @@ SC_MODULE(exec_s2) {
                   << CSR_WENABLE_RD_S2 << CSR_WADR_RD_S2 << CSR_RDATA_RD_S2 << ILLEGAL_INSTRUCTION_RD_S2
                   << ADRESS_MISSALIGNED_RD_S2 << ENV_CALL_U_MODE_RD_S2 << ENV_CALL_M_MODE_RD_S2 << exception_se
                   << load_adress_missaligned_se << load_access_fault_se << store_access_fault_se
-                  << store_adress_missaligned_se << EXCEPTION_SM << MRET_RD_S2 << INSTRUCTION_ACCESS_FAULT_RD_S2
+                  << store_adress_missaligned_se << EXCEPTION_SM_S1 << MRET_RD_S2 << INSTRUCTION_ACCESS_FAULT_RD_S2
                   << MULT_INST_RD_S2;
         SC_METHOD(fifo_unconcat);
         sensitive << exe2mem_dout_se_s2;

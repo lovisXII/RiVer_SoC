@@ -80,10 +80,10 @@ SC_MODULE(mem_s2) {
     sc_out<bool>        MULT_INST_RM_S2;
     // Global Interface :
 
-    sc_out<bool>        EXCEPTION_SM;
+    sc_out<bool>        EXCEPTION_SM_S2;
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S2;
-    sc_out<sc_uint<32>> RETURN_ADRESS_SM;
-    sc_out<bool>        MRET_SM;  // 46
+    sc_out<sc_uint<32>> RETURN_ADRESS_SM_S2;
+    sc_out<bool>        MRET_SM_S2;  // 46
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
@@ -92,8 +92,8 @@ SC_MODULE(mem_s2) {
 
     sc_in<bool> INTERRUPTION_SE_S2;
     sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SE_S2;
-    sc_in<bool> MACHINE_TIMER_INTERRUPT_SE_S1;
-    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE_S1;
+    sc_in<bool> MACHINE_TIMER_INTERRUPT_SE_S2;
+    sc_in<bool> MACHINE_EXTERNAL_INTERRUPT_SE_S2;
     sc_in<bool> EBREAK_RE_S2;
     // CSR Interface :
 
@@ -171,7 +171,7 @@ SC_MODULE(mem_s2) {
                   << INSTRUCTION_ACCESS_FAULT_RE_S2 << ILLEGAL_INSTRUCTION_RE_S2 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S2
                   << ENV_CALL_U_MODE_RE_S2 << ENV_CALL_S_MODE_RE_S2 << ENV_CALL_M_MODE_RE_S2 << LOAD_ADRESS_MISSALIGNED_RE_S2
                   << STORE_ADRESS_MISSALIGNED_RE_S2 << LOAD_ACCESS_FAULT_RE_S2 << STORE_ACCESS_FAULT_RE_S2 << MRET_RE_S2
-                  << EXCEPTION_SM << ENV_CALL_WRONG_MODE_RE_S2 << BUS_ERROR_SX << EXCEPTION_SM << RESET << MSTATUS_RC_S2
+                  << EXCEPTION_SM_S2 << ENV_CALL_WRONG_MODE_RE_S2 << BUS_ERROR_SX << EXCEPTION_SM_S2 << RESET << MSTATUS_RC_S2
                   << EXE_RES_RE_S2 << MEPC_SC_S2;
     }
 };

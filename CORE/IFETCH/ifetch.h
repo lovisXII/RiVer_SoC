@@ -55,12 +55,12 @@ SC_MODULE(ifetch) {
 
     sc_in<bool>         INTERRUPTION_SE_S1;
     sc_in<sc_uint<2>>   CURRENT_MODE_SM_S1 ;
-    sc_in<bool>         MRET_SM ;
-    sc_in<sc_uint<32>>  RETURN_ADRESS_SM ;
+    sc_in<bool>         MRET_SM_S1 ;
+    sc_in<sc_uint<32>>  RETURN_ADRESS_SM_S1 ;
 
     // Global Interface :
 
-    sc_in<bool> EXCEPTION_SM;
+    sc_in<bool> EXCEPTION_SM_S1;
     sc_in_clk   CLK;
     sc_in<bool>   RESET;
 
@@ -121,10 +121,10 @@ SC_MODULE(ifetch) {
         << IF2DEC_FLUSH_SD_S2 
         << IC_STALL_SI 
         << RESET
-        << EXCEPTION_SM 
-        << MRET_SM 
-        << RETURN_ADRESS_SM;
+        << EXCEPTION_SM_S1 
+        << MRET_SM_S1 
+        << RETURN_ADRESS_SM_S1;
         SC_METHOD(exception)
-        sensitive << RESET << EXCEPTION_SM ;
+        sensitive << RESET << EXCEPTION_SM_S1 ;
     }
 };
