@@ -754,6 +754,7 @@ void decod::post_reg_read_decoding_s1() {
         mem_sign_extend_sd_s1.write(0);
         mem_size_sd_s1.write(0);
         select_type_operations_sd_s1.write(0b0001);
+        not_jump_var_s1      = 1;
         illegal_inst_s1 = true;
     }
 

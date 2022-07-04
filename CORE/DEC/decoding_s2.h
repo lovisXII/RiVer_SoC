@@ -753,6 +753,7 @@ void decod::post_reg_read_decoding_s2() {
         mem_sign_extend_sd_s2.write(0);
         mem_size_sd_s2.write(0);
         select_type_operations_sd_s2.write(0b0001);
+        not_jump_var = 1 ;
         illegal_inst = true;
     }
 
