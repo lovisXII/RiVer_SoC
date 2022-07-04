@@ -1,4 +1,3 @@
-#include "decoding_s1.h"
 #include "decoding_s2.h"
 
 
@@ -304,14 +303,14 @@ void decod::unconcat_dec2if(){
 //:---------------------------------------------
 
 void decod::pc_inc() {
-    sc_uint<32> pc                = READ_PC_SR.read();
+    sc_uint<32> pc                   = READ_PC_SR.read();
     sc_uint<32> pc_out_s1            = pc;
     sc_uint<32> pc_out_s2            = pc;
     sc_uint<32> offset_branch_var_s1 = offset_branch_sd_s1.read();
     sc_uint<32> offset_branch_var_s2 = offset_branch_sd_s2.read();
     
-    bool add_offset_to_pc_s1 = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
-    bool add_offset_to_pc_s2 = jump_sd_s2.read() && !IF2DEC_EMPTY_SI_S2 ;
+    add_offset_to_pc_s1 = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
+    add_offset_to_pc_s2 = jump_sd_s2.read() && !IF2DEC_EMPTY_SI_S2 ;
     
 
     // PC Incrementation
@@ -320,7 +319,6 @@ void decod::pc_inc() {
     //  - branch only in  s1
     //  - branch only in s2
     //  - branch in s1 and s2 -> s1 prio
-
     if (!add_offset_to_pc_s1 && !add_offset_to_pc_s2 && !dec2if_full_sd ) {//no branch
         pc_out_s1 = pc + 4;
         pc_out_s2 = pc + 8;
@@ -422,8 +420,7 @@ void decod::pc_inc() {
         
         IF2DEC_POP_SD_S1= 1;
         IF2DEC_POP_SD_S2= 1;
-        IF2DEC_FLUSH_SD_S1= 0;
-        IF2DEC_FLUSH_SD_S2= 0;
+        IF2DEC_FLUSH_SD= 0;
 
         // DEC2EXE Gestion
 
@@ -435,32 +432,29 @@ void decod::pc_inc() {
         
         // IF2DEC Gestion
         
-        if (jump_sd_s1.read() && !stall_sd_s1) //jump_s1 prio 
+        if (jump_sd_s1.read() && !stall_sd_s1) //jump_s1  
         {
             IF2DEC_POP_SD_S1 = 1;
             IF2DEC_POP_SD_S2= 1;
-            IF2DEC_FLUSH_SD_S1= 1;
-            IF2DEC_FLUSH_SD_S2= 1;
+            IF2DEC_FLUSH_SD= 1;
         } 
         else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
         {
             IF2DEC_POP_SD_S1= 1;
             IF2DEC_POP_SD_S2= 1;
-            IF2DEC_FLUSH_SD_S1= 0;
-            IF2DEC_FLUSH_SD_S2= 0;
+            IF2DEC_FLUSH_SD= 0;
         } 
         else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s2) //jump s2
         {
-            IF2DEC_POP_SD_S1= 1;
-            IF2DEC_POP_SD_S2= 1;
-            IF2DEC_FLUSH_SD_S1= 0;
-            IF2DEC_FLUSH_SD_S2= 0;
+            IF2DEC_POP_SD_S1    = 1;
+            IF2DEC_POP_SD_S2    = 1;
+            IF2DEC_FLUSH_SD     = 1;
 
         }
         else {
             IF2DEC_POP_SD_S1= 0;
             IF2DEC_POP_SD_S2= 0;
-            IF2DEC_FLUSH_SD_S1= 0;
+            IF2DEC_FLUSH_SD= 0;
         }
 
         // DEC2EXE_S1 Gestion
@@ -635,8 +629,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, INSTR_RI_S2, GET_NAME(INSTR_RI_S2));
     sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
     sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));  // Decod says to IFETCH if it wants a pop or no
-    sc_trace(tf, IF2DEC_FLUSH_SD_S1, GET_NAME(IF2DEC_FLUSH_SD_S1));
-
+    sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     // Interface with DEC2EXE
 
     sc_trace(tf, DEC2EXE_POP_SE_S1, GET_NAME(DEC2EXE_POP_SE_S1));
@@ -958,4 +951,6 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf,EXE_DEST_RD_S2, GET_NAME(EXE_DEST_RD_S2));
     sc_trace(tf,SLT_RD_S2, GET_NAME(SLT_RD_S2));
     sc_trace(tf,SLTU_RD_S2, GET_NAME(SLTU_RD_S2));
+    sc_trace(tf,add_offset_to_pc_s1, GET_NAME(add_offset_to_pc_s1));
+    sc_trace(tf,add_offset_to_pc_s2, GET_NAME(add_offset_to_pc_s2));
 }

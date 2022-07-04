@@ -1,5 +1,6 @@
 #include <systemc.h>
 #include "dec.h"
+#include "decoding_s1.h"
 //---------------------------------------------INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
@@ -452,7 +453,7 @@ void decod::post_reg_read_decoding_s2() {
         }
 
         if (lw_i_sd_s2 | lh_i_sd_s2 | lhu_i_sd_s2 | lb_i_sd_s2 | lbu_i_sd_s2) {
-            mem_load_sd_s2.write(1);
+            mem_load_sd_s2.write(!jump_sd_s1);
             if (lw_i_sd_s2) {
                 mem_size_sd_s2.write(0);
                 mem_sign_extend_sd_s2.write(0);
@@ -528,7 +529,7 @@ void decod::post_reg_read_decoding_s2() {
         // STORE :
 
         if (sw_i_sd_s2 | sh_i_sd_s2 | sb_i_sd_s2) {
-            mem_store_sd_s2.write(1);
+            mem_store_sd_s2.write(!jump_sd_s1);
             if (sw_i_sd_s2) {
                 mem_size_sd_s2.write(0);
             } else if (sh_i_sd_s2) {
@@ -772,7 +773,7 @@ void decod::post_reg_read_decoding_s2() {
 
     illegal_instruction_sd_s2.write(illegal_inst);
     block_bp_sd_s2.write(jalr_type_inst_sd_s2);
-    exe_wb_sd_s2.write(dec2exe_wb_var);
+    exe_wb_sd_s2.write(dec2exe_wb_var && !jump_sd_s1);
     offset_branch_sd_s2.write(offset_branch_var);
     exe_op1_sd_s2.write(dec2exe_op1_var);
     exe_op2_sd_s2.write(dec2exe_op2_var);

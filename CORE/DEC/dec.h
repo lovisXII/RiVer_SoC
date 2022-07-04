@@ -32,8 +32,7 @@ SC_MODULE(decod) {
     sc_in<bool>        IF2DEC_EMPTY_SI_S2;
     sc_out<bool>       IF2DEC_POP_SD_S1;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>       IF2DEC_POP_SD_S2;
-    sc_out<bool>       IF2DEC_FLUSH_SD_S1;
-    sc_out<bool>       IF2DEC_FLUSH_SD_S2;
+    sc_out<bool>       IF2DEC_FLUSH_SD;
 
     // Interface with CSR :
 
@@ -343,6 +342,7 @@ SC_MODULE(decod) {
 
     sc_signal<bool> inc_pc_sd_s1;
     sc_signal<bool> jump_sd_s1;
+    sc_signal<bool> add_offset_to_pc_s1;
 
     // Pipeline Gestion
 
@@ -499,6 +499,7 @@ SC_MODULE(decod) {
 
     sc_signal<bool> inc_pc_sd_s2;
     sc_signal<bool> jump_sd_s2;
+    sc_signal<bool> add_offset_to_pc_s2;
 
     // Pipeline Gestion
 
@@ -755,12 +756,25 @@ SC_MODULE(decod) {
                   << CSR_RDATA_SC_S1 << ecall_i_sd_s1
 
                   << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM_S1 << mret_i_sd_s1 << sret_i_sd_s1
-                  << CSR_RDATA_SC_S1;
+                  << CSR_RDATA_SC_S1 << jump_sd_s1;
 
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd_s1 << inc_pc_sd_s1 << jump_sd_s1 << MTVEC_VALUE_RC_S1
-                  << EXCEPTION_SM_S1 << PC_IF2DEC_RI_S1 << MRET_SM_S1 << dec2if_full_sd << IF2DEC_EMPTY_SI_S1 << MCAUSE_WDATA_SM_S1
-                  << stall_sd_s1;
+        sensitive << CLK.pos() 
+                  << READ_PC_SR 
+                  << offset_branch_sd_s1 
+                  << offset_branch_sd_s2 
+                  << jump_sd_s1  
+                  << jump_sd_s2 
+                  << MTVEC_VALUE_RC_S1
+                  << EXCEPTION_SM_S1 
+                  << PC_IF2DEC_RI_S1 
+                  << MRET_SM_S1 
+                  << dec2if_full_sd 
+                  << IF2DEC_EMPTY_SI_S1 
+                  << MCAUSE_WDATA_SM_S1
+                  << stall_sd_s1
+                  << add_offset_to_pc_s1
+                  << add_offset_to_pc_s2;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR_S1 << RDATA2_SR_S1 << BP_DEST_RE << BP_EXE_RES_RE

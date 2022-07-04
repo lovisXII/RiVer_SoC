@@ -30,10 +30,15 @@ void ifetch::fetch_method() {
         INSTR_RI_S1     = (sc_bv_base)instr_ri_var_s1.range(63, 32) ;
         PC_IF2DEC_RI_S1 = (sc_bv_base)instr_ri_var_s1.range(31, 0)  ;
 
-        if (IF2DEC_FLUSH_SD_S1.read()) {
+        if (IF2DEC_FLUSH_SD.read()) {
+            
             if2dec_push_si_s1.write(false);
+            if2dec_push_si_s2.write(false);
+
             DEC2IF_POP_SI.write(true);
+            
             ADR_VALID_SI_S1.write(false);
+            ADR_VALID_SI_S2.write(false);
         } else {
             // stall if the memory stalls, if we can't push to dec, or have no value
             // of pc to pop from dec
@@ -42,6 +47,7 @@ void ifetch::fetch_method() {
             if2dec_push_si_s2.write(!stall);
             DEC2IF_POP_SI.write(!stall);
             ADR_VALID_SI_S1.write(!DEC2IF_EMPTY_SI.read());
+            ADR_VALID_SI_S2.write(!DEC2IF_EMPTY_SI.read());
         }
 
     } else {
@@ -103,7 +109,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, IC_STALL_SI, GET_NAME(IC_STALL_SI));
     sc_trace(tf, DEC2IF_EMPTY_SI, GET_NAME(DEC2IF_EMPTY_SI));
     sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));
-    sc_trace(tf, IF2DEC_FLUSH_SD_S1, GET_NAME(IF2DEC_FLUSH_SD_S1));
+    sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));
     sc_trace(tf, if2dec_push_si_s1, GET_NAME(if2dec_push_si_s1));
     sc_trace(tf, if2dec_push_si_s2, GET_NAME(if2dec_push_si_s2));

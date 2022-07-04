@@ -99,10 +99,9 @@ SC_MODULE(core) {
     sc_signal<sc_bv<32>>   INSTR_RI_S2;
     sc_signal<bool>        IF2DEC_EMPTY_SI_S1;
     sc_signal<bool>        IF2DEC_POP_SD_S1;
-    sc_signal<bool>        IF2DEC_FLUSH_SD_S1;
+    sc_signal<bool>        IF2DEC_FLUSH_SD;
     sc_signal<bool>        IF2DEC_EMPTY_SI_S2;
     sc_signal<bool>        IF2DEC_POP_SD_S2;
-    sc_signal<bool>        IF2DEC_FLUSH_SD_S2;
     sc_signal<sc_uint<32>> PC_IF2DEC_RI_S1;
     sc_signal<sc_uint<32>> PC_IF2DEC_RI_S2;
     // DEC-EXE interface
@@ -425,11 +424,10 @@ SC_MODULE(core) {
         ifetch_inst.INSTR_RI_S2(INSTR_RI_S2);
         ifetch_inst.IF2DEC_EMPTY_SI_S1(IF2DEC_EMPTY_SI_S1);
         ifetch_inst.IF2DEC_POP_SD_S1(IF2DEC_POP_SD_S1);
-        ifetch_inst.IF2DEC_FLUSH_SD_S1(IF2DEC_FLUSH_SD_S1);
+        ifetch_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
         ifetch_inst.IF2DEC_EMPTY_SI_S2(IF2DEC_EMPTY_SI_S2);
         ifetch_inst.IF2DEC_POP_SD_S2(IF2DEC_POP_SD_S2);
-        ifetch_inst.IF2DEC_FLUSH_SD_S2(IF2DEC_FLUSH_SD_S2);
 
         ifetch_inst.ADR_SI_S1(ADR_SI_S1);
         ifetch_inst.ADR_SI_S2(ADR_SI_S2);
@@ -469,8 +467,7 @@ SC_MODULE(core) {
         dec_inst.IF2DEC_EMPTY_SI_S2(IF2DEC_EMPTY_SI_S2);
         dec_inst.IF2DEC_POP_SD_S1(IF2DEC_POP_SD_S1);
         dec_inst.IF2DEC_POP_SD_S2(IF2DEC_POP_SD_S2);
-        dec_inst.IF2DEC_FLUSH_SD_S1(IF2DEC_FLUSH_SD_S1);
-        dec_inst.IF2DEC_FLUSH_SD_S2(IF2DEC_FLUSH_SD_S2);
+        dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
         dec_inst.OP1_RD_S1(OP1_RD_S1);
         dec_inst.OP2_RD_S1(OP2_RD_S1);

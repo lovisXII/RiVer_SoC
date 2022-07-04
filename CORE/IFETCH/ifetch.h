@@ -32,8 +32,7 @@ SC_MODULE(ifetch) {
 
     // if2dec interface
 
-    sc_in<bool>             IF2DEC_FLUSH_SD_S1;   // allow to flush if2dec in case of a branch
-    sc_in<bool>             IF2DEC_FLUSH_SD_S2;
+    sc_in<bool>             IF2DEC_FLUSH_SD;   // allow to flush if2dec in case of a branch
     
     sc_in<bool>             IF2DEC_POP_SD_S1;
     sc_in<bool>             IF2DEC_POP_SD_S2;
@@ -117,8 +116,8 @@ SC_MODULE(ifetch) {
         << if2dec_full_si_s2 
         << PC_DEC2IF_RD_S1  
         << PC_DEC2IF_RD_S2 
-        << IF2DEC_FLUSH_SD_S1 
-        << IF2DEC_FLUSH_SD_S2 
+        << IF2DEC_FLUSH_SD 
+        << IF2DEC_FLUSH_SD 
         << IC_STALL_SI 
         << RESET
         << EXCEPTION_SM_S1 
