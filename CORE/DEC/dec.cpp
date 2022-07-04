@@ -432,7 +432,7 @@ void decod::pc_inc() {
     else{
         
         // IF2DEC Gestion
-        
+
         if (jump_sd_s1.read() && !stall_sd_s1) //jump_s1  
         {
             IF2DEC_POP_SD_S1 = 1;

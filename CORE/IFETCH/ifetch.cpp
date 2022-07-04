@@ -29,7 +29,6 @@ void ifetch::fetch_method() {
         
         INSTR_RI_S1     = (sc_bv_base)instr_ri_var_s1.range(63, 32) ;
         PC_IF2DEC_RI_S1 = (sc_bv_base)instr_ri_var_s1.range(31, 0)  ;
-
         if (IF2DEC_FLUSH_SD.read()) {
             
             if2dec_push_si_s1.write(false);

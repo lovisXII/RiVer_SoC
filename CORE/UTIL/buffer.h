@@ -66,7 +66,6 @@ SC_MODULE(buffer) {
         }
         SC_METHOD(flags_update);
         sensitive   << RESET_N 
-                    << FLUSH_S
                     << POP_S
                     << buffer_valid 
                     << empty_s
@@ -93,7 +92,7 @@ void buffer<size_data, depth>::flags_update() {
         }
 
         sc_bv<depth> test_empty = 0 ;
-        if((buffer_valid.read() == test_empty)){
+        if(buffer_valid.read() == test_empty){
             empty_s = 1;
         }
         else{
