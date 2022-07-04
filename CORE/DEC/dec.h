@@ -199,8 +199,10 @@ SC_MODULE(decod) {
     sc_signal<sc_uint<32>> rdata2_sd_s1;
     sc_signal<sc_uint<32>> rdata1_sd_s2;
     sc_signal<sc_uint<32>> rdata2_sd_s2;
-    sc_signal<bool>        r1_valid_sd;
-    sc_signal<bool>        r2_valid_sd;
+    sc_signal<bool>        r1_valid_sd_s1;
+    sc_signal<bool>        r2_valid_sd_s1;
+    sc_signal<bool>        r1_valid_sd_s2;
+    sc_signal<bool>        r2_valid_sd_s2;
     sc_signal<bool>        block_in_dec;
 
     // fifo dec2if :
@@ -501,9 +503,6 @@ SC_MODULE(decod) {
     sc_signal<bool> jump_sd_s2;
     sc_signal<bool> add_offset_to_pc_s2;
 
-    // Pipeline Gestion
-
-    sc_signal<bool> stall_sd_s2;
     // Internal signals :
 
     sc_signal<sc_uint<6>>  adr_dest_sd_s2;
@@ -614,7 +613,7 @@ SC_MODULE(decod) {
                   << slti_i_sd_s1 << slt_i_sd_s1
 
                   << sltiu_i_sd_s1 << sltu_i_sd_s1 << RADR1_SD_S1 << CSR_RDATA_SC_S1 << csr_radr_sd_s1 << RADR2_SD_S1
-                  << r1_valid_sd << EXCEPTION_SM_S1 << r2_valid_sd << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1
+                  << r1_valid_sd_s1 << EXCEPTION_SM_S1 << r2_valid_sd_s1 << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1
                   << illegal_instruction_sd_s1 << instruction_adress_missaligned_sd_s1 << env_call_m_mode_sd_s1
                   << block_bp_sd_s1 << env_call_s_mode_sd_s1 << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1
                   << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1
@@ -631,7 +630,7 @@ SC_MODULE(decod) {
                   << slti_i_sd_s2 << slt_i_sd_s2
 
                   << sltiu_i_sd_s2 << sltu_i_sd_s2 << RADR1_SD_S2 << CSR_RDATA_SC_S2 << csr_radr_sd_s2 << RADR2_SD_S2
-                  << r1_valid_sd << EXCEPTION_SM_S1 << r2_valid_sd << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
+                  << r1_valid_sd_s1 << EXCEPTION_SM_S1 << r2_valid_sd_s1 << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
                   << illegal_instruction_sd_s2 << instruction_adress_missaligned_sd_s2 << env_call_m_mode_sd_s2
                   << block_bp_sd_s2 << env_call_s_mode_sd_s2 << env_call_u_mode_sd_s2 << env_call_wrong_mode_s2
                   << mret_i_sd_s2 << instruction_access_fault_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2
@@ -647,7 +646,7 @@ SC_MODULE(decod) {
         sensitive << dec2if_out_sd;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd << r2_valid_sd
+        sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1
                   << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE_S1
                   << BP_EXE2MEM_EMPTY_SE << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
                   << csr_in_progress_s1;
@@ -710,7 +709,7 @@ SC_MODULE(decod) {
                   << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1
                   << dec2exe_push_sd_s1
 
-                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1
+                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1 << system_type_inst_sd_s1
                   << csrrw_i_sd_s1
 
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
@@ -749,7 +748,7 @@ SC_MODULE(decod) {
                   << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1
                   << dec2exe_push_sd_s1
 
-                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd << r2_valid_sd << system_type_inst_sd_s1
+                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1 << system_type_inst_sd_s1
                   << csrrw_i_sd_s1
 
                   << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
