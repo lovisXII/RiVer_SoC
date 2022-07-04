@@ -8,7 +8,9 @@ void core::trace(sc_trace_file* tf) {
     exec_inst_s1.trace(tf);
     exec_inst_s2.trace(tf);
     mem_inst_s1.trace(tf);
+    mem_inst_s2.trace(tf);
     wbk_inst_s1.trace(tf);
+    wbk_inst_s2.trace(tf);
     reg_inst.trace(tf);
     csr_inst.trace(tf);
     x0_multiplier_inst.trace(tf);

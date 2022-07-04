@@ -6,7 +6,7 @@
 
 #include "EXE2/exec_s2.h"
 #include "MEM2/mem_s2.h"
-//#include "WBK2/wbk_s2.h"
+#include "WBK2/wbk_s2.h"
 
 #include "CSR/csr.h"
 #include "REG/reg.h"
@@ -24,12 +24,16 @@ SC_MODULE(core) {
     
     ifetch      ifetch_inst;
     decod       dec_inst;
+
     exec_s1     exec_inst_s1;
-    mem_s1      mem_inst_s1;
-    wbk_s1      wbk_inst_s1;
     exec_s2     exec_inst_s2;
+    
+    mem_s1      mem_inst_s1;
     mem_s2      mem_inst_s2;
-    // wbk_s2      wbk_inst_s2;
+    
+    wbk_s1      wbk_inst_s1;
+    wbk_s2      wbk_inst_s2;
+    
     reg         reg_inst;
     csr         csr_inst;
     
@@ -377,6 +381,10 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> WDATA_SW_S1;
     sc_signal<bool>        WENABLE_SW_S1;
 
+    sc_signal<sc_uint<6>>  WADR_SW_S2;
+    sc_signal<sc_uint<32>> WDATA_SW_S2;
+    sc_signal<bool>        WENABLE_SW_S2;
+
 
     // Pipeline Mode
 
@@ -393,11 +401,12 @@ SC_MODULE(core) {
           dec_inst("decod"),
           exec_inst_s1("exec_s1"),
           exec_inst_s2("exec_s2"),
-          x0_multiplier_inst("x0_multiplier"),
           mem_inst_s1("mem_s1"),
           mem_inst_s2("mem_s2"),
+          wbk_inst_s1("wbk_s1"),
+          wbk_inst_s2("wbk_s2"),
+          x0_multiplier_inst("x0_multiplier"),
           x1_multiplier_inst("x1_multiplier"),
-          wbk_inst_s1("wbk"),
           x2_multiplier_inst("x2_multiplier"),
           reg_inst("reg"),
           csr_inst("csr") {
@@ -1006,6 +1015,8 @@ SC_MODULE(core) {
         reg_inst.CLK(CLK);
         reg_inst.RESET_N(RESET);
 
+        // WBK_S1 port map :
+
         wbk_inst_s1.MEM_RES_RM_S1(MEM_RES_RM_S1);
         wbk_inst_s1.DEST_RM_S1(DEST_RM_S1);
         wbk_inst_s1.WB_RM_S1(WB_RM_S1);
@@ -1028,6 +1039,32 @@ SC_MODULE(core) {
 
         wbk_inst_s1.CLK(CLK);
         wbk_inst_s1.RESET(RESET);
+
+
+        // WBK_S2 port map :
+
+        wbk_inst_s2.MEM_RES_RM_S2(MEM_RES_RM_S2);
+        wbk_inst_s2.DEST_RM_S2(DEST_RM_S2);
+        wbk_inst_s2.WB_RM_S2(WB_RM_S2);
+        wbk_inst_s2.MEM2WBK_EMPTY_SM_S2(MEM2WBK_EMPTY_SM_S2);
+        wbk_inst_s2.MEM2WBK_POP_SW_S2(MEM2WBK_POP_SW_S2);
+
+        wbk_inst_s2.WADR_SW_S2(WADR_SW_S2);
+        wbk_inst_s2.WDATA_SW_S2(WDATA_SW_S2);
+        wbk_inst_s2.WENABLE_SW_S2(WENABLE_SW_S2);
+        wbk_inst_s2.CSR_RDATA_RM_S2(CSR_RDATA_RM_S2);
+        wbk_inst_s2.CSR_WENABLE_RM_S2(CSR_WENABLE_RM_S2);
+
+        wbk_inst_s2.PC_MEM2WBK_RM_S2(PC_MEM2WBK_RM_S2);
+
+        wbk_inst_s2.INTERRUPTION_SE_S2(INTERRUPTION_SE_S2);
+        wbk_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
+        
+        wbk_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
+        wbk_inst_s2.X2_RES_RX2(multiplier_out_sx2);
+
+        wbk_inst_s2.CLK(CLK);
+        wbk_inst_s2.RESET(RESET);
 
         //X1 - MULTIPLIER port map :
 
