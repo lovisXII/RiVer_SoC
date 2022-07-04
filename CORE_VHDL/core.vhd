@@ -188,6 +188,9 @@ component dec
         MEM_LOAD_RD , MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
         MEM_SIZE_RD : out std_logic_vector(1 downto 0);
 
+        PC_DEC2EXE_RD : out std_logic_vector(31 downto 0);
+        PC_BRANCH_VALUE_RD : out std_logic_vector(31 downto 0);
+
         CSR_WENABLE_RD  : out std_logic; 
         CSR_WADR_RD     : out std_logic_vector(11 downto 0);
         CSR_RDATA_RD    : out std_logic_vector(31 downto 0);
@@ -221,8 +224,8 @@ component dec
         CSR_WENABLE_RE, CSR_WENABLE_RM : in std_logic;
         CSR_RDATA_RE, CSR_RDATA_RM : in std_logic_vector(31 downto 0);
 
-        PC_DEC2EXE_RD : out std_logic_vector(31 downto 0);
-        PC_BRANCH_VALUE_RD : out std_logic_vector(31 downto 0);
+        CSR_RADR_SD : out std_logic_vector(11 downto 0);
+        CSR_RDATA_SC : in std_logic_vector(31 downto 0);
 
         -- Exception 
         EXCEPTION_RI : in std_logic;
@@ -585,6 +588,9 @@ dec_i : dec
         CSR_WENABLE_RM      => CSR_WENABLE_RM,
         CSR_RDATA_RE        => CSR_RDATA_RE,
         CSR_RDATA_RM        => CSR_RDATA_RM,  
+
+        CSR_RADR_SD         => CSR_RADR_SD,
+        CSR_RDATA_SC        => CSR_RDATA_SC, 
 
         -- Exception 
         EXCEPTION_RI                => EXCEPTION_RI, 
