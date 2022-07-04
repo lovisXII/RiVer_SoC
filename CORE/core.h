@@ -1031,6 +1031,10 @@ SC_MODULE(core) {
         reg_inst.WENABLE_SW_S1(WENABLE_SW_S1);
         reg_inst.WDATA_SW_S1(WDATA_SW_S1);
 
+        reg_inst.WADR_SW_S2(WADR_SW_S2);
+        reg_inst.WENABLE_SW_S2(WENABLE_SW_S2);
+        reg_inst.WDATA_SW_S2(WDATA_SW_S2);
+
         reg_inst.READ_PC_SR(READ_PC_SR);
         reg_inst.WRITE_PC_SD(WRITE_PC_SD);
         reg_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE_SD);
@@ -1050,6 +1054,7 @@ SC_MODULE(core) {
         wbk_inst_s1.WADR_SW_S1(WADR_SW_S1);
         wbk_inst_s1.WDATA_SW_S1(WDATA_SW_S1);
         wbk_inst_s1.WENABLE_SW_S1(WENABLE_SW_S1);
+
         wbk_inst_s1.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
         wbk_inst_s1.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
 

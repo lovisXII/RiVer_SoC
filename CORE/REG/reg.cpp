@@ -43,7 +43,16 @@ void reg::writing_adresse() {
                 }
             }
         }
-
+        if (not(WADR_SW_S2.read() == 32 && WRITE_PC_ENABLE_SD.read())) {
+            if (WADR_SW_S2.read() != 0)  // si on cherche à écrire dans le registre 0 on ne fait rien
+            {
+                if (WENABLE_SW_S2.read())  // if the register written is valid
+                {
+                    REG_RR[WADR_SW_S2.read()].write(WDATA_SW_S2);  // we write the data into the register from
+                                                             // the written adress
+                }
+            }
+        }
         wait(1);
     }
 }

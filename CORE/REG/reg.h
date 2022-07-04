@@ -22,6 +22,10 @@ SC_MODULE(reg) {
     sc_in<bool>        WENABLE_SW_S1;
     sc_in<sc_uint<32>> WDATA_SW_S1;
 
+    sc_in<sc_uint<6>>  WADR_SW_S2;
+    sc_in<bool>        WENABLE_SW_S2;
+    sc_in<sc_uint<32>> WDATA_SW_S2;
+
     sc_in<sc_uint<32>> WRITE_PC_SD;
     sc_in<bool>        WRITE_PC_ENABLE_SD;
 
