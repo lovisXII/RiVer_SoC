@@ -132,7 +132,26 @@ void decod::unconcat_dec2exe() {
     SLT_RD.write((bool)dec2exe_out_var[1]);
     SLTU_RD.write((bool)dec2exe_out_var[0]);
 }
+void decod::concat_dec2if()
+{
+    sc_bv<dec2if_size> dec2if_in_var;
+    dec2if_in_var[97] = pred_success_sd;
+    dec2if_in_var[96] = b_type_inst_sd;
+    dec2if_in_var.range(95, 64) = PC_IF2DEC_RI.read();
+    dec2if_in_var.range(63, 32) = branch_adr_sd;
+    dec2if_in_var.range(31, 0) = res_pc_sd;
 
+    dec2if_in_sd.write(dec2if_in_var);
+}
+void decod::unconcat_dec2if()
+{
+    sc_bv<dec2if_size> dec2if_out_var = dec2if_out_sd.read();
+    PRED_SUCCESS_RD.write((bool)dec2if_out_var[97]);
+    BRANCH_INST_RD.write((bool)dec2if_out_var[96]);
+    BRANCH_INST_ADR_RD.write((sc_bv_base)dec2if_out_var.range(95, 64));
+    ADR_TO_BRANCH_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
+    PC_RD.write((sc_bv_base)dec2if_out_var.range(31, 0));
+}
 //---------------------------------------------INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
@@ -926,6 +945,9 @@ void decod::pc_inc() {
     sc_uint<32> offset_branch_var = offset_branch_sd.read();
     bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
     
+    branch_adr_sd = PC_IF2DEC_RI.read() + offset_branch_var;
+
+
     if (!add_offset_to_pc && !dec2if_full_sd ) {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD  = 1;
@@ -939,12 +961,18 @@ void decod::pc_inc() {
         dec2if_push_sd      = 0;
     }
 
-        DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
+    DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
+    bool pred_success_var = false;
+    if(PRED_TAKEN_RI.read() && (pc_out == PRED_ADR_RI.read()))
+    {
+        pred_success_var = true;
+        pc_out = PRED_ADR_RI.read() + 4;
+    }
 
     // Adress missaligned exception :
 
-    if (EXCEPTION_SM.read() == 0 && EXCEPTION_SM.read() != 1) {
-        dec2if_in_sd.write(pc_out);
+    if (EXCEPTION_SM.read() == 0) {
+        res_pc_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
         pc_branch_value_sd = pc_out ;
         if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
@@ -979,7 +1007,7 @@ void decod::pc_inc() {
             MTVEC_VALUE_VAR.range(1, 0)  = 0;
 
             if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
-                dec2if_in_sd = MTVEC_VALUE_VAR;
+                res_pc_sd = MTVEC_VALUE_VAR;
                 WRITE_PC_SD  = MTVEC_VALUE_VAR;
                 WRITE_PC_ENABLE_SD.write(1);
             } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
@@ -987,13 +1015,13 @@ void decod::pc_inc() {
                 // MCAUSE * 4 :
                 MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM.read().range(29, 0);
                 MCAUSE_VAR.range(1, 0)  = 0;
-                dec2if_in_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
+                res_pc_sd.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
                 WRITE_PC_ENABLE_SD.write(1);
             }
 
         } else {
-            dec2if_in_sd.write(RETURN_ADRESS_SM.read());
+            res_pc_sd.write(RETURN_ADRESS_SM.read());
             WRITE_PC_SD.write(RETURN_ADRESS_SM.read());
             WRITE_PC_ENABLE_SD.write(1);
         }
@@ -1011,8 +1039,8 @@ void decod::pc_inc() {
     else{
         
         // IF2DEC Gestion
-        
-        if (jump_sd.read() && !stall_sd) {
+        if (((jump_sd.read() && b_type_inst_sd && !pred_success_var) || (jump_sd && !b_type_inst_sd)) && !stall_sd)
+        {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
         } else if (!jump_sd && !stall_sd) {
@@ -1031,8 +1059,12 @@ void decod::pc_inc() {
             dec2exe_push_sd.write(1);
         }
     }
-}
-
+    pred_success_sd = pred_success_var;
+}/*
+void decod::gestion_fifo()
+{
+    
+}*/
 void decod::bypasses() {
     // BP_DEST_RE is the same signal than DEST_RE
     // Same for all other bp_dest_rx
@@ -1175,7 +1207,10 @@ void decod::trace(sc_trace_file* tf) {
 
     sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));  // Ifecth say to decod if it wants a pop or no
     sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
-    sc_trace(tf, PC_RD, GET_NAME(PC_RD));  // this value must also be sent to REG
+    sc_trace(tf, BRANCH_INST_RD, GET_NAME(BRANCH_INST_RD));
+    sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
+    sc_trace(tf, ADR_TO_BRANCH_RD, GET_NAME(ADR_TO_BRANCH_RD));
+    sc_trace(tf, PC_RD, GET_NAME(PC_RD));
 
     // Interface with IF2DEC :
 
@@ -1184,6 +1219,9 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, IF2DEC_EMPTY_SI, GET_NAME(IF2DEC_EMPTY_SI));
     sc_trace(tf, IF2DEC_POP_SD, GET_NAME(IF2DEC_POP_SD));  // Decod says to IFETCH if it wants a pop or no
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
+    sc_trace(tf, dec2if_out_sd, GET_NAME(dec2if_out_sd));  // this value must also be sent to REG
+    sc_trace(tf, PRED_TAKEN_RI, GET_NAME(PRED_TAKEN_RI));
+    sc_trace(tf, PRED_ADR_RI, GET_NAME(PRED_ADR_RI));
 
     // Interface with DEC2EXE
 
@@ -1221,9 +1259,7 @@ void decod::trace(sc_trace_file* tf) {
 
     // Exception :
 
-    sc_trace(tf,
-             EXCEPTION_RI,
-             GET_NAME(EXCEPTION_RI));  // this signal will be at 0 considering there is no exception in IFETCH
+    sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));  // this signal will be at 0 considering there is no exception in IFETCH
 
     sc_trace(tf, ENV_CALL_U_MODE_RD, GET_NAME(ENV_CALL_U_MODE_RD));
     sc_trace(tf, ENV_CALL_WRONG_MODE_RD, GET_NAME(ENV_CALL_WRONG_MODE_RD));
@@ -1342,15 +1378,14 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, exe_neg_op2_sd, GET_NAME(exe_neg_op2_sd));
     sc_trace(tf, exe_wb_sd, GET_NAME(exe_wb_sd));
     sc_trace(tf, mem_sign_extend_sd, GET_NAME(mem_sign_extend_sd));
+    sc_trace(tf, pred_success_sd, GET_NAME(pred_success_sd));
 
     // Exception :
 
     sc_trace(tf, ecall_i_sd, GET_NAME(ecall_i_sd));
     sc_trace(tf, ebreak_i_sd, GET_NAME(ebreak_i_sd));
     sc_trace(tf, illegal_instruction_sd, GET_NAME(illegal_instruction_sd));  // instruction doesnt exist
-    sc_trace(tf,
-             instruction_adress_missaligned_sd,
-             GET_NAME(instruction_adress_missaligned_sd));  // branch offset is misaligned
+    sc_trace(tf, instruction_adress_missaligned_sd, GET_NAME(instruction_adress_missaligned_sd));  // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd, GET_NAME(env_call_m_mode_sd));
     sc_trace(tf, env_call_s_mode_sd, GET_NAME(env_call_s_mode_sd));
     sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
@@ -1363,4 +1398,6 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, env_call_wrong_mode, GET_NAME(env_call_wrong_mode));
     sc_trace(tf, dependence_on_mult, GET_NAME(dependence_on_mult));
+    sc_trace(tf, res_pc_sd, GET_NAME(res_pc_sd));
+    sc_trace(tf, branch_adr_sd, GET_NAME(branch_adr_sd));
 }
