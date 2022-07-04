@@ -208,10 +208,14 @@ SC_MODULE(core) {
     sc_signal<bool> DEC2EXE_POP_SE_S2;
     sc_signal<bool> DEC2EXE_EMPTY_SD_S2;
 
-    sc_signal<bool>       BP_R1_VALID_RD;
-    sc_signal<bool>       BP_R2_VALID_RD;
-    sc_signal<sc_uint<6>> BP_RADR1_RD;
-    sc_signal<sc_uint<6>> BP_RADR2_RD;
+    sc_signal<bool>       BP_R1_VALID_RD_S1;
+    sc_signal<bool>       BP_R2_VALID_RD_S1;
+    sc_signal<bool>       BP_R1_VALID_RD_S2;
+    sc_signal<bool>       BP_R2_VALID_RD_S2;
+    sc_signal<sc_uint<6>> BP_RADR1_RD_S1;
+    sc_signal<sc_uint<6>> BP_RADR2_RD_S1;
+    sc_signal<sc_uint<6>> BP_RADR1_RD_S2;
+    sc_signal<sc_uint<6>> BP_RADR2_RD_S2;
     sc_signal<bool>       BLOCK_BP_RD_S1;
 
     sc_signal<bool>        CSR_WENABLE_RD_S1;
@@ -537,10 +541,14 @@ SC_MODULE(core) {
         dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE_S1);
         dec_inst.BP_MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
 
-        dec_inst.BP_R1_VALID_RD(BP_R1_VALID_RD);
-        dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);
-        dec_inst.BP_RADR1_RD(BP_RADR1_RD);
-        dec_inst.BP_RADR2_RD(BP_RADR2_RD);
+        dec_inst.BP_R1_VALID_RD_S1(BP_R1_VALID_RD_S1);
+        dec_inst.BP_R2_VALID_RD_S1(BP_R2_VALID_RD_S1);
+        dec_inst.BP_R1_VALID_RD_S2(BP_R1_VALID_RD_S2);
+        dec_inst.BP_R2_VALID_RD_S2(BP_R2_VALID_RD_S2);
+        dec_inst.BP_RADR1_RD_S1(BP_RADR1_RD_S1);
+        dec_inst.BP_RADR2_RD_S1(BP_RADR2_RD_S1);
+        dec_inst.BP_RADR1_RD_S2(BP_RADR1_RD_S2);
+        dec_inst.BP_RADR2_RD_S2(BP_RADR2_RD_S2);
         dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE_S1);
 
         dec_inst.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
@@ -566,6 +574,21 @@ SC_MODULE(core) {
         dec_inst.ENV_CALL_U_MODE_RD_S1(ENV_CALL_U_MODE_RD_S1);
         dec_inst.ENV_CALL_M_MODE_RD_S1(ENV_CALL_M_MODE_RD_S1);
         dec_inst.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
+
+
+        dec_inst.ENV_CALL_S_MODE_RD_S2(ENV_CALL_S_MODE_RD_S2);
+        dec_inst.ENV_CALL_WRONG_MODE_RD_S2(ENV_CALL_WRONG_MODE_RD_S2);
+        dec_inst.ILLEGAL_INSTRUCTION_RD_S2(ILLEGAL_INSTRUCTION_RD_S2);  // accessing stuff in wrong mode
+        dec_inst.ADRESS_MISSALIGNED_RD_S2(ADRESS_MISSALIGNED_RD_S2);    // branch offset is misaligned
+        dec_inst.ENV_CALL_U_MODE_RD_S2(ENV_CALL_U_MODE_RD_S2);
+        dec_inst.ENV_CALL_M_MODE_RD_S2(ENV_CALL_M_MODE_RD_S2);
+        dec_inst.INSTRUCTION_ACCESS_FAULT_RD_S2(INSTRUCTION_ACCESS_FAULT_RD_S2);
+        dec_inst.MRET_RD_S2(MRET_RD_S2);
+        dec_inst.EXCEPTION_RD_S2(EXCEPTION_RD_S2);
+        dec_inst.EBREAK_RD_S2(EBREAK_RD_S2);
+
+        dec_inst.BLOCK_BP_RD_S2(BLOCK_BP_RD_S2);
+
         dec_inst.MTVEC_VALUE_RC_S1(MTVEC_VALUE_RC_S1);
         dec_inst.MRET_SM_S1(MRET_SM_S1);
         dec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
@@ -575,6 +598,7 @@ SC_MODULE(core) {
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         dec_inst.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
         dec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
+        dec_inst.MULT_INST_RD_S2(MULT_INST_RD_S2);
         dec_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
         dec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         dec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
@@ -582,10 +606,10 @@ SC_MODULE(core) {
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);
 
-        exec_inst_s1.RADR1_RD_S1(BP_RADR1_RD);
-        exec_inst_s1.RADR2_RD_S1(BP_RADR2_RD);
-        exec_inst_s1.OP1_VALID_RD_S1(BP_R1_VALID_RD);
-        exec_inst_s1.OP2_VALID_RD_S1(BP_R2_VALID_RD);
+        exec_inst_s1.RADR1_RD_S1(BP_RADR1_RD_S1);
+        exec_inst_s1.RADR2_RD_S1(BP_RADR2_RD_S1);
+        exec_inst_s1.OP1_VALID_RD_S1(BP_R1_VALID_RD_S1);
+        exec_inst_s1.OP2_VALID_RD_S1(BP_R2_VALID_RD_S1);
         exec_inst_s1.MEM_DEST_RM_S1(DEST_RM_S1);
         exec_inst_s1.MEM_RES_RM_S1(MEM_RES_RM_S1);
         exec_inst_s1.OP1_RD_S1(OP1_RD_S1);
@@ -684,10 +708,10 @@ SC_MODULE(core) {
 
         // EXE_S2 port map :
 
-        exec_inst_s2.RADR1_RD_S2(BP_RADR1_RD);
-        exec_inst_s2.RADR2_RD_S2(BP_RADR2_RD);
-        exec_inst_s2.OP1_VALID_RD_S2(BP_R1_VALID_RD);
-        exec_inst_s2.OP2_VALID_RD_S2(BP_R2_VALID_RD);
+        exec_inst_s2.RADR1_RD_S2(BP_RADR1_RD_S1);
+        exec_inst_s2.RADR2_RD_S2(BP_RADR2_RD_S1);
+        exec_inst_s2.OP1_VALID_RD_S2(BP_R1_VALID_RD_S1);
+        exec_inst_s2.OP2_VALID_RD_S2(BP_R2_VALID_RD_S1);
         exec_inst_s2.MEM_DEST_RM_S2(DEST_RM_S2);
         exec_inst_s2.MEM_RES_RM_S2(MEM_RES_RM_S2);
         exec_inst_s2.OP1_RD_S2(OP1_RD_S2);

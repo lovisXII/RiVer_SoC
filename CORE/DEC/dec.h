@@ -123,6 +123,7 @@ SC_MODULE(decod) {
 
     // Multiplications signals
     sc_out<bool> MULT_INST_RD_S1;
+    sc_out<bool> MULT_INST_RD_S2;
 
     sc_in<bool> MULT_INST_RE_S1;
     sc_in<bool> MULT_INST_RM_S1;
@@ -142,12 +143,16 @@ SC_MODULE(decod) {
     sc_in<bool>        CSR_WENABLE_RM_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
 
-    sc_out<bool>       BP_R1_VALID_RD;
-    sc_out<bool>       BP_R2_VALID_RD;
-    sc_out<sc_uint<6>> BP_RADR1_RD;
-    sc_out<sc_uint<6>> BP_RADR2_RD;
+    sc_out<bool>       BP_R1_VALID_RD_S1;
+    sc_out<bool>       BP_R2_VALID_RD_S1;
+    sc_out<bool>       BP_R1_VALID_RD_S2;
+    sc_out<bool>       BP_R2_VALID_RD_S2;
+    sc_out<sc_uint<6>> BP_RADR1_RD_S1;
+    sc_out<sc_uint<6>> BP_RADR2_RD_S1;
+    sc_out<sc_uint<6>> BP_RADR1_RD_S2;
+    sc_out<sc_uint<6>> BP_RADR2_RD_S2;
     sc_out<bool>       BLOCK_BP_RD_S1;
-
+    sc_out<bool>       BLOCK_BP_RD_S2;
     // Exception/Interruption :
 
     sc_in<bool> EXCEPTION_RI;  // this signal will be at 0 considering there is no exception in IFETCH
@@ -162,6 +167,17 @@ SC_MODULE(decod) {
     sc_out<bool>      MRET_RD_S1;
     sc_out<bool>      EXCEPTION_RD_S1;
     sc_out<bool>      EBREAK_RD_S1;
+
+    sc_out<bool>      ILLEGAL_INSTRUCTION_RD_S2;  // instruction doesnt exist
+    sc_out<bool>      ADRESS_MISSALIGNED_RD_S2;   // branch offset is misaligned
+    sc_out<bool>      ENV_CALL_U_MODE_RD_S2;
+    sc_out<bool>      ENV_CALL_M_MODE_RD_S2;
+    sc_out<bool>      ENV_CALL_S_MODE_RD_S2;
+    sc_out<bool>      ENV_CALL_WRONG_MODE_RD_S2;
+    sc_out<bool>      INSTRUCTION_ACCESS_FAULT_RD_S2;
+    sc_out<bool>      MRET_RD_S2;
+    sc_out<bool>      EXCEPTION_RD_S2;
+    sc_out<bool>      EBREAK_RD_S2;
     sc_in<sc_uint<2>> CURRENT_MODE_SM_S1;
 
     // Interruption :
