@@ -131,37 +131,30 @@ void buffer<size_data, depth>::write() {
         {
             if(!read && write && !full_s)
             {
-                // cerr << sc_time_stamp() << " first case " << endl ;
                 inside_data_s[write_ptr_var]    = DIN_S ;
 
-                mask_s1 = 0b1 << depth - (write_ptr_var + 1);
+                buffer_valid_var[write_ptr_var] = 1 ;
                 write_ptr_var -- ;
             }
             else if(read && !write && !empty_s) // read only one inst
             {
-                // cerr << sc_time_stamp() << " 2 case " << endl ;
-
-                mask_s1 = 0b1 << depth - (read_ptr_var_s1 + 1);
-
+                buffer_valid_var[read_ptr_var_s1] = 0 ;
                 read_ptr_var_s1 --;
             }
             else if (read && write) // read only 1 inst and write
             {
-                // cerr << sc_time_stamp() << " 3 case " << endl ;
                 if(!empty_s)
                 {
-                    mask_s1 |= 0b1 << depth - (read_ptr_var_s1 + 1);
-
+                    buffer_valid_var[read_ptr_var_s1] = 0 ;
                     read_ptr_var_s1 --;
                 }
                 if(!full_s){
 
                     inside_data_s[write_ptr_var]    = DIN_S ;
-
-                    mask_s1 |= 0b1 << depth - (write_ptr_var + 1);
-
+                    buffer_valid_var[write_ptr_var] = 1 ;
                     write_ptr_var -- ;
                 }
+                cerr << sc_time_stamp() << " mask " << std::hex << mask_s1 << endl ;
             }
 
             if(write_ptr_var == -1){
@@ -170,9 +163,6 @@ void buffer<size_data, depth>::write() {
             if(read_ptr_var_s1 == -1){
                 read_ptr_var_s1 = depth-1 ;    
             } 
-
-            buffer_valid_var   ^= mask_s1 ;
-
             buffer_valid = buffer_valid_var ;
             
             read_ptr         = read_ptr_var_s1 ;

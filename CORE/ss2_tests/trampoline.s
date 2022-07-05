@@ -18,7 +18,7 @@ _label1 :
     nop
     nop
     nop
-    nop
+    nop 
     blt x1,x2, _branch2
     j _bad
 _label2 :
