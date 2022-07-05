@@ -15,15 +15,24 @@ void decod::dependencies(){
         if(dependencies)
         {
             reg_dependencies_sd = true ;
-            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 1;
         }
         else{
-            reg_dependencies_sd = false ;   
+            reg_dependencies_sd = false ;
         }
     }
     else{
         reg_dependencies_sd = false;
     }
+
+    // Pipeline priority gestion
+
+    if(dependencies && adr_dest_sd_s1.read() != 0 && !IF2DEC_FLUSH_SD.read())
+            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 1;
+    else if(!dependencies && !IF2DEC_FLUSH_SD.read())
+            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 0;
+    else if (IF2DEC_FLUSH_SD.read())
+        prioritary_pipeline_sd = 0 ;
+
 }
 
 // ---------------------------------------------FIFO LOADING

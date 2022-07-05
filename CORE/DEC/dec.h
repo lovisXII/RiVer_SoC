@@ -607,7 +607,8 @@ SC_MODULE(decod) {
         SC_METHOD(dependencies)
         sensitive   << adr_dest_sd_s1
                     << RADR1_SD_S2
-                    << RADR2_SD_S2;
+                    << RADR2_SD_S2
+                    << IF2DEC_FLUSH_SD;
         SC_METHOD(concat_dec2exe_s1)
         sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
                   << exe_wb_sd_s1
