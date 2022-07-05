@@ -30,6 +30,10 @@ SC_MODULE(ifetch) {
     sc_in<bool>             DEC2IF_EMPTY_SI;
     sc_out<bool>            DEC2IF_POP_SI;
 
+    // DEC Interface :
+
+    sc_in<sc_uint<2>>       PRIORITARY_PIPELINE_RD ;
+
     // if2dec interface
 
     sc_in<bool>             IF2DEC_FLUSH_SD;   // allow to flush if2dec in case of a branch
@@ -71,10 +75,10 @@ SC_MODULE(ifetch) {
     sc_signal<bool>                 if2dec_push_si_s2;
     sc_signal<bool>                 if2dec_full_si_s2;
     sc_signal<sc_bv<if2dec_size>>   if2dec_in_si_s1;
-    sc_signal<sc_bv<if2dec_size>>   instr_ri_s1;  // instruction sent to if2dec
+    sc_signal<sc_bv<if2dec_size>>   instr_si_s1;  // instruction sent to if2dec
    
     sc_signal<sc_bv<if2dec_size>>   if2dec_in_si_s2;
-    sc_signal<sc_bv<if2dec_size>>   instr_ri_s2;  // instruction sent to if2dec
+    sc_signal<sc_bv<if2dec_size>>   instr_si_s2;  // instruction sent to if2dec
 
     
     void fetch_method();
@@ -86,7 +90,7 @@ SC_MODULE(ifetch) {
         // Buffer 1 port map :
 
         buffer_inst_1.DIN_S(if2dec_in_si_s1);
-        buffer_inst_1.DOUT_R(instr_ri_s1);
+        buffer_inst_1.DOUT_R(instr_si_s1);
         buffer_inst_1.EMPTY_S(IF2DEC_EMPTY_SI_S1);
         buffer_inst_1.FULL_S(if2dec_full_si_s1);
         buffer_inst_1.PUSH_S(if2dec_push_si_s1);
@@ -98,7 +102,7 @@ SC_MODULE(ifetch) {
         // Buffer 2 port map :
 
         buffer_inst_2.DIN_S(if2dec_in_si_s2);
-        buffer_inst_2.DOUT_R(instr_ri_s2);
+        buffer_inst_2.DOUT_R(instr_si_s2);
         buffer_inst_2.EMPTY_S(IF2DEC_EMPTY_SI_S2);
         buffer_inst_2.FULL_S(if2dec_full_si_s2);
         buffer_inst_2.PUSH_S(if2dec_push_si_s2);
@@ -111,8 +115,9 @@ SC_MODULE(ifetch) {
         sensitive 
         << IC_INST_SI_S1 
         << IC_INST_SI_S2 
-        << instr_ri_s1
-        << instr_ri_s2
+        << PRIORITARY_PIPELINE_RD
+        << instr_si_s1
+        << instr_si_s2
         << DEC2IF_EMPTY_SI 
         << if2dec_full_si_s1 
         << if2dec_full_si_s2 

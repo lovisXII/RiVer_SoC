@@ -93,6 +93,7 @@ SC_MODULE(core) {
     sc_signal<sc_bv<32>> PC_DEC2IF_RD_S2;
     sc_signal<bool>      EXCEPTION_RI;
 
+    sc_signal<sc_uint<2>> PRIORITARY_PIPELINE_RD;
     // IF2DEC :
 
     sc_signal<sc_bv<32>>   INSTR_RI_S1;
@@ -446,6 +447,7 @@ SC_MODULE(core) {
         ifetch_inst.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         ifetch_inst.MRET_SM_S1(MRET_SM_S1);
         ifetch_inst.RETURN_ADRESS_SM_S1(RETURN_ADRESS_SM_S1);
+        ifetch_inst.PRIORITARY_PIPELINE_RD(PRIORITARY_PIPELINE_RD);
 
  
 
@@ -599,6 +601,7 @@ SC_MODULE(core) {
         dec_inst.MULT_INST_RE_S1(MULT_INST_RE_S1);
         dec_inst.MULT_INST_RM_S1(MULT_INST_RM_S1);
         dec_inst.PC_BRANCH_VALUE_RD_S1(PC_BRANCH_VALUE_RD_S1);
+        dec_inst.PRIORITARY_PIPELINE_RD(PRIORITARY_PIPELINE_RD);
 
         dec_inst.CLK(CLK);
         dec_inst.RESET_N(RESET);

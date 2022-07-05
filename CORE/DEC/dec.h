@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size_s1 252
+#define dec2exe_size_s1 254
 #define dec2exe_size_s2 252
 #define dec2if_size     64
 
@@ -33,6 +33,10 @@ SC_MODULE(decod) {
     sc_out<bool>       IF2DEC_POP_SD_S1;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>       IF2DEC_POP_SD_S2;
     sc_out<bool>       IF2DEC_FLUSH_SD;
+
+    // Interface with IFTECH
+    
+    sc_out<sc_uint<2>> PRIORITARY_PIPELINE_RD ; // indicate which fifo is the most recent
 
     // Interface with CSR :
 
@@ -118,7 +122,7 @@ SC_MODULE(decod) {
 
     sc_in<bool>                       DEC2EXE_POP_SE_S2;
     sc_out<bool>                      DEC2EXE_EMPTY_SD_S2;
-    sc_signal<sc_bv<dec2exe_size_s1>> dec2exe_out_sd_s2;
+    sc_signal<sc_bv<dec2exe_size_s2>> dec2exe_out_sd_s2;
 
     // Multiplications signals
     sc_out<bool> MULT_INST_RD_S1;
@@ -543,6 +547,7 @@ SC_MODULE(decod) {
     // Super-scalar parameters :
 
     sc_signal<bool> reg_dependencies_sd ; 
+    sc_signal<sc_uint<2>> prioritary_pipeline_sd ; // indicate which fifo is the most recent
     sc_signal<bool> flushing_inst_s2 ;
 
     void concat_dec2exe_s1();
@@ -600,9 +605,9 @@ SC_MODULE(decod) {
         dec2exe_s2.RESET_N(RESET_N);
 
         SC_METHOD(dependencies)
-        sensitive << adr_dest_sd_s1
-                  << RADR1_SD_S2
-                  << RADR2_SD_S2 ;
+        sensitive   << adr_dest_sd_s1
+                    << RADR1_SD_S2
+                    << RADR2_SD_S2;
         SC_METHOD(concat_dec2exe_s1)
         sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
                   << exe_wb_sd_s1
@@ -617,7 +622,8 @@ SC_MODULE(decod) {
                   << illegal_instruction_sd_s1 << instruction_adress_missaligned_sd_s1 << env_call_m_mode_sd_s1
                   << block_bp_sd_s1 << env_call_s_mode_sd_s1 << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1
                   << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1
-                  << mulhu_i_sd_s1;
+                  << mulhu_i_sd_s1
+                  << prioritary_pipeline_sd;
 
 
         SC_METHOD(concat_dec2exe_s2)
@@ -634,7 +640,7 @@ SC_MODULE(decod) {
                   << illegal_instruction_sd_s2 << instruction_adress_missaligned_sd_s2 << env_call_m_mode_sd_s2
                   << block_bp_sd_s2 << env_call_s_mode_sd_s2 << env_call_u_mode_sd_s2 << env_call_wrong_mode_s2
                   << mret_i_sd_s2 << instruction_access_fault_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2
-                  << mulhu_i_sd_s2;
+                  << mulhu_i_sd_s2 << reg_dependencies_sd;
         SC_METHOD(unconcat_dec2exe_s1)
         sensitive << dec2exe_out_sd_s1;
 
@@ -773,7 +779,8 @@ SC_MODULE(decod) {
                   << MCAUSE_WDATA_SM_S1
                   << stall_sd_s1
                   << add_offset_to_pc_s1
-                  << add_offset_to_pc_s2;
+                  << add_offset_to_pc_s2
+                  << reg_dependencies_sd;
 
         SC_METHOD(bypasses);
         sensitive << RDATA1_SR_S1 << RDATA2_SR_S1 << BP_DEST_RE << BP_EXE_RES_RE

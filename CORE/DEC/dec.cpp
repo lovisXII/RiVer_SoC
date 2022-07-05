@@ -7,18 +7,22 @@
 void decod::dependencies(){
     sc_uint<6> radr1_sd_s2 = RADR1_SD_S2 ; 
     sc_uint<6> radr2_sd_s2 = RADR2_SD_S2 ;
-
     // Need to add the case where there is store dependencies
     // addi x2,x0,10
     // sw x2, 0(x2)
+    bool dependencies = (adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2);
     if(adr_dest_sd_s1.read() != 0){
-        if(adr_dest_sd_s1 == radr1_sd_s2 || adr_dest_sd_s1 == radr2_sd_s2 )
+        if(dependencies)
         {
             reg_dependencies_sd = true ;
+            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 1;
         }
         else{
-            reg_dependencies_sd = false ;
+            reg_dependencies_sd = false ;   
         }
+    }
+    else{
+        reg_dependencies_sd = false;
     }
 }
 
@@ -27,7 +31,9 @@ void decod::dependencies(){
 
 void decod::concat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_in_var;
-    if (EXCEPTION_SM_S1.read() == 0) {
+    if (!EXCEPTION_SM_S1.read()) {
+
+        dec2exe_in_var.range(252,253) = prioritary_pipeline_sd.read() ;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s1;  
         dec2exe_in_var[219] = mul_i_sd_s1 || mulh_i_sd_s1 || mulhsu_i_sd_s1 || mulhu_i_sd_s1;  
         dec2exe_in_var[218] = ebreak_i_sd_s1;
@@ -69,6 +75,7 @@ void decod::concat_dec2exe_s1() {
         dec2exe_in_var[1]            = slt_i_sd_s1.read() | slti_i_sd_s1.read();
         dec2exe_in_var[0]            = sltu_i_sd_s1.read() | sltiu_i_sd_s1.read();
     } else {
+        dec2exe_in_var[252]            = 0 ;
         dec2exe_in_var.range(251,220)  = 0;
         dec2exe_in_var[219]            = 0;
         dec2exe_in_var[218]            = 0; 
@@ -111,7 +118,7 @@ void decod::concat_dec2exe_s1() {
 
 void decod::concat_dec2exe_s2() {
     sc_bv<dec2exe_size_s2> dec2exe_in_var;
-    if (EXCEPTION_SM_S1.read() == 0) {
+    if (!EXCEPTION_SM_S1.read() && !reg_dependencies_sd.read()) {
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
         dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
         dec2exe_in_var[218] = ebreak_i_sd_s2;
@@ -169,7 +176,7 @@ void decod::concat_dec2exe_s2() {
         dec2exe_in_var.range(207, 176) = 0;
         dec2exe_in_var[175]            = 0;
         dec2exe_in_var.range(174, 163) = 0;
-        dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S2.read();
+        reg_dependencies_sd.read() ? dec2exe_in_var.range(162, 131) = 0 : dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI_S2.read();
         dec2exe_in_var[130]            = 0;
         dec2exe_in_var[129]            = 0;
         dec2exe_in_var.range(128, 123) = 0;
@@ -196,6 +203,7 @@ void decod::concat_dec2exe_s2() {
 void decod::unconcat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_out_var = dec2exe_out_sd_s1.read();
 
+    PRIORITARY_PIPELINE_RD = (sc_bv_base) dec2exe_out_var.range(252,253) ;
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD_S1.write((bool)dec2exe_out_var[219]);
     EBREAK_RD_S1.write((bool)dec2exe_out_var[218]);
@@ -432,32 +440,54 @@ void decod::pc_inc() {
     else{
         
         // IF2DEC Gestion
+        if(!reg_dependencies_sd.read()){
+            if (jump_sd_s1.read() && !stall_sd_s1 ) //jump_s1  
+            {
+                IF2DEC_POP_SD_S1 = 1;
+                IF2DEC_POP_SD_S2= 1;
+                IF2DEC_FLUSH_SD= 1;
+            } 
+            else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
+            {
+                IF2DEC_POP_SD_S1= 1;
+                IF2DEC_POP_SD_S2= 1;
+                IF2DEC_FLUSH_SD= 0;
+            } 
+            else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s1) //jump s2, s2 can't jump if s1 jump
+            {
+                IF2DEC_POP_SD_S1    = 1;
+                IF2DEC_POP_SD_S2    = 1;
+                IF2DEC_FLUSH_SD     = 1;
 
-        if (jump_sd_s1.read() && !stall_sd_s1) //jump_s1  
-        {
-            IF2DEC_POP_SD_S1 = 1;
-            IF2DEC_POP_SD_S2= 1;
-            IF2DEC_FLUSH_SD= 1;
-        } 
-        else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
-        {
-            IF2DEC_POP_SD_S1= 1;
-            IF2DEC_POP_SD_S2= 1;
-            IF2DEC_FLUSH_SD= 0;
-        } 
-        else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s1) //jump s2, s2 can't jump if s1 jump
-        {
-            IF2DEC_POP_SD_S1    = 1;
-            IF2DEC_POP_SD_S2    = 1;
-            IF2DEC_FLUSH_SD     = 1;
+            }
+            else //any case of stall is the same 
+            {
+                IF2DEC_POP_SD_S1= 0;
+                IF2DEC_POP_SD_S2= 0;
+                IF2DEC_FLUSH_SD= 0;
+            }
+        }
+        else{
+            if (jump_sd_s1.read() && !stall_sd_s1 ) //jump_s1  
+            {
+                IF2DEC_POP_SD_S1 = 1;
+                IF2DEC_POP_SD_S2= 1;
+                IF2DEC_FLUSH_SD= 1;
+            } 
+            else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
+            {
+                IF2DEC_POP_SD_S1= 1;
+                IF2DEC_POP_SD_S2= 0;
+                IF2DEC_FLUSH_SD= 0;
+            } 
+            else //any case of stall is the same 
+            {
+                IF2DEC_POP_SD_S1= 0;
+                IF2DEC_POP_SD_S2= 0;
+                IF2DEC_FLUSH_SD= 0;
+            }
+        }
 
-        }
-        else //any case of stall is the same 
-        {
-            IF2DEC_POP_SD_S1= 0;
-            IF2DEC_POP_SD_S2= 0;
-            IF2DEC_FLUSH_SD= 0;
-        }
 
         // DEC2EXE_S1 Gestion
         
@@ -633,6 +663,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
     sc_trace(tf, IF2DEC_EMPTY_SI_S2, GET_NAME(IF2DEC_EMPTY_SI_S2));
     sc_trace(tf, IF2DEC_POP_SD_S1, GET_NAME(IF2DEC_POP_SD_S1));  // Decod says to IFETCH if it wants a pop or no
+    sc_trace(tf, IF2DEC_POP_SD_S2, GET_NAME(IF2DEC_POP_SD_S2));
     sc_trace(tf, IF2DEC_FLUSH_SD, GET_NAME(IF2DEC_FLUSH_SD));
     // Interface with DEC2EXE
 
@@ -703,6 +734,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, dec2if_out_sd, GET_NAME(dec2if_out_sd));
     sc_trace(tf, dec2exe_in_sd_s1, GET_NAME(dec2exe_in_sd_s1));
     sc_trace(tf, dec2exe_push_sd_s1, GET_NAME(dec2exe_push_sd_s1));
+    sc_trace(tf, dec2exe_push_sd_s2, GET_NAME(dec2exe_push_sd_s2));
     sc_trace(tf, dec2exe_full_sd_s1, GET_NAME(dec2exe_full_sd_s1));
     sc_trace(tf, r_type_inst_sd_s1, GET_NAME(r_type_inst_sd_s1));        // R type format
     sc_trace(tf, i_type_inst_sd_s1, GET_NAME(i_type_inst_sd_s1));        // I type format
@@ -949,6 +981,7 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
 
     sc_trace(tf,MEM_LOAD_RD_S2, GET_NAME(MEM_LOAD_RD_S2));
     sc_trace(tf,MEM_STORE_RD_S2, GET_NAME(MEM_STORE_RD_S2));
+    sc_trace(tf,PRIORITARY_PIPELINE_RD, GET_NAME(PRIORITARY_PIPELINE_RD));
 
     sc_trace(tf,MEM_SIGN_EXTEND_RD_S2, GET_NAME(MEM_SIGN_EXTEND_RD_S2));
     sc_trace(tf,MEM_SIZE_RD_S2, GET_NAME(MEM_SIZE_RD_S2));
@@ -958,4 +991,5 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf,SLTU_RD_S2, GET_NAME(SLTU_RD_S2));
     sc_trace(tf,add_offset_to_pc_s1, GET_NAME(add_offset_to_pc_s1));
     sc_trace(tf,add_offset_to_pc_s2, GET_NAME(add_offset_to_pc_s2));
+    sc_trace(tf,prioritary_pipeline_sd, GET_NAME(prioritary_pipeline_sd));
 }
