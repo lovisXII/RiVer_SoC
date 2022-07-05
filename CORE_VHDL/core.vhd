@@ -353,8 +353,9 @@ component mem
         -- Wbk interface
         MEM_RES_RM : out std_logic_vector(31 downto 0);
         MEM_DEST_RM : out std_logic_vector(5 downto 0);
-        MEM_SIZE_RM : out std_logic_vector(1 downto 0);
-        WB_RM, SIGN_EXTEND_RM, LOAD_RM : out std_logic;
+        WB_RM : out std_logic;
+        CSR_RDATA_RM : out std_logic_vector(31 downto 0);
+        CSR_WENABLE_RM : out std_logic;
 
         -- CSR 
         CSR_WENABLE_RE  : in std_logic;
@@ -365,9 +366,9 @@ component mem
         CSR_WDATA_SM    : out std_logic_vector(31 downto 0);
         CSR_ENABLE_SM   : out std_logic; 
 
-        MSTATUS_WDATA_RM    : out std_logic_vector(31 downto 0);
-        MIP_WDATA_RM        : out std_logic_vector(31 downto 0);
-        MEPC_WDATA_RM       : out std_logic_vector(31 downto 0);
+        MSTATUS_WDATA_SM    : out std_logic_vector(31 downto 0);
+        MIP_WDATA_SM        : out std_logic_vector(31 downto 0);
+        MEPC_WDATA_SM       : out std_logic_vector(31 downto 0);
         MCAUSE_WDATA_SM     : out std_logic_vector(31 downto 0);
         MTVAL_WDATA_SM      : out std_logic_vector(31 downto 0);
 
@@ -385,7 +386,7 @@ component mem
         ENV_CALL_U_MODE_RE, ENV_CALL_S_MODE_RE, ENV_CALL_M_MODE_RE : in std_logic;
         ENV_CALL_WRONG_MODE_RE : in std_logic;
         MRET_RE : in std_logic;
-
+        EBREAK_RE : in std_logic; 
         PC_BRANCH_VALUE_RE : in std_logic_vector(31 downto 0);
 
         BUS_ERROR_SX : in std_logic;
@@ -405,10 +406,7 @@ component wbk
         -- Mem 
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         MEM_DEST_RM : in std_logic_vector(5 downto 0);
-        MEM_SIZE_RM : in std_logic_vector(1 downto 0);
         WB_RM : in std_logic;
-        SIGN_EXTEND_RM : in std_logic;
-        LOAD_RM : in std_logic;
 
         PC_MEM2WBK_RM   : in std_logic_vector(31 downto 0);
         CSR_RDATA_RM    : in std_logic_vector(31 downto 0);
@@ -741,10 +739,10 @@ mem_i : mem
         -- Wbk interface
         MEM_RES_RM          => MEM_RES_RM,
         MEM_DEST_RM         => MEM_DEST_RM,
-        MEM_SIZE_RM         => MEM_SIZE_RM,
         WB_RM               => WB_RM,
-        SIGN_EXTEND_RM      => SIGN_EXTEND_RM, 
-        LOAD_RM             => LOAD_RM,
+        CSR_RDATA_RM        => CSR_RDATA_RM,
+        CSR_WENABLE_RM      => CSR_WENABLE_RM,
+
 
         -- CSR 
         CSR_WENABLE_RE      => CSR_WENABLE_RE,
@@ -755,9 +753,9 @@ mem_i : mem
         CSR_WDATA_SM        => CSR_WDATA_SM,   
         CSR_ENABLE_SM       => CSR_ENABLE_SM, 
 
-        MSTATUS_WDATA_RM    => MSTATUS_WDATA_RM,    
-        MIP_WDATA_RM        => MIP_WDATA_RM,    
-        MEPC_WDATA_RM       => MEPC_WDATA_RM,    
+        MSTATUS_WDATA_SM    => MSTATUS_WDATA_RM,    
+        MIP_WDATA_SM        => MIP_WDATA_RM,    
+        MEPC_WDATA_SM       => MEPC_WDATA_RM,    
         MCAUSE_WDATA_SM     => MCAUSE_WDATA_SM,    
         MTVAL_WDATA_SM      => MTVAL_WDATA_SM,    
 
@@ -781,7 +779,7 @@ mem_i : mem
         ENV_CALL_M_MODE_RE                  => ENV_CALL_M_MODE_RE,
         ENV_CALL_WRONG_MODE_RE              => ENV_CALL_WRONG_MODE_RE,
         MRET_RE                             => MRET_RE,
-
+        EBREAK_RE                           => EBREAK_RE,
         PC_BRANCH_VALUE_RE                  => PC_BRANCH_VALUE_RE,
 
         BUS_ERROR_SX                        => BUS_ERROR_SX, 
@@ -801,10 +799,7 @@ wbk_i : wbk
         -- Mem 
         MEM_RES_RM          => MEM_RES_RM,
         MEM_DEST_RM         => MEM_DEST_RM,
-        MEM_SIZE_RM         => MEM_SIZE_RM,
         WB_RM               => WB_RM,
-        SIGN_EXTEND_RM      => SIGN_EXTEND_RM,
-        LOAD_RM             => LOAD_RM, 
 
         PC_MEM2WBK_RM       => PC_MEM2WBK_RM,
         CSR_RDATA_RM        => CSR_RDATA_RM,

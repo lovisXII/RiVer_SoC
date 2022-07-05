@@ -10,10 +10,7 @@ entity wbk is
         -- Mem 
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         MEM_DEST_RM : in std_logic_vector(5 downto 0);
-        MEM_SIZE_RM : in std_logic_vector(1 downto 0);
         WB_RM : in std_logic;
-        SIGN_EXTEND_RM : in std_logic;
-        LOAD_RM : in std_logic;
 
         PC_MEM2WBK_RM   : in std_logic_vector(31 downto 0);
         CSR_RDATA_RM    : in std_logic_vector(31 downto 0);
