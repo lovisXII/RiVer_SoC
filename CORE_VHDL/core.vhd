@@ -278,6 +278,7 @@ component exec
         EXE2MEM_EMPTY_SE : out std_logic;
         DEC2EXE_POP_SE : out std_logic;
 
+        PC_DEC2EXE_RD : in std_logic_vector(31 downto 0);
         PC_EXE2MEM_RE : out std_logic_vector(31 downto 0);
 
         -- bypasses 
@@ -288,7 +289,7 @@ component exec
         CSR_RDATA_RM : in std_logic_vector(31 downto 0);
 
         -- CSR 
-        CSR_ENABLE_RD : in std_logic;
+        CSR_WENABLE_RD : in std_logic;
         CSR_WADR_RD   : in std_logic_vector(11 downto 0);
         CSR_RDATA_RD  : in std_logic_vector(31 downto 0);
 
@@ -649,6 +650,7 @@ exec_i : exec
         EXE2MEM_EMPTY_SE    => EXE2MEM_EMPTY_SE,
         DEC2EXE_POP_SE      => DEC2EXE_POP_SE,
 
+        PC_DEC2EXE_RD       => PC_DEC2EXE_RD,
         PC_EXE2MEM_RE       => PC_EXE2MEM_RE,
 
         BLOCK_BP_RD         => BLOCK_BP_RD,
@@ -659,7 +661,7 @@ exec_i : exec
         CSR_RDATA_RM        => CSR_RDATA_RM,
 
         -- CSR 
-        CSR_ENABLE_RD       => CSR_ENABLE_RD,
+        CSR_WENABLE_RD       => CSR_ENABLE_RD,
         CSR_WADR_RD         => CSR_WADR_RD, 
         CSR_RDATA_RD        => CSR_RDATA_RD, 
 

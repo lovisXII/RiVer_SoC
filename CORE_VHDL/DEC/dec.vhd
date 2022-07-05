@@ -2,6 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library work; 
+use work.util.all; 
+
 entity dec is 
     port(
         -- global interface
@@ -89,7 +92,6 @@ end dec;
 architecture archi of dec is 
 
 constant inc_value : std_logic_vector(31 downto 0) := x"00000004";
-constant kernel_adr : std_logic_vector(31 downto 0) := x"F0000000";
 
 signal reset_sync_sd : std_logic := '0';
 signal resetting_sd : std_logic := '0' ; 
