@@ -169,8 +169,8 @@ void buffer<size_data, depth>::write() {
             write_ptr           = write_ptr_var;
         }
         else{
-            read_ptr = 0 ;
-            write_ptr = 0 ;
+            read_ptr = 1 ;
+            write_ptr = 1 ;
             buffer_valid = 0;
         }
 
