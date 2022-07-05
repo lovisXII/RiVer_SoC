@@ -119,7 +119,8 @@ signal exception_se : std_logic;
 -- exe output readable 
 signal exe_fifo_res : std_logic_vector(31 downto 0); 
 signal exe_fifo_dest : std_logic_vector(5 downto 0);
-signal exe_fifo_mem_load : std_logic;
+signal exe_fifo_mem_store, exe_fifo_mem_load : std_logic;
+signal exe_fifo_wb : std_logic; 
 
 component alu
     port(
@@ -278,11 +279,15 @@ access_fault <= '1' when alu_res > kernel_adr and CURRENT_MODE_SM = "00" else '0
 load_access_fault_se <= MEM_LOAD_RD and access_fault; 
 store_access_fault_se <= MEM_STORE_RD and access_fault; 
 
+exception_se <= EXCEPTION_RD or load_adress_misaligned_se or load_access_fault_se or store_access_fault_se or store_adress_misaligned_se;
+
 -- Output
 RES_RE <= exe_fifo_res;
 DEST_RE <= exe_fifo_dest; 
 EXE2MEM_EMPTY_SE <= exe2mem_empty;
-MEM_LOAD_RE <= exe_fifo_mem_load; 
+MEM_LOAD_RE <= exe_fifo_mem_load when exception_se = '0' else '0'; 
+MEM_STORE_RE <= exe_fifo_mem_store when exception_se = '0' else '0'; 
+WB_RE <= exe_fifo_wb when exception_se = '0' else '0'; 
 
 -- fifo 
 exe2mem_data(31 downto 0) <= exe_res;
@@ -324,9 +329,9 @@ exe_fifo_res <= exe2mem_dout(31 downto 0);
 MEM_DATA_RE <= exe2mem_dout(63 downto 32); 
 exe_fifo_dest <= exe2mem_dout(69 downto 64);  
 MEM_SIZE_RE <= exe2mem_dout(71 downto 70); 
-WB_RE <= exe2mem_dout(72);   
+exe_fifo_wb <= exe2mem_dout(72);   
 exe_fifo_mem_load <= exe2mem_dout(73);   
-MEM_STORE_RE <= exe2mem_dout(74);   
+exe_fifo_mem_store <= exe2mem_dout(74);   
 MEM_SIGN_EXTEND_RE <= exe2mem_dout(75);   
 PC_EXE2MEM_RE <= exe2mem_dout(107 downto 76);
 CSR_WENABLE_RE <= exe2mem_dout(108);
