@@ -38,6 +38,7 @@ DEST_SW <= MEM_DEST_RM;
 WB_SW <= '1' when (WB_RM = '1' and MEM2WBK_EMPTY_SM = '0') else '0';
 
 MEM2WBK_POP_SW <= not MEM2WBK_EMPTY_SM; 
-DATA_SW <= MEM_RES_RM; 
+DATA_SW <=  CSR_RDATA_RM when CSR_WENABLE_RM = '1' else 
+            MEM_RES_RM; 
 
 end archi;
