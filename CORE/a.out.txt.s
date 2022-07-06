@@ -9,10 +9,18 @@ Disassembly of section seg_text:
    10058:	00000013          	nop
    1005c:	00a00093          	li	ra,10
    10060:	00100133          	add	sp,zero,ra
-   10064:	00119463          	bne	gp,ra,1006c <_start+0x18>
-   10068:	f9def06f          	j	4 <_good>
-   1006c:	f95ef06f          	j	0 <_bad>
-   10070:	00000013          	nop
+   10064:	00118463          	beq	gp,ra,1006c <_label1>
+   10068:	f99ef06f          	j	0 <_bad>
+
+0001006c <_label1>:
+   1006c:	01400613          	li	a2,20
+   10070:	03200693          	li	a3,50
+   10074:	00d61463          	bne	a2,a3,1007c <_label1+0x10>
+   10078:	f89ef06f          	j	0 <_bad>
+   1007c:	0040006f          	j	10080 <_label2>
+
+00010080 <_label2>:
+   10080:	f85ef06f          	j	4 <_good>
 
 Disassembly of section .riscv.attributes:
 
