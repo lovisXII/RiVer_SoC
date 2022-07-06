@@ -12,7 +12,6 @@ _start :
     nop
     addi x1,x0,10
     addi x2,x0,10
-    addi x2,x0,0
     beq x1,x2, _good
     j _bad
     j _bad
