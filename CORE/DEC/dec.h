@@ -131,15 +131,15 @@ SC_MODULE(decod) {
     sc_in<bool> MULT_INST_RE_S1;
     sc_in<bool> MULT_INST_RM_S1;
 
-    // Bypasses
+    // Bypasses with S1
 
-    sc_in<sc_uint<6>>  BP_DEST_RE;
-    sc_in<sc_uint<32>> BP_EXE_RES_RE;
-    sc_in<bool>        BP_MEM_LOAD_RE;
-    sc_in<bool>        BP_EXE2MEM_EMPTY_SE;
+    sc_in<sc_uint<6>>  DEST_RE_S1;
+    sc_in<sc_uint<32>> EXE_RES_RE_S1;
+    sc_in<bool>        MEM_LOAD_RE_S1;
+    sc_in<bool>        EXE2MEM_EMPTY_SE_S1;
     sc_in<bool>        BP_MEM2WBK_EMPTY_SM_S1;
-    sc_in<sc_uint<6>>  BP_DEST_RM;
-    sc_in<sc_uint<32>> BP_MEM_RES_RM;
+    sc_in<sc_uint<6>>  DEST_RM_S1;
+    sc_in<sc_uint<32>> MEM_RES_RM_S1;
 
     sc_in<bool>        CSR_WENABLE_RE_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RE_S1;
@@ -156,6 +156,25 @@ SC_MODULE(decod) {
     sc_out<sc_uint<6>> BP_RADR2_RD_S2;
     sc_out<bool>       BLOCK_BP_RD_S1;
     sc_out<bool>       BLOCK_BP_RD_S2;
+
+
+    // Bypasses with S2
+
+    sc_in<sc_uint<6>>   DEST_RE_S2 ;
+    sc_in<bool>         MEM_LOAD_RE_S2;
+    sc_in<bool>         EXE2MEM_EMPTY_SE_S2;
+    sc_in<bool>         CSR_WENABLE_RE_S2;
+    sc_in<sc_uint<32>>  CSR_RDATA_RE_S2;
+
+    sc_in<sc_uint<6>>   DEST_RM_S2;
+    sc_in<bool>         CSR_WENABLE_RM_S2;
+    sc_in<sc_uint<32>>  CSR_RDATA_RM_S2;
+    sc_in<bool>         BP_MEM2WBK_EMPTY_SM_S2;
+    sc_in<sc_uint<32>>  EXE_RES_RE_S2;
+    sc_in<sc_uint<32>>  MEM_RES_RM_S2;
+
+
+
     // Exception/Interruption :
 
     sc_in<bool> EXCEPTION_RI;  // this signal will be at 0 considering there is no exception in IFETCH
@@ -655,7 +674,7 @@ SC_MODULE(decod) {
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1
                   << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE_S1
-                  << BP_EXE2MEM_EMPTY_SE << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
+                  << EXE2MEM_EMPTY_SE_S1 << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
                   << csr_in_progress_s1;
 
         SC_METHOD(decoding_instruction_type_s1)
@@ -784,13 +803,35 @@ SC_MODULE(decod) {
                   << reg_dependencies_sd;
 
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR_S1 << RDATA2_SR_S1 << BP_DEST_RE << BP_EXE_RES_RE
+        sensitive   << RDATA1_SR_S1 
+                    << RDATA2_SR_S1 
+                    << DEST_RE_S1 
+                    << EXE_RES_RE_S1
+                    << DEST_RM_S1 
+                    << MEM_RES_RM_S1 
+                    << RADR1_SD_S1 
+                    << EXE_DEST_RD_S1
+                    << RADR2_SD_S1 
+                    << EXE2MEM_EMPTY_SE_S1 
+                    << MULT_INST_RE_S1 
+                    << MULT_INST_RM_S1
+                    << DEC2EXE_EMPTY_SD_S1 
+                    << MEM_LOAD_RE_S1 
+                    << BP_MEM2WBK_EMPTY_SM_S1
 
-                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD_S1 << EXE_DEST_RD_S1
-
-                  << RADR2_SD_S1 << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE_S1 << MULT_INST_RM_S1
-
-                  << DEC2EXE_EMPTY_SD_S1 << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM_S1;
+                    << RDATA1_SR_S2 
+                    << RDATA2_SR_S2 
+                    << DEST_RE_S2 
+                    << EXE_RES_RE_S2
+                    << DEST_RM_S2 
+                    << MEM_RES_RM_S1 
+                    << RADR1_SD_S2 
+                    << EXE_DEST_RD_S2
+                    << RADR2_SD_S2 
+                    << EXE2MEM_EMPTY_SE_S2 
+                    << DEC2EXE_EMPTY_SD_S2 
+                    << MEM_LOAD_RE_S2 
+                    << BP_MEM2WBK_EMPTY_SM_S2;
         reset_signal_is(RESET_N, false);
     }
 };

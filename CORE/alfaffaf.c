@@ -1,40 +1,15 @@
-    sc_trace(tf,PC_BRANCH_VALUE_RD_S2, GET_NAME(PC_BRANCH_VALUE_RD_S2));
-    sc_trace(tf,MULT_INST_RD_S2, GET_NAME(MULT_INST_RD_S2));
-    sc_trace(tf,EBREAK_RD_S2, GET_NAME(EBREAK_RD_S2));
-    sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RD_S2, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S2));
-    sc_trace(tf,MRET_RD_S2, GET_NAME(MRET_RD_S2));
-    sc_trace(tf,BLOCK_BP_RD_S2, GET_NAME(BLOCK_BP_RD_S2));
-    sc_trace(tf,EXCEPTION_RD_S2, GET_NAME(EXCEPTION_RD_S2));
-    sc_trace(tf,ENV_CALL_WRONG_MODE_RD_S2, GET_NAME(ENV_CALL_WRONG_MODE_RD_S2));
-    sc_trace(tf,ENV_CALL_U_MODE_RD_S2, GET_NAME(ENV_CALL_U_MODE_RD_S2));
-    sc_trace(tf,ILLEGAL_INSTRUCTION_RD_S2, GET_NAME(ILLEGAL_INSTRUCTION_RD_S2));
-    sc_trace(tf,ADRESS_MISSALIGNED_RD_S2, GET_NAME(ADRESS_MISSALIGNED_RD_S2));
-    sc_trace(tf,ENV_CALL_M_MODE_RD_S2, GET_NAME(ENV_CALL_M_MODE_RD_S2));
-    sc_trace(tf,ENV_CALL_S_MODE_RD_S2, GET_NAME(ENV_CALL_S_MODE_RD_S2));
-    sc_trace(tf,CSR_RDATA_RD_S2, GET_NAME(CSR_RDATA_RD_S2));
-    sc_trace(tf,CSR_WENABLE_RD_S2, GET_NAME(CSR_WENABLE_RD_S2));
-    sc_trace(tf,CSR_WADR_RD_S2, GET_NAME(CSR_WADR_RD_S2));
-    sc_trace(tf,PC_DEC2EXE_RD_S2, GET_NAME(PC_DEC2EXE_RD_S2));
-    sc_trace(tf,BP_R1_VALID_RD_S2, GET_NAME(BP_R1_VALID_RD_S2));
-    sc_trace(tf,BP_R2_VALID_RD_S2, GET_NAME(BP_R2_VALID_RD_S2));
-
-    sc_trace(tf,BP_RADR1_RD_S2, GET_NAME(BP_RADR1_RD_S2));
-    sc_trace(tf,BP_RADR2_RD_S2, GET_NAME(BP_RADR2_RD_S2));
-
-    sc_trace(tf,EXE_CMD_RD_S2, GET_NAME(EXE_CMD_RD_S2));
-    sc_trace(tf,OP1_RD_S2, GET_NAME(OP1_RD_S2));
-    sc_trace(tf,OP2_RD_S2, GET_NAME(OP2_RD_S2));
-    sc_trace(tf,NEG_OP2_RD_S2, GET_NAME(NEG_OP2_RD_S2));
-    sc_trace(tf,WB_RD_S2, GET_NAME(WB_RD_S2));
-
-    sc_trace(tf,MEM_DATA_RD_S2, GET_NAME(MEM_DATA_RD_S2));
-
-    sc_trace(tf,MEM_LOAD_RD_S2, GET_NAME(MEM_LOAD_RD_S2));
-    sc_trace(tf,MEM_STORE_RD_S2, GET_NAME(MEM_STORE_RD_S2));
-
-    sc_trace(tf,MEM_SIGN_EXTEND_RD_S2, GET_NAME(MEM_SIGN_EXTEND_RD_S2));
-    sc_trace(tf,MEM_SIZE_RD_S2, GET_NAME(MEM_SIZE_RD_S2));
-    sc_trace(tf,SELECT_TYPE_OPERATIONS_RD_S2, GET_NAME(SELECT_TYPE_OPERATIONS_RD_S2));
-    sc_trace(tf,EXE_DEST_RD_S2, GET_NAME(EXE_DEST_RD_S2));
-    sc_trace(tf,SLT_RD_S2, GET_NAME(SLT_RD_S2));
-    sc_trace(tf,SLTU_RD_S2, GET_NAME(SLTU_RD_S2));
+<< RDATA1_SR_S2 
+                    << RDATA2_SR_S2 
+                    << DEST_RE_S2 
+                    << EXE_RES_RE_S1
+                    << DEST_RM_S2 
+                    << MEM_RES_RM_S1 
+                    << RADR1_SD_S2 
+                    << EXE_DEST_RD_S2
+                    << RADR2_SD_S2 
+                    << EXE2MEM_EMPTY_SE_S2 
+                    << MULT_INST_RE_S2 
+                    << MULT_INST_RM_S2
+                    << DEC2EXE_EMPTY_SD_S2 
+                    << MEM_LOAD_RE_S2 
+                    << BP_MEM2WBK_EMPTY_SM_S2

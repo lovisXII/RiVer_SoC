@@ -512,49 +512,86 @@ void decod::pc_inc() {
 
 void decod::bypasses() {
 
-    r1_valid_sd_s2 = 1 ;
     r2_valid_sd_s2 = 1 ;
 
-    if (RADR1_SD_S1.read() == 0) {  // ignore r0
+    // Bypass on rs1_s1 :
+
+    if (RADR1_SD_S1.read() == 0) //case rs1 = 0, no bypass needed 
+    {  
         rdata1_sd_s1.write(RDATA1_SR_S1.read());
         r1_valid_sd_s1= true;
     } 
-    else if (RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read()) 
-    {  // dont bypass if instr is currently in exe
+    else if (RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read() 
+    || RADR1_SD_S1.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read()) 
+    {  
         r1_valid_sd_s1= false;
     } 
-    else if (RADR1_SD_S1.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
+    else if (RADR1_SD_S1.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1
+    || RADR1_SD_S1.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2) 
     {  // dont bypass if load instr is currently in mem
         r1_valid_sd_s1= false;
     } 
-    else if(RADR1_SD_S1.read() == BP_DEST_RE.read() && MULT_INST_RE_S1 && !BP_EXE2MEM_EMPTY_SE.read())
+    else if(RADR1_SD_S1.read() == DEST_RE_S1.read() && MULT_INST_RE_S1 && !EXE2MEM_EMPTY_SE_S1.read())
     { // dont bypass if mul instruction didnt finish
         r1_valid_sd_s1= false;
     } 
-    else if(RADR1_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read())
+    else if(RADR1_SD_S1.read() == DEST_RM_S1.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read())
     { // dont bypass if mul instruction didnt finish
         r1_valid_sd_s1= false;
     } 
-    else if (RADR1_SD_S1.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) 
-    {  // bypass E->D
+
+    // bypass E1->D
+
+    else if (RADR1_SD_S1.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) 
+    {  
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata1_sd_s1.write(CSR_RDATA_RE_S1.read());
         else
-            rdata1_sd_s1.write(BP_EXE_RES_RE.read());
-    } 
-    else if (RADR1_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) 
-    {  // bypass M->D
+            rdata1_sd_s1.write(EXE_RES_RE_S1.read());
+    }  
+
+    // bypass E2->D
+
+    else if (RADR1_SD_S1.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2) 
+    {  
+        r1_valid_sd_s1= true;
+        if (CSR_WENABLE_RE_S2.read())
+            rdata1_sd_s1.write(CSR_RDATA_RE_S2.read());
+        else
+            rdata1_sd_s1.write(EXE_RES_RE_S2.read());
+    }
+
+    // bypass M1->D
+
+    else if (RADR1_SD_S1.read() == DEST_RM_S1.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) 
+    {  
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata1_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
-            rdata1_sd_s1.write(BP_MEM_RES_RM.read());
+            rdata1_sd_s1.write(MEM_RES_RM_S1.read());
     } 
-    else {  // no bypass
+
+    // bypass M2->D
+
+    else if (RADR1_SD_S1.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    {  
         r1_valid_sd_s1= true;
-        rdata1_sd_s1.write(RDATA1_SR_S1.read());
+        if (CSR_WENABLE_RM_S2.read())
+            rdata1_sd_s1 = CSR_RDATA_RM_S2.read();
+        else
+            rdata1_sd_s1 = MEM_RES_RM_S2.read();
+    } 
+
+    // no bypass
+
+    else {  
+        r1_valid_sd_s1= true;
+        rdata1_sd_s1 = RDATA1_SR_S1.read();
     }
+
+    // Bypass on rs2_s1 :
 
     if (RADR2_SD_S1.read() == 0) {  // ignore r0
         rdata2_sd_s1.write(RDATA2_SR_S1.read());
@@ -562,38 +599,110 @@ void decod::bypasses() {
     } else if (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() &&
                !DEC2EXE_EMPTY_SD_S1.read()) {  // dont bypass if instr is currently in exe
         r2_valid_sd_s1= false;
-    } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && BP_MEM_LOAD_RE.read() &&
-               !BP_EXE2MEM_EMPTY_SE) {  // dont bypass if load instr is
+    } else if (RADR2_SD_S1.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() &&
+               !EXE2MEM_EMPTY_SE_S1) {  // dont bypass if load instr is
                                         // currently in mem
         r2_valid_sd_s1= false;
-    } else if(RADR2_SD_S1.read() == BP_DEST_RE.read() && MULT_INST_RE_S1 && !BP_EXE2MEM_EMPTY_SE.read()){ // dont bypass if mul instruction didnt finish
+    } else if(RADR2_SD_S1.read() == DEST_RE_S1.read() && MULT_INST_RE_S1 && !EXE2MEM_EMPTY_SE_S1.read()){ // dont bypass if mul instruction didnt finish
         r2_valid_sd_s1= false;
-    } else if(RADR2_SD_S1.read() == BP_DEST_RM.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read()){ // dont bypass if mul instruction didnt finish
+    } else if(RADR2_SD_S1.read() == DEST_RM_S1.read() && MULT_INST_RM_S1 && !BP_MEM2WBK_EMPTY_SM_S1.read()){ // dont bypass if mul instruction didnt finish
         r2_valid_sd_s1= false;
-    } else if (RADR2_SD_S1.read() == BP_DEST_RE.read() && !BP_EXE2MEM_EMPTY_SE) {  // bypass E->D
+    } else if (RADR2_SD_S1.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) {  // bypass E->D
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata2_sd_s1.write(CSR_RDATA_RE_S1.read());
         else
-            rdata2_sd_s1.write(BP_EXE_RES_RE.read());
-    } else if (RADR2_SD_S1.read() == BP_DEST_RM.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) {  // bypass M->D
+            rdata2_sd_s1.write(EXE_RES_RE_S1.read());
+    } else if (RADR2_SD_S1.read() == DEST_RM_S1.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) {  // bypass M->D
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata2_sd_s1.write(CSR_RDATA_RM_S1.read());
         else
-            rdata2_sd_s1.write(BP_MEM_RES_RM.read());
+            rdata2_sd_s1.write(MEM_RES_RM_S1.read());
     } else {  // no bypass
         r2_valid_sd_s1= true;
         rdata2_sd_s1.write(RDATA2_SR_S1.read());
     }
     // When a load is in exe, we can block the pipeline now
     // Avoid an issue with load - load - add sequence
+
+
+    // Bypass on rs1_s2 :
+
+     if (RADR1_SD_S2.read() == 0) 
+    {  
+        rdata1_sd_s2.write(RDATA1_SR_S2.read());
+        r1_valid_sd_s2= true;
+    } 
+    else if (RADR1_SD_S2.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read()
+    || RADR1_SD_S2.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read()) 
+    {  
+        r1_valid_sd_s2= false;
+    } 
+    else if (RADR1_SD_S2.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2
+    || RADR1_SD_S2.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) 
+    {  
+        r1_valid_sd_s2= false;
+    } 
+
+    // bypass E1->D
+
+    else if (RADR1_SD_S2.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) 
+    {  
+        r1_valid_sd_s2= true;
+        if (CSR_WENABLE_RE_S1.read())
+            rdata1_sd_s2.write(CSR_RDATA_RE_S1.read());
+        else
+            rdata1_sd_s2.write(EXE_RES_RE_S1.read());
+    } 
+
+    // bypass E2->D
+
+    else if (RADR1_SD_S2.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2) 
+    {  
+        r1_valid_sd_s2= true;
+        if (CSR_WENABLE_RE_S2.read())
+            rdata1_sd_s2.write(CSR_RDATA_RE_S2.read());
+        else
+            rdata1_sd_s2.write(EXE_RES_RE_S2.read());
+    } 
+
+    // bypass M1->D
+
+    else if (RADR1_SD_S2.read() == DEST_RM_S1.read() && !BP_MEM2WBK_EMPTY_SM_S1.read()) 
+    {  
+        r1_valid_sd_s2= true;
+        if (CSR_WENABLE_RM_S1.read())
+            rdata1_sd_s2 = CSR_RDATA_RM_S1.read();
+        else
+            rdata1_sd_s2 = MEM_RES_RM_S1.read();
+    } 
+
+    // bypass M2->D
+
+    else if (RADR1_SD_S2.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    {  
+        r1_valid_sd_s2= true;
+        if (CSR_WENABLE_RM_S2.read())
+            rdata1_sd_s2.write(CSR_RDATA_RM_S2.read());
+        else
+            rdata1_sd_s2.write(MEM_RES_RM_S2.read());
+    } 
+
+    // no bypass
+
+    else {  
+        r1_valid_sd_s2= true;
+        rdata1_sd_s2.write(RDATA1_SR_S2.read());
+    }
+
+
     block_in_dec.write((RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()) ||
                        (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()));
 }
 
 void decod::stall_method() {
-    csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !BP_EXE2MEM_EMPTY_SE);
+    csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
     
     stall_sd_s1        = ((csr_in_progress_s1 || csr_in_progress_s2) || ((!r1_valid_sd_s1 || !r2_valid_sd_s1) &&
                       (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
@@ -601,7 +710,7 @@ void decod::stall_method() {
                       (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec))
                       || (IF2DEC_EMPTY_SI_S1 && IF2DEC_EMPTY_SI_S2) || dec2exe_full_sd_s1 || dec2exe_full_sd_s2);
 
-    //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE_S1 && !BP_EXE2MEM_EMPTY_SE);
+    //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
 
 }
 
@@ -688,13 +797,14 @@ void decod::trace(sc_trace_file* tf) {
 
     // Bypasses
 
-    sc_trace(tf, BP_DEST_RE, GET_NAME(BP_DEST_RE));
-    sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
-    sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME(BP_MEM_LOAD_RE));
-    sc_trace(tf, BP_EXE2MEM_EMPTY_SE, GET_NAME(BP_EXE2MEM_EMPTY_SE));
+    sc_trace(tf, DEST_RE_S1, GET_NAME(DEST_RE_S1));
+    sc_trace(tf, EXE_RES_RE_S1, GET_NAME(EXE_RES_RE_S1));
+    sc_trace(tf, EXE_RES_RE_S2, GET_NAME(EXE_RES_RE_S2));
+    sc_trace(tf, MEM_LOAD_RE_S1, GET_NAME(MEM_LOAD_RE_S1));
+    sc_trace(tf, EXE2MEM_EMPTY_SE_S1, GET_NAME(EXE2MEM_EMPTY_SE_S1));
     sc_trace(tf, BP_MEM2WBK_EMPTY_SM_S1, GET_NAME(BP_MEM2WBK_EMPTY_SM_S1));
-    sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
-    sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
+    sc_trace(tf, DEST_RM_S1, GET_NAME(DEST_RM_S1));
+    sc_trace(tf, MEM_RES_RM_S1, GET_NAME(MEM_RES_RM_S1));
     sc_trace(tf, MULT_INST_RE_S1, GET_NAME(MULT_INST_RE_S1));
     sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
     
