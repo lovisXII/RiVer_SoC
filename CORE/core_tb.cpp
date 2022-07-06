@@ -540,6 +540,7 @@ int sc_main(int argc, char* argv[]) {
 
 
         unsigned int pc_adr = PC_VALUE.read();
+        //std::cerr << pc_adr << endl;
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);

@@ -11,7 +11,7 @@
 #define size_of_pred_pointer 5          //2^n = predictor_register_size
 
 
-typedef enum // PREDICTION STATE
+enum // PREDICTION STATE
 { // 1,2,4,8 -> one-hot
     strongly_taken = 1,
     weakly_taken = 2,
@@ -34,6 +34,7 @@ SC_MODULE(ifetch) {
     sc_out<bool> DEC2IF_POP_SI;
 
     sc_in<sc_uint<32>> PC_RD;  // PC coming to fetch an instruction
+    sc_in<bool>        FORCE_PC_RD;
     sc_in<bool>        PRED_SUCCESS_RD;
     sc_in<bool>        BRANCH_INST_RD;
     sc_in<sc_uint<32>> BRANCH_INST_ADR_RD;
@@ -117,7 +118,8 @@ SC_MODULE(ifetch) {
         << MRET_SM 
         << RETURN_ADRESS_SM
         << PRED_ADR_RI
-        << PRED_TAKEN_RI;
+        << PRED_TAKEN_RI
+        << PRED_SUCCESS_RD;
         SC_METHOD(exception);
         sensitive << RESET << EXCEPTION_SM ;
 
@@ -128,8 +130,6 @@ SC_MODULE(ifetch) {
         sensitive << PC_RD;
 
         SC_METHOD(calc_prob_pred);
-        sensitive << BRANCH_INST_RD
-                  << BRANCH_INST_ADR_RD
-                  << PRED_SUCCESS_RD;
+        sensitive << BRANCH_INST_ADR_RD;
     }
 };

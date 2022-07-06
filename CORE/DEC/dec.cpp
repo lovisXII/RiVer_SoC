@@ -135,6 +135,7 @@ void decod::unconcat_dec2exe() {
 void decod::concat_dec2if()
 {
     sc_bv<dec2if_size> dec2if_in_var;
+    dec2if_in_var[98] = force_pc_sd;
     dec2if_in_var[97] = pred_success_sd;
     dec2if_in_var[96] = b_type_inst_sd;
     dec2if_in_var.range(95, 64) = PC_IF2DEC_RI.read();
@@ -146,6 +147,7 @@ void decod::concat_dec2if()
 void decod::unconcat_dec2if()
 {
     sc_bv<dec2if_size> dec2if_out_var = dec2if_out_sd.read();
+    FORCE_PC_RD.write((bool)dec2if_out_var[98]);
     PRED_SUCCESS_RD.write((bool)dec2if_out_var[97]);
     BRANCH_INST_RD.write((bool)dec2if_out_var[96]);
     BRANCH_INST_ADR_RD.write((sc_bv_base)dec2if_out_var.range(95, 64));
@@ -946,14 +948,17 @@ void decod::pc_inc() {
     bool add_offset_to_pc = jump_sd.read() && !IF2DEC_EMPTY_SI ;
     
     branch_adr_sd = PC_IF2DEC_RI.read() + offset_branch_var;
-
-
-    if (!add_offset_to_pc && !dec2if_full_sd ) {
+    
+    //bool pred_success_var = false;
+    if (!add_offset_to_pc && !dec2if_full_sd) {
         pc_out = pc + 4;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
     } else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd) {
-        pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
+        if(PRED_TAKEN_RI.read())
+            pc_out = PRED_ADR_RI.read() + 4;
+        else
+            pc_out = PC_IF2DEC_RI.read() + offset_branch_var;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
     } else {
@@ -961,13 +966,12 @@ void decod::pc_inc() {
         dec2if_push_sd      = 0;
     }
 
+    force_pc_sd = !add_offset_to_pc && PRED_TAKEN_RI.read();
+
     DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
-    bool pred_success_var = false;
-    if(PRED_TAKEN_RI.read() && (pc_out == PRED_ADR_RI.read()))
-    {
-        pred_success_var = true;
-        pc_out = PRED_ADR_RI.read() + 4;
-    }
+
+    //pred_success_sd = pred_success_var;
+    
 
     // Adress missaligned exception :
 
@@ -1039,14 +1043,36 @@ void decod::pc_inc() {
     else{
         
         // IF2DEC Gestion
-        if (((jump_sd.read() && b_type_inst_sd && !pred_success_var) || (jump_sd && !b_type_inst_sd)) && !stall_sd)
+        if(PRED_TAKEN_RI)
+        {
+            if(jump_sd && !stall_sd)
+            {
+                IF2DEC_POP_SD.write(1);
+                IF2DEC_FLUSH_SD.write(0);
+            }
+            else if(!jump_sd && !stall_sd)
+            {
+                IF2DEC_POP_SD.write(1);
+                IF2DEC_FLUSH_SD.write(1);    
+            }
+            else
+            {
+                IF2DEC_POP_SD.write(0);
+                IF2DEC_FLUSH_SD.write(0);
+            }
+        }
+        else if(jump_sd && !stall_sd)
         {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
-        } else if (!jump_sd && !stall_sd) {
+        } 
+        else if(!jump_sd && !stall_sd) 
+        {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(0);
-        } else {
+        } 
+        else 
+        {
             IF2DEC_POP_SD.write(0);
             IF2DEC_FLUSH_SD.write(0);
         }
@@ -1059,7 +1085,6 @@ void decod::pc_inc() {
             dec2exe_push_sd.write(1);
         }
     }
-    pred_success_sd = pred_success_var;
 }/*
 void decod::gestion_fifo()
 {
@@ -1361,7 +1386,8 @@ void decod::trace(sc_trace_file* tf) {
 
     sc_trace(tf, inc_pc_sd, GET_NAME(inc_pc_sd));
     sc_trace(tf, jump_sd, GET_NAME(jump_sd));
-
+    sc_trace(tf, force_pc_sd, GET_NAME(force_pc_sd));
+    
     // Internal signals :
 
     sc_trace(tf, adr_dest_sd, GET_NAME(adr_dest_sd));

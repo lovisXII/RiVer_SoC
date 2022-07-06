@@ -3,7 +3,7 @@
 #include "../UTIL/fifo.h"
 
 #define dec2exe_size        252
-#define dec2if_size         98
+#define dec2if_size         99
 #define start_kernel_adress 0xF0000000
 
 SC_MODULE(decod) {
@@ -49,6 +49,7 @@ SC_MODULE(decod) {
     sc_in<bool>        DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
     sc_out<bool>       DEC2IF_EMPTY_SD;
 
+    sc_out<bool>        FORCE_PC_RD;
     sc_out<bool>        PRED_SUCCESS_RD;
     sc_out<bool>        BRANCH_INST_RD;
     sc_out<sc_uint<32>> BRANCH_INST_ADR_RD;
@@ -146,7 +147,7 @@ SC_MODULE(decod) {
     sc_signal<bool>        r2_valid_sd;
     sc_signal<bool>        block_in_dec;
     sc_signal<sc_uint<32>> res_pc_sd;
-
+    sc_signal<bool>        force_pc_sd;
     // fifo dec2if :
 
     sc_signal<sc_bv<dec2if_size>> dec2if_in_sd;  // pc sent to fifo
@@ -154,7 +155,7 @@ SC_MODULE(decod) {
     sc_signal<bool>               dec2if_empty_sd;
     sc_signal<bool>               dec2if_full_sd;
     sc_signal<sc_bv<dec2if_size>> dec2if_out_sd;
-
+    
     
     // fifo dec2exe :
 
@@ -376,8 +377,8 @@ SC_MODULE(decod) {
                   << branch_adr_sd
                   << PC_IF2DEC_RI
                   << res_pc_sd
-                  << PRED_TAKEN_RI
-                  << PRED_ADR_RI;
+                  << force_pc_sd
+                  << pred_success_sd;
         SC_METHOD(unconcat_dec2if);
         sensitive << dec2if_out_sd;
 
@@ -441,9 +442,14 @@ SC_MODULE(decod) {
                   << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd << sret_i_sd
                   << CSR_RDATA_SC;
         SC_METHOD(pc_inc);
-        sensitive << CLK.pos() << READ_PC_SR << offset_branch_sd << inc_pc_sd << jump_sd << MTVEC_VALUE_RC
-                  << EXCEPTION_SM << PC_IF2DEC_RI << MRET_SM << dec2if_full_sd << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
-                  << stall_sd << branch_adr_sd << PRED_TAKEN_RI << PRED_ADR_RI;
+        sensitive << CLK.pos() << READ_PC_SR 
+                  << offset_branch_sd << inc_pc_sd 
+                  << jump_sd << MTVEC_VALUE_RC
+                  << EXCEPTION_SM << PC_IF2DEC_RI 
+                  << MRET_SM << dec2if_full_sd 
+                  << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
+                  << stall_sd 
+                  << PRED_TAKEN_RI << PRED_ADR_RI;
                   
     
         SC_METHOD(bypasses);
