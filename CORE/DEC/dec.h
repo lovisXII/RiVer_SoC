@@ -698,12 +698,12 @@ SC_MODULE(decod) {
                   << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM_S1;
 
         SC_METHOD(pre_reg_read_decoding_s2)
-        sensitive << INSTR_RI_S2 << r_type_inst_sd_s1 << i_type_inst_sd_s1 << i_type_inst_sd_s1 << s_type_inst_sd_s1
-                  << b_type_inst_sd_s1 << u_type_inst_sd_s1 << j_type_inst_sd_s1 << m_type_inst_sd_s1
-                  << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1
-                  << bgeu_i_sd_s1 << system_type_inst_sd_s1 << csrrw_i_sd_s1 << csrrs_i_sd_s1 << csrrc_i_sd_s1
-                  << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << ecall_i_sd_s1 << ebreak_i_sd_s1
-                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM_S1;
+        sensitive << INSTR_RI_S2 << r_type_inst_sd_s2 << i_type_inst_sd_s2 << i_type_inst_sd_s2 << s_type_inst_sd_s2
+                  << b_type_inst_sd_s2 << u_type_inst_sd_s2 << j_type_inst_sd_s2 << m_type_inst_sd_s2
+                  << jalr_type_inst_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2 << blt_i_sd_s2 << bge_i_sd_s2 << bltu_i_sd_s2
+                  << bgeu_i_sd_s2 << system_type_inst_sd_s2 << csrrw_i_sd_s2 << csrrs_i_sd_s2 << csrrc_i_sd_s2
+                  << csrrwi_i_sd_s2 << csrrsi_i_sd_s2 << csrrci_i_sd_s2 << ecall_i_sd_s2 << ebreak_i_sd_s2
+                  << fence_i_sd_s2 << mret_i_sd_s2 << sret_i_sd_s2 << RESET_N << CURRENT_MODE_SM_S1;
 
         SC_METHOD(post_reg_read_decoding_s1)
         sensitive << i_type_inst_sd_s1 << s_type_inst_sd_s1 << b_type_inst_sd_s1 << u_type_inst_sd_s1
@@ -745,43 +745,43 @@ SC_MODULE(decod) {
                   << CSR_RDATA_SC_S1;
 
         SC_METHOD(post_reg_read_decoding_s2)
-        sensitive << i_type_inst_sd_s1 << s_type_inst_sd_s1 << b_type_inst_sd_s1 << u_type_inst_sd_s1
-                  << j_type_inst_sd_s1
+        sensitive << i_type_inst_sd_s2 << s_type_inst_sd_s2 << b_type_inst_sd_s2 << u_type_inst_sd_s2
+                  << j_type_inst_sd_s2
 
-                  << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1
+                  << jalr_type_inst_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2
 
-                  << m_type_inst_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1 << mulhu_i_sd_s1 << div_i_sd_s1
-                  << divu_i_sd_s1 << rem_i_sd_s1 << remu_i_sd_s1
+                  << m_type_inst_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2 << mulhu_i_sd_s2 << div_i_sd_s2
+                  << divu_i_sd_s2 << rem_i_sd_s2 << remu_i_sd_s2
 
-                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI_S1 << dec2if_push_sd
+                  << blt_i_sd_s2 << bge_i_sd_s2 << bltu_i_sd_s2 << bgeu_i_sd_s2 << IF2DEC_EMPTY_SI_S2 << dec2if_push_sd
                   << READ_PC_SR
 
-                  << stall_sd_s1 << dec2if_push_sd << add_i_sd_s1 << slt_i_sd_s1 << sltu_i_sd_s1 << and_i_sd_s1
-                  << or_i_sd_s1 << xor_i_sd_s1
+                  << stall_sd_s1 << dec2if_push_sd << add_i_sd_s2 << slt_i_sd_s2 << sltu_i_sd_s2 << and_i_sd_s2
+                  << or_i_sd_s2 << xor_i_sd_s2
 
-                  << sll_i_sd_s1 << srl_i_sd_s1 << sub_i_sd_s1 << sra_i_sd_s1 << addi_i_sd_s1
+                  << sll_i_sd_s2 << srl_i_sd_s2 << sub_i_sd_s2 << sra_i_sd_s2 << addi_i_sd_s2
 
-                  << slti_i_sd_s1 << sltiu_i_sd_s1 << andi_i_sd_s1 << ori_i_sd_s1 << xori_i_sd_s1 << jalr_i_sd_s1
-                  << slli_i_sd_s1
+                  << slti_i_sd_s2 << sltiu_i_sd_s2 << andi_i_sd_s2 << ori_i_sd_s2 << xori_i_sd_s2 << jalr_i_sd_s2
+                  << slli_i_sd_s2
 
-                  << srli_i_sd_s1 << srai_i_sd_s1 << lw_i_sd_s1 << lh_i_sd_s1
+                  << srli_i_sd_s2 << srai_i_sd_s2 << lw_i_sd_s2 << lh_i_sd_s2
 
-                  << lhu_i_sd_s1 << lb_i_sd_s1 << lbu_i_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1
-                  << bge_i_sd_s1 << bltu_i_sd_s1
+                  << lhu_i_sd_s2 << lb_i_sd_s2 << lbu_i_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2 << blt_i_sd_s2
+                  << bge_i_sd_s2 << bltu_i_sd_s2
 
-                  << bgeu_i_sd_s1 << lui_i_sd_s1 << auipc_i_sd_s1
+                  << bgeu_i_sd_s2 << lui_i_sd_s2 << auipc_i_sd_s2
 
-                  << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1
-                  << dec2exe_push_sd_s1
+                  << jal_i_sd_s2 << sw_i_sd_s2 << sh_i_sd_s2 << sb_i_sd_s2 << j_type_inst_sd_s2 << jalr_type_inst_sd_s2
+                  << dec2exe_push_sd_s2
 
-                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1 << system_type_inst_sd_s1
-                  << csrrw_i_sd_s1
+                  << rdata1_sd_s2 << rdata2_sd_s2 << r1_valid_sd_s2 << r2_valid_sd_s2 << system_type_inst_sd_s2
+                  << csrrw_i_sd_s2
 
-                  << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
-                  << CSR_RDATA_SC_S1 << ecall_i_sd_s1
+                  << csrrs_i_sd_s2 << csrrc_i_sd_s2 << csrrwi_i_sd_s2 << csrrsi_i_sd_s2 << csrrci_i_sd_s2
+                  << CSR_RDATA_SC_S2 << ecall_i_sd_s2
 
-                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM_S1 << mret_i_sd_s1 << sret_i_sd_s1
-                  << CSR_RDATA_SC_S1 << jump_sd_s1;
+                  << ebreak_i_sd_s2 << fence_i_sd_s2 << PC_IF2DEC_RI_S2 << EXCEPTION_SM_S1 << mret_i_sd_s2 << sret_i_sd_s2
+                  << CSR_RDATA_SC_S2;
 
         SC_METHOD(pc_inc)
         sensitive << CLK.pos() 
