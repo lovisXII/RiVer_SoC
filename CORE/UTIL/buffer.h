@@ -154,7 +154,6 @@ void buffer<size_data, depth>::write() {
                     buffer_valid_var[write_ptr_var] = 1 ;
                     write_ptr_var -- ;
                 }
-                cerr << sc_time_stamp() << " mask " << std::hex << mask_s1 << endl ;
             }
 
             if(write_ptr_var == -1){
