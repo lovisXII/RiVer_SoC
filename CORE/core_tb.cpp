@@ -65,7 +65,7 @@ int sc_main(int argc, char* argv[]) {
     int                     begin_signature;
     int                     end_signature;
 
-    char   test[512] = "> a.out.txt";
+    char   test[512] = "> a.out.txt.s";
     string opt;
     string signature_name;
     bool   riscof;
