@@ -91,7 +91,7 @@ signal data_sm, data_store_sm, data_byte_store_sm, data_half_store_sm : std_logi
 signal byt_sel_sm : std_logic_vector(3 downto 0);
 
 -- CSR & Exception 
-signal exception : std_logic; 
+signal exception : std_logic := '0'; 
 signal mode_sm : std_logic_vector(1 downto 0) := "11";
 signal new_mode : std_logic_vector(1 downto 0);
 signal machine_mode_condition : std_logic;
@@ -209,7 +209,7 @@ data_sm <=  load_data when LOAD_RE = '1' else
 --------------------
 -- CSR & Exception 
 --------------------
-exception <= EXCEPTION_RE or BUS_ERROR_SX; 
+exception <= '0'; --EXCEPTION_RE or BUS_ERROR_SX; 
 
 -- CSR write
 CSR_WADR_SM     <= CSR_WADR_RE; 

@@ -82,10 +82,16 @@ if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD = '0' else '0';
 DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
 ADR_VALID_SI <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0') else '0';
 
+--if2dec_push_si  <=  '1' when EXCEPTION_SM = '1'     else 
+--                    '0' when IF2DEC_FLUSH_SD = '1'  else 
+--                    not(stall_si);
+--DEC2IF_POP_SI   <=  '1' when (IF2DEC_FLUSH_SD = '1' or EXCEPTION_SM = '1') else not(stall_si);
+--ADR_VALID_SI    <=  '0' when (IF2DEC_FLUSH_SD = '1' or EXCEPTION_SM = '1') else not(DEC2IF_EMPTY_SD);
+
 ADR_SI <= PC_RD;
 
-if2dec_din(63 downto 32)    <=  IC_INST_SI when EXCEPTION_SM = '0' else 
-                                nop_i;
+if2dec_din(63 downto 32)    <=  nop_i when EXCEPTION_SM = '1' else 
+                                IC_INST_SI;
 if2dec_din(31 downto 0)     <=  PC_RD; 
 
 EXCEPTION_RI <= '0'; 

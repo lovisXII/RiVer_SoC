@@ -125,7 +125,7 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 10000000; 
+constant NCYCLES : integer := 10000; 
 signal CYCLES : integer := 0; 
 signal good_adr, bad_adr: std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
@@ -195,7 +195,7 @@ begin
     end if; 
     if CYCLES = NCYCLES then 
         assert false report "end of simulation (timeout)" severity note; 
-        r0 := end_simulation(un,un);
+        r0 := end_simulation(un,0);
        wait; 
     end if;
     

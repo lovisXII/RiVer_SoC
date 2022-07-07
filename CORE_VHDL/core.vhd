@@ -106,7 +106,6 @@ signal MIE_VALUE_RC        : std_logic_vector(31 downto 0);
 signal MCAUSE_SC           : std_logic_vector(31 downto 0);
 signal CSR_RADR_SD, CSR_WADR_RD : std_logic_vector(11 downto 0);
 signal CSR_RDATA_SC, CSR_RDATA_RD : std_logic_vector(31 downto 0);
-signal CSR_ENABLE_RD : std_logic;
 signal MIP_WDATA_SM : std_logic_vector(31 downto 0);
 -- Exception 
 signal ILLEGAL_INSTRUCTION_RD, ADRESS_MISALIGNED_RD, INSTRUCTION_ACCESS_FAULT_RD, EBREAK_RD : std_logic;
@@ -659,7 +658,7 @@ exec_i : exec
         CSR_RDATA_RM        => CSR_RDATA_RM,
 
         -- CSR 
-        CSR_WENABLE_RD       => CSR_ENABLE_RD,
+        CSR_WENABLE_RD      => CSR_WENABLE_RD,
         CSR_WADR_RD         => CSR_WADR_RD, 
         CSR_RDATA_RD        => CSR_RDATA_RD, 
 
@@ -868,6 +867,6 @@ csr_i : csr
         CSR_RDATA_SC        => CSR_RDATA_SC
     );
 
-DEBUG_PC_READ <= READ_PC_SR; 
-
+DEBUG_PC_READ   <= READ_PC_SR; 
+BUS_ERROR_SX    <= '0';
 end archi;
