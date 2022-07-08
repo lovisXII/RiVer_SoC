@@ -33,7 +33,7 @@ int read_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        //printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
+        printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
@@ -101,7 +101,7 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    //printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
+    printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
     return 0; 
 }   
 
@@ -234,6 +234,8 @@ int main(int argc, char const* argv[]) {
         start_pc = rvtest_entry_point;
     else
         start_pc = (structure->start_adr);
+        //start_pc = 0x80000000;  
+        //
         
     printf("Start Adress : %x\n",start_pc) ;
 

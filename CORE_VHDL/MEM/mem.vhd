@@ -209,7 +209,8 @@ data_sm <=  load_data when LOAD_RE = '1' else
 --------------------
 -- CSR & Exception 
 --------------------
-exception <= '0'; --EXCEPTION_RE or BUS_ERROR_SX; 
+exception <=    '1' when (EXCEPTION_RE = '1' or BUS_ERROR_SX = '1') else 
+                '0'; 
 
 -- CSR write
 CSR_WADR_SM     <= CSR_WADR_RE; 
@@ -251,6 +252,8 @@ machine_mode_condition <= ENV_CALL_WRONG_MODE_RE or STORE_ACCESS_FAULT_RE or LOA
 new_mode <= "11" when machine_mode_condition = '1' else 
             "00";
 
+
+-- to verify
 mode : process(clk, reset_n)
 begin 
     if reset_n = '0' then 
@@ -261,6 +264,11 @@ begin
         end if; 
     end if; 
 end process; 
+
+
+RETURN_ADRESS_SM <= MEPC_SC when MRET_RE = '1' else 
+                    x"00000000";
+
 
 -- Ouput affectation 
 EXCEPTION_SM <= exception; 

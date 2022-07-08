@@ -120,34 +120,36 @@ signal j_i_sd, jalr_i_sd : std_logic;
 
 -- System instructions
 signal system_inst_sd : std_logic;
-signal ecall_i_sd, ebreak_i_sd : std_logic;
+signal ecall_i_sd : std_logic;
+signal ebreak_i_sd : std_logic := '0';
 signal csrrw_i_sd, csrrs_i_sd, csrrc_i_sd : std_logic;
 signal csrrwi_i_sd, csrrsi_i_sd, csrrci_i_sd : std_logic;
-signal mret_i_sd, sret_i_sd : std_logic;
-
+signal sret_i_sd : std_logic;
+signal mret_i_sd : std_logic := '0';
 signal csr_in_progress : std_logic;
 
 signal fence_i_sd : std_logic;
 
-signal env_call_u_mode_sd, env_call_s_mode_sd, env_call_m_mode_sd : std_logic;
-signal env_call_wrong_mode : std_logic;
+signal env_call_u_mode_sd : std_logic := '0'; 
+signal env_call_s_mode_sd : std_logic := '0'; 
+signal env_call_m_mode_sd : std_logic := '0';
+signal env_call_wrong_mode : std_logic := '0';
 
-signal exception_sd : std_logic;
+signal exception_sd : std_logic := '0';
 
 signal csr_wenable_sd : std_logic;
 
-signal illegal_inst, illegal_inst_sd : std_logic;
-signal instruction_access_fault_sd : std_logic;
-signal instruction_adress_misaligned_sd : std_logic; 
+signal illegal_inst : std_logic := '0'; 
+signal illegal_inst_sd : std_logic := '0';
+signal instruction_access_fault_sd : std_logic := '0';
+signal instruction_adress_misaligned_sd : std_logic := '0'; 
+signal instruction_adress_fault_sd : std_logic := '0';
 
 signal op1_csri_type_sd : std_logic_vector(31 downto 0); 
 
 signal mtvec_value, mcause_val : std_logic_vector(31 downto 0);
 
-signal instruction_adress_fault_sd : std_logic;
-
 signal csr_radr : std_logic_vector(11 downto 0);
-
 
 -- dec2exe data and commands
 signal dec2exe_op1_sd, dec2exe_op2_sd, op1_u_type_sd, op2_i_type_sd, op2_s_type_sd : std_logic_vector(31 downto 0); 
@@ -575,6 +577,10 @@ rdata2_sd   <=  BP_EXE_RES_RE   when bpc_ed2 = '1' and CSR_WENABLE_RE = '0' else
 
 r2_valid_sd <=  not(bpc_instr_in_exe2 or bpc_load_in_mem2);
 
+
+exception_sd <= (illegal_inst_sd or instruction_adress_misaligned_sd or env_call_u_mode_sd or
+env_call_m_mode_sd or env_call_s_mode_sd or env_call_wrong_mode or mret_i_sd or
+instruction_access_fault_sd or ebreak_i_sd);
 -------------------------
 -- Ouput
 -------------------------
@@ -598,9 +604,7 @@ dec2exe_data(247 downto 216) <= pc_branch_value_sd;
 dec2exe_data(215) <= ebreak_i_sd; 
 dec2exe_data(214) <= instruction_access_fault_sd; 
 dec2exe_data(213) <= mret_i_sd; 
-dec2exe_data(212) <= illegal_inst_sd or instruction_adress_misaligned_sd or env_call_u_mode_sd or
-                    env_call_m_mode_sd or env_call_s_mode_sd or env_call_wrong_mode or mret_i_sd or
-                    instruction_access_fault_sd or ebreak_i_sd; 
+dec2exe_data(212) <= exception_sd; 
 dec2exe_data(211) <= env_call_wrong_mode;
 dec2exe_data(210) <= env_call_u_mode_sd;
 dec2exe_data(209) <= illegal_inst_sd;

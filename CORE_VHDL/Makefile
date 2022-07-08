@@ -35,7 +35,7 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
-exception.o : exception.s
+exception.o : exception.s reset.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 
 warning :

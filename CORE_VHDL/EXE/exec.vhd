@@ -108,13 +108,13 @@ signal bpc_ee2, bpc_me2 : std_logic;
 signal bpc_disable1, bpc_disable2 : std_logic; 
 
 -- exception 
-signal adress_misaligned : std_logic;
-signal load_adress_misaligned_se : std_logic;
-signal store_adress_misaligned_se : std_logic;
-signal access_fault : std_logic;
-signal load_access_fault_se : std_logic;
-signal store_access_fault_se : std_logic;
-signal exception_se : std_logic;
+signal adress_misaligned : std_logic := '0';
+signal load_adress_misaligned_se : std_logic := '0';
+signal store_adress_misaligned_se : std_logic := '0';
+signal access_fault : std_logic := '0';
+signal load_access_fault_se : std_logic := '0';
+signal store_access_fault_se : std_logic := '0';
+signal exception_se : std_logic := '0';
 
 -- exe output readable 
 signal exe_fifo_res : std_logic_vector(31 downto 0); 
@@ -279,7 +279,7 @@ access_fault <= '1' when alu_res > kernel_adr and CURRENT_MODE_SM = "00" else '0
 load_access_fault_se <= MEM_LOAD_RD and access_fault; 
 store_access_fault_se <= MEM_STORE_RD and access_fault; 
 
-exception_se <= EXCEPTION_RD or load_adress_misaligned_se or load_access_fault_se or store_access_fault_se or store_adress_misaligned_se;
+exception_se <= (EXCEPTION_RD or load_adress_misaligned_se or load_access_fault_se or store_access_fault_se or store_adress_misaligned_se) and reset_n;
 
 -- Output
 RES_RE <= exe_fifo_res;

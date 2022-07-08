@@ -78,9 +78,9 @@ if2dec : fifo
 
 stall_si <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SD;
 
-if2dec_push_si <= not stall_si when IF2DEC_FLUSH_SD = '0' else '0'; 
+if2dec_push_si <= not stall_si when (IF2DEC_FLUSH_SD = '0') else '0'; 
 DEC2IF_POP_SI <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
-ADR_VALID_SI <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0') else '0';
+ADR_VALID_SI <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM /= '1') else '0';
 
 --if2dec_push_si  <=  '1' when EXCEPTION_SM = '1'     else 
 --                    '0' when IF2DEC_FLUSH_SD = '1'  else 
@@ -90,7 +90,7 @@ ADR_VALID_SI <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM
 
 ADR_SI <= PC_RD;
 
-if2dec_din(63 downto 32)    <=  nop_i when EXCEPTION_SM = '1' else 
+if2dec_din(63 downto 32)    <=  nop_i when EXCEPTION_SM /= '0' else 
                                 IC_INST_SI;
 if2dec_din(31 downto 0)     <=  PC_RD; 
 
