@@ -276,5 +276,7 @@ MEPC_WDATA_SM <= PC_EXE2MEM_RE;
 MSTATUS_WDATA_SM <= mstatus_x; 
 CURRENT_MODE_SM <= mode_sm; 
 MRET_SM <= MRET_RE and exception;
-
+MIP_WDATA_SM <= x"00000000"; 
+MTVAL_WDATA_SM <= mtval_x; 
+MCAUSE_WDATA_SM <= mcause_x; 
 end archi;

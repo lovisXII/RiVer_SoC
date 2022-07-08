@@ -12,9 +12,9 @@ entity csr is
         CSR_ENABLE_SM       : in std_logic;
 
         EXCEPTION_SM        : in std_logic;
-        MSTATUS_WDATA_RM    : in std_logic_vector(31 downto 0);
-        MIP_WDATA_RM        : in std_logic_vector(31 downto 0);
-        MEPC_WDATA_RM       : in std_logic_vector(31 downto 0);
+        MSTATUS_WDATA_SM    : in std_logic_vector(31 downto 0);
+        MIP_WDATA_SM        : in std_logic_vector(31 downto 0);
+        MEPC_WDATA_SM       : in std_logic_vector(31 downto 0);
         MCAUSE_WDATA_SM     : in std_logic_vector(31 downto 0);
         MTVAL_WDATA_SM      : in std_logic_vector(31 downto 0);
 
@@ -83,11 +83,11 @@ begin
     
     elsif rising_edge(clk) then 
         if EXCEPTION_SM = '1' then 
-            reg_mstatus      <= MSTATUS_WDATA_RM;
-            reg_mepc         <= MIP_WDATA_RM;
-            reg_mcause       <= MEPC_WDATA_RM;
-            reg_mtval        <= MCAUSE_WDATA_SM;
-            reg_mip          <= MTVAL_WDATA_SM;
+            reg_mstatus      <= MSTATUS_WDATA_SM;
+            reg_mepc         <= MEPC_WDATA_SM;
+            reg_mcause       <= MCAUSE_WDATA_SM;
+            reg_mtval        <= MTVAL_WDATA_SM;
+            reg_mip          <= MIP_WDATA_SM;
         elsif CSR_ENABLE_SM = '1' then 
             case (CSR_WADR_SM) is 
                 when adr_mstatus        =>  reg_mstatus     <= CSR_WDATA_SM;

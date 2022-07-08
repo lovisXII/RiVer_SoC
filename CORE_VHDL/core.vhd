@@ -93,9 +93,9 @@ signal CSR_WADR_SM         : std_logic_vector(11 downto 0);
 signal CSR_WDATA_SM        : std_logic_vector(31 downto 0);
 signal CSR_ENABLE_SM, CSR_WENABLE_RD : std_logic;
 signal EXCEPTION_SM        : std_logic := '0';
-signal MSTATUS_WDATA_RM    : std_logic_vector(31 downto 0);
-signal MIP_WDATA_RM        : std_logic_vector(31 downto 0);
-signal MEPC_WDATA_RM       : std_logic_vector(31 downto 0);
+signal mstatus_wdata_sm    : std_logic_vector(31 downto 0);
+signal MIP_WDATA_SM        : std_logic_vector(31 downto 0);
+signal MEPC_WDATA_SM       : std_logic_vector(31 downto 0);
 signal MCAUSE_WDATA_SM     : std_logic_vector(31 downto 0);
 signal MTVAL_WDATA_SM      : std_logic_vector(31 downto 0);
 signal MEPC_SC             : std_logic_vector(31 downto 0);
@@ -106,7 +106,7 @@ signal MIE_VALUE_RC        : std_logic_vector(31 downto 0);
 signal MCAUSE_SC           : std_logic_vector(31 downto 0);
 signal CSR_RADR_SD, CSR_WADR_RD : std_logic_vector(11 downto 0);
 signal CSR_RDATA_SC, CSR_RDATA_RD : std_logic_vector(31 downto 0);
-signal MIP_WDATA_SM : std_logic_vector(31 downto 0);
+
 -- Exception 
 signal ILLEGAL_INSTRUCTION_RD, ADRESS_MISALIGNED_RD, INSTRUCTION_ACCESS_FAULT_RD, EBREAK_RD : std_logic;
 signal ILLEGAL_INSTRUCTION_RE, ADRESS_MISALIGNED_RE, INSTRUCTION_ACCESS_FAULT_RE, EBREAK_RE : std_logic;
@@ -458,9 +458,9 @@ component csr
         CSR_ENABLE_SM       : in std_logic;
 
         EXCEPTION_SM        : in std_logic;
-        MSTATUS_WDATA_RM    : in std_logic_vector(31 downto 0);
-        MIP_WDATA_RM        : in std_logic_vector(31 downto 0);
-        MEPC_WDATA_RM       : in std_logic_vector(31 downto 0);
+        mstatus_wdata_sm    : in std_logic_vector(31 downto 0);
+        MIP_WDATA_SM        : in std_logic_vector(31 downto 0);
+        MEPC_WDATA_SM       : in std_logic_vector(31 downto 0);
         MCAUSE_WDATA_SM     : in std_logic_vector(31 downto 0);
         MTVAL_WDATA_SM      : in std_logic_vector(31 downto 0);
 
@@ -752,9 +752,9 @@ mem_i : mem
         CSR_WDATA_SM        => CSR_WDATA_SM,   
         CSR_ENABLE_SM       => CSR_ENABLE_SM, 
 
-        MSTATUS_WDATA_SM    => MSTATUS_WDATA_RM,    
-        MIP_WDATA_SM        => MIP_WDATA_RM,    
-        MEPC_WDATA_SM       => MEPC_WDATA_RM,    
+        MSTATUS_WDATA_SM    => mstatus_wdata_sm,    
+        MIP_WDATA_SM        => MIP_WDATA_SM,    
+        MEPC_WDATA_SM       => MEPC_WDATA_SM,    
         MCAUSE_WDATA_SM     => MCAUSE_WDATA_SM,    
         MTVAL_WDATA_SM      => MTVAL_WDATA_SM,    
 
@@ -850,9 +850,9 @@ csr_i : csr
         CSR_ENABLE_SM       => CSR_ENABLE_SM, 
 
         EXCEPTION_SM        => EXCEPTION_SM,
-        MSTATUS_WDATA_RM    => MSTATUS_WDATA_RM, 
-        MIP_WDATA_RM        => MIP_WDATA_RM, 
-        MEPC_WDATA_RM       => MEPC_WDATA_RM, 
+        mstatus_wdata_sm    => mstatus_wdata_sm, 
+        MIP_WDATA_SM        => MIP_WDATA_SM, 
+        MEPC_WDATA_SM       => MEPC_WDATA_SM, 
         MCAUSE_WDATA_SM     => MCAUSE_WDATA_SM, 
         MTVAL_WDATA_SM      => MTVAL_WDATA_SM, 
 

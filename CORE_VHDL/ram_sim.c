@@ -233,9 +233,10 @@ int main(int argc, char const* argv[]) {
     if(rvtest_entry_point)
         start_pc = rvtest_entry_point;
     else
-        start_pc = (structure->start_adr);
-        //start_pc = 0x80000000;  
-        //
+        start_pc = 0x80000000;
+        //start_pc = (structure->start_adr);
+        //  
+        
         
     printf("Start Adress : %x\n",start_pc) ;
 
