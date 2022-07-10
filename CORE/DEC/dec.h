@@ -49,7 +49,7 @@ SC_MODULE(decod) {
     sc_in<bool>        DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
     sc_out<bool>       DEC2IF_EMPTY_SD;
 
-    sc_out<bool>        FORCE_PC_RD;
+    sc_out<bool>        PRED_FAILED_RD;
     sc_out<bool>        PRED_SUCCESS_RD;
     sc_out<bool>        BRANCH_INST_RD;
     sc_out<sc_uint<32>> BRANCH_INST_ADR_RD;
@@ -67,7 +67,7 @@ SC_MODULE(decod) {
 
     sc_out<bool>                  IF2DEC_POP_SD;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>                  IF2DEC_FLUSH_SD;
-
+    
     // Interface with DEC2EXE
 
     sc_in<bool>                    DEC2EXE_POP_SE;
@@ -147,7 +147,7 @@ SC_MODULE(decod) {
     sc_signal<bool>        r2_valid_sd;
     sc_signal<bool>        block_in_dec;
     sc_signal<sc_uint<32>> res_pc_sd;
-    sc_signal<bool>        force_pc_sd;
+    sc_signal<bool>        pred_failed_sd;
     // fifo dec2if :
 
     sc_signal<sc_bv<dec2if_size>> dec2if_in_sd;  // pc sent to fifo
@@ -377,8 +377,8 @@ SC_MODULE(decod) {
                   << branch_adr_sd
                   << PC_IF2DEC_RI
                   << res_pc_sd
-                  << force_pc_sd
-                  << pred_success_sd;
+                  << pred_success_sd
+                  << pred_failed_sd;
         SC_METHOD(unconcat_dec2if);
         sensitive << dec2if_out_sd;
 

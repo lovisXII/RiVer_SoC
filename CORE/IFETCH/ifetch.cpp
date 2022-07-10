@@ -6,7 +6,7 @@ void ifetch::fetch_method() {
     if (EXCEPTION_SM.read() == 0) {
 
 
-        if(PRED_TAKEN_RI.read() && !FORCE_PC_RD.read())
+        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
         {
             ADR_SI.write(PRED_ADR_RI.read());
         }
@@ -19,7 +19,7 @@ void ifetch::fetch_method() {
         if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
         if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
         if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
-        if2dec_in_var.range(31, 0)  = PRED_TAKEN_RI.read()?PRED_ADR_RI.read():PC_RD.read();
+        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_RI.read():PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
 
         // data coming out from if2dec :
@@ -48,8 +48,8 @@ void ifetch::fetch_method() {
         if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
         if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
         if2dec_in_var.range(63, 32) = nop_encoding;
-        if2dec_in_var.range(31, 0)  = PRED_TAKEN_RI.read()?PRED_ADR_RI.read():PC_RD.read();
-        if(PRED_TAKEN_RI.read() && !FORCE_PC_RD.read())
+        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_RI.read():PC_RD.read();
+        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
         {
             ADR_SI.write(PRED_ADR_RI.read());
         }
@@ -117,7 +117,7 @@ void ifetch::read_pred_reg()
     {
         if(BRANCH_ADR_RI[i].read() == PC_RD.read())
         {
-            found = true;
+            //found = true;
             PRED_NEXT_ADR_SI = PREDICTED_ADR_RI[i];
             PRED_ADR_TAKEN_SI = (bool)(PRED_STATE_RI[i].read() == strongly_taken) || (PRED_STATE_RI[i].read() == weakly_taken);
             break;
@@ -187,7 +187,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, pred_write_pointer_si, GET_NAME(pred_write_pointer_si));
     sc_trace(tf, PRED_SUCCESS_RD, GET_NAME(PRED_SUCCESS_RD));
     sc_trace(tf, next_state_pred_si, GET_NAME(next_state_pred_si));
-    sc_trace(tf, FORCE_PC_RD, GET_NAME(FORCE_PC_RD));
+    sc_trace(tf, PRED_FAILED_RD, GET_NAME(PRED_FAILED_RD));
 
     for(int i = 0; i < predictor_register_size; i++)
     {

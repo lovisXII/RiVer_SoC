@@ -33,7 +33,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> BRANCH_INST_ADR_RD;
     sc_signal<sc_uint<32>> ADR_TO_BRANCH_RD;
     sc_signal<bool>        PRED_SUCCESS_RD;
-    sc_signal<bool>        FORCE_PC_RD;
+    sc_signal<bool>        PRED_FAILED_RD;
     // IF2DEC :
 
     sc_signal<sc_bv<32>>   INSTR_RI;
@@ -45,6 +45,7 @@ SC_MODULE(core) {
 
     sc_signal<sc_uint<32>> PRED_ADR_RI;
     sc_signal<bool>        PRED_TAKEN_RI;
+
     // DEC-EXE interface
 
     sc_signal<sc_uint<32>> PC_DEC2EXE_RD;
@@ -287,7 +288,7 @@ SC_MODULE(core) {
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
         ifetch_inst.PC_RD(PC_RD);
-        ifetch_inst.FORCE_PC_RD(FORCE_PC_RD);
+        ifetch_inst.PRED_FAILED_RD(PRED_FAILED_RD);
         ifetch_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
         ifetch_inst.BRANCH_INST_RD(BRANCH_INST_RD);
         ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
@@ -315,13 +316,14 @@ SC_MODULE(core) {
         ifetch_inst.MRET_SM(MRET_SM);
         ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
+
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
 
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
         dec_inst.PC_RD(PC_RD);
-        dec_inst.FORCE_PC_RD(FORCE_PC_RD);
+        dec_inst.PRED_FAILED_RD(PRED_FAILED_RD);
         dec_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
         dec_inst.BRANCH_INST_RD(BRANCH_INST_RD);
         dec_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
