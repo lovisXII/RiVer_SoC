@@ -4,27 +4,17 @@ void ifetch::fetch_method() {
     sc_bv<if2dec_size> if2dec_in_var;
     sc_bv<if2dec_size> instr_ri_var = instr_ri.read();
     if (EXCEPTION_SM.read() == 0) {
-
-
-        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
-        {
-            ADR_SI.write(PRED_ADR_RI.read());
-        }
-        else
-        {
-            ADR_SI.write(PC_RD.read());
-        }
+        ADR_SI.write(PC_RD.read());
 
         // data sent in if2dec
-        if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
-        if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
+
+
         if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
-        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_RI.read():PC_RD.read();
+        if2dec_in_var.range(31, 0)  = PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
 
         // data coming out from if2dec :
-        PRED_TAKEN_RI.write((bool)instr_ri_var[96]);
-        PRED_ADR_RI.write((sc_bv_base)instr_ri_var.range(95, 64));
+
         INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
         PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
         if (IF2DEC_FLUSH_SD.read()) {
@@ -45,25 +35,17 @@ void ifetch::fetch_method() {
         // If an exception is detected
         // Pipeline pass in M-mode
         // Fifo send nop instruction 
-        if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
-        if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
+
         if2dec_in_var.range(63, 32) = nop_encoding;
-        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_RI.read():PC_RD.read();
-        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
-        {
-            ADR_SI.write(PRED_ADR_RI.read());
-        }
-        else
-        {
-            ADR_SI.write(PC_RD.read());
-        }
+
+        if2dec_in_var.range(31, 0)  = PC_RD.read();
+        ADR_SI.write(PC_RD.read());
 
 
         if2dec_in_si.write(if2dec_in_var);  
         
         // data coming out from if2dec :
-        PRED_TAKEN_RI.write((bool)instr_ri_var[96]);
-        PRED_ADR_RI.write((sc_bv_base)instr_ri_var.range(95, 64));
+
         INSTR_RI.write((sc_bv_base)instr_ri_var.range(63, 32));
         PC_IF2DEC_RI.write((sc_bv_base)instr_ri_var.range(31, 0));
         IF2DEC_PUSH_SI.write(true);
@@ -81,79 +63,8 @@ void ifetch::exception()
 {
     EXCEPTION_RI.write(0);
 }
-void ifetch::write_pred_reg()
-{
-    int index = 0;
-    if(BRANCH_INST_RD.read() && !IF2DEC_EMPTY_SI.read())
-    {
-        bool found = false;
-        for(int i = 0; i < predictor_register_size; ++i)
-        {
-            if(BRANCH_ADR_RI[i] == BRANCH_INST_ADR_RD.read())
-            {
-                found = true;
-                index = i;
-                break;
-            }
-        }
-        if(!found)
-        {
-            BRANCH_ADR_RI[pred_write_pointer_si.read()] = BRANCH_INST_ADR_RD.read();
-            PREDICTED_ADR_RI[pred_write_pointer_si.read()] = ADR_TO_BRANCH_RD.read();
-            PRED_STATE_RI[pred_write_pointer_si.read()] = weakly_taken;
-            sc_uint<size_of_pred_pointer> pointer = pred_write_pointer_si.read();
-            pred_write_pointer_si = pred_write_pointer_si.read() + 1;
-        }
-        else
-        {
-            PRED_STATE_RI[index] = next_state_pred_si;
-        }
-    }
-}
-void ifetch::read_pred_reg()
-{
-    bool found = false;
-    for(int i = 0; i < predictor_register_size; ++i)
-    {
-        if(BRANCH_ADR_RI[i].read() == PC_RD.read())
-        {
-            //found = true;
-            PRED_NEXT_ADR_SI = PREDICTED_ADR_RI[i];
-            PRED_ADR_TAKEN_SI = (bool)(PRED_STATE_RI[i].read() == strongly_taken) || (PRED_STATE_RI[i].read() == weakly_taken);
-            break;
-        }
-    }
-    if(!found)
-    {
-        PRED_ADR_TAKEN_SI = false;
-    }
-}
-void ifetch::calc_prob_pred()
-{
-    for(int i = 0; i < predictor_register_size; ++i)
-    {
-        if(BRANCH_ADR_RI[i].read() & BRANCH_INST_ADR_RD.read())
-        {
-            switch(PRED_STATE_RI[i].read())
-            {
-                case strongly_taken:
-                    next_state_pred_si = PRED_SUCCESS_RD.read()?strongly_taken:weakly_taken;
-                break;
-                case weakly_taken:
-                    next_state_pred_si = PRED_SUCCESS_RD.read()?strongly_taken:weakly_not_taken;
-                break;
-                case weakly_not_taken:
-                    next_state_pred_si = PRED_SUCCESS_RD.read()?weakly_taken:strongly_not_taken;
-                break;
-                case strongly_not_taken:
-                    next_state_pred_si = PRED_SUCCESS_RD.read()?weakly_not_taken:strongly_not_taken;
-                break;
-            }
-            break;
-        }
-    }
-    
-}
+
+
 void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, ADR_SI, GET_NAME(ADR_SI));
     sc_trace(tf, ADR_VALID_SI, GET_NAME(ADR_VALID_SI));
@@ -177,32 +88,5 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
-    sc_trace(tf, BRANCH_INST_RD, GET_NAME(BRANCH_INST_RD));
-    sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
-    sc_trace(tf, ADR_TO_BRANCH_RD, GET_NAME(ADR_TO_BRANCH_RD));
-    sc_trace(tf, PRED_ADR_RI, GET_NAME(PRED_ADR_RI));
-    sc_trace(tf, PRED_TAKEN_RI, GET_NAME(PRED_TAKEN_RI));
-    sc_trace(tf, PRED_NEXT_ADR_SI, GET_NAME(PRED_NEXT_ADR_SI));
-    sc_trace(tf, PRED_ADR_TAKEN_SI, GET_NAME(PRED_ADR_TAKEN_SI));
-    sc_trace(tf, pred_write_pointer_si, GET_NAME(pred_write_pointer_si));
-    sc_trace(tf, PRED_SUCCESS_RD, GET_NAME(PRED_SUCCESS_RD));
-    sc_trace(tf, next_state_pred_si, GET_NAME(next_state_pred_si));
-    sc_trace(tf, PRED_FAILED_RD, GET_NAME(PRED_FAILED_RD));
-
-    for(int i = 0; i < predictor_register_size; i++)
-    {
-        std::string regname = "REG_ADR_";
-        regname += std::to_string(i);
-        sc_trace(tf, BRANCH_ADR_RI[i], signal_get_name(BRANCH_ADR_RI[i].name(), regname.c_str()));
-
-        regname = "REG_PRED_";
-        regname += std::to_string(i);
-        sc_trace(tf, PREDICTED_ADR_RI[i], signal_get_name(PREDICTED_ADR_RI[i].name(), regname.c_str()));
-
-        regname = "REG_STATE_";
-        regname += std::to_string(i);
-        sc_trace(tf, PRED_STATE_RI[i], signal_get_name(PRED_STATE_RI[i].name(), regname.c_str()));
-    }
-    
     fifo_inst.trace(tf);
 }
