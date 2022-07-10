@@ -77,7 +77,6 @@ void exec::select_exec_res() {
                     load_adress_missaligned_se.write(0);
                     store_adress_missaligned_se.write(0);
                 }
-                
                 if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
                 {
                     if (alu_out_se.read() > start_kernel_adress) {

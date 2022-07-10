@@ -1,3 +1,11 @@
+// +----------------------------------------------+
+// |    Return:                                   |
+// |        Prog Error           : -3             |
+// |        Simulation Error     : -2             |
+// |        Simulation Exception : -1             |
+// |        Simulation Success   : num of cycles  |
+// +----------------------------------------------+
+
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -7,6 +15,7 @@
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
+
 
 using namespace std;
 using namespace ELFIO;
@@ -71,12 +80,17 @@ int sc_main(int argc, char* argv[]) {
     string opt;
     string signature_name;
     bool   riscof;
+    bool   stats;
+
     if (argc >= 3 && std::string(argv[2]) == "-O") {
         opt = "-O2";
     } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
         signature_name = string(argv[3]);
         riscof         = true;
-    };
+    } else if(argc >= 3 && std::string(argv[2]) == "--stats")
+    {
+        stats          = true;
+    }
 
     char temp_text[512];
     if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
@@ -98,7 +112,7 @@ int sc_main(int argc, char* argv[]) {
     }
     if (!reader.load(path)) {  // verify if the path is correctly loadkernelle "
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
-        return 2;
+        return -3;
     }
     sprintf(temp_text, "riscv32-unknown-elf-objdump -D %s", path.c_str());
     strcat(temp_text, test);
@@ -327,6 +341,10 @@ int sc_main(int argc, char* argv[]) {
     RESET.write(true);   // end of reset
     cerr << "done." << endl;
 
+    // STATS
+
+    int NB_CYCLES = 0;
+    //
 
     int cycles = 0;
     int countdown;
@@ -540,20 +558,27 @@ int sc_main(int argc, char* argv[]) {
 
 
         unsigned int pc_adr = PC_VALUE.read();
-        //std::cerr << pc_adr << endl;
+        NB_CYCLES = sc_time_stamp().to_double()/1000;
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            exit(1);
+            return -2;
         } else if (signature_name == "" && pc_adr == good_adr) {
+            if(stats)
+            {
+                cout <<"#-- STATS -- #"<<endl<<endl;
+                cout << "NBCYCLES = "<<std::dec<<NB_CYCLES<<endl<<endl;
+                cout <<"#------------#"<<endl;
+            }
+            
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            exit(0);
+            return 0;
         } 
         else if(signature_name == "" && pc_adr == exception_occur){
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            exit(1);
+            exit(-1);
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
@@ -578,7 +603,7 @@ int sc_main(int argc, char* argv[]) {
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
-            exit(0);
+            exit(sc_time_stamp().to_double());
         }
 
         // unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
