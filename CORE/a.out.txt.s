@@ -5,16 +5,22 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	02f00293          	li	t0,47
+   10054:	00a00193          	li	gp,10
    10058:	00000013          	nop
-   1005c:	00c00093          	li	ra,12
-   10060:	01700113          	li	sp,23
-   10064:	002081b3          	add	gp,ra,sp
-   10068:	00c00213          	li	tp,12
-   1006c:	003201b3          	add	gp,tp,gp
-   10070:	00519463          	bne	gp,t0,10078 <_start+0x24>
-   10074:	f91ef06f          	j	4 <_good>
+   1005c:	00a00093          	li	ra,10
+   10060:	00100133          	add	sp,zero,ra
+   10064:	00118463          	beq	gp,ra,1006c <_label1>
+   10068:	f99ef06f          	j	0 <_bad>
+
+0001006c <_label1>:
+   1006c:	01400613          	li	a2,20
+   10070:	03200693          	li	a3,50
+   10074:	00d61463          	bne	a2,a3,1007c <_label1+0x10>
    10078:	f89ef06f          	j	0 <_bad>
+   1007c:	0040006f          	j	10080 <_label2>
+
+00010080 <_label2>:
+   10080:	f85ef06f          	j	4 <_good>
 
 Disassembly of section .riscv.attributes:
 
