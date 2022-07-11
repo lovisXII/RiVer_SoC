@@ -4,6 +4,9 @@
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
 
+
+#define BRANCH_PREDICTION
+
 #define nop_encoding 0x0000013
 #define if2dec_size  97
 

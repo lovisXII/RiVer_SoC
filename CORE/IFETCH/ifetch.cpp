@@ -117,7 +117,9 @@ void ifetch::read_pred_reg()
     {
         if(BRANCH_ADR_RI[i].read() == PC_RD.read())
         {
-            //found = true;
+            #ifdef BRANCH_PREDICTION
+            found = true;
+            #endif
             PRED_NEXT_ADR_SI = PREDICTED_ADR_RI[i];
             PRED_ADR_TAKEN_SI = (bool)(PRED_STATE_RI[i].read() == strongly_taken) || (PRED_STATE_RI[i].read() == weakly_taken);
             break;

@@ -20,9 +20,8 @@
 using namespace std;
 using namespace ELFIO;
 
-#define ICACHE_ON
-#define DCACHE_ON
-//#define DEBUG_MAX_ITERATIONS 
+//#define ICACHE_ON
+//#define DCACHE_ON
 
 #ifdef ICACHE_ON
 
@@ -354,12 +353,8 @@ int sc_main(int argc, char* argv[]) {
     int mem_adr;
     int mem_size;
 
-#ifdef DEBUG_MAX_ITERATIONS
-    int cpt = 0;
-    while (cpt < 100000) { cpt++;
-#else
-    while (1) {
-#endif
+    while (1) 
+    {
         if (countdown) countdown--;
         cycles++;
 #ifdef DCACHE_ON
@@ -426,7 +421,6 @@ int sc_main(int argc, char* argv[]) {
                         }
                         else if(mem_size == 1){//access in half word
                             int mask_adr = DCACHE_A.read() & 0x00000003 ;
-                            cout << sc_time_stamp() << "  " << mask_adr << "   " <<mem_adr<<"    "<<temporary_store_value<<endl;
                             switch (mask_adr)
                             {
                             case 0 :
@@ -506,7 +500,6 @@ int sc_main(int argc, char* argv[]) {
                     if_adr = ICACHE_A.read();
 
                     ICACHE_DT.write(ram[if_adr]);
-                    //std::cout << "inst 0: " << ram[if_adr] << std::endl;
                     ICACHE_A.write(if_adr);
                     MP_ACK_ICACHE.write(true);
                     IC_fsm_current_state = IC_SEND_INSTRUCTION_1;
@@ -521,8 +514,6 @@ int sc_main(int argc, char* argv[]) {
                 ICACHE_A.write(if_adr+4);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU0;
-
-                //std::cout << "inst 1: " << ram[if_adr+4] << std::endl;
             break;
             case IC_CLK_SIMU0:
                 IC_fsm_current_state = IC_SEND_INSTRUCTION_2;
@@ -532,8 +523,6 @@ int sc_main(int argc, char* argv[]) {
                 ICACHE_A.write(if_adr+8);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU1;
-
-                //std::cout << "inst 2: " << ram[if_adr+8] << std::endl;
             break;
             case IC_CLK_SIMU1:
                 IC_fsm_current_state = IC_SEND_INSTRUCTION_3;
@@ -543,8 +532,6 @@ int sc_main(int argc, char* argv[]) {
                 ICACHE_A.write(if_adr+12);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_END_BURST;
-
-                //std::cout << "inst 3: " << ram[if_adr + 12] << std::endl;
             break;
             case IC_END_BURST:
                 IC_fsm_current_state = IC_IDLE;
@@ -562,7 +549,7 @@ int sc_main(int argc, char* argv[]) {
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            return -2;
+            exit(1);
         } else if (signature_name == "" && pc_adr == good_adr) {
             if(stats)
             {
@@ -573,12 +560,12 @@ int sc_main(int argc, char* argv[]) {
             
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            return 0;
+            exit(0);
         } 
         else if(signature_name == "" && pc_adr == exception_occur){
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            exit(-1);
+            exit(1);
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
@@ -596,31 +583,13 @@ int sc_main(int argc, char* argv[]) {
             
             int j = 1;
             for (int i = begin_signature; i < end_signature; i += 4){
-                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout <<dec<<j<<hex<< ": adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
                 j++;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
-            exit(sc_time_stamp().to_double());
+            exit(0);
         }
-
-        // unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
-        // unsigned int offset          = 8 * (mem_adr % 4);
-        // unsigned int mask;
-        // if (mem_size == 2)
-        //     mask = 0xFF;
-        // else if (mem_size == 1)
-        //     mask = 0xFFFF;
-        // else
-        //     mask = 0xFFFFFFFF;
-        // mask <<= offset;
-        // if (mem_store && mem_adr_valid) {
-        //     ram[rounded_mem_adr] &= ~mask;
-        //     ram[rounded_mem_adr] |= (mask & (mem_data << offset));
-        // }
-        // mem_result = (ram[rounded_mem_adr] & mask) >> offset;
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
@@ -651,7 +620,6 @@ int sc_main(int argc, char* argv[]) {
                     temporary_store_value = temporary_store_value & 0xFF000000 ;
                     temporary_value = 0x00FFFFFF & temporary_value ;
                     ram[mem_adr] = temporary_value | temporary_store_value ;
-                    cout << ram[mem_adr] << endl ;
                     break ;
                 default:
                     break;
