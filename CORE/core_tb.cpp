@@ -1,10 +1,3 @@
-// +----------------------------------------------+
-// |    Return:                                   |
-// |        Prog Error           : -3             |
-// |        Simulation Error     : -2             |
-// |        Simulation Exception : -1             |
-// |        Simulation Success   : num of cycles  |
-// +----------------------------------------------+
 
 #include <fstream>
 #include <iomanip>
@@ -20,8 +13,8 @@
 using namespace std;
 using namespace ELFIO;
 
-//#define ICACHE_ON
-//#define DCACHE_ON
+#define ICACHE_ON
+#define DCACHE_ON
 
 #ifdef ICACHE_ON
 
