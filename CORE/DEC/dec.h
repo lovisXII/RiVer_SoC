@@ -169,7 +169,7 @@ SC_MODULE(decod) {
     sc_in<sc_uint<6>>   DEST_RM_S2;
     sc_in<bool>         CSR_WENABLE_RM_S2;
     sc_in<sc_uint<32>>  CSR_RDATA_RM_S2;
-    sc_in<bool>         BP_MEM2WBK_EMPTY_SM_S2;
+    sc_in<bool>         MEM2WBK_EMPTY_SM_S2;
     sc_in<sc_uint<32>>  EXE_RES_RE_S2;
     sc_in<sc_uint<32>>  MEM_RES_RM_S2;
 
@@ -831,7 +831,7 @@ SC_MODULE(decod) {
                     << EXE2MEM_EMPTY_SE_S2 
                     << DEC2EXE_EMPTY_SD_S2 
                     << MEM_LOAD_RE_S2 
-                    << BP_MEM2WBK_EMPTY_SM_S2;
+                    << MEM2WBK_EMPTY_SM_S2;
         reset_signal_is(RESET_N, false);
     }
 };

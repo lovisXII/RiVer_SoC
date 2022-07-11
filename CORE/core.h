@@ -566,7 +566,7 @@ SC_MODULE(core) {
         dec_inst.DEST_RM_S2(DEST_RM_S2);
         dec_inst.CSR_WENABLE_RM_S2(CSR_WENABLE_RM_S2);
         dec_inst.CSR_RDATA_RM_S2(CSR_RDATA_RM_S2);
-        dec_inst.BP_MEM2WBK_EMPTY_SM_S2(MEM2WBK_EMPTY_SM_S2);
+        dec_inst.MEM2WBK_EMPTY_SM_S2(MEM2WBK_EMPTY_SM_S2);
         dec_inst.EXE_RES_RE_S2(EXE_RES_RE_S2);
         dec_inst.MEM_RES_RM_S2(MEM_RES_RM_S2);
 
@@ -751,6 +751,21 @@ SC_MODULE(core) {
         exec_inst_s2.EBREAK_RD_S2(EBREAK_RD_S2);
         exec_inst_s2.EBREAK_RE_S2(EBREAK_RE_S2);
 
+
+        exec_inst_s2.DEST_RE_S1(DEST_RE_S1);
+        exec_inst_s2.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
+        exec_inst_s2.CSR_RDATA_RE_S1(CSR_RDATA_RE_S1);
+        exec_inst_s2.MEM_LOAD_RE_S1(MEM_LOAD_RE_S1);
+        exec_inst_s2.EXE_RES_RE_S1(EXE_RES_RE_S1);
+        exec_inst_s2.MEM_DEST_RM_S1(DEST_RM_S1);
+        exec_inst_s2.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);
+        exec_inst_s2.CSR_RDATA_RM_S1(CSR_RDATA_RM_S1);
+        exec_inst_s2.MEM_RES_RM_S1(MEM_RES_RM_S1);
+        exec_inst_s2.MEM2WBK_EMPTY_SM_S1(MEM2WBK_EMPTY_SM_S1);
+        exec_inst_s2.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
+        exec_inst_s2.OP2_RD_S1(OP2_RD_S1);
+        exec_inst_s2.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
+
         exec_inst_s2.MULT_INST_RD_S2(MULT_INST_RD_S2);
         exec_inst_s2.PC_DEC2EXE_RD_S2(PC_DEC2EXE_RD_S2);
         exec_inst_s2.PC_EXE2MEM_RE_S2(PC_EXE2MEM_RE_S2);
@@ -829,7 +844,7 @@ SC_MODULE(core) {
         exec_inst_s2.OP2_SE_S2(op2_se_s2);
 
         exec_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
-        exec_inst_s2.BP_MEM2WBK_EMPTY_SM_S2(MEM2WBK_EMPTY_SM_S2);
+        exec_inst_s2.MEM2WBK_EMPTY_SM_S2(MEM2WBK_EMPTY_SM_S2);
 
         exec_inst_s2.CLK(CLK);
         exec_inst_s2.RESET(RESET);

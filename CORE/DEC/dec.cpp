@@ -575,7 +575,7 @@ void decod::bypasses() {
 
     // BYPASS M2->D
 
-    else if (RADR1_SD_S1.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR1_SD_S1.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
     {  
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S2.read())
@@ -654,7 +654,7 @@ void decod::bypasses() {
 
     // bypass M2->D
 
-    else if (RADR2_SD_S1.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR2_SD_S1.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
     {  
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S2.read())
@@ -726,7 +726,7 @@ void decod::bypasses() {
 
     // bypass M2->D
 
-    else if (RADR1_SD_S2.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR1_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
     {  
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())
@@ -796,7 +796,7 @@ void decod::bypasses() {
 
     // bypass M2->D
 
-    else if (RADR2_SD_S2.read() == DEST_RM_S2.read() && !BP_MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR2_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
     {  
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())

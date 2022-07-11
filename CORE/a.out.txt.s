@@ -5,25 +5,30 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	01700293          	li	t0,23
-   10058:	02e00313          	li	t1,46
-   1005c:	00a00093          	li	ra,10
-   10060:	00c00113          	li	sp,12
-   10064:	07d00193          	li	gp,125
-   10068:	01700213          	li	tp,23
-   1006c:	00402023          	sw	tp,0(zero) # 0 <_bad>
-   10070:	000000b3          	add	ra,zero,zero
-   10074:	004000b3          	add	ra,zero,tp
-   10078:	00000013          	nop
-   1007c:	00002183          	lw	gp,0(zero) # 0 <_bad>
-   10080:	00000013          	nop
-   10084:	00308133          	add	sp,ra,gp
-   10088:	00000013          	nop
-   1008c:	00518463          	beq	gp,t0,10094 <_start+0x40>
-   10090:	f71ef06f          	j	0 <_bad>
-   10094:	00610463          	beq	sp,t1,1009c <_start+0x48>
-   10098:	f69ef06f          	j	0 <_bad>
-   1009c:	f69ef06f          	j	4 <_good>
+   10054:	00a06093          	ori	ra,zero,10
+   10058:	00c06113          	ori	sp,zero,12
+   1005c:	00c06193          	ori	gp,zero,12
+   10060:	03406213          	ori	tp,zero,52
+   10064:	00000013          	nop
+   10068:	00000013          	nop
+   1006c:	00000013          	nop
+   10070:	00000013          	nop
+   10074:	02218463          	beq	gp,sp,1009c <_label_test_1>
+   10078:	07800393          	li	t2,120
+   1007c:	00218863          	beq	gp,sp,1008c <_label_test_2>
+   10080:	0001a503          	lw	a0,0(gp)
+   10084:	00310613          	addi	a2,sp,3
+   10088:	0001a633          	sltz	a2,gp
+
+0001008c <_label_test_2>:
+   1008c:	00c06313          	ori	t1,zero,12
+   10090:	0001a503          	lw	a0,0(gp)
+   10094:	00310613          	addi	a2,sp,3
+   10098:	0001a633          	sltz	a2,gp
+
+0001009c <_label_test_1>:
+   1009c:	00c00293          	li	t0,12
+   100a0:	f65ef06f          	j	4 <_good>
 
 Disassembly of section .riscv.attributes:
 
