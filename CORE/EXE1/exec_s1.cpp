@@ -585,7 +585,7 @@ void exec_s1::bypasses() {
     // E2->E1 and no load (normal bypass)
     {
         op1_se_s1.write(EXE_RES_RE_S2.read());
-        r1_valid_se = EXE2MEM_EMPTY_SE_S1;
+        r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S2) 
     // M2->E1 and csr
