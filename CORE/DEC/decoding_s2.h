@@ -316,7 +316,7 @@ void decod::pre_reg_read_decoding_s2() {
         CSR_RADR_SD_S2.write(0);
     }
     // U-type Instruction :
-    else if (u_type_inst_sd_s2 == 1) {
+    else if (u_type_inst_sd_s2 == 1) {  
         radr1_var_s2    = 0;
         adr_dest_var_s2 = if_ir2.range(11, 7);
         radr2_var_s2    = 0;

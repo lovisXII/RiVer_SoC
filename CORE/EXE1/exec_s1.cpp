@@ -609,7 +609,7 @@ void exec_s1::bypasses() {
         blocked_var = true;
         r1_valid_se = true;
     }
-    else if (DEST_RE_S2.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S1) 
+    else if (DEST_RE_S2.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
     // stall in case of load in M2 and data dependencies in exe
     {
         blocked_var = true;
@@ -625,24 +625,46 @@ void exec_s1::bypasses() {
     // BYPASS on rs2_s1 :
     // ###############################
 
-    if (RADR2_RD_S1.read() == 0 || MEM_LOAD_RD_S1.read() || BLOCK_BP_RD_S1.read()) {
+
+    /*
+    For rs2, there is no bypass in case of a load :
+    lw rd, imm(rs1)
+
+    But in case of a store :
+    
+    sw rs2,0(rs1)
+
+    We must bypass the value 
+    */
+    if (RADR2_RD_S1.read() == 0 || MEM_LOAD_RD_S1.read() || BLOCK_BP_RD_S1.read()) 
+    {
         op2_se.write(OP2_RD_S1.read());
         r2_valid_se = true;
-    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1) {
+    } 
+    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1) 
+    // E1->E1 bypass
+    {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S1)
+        if (CSR_WENABLE_RE_S1) // case with csr
             bp_value = CSR_RDATA_RE_S1;
         else
             bp_value = EXE_RES_RE_S1;
-        if (MEM_STORE_RD_S1.read()) {  // on stores we need to bypass to the data not adr
+
+        if (MEM_STORE_RD_S1.read()) //case of a store 
+        {  // on stores we need to bypass to the data not adr
             bp_mem_data_var = bp_value;
             op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
-        } else {
+        }
+        else 
+        {
             op2_se.write(bp_value);
             r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
         }
-    } else if (MEM_DEST_RM_S1.read() == RADR2_RD_S1.read()) {
+    } 
+    else if (MEM_DEST_RM_S1.read() == RADR2_RD_S1.read()) 
+    // M1->E1
+    {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM_S1)
             bp_value = CSR_RDATA_RM_S1;
@@ -656,10 +678,59 @@ void exec_s1::bypasses() {
             op2_se.write(MEM_RES_RM_S1.read());
             r2_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
         }
-    } else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) {
+    }
+    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
+    //M1->E1 with load so need to stall
+    {
         blocked_var = true;
         r2_valid_se = true;
-    } else {
+    }
+    else if(DEST_RE_S2.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S2) 
+    // E2->E1 bypass
+    {
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RE_S1) // case with csr
+            bp_value = CSR_RDATA_RE_S2;
+        else
+            bp_value = EXE_RES_RE_S2;
+
+        if (MEM_STORE_RD_S1.read()) //case of a store 
+        {  // on stores we need to bypass to the data not adr
+            cout << sc_time_stamp() << "sstore in s1" << endl ;
+            bp_mem_data_var = bp_value;
+            op2_se.write(OP2_RD_S2.read());
+            r2_valid_se = true;
+        }
+        else 
+        {
+            op2_se.write(bp_value);
+            r2_valid_se = true;
+        }
+    } 
+    else if(MEM_DEST_RM_S2.read() == RADR2_RD_S1.read()) 
+    // M2->E1
+    {
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RM_S2)
+            bp_value = CSR_RDATA_RM_S2;
+        else
+            bp_value = MEM_RES_RM_S2;
+        if (MEM_STORE_RD_S2.read()) {
+            bp_mem_data_var = MEM_RES_RM_S2.read();
+            op2_se.write(OP2_RD_S2.read());
+            r2_valid_se = true;
+        } else {
+            op2_se.write(MEM_RES_RM_S2.read());
+            r2_valid_se = true;
+        }
+    }
+    else if (DEST_RE_S2.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
+    {
+        blocked_var = true;
+        r2_valid_se = true;
+    }
+    else 
+    {
         op2_se.write(OP2_RD_S1.read());
         r2_valid_se = true;
     }

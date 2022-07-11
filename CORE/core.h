@@ -631,6 +631,7 @@ SC_MODULE(core) {
         exec_inst_s1.MEM_RES_RM_S2(MEM_RES_RM_S2);
         exec_inst_s1.OP1_RD_S1(OP1_RD_S1);
         exec_inst_s1.OP2_RD_S1(OP2_RD_S1);
+        exec_inst_s1.OP2_RD_S2(OP2_RD_S2);
         exec_inst_s1.CMD_RD_S1(EXE_CMD_RD_S1);
         exec_inst_s1.DEST_RD_S1(EXE_DEST_RD_S1);
         exec_inst_s1.NEG_OP2_RD_S1(NEG_OP2_RD_S1);
@@ -646,6 +647,7 @@ SC_MODULE(core) {
         exec_inst_s1.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
         exec_inst_s1.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
         exec_inst_s1.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
+        exec_inst_s1.MEM_STORE_RD_S2(MEM_STORE_RD_S2);
         exec_inst_s1.MEM_SIGN_EXTEND_RD_S1(MEM_SIGN_EXTEND_RD_S1);
         exec_inst_s1.MEM_SIZE_RD_S1(MEM_SIZE_RD_S1);
         exec_inst_s1.SLT_RD_S1(SLT_RD_S1);
@@ -669,6 +671,7 @@ SC_MODULE(core) {
         exec_inst_s1.MULT_INST_RE_S1(MULT_INST_RE_S1);
         exec_inst_s1.MULT_SEL_HIGH_RE_S1(MULT_SEL_HIGH_RE_S1);
         exec_inst_s1.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
+        exec_inst_s1.EXE2MEM_EMPTY_SE_S2(EXE2MEM_EMPTY_SE_S2);
         exec_inst_s1.EXE2MEM_POP_SM_S1(EXE2MEM_POP_SM_S1);
 
         exec_inst_s1.CSR_WENABLE_RM_S1(CSR_WENABLE_RM_S1);

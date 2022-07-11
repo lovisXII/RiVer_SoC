@@ -74,6 +74,7 @@ SC_MODULE(exec_s1) {
 
     sc_in<sc_uint<32>> OP1_RD_S1;  // can contains CSR if CSR_type_operation_RD == 1
     sc_in<sc_uint<32>> OP2_RD_S1;
+    sc_in<sc_uint<32>> OP2_RD_S2;
     sc_in<bool>        OP1_VALID_RD_S1;
     sc_in<bool>        OP2_VALID_RD_S1;
     sc_in<sc_uint<6>>  RADR1_RD_S1;
@@ -88,7 +89,9 @@ SC_MODULE(exec_s1) {
     sc_in<bool>        NEG_OP2_RD_S1, WB_RD_S1;
     sc_in<bool>        MEM_SIGN_EXTEND_RD_S1;
     sc_in<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S1;  // taille fifo entrée : 110
-    sc_in<bool>        MEM_LOAD_RD_S1, MEM_STORE_RD_S1;
+    sc_in<bool>        MEM_LOAD_RD_S1;
+    sc_in<bool>        MEM_STORE_RD_S1;
+    sc_in<bool>        MEM_STORE_RD_S2;
 
     sc_in<bool> EXE2MEM_POP_SM_S1;
     sc_in<bool> MULT_INST_RD_S1;
@@ -179,7 +182,7 @@ SC_MODULE(exec_s1) {
     sc_out<bool> MULT_SEL_HIGH_RE_S1;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE_S1, DEC2EXE_POP_SE_S1;
-
+    sc_in<bool> EXE2MEM_EMPTY_SE_S2;
     sc_out<bool>        CSR_WENABLE_RE_S1;
     sc_in<bool>        CSR_WENABLE_RE_S2;
     sc_out<sc_uint<12>> CSR_WADR_RE_S1;
@@ -382,7 +385,8 @@ SC_MODULE(exec_s1) {
 			<< MULT_INST_RE_S1 
 			<< MULT_INST_RM_S1 
 			<< MEM2WBK_EMPTY_SM_S1 
-			<< EXE2MEM_EMPTY_SE_S1;
+			<< EXE2MEM_EMPTY_SE_S1
+            << OP2_RD_S2;
         SC_METHOD(exception);
         sensitive 
 			<< WB_RD_S1 
