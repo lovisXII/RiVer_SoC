@@ -32,7 +32,7 @@ SC_MODULE(decod) {
     sc_in<bool>        IF2DEC_EMPTY_SI_S2;
     sc_out<bool>       IF2DEC_POP_SD_S1;  // Decod says to IFETCH if it wants a pop or no
     sc_out<bool>       IF2DEC_POP_SD_S2;
-    sc_out<bool>       IF2DEC_FLUSH_SD;
+    sc_out<bool>       IF2DEC_FLUSH_SD;//12
 
     // Interface with IFTECH
     
@@ -67,7 +67,7 @@ SC_MODULE(decod) {
     // Interface with EXE_S1 :
 
     sc_out<sc_uint<32>> OP1_RD_S1;                     // value of op1
-    sc_out<sc_uint<32>> OP2_RD_S1;                     // value of op2
+    sc_out<sc_uint<32>> OP2_RD_S1;         //30            // value of op2
     sc_out<sc_uint<2>>  EXE_CMD_RD_S1;                 // value of the command sent to exe
     sc_out<bool>        NEG_OP2_RD_S1;                 // allow to take not(op2) to do substraction
     sc_out<bool>        WB_RD_S1;                      // say if we plan to wbk the value of rd or no
@@ -77,7 +77,7 @@ SC_MODULE(decod) {
     sc_out<bool>        SLTU_RD_S1;
     sc_out<sc_uint<32>> PC_DEC2EXE_RD_S1;       // PC link to the current decoded instruction
     sc_out<sc_uint<32>> PC_BRANCH_VALUE_RD_S1;  // PC of the branch value, will be usefull for exception
-    sc_out<sc_uint<32>> MEM_DATA_RD_S1;         // data sent to mem for storage
+    sc_out<sc_uint<32>> MEM_DATA_RD_S1;        //40 // data sent to mem for storage
     sc_out<bool>        MEM_LOAD_RD_S1;         // say to mem if we do a load
     sc_out<bool>        MEM_STORE_RD_S1;        // say to mem if we do a store
     sc_out<bool>        MEM_SIGN_EXTEND_RD_S1;
@@ -100,7 +100,7 @@ SC_MODULE(decod) {
     sc_out<sc_uint<6>>  EXE_DEST_RD_S2;                // the destination register
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD_S2;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD_S2;
-    sc_out<bool>        SLTU_RD_S2;
+    sc_out<bool>        SLTU_RD_S2;             //56
     sc_out<sc_uint<32>> PC_DEC2EXE_RD_S2;       // PC link to the current decoded instruction
     sc_out<sc_uint<32>> PC_BRANCH_VALUE_RD_S2;  // PC of the branch value, will be usefull for exception
     sc_out<sc_uint<32>> MEM_DATA_RD_S2;         // data sent to mem for storage
@@ -117,19 +117,19 @@ SC_MODULE(decod) {
     // Interface with DEC2EXE
 
     sc_in<bool>                       DEC2EXE_POP_SE_S1;
-    sc_out<bool>                      DEC2EXE_EMPTY_SD_S1;
+    sc_out<bool>                      DEC2EXE_EMPTY_SD_S1;//69
     sc_signal<sc_bv<dec2exe_size_s1>> dec2exe_out_sd_s1;
 
     sc_in<bool>                       DEC2EXE_POP_SE_S2;
-    sc_out<bool>                      DEC2EXE_EMPTY_SD_S2;
+    sc_out<bool>                      DEC2EXE_EMPTY_SD_S2;//71
     sc_signal<sc_bv<dec2exe_size_s2>> dec2exe_out_sd_s2;
 
     // Multiplications signals
     sc_out<bool> MULT_INST_RD_S1;
     sc_out<bool> MULT_INST_RD_S2;
 
+    sc_in<bool> MULT_INST_RM_S1;//75
     sc_in<bool> MULT_INST_RE_S1;
-    sc_in<bool> MULT_INST_RM_S1;
 
     // Bypasses with S1
 
@@ -137,7 +137,7 @@ SC_MODULE(decod) {
     sc_in<sc_uint<32>> EXE_RES_RE_S1;
     sc_in<bool>        MEM_LOAD_RE_S1;
     sc_in<bool>        EXE2MEM_EMPTY_SE_S1;
-    sc_in<bool>        BP_MEM2WBK_EMPTY_SM_S1;
+    sc_in<bool>        MEM2WBK_EMPTY_SM_S1;
     sc_in<sc_uint<6>>  DEST_RM_S1;
     sc_in<sc_uint<32>> MEM_RES_RM_S1;
 
@@ -817,7 +817,7 @@ SC_MODULE(decod) {
                     << MULT_INST_RM_S1
                     << DEC2EXE_EMPTY_SD_S1 
                     << MEM_LOAD_RE_S1 
-                    << BP_MEM2WBK_EMPTY_SM_S1
+                    << MEM2WBK_EMPTY_SM_S1
 
                     << RDATA1_SR_S2 
                     << RDATA2_SR_S2 

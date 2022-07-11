@@ -85,7 +85,7 @@ SC_MODULE(exec_s1) {
     sc_in<sc_uint<32>> CSR_RDATA_RD_S1;
 
     sc_in<bool> MULT_INST_RM_S1;
-    sc_in<bool> BP_MEM2WBK_EMPTY_SM_S1;
+    sc_in<bool> MEM2WBK_EMPTY_SM_S1;
     // Exception coming from Decod :
 
     sc_in<bool>         EXCEPTION_RD_S1;  // tells if an instruction have been made in DEC
@@ -129,9 +129,13 @@ SC_MODULE(exec_s1) {
     // bypasses
 
     sc_in<sc_uint<6>>  MEM_DEST_RM_S1;
+    sc_in<sc_uint<6>>  MEM_DEST_RM_S2;
     sc_in<sc_uint<32>> MEM_RES_RM_S1;
+    sc_in<sc_uint<32>> MEM_RES_RM_S2;
     sc_in<bool>        CSR_WENABLE_RM_S1;
+    sc_in<bool>        CSR_WENABLE_RM_S2;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
+    sc_in<sc_uint<32>> CSR_RDATA_RM_S2;
 
     // General Interface :
 
@@ -145,21 +149,27 @@ SC_MODULE(exec_s1) {
     // Fifo exe2mem interface :
 
     sc_out<sc_uint<32>> EXE_RES_RE_S1;
+    sc_in<sc_uint<32>>  EXE_RES_RE_S2;
     sc_out<sc_uint<32>> MEM_DATA_RE_S1;
     sc_out<sc_uint<6>>  DEST_RE_S1;
+    sc_in<sc_uint<6>>   DEST_RE_S2;
     sc_out<sc_uint<2>>  MEM_SIZE_RE_S1;
     sc_out<sc_uint<32>> PC_EXE2MEM_RE_S1;
 
     sc_out<bool> WB_RE_S1, MEM_SIGN_EXTEND_RE_S1;  // taille fifo sortie : 7
-    sc_out<bool> MEM_LOAD_RE_S1, MEM_STORE_RE_S1;
+    sc_out<bool> MEM_LOAD_RE_S1;
+    sc_in<bool> MEM_LOAD_RE_S2;
+    sc_out<bool> MEM_STORE_RE_S1;
     sc_out<bool> MULT_INST_RE_S1;      // multiplication instruction
     sc_out<bool> MULT_SEL_HIGH_RE_S1;  // select higher bits of multiplication
 
     sc_out<bool> EXE2MEM_EMPTY_SE_S1, DEC2EXE_POP_SE_S1;
 
     sc_out<bool>        CSR_WENABLE_RE_S1;
+    sc_in<bool>        CSR_WENABLE_RE_S2;
     sc_out<sc_uint<12>> CSR_WADR_RE_S1;
     sc_out<sc_uint<32>> CSR_RDATA_RE_S1;
+    sc_in<sc_uint<32>> CSR_RDATA_RE_S2;
 
     // Internals signals :
 
@@ -274,7 +284,7 @@ SC_MODULE(exec_s1) {
         sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM_S1 << MEM_RES_RM_S1 << DEST_RE_S1 << EXE_RES_RE_S1 << RADR1_RD_S1
                   << CSR_WENABLE_RE_S1 << BLOCK_BP_RD_S1 << DEST_RE_S1 << MEM_LOAD_RE_S1 << CSR_WENABLE_RM_S1 << CSR_RDATA_RM_S1
                   << RADR2_RD_S1 << OP1_RD_S1 << OP2_RD_S1 << exception_se << MEM_DATA_RD_S1 << MEM_STORE_RD_S1
-                  << MULT_INST_RE_S1 << MULT_INST_RM_S1 << BP_MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE_S1;
+                  << MULT_INST_RE_S1 << MULT_INST_RM_S1 << MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE_S1;
         SC_METHOD(exception);
         sensitive << WB_RD_S1 << MEM_LOAD_RD_S1 << MEM_STORE_RD_S1 << WB_RD_S1 << EXCEPTION_RD_S1
                   << load_adress_missaligned_se << exception_se << load_access_fault_se << store_access_fault_se
