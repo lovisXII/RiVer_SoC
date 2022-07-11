@@ -6,7 +6,7 @@ void ifetch::fetch_method() {
     if (EXCEPTION_SM.read() == 0) {
 
 
-        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
+        if(PRED_TAKEN_SD.read() && !PRED_FAILED_RD.read())
         {
             ADR_SI.write(PRED_ADR_SD.read());
         }
@@ -19,7 +19,7 @@ void ifetch::fetch_method() {
         if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
         if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
         if2dec_in_var.range(63, 32) = (sc_bv_base)IC_INST_SI.read();
-        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_SD.read():PC_RD.read();
+        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_SD.read() && !PRED_FAILED_RD.read())?PRED_ADR_SD.read():PC_RD.read();
         if2dec_in_si.write(if2dec_in_var);
 
         // data coming out from if2dec :
@@ -48,8 +48,8 @@ void ifetch::fetch_method() {
         if2dec_in_var[96] = PRED_ADR_TAKEN_SI.read();
         if2dec_in_var.range(95, 64) = PRED_NEXT_ADR_SI.read();
         if2dec_in_var.range(63, 32) = nop_encoding;
-        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())?PRED_ADR_SD.read():PC_RD.read();
-        if(PRED_TAKEN_RI.read() && !PRED_FAILED_RD.read())
+        if2dec_in_var.range(31, 0)  = (PRED_TAKEN_SD.read() && !PRED_FAILED_RD.read())?PRED_ADR_SD.read():PC_RD.read();
+        if(PRED_TAKEN_SD.read() && !PRED_FAILED_RD.read())
         {
             ADR_SI.write(PRED_ADR_SD.read());
         }
