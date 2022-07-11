@@ -735,10 +735,10 @@ SC_MODULE(core) {
 
         // EXE_S2 port map :
 
-        exec_inst_s2.RADR1_RD_S2(BP_RADR1_RD_S1);
-        exec_inst_s2.RADR2_RD_S2(BP_RADR2_RD_S1);
-        exec_inst_s2.OP1_VALID_RD_S2(BP_R1_VALID_RD_S1);
-        exec_inst_s2.OP2_VALID_RD_S2(BP_R2_VALID_RD_S1);
+        exec_inst_s2.RADR1_RD_S2(BP_RADR1_RD_S2);
+        exec_inst_s2.RADR2_RD_S2(BP_RADR2_RD_S2);
+        exec_inst_s2.OP1_VALID_RD_S2(BP_R1_VALID_RD_S2);
+        exec_inst_s2.OP2_VALID_RD_S2(BP_R2_VALID_RD_S2);
         exec_inst_s2.MEM_DEST_RM_S2(DEST_RM_S2);
         exec_inst_s2.MEM_RES_RM_S2(MEM_RES_RM_S2);
         exec_inst_s2.OP1_RD_S2(OP1_RD_S2);

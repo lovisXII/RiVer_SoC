@@ -29,5 +29,5 @@ exception.o : exception.s
 	$(CC) -c $< $(C_ARGS) -o $@
 
 clean: 
-	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out
+	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out *.out.txt *.out.txt.s
 	rm kernel exception.o

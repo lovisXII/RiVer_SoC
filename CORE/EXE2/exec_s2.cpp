@@ -551,7 +551,7 @@ void exec_s2::bypasses() {
         r1_valid_se = true;
     } 
     else if (DEST_RE_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RE_S2) 
-    // E22->E2 and csr
+    // E2->E2 and csr
     {
         op1_se_s2.write(CSR_RDATA_RE_S2.read());
         r1_valid_se = true;
@@ -897,6 +897,7 @@ void exec_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, OP2_SE_S2, GET_NAME(OP2_SE_S2));
 
     sc_trace(tf, BLOCK_BP_RD_S2, GET_NAME(BLOCK_BP_RD_S2));
+    sc_trace(tf, DEST_RE_S1, GET_NAME(DEST_RE_S1));
 
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
