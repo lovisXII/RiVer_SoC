@@ -25,11 +25,15 @@ SC_MODULE(core) {
     // IFETCH-DEC interface
     // DEC2IF :
 
-    sc_signal<bool>      DEC2IF_POP_SI;
-    sc_signal<bool>      DEC2IF_EMPTY_SI;
-    sc_signal<sc_bv<32>> PC_RD;
-    sc_signal<bool>      EXCEPTION_RI;
+    sc_signal<bool>        DEC2IF_POP_SI;
+    sc_signal<bool>        DEC2IF_EMPTY_SI;
+    sc_signal<sc_uint<32>>   PC_RD;
 
+    sc_signal<bool>        BRANCH_INST_RD;
+    sc_signal<sc_uint<32>> BRANCH_INST_ADR_RD;
+    sc_signal<sc_uint<32>> ADR_TO_BRANCH_RD;
+    sc_signal<bool>        PRED_SUCCESS_RD;
+    sc_signal<bool>        PRED_FAILED_RD;
     // IF2DEC :
 
     sc_signal<sc_bv<32>>   INSTR_RI;
@@ -37,6 +41,11 @@ SC_MODULE(core) {
     sc_signal<bool>        IF2DEC_POP_SD;
     sc_signal<bool>        IF2DEC_FLUSH_SD;
     sc_signal<sc_uint<32>> PC_IF2DEC_RI;
+    sc_signal<bool>        EXCEPTION_RI;
+
+    sc_signal<sc_uint<32>> PRED_ADR_RI;
+    sc_signal<bool>        PRED_TAKEN_RI;
+
     // DEC-EXE interface
 
     sc_signal<sc_uint<32>> PC_DEC2EXE_RD;
@@ -279,11 +288,20 @@ SC_MODULE(core) {
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
         ifetch_inst.PC_RD(PC_RD);
+        ifetch_inst.PRED_FAILED_RD(PRED_FAILED_RD);
+        ifetch_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
+        ifetch_inst.BRANCH_INST_RD(BRANCH_INST_RD);
+        ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
+        ifetch_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
+
         ifetch_inst.INSTR_RI(INSTR_RI);
         ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         ifetch_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
         ifetch_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
+        ifetch_inst.PRED_ADR_RI(PRED_ADR_RI);
+        ifetch_inst.PRED_TAKEN_RI(PRED_TAKEN_RI);
+    
         ifetch_inst.ADR_SI(ADR_SI);
         ifetch_inst.ADR_VALID_SI(ADR_VALID_SI);
 
@@ -298,16 +316,27 @@ SC_MODULE(core) {
         ifetch_inst.MRET_SM(MRET_SM);
         ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
 
+
         ifetch_inst.CLK(CLK);
         ifetch_inst.RESET(RESET);
 
         dec_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         dec_inst.DEC2IF_EMPTY_SD(DEC2IF_EMPTY_SI);
         dec_inst.PC_RD(PC_RD);
+        dec_inst.PRED_FAILED_RD(PRED_FAILED_RD);
+        dec_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
+        dec_inst.BRANCH_INST_RD(BRANCH_INST_RD);
+        dec_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
+        dec_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
+
         dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         dec_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
         dec_inst.INSTR_RI(INSTR_RI);
         dec_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
+
+        dec_inst.PRED_ADR_RI(PRED_ADR_RI);
+        dec_inst.PRED_TAKEN_RI(PRED_TAKEN_RI);
+
         dec_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
         dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
 
