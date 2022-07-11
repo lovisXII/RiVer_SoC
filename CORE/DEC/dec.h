@@ -56,6 +56,8 @@ SC_MODULE(decod) {
     sc_out<sc_uint<32>> ADR_TO_BRANCH_RD;
     sc_out<sc_uint<32>> PC_RD;
 
+    sc_out<sc_uint<32>> PRED_ADR_SD;
+    sc_out<bool>        PRED_TAKEN_SD;
     // Interface with IF2DEC :
 
     sc_in<sc_uint<32>>            PC_IF2DEC_RI;
@@ -335,6 +337,7 @@ SC_MODULE(decod) {
     void check_pred_adr();
     void bypasses();
     void stall_method();
+    void pred_reg_data();
     void trace(sc_trace_file * tf);
 
     SC_CTOR(decod) : dec2if("dec2if"), dec2exe("dec2exe") {
@@ -460,6 +463,8 @@ SC_MODULE(decod) {
                   << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
 
                   << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
+        SC_METHOD(pred_reg_data);
+        sensitive << PRED_ADR_RI << PRED_TAKEN_RI;
         reset_signal_is(RESET_N, false);
     }
 };

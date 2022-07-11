@@ -1215,6 +1215,11 @@ void decod::stall_method() {
                       || IF2DEC_EMPTY_SI || dec2exe_full_sd);
 }
 
+void decod::pred_reg_data()
+{
+    PRED_ADR_SD.write(PRED_ADR_RI.read());
+    PRED_TAKEN_SD.write(PRED_TAKEN_RI.read());
+}
 //---------------------------------------------METHOD TO TRACE SIGNALS
 //:---------------------------------------------
 

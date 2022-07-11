@@ -34,6 +34,9 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> ADR_TO_BRANCH_RD;
     sc_signal<bool>        PRED_SUCCESS_RD;
     sc_signal<bool>        PRED_FAILED_RD;
+
+    sc_signal<sc_uint<32>> PRED_ADR_SD;
+    sc_signal<bool>        PRED_TAKEN_SD;
     // IF2DEC :
 
     sc_signal<sc_bv<32>>   INSTR_RI;
@@ -294,6 +297,9 @@ SC_MODULE(core) {
         ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
         ifetch_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
 
+        ifetch_inst.PRED_ADR_SD(PRED_ADR_SD);
+        ifetch_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
+
         ifetch_inst.INSTR_RI(INSTR_RI);
         ifetch_inst.IF2DEC_EMPTY_SI(IF2DEC_EMPTY_SI);
         ifetch_inst.IF2DEC_POP_SD(IF2DEC_POP_SD);
@@ -376,6 +382,9 @@ SC_MODULE(core) {
         dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
         dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
         dec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+
+        dec_inst.PRED_ADR_SD(PRED_ADR_SD);
+        dec_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
 
         dec_inst.BP_R1_VALID_RD(BP_R1_VALID_RD);
         dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);

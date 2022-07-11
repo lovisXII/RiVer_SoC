@@ -10,10 +10,10 @@ for file in $(ls tests); do
 
     timeout 20s ./core_tb tests/$file >/dev/null 2>&1;
     RES=$?;
-    if [ $RES -ge 0 ];
+    if (( $RES == 0 ))
     then
         printf "${GREEN} passed\n${NOC}"
-    elif [ $RES -q 1 ]
+    elif (( $RES == 2 ))
     then
         printf "${YELLOW} exception\n${NOC}"
     else
@@ -23,10 +23,10 @@ for file in $(ls tests); do
     timeout 20s ./core_tb tests/$file -O >/dev/null 2>&1
     RES=$?;
     
-    if [ $RES -ge 0 ];
+    if (( $RES == 0 ))
     then
         printf "${GREEN} passed\n${NOC}"
-    elif [ ${RES} -q -1 ]
+    elif (( $RES == 2 ))
     then
         printf "${YELLOW} exception\n${NOC}"
     else

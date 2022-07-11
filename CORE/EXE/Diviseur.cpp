@@ -9,13 +9,6 @@ void Diviseur::new_state()
     divisor_re = divisor_se;
     quotient_re = quotient_se;
     reminder_re = reminder_se;
-
-    /*cout << "End of cycle: "
-         << "   Divisor:   " << divisor_re.read()
-         << "   Quotient:  " << quotient_re.read()
-         << "   reminder: " << reminder_re.read() 
-         << "   shift:  "<<shift_cpt_re.read()
-         << "   next state: "<<current_state<< endl << endl;*/
 }
 void Diviseur::state_transition()
 {
@@ -41,7 +34,6 @@ void Diviseur::state_transition()
 }
 void Diviseur::mae_output()
 {
-    //cout << "CURRENT STATE: "<<current_state<<endl;
     switch(current_state.read())
     {
         case 0:// init/idle
@@ -97,7 +89,6 @@ void Diviseur::mae_output()
             {
                 if(divisor_re.read() > reminder_re.read())
                 {
-                    ////cout << "    # divisor > reminder" << endl << endl;
                     divisor_se = divisor_re.read() >> 1;
 
                     sc_uint<64> quo = quotient_re.read(); 
@@ -107,7 +98,6 @@ void Diviseur::mae_output()
                 }
                 else
                 {
-                    ////cout << "    # divisor <= reminder" << endl << endl;
                     reminder_se = reminder_re.read() - divisor_re.read();
                     
                     sc_uint<64> quo = quotient_re.read(); 
@@ -116,11 +106,7 @@ void Diviseur::mae_output()
                     quotient_se = quo;
 
                     divisor_se = divisor_re.read() >> 1;
-
                 }
-                /*cout << "  -->  divisor = "<< divisor_re.read() 
-                 << "   quotient = " << quotient_re.read()
-                 << "   reminder = " << reminder_re.read() << endl;*/
                 shift_cpt_se = shift_cpt_re.read() + 1;
             }
         break;

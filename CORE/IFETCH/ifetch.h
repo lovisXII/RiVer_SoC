@@ -43,6 +43,8 @@ SC_MODULE(ifetch) {
     sc_in<sc_uint<32>> BRANCH_INST_ADR_RD;
     sc_in<sc_uint<32>> ADR_TO_BRANCH_RD;
 
+    sc_in<sc_uint<32>> PRED_ADR_SD;
+    sc_in<bool>        PRED_TAKEN_SD;
     // if2dec interface
 
     sc_in<bool>      IF2DEC_FLUSH_SD;  // allow to flush if2dec in case of a branch
@@ -81,9 +83,9 @@ SC_MODULE(ifetch) {
     sc_signal<sc_bv<if2dec_size>>   instr_ri;  // instruction sent to if2dec
 
     // branch prediction register
-    sc_signal<sc_uint<32>> BRANCH_ADR_RI[predictor_register_size];
-    sc_signal<sc_uint<32>> PREDICTED_ADR_RI[predictor_register_size];
-    sc_signal<sc_uint<4>>  PRED_STATE_RI[predictor_register_size];
+    sc_signal<sc_uint<32>> BRANCH_ADR_REG[predictor_register_size];
+    sc_signal<sc_uint<32>> PREDICTED_ADR_REG[predictor_register_size];
+    sc_signal<sc_uint<4>>  PRED_STATE_REG[predictor_register_size];
     sc_signal<sc_uint<size_of_pred_pointer>> pred_write_pointer_si;
 
     sc_signal<sc_uint<32>> PRED_NEXT_ADR_SI;

@@ -565,7 +565,7 @@ int sc_main(int argc, char* argv[]) {
         else if(signature_name == "" && pc_adr == exception_occur){
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            exit(1);
+            exit(2);
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
