@@ -19,7 +19,11 @@ SC_MODULE(alu) {
 
     SC_CTOR(alu) {
         SC_METHOD(operation);
-        sensitive << OP1_SE_S1 << OP2_SE_S1 << CIN_SE << CMD_SE;
+        sensitive 
+			<< OP1_SE_S1 
+			<< OP2_SE_S1 
+			<< CIN_SE 
+			<< CMD_SE;
     }
 };
 
@@ -44,13 +48,24 @@ SC_MODULE(shifter) {
 
     SC_CTOR(shifter) {
         SC_METHOD(decode_cmd);
-        sensitive << CMD_SE;
+        sensitive 
+			<< CMD_SE;
         SC_METHOD(shifter_sll);
-        sensitive << DIN_SE << SHIFT_VAL_SE;
+        sensitive 
+			<< DIN_SE 
+			<< SHIFT_VAL_SE;
         SC_METHOD(shifter_sr);
-        sensitive << DIN_SE << SHIFT_VAL_SE << sra_se;
+        sensitive 
+			<< DIN_SE 
+			<< SHIFT_VAL_SE 
+			<< sra_se;
         SC_METHOD(shifter_agregate);
-        sensitive << sll_dout_se << sr_dout_se << sll_se << srl_se << sra_se;
+        sensitive 
+			<< sll_dout_se 
+			<< sr_dout_se 
+			<< sll_se 
+			<< srl_se 
+			<< sra_se;
     }
 };
 
@@ -262,32 +277,125 @@ SC_MODULE(exec_s1) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(preprocess_op);
-        sensitive << op1_se_s1 << NEG_OP2_RD_S1 << op2_se;
+        sensitive 
+			<< op1_se_s1 
+			<< NEG_OP2_RD_S1 
+			<< op2_se;
         SC_METHOD(select_exec_res);
-        sensitive << alu_out_se << divider_out_se << shifter_out_se << SLT_RD_S1 << SLTU_RD_S1
-                  << SELECT_TYPE_OPERATIONS_RD_S1 << CURRENT_MODE_SM_S1 << MEM_LOAD_RD_S1 << MEM_STORE_RD_S1
-                  << exception_se << RESET;
+        sensitive 
+			<< alu_out_se 
+			<< divider_out_se 
+			<< shifter_out_se 
+			<< SLT_RD_S1 
+			<< SLTU_RD_S1
+                  
+			<< SELECT_TYPE_OPERATIONS_RD_S1 
+			<< CURRENT_MODE_SM_S1 
+			<< MEM_LOAD_RD_S1 
+			<< MEM_STORE_RD_S1
+                  
+			<< exception_se 
+			<< RESET;
         SC_METHOD(fifo_concat);
-        sensitive << bp_mem_data_sd << DEST_RD_S1 << MEM_SIZE_RD_S1 << MEM_LOAD_RD_S1 << MEM_SIGN_EXTEND_RD_S1
-                  << MEM_STORE_RD_S1 << WB_RD_S1 << exe_res_se_s1 << mem_load_re << mem_store_re << wb_re
-                  << CSR_WENABLE_RD_S1 << CSR_WADR_RD_S1 << CSR_RDATA_RD_S1 << ILLEGAL_INSTRUCTION_RD_S1
-                  << ADRESS_MISSALIGNED_RD_S1 << ENV_CALL_U_MODE_RD_S1 << ENV_CALL_M_MODE_RD_S1 << exception_se
-                  << load_adress_missaligned_se << load_access_fault_se << store_access_fault_se
-                  << store_adress_missaligned_se << EXCEPTION_SM_S1 << MRET_RD_S1 << INSTRUCTION_ACCESS_FAULT_RD_S1
-                  << MULT_INST_RD_S1;
+        sensitive 
+			<< bp_mem_data_sd 
+			<< DEST_RD_S1 
+			<< MEM_SIZE_RD_S1 
+			<< MEM_LOAD_RD_S1 
+			<< MEM_SIGN_EXTEND_RD_S1
+                  
+			<< MEM_STORE_RD_S1 
+			<< WB_RD_S1 
+			<< exe_res_se_s1 
+			<< mem_load_re 
+			<< mem_store_re 
+			<< wb_re
+                  
+			<< CSR_WENABLE_RD_S1 
+			<< CSR_WADR_RD_S1 
+			<< CSR_RDATA_RD_S1 
+			<< ILLEGAL_INSTRUCTION_RD_S1
+                  
+			<< ADRESS_MISSALIGNED_RD_S1 
+			<< ENV_CALL_U_MODE_RD_S1 
+			<< ENV_CALL_M_MODE_RD_S1 
+			<< exception_se
+                  
+			<< load_adress_missaligned_se 
+			<< load_access_fault_se 
+			<< store_access_fault_se
+                  
+			<< store_adress_missaligned_se 
+			<< EXCEPTION_SM_S1 
+			<< MRET_RD_S1 
+			<< INSTRUCTION_ACCESS_FAULT_RD_S1
+                  
+			<< MULT_INST_RD_S1;
         SC_METHOD(fifo_unconcat);
-        sensitive << exe2mem_dout_se_s1;
+        sensitive 
+			<< exe2mem_dout_se_s1;
         SC_METHOD(manage_fifo);
-        sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD_S1 << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << exception_se << blocked
-                  << r1_valid_se << r2_valid_se;
+        sensitive 
+			<< exe2mem_full_se 
+			<< DEC2EXE_EMPTY_SD_S1 
+			<< OP1_VALID_RD_S1 
+			<< OP2_VALID_RD_S1 
+			<< exception_se 
+			<< blocked
+                  
+			<< r1_valid_se 
+			<< r2_valid_se;
         SC_METHOD(bypasses);
-        sensitive << OP1_VALID_RD_S1 << OP2_VALID_RD_S1 << MEM_DEST_RM_S1 << MEM_RES_RM_S1 << DEST_RE_S1 << EXE_RES_RE_S1 << RADR1_RD_S1
-                  << CSR_WENABLE_RE_S1 << BLOCK_BP_RD_S1 << DEST_RE_S1 << MEM_LOAD_RE_S1 << CSR_WENABLE_RM_S1 << CSR_RDATA_RM_S1
-                  << RADR2_RD_S1 << OP1_RD_S1 << OP2_RD_S1 << exception_se << MEM_DATA_RD_S1 << MEM_STORE_RD_S1
-                  << MULT_INST_RE_S1 << MULT_INST_RM_S1 << MEM2WBK_EMPTY_SM_S1 << EXE2MEM_EMPTY_SE_S1;
+        sensitive   
+			<< OP1_VALID_RD_S1 
+                    
+			<< OP2_VALID_RD_S1 
+                    
+			<< MEM_DEST_RM_S1 
+			<< MEM_DEST_RM_S2
+                    
+			<< MEM_RES_RM_S1 
+			<< EXE_RES_RE_S1 
+			<< EXE_RES_RE_S2 
+			<< RADR1_RD_S1
+                  
+			<< CSR_WENABLE_RE_S1 
+			<< CSR_WENABLE_RE_S2 
+			<< BLOCK_BP_RD_S1 
+			<< DEST_RE_S1 
+			<< DEST_RE_S2 
+			<< MEM_LOAD_RE_S1 
+			<< MEM_LOAD_RE_S2 
+			<< CSR_WENABLE_RM_S1 
+			<< CSR_WENABLE_RM_S2 
+			<< CSR_RDATA_RM_S1
+			<< CSR_RDATA_RM_S2
+            << CSR_RDATA_RE_S1
+            << CSR_RDATA_RE_S2    
+			<< RADR2_RD_S1 
+			<< OP1_RD_S1 
+			<< OP2_RD_S1 
+			<< exception_se 
+			<< MEM_DATA_RD_S1 
+			<< MEM_STORE_RD_S1
+                  
+			<< MULT_INST_RE_S1 
+			<< MULT_INST_RM_S1 
+			<< MEM2WBK_EMPTY_SM_S1 
+			<< EXE2MEM_EMPTY_SE_S1;
         SC_METHOD(exception);
-        sensitive << WB_RD_S1 << MEM_LOAD_RD_S1 << MEM_STORE_RD_S1 << WB_RD_S1 << EXCEPTION_RD_S1
-                  << load_adress_missaligned_se << exception_se << load_access_fault_se << store_access_fault_se
-                  << store_adress_missaligned_se;
+        sensitive 
+			<< WB_RD_S1 
+			<< MEM_LOAD_RD_S1 
+			<< MEM_STORE_RD_S1 
+			<< WB_RD_S1 
+			<< EXCEPTION_RD_S1
+                  
+			<< load_adress_missaligned_se 
+			<< exception_se 
+			<< load_access_fault_se 
+			<< store_access_fault_se
+                  
+			<< store_adress_missaligned_se;
     }
 };

@@ -827,6 +827,16 @@ void exec_s1::trace(sc_trace_file* tf) {
 
     sc_trace(tf, BLOCK_BP_RD_S1, GET_NAME(BLOCK_BP_RD_S1));
 
+    sc_trace(tf, MEM_DEST_RM_S2, GET_NAME(MEM_DEST_RM_S2));
+    sc_trace(tf, MEM_RES_RM_S2, GET_NAME(MEM_RES_RM_S2));
+    sc_trace(tf, CSR_WENABLE_RM_S2, GET_NAME(CSR_WENABLE_RM_S2));
+    sc_trace(tf, CSR_RDATA_RM_S2, GET_NAME(CSR_RDATA_RM_S2));
+    sc_trace(tf, EXE_RES_RE_S2, GET_NAME(EXE_RES_RE_S2));
+    sc_trace(tf, DEST_RE_S2, GET_NAME(DEST_RE_S2));
+    sc_trace(tf, CSR_WENABLE_RE_S2, GET_NAME(CSR_WENABLE_RE_S2));
+    sc_trace(tf, MEM_LOAD_RE_S2, GET_NAME(MEM_LOAD_RE_S2));
+    sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
+    sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

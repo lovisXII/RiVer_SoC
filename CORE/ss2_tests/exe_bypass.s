@@ -11,12 +11,12 @@ _start :
     li x6,63
 
     # Testing exe_bypass
-    addi x1,x0,12
     addi x2,x0,13
+    addi x1,x0,12
 
-    # bypass E1 -> E2 on x1
+    # bypass E2 -> E1 on x1
 
+    add x4,x1,x0 # Bypass from addi x1,x0,x12
     addi x3,x0,12
-    add x4,x0,x1 # Bypass from addi x1,x0,x12
     beq x4,x1,_good
     j _bad
