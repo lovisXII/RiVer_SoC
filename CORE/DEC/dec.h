@@ -567,6 +567,7 @@ SC_MODULE(decod) {
 
     sc_signal<bool> reg_dependencies_sd ; 
     sc_signal<sc_uint<2>> prioritary_pipeline_sd ; // indicate which fifo is the most recent
+    sc_signal<sc_uint<2>> prioritary_pipeline_rd;
     sc_signal<bool> flushing_inst_s2 ;
 
     void concat_dec2exe_s1();
@@ -575,6 +576,8 @@ SC_MODULE(decod) {
     void concat_dec2exe_s2() ;
     void unconcat_dec2exe_s2();
     
+    void prio_pipeline_affectation();
+
     void concat_dec2if();
     void unconcat_dec2if();
     void decoding_instruction_type_s1();
@@ -628,6 +631,9 @@ SC_MODULE(decod) {
                     << RADR1_SD_S2
                     << RADR2_SD_S2
                     << IF2DEC_FLUSH_SD;
+        SC_METHOD(prio_pipeline_affectation)
+        sensitive   << prioritary_pipeline_sd
+                    << RESET_N;
         SC_METHOD(concat_dec2exe_s1)
         sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
                   << exe_wb_sd_s1

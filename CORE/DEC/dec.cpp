@@ -27,12 +27,17 @@ void decod::dependencies(){
     // Pipeline priority gestion
 
     if(dependencies && adr_dest_sd_s1.read() != 0 && !IF2DEC_FLUSH_SD.read())
-            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 1;
-    else if(!dependencies && !IF2DEC_FLUSH_SD.read())
-            prioritary_pipeline_sd = prioritary_pipeline_sd.read() ^ 0;
+            prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
     else if (IF2DEC_FLUSH_SD.read())
         prioritary_pipeline_sd = 0 ;
 
+}
+
+void decod::prio_pipeline_affectation(){
+    if(!RESET_N.read())
+        prioritary_pipeline_rd = 0;
+    else
+        prioritary_pipeline_rd = prioritary_pipeline_sd ;
 }
 
 // ---------------------------------------------FIFO LOADING
@@ -912,6 +917,7 @@ void decod::trace(sc_trace_file* tf) {
     // Bypasses
 
     sc_trace(tf, DEST_RE_S1, GET_NAME(DEST_RE_S1));
+    sc_trace(tf, DEST_RE_S2, GET_NAME(DEST_RE_S2));
     sc_trace(tf, EXE_RES_RE_S1, GET_NAME(EXE_RES_RE_S1));
     sc_trace(tf, EXE_RES_RE_S2, GET_NAME(EXE_RES_RE_S2));
     sc_trace(tf, MEM_LOAD_RE_S1, GET_NAME(MEM_LOAD_RE_S1));
@@ -919,6 +925,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, EXE2MEM_EMPTY_SE_S2, GET_NAME(EXE2MEM_EMPTY_SE_S2));
     sc_trace(tf, MEM2WBK_EMPTY_SM_S1, GET_NAME(MEM2WBK_EMPTY_SM_S1));
     sc_trace(tf, DEST_RM_S1, GET_NAME(DEST_RM_S1));
+    sc_trace(tf, DEST_RM_S2, GET_NAME(DEST_RM_S2));
     sc_trace(tf, MEM_RES_RM_S1, GET_NAME(MEM_RES_RM_S1));
     sc_trace(tf, MULT_INST_RE_S1, GET_NAME(MULT_INST_RE_S1));
     sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
@@ -1226,4 +1233,5 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf,add_offset_to_pc_s1, GET_NAME(add_offset_to_pc_s1));
     sc_trace(tf,add_offset_to_pc_s2, GET_NAME(add_offset_to_pc_s2));
     sc_trace(tf,prioritary_pipeline_sd, GET_NAME(prioritary_pipeline_sd));
+    sc_trace(tf,prioritary_pipeline_rd, GET_NAME(prioritary_pipeline_rd));
 }
