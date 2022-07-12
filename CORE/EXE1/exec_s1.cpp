@@ -670,11 +670,15 @@ void exec_s1::bypasses() {
             bp_value = CSR_RDATA_RM_S1;
         else
             bp_value = MEM_RES_RM_S1;
-        if (MEM_STORE_RD_S1.read()) {
+        
+        if (MEM_STORE_RD_S1.read()) 
+        {
             bp_mem_data_var = MEM_RES_RM_S1.read();
             op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
-        } else {
+        }
+        else 
+        {
             op2_se.write(MEM_RES_RM_S1.read());
             r2_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
         }
@@ -715,9 +719,10 @@ void exec_s1::bypasses() {
             bp_value = CSR_RDATA_RM_S2;
         else
             bp_value = MEM_RES_RM_S2;
-        if (MEM_STORE_RD_S2.read()) {
+
+        if (MEM_STORE_RD_S1.read()) {
             bp_mem_data_var = MEM_RES_RM_S2.read();
-            op2_se.write(OP2_RD_S2.read());
+            op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
         } else {
             op2_se.write(MEM_RES_RM_S2.read());

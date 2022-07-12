@@ -627,217 +627,605 @@ SC_MODULE(decod) {
         dec2exe_s2.RESET_N(RESET_N);
 
         SC_METHOD(dependencies)
-        sensitive   << adr_dest_sd_s1
-                    << RADR1_SD_S2
-                    << RADR2_SD_S2
-                    << IF2DEC_FLUSH_SD;
+        sensitive   
+			<< adr_dest_sd_s1
+                    
+			<< RADR1_SD_S2
+                    
+			<< RADR2_SD_S2
+                    
+			<< IF2DEC_FLUSH_SD;
         SC_METHOD(prio_pipeline_affectation)
-        sensitive   << prioritary_pipeline_sd
-                    << RESET_N;
+        sensitive   
+			<< CLK.pos()                    
+			<< RESET_N;
         SC_METHOD(concat_dec2exe_s1)
-        sensitive << dec2exe_in_sd_s1 << exe_op1_sd_s1 << exe_op2_sd_s1 << exe_cmd_sd_s1 << exe_neg_op2_sd_s1
-                  << exe_wb_sd_s1
+        sensitive 
+			<< dec2exe_in_sd_s1 
+			<< exe_op1_sd_s1 
+			<< exe_op2_sd_s1 
+			<< exe_cmd_sd_s1 
+			<< exe_neg_op2_sd_s1
+                  
+			<< exe_wb_sd_s1
 
-                  << mem_data_sd_s1 << mem_load_sd_s1 << mem_store_sd_s1
+                  
+			<< mem_data_sd_s1 
+			<< mem_load_sd_s1 
+			<< mem_store_sd_s1
 
-                  << mem_sign_extend_sd_s1 << mem_size_sd_s1 << select_type_operations_sd_s1 << adr_dest_sd_s1
-                  << slti_i_sd_s1 << slt_i_sd_s1
+                  
+			<< mem_sign_extend_sd_s1 
+			<< mem_size_sd_s1 
+			<< select_type_operations_sd_s1 
+			<< adr_dest_sd_s1
+                  
+			<< slti_i_sd_s1 
+			<< slt_i_sd_s1
 
-                  << sltiu_i_sd_s1 << sltu_i_sd_s1 << RADR1_SD_S1 << CSR_RDATA_SC_S1 << csr_radr_sd_s1 << RADR2_SD_S1
-                  << r1_valid_sd_s1 << EXCEPTION_SM_S1 << r2_valid_sd_s1 << PC_IF2DEC_RI_S1 << csr_wenable_sd_s1
-                  << illegal_instruction_sd_s1 << instruction_adress_missaligned_sd_s1 << env_call_m_mode_sd_s1
-                  << block_bp_sd_s1 << env_call_s_mode_sd_s1 << env_call_u_mode_sd_s1 << env_call_wrong_mode_s1
-                  << mret_i_sd_s1 << instruction_access_fault_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1
-                  << mulhu_i_sd_s1
-                  << prioritary_pipeline_sd;
+                  
+			<< sltiu_i_sd_s1 
+			<< sltu_i_sd_s1 
+			<< RADR1_SD_S1 
+			<< CSR_RDATA_SC_S1 
+			<< csr_radr_sd_s1 
+			<< RADR2_SD_S1
+                  
+			<< r1_valid_sd_s1 
+			<< EXCEPTION_SM_S1 
+			<< r2_valid_sd_s1 
+			<< PC_IF2DEC_RI_S1 
+			<< csr_wenable_sd_s1
+                  
+			<< illegal_instruction_sd_s1 
+			<< instruction_adress_missaligned_sd_s1 
+			<< env_call_m_mode_sd_s1
+                  
+			<< block_bp_sd_s1 
+			<< env_call_s_mode_sd_s1 
+			<< env_call_u_mode_sd_s1 
+			<< env_call_wrong_mode_s1
+                  
+			<< mret_i_sd_s1 
+			<< instruction_access_fault_sd_s1 
+			<< mul_i_sd_s1 
+			<< mulh_i_sd_s1 
+			<< mulhsu_i_sd_s1
+                  
+			<< mulhu_i_sd_s1
+                  
+			<< prioritary_pipeline_sd;
 
 
         SC_METHOD(concat_dec2exe_s2)
-        sensitive << dec2exe_in_sd_s2 << exe_op1_sd_s2 << exe_op2_sd_s2 << exe_cmd_sd_s2 << exe_neg_op2_sd_s2
-                  << exe_wb_sd_s2
+        sensitive 
+			<< dec2exe_in_sd_s2 
+			<< exe_op1_sd_s2 
+			<< exe_op2_sd_s2 
+			<< exe_cmd_sd_s2 
+			<< exe_neg_op2_sd_s2
+                  
+			<< exe_wb_sd_s2
 
-                  << mem_data_sd_s2 << mem_load_sd_s2 << mem_store_sd_s2
+                  
+			<< mem_data_sd_s2 
+			<< mem_load_sd_s2 
+			<< mem_store_sd_s2
 
-                  << mem_sign_extend_sd_s2 << mem_size_sd_s2 << select_type_operations_sd_s2 << adr_dest_sd_s2
-                  << slti_i_sd_s2 << slt_i_sd_s2
+                  
+			<< mem_sign_extend_sd_s2 
+			<< mem_size_sd_s2 
+			<< select_type_operations_sd_s2 
+			<< adr_dest_sd_s2
+                  
+			<< slti_i_sd_s2 
+			<< slt_i_sd_s2
 
-                  << sltiu_i_sd_s2 << sltu_i_sd_s2 << RADR1_SD_S2 << CSR_RDATA_SC_S2 << csr_radr_sd_s2 << RADR2_SD_S2
-                  << r1_valid_sd_s1 << EXCEPTION_SM_S1 << r2_valid_sd_s1 << PC_IF2DEC_RI_S2 << csr_wenable_sd_s2
-                  << illegal_instruction_sd_s2 << instruction_adress_missaligned_sd_s2 << env_call_m_mode_sd_s2
-                  << block_bp_sd_s2 << env_call_s_mode_sd_s2 << env_call_u_mode_sd_s2 << env_call_wrong_mode_s2
-                  << mret_i_sd_s2 << instruction_access_fault_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2
-                  << mulhu_i_sd_s2 << reg_dependencies_sd;
+                  
+			<< sltiu_i_sd_s2 
+			<< sltu_i_sd_s2 
+			<< RADR1_SD_S2 
+			<< CSR_RDATA_SC_S2 
+			<< csr_radr_sd_s2 
+			<< RADR2_SD_S2
+                  
+			<< r1_valid_sd_s1 
+			<< EXCEPTION_SM_S1 
+			<< r2_valid_sd_s1 
+			<< PC_IF2DEC_RI_S2 
+			<< csr_wenable_sd_s2
+                  
+			<< illegal_instruction_sd_s2 
+			<< instruction_adress_missaligned_sd_s2 
+			<< env_call_m_mode_sd_s2
+                  
+			<< block_bp_sd_s2 
+			<< env_call_s_mode_sd_s2 
+			<< env_call_u_mode_sd_s2 
+			<< env_call_wrong_mode_s2
+                  
+			<< mret_i_sd_s2 
+			<< instruction_access_fault_sd_s2 
+			<< mul_i_sd_s2 
+			<< mulh_i_sd_s2 
+			<< mulhsu_i_sd_s2
+                  
+			<< mulhu_i_sd_s2 
+			<< reg_dependencies_sd;
         SC_METHOD(unconcat_dec2exe_s1)
-        sensitive << dec2exe_out_sd_s1;
+        sensitive 
+			<< dec2exe_out_sd_s1;
 
         SC_METHOD(unconcat_dec2exe_s2)
-        sensitive << dec2exe_out_sd_s2;
+        sensitive 
+			<< dec2exe_out_sd_s2;
         SC_METHOD(concat_dec2if)
-        sensitive << dec2if_pc_sd_s1 << dec2if_pc_sd_s2;
+        sensitive 
+			<< dec2if_pc_sd_s1 
+			<< dec2if_pc_sd_s2;
         SC_METHOD(unconcat_dec2if)
-        sensitive << dec2if_out_sd;
+        sensitive 
+			<< dec2if_out_sd;
 
         SC_METHOD(stall_method)
-        sensitive << b_type_inst_sd_s1 << jalr_type_inst_sd_s1 << j_type_inst_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1
-                  << csr_wenable_sd_s1 << DEC2EXE_EMPTY_SD_S1 << CSR_WENABLE_RD_S1 << CSR_WENABLE_RE_S1
-                  << EXE2MEM_EMPTY_SE_S1 << csr_in_progress_s1 << block_in_dec << IF2DEC_EMPTY_SI_S1 << dec2exe_full_sd_s1
-                  << csr_in_progress_s1;
+        sensitive 
+			<< b_type_inst_sd_s1 
+			<< jalr_type_inst_sd_s1 
+			<< j_type_inst_sd_s1 
+			<< r1_valid_sd_s1 
+			<< r2_valid_sd_s1
+                  
+			<< csr_wenable_sd_s1 
+			<< DEC2EXE_EMPTY_SD_S1 
+			<< CSR_WENABLE_RD_S1 
+			<< CSR_WENABLE_RE_S1
+                  
+			<< EXE2MEM_EMPTY_SE_S1 
+			<< csr_in_progress_s1 
+			<< block_in_dec 
+			<< IF2DEC_EMPTY_SI_S1 
+			<< dec2exe_full_sd_s1
+                  
+			<< csr_in_progress_s1;
 
         SC_METHOD(decoding_instruction_type_s1)
-        sensitive << INSTR_RI_S1 << READ_PC_SR;
+        sensitive 
+			<< INSTR_RI_S1 
+			<< READ_PC_SR;
 
         SC_METHOD(decoding_instruction_type_s2)
-        sensitive << INSTR_RI_S2 << READ_PC_SR;
+        sensitive 
+			<< INSTR_RI_S2 
+			<< READ_PC_SR;
 
         SC_METHOD(decoding_instruction_s1)
-        sensitive << INSTR_RI_S1;
+        sensitive 
+			<< INSTR_RI_S1;
 
         SC_METHOD(decoding_instruction_s2)
-        sensitive << INSTR_RI_S2;
+        sensitive 
+			<< INSTR_RI_S2;
 
         SC_METHOD(pre_reg_read_decoding_s1)
-        sensitive << INSTR_RI_S1 << r_type_inst_sd_s1 << i_type_inst_sd_s1 << i_type_inst_sd_s1 << s_type_inst_sd_s1
-                  << b_type_inst_sd_s1 << u_type_inst_sd_s1 << j_type_inst_sd_s1 << m_type_inst_sd_s1
-                  << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1
-                  << bgeu_i_sd_s1 << system_type_inst_sd_s1 << csrrw_i_sd_s1 << csrrs_i_sd_s1 << csrrc_i_sd_s1
-                  << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1 << ecall_i_sd_s1 << ebreak_i_sd_s1
-                  << fence_i_sd_s1 << mret_i_sd_s1 << sret_i_sd_s1 << RESET_N << CURRENT_MODE_SM_S1;
+        sensitive 
+			<< INSTR_RI_S1 
+			<< r_type_inst_sd_s1 
+			<< i_type_inst_sd_s1 
+			<< i_type_inst_sd_s1 
+			<< s_type_inst_sd_s1
+                  
+			<< b_type_inst_sd_s1 
+			<< u_type_inst_sd_s1 
+			<< j_type_inst_sd_s1 
+			<< m_type_inst_sd_s1
+                  
+			<< jalr_type_inst_sd_s1 
+			<< beq_i_sd_s1 
+			<< bne_i_sd_s1 
+			<< blt_i_sd_s1 
+			<< bge_i_sd_s1 
+			<< bltu_i_sd_s1
+                  
+			<< bgeu_i_sd_s1 
+			<< system_type_inst_sd_s1 
+			<< csrrw_i_sd_s1 
+			<< csrrs_i_sd_s1 
+			<< csrrc_i_sd_s1
+                  
+			<< csrrwi_i_sd_s1 
+			<< csrrsi_i_sd_s1 
+			<< csrrci_i_sd_s1 
+			<< ecall_i_sd_s1 
+			<< ebreak_i_sd_s1
+                  
+			<< fence_i_sd_s1 
+			<< mret_i_sd_s1 
+			<< sret_i_sd_s1 
+			<< RESET_N 
+			<< CURRENT_MODE_SM_S1;
 
         SC_METHOD(pre_reg_read_decoding_s2)
-        sensitive << INSTR_RI_S2 << r_type_inst_sd_s2 << i_type_inst_sd_s2 << i_type_inst_sd_s2 << s_type_inst_sd_s2
-                  << b_type_inst_sd_s2 << u_type_inst_sd_s2 << j_type_inst_sd_s2 << m_type_inst_sd_s2
-                  << jalr_type_inst_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2 << blt_i_sd_s2 << bge_i_sd_s2 << bltu_i_sd_s2
-                  << bgeu_i_sd_s2 << system_type_inst_sd_s2 << csrrw_i_sd_s2 << csrrs_i_sd_s2 << csrrc_i_sd_s2
-                  << csrrwi_i_sd_s2 << csrrsi_i_sd_s2 << csrrci_i_sd_s2 << ecall_i_sd_s2 << ebreak_i_sd_s2
-                  << fence_i_sd_s2 << mret_i_sd_s2 << sret_i_sd_s2 << RESET_N << CURRENT_MODE_SM_S1;
+        sensitive 
+			<< INSTR_RI_S2 
+			<< r_type_inst_sd_s2 
+			<< i_type_inst_sd_s2 
+			<< i_type_inst_sd_s2 
+			<< s_type_inst_sd_s2
+                  
+			<< b_type_inst_sd_s2 
+			<< u_type_inst_sd_s2 
+			<< j_type_inst_sd_s2 
+			<< m_type_inst_sd_s2
+                  
+			<< jalr_type_inst_sd_s2 
+			<< beq_i_sd_s2 
+			<< bne_i_sd_s2 
+			<< blt_i_sd_s2 
+			<< bge_i_sd_s2 
+			<< bltu_i_sd_s2
+                  
+			<< bgeu_i_sd_s2 
+			<< system_type_inst_sd_s2 
+			<< csrrw_i_sd_s2 
+			<< csrrs_i_sd_s2 
+			<< csrrc_i_sd_s2
+                  
+			<< csrrwi_i_sd_s2 
+			<< csrrsi_i_sd_s2 
+			<< csrrci_i_sd_s2 
+			<< ecall_i_sd_s2 
+			<< ebreak_i_sd_s2
+                  
+			<< fence_i_sd_s2 
+			<< mret_i_sd_s2 
+			<< sret_i_sd_s2 
+			<< RESET_N 
+			<< CURRENT_MODE_SM_S1;
 
         SC_METHOD(post_reg_read_decoding_s1)
-        sensitive << i_type_inst_sd_s1 << s_type_inst_sd_s1 << b_type_inst_sd_s1 << u_type_inst_sd_s1
-                  << j_type_inst_sd_s1
+        sensitive 
+			<< i_type_inst_sd_s1 
+			<< s_type_inst_sd_s1 
+			<< b_type_inst_sd_s1 
+			<< u_type_inst_sd_s1
+                  
+			<< j_type_inst_sd_s1
 
-                  << jalr_type_inst_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1
+                  
+			<< jalr_type_inst_sd_s1 
+			<< beq_i_sd_s1 
+			<< bne_i_sd_s1
 
-                  << m_type_inst_sd_s1 << mul_i_sd_s1 << mulh_i_sd_s1 << mulhsu_i_sd_s1 << mulhu_i_sd_s1 << div_i_sd_s1
-                  << divu_i_sd_s1 << rem_i_sd_s1 << remu_i_sd_s1
+                  
+			<< m_type_inst_sd_s1 
+			<< mul_i_sd_s1 
+			<< mulh_i_sd_s1 
+			<< mulhsu_i_sd_s1 
+			<< mulhu_i_sd_s1 
+			<< div_i_sd_s1
+                  
+			<< divu_i_sd_s1 
+			<< rem_i_sd_s1 
+			<< remu_i_sd_s1
 
-                  << blt_i_sd_s1 << bge_i_sd_s1 << bltu_i_sd_s1 << bgeu_i_sd_s1 << IF2DEC_EMPTY_SI_S1 << dec2if_push_sd
-                  << READ_PC_SR
+                  
+			<< blt_i_sd_s1 
+			<< bge_i_sd_s1 
+			<< bltu_i_sd_s1 
+			<< bgeu_i_sd_s1 
+			<< IF2DEC_EMPTY_SI_S1 
+			<< dec2if_push_sd
+                  
+			<< READ_PC_SR
 
-                  << stall_sd_s1 << dec2if_push_sd << add_i_sd_s1 << slt_i_sd_s1 << sltu_i_sd_s1 << and_i_sd_s1
-                  << or_i_sd_s1 << xor_i_sd_s1
+                  
+			<< stall_sd_s1 
+			<< dec2if_push_sd 
+			<< add_i_sd_s1 
+			<< slt_i_sd_s1 
+			<< sltu_i_sd_s1 
+			<< and_i_sd_s1
+                  
+			<< or_i_sd_s1 
+			<< xor_i_sd_s1
 
-                  << sll_i_sd_s1 << srl_i_sd_s1 << sub_i_sd_s1 << sra_i_sd_s1 << addi_i_sd_s1
+                  
+			<< sll_i_sd_s1 
+			<< srl_i_sd_s1 
+			<< sub_i_sd_s1 
+			<< sra_i_sd_s1 
+			<< addi_i_sd_s1
 
-                  << slti_i_sd_s1 << sltiu_i_sd_s1 << andi_i_sd_s1 << ori_i_sd_s1 << xori_i_sd_s1 << jalr_i_sd_s1
-                  << slli_i_sd_s1
+                  
+			<< slti_i_sd_s1 
+			<< sltiu_i_sd_s1 
+			<< andi_i_sd_s1 
+			<< ori_i_sd_s1 
+			<< xori_i_sd_s1 
+			<< jalr_i_sd_s1
+                  
+			<< slli_i_sd_s1
 
-                  << srli_i_sd_s1 << srai_i_sd_s1 << lw_i_sd_s1 << lh_i_sd_s1
+                  
+			<< srli_i_sd_s1 
+			<< srai_i_sd_s1 
+			<< lw_i_sd_s1 
+			<< lh_i_sd_s1
 
-                  << lhu_i_sd_s1 << lb_i_sd_s1 << lbu_i_sd_s1 << beq_i_sd_s1 << bne_i_sd_s1 << blt_i_sd_s1
-                  << bge_i_sd_s1 << bltu_i_sd_s1
+                  
+			<< lhu_i_sd_s1 
+			<< lb_i_sd_s1 
+			<< lbu_i_sd_s1 
+			<< beq_i_sd_s1 
+			<< bne_i_sd_s1 
+			<< blt_i_sd_s1
+                  
+			<< bge_i_sd_s1 
+			<< bltu_i_sd_s1
 
-                  << bgeu_i_sd_s1 << lui_i_sd_s1 << auipc_i_sd_s1
+                  
+			<< bgeu_i_sd_s1 
+			<< lui_i_sd_s1 
+			<< auipc_i_sd_s1
 
-                  << jal_i_sd_s1 << sw_i_sd_s1 << sh_i_sd_s1 << sb_i_sd_s1 << j_type_inst_sd_s1 << jalr_type_inst_sd_s1
-                  << dec2exe_push_sd_s1
+                  
+			<< jal_i_sd_s1 
+			<< sw_i_sd_s1 
+			<< sh_i_sd_s1 
+			<< sb_i_sd_s1 
+			<< j_type_inst_sd_s1 
+			<< jalr_type_inst_sd_s1
+                  
+			<< dec2exe_push_sd_s1
 
-                  << rdata1_sd_s1 << rdata2_sd_s1 << r1_valid_sd_s1 << r2_valid_sd_s1 << system_type_inst_sd_s1
-                  << csrrw_i_sd_s1
+                  
+			<< rdata1_sd_s1 
+			<< rdata2_sd_s1 
+			<< r1_valid_sd_s1 
+			<< r2_valid_sd_s1 
+			<< system_type_inst_sd_s1
+                  
+			<< csrrw_i_sd_s1
 
-                  << csrrs_i_sd_s1 << csrrc_i_sd_s1 << csrrwi_i_sd_s1 << csrrsi_i_sd_s1 << csrrci_i_sd_s1
-                  << CSR_RDATA_SC_S1 << ecall_i_sd_s1
+                  
+			<< csrrs_i_sd_s1 
+			<< csrrc_i_sd_s1 
+			<< csrrwi_i_sd_s1 
+			<< csrrsi_i_sd_s1 
+			<< csrrci_i_sd_s1
+                  
+			<< CSR_RDATA_SC_S1 
+			<< ecall_i_sd_s1
 
-                  << ebreak_i_sd_s1 << fence_i_sd_s1 << PC_IF2DEC_RI_S1 << EXCEPTION_SM_S1 << mret_i_sd_s1 << sret_i_sd_s1
-                  << CSR_RDATA_SC_S1;
+                  
+			<< ebreak_i_sd_s1 
+			<< fence_i_sd_s1 
+			<< PC_IF2DEC_RI_S1 
+			<< EXCEPTION_SM_S1 
+			<< mret_i_sd_s1 
+			<< sret_i_sd_s1
+                  
+			<< CSR_RDATA_SC_S1;
 
         SC_METHOD(post_reg_read_decoding_s2)
-        sensitive << i_type_inst_sd_s2 << s_type_inst_sd_s2 << b_type_inst_sd_s2 << u_type_inst_sd_s2
-                  << j_type_inst_sd_s2
+        sensitive 
+			<< i_type_inst_sd_s2 
+			<< s_type_inst_sd_s2 
+			<< b_type_inst_sd_s2 
+			<< u_type_inst_sd_s2
+                  
+			<< j_type_inst_sd_s2
 
-                  << jalr_type_inst_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2
+                  
+			<< jalr_type_inst_sd_s2 
+			<< beq_i_sd_s2 
+			<< bne_i_sd_s2
 
-                  << m_type_inst_sd_s2 << mul_i_sd_s2 << mulh_i_sd_s2 << mulhsu_i_sd_s2 << mulhu_i_sd_s2 << div_i_sd_s2
-                  << divu_i_sd_s2 << rem_i_sd_s2 << remu_i_sd_s2
+                  
+			<< m_type_inst_sd_s2 
+			<< mul_i_sd_s2 
+			<< mulh_i_sd_s2 
+			<< mulhsu_i_sd_s2 
+			<< mulhu_i_sd_s2 
+			<< div_i_sd_s2
+                  
+			<< divu_i_sd_s2 
+			<< rem_i_sd_s2 
+			<< remu_i_sd_s2
 
-                  << blt_i_sd_s2 << bge_i_sd_s2 << bltu_i_sd_s2 << bgeu_i_sd_s2 << IF2DEC_EMPTY_SI_S2 << dec2if_push_sd
-                  << READ_PC_SR
+                  
+			<< blt_i_sd_s2 
+			<< bge_i_sd_s2 
+			<< bltu_i_sd_s2 
+			<< bgeu_i_sd_s2 
+			<< IF2DEC_EMPTY_SI_S2 
+			<< dec2if_push_sd
+                  
+			<< READ_PC_SR
 
-                  << stall_sd_s1 << dec2if_push_sd << add_i_sd_s2 << slt_i_sd_s2 << sltu_i_sd_s2 << and_i_sd_s2
-                  << or_i_sd_s2 << xor_i_sd_s2
+                  
+			<< stall_sd_s1 
+			<< dec2if_push_sd 
+			<< add_i_sd_s2 
+			<< slt_i_sd_s2 
+			<< sltu_i_sd_s2 
+			<< and_i_sd_s2
+                  
+			<< or_i_sd_s2 
+			<< xor_i_sd_s2
 
-                  << sll_i_sd_s2 << srl_i_sd_s2 << sub_i_sd_s2 << sra_i_sd_s2 << addi_i_sd_s2
+                  
+			<< sll_i_sd_s2 
+			<< srl_i_sd_s2 
+			<< sub_i_sd_s2 
+			<< sra_i_sd_s2 
+			<< addi_i_sd_s2
 
-                  << slti_i_sd_s2 << sltiu_i_sd_s2 << andi_i_sd_s2 << ori_i_sd_s2 << xori_i_sd_s2 << jalr_i_sd_s2
-                  << slli_i_sd_s2
+                  
+			<< slti_i_sd_s2 
+			<< sltiu_i_sd_s2 
+			<< andi_i_sd_s2 
+			<< ori_i_sd_s2 
+			<< xori_i_sd_s2 
+			<< jalr_i_sd_s2
+                  
+			<< slli_i_sd_s2
 
-                  << srli_i_sd_s2 << srai_i_sd_s2 << lw_i_sd_s2 << lh_i_sd_s2
+                  
+			<< srli_i_sd_s2 
+			<< srai_i_sd_s2 
+			<< lw_i_sd_s2 
+			<< lh_i_sd_s2
 
-                  << lhu_i_sd_s2 << lb_i_sd_s2 << lbu_i_sd_s2 << beq_i_sd_s2 << bne_i_sd_s2 << blt_i_sd_s2
-                  << bge_i_sd_s2 << bltu_i_sd_s2
+                  
+			<< lhu_i_sd_s2 
+			<< lb_i_sd_s2 
+			<< lbu_i_sd_s2 
+			<< beq_i_sd_s2 
+			<< bne_i_sd_s2 
+			<< blt_i_sd_s2
+                  
+			<< bge_i_sd_s2 
+			<< bltu_i_sd_s2
 
-                  << bgeu_i_sd_s2 << lui_i_sd_s2 << auipc_i_sd_s2
+                  
+			<< bgeu_i_sd_s2 
+			<< lui_i_sd_s2 
+			<< auipc_i_sd_s2
 
-                  << jal_i_sd_s2 << sw_i_sd_s2 << sh_i_sd_s2 << sb_i_sd_s2 << j_type_inst_sd_s2 << jalr_type_inst_sd_s2
-                  << dec2exe_push_sd_s2
+                  
+			<< jal_i_sd_s2 
+			<< sw_i_sd_s2 
+			<< sh_i_sd_s2 
+			<< sb_i_sd_s2 
+			<< j_type_inst_sd_s2 
+			<< jalr_type_inst_sd_s2
+                  
+			<< dec2exe_push_sd_s2
 
-                  << rdata1_sd_s2 << rdata2_sd_s2 << r1_valid_sd_s2 << r2_valid_sd_s2 << system_type_inst_sd_s2
-                  << csrrw_i_sd_s2
+                  
+			<< rdata1_sd_s2 
+			<< rdata2_sd_s2 
+			<< r1_valid_sd_s2 
+			<< r2_valid_sd_s2 
+			<< system_type_inst_sd_s2
+                  
+			<< csrrw_i_sd_s2
 
-                  << csrrs_i_sd_s2 << csrrc_i_sd_s2 << csrrwi_i_sd_s2 << csrrsi_i_sd_s2 << csrrci_i_sd_s2
-                  << CSR_RDATA_SC_S2 << ecall_i_sd_s2
+                  
+			<< csrrs_i_sd_s2 
+			<< csrrc_i_sd_s2 
+			<< csrrwi_i_sd_s2 
+			<< csrrsi_i_sd_s2 
+			<< csrrci_i_sd_s2
+                  
+			<< CSR_RDATA_SC_S2 
+			<< ecall_i_sd_s2
 
-                  << ebreak_i_sd_s2 << fence_i_sd_s2 << PC_IF2DEC_RI_S2 << EXCEPTION_SM_S1 << mret_i_sd_s2 << sret_i_sd_s2
-                  << CSR_RDATA_SC_S2;
+                  
+			<< ebreak_i_sd_s2 
+			<< fence_i_sd_s2 
+			<< PC_IF2DEC_RI_S2 
+			<< EXCEPTION_SM_S1 
+			<< mret_i_sd_s2 
+			<< sret_i_sd_s2
+                  
+			<< CSR_RDATA_SC_S2;
 
         SC_METHOD(pc_inc)
-        sensitive << CLK.pos() 
-                  << READ_PC_SR 
-                  << offset_branch_sd_s1 
-                  << offset_branch_sd_s2 
-                  << jump_sd_s1  
-                  << jump_sd_s2 
-                  << MTVEC_VALUE_RC_S1
-                  << EXCEPTION_SM_S1 
-                  << PC_IF2DEC_RI_S1 
-                  << MRET_SM_S1 
-                  << dec2if_full_sd 
-                  << IF2DEC_EMPTY_SI_S1 
-                  << MCAUSE_WDATA_SM_S1
-                  << stall_sd_s1
-                  << add_offset_to_pc_s1
-                  << add_offset_to_pc_s2
-                  << reg_dependencies_sd;
+        sensitive 
+			<< CLK.pos() 
+                  
+			<< READ_PC_SR 
+                  
+			<< offset_branch_sd_s1 
+                  
+			<< offset_branch_sd_s2 
+                  
+			<< jump_sd_s1  
+                  
+			<< jump_sd_s2 
+                  
+			<< MTVEC_VALUE_RC_S1
+                  
+			<< EXCEPTION_SM_S1 
+                  
+			<< PC_IF2DEC_RI_S1 
+                  
+			<< MRET_SM_S1 
+                  
+			<< dec2if_full_sd 
+                  
+			<< IF2DEC_EMPTY_SI_S1 
+                  
+			<< MCAUSE_WDATA_SM_S1
+                  
+			<< stall_sd_s1
+                  
+			<< add_offset_to_pc_s1
+                  
+			<< add_offset_to_pc_s2
+                  
+			<< reg_dependencies_sd;
 
         SC_METHOD(bypasses);
-        sensitive   << RDATA1_SR_S1 
-                    << RDATA2_SR_S1 
-                    << DEST_RE_S1 
-                    << EXE_RES_RE_S1
-                    << DEST_RM_S1 
-                    << MEM_RES_RM_S1 
-                    << RADR1_SD_S1 
-                    << EXE_DEST_RD_S1
-                    << RADR2_SD_S1 
-                    << EXE2MEM_EMPTY_SE_S1 
-                    << MULT_INST_RE_S1 
-                    << MULT_INST_RM_S1
-                    << DEC2EXE_EMPTY_SD_S1 
-                    << MEM_LOAD_RE_S1 
-                    << MEM2WBK_EMPTY_SM_S1
+        sensitive   
+			<< RDATA1_SR_S1 
+                    
+			<< RDATA2_SR_S1 
+                    
+			<< DEST_RE_S1 
+                    
+			<< EXE_RES_RE_S1
+                    
+			<< DEST_RM_S1 
+                    
+			<< MEM_RES_RM_S1 
+                    
+			<< RADR1_SD_S1 
+                    
+			<< EXE_DEST_RD_S1
+                    
+			<< RADR2_SD_S1 
+                    
+			<< EXE2MEM_EMPTY_SE_S1 
+                    
+			<< MULT_INST_RE_S1 
+                    
+			<< MULT_INST_RM_S1
+                    
+			<< DEC2EXE_EMPTY_SD_S1 
+                    
+			<< MEM_LOAD_RE_S1 
+                    
+			<< MEM2WBK_EMPTY_SM_S1
 
-                    << RDATA1_SR_S2 
-                    << RDATA2_SR_S2 
-                    << DEST_RE_S2 
-                    << EXE_RES_RE_S2
-                    << DEST_RM_S2 
-                    << MEM_RES_RM_S1 
-                    << RADR1_SD_S2 
-                    << EXE_DEST_RD_S2
-                    << RADR2_SD_S2 
-                    << EXE2MEM_EMPTY_SE_S2 
-                    << DEC2EXE_EMPTY_SD_S2 
-                    << MEM_LOAD_RE_S2 
-                    << MEM2WBK_EMPTY_SM_S2;
+                    
+			<< RDATA1_SR_S2 
+                    
+			<< RDATA2_SR_S2 
+                    
+			<< DEST_RE_S2 
+                    
+			<< EXE_RES_RE_S2
+                    
+			<< DEST_RM_S2 
+                    
+			<< MEM_RES_RM_S1 
+                    
+			<< RADR1_SD_S2 
+                    
+			<< EXE_DEST_RD_S2
+                    
+			<< RADR2_SD_S2 
+                    
+			<< EXE2MEM_EMPTY_SE_S2 
+                    
+			<< DEC2EXE_EMPTY_SD_S2 
+                    
+			<< MEM_LOAD_RE_S2 
+                    
+			<< MEM2WBK_EMPTY_SM_S2;
         reset_signal_is(RESET_N, false);
     }
 };

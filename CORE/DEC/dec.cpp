@@ -532,7 +532,7 @@ void decod::bypasses() {
         r1_valid_sd_s1= false;
     } 
     else if ((RADR1_SD_S1.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1)
-    || (RADR1_SD_S1.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)) 
+    || ((RADR1_SD_S1.read() == DEST_RE_S2.read()) && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)) 
     {  // dont bypass if load instr is currently in mem
         r1_valid_sd_s1= false;
     } 
@@ -921,6 +921,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, EXE_RES_RE_S1, GET_NAME(EXE_RES_RE_S1));
     sc_trace(tf, EXE_RES_RE_S2, GET_NAME(EXE_RES_RE_S2));
     sc_trace(tf, MEM_LOAD_RE_S1, GET_NAME(MEM_LOAD_RE_S1));
+    sc_trace(tf, MEM_LOAD_RE_S2, GET_NAME(MEM_LOAD_RE_S2));
     sc_trace(tf, EXE2MEM_EMPTY_SE_S1, GET_NAME(EXE2MEM_EMPTY_SE_S1));
     sc_trace(tf, EXE2MEM_EMPTY_SE_S2, GET_NAME(EXE2MEM_EMPTY_SE_S2));
     sc_trace(tf, MEM2WBK_EMPTY_SM_S1, GET_NAME(MEM2WBK_EMPTY_SM_S1));
