@@ -19,7 +19,7 @@ Disassembly of section seg_text:
    10080:	01530463          	beq	t1,s5,10088 <_start+0x34>
    10084:	f7def06f          	j	0 <_bad>
    10088:	402080b3          	sub	ra,ra,sp
-   1008c:	07b00313          	li	t1,123
+   1008c:	07b30313          	addi	t1,t1,123
    10090:	01630463          	beq	t1,s6,10098 <_start+0x44>
    10094:	f6def06f          	j	0 <_bad>
    10098:	00131313          	slli	t1,t1,0x1

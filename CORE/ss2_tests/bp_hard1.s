@@ -24,7 +24,7 @@ _start :
     bne x6,x21,_bad
     sub x1,x1,x2 # x1 = 48-23=25
     
-    addi x6,x0,123 # x6 = 362+123=485
+    addi x6,x6,123 # x6 = 362+123=485
     bne x6,x22,_bad
     
     slli x6,x6,1 #x6 = 970
