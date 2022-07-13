@@ -379,7 +379,8 @@ radr1_sd <= '0'&INSTR_RI(19 downto 15) when ((r_type_sd or i_type_sd or s_type_s
 radr2_sd <= '0'&INSTR_RI(24 downto 20) when ((r_type_sd or s_type_sd or b_type_sd) = '1') else
             "000000";
 
-rdest_sd <= '0'&INSTR_RI(11 downto 7) when ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') else
+rdest_sd <= '0'&INSTR_RI(11 downto 7) when  ((r_type_sd or i_type_sd or u_type_sd or j_type_sd or jalr_type_sd) = '1') 
+                                        or  ((csrrw_i_sd or csrrs_i_sd or csrrc_i_sd or csrrwi_i_sd or csrrsi_i_sd or csrrci_i_sd) = '1') else
             "000000";
 
 csr_radr <=  INSTR_RI(31 downto 20) when system_inst_sd = '1' and ((csrrw_i_sd or csrrs_i_sd or csrrc_i_sd or csrrwi_i_sd or csrrsi_i_sd or csrrci_i_sd) = '1') else 
@@ -394,7 +395,7 @@ op1_csri_type_sd(4 downto 0)    <= INSTR_RI(19 downto 15);
 
 dec2exe_op1_sd <=   rdata1_sd               when ((r_type_sd or i_type_sd or s_type_sd or b_type_sd or csrrw_i_sd or csrrs_i_sd) = '1') else 
                     not(rdata1_sd)          when csrrc_i_sd = '1' else 
-                    op1_csri_type_sd        when ((csrrw_i_sd or csrrs_i_sd) = '1') else
+                    op1_csri_type_sd        when ((csrrwi_i_sd or csrrsi_i_sd) = '1') else
                     not(op1_csri_type_sd)   when csrrci_i_sd = '1' else 
                     op1_u_type_sd           when u_type_sd = '1' else 
                     READ_PC_SR              when ((j_type_sd or jalr_type_sd) = '1') else 
@@ -409,7 +410,7 @@ op2_s_type_sd(11 downto 5)  <= INSTR_RI(31 downto 25);
 op2_s_type_sd(4 downto 0)   <= INSTR_RI(11 downto 7);
 
 dec2exe_op2_sd <=   rdata2_sd       when ((r_type_sd  or b_type_sd or (u_type_sd and not(auipc_i_sd))) = '1') else 
-                    CSR_RDATA_SC    when ((csrrs_i_sd or csrrc_i_sd or csrrsi_i_sd or csrrci_i_sd)) = '1' else
+                    CSR_RDATA_SC    when ((csrrs_i_sd or csrrc_i_sd or csrrsi_i_sd or csrrci_i_sd) = '1') else
                     op2_i_type_sd   when i_type_sd = '1' else
                     op2_s_type_sd   when s_type_sd = '1' else
                     PC_IF2DEC_RI    when auipc_i_sd = '1' else 
