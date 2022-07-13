@@ -540,7 +540,9 @@ void exec_s1::manage_fifo() {
 void exec_s1::bypasses() {
     bool        blocked_var     = false;
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD_S1.read();
-
+    bp_s2_E2_is_taken =
+    ((DEST_RE_S2.read() == RADR1_RD_S1.read()) || (DEST_RE_S2.read() == RADR2_RD_S1.read())) 
+    && DEST_RE_S2.read() !=0;
 
     // ###############################
     // BYPASS on rs1_s1 :
@@ -551,13 +553,13 @@ void exec_s1::bypasses() {
         op1_se_s1.write(OP1_RD_S1.read());
         r1_valid_se = true;
     } 
-    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1) 
+    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1 && !bp_s2_E2_is_taken) 
     // E1->E1 and csr
     {
         op1_se_s1.write(CSR_RDATA_RE_S1.read());
         r1_valid_se = true;
     }
-    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1) 
+    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
     // E1->E1 and no load (normal bypass)
     {
         op1_se_s1.write(EXE_RES_RE_S1.read());
@@ -641,7 +643,7 @@ void exec_s1::bypasses() {
         op2_se.write(OP2_RD_S1.read());
         r2_valid_se = true;
     } 
-    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1) 
+    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
     // E1->E1 bypass
     {
         sc_uint<32> bp_value;
@@ -913,6 +915,7 @@ void exec_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, MEM_LOAD_RE_S2, GET_NAME(MEM_LOAD_RE_S2));
     sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
     sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
+    sc_trace(tf, bp_s2_E2_is_taken, GET_NAME(bp_s2_E2_is_taken));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);
     fifo_inst.trace(tf);

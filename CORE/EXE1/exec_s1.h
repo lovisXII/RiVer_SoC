@@ -223,6 +223,11 @@ SC_MODULE(exec_s1) {
     sc_signal<bool> load_access_fault_se;        // trying to access memory in wrong mode
     sc_signal<bool> store_access_fault_se;
     sc_signal<bool> store_adress_missaligned_se;
+
+    // Superscalar :
+
+    sc_signal<bool> bp_s2_E2_is_taken;
+
     // Instance used :
 
     alu     alu_inst;
