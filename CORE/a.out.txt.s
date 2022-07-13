@@ -5,26 +5,22 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00c00093          	li	ra,12
-   10058:	7a106093          	ori	ra,zero,1953
+   10054:	02f00293          	li	t0,47
+   10058:	00000013          	nop
+
+   1005c:	00c00093          	li	ra,12
+   10060:	01700113          	li	sp,23
    
-   1005c:	00609093          	slli	ra,ra,0x6
-   10060:	0140e093          	ori	ra,ra,20
-   
-   10064:	05406113          	ori	sp,zero,84
-   10068:	02102023          	sw	ra,32(zero) # 20 <_exception_occur+0x18>
-   1006c:	02002183          	lw	gp,32(zero) # 20 <_exception_occur+0x18>
-   10070:	02200223          	sb	sp,36(zero) # 24 <_exception_occur+0x1c>
-   10074:	02400203          	lb	tp,36(zero) # 24 <_exception_occur+0x1c>
-   10078:	404182b3          	sub	t0,gp,tp
-   1007c:	03d06313          	ori	t1,zero,61
-   10080:	00b31313          	slli	t1,t1,0xb
-   10084:	00628463          	beq	t0,t1,1008c <_start+0x38>
-   10088:	f79ef06f          	j	0 <_bad>
-   1008c:	00000013          	nop
-   10090:	f75ef36f          	jal	t1,4 <_good>
-   10094:	00000013          	nop
-   10098:	00000013          	nop
+   10064:	002081b3          	add	gp,ra,sp
+   10068:	00c00213          	li	tp,12
+
+   1006c:	003201b3          	add	gp,tp,gp
+   10070:	00519463          	bne	gp,t0,10078 <_start+0x24>
+
+   10070:	00519463          	bne	gp,t0,10078 <_start+0x24>
+   10074:	f91ef06f          	j	4 <_good>
+
+   10078:	f89ef06f          	j	0 <_bad>
 
 Disassembly of section .riscv.attributes:
 

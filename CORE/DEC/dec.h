@@ -632,8 +632,9 @@ SC_MODULE(decod) {
 			<< RADR1_SD_S2
 			<< RADR2_SD_S2                    
 			<< IF2DEC_FLUSH_SD;
-        SC_CTHREAD(prio_pipeline_affectation, decod::CLK.pos());
-        reset_signal_is(RESET_N, false);
+        SC_METHOD(prio_pipeline_affectation)
+        sensitive 
+			<< CLK.pos();
         SC_METHOD(concat_dec2exe_s1)
         sensitive 
 			<< dec2exe_in_sd_s1 

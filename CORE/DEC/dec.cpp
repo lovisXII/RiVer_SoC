@@ -26,15 +26,6 @@ void decod::dependencies(){
         reg_dependencies_sd = false ;
         prioritary_pipeline_sd = prioritary_pipeline_rd ;
     }
-   
-
-    // Pipeline priority gestion
-
-    // if(reg_dependencies_sd && !IF2DEC_FLUSH_SD.read())
-    //     prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
-    // else if (IF2DEC_FLUSH_SD.read())
-    //     prioritary_pipeline_sd = 0 ;
-
 }
 
 void decod::prio_pipeline_affectation(){
@@ -45,6 +36,7 @@ void decod::prio_pipeline_affectation(){
 
     PRIORITARY_PIPELINE_RD = prioritary_pipeline_sd ;
 }
+
 
 // ---------------------------------------------FIFO LOADING
 // :---------------------------------------------
