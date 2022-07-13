@@ -5,41 +5,16 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00a00093          	li	ra,10
-   10058:	00a00113          	li	sp,10
-   1005c:	00000013          	nop
-   10060:	00000013          	nop
-   10064:	00000013          	nop
-   10068:	00000013          	nop
-   1006c:	00000013          	nop
-   10070:	00000013          	nop
-   10074:	02208863          	beq	ra,sp,100a4 <_branch1>
+   10054:	02f00293          	li	t0,47
+   10058:	00000013          	nop
+   1005c:	00c00093          	li	ra,12
+   10060:	01700113          	li	sp,23
+   10064:	002081b3          	add	gp,ra,sp
+   10068:	00c00213          	li	tp,12
+   1006c:	003201b3          	add	gp,tp,gp
+   10070:	00519463          	bne	gp,t0,10078 <_start+0x24>
+   10074:	f91ef06f          	j	4 <_good>
    10078:	f89ef06f          	j	0 <_bad>
-
-0001007c <_label1>:
-   1007c:	00d10113          	addi	sp,sp,13
-   10080:	00000013          	nop
-   10084:	00000013          	nop
-   10088:	00000013          	nop
-   1008c:	00000013          	nop
-   10090:	00000013          	nop
-   10094:	0020ca63          	blt	ra,sp,100a8 <_branch2>
-   10098:	f69ef06f          	j	0 <_bad>
-
-0001009c <_label2>:
-   1009c:	00115863          	bge	sp,ra,100ac <_branch3>
-
-000100a0 <_label3>:
-   100a0:	f65ef06f          	j	4 <_good>
-
-000100a4 <_branch1>:
-   100a4:	fd9ff06f          	j	1007c <_label1>
-
-000100a8 <_branch2>:
-   100a8:	ff5ff06f          	j	1009c <_label2>
-
-000100ac <_branch3>:
-   100ac:	ff5ff06f          	j	100a0 <_label3>
 
 Disassembly of section .riscv.attributes:
 

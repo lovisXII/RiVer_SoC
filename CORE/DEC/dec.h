@@ -769,7 +769,7 @@ SC_MODULE(decod) {
 			<< j_type_inst_sd_s1 
 			<< r1_valid_sd_s1 
 			<< r2_valid_sd_s1
-                  
+            << reg_dependencies_sd
 			<< csr_wenable_sd_s1 
 			<< DEC2EXE_EMPTY_SD_S1 
 			<< CSR_WENABLE_RD_S1 

@@ -492,7 +492,7 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             } 
-            else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
+            else if (!jump_sd_s1 && !stall_sd_s1) //no jump 
             {
                 IF2DEC_POP_SD_S1= 1;
                 IF2DEC_POP_SD_S2= 0;
@@ -828,8 +828,8 @@ void decod::stall_method() {
     
     stall_sd_s1        = ((csr_in_progress_s1 || csr_in_progress_s2) || ((!r1_valid_sd_s1 || !r2_valid_sd_s1) &&
                       (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
-                      || ((!r1_valid_sd_s2 || !r2_valid_sd_s2) &&
-                      (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec))
+                      || (((!r1_valid_sd_s2 || !r2_valid_sd_s2) &&
+                      (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec)) && !reg_dependencies_sd)
                       || (IF2DEC_EMPTY_SI_S1 && IF2DEC_EMPTY_SI_S2) || dec2exe_full_sd_s1 || dec2exe_full_sd_s2);
 
     //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
@@ -898,6 +898,7 @@ void decod::trace(sc_trace_file* tf) {
     // Interface with IF2DEC :
 
     sc_trace(tf, PC_IF2DEC_RI_S1, GET_NAME(PC_IF2DEC_RI_S1));
+    sc_trace(tf, PC_IF2DEC_RI_S2, GET_NAME(PC_IF2DEC_RI_S2));
     sc_trace(tf, INSTR_RI_S1, GET_NAME(INSTR_RI_S1));
     sc_trace(tf, INSTR_RI_S2, GET_NAME(INSTR_RI_S2));
     sc_trace(tf, IF2DEC_EMPTY_SI_S1, GET_NAME(IF2DEC_EMPTY_SI_S1));
