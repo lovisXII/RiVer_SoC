@@ -95,6 +95,7 @@ signal exception : std_logic := '0';
 signal mode_sm : std_logic_vector(1 downto 0) := "11";
 signal new_mode : std_logic_vector(1 downto 0);
 signal machine_mode_condition : std_logic;
+signal old_mode : std_logic_vector(1 downto 0);
 
 signal mstatus_x : std_logic_vector(31 downto 0);
 signal mcause_x  : std_logic_vector(31 downto 0);
@@ -220,7 +221,7 @@ CSR_ENABLE_SM   <= CSR_WENABLE_RE and not exception;
 -- MSTATUS 
 mstatus_x(31)           <= '0'; 
 mstatus_x(30 downto 13) <= MSTATUS_RC(30 downto 13); 
-mstatus_x(12 downto 11) <= mode_sm; 
+mstatus_x(12 downto 11) <= old_mode; 
 mstatus_x(10 downto 8)  <= MSTATUS_RC(10 downto 8);
 mstatus_x(7)            <= MSTATUS_RC(3);
 mstatus_x(6 downto 4)   <= MSTATUS_RC(6 downto 4);
@@ -247,24 +248,47 @@ mtval_x     <=  RES_RE when ((STORE_ACCESS_FAULT_RE or LOAD_ACCESS_FAULT_RE or S
                 PC_BRANCH_VALUE_RE when INSTRUCTION_ADRESS_MISALIGNED_RE = '1' else
                 x"00000000"; 
 
-machine_mode_condition <= ENV_CALL_WRONG_MODE_RE or STORE_ACCESS_FAULT_RE or LOAD_ACCESS_FAULT_RE or STORE_ADRESS_MISALIGNED_RE or LOAD_ADRESS_MISALIGNED_RE or ENV_CALL_M_MODE_RE or ENV_CALL_S_MODE_RE or ENV_CALL_U_MODE_RE or EBREAK_RE or INSTRUCTION_ADRESS_MISALIGNED_RE or ILLEGAL_INSTRUCTION_RE or INSTRUCTION_ACCESS_FAULT_RE;   
+machine_mode_condition  <=  ENV_CALL_WRONG_MODE_RE              or 
+                            STORE_ACCESS_FAULT_RE               or 
+                            LOAD_ACCESS_FAULT_RE                or 
+                            STORE_ADRESS_MISALIGNED_RE          or 
+                            LOAD_ADRESS_MISALIGNED_RE           or 
+                            ENV_CALL_M_MODE_RE                  or 
+                            ENV_CALL_S_MODE_RE                  or 
+                            ENV_CALL_U_MODE_RE                  or 
+                            EBREAK_RE                           or 
+                            INSTRUCTION_ADRESS_MISALIGNED_RE    or 
+                            ILLEGAL_INSTRUCTION_RE              or 
+                            INSTRUCTION_ACCESS_FAULT_RE;   
 
 new_mode <= "11" when machine_mode_condition = '1' else 
             "00";
 
 
 -- to verify
-mode : process(clk, reset_n)
+--mode : process(clk, reset_n)
+--begin 
+--    if reset_n = '0' then 
+--        mode_sm <= "11"; 
+--    elsif falling_edge(clk) then -- i don't think i'll keep this
+--        if exception = '1' then 
+--            mode_sm <= new_mode;
+--        end if; 
+--    end if; 
+--end process; 
+
+reg_mode : process(clk, reset_n)
 begin 
     if reset_n = '0' then 
-        mode_sm <= "11"; 
+        old_mode <= "11";
     elsif rising_edge(clk) then 
-        if exception = '1' then 
-            mode_sm <= new_mode;
-        end if; 
+        old_mode <= mode_sm; 
     end if; 
 end process; 
 
+mode_sm <=  new_mode when exception = '1' else
+            old_mode; 
+        
 
 RETURN_ADRESS_SM <= MEPC_SC when MRET_RE = '1' else 
                     x"00000000";
@@ -278,5 +302,5 @@ CURRENT_MODE_SM <= mode_sm;
 MRET_SM <= MRET_RE and exception;
 MIP_WDATA_SM <= x"00000000"; 
 MTVAL_WDATA_SM <= mtval_x; 
-MCAUSE_WDATA_SM <= mcause_x; 
+MCAUSE_WDATA_SM <= mcause_x;    
 end archi;

@@ -8,5 +8,6 @@ _start:
     fence
     lw x3, 0(x9)
     beq x8, x3, _good
+    j _bad
     nop
     nop

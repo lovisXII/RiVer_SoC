@@ -7,6 +7,7 @@ _start:
     csrrci x3,0x300, 0x1 # clear the lowest bit
     csrrw x3,0x300,x0 # x3 = 0b11110
     beq x3,x4, _good
+    j _bad
     nop
     nop
 
