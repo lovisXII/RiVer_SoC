@@ -541,9 +541,7 @@ void exec_s1::bypasses() {
     bool        blocked_var     = false;
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD_S1.read();
     bp_s2_E2_is_taken =
-    ((DEST_RE_S2.read() == RADR1_RD_S1.read()) || (DEST_RE_S2.read() == RADR2_RD_S1.read())) 
-    && DEST_RE_S2.read() !=0;
-
+    (DEST_RE_S1.read() == DEST_RE_S2.read()) && (DEST_RE_S1.read() != 0);
     // ###############################
     // BYPASS on rs1_s1 :
     // ###############################
