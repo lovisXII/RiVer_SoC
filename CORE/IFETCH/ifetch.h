@@ -10,8 +10,8 @@
 #define nop_encoding 0x0000013
 #define if2dec_size  97
 
-#define predictor_register_size 64
-#define size_of_pred_pointer 6          //2^n = predictor_register_size
+#define predictor_register_size 128
+#define size_of_pred_pointer 7          //2^n = predictor_register_size
 
 
 enum // PREDICTION STATE
