@@ -5,7 +5,7 @@ NOC='\033[0m'
 make core_tb
 for file in $(ls tests); do 
     printf "Test ${file} non opt..." 
-    timeout 5s ./core_tb tests/$file >/dev/null 2>&1
+    timeout 5s make run TEST=tests/$file >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -13,7 +13,7 @@ for file in $(ls tests); do
         printf "${RED} failed\n${NOC}"
     fi
     printf "Test ${file} opt..." 
-    timeout 5s ./core_tb tests/$file -O >/dev/null 2>&1
+    timeout 5s make run TEST=tests//$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"

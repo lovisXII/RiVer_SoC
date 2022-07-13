@@ -8,7 +8,7 @@ _start:
     csrrsi x3, 0x300, 0x1 # x3 = 0x5; 0x300 = 0x5 or 0x1
     csrrwi x3, 0x300, 0 #x3 = 0x6; 
     beq x3,x4, _good
-    beq x3,x4, _bad
+    j _bad
     nop
     nop
 
