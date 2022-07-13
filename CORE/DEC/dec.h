@@ -630,7 +630,9 @@ SC_MODULE(decod) {
         sensitive   
 			<< adr_dest_sd_s1
 			<< RADR1_SD_S2
-			<< RADR2_SD_S2                    
+			<< RADR2_SD_S2  
+            << dec2exe_full_sd_s1     
+            << dec2exe_full_sd_s2             
 			<< IF2DEC_FLUSH_SD;
         SC_METHOD(prio_pipeline_affectation)
         sensitive 
