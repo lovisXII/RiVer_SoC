@@ -10,26 +10,30 @@ void decod::dependencies(){
     // Need to add the case where there is store dependencies
     // addi x2,x0,10
     // sw x2, 0(x2)
-    bool dependencies = (adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2);
-    if(adr_dest_sd_s1.read() != 0){
-        if(dependencies)
-        {
-            reg_dependencies_sd = true ;
-        }
-        else{
-            reg_dependencies_sd = false ;
-        }
+    bool dependencies = ((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) && (adr_dest_sd_s1.read() != 0);
+    
+    if(dependencies && !IF2DEC_FLUSH_SD.read())
+    {
+        reg_dependencies_sd = true ;
+        prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
+    }
+    else if(IF2DEC_FLUSH_SD.read())
+    {
+        reg_dependencies_sd = false ;
+        prioritary_pipeline_sd = 0;
     }
     else{
-        reg_dependencies_sd = false;
+        reg_dependencies_sd = false ;
+        prioritary_pipeline_sd = prioritary_pipeline_rd ;
     }
+   
 
     // Pipeline priority gestion
 
-    if(dependencies && adr_dest_sd_s1.read() != 0 && !IF2DEC_FLUSH_SD.read())
-            prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
-    else if (IF2DEC_FLUSH_SD.read())
-        prioritary_pipeline_sd = 0 ;
+    // if(reg_dependencies_sd && !IF2DEC_FLUSH_SD.read())
+    //     prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
+    // else if (IF2DEC_FLUSH_SD.read())
+    //     prioritary_pipeline_sd = 0 ;
 
 }
 
@@ -38,6 +42,8 @@ void decod::prio_pipeline_affectation(){
         prioritary_pipeline_rd = 0;
     else
         prioritary_pipeline_rd = prioritary_pipeline_sd ;
+
+    PRIORITARY_PIPELINE_RD = prioritary_pipeline_sd ;
 }
 
 // ---------------------------------------------FIFO LOADING
@@ -47,7 +53,6 @@ void decod::concat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_in_var;
     if (!EXCEPTION_SM_S1.read()) {
 
-        dec2exe_in_var.range(252,253) = prioritary_pipeline_sd.read() ;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s1;  
         dec2exe_in_var[219] = mul_i_sd_s1 || mulh_i_sd_s1 || mulhsu_i_sd_s1 || mulhu_i_sd_s1;  
         dec2exe_in_var[218] = ebreak_i_sd_s1;
@@ -217,7 +222,6 @@ void decod::concat_dec2exe_s2() {
 void decod::unconcat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_out_var = dec2exe_out_sd_s1.read();
 
-    PRIORITARY_PIPELINE_RD = (sc_bv_base) dec2exe_out_var.range(252,253) ;
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD_S1.write((bool)dec2exe_out_var[219]);
     EBREAK_RD_S1.write((bool)dec2exe_out_var[218]);
