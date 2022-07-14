@@ -240,7 +240,9 @@ dec2exe : fifo
 -------------------------
 -- fifo gestion 
 -------------------------
-csr_in_progress <=  ((csr_wenable_fifo and dec2exe_empty) or CSR_WENABLE_RE) and not(BP_EXE2MEM_EMPTY_SE);
+csr_in_progress <=  '1' when     (csr_wenable_fifo = '1' and dec2exe_empty = '0') 
+                            or  (CSR_WENABLE_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0') else 
+                    '0';
 
 stall_sd    <=  '1' when    (
                                 (csr_in_progress = '1' or (

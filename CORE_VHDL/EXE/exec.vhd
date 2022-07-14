@@ -293,6 +293,7 @@ MEM_STORE_RE <= exe_fifo_mem_store when exception_se = '0' else '0';
 WB_RE <= exe_fifo_wb when exception_se = '0' else '0'; 
 CSR_RDATA_RE <= exe_fifo_csr_data; 
 CSR_WENABLE_RE <= exe_fifo_csr_wenable; 
+
 -- fifo 
 exe2mem_data(31 downto 0) <= exe_res;
 exe2mem_data(63 downto 32) <= bp_mem_data;
