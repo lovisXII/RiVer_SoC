@@ -12,6 +12,7 @@ int NB_INSTR;
 
 int good_adr = 0; 
 int bad_adr = 0; 
+int exception_adr = 0; 
 
 int*** ram[256];
 
@@ -230,6 +231,10 @@ int main(int argc, char const* argv[]) {
     if(Elf32_SymAdr(pObj,&end_signature,"end_signature")==0)
                 fprintf(stderr, "Found end_signature at : 0x%8x\n", end_signature);
    
+    if(Elf32_SymAdr(pObj,&exception_adr,"_exception_occur")==0)
+                fprintf(stderr, "Found _exception_occur at : 0x%8x\n", end_signature);
+   
+
     if(rvtest_entry_point)
         start_pc = rvtest_entry_point;
     else
