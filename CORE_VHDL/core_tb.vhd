@@ -127,7 +127,7 @@ end component;
 -- Simulation 
 constant NCYCLES : integer := 10000000; 
 signal CYCLES : integer := 0; 
-signal good_adr, bad_adr: std_logic_vector(31 downto 0);
+signal good_adr, bad_adr, exception_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
 signal result : integer := 0;  
 
@@ -140,6 +140,7 @@ begin
 
 good_adr        <=  std_logic_vector(to_signed(get_good(0), 32));
 bad_adr         <=  std_logic_vector(to_signed(get_bad(0), 32));
+exception_adr   <=  x"00011064"; -- because of flemme, TODO in ram_sim.c
 riscof_en       <=  get_riscof_en(0);
 riscof_end_adr  <=  std_logic_vector(to_signed(get_end_riscof(0), 32));
 
@@ -223,14 +224,15 @@ begin
                 assert false report "Test failed" severity error; 
                 --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
                 result <= 1;
-                end_simu <= '1';  
-
-            
+                end_simu <= '1';              
             elsif ADR_SI = good_adr then 
                 assert false report "Test success" severity note; 
                 result <= 0;
                 end_simu <= '1';  
-
+            elsif ADR_SI = exception_adr then 
+                assert false report "Exception occured" severity note; 
+                result <= 1;    
+                end_simu <= '1'; 
             else
                 --report "ADR_SI length = " & integer'image(ADR_SI'length);
                 --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";

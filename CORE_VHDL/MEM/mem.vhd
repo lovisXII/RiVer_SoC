@@ -229,18 +229,19 @@ mstatus_x(3)            <= '0';
 mstatus_x(2 downto 0)   <= MSTATUS_RC(2 downto 0);
 
 -- MCAUSE
-mcause_x    <=  x"00000018" when ENV_CALL_WRONG_MODE_RE = '1'       else 
-                x"00000007" when STORE_ACCESS_FAULT_RE  = '1'       else
-                x"00000005" when ENV_CALL_WRONG_MODE_RE = '1'       else 
-                x"00000006" when STORE_ADRESS_MISALIGNED_RE = '1'  else 
-                x"00000004" when LOAD_ADRESS_MISALIGNED_RE = '1'   else 
-                x"0000000B" when ENV_CALL_M_MODE_RE     = '1'       else 
-                x"00000009" when ENV_CALL_S_MODE_RE     = '1'       else 
-                x"00000008" when ENV_CALL_U_MODE_RE     = '1'       else 
-                x"00000003" when EBREAK_RE              = '1'       else 
+mcause_x    <=  x"00000018" when ENV_CALL_WRONG_MODE_RE = '1'           else 
+                x"00000007" when STORE_ACCESS_FAULT_RE  = '1'           else
+                x"00000005" when LOAD_ACCESS_FAULT_RE   = '1'           else 
+                x"00000005" when ENV_CALL_WRONG_MODE_RE = '1'           else 
+                x"00000006" when STORE_ADRESS_MISALIGNED_RE = '1'       else 
+                x"00000004" when LOAD_ADRESS_MISALIGNED_RE = '1'        else 
+                x"0000000B" when ENV_CALL_M_MODE_RE     = '1'           else 
+                x"00000009" when ENV_CALL_S_MODE_RE     = '1'           else 
+                x"00000008" when ENV_CALL_U_MODE_RE     = '1'           else 
+                x"00000003" when EBREAK_RE              = '1'           else 
                 x"00000000" when INSTRUCTION_ADRESS_MISALIGNED_RE = '1' else 
-                x"00000002" when ILLEGAL_INSTRUCTION_RE = '1'       else 
-                x"00000001" when INSTRUCTION_ACCESS_FAULT_RE = '1'  else 
+                x"00000002" when ILLEGAL_INSTRUCTION_RE = '1'           else 
+                x"00000001" when INSTRUCTION_ACCESS_FAULT_RE = '1'      else 
                 x"00000000"; -- or debug value
 
 -- MTVAL
@@ -263,19 +264,6 @@ machine_mode_condition  <=  ENV_CALL_WRONG_MODE_RE              or
 
 new_mode <= "11" when machine_mode_condition = '1' else 
             "00";
-
-
--- to verify
---mode : process(clk, reset_n)
---begin 
---    if reset_n = '0' then 
---        mode_sm <= "11"; 
---    elsif falling_edge(clk) then -- i don't think i'll keep this
---        if exception = '1' then 
---            mode_sm <= new_mode;
---        end if; 
---    end if; 
---end process; 
 
 reg_mode : process(clk, reset_n)
 begin 
