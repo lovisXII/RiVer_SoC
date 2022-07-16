@@ -49,6 +49,11 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> PRED_ADR_RI;
     sc_signal<bool>        PRED_TAKEN_RI;
 
+    sc_signal<bool>        RET_INST_RD;
+    sc_signal<sc_uint<32>> RET_INST_ADR_RD;
+
+    sc_signal<bool>        VALID_ADR_TO_RET_RD;
+    sc_signal<sc_uint<32>> ADR_TO_RET_RD;
     // DEC-EXE interface
 
     sc_signal<sc_uint<32>> PC_DEC2EXE_RD;
@@ -296,6 +301,11 @@ SC_MODULE(core) {
         ifetch_inst.BRANCH_INST_RD(BRANCH_INST_RD);
         ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
         ifetch_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
+
+        ifetch_inst.RET_INST_RD(RET_INST_RD);
+        ifetch_inst.RET_INST_ADR_RD(RET_INST_ADR_RD);
+        ifetch_inst.VALID_ADR_TO_RET_RD(VALID_ADR_TO_RET_RD);
+        ifetch_inst.ADR_TO_RET_RD(ADR_TO_RET_RD);
 
         ifetch_inst.PRED_ADR_SD(PRED_ADR_SD);
         ifetch_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
