@@ -172,7 +172,7 @@ SC_MODULE(ifetch) {
 
         SC_METHOD(calc_prob_pred);
         sensitive << PRED_FAILED_RD << PRED_SUCCESS_RD;
-
+/*
             // ret prediction
         SC_METHOD(write_pred_ret_reg);
         sensitive << CLK.neg();
@@ -182,8 +182,8 @@ SC_MODULE(ifetch) {
 
         SC_METHOD(read_pred_ret_reg);
         sensitive << PC_RD;
-        
+        */
         SC_METHOD(next_pred_adr);
-        sensitive << pred_branch_taken_si << pred_ret_taken_si;
+        sensitive << pred_branch_taken_si << pred_ret_taken_si << pred_ret_next_adr_si << pred_branch_next_adr_si;
     }
 };
