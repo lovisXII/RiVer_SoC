@@ -230,8 +230,8 @@ begin
                 result <= 0;
                 end_simu <= '1';  
             elsif ADR_SI = exception_adr then 
-                assert false report "Exception occured" severity note; 
-                result <= 1;    
+                assert false report "Exception occured" severity warning; 
+                result <= 2;    
                 end_simu <= '1'; 
             else
                 --report "ADR_SI length = " & integer'image(ADR_SI'length);

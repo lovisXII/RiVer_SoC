@@ -34,29 +34,10 @@ int read_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
+        //printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
-}
-
-int end_simulation(int result, int riscof_enable) {
-    if(!riscof_enable)
-        exit(result);
-    else{
-        if(begin_signature && end_signature)
-        {    
-            signature_size = (end_signature - begin_signature)/4 ;
-            signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
-            for(int i = 0 ; i < signature_size ; i++)
-            {
-                signature_value[i] = read_mem(begin_signature+i*4) ;
-                fprintf(riscof_signature,"%08x\n",signature_value[i]) ;
-            }
-        }
-        exit(result);
-    }
-    
 }
 
 int write_mem(int a, int data, int byt_sel) {
@@ -102,9 +83,27 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
+    //printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
     return 0; 
 }   
+
+int end_simulation(int result, int riscof_enable) {
+    if(!riscof_enable)
+        exit(result);
+    else{
+        if(begin_signature && end_signature)
+        {    
+            signature_size = (end_signature - begin_signature)/4 ;
+            signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
+            for(int i = 0 ; i < signature_size ; i++)
+            {
+                signature_value[i] = read_mem(begin_signature+i*4) ;
+                fprintf(riscof_signature,"%08x\n",signature_value[i]) ;
+            }
+        }
+        exit(result);
+    }
+}
 
 int get_startpc(int z) {
     return start_pc; 
