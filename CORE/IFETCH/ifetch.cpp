@@ -157,53 +157,64 @@ void ifetch::calc_prob_pred()
 }
 void ifetch::write_pred_ret_reg()
 {
-    int index = 0;
     if(RET_INST_RD.read() && !IF2DEC_EMPTY_SI.read())
     {
-        bool found = false;
         for(int i = 0; i < ret_predictor_register_size; ++i)
         {
-            if(RET_ADR_RI[i] == RET_INST_ADR_RD.read())
+            if(RET_ADR_RI[i] == BRANCH_INST_ADR_RD.read())
             {
-                found = true;
-                index = i;
+                RET_ADR_RI[ret_write_pointer_si.read()] = BRANCH_INST_ADR_RD.read();
+                ret_write_pointer_si = ret_write_pointer_si.read() << 1;
                 break;
             }
         }
-        if(!found)
-        {
-            RET_ADR_RI[ret_write_pointer_si.read()] = RET_INST_ADR_RD.read();
-
-            ret_write_pointer_si = ret_write_pointer_si.read() + 1;
-        }
     }
 }
-void ifetch::write_ret_stack()
-{
-    int index = 0;
-    if(VALID_ADR_TO_RET_RD.read() && !IF2DEC_EMPTY_SI.read())
-    {
-        RET_STACK_RI[ret_stack_pointer_si.read()] = ADR_TO_RET_RD.read();
-
-        ret_stack_pointer_si = ret_stack_pointer_si.read() + 1;
-    }
-}
-void ifetch::read_pred_ret_reg()
+void ifetch::ret_stack()
 {
     bool found = false;
     for(int i = 0; i < ret_predictor_register_size; ++i)
     {
         if(RET_ADR_RI[i].read() == PC_RD.read())
         {
-            #ifdef BRANCH_PREDICTION
+            #ifdef RET_BRANCH_PREDICTION
             found = true;
             #endif
-            pred_ret_next_adr_si = PREDICTED_ADR_REG[i];
             break;
         }
     }
     pred_ret_taken_si = found;
+
+    if(!IF2DEC_EMPTY_SI.read())
+    {
+        if(PUSH_ADR_RAS_RD.read())
+        {
+            // ret inst found on decod stage => pop @
+            for(int i = 0; i < ret_stack_size; i++)
+                if(ret_stack_pointer_si.read()[i])
+                    RET_STACK_RI[i] = ADR_TO_RET_RD.read();
+
+            ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+        }
+        else if(POP_ADR_RAS_RD.read())
+        {
+            // push valid adr to ret on stack
+            ret_stack_pointer_si = ret_stack_pointer_si.read() << 1;
+        }
+
+        if(found)
+        {
+            // pc@ == ret inst => pop @ to ret
+            for(int i = 0; i < ret_stack_size; i++)
+            {
+                if(ret_stack_pointer_si.read()[i])
+                    pred_ret_next_adr_si = RET_STACK_RI[i];
+            }
+            ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+        }
+    }
 }
+
 void ifetch::next_pred_adr()
 {
     if(pred_branch_taken_si)
