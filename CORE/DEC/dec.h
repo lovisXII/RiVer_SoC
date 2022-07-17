@@ -3,7 +3,7 @@
 #include "../UTIL/fifo.h"
 
 #define dec2exe_size        252
-#define dec2if_size         99
+#define dec2if_size         134
 #define start_kernel_adress 0xF0000000
 
 SC_MODULE(decod) {
@@ -58,6 +58,12 @@ SC_MODULE(decod) {
 
     sc_out<sc_uint<32>> PRED_ADR_SD;
     sc_out<bool>        PRED_TAKEN_SD;
+
+    sc_out<bool>        PUSH_ADR_RAS_RD;
+    sc_out<bool>        POP_ADR_RAS_RD; 
+    sc_out<sc_uint<32>> ADR_TO_RET_RD;    
+
+    sc_out<bool>        RET_INST_RD;
     // Interface with IF2DEC :
 
     sc_in<sc_uint<32>>            PC_IF2DEC_RI;

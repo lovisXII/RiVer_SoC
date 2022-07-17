@@ -6,6 +6,7 @@
 
 
 #define BRANCH_PREDICTION
+//#define RET_BRANCH_PREDICTION
 
 #define nop_encoding 0x0000013
 #define if2dec_size  97
@@ -17,7 +18,6 @@
 #define ret_predictor_pointer_size  4
 
 #define ret_stack_size              16
-#define ret_stack_pointer_size      4
 
 enum // PREDICTION STATE
 { // 1,2,4,8 -> one-hot
@@ -51,11 +51,13 @@ SC_MODULE(ifetch) {
     sc_in<sc_uint<32>> PRED_ADR_SD;
     sc_in<bool>        PRED_TAKEN_SD;
 
-    sc_in<bool>        RET_INST_RD;
-    sc_in<sc_uint<32>> RET_INST_ADR_RD;
+    // RAS : return-address stack
+    sc_in<bool>        PUSH_ADR_RAS_RD;
+    sc_in<bool>        POP_ADR_RAS_RD;
+    
+    sc_in<sc_uint<32>> ADR_TO_RET_RD;    
 
-    sc_in<bool>        VALID_ADR_TO_RET_RD;
-    sc_in<sc_uint<32>> ADR_TO_RET_RD;
+    sc_in<bool>        RET_INST_RD;
 
     // if2dec interface
 
@@ -109,10 +111,8 @@ SC_MODULE(ifetch) {
     sc_signal<sc_uint<32>> RET_ADR_RI[ret_predictor_register_size];
     sc_signal<sc_uint<ret_predictor_pointer_size>> ret_write_pointer_si;
 
-    sc_signal<bool> pop_stack_si;
-
     sc_signal<sc_uint<32>> RET_STACK_RI[ret_stack_size];
-    sc_signal<sc_uint<ret_stack_pointer_size>> ret_stack_pointer_si;
+    sc_signal<sc_uint<ret_stack_size>> ret_stack_pointer_si;
 
     sc_signal<sc_uint<32>> pred_ret_next_adr_si;
     sc_signal<bool>        pred_ret_taken_si;
@@ -130,9 +130,8 @@ SC_MODULE(ifetch) {
     void apply_prob();
 
     void write_pred_ret_reg();
-    void write_ret_stack();
 
-    void read_pred_ret_reg();
+    void ret_stack();
 
     void next_pred_adr();
 
@@ -172,17 +171,15 @@ SC_MODULE(ifetch) {
 
         SC_METHOD(calc_prob_pred);
         sensitive << PRED_FAILED_RD << PRED_SUCCESS_RD;
-/*
-            // ret prediction
+
+        // ret prediction
+        /*
         SC_METHOD(write_pred_ret_reg);
         sensitive << CLK.neg();
 
-        SC_METHOD(write_ret_stack);
-        sensitive << CLK.neg();
-
-        SC_METHOD(read_pred_ret_reg);
-        sensitive << PC_RD;
-        */
+        SC_METHOD(ret_stack);
+        sensitive << CLK.neg();*/
+        
         SC_METHOD(next_pred_adr);
         sensitive << pred_branch_taken_si << pred_ret_taken_si << pred_ret_next_adr_si << pred_branch_next_adr_si;
     }

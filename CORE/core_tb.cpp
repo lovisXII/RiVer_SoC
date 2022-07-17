@@ -1,10 +1,3 @@
-// +----------------------------------------------+
-// |    Return:                                   |
-// |        Prog Error           : -3             |
-// |        Simulation Error     : -2             |
-// |        Simulation Exception : -1             |
-// |        Simulation Success   : num of cycles  |
-// +----------------------------------------------+
 
 #include <fstream>
 #include <iomanip>

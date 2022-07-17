@@ -135,6 +135,14 @@ void decod::unconcat_dec2exe() {
 void decod::concat_dec2if()
 {
     sc_bv<dec2if_size> dec2if_in_var;
+    
+    bool rd_link  = (adr_dest_sd.read() == 1) || (adr_dest_sd.read() == 5);
+    bool rs1_link = (RADR1_SD.read() == 1) || (RADR1_SD.read() == 5);
+
+    dec2if_in_var[133] = rd_link;
+    dec2if_in_var[132] = (!rd_link && rs1_link) || (rd_link && rs1_link && (adr_dest_sd.read() != RADR1_SD.read()));
+    dec2if_in_var.range(131, 100) = PC_IF2DEC_RI.read() + 4;
+    dec2if_in_var[99] = jalr_type_inst_sd && (adr_dest_sd.read() == 0) && (offset_branch_sd.read() == 0) && (RADR1_SD.read() == 1);
     dec2if_in_var[98] = pred_failed_sd;
     dec2if_in_var[97] = pred_success_sd;
     dec2if_in_var[96] = b_type_inst_sd | j_type_inst_sd;
@@ -147,6 +155,10 @@ void decod::concat_dec2if()
 void decod::unconcat_dec2if()
 {
     sc_bv<dec2if_size> dec2if_out_var = dec2if_out_sd.read();
+    PUSH_ADR_RAS_RD.write((bool)dec2if_out_var[133]);
+    POP_ADR_RAS_RD.write((bool)dec2if_out_var[132]);
+    ADR_TO_RET_RD.write((sc_bv_base)dec2if_out_var.range(131, 100));
+    RET_INST_RD.write((bool)dec2if_out_var[99]);
     PRED_FAILED_RD.write((bool)dec2if_out_var[98]);
     PRED_SUCCESS_RD.write((bool)dec2if_out_var[97]);
     BRANCH_INST_RD.write((bool)dec2if_out_var[96]);
