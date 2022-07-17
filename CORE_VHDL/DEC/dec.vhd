@@ -103,7 +103,7 @@ signal dec2exe_din, dec2exe_data, dec2exe_x, dec2exe_dout : std_logic_vector(247
 signal dec2exe_full_sd, dec2exe_push_sd : std_logic;
 
 -- Instructions
-signal r_type_sd, i_type_sd, s_type_sd, b_type_sd, u_type_sd, j_type_sd, jalr_type_sd, jal_type_sd : std_logic;
+signal r_type_sd, i_type_sd, s_type_sd, b_type_sd, u_type_sd, j_type_sd, jalr_type_sd : std_logic;
 signal load_type_sd, nmem_type_sd : std_logic;
 
 signal add_i_sd, sub_i_sd, slt_i_sd, sltu_i_sd, and_i_sd, or_i_sd, xor_i_sd, sll_i_sd, srl_i_sd, sra_i_sd : std_logic;
@@ -654,7 +654,6 @@ ENV_CALL_WRONG_MODE_RD <= dec2exe_dout(211);
 ENV_CALL_U_MODE_RD <= dec2exe_dout(210);
 ILLEGAL_INSTRUCTION_RD <= dec2exe_dout(209);
 ADRESS_MISALIGNED_RD <= dec2exe_dout(208);
-INSTRUCTION_ACCESS_FAULT_RD <= dec2exe_dout(208);
 ENV_CALL_M_MODE_RD <= dec2exe_dout(207);
 ENV_CALL_S_MODE_RD <= dec2exe_dout(206);                
 CSR_RDATA_RD <= dec2exe_dout(205 downto 174);
