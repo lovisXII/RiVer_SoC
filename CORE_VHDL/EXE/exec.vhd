@@ -273,7 +273,7 @@ blocked_se <=   '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' 
                 '0';
 
 -- Exception 
-adress_misaligned <=    '1' when   (alu_res(1 downto 0) = "11" and MEM_SIZE_RD = "00") 
+adress_misaligned <=    '1' when   (alu_res(1 downto 0) /= "00" and MEM_SIZE_RD = "00") 
                                 or  (alu_res(0) = '1' and MEM_SIZE_RD = "01")
                             else 
                         '0'; 
