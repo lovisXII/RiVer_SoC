@@ -565,7 +565,6 @@ void exec_s1::bypasses() {
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
     // E1->E1 and no load (normal bypass)
     {
-        cout << sc_time_stamp() << " test " << endl ;
         op1_se_s1.write(EXE_RES_RE_S1.read());
         r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
     }
@@ -620,6 +619,10 @@ void exec_s1::bypasses() {
     {
         blocked_var = true;
         r1_valid_se = true;
+    }
+    else if(op1_is_saved_re){
+        r1_valid_se = true ;
+        op1_se_s1 = op1_bp_re;
     }
     else 
     {
@@ -706,7 +709,6 @@ void exec_s1::bypasses() {
 
         if (MEM_STORE_RD_S1.read()) //case of a store 
         {  // on stores we need to bypass to the data not adr
-            cout << sc_time_stamp() << "sstore in s1" << endl ;
             bp_mem_data_var = bp_value;
             op2_se.write(OP2_RD_S2.read());
             r2_valid_se = true;
@@ -740,6 +742,10 @@ void exec_s1::bypasses() {
         blocked_var = true;
         r2_valid_se = true;
     }
+    else if(op2_is_saved_re){
+        r2_valid_se = true ;
+        op2_se = op2_bp_re;
+    }
     else 
     {
         op2_se.write(OP2_RD_S1.read());
@@ -749,6 +755,25 @@ void exec_s1::bypasses() {
     blocked.write(blocked_var);
 }
 
+void exec_s1::save_op_bp_in_register(){
+    if((RADR1_RD_S1 == MEM_DEST_RM_S1 || RADR1_RD_S1 == MEM_DEST_RM_S2) && blocked)
+    {
+        op1_is_saved_re = 1;
+        op2_is_saved_re = 0;
+        op1_bp_re = op1_se_s1;
+    }
+    else if((RADR2_RD_S1 == MEM_DEST_RM_S1 || RADR2_RD_S1 == MEM_DEST_RM_S2) && blocked){
+
+        op1_is_saved_re = 0;
+        op2_is_saved_re = 1;
+        op1_bp_re = op2_se;
+    } 
+    else{
+
+        op1_is_saved_re = 0;
+        op2_is_saved_re = 0;
+    }
+}
 void exec_s1::exception() {
     exception_se = EXCEPTION_RD_S1 | load_adress_missaligned_se | load_access_fault_se | store_access_fault_se |
                    store_adress_missaligned_se;
@@ -918,7 +943,11 @@ void exec_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WENABLE_RE_S2, GET_NAME(CSR_WENABLE_RE_S2));
     sc_trace(tf, MEM_LOAD_RE_S2, GET_NAME(MEM_LOAD_RE_S2));
     sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
-    sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
+    
+    sc_trace(tf, op1_bp_re, GET_NAME(op1_bp_re));
+    sc_trace(tf, op2_bp_re, GET_NAME(op2_bp_re));
+    sc_trace(tf, op1_is_saved_re, GET_NAME(op1_is_saved_re));
+    sc_trace(tf, op2_is_saved_re, GET_NAME(op2_is_saved_re));
     // sc_trace(tf, bp_s2_E2_is_taken, GET_NAME(bp_s2_E2_is_taken));
     alu_inst.trace(tf);
     shifter_inst.trace(tf);

@@ -614,6 +614,10 @@ void exec_s2::bypasses() {
         blocked_var = true;
         r1_valid_se = true;
     }
+    else if(op1_is_saved_re){
+        r1_valid_se = true ;
+        op1_se_s2 = op1_bp_re;
+    }
     else 
     {
         op1_se_s2.write(OP1_RD_S2.read());
@@ -729,6 +733,10 @@ void exec_s2::bypasses() {
         blocked_var = true;
         r2_valid_se = true;
     }
+    else if(op2_is_saved_re){
+        r2_valid_se = true ;
+        op2_se = op2_bp_re;
+    }
     else 
     {
         op2_se.write(OP2_RD_S2.read());
@@ -736,6 +744,26 @@ void exec_s2::bypasses() {
     }
     bp_mem_data_sd.write(bp_mem_data_var);
     blocked.write(blocked_var);
+}
+
+void exec_s2::save_op_bp_in_register(){
+    if((RADR1_RD_S2 == MEM_DEST_RM_S2 || RADR1_RD_S2 == MEM_DEST_RM_S1) && blocked)
+    {
+        op1_is_saved_re = 1;
+        op2_is_saved_re = 0;
+        op1_bp_re = op1_se_s2;
+    }
+    else if((RADR2_RD_S2 == MEM_DEST_RM_S2 || RADR2_RD_S2 == MEM_DEST_RM_S1) && blocked){
+
+        op1_is_saved_re = 0;
+        op2_is_saved_re = 1;
+        op1_bp_re = op2_se;
+    } 
+    else{
+
+        op1_is_saved_re = 0;
+        op2_is_saved_re = 0;
+    }
 }
 
 void exec_s2::exception() {

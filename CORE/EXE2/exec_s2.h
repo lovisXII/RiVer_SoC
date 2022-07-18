@@ -228,6 +228,16 @@ SC_MODULE(exec_s2) {
     sc_signal<bool> load_access_fault_se;        // trying to access memory in wrong mode
     sc_signal<bool> store_access_fault_se;
     sc_signal<bool> store_adress_missaligned_se;
+
+
+    // Superscalar :
+
+    sc_signal<sc_uint<32>> op1_bp_re ;
+    sc_signal<sc_uint<32>> op2_bp_re ;
+    
+    sc_signal<bool> op1_is_saved_re;
+    sc_signal<bool> op2_is_saved_re;
+
     // Instance used :
 
     alu_s2     alu_inst;
@@ -244,6 +254,7 @@ SC_MODULE(exec_s2) {
     void bypasses();  // allow the push/pop of fifo exe2mem
     void exception();
 
+    void save_op_bp_in_register();
     void trace(sc_trace_file * tf);
     SC_CTOR(exec_s2)
         : alu_inst("alu_s2"),
@@ -301,6 +312,7 @@ SC_MODULE(exec_s2) {
 			<< CURRENT_MODE_SM_S2 
 			<< MEM_LOAD_RD_S2 
 			<< MEM_STORE_RD_S2
+            << MEM_SIZE_RD_S2
                   
 			<< exception_se 
 			<< RESET;
@@ -422,7 +434,13 @@ SC_MODULE(exec_s2) {
                 
 			<< EXE2MEM_EMPTY_SE_S2
                 
-			<< OP2_RD_S1;
+			<< OP2_RD_S1
+            << op1_is_saved_re
+            << op2_is_saved_re
+            << op1_bp_re
+            << op2_bp_re;
+        SC_METHOD(save_op_bp_in_register);
+        sensitive << CLK.pos();
         SC_METHOD(exception);
         sensitive 
 			<< WB_RD_S2 

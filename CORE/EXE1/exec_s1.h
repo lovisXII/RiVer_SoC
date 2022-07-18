@@ -226,8 +226,11 @@ SC_MODULE(exec_s1) {
 
     // Superscalar :
 
-    // sc_signal<bool> bp_s2_E2_is_taken;
-    // sc_signal<bool> bp_s2_M2_is_taken;
+    sc_signal<sc_uint<32>> op1_bp_re ;
+    sc_signal<sc_uint<32>> op2_bp_re ;
+    
+    sc_signal<bool> op1_is_saved_re;
+    sc_signal<bool> op2_is_saved_re;
 
     // Instance used :
 
@@ -244,6 +247,7 @@ SC_MODULE(exec_s1) {
 
     void bypasses();  // allow the push/pop of fifo exe2mem
     void exception();
+    void save_op_bp_in_register();
 
     void trace(sc_trace_file * tf);
     SC_CTOR(exec_s1)
@@ -392,7 +396,13 @@ SC_MODULE(exec_s1) {
 			<< MULT_INST_RM_S1 
 			<< MEM2WBK_EMPTY_SM_S1 
 			<< EXE2MEM_EMPTY_SE_S1
-            << OP2_RD_S2;
+            << OP2_RD_S2
+            << op1_is_saved_re
+            << op2_is_saved_re
+            << op1_bp_re
+            << op2_bp_re;
+        SC_METHOD(save_op_bp_in_register);
+        sensitive << CLK.pos();
         SC_METHOD(exception);
         sensitive 
 			<< WB_RD_S1 

@@ -452,6 +452,17 @@ void decod::pc_inc() {
     else{
         
         // IF2DEC Gestion
+        /*
+        2 cases are possible :
+        - S1 prio on S2, this is the "normal" case.
+        If there is no data dependencies : 
+            - If the 1st or the 2nd inst is a successfull branch we must pop both buffer and flush it
+            - If there is no jump we pop both inst
+            - In any other case we do not pop
+        If there is a data dependcie :
+            - If there is a jump on s1, we flush
+            - If there is no jump we pop only S1
+        */
         if(!reg_dependencies_sd.read()){
             if (jump_sd_s1.read() && !stall_sd_s1 ) //jump_s1  
             {
@@ -486,10 +497,18 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             } 
-            else if (!jump_sd_s1 && !stall_sd_s1) //no jump 
+            else if (!jump_sd_s1 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 0) //no jump and S1 prio S2
+            // we must pop S1 but not S2 cause S1 is prio
             {
                 IF2DEC_POP_SD_S1= 1;
                 IF2DEC_POP_SD_S2= 0;
+                IF2DEC_FLUSH_SD= 0;
+            } 
+            else if (!jump_sd_s1 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 2) //no jump and S2 prio S1
+            // we must pop S2 but not S1 cause S2 is prio
+            {
+                IF2DEC_POP_SD_S1= 0;
+                IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 0;
             } 
             else //any case of stall is the same 
@@ -499,6 +518,10 @@ void decod::pc_inc() {
                 IF2DEC_FLUSH_SD= 0;
             }
         }
+        }
+        
+        
+
 
 
         // DEC2EXE_S1 Gestion
@@ -510,7 +533,6 @@ void decod::pc_inc() {
             dec2exe_push_sd_s1= 1;
             dec2exe_push_sd_s2 = 1;
         }
-    }
 }
 
 void decod::bypasses() {

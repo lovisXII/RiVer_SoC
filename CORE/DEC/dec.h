@@ -1164,7 +1164,8 @@ SC_MODULE(decod) {
                   
 			<< add_offset_to_pc_s2
                   
-			<< reg_dependencies_sd;
+			<< reg_dependencies_sd
+            << PRIORITARY_PIPELINE_RD;
 
         SC_METHOD(bypasses);
         sensitive   
