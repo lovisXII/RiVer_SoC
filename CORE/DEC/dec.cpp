@@ -464,20 +464,38 @@ void decod::pc_inc() {
             - If there is a jump on s1, we flush
             - If there is no jump we pop only S1
         */
-        if(!reg_dependencies_sd.read()){
             if (jump_sd_s1.read() && !stall_sd_s1 ) //jump_s1  
             {
                 IF2DEC_POP_SD_S1 = 1;
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             } 
-            else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1) //no jump 
+            else if (!jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1 && !reg_dependencies_sd) //no jump && no dependencies
             {
                 IF2DEC_POP_SD_S1= 1;
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 0;
             } 
-            else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s1) //jump s2, s2 can't jump if s1 jump
+            else if(!jump_sd_s1 && !jump_sd_s2  && reg_dependencies_sd.read() 
+            && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 0) 
+            // no jump && data dependencies and S1 prio S2
+            // we must pop S1 but not S2 cause S1 is prio
+            {
+                IF2DEC_POP_SD_S1= 1;
+                IF2DEC_POP_SD_S2= 0;
+                IF2DEC_FLUSH_SD= 0;
+            } 
+            else if(!jump_sd_s1 && !jump_sd_s2 && reg_dependencies_sd.read() 
+            && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 1) 
+            // no jump && data dependencies and S2 prio S1
+            // we must pop S2 but not S1 cause S2 is prio
+            {
+                IF2DEC_POP_SD_S1= 0;
+                IF2DEC_POP_SD_S2= 1;
+                IF2DEC_FLUSH_SD= 0;
+            } 
+            else if(!jump_sd_s1 && jump_sd_s2 && !stall_sd_s1) 
+            //jump s2, s2 can't jump if s1 jump
             {
                 IF2DEC_POP_SD_S1    = 1;
                 IF2DEC_POP_SD_S2    = 1;
@@ -490,35 +508,6 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 0;
                 IF2DEC_FLUSH_SD= 0;
             }
-        }
-        else{
-            if (jump_sd_s1.read() && !stall_sd_s1 ) //jump_s1  
-            {
-                IF2DEC_POP_SD_S1 = 1;
-                IF2DEC_POP_SD_S2= 1;
-                IF2DEC_FLUSH_SD= 1;
-            } 
-            else if (!jump_sd_s1 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 0) //no jump and S1 prio S2
-            // we must pop S1 but not S2 cause S1 is prio
-            {
-                IF2DEC_POP_SD_S1= 1;
-                IF2DEC_POP_SD_S2= 0;
-                IF2DEC_FLUSH_SD= 0;
-            } 
-            else if (!jump_sd_s2 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 1) //no jump and S2 prio S1
-            // we must pop S2 but not S1 cause S2 is prio
-            {
-                IF2DEC_POP_SD_S1= 0;
-                IF2DEC_POP_SD_S2= 1;
-                IF2DEC_FLUSH_SD= 0;
-            } 
-            else //any case of stall is the same 
-            {
-                IF2DEC_POP_SD_S1= 0;
-                IF2DEC_POP_SD_S2= 0;
-                IF2DEC_FLUSH_SD= 0;
-            }
-        }
         }
         
         
