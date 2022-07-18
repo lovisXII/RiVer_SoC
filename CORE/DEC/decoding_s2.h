@@ -614,7 +614,7 @@ void decod::post_reg_read_decoding_s2() {
         select_type_operations_sd_s2.write(1);
         mem_data_var = 0;
         if (jalr_type_inst_sd_s2) {
-            dec2exe_op1_var = READ_PC_SR.read();
+            dec2exe_op1_var = READ_PC_SR.read() - 4 ;
             dec2exe_op2_var = 0x0;
 
             if (if_ir2.range(31, 31) == 1) {
@@ -628,7 +628,7 @@ void decod::post_reg_read_decoding_s2() {
             mem_data_var                  = 0;
             not_jump_var                  = 0;
         } else {
-            dec2exe_op1_var = READ_PC_SR.read();
+            dec2exe_op1_var = READ_PC_SR.read() - 4;
             dec2exe_op2_var = 0x0;  // on va envoyer l'adresse de retour
 
             if (if_ir2.range(31, 31) == 1) {

@@ -150,8 +150,8 @@ int sc_main(int argc, char* argv[]) {
                     cout << "Found reset at adr "<< std::hex << reset_adr << endl;
                 }
                 if (name == "_start") {
-                    start_adr = value - 4;  // minus 4 to acount for init inc_pc
                     cout << "Found start at adr " << std::hex << start_adr << endl;
+                    start_adr = value - 4;  // minus 4 to acount for init inc_pc
                 }
                 if (name == "_bad") {
                     bad_adr = value;

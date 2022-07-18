@@ -1007,7 +1007,7 @@ SC_MODULE(decod) {
 			<< EXCEPTION_SM_S1 
 			<< mret_i_sd_s1 
 			<< sret_i_sd_s1
-                  
+            << PC_IF2DEC_RI_S1
 			<< CSR_RDATA_SC_S1;
 
         SC_METHOD(post_reg_read_decoding_s2)
@@ -1132,7 +1132,7 @@ SC_MODULE(decod) {
 			<< EXCEPTION_SM_S1 
 			<< mret_i_sd_s2 
 			<< sret_i_sd_s2
-                  
+            << jump_sd_s1
 			<< CSR_RDATA_SC_S2;
 
         SC_METHOD(pc_inc)
@@ -1170,6 +1170,7 @@ SC_MODULE(decod) {
 			<< add_offset_to_pc_s2
                   
 			<< reg_dependencies_sd
+            << PC_IF2DEC_RI_S2
             << PRIORITARY_PIPELINE_RD;
 
         SC_METHOD(bypasses);
