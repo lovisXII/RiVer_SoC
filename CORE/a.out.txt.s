@@ -5,35 +5,47 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00c00093          	li	ra,12
-   10058:	7a106093          	ori	ra,zero,1953
+   10054:	00500213          	li	tp,5
+   10058:	00700293          	li	t0,7
    
-   1005c:	00609093          	slli	ra,ra,0x6
-   10060:	0140e093          	ori	ra,ra,20
+   1005c:	02402023          	sw	tp,32(zero) # 20 <_exception_occur+0x18>
+   10060:	00200093          	li	ra,2
    
-   10060:	0140e093          	ori	ra,ra,20
-   10064:	05406113          	ori	sp,zero,84
+   10064:	00308113          	addi	sp,ra,3
+   10068:	00000013          	nop
    
-   10068:	02102023          	sw	ra,32(zero) # 20 <_exception_occur+0x18>
-   1006c:	02002183          	lw	gp,32(zero) # 20 <_exception_occur+0x18>
+   1006c:	00000013          	nop
+   10070:	00000013          	nop
    
-   10070:	02200223          	sb	sp,36(zero) # 24 <_exception_occur+0x1c>
-   10074:	02400203          	lb	tp,36(zero) # 24 <_exception_occur+0x1c>
+   10074:	00410463          	beq	sp,tp,1007c <_start+0x28>
+   10078:	f89ef06f          	j	0 <_bad>
    
-   10078:	404182b3          	sub	t0,gp,tp
-   1007c:	03d06313          	ori	t1,zero,61
+   1007c:	00200413          	li	s0,2
+   10080:	00041463          	bnez	s0,10088 <_start+0x34>
    
-   10080:	00b31313          	slli	t1,t1,0xb
-   10084:	00628463          	beq	t0,t1,1008c <_start+0x38>
+   10080:	00041463          	bnez	s0,10088 <_start+0x34>
+   10084:	f7def06f          	j	0 <_bad>
    
-   10084:	00628463          	beq	t0,t1,1008c <_start+0x38>
-   10088:	f79ef06f          	j	0 <_bad>
-   
-   1008c:	00000013          	nop
-   10090:	f75ef36f          	jal	t1,4 <_good>
+   10088:	02002383          	lw	t2,32(zero) # 20 <_exception_occur+0x18>
+   1008c:	00238113          	addi	sp,t2,2
 
+   1008c:	00238113          	addi	sp,t2,2
+   10090:	00000013          	nop
+   
    10094:	00000013          	nop
    10098:	00000013          	nop
+   
+   1009c:	00510463          	beq	sp,t0,100a4 <_start+0x50>
+   100a0:	f61ef06f          	j	0 <_bad>
+   
+   100a4:	02052103          	lw	sp,32(a0)
+   100a8:	00410463          	beq	sp,tp,100b0 <_start+0x5c>
+   
+   100a8:	00410463          	beq	sp,tp,100b0 <_start+0x5c>
+   100ac:	f55ef06f          	j	0 <_bad>
+
+   100b0:	f55ef06f          	j	4 <_good>
+   100b4:	00000013          	nop
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:

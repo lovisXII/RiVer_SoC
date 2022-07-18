@@ -16,12 +16,12 @@ _start:
     addi x8,x0, 2
     beq  x8, x0, _bad
     #MEM->EXE
-    lw   x7, 32(x0)
-    addi x2, x7, 2
+    lw   x7, 32(x0) #x7 = 5
+    addi x2, x7, 2 # x2 = 7
     nop
     nop
     nop
-    bne  x2, x5, _bad
+    bne  x2, x5, _bad 
 
     #MEM->DEC
     lw   x2, 32(x10)

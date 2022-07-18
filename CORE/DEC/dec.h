@@ -633,7 +633,8 @@ SC_MODULE(decod) {
 			<< RADR2_SD_S2  
             << dec2exe_full_sd_s1     
             << dec2exe_full_sd_s2             
-			<< IF2DEC_FLUSH_SD;
+			<< IF2DEC_FLUSH_SD
+            << stall_sd_s1;
         SC_METHOD(prio_pipeline_affectation)
         sensitive 
 			<< CLK.pos();
