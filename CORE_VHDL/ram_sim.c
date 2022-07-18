@@ -132,8 +132,8 @@ extern int ghdl_main(int argc, char const* argv[]);
 int main(int argc, char const* argv[]) {
     
     char   signature_name[200] ="";
-    char   opt[20] = "";
-    char   input_file[50] ;
+    char   opt[50] = "";
+    char   input_file[200] ;
     char   output[50] ;
     char   test[512] = "> a.out.txt";
     int nargs = 1;
@@ -158,7 +158,7 @@ int main(int argc, char const* argv[]) {
         riscof_signature = fopen(signature_name,"w") ;
         if( riscof_signature == NULL)
         {
-            fprintf(stderr, "error while opening %s\n", signature_name);
+            fprintf(stderr, "error while opening signature file : %s\n", signature_name);
             exit(1) ;
         }
         else{
