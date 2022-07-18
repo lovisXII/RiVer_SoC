@@ -632,8 +632,9 @@ SC_MODULE(decod) {
 			<< RADR1_SD_S2
 			<< RADR2_SD_S2  
             << dec2exe_full_sd_s1     
-            << dec2exe_full_sd_s2             
-			<< IF2DEC_FLUSH_SD
+            << dec2exe_full_sd_s2     
+            << jump_sd_s1
+            << jump_sd_s2
             << stall_sd_s1;
         SC_METHOD(prio_pipeline_affectation)
         sensitive 
@@ -691,9 +692,7 @@ SC_MODULE(decod) {
 			<< mulh_i_sd_s1 
 			<< mulhsu_i_sd_s1
                   
-			<< mulhu_i_sd_s1
-                  
-			<< prioritary_pipeline_sd;
+			<< mulhu_i_sd_s1;
 
 
         SC_METHOD(concat_dec2exe_s2)
@@ -785,7 +784,6 @@ SC_MODULE(decod) {
             << b_type_inst_sd_s2
             << jalr_type_inst_sd_s2
             << j_type_inst_sd_s2
-            << reg_dependencies_sd
             << IF2DEC_EMPTY_SI_S1
             << IF2DEC_EMPTY_SI_S2
             << dec2exe_full_sd_s1

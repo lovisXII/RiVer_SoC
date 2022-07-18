@@ -12,13 +12,14 @@ void decod::dependencies(){
     // sw x2, 0(x2)
     bool dependencies = ((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) && (adr_dest_sd_s1.read() != 0) ;
     
-    if(dependencies && !IF2DEC_FLUSH_SD.read() && !stall_sd_s1)
+        cout << sc_time_stamp() << " dep " << endl ;
+    if(dependencies && !jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1)
     {
         reg_dependencies_sd = true ;
         if(!dec2exe_full_sd_s1 && !dec2exe_full_sd_s2)
             prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
     }
-    else if(IF2DEC_FLUSH_SD.read())
+    else if((jump_sd_s1 || jump_sd_s2) && !stall_sd_s1)
     {
         reg_dependencies_sd = false ;
         if(!dec2exe_full_sd_s1 && !dec2exe_full_sd_s2)
