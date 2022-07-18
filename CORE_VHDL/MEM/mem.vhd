@@ -247,6 +247,7 @@ mcause_x    <=  x"00000018" when ENV_CALL_WRONG_MODE_RE = '1'           else
 -- MTVAL
 mtval_x     <=  RES_RE when ((STORE_ACCESS_FAULT_RE or LOAD_ACCESS_FAULT_RE or STORE_ADRESS_MISALIGNED_RE or LOAD_ADRESS_MISALIGNED_RE) = '1') else 
                 PC_BRANCH_VALUE_RE when INSTRUCTION_ADRESS_MISALIGNED_RE = '1' else
+                PC_EXE2MEM_RE when EBREAK_RE = '1' else
                 x"00000000"; 
 
 machine_mode_condition  <=  ENV_CALL_WRONG_MODE_RE              or 
