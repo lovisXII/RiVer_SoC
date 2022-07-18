@@ -17,7 +17,7 @@ begin
 end read_mem; 
 attribute foreign of read_mem : function is "VHPIDIRECT read_mem";    
 
-function write_mem(adr : integer; data : integer; byte_select : integer) return integer is 
+function write_mem(adr : integer; data : integer; byte_select : integer; time : integer) return integer is 
 begin 
     assert false severity failure;
 end write_mem; 
@@ -125,16 +125,18 @@ component core
 end component; 
 
 -- Simulation 
-constant NCYCLES : integer := 10000000; 
+constant NCYCLES : integer := 100000; 
 signal CYCLES : integer := 0; 
 signal good_adr, bad_adr, exception_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
 signal result : integer := 0;  
-
+signal timeout : integer := 0; 
+signal time : integer := 0; 
 -- riscof
 signal riscof_en : integer := 0; 
 signal riscof_end_adr : std_logic_vector(31 downto 0);
 signal cpt_end : integer := 0;
+constant cpt_max : integer := 10;
 signal riscof_end : integer := 0;
 begin 
 
@@ -186,7 +188,7 @@ begin
             assert false report "simulation begin" severity note; 
         end if;
     end if; 
-    if end_simu = '1' or cpt_end = 3 then 
+    if end_simu = '1' or cpt_end = cpt_max then 
         assert false report "end of simulation" severity note; 
         r0 := end_simulation(result,un);
         wait; 
@@ -195,6 +197,7 @@ begin
         cpt_end <= cpt_end + 1;
     end if; 
     if CYCLES = NCYCLES then 
+        timeout <= 1; 
         assert false report "end of simulation (timeout)" severity note; 
         r0 := end_simulation(un,0);
        wait; 
@@ -204,6 +207,12 @@ begin
     -- report "end riscof test" severity note; 
     --     r0 := end_simulation(0,1);
     -- end if;
+end process; 
+
+
+process(clk)
+begin 
+    time <= time + 5; 
 end process; 
 
 reset_n <= '0', '1' after 6 ns;
@@ -282,7 +291,7 @@ begin
     elsif falling_edge(clk) then 
         if MCACHE_ADR_VALID_SM = '1' then 
             if MCACHE_STORE_SM = '1' then  
-                read0 := write_mem(adr_int, data_int, byt_sel_i);
+                read0 := write_mem(adr_int, data_int, byt_sel_i, time);
             elsif MCACHE_LOAD_SM = '1' then 
                 MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
             else 

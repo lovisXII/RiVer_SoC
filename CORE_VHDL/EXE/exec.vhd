@@ -97,6 +97,8 @@ signal exe2mem_empty : std_logic;
 
 signal slt_res, sltu_res : std_logic_vector(31 downto 0);
 
+signal wb_se, load_se, store_se : std_logic; 
+
 signal stall_se : std_logic; 
 signal blocked_se : std_logic;
 signal bp_mem_data : std_logic_vector(31 downto 0);
@@ -284,13 +286,17 @@ store_access_fault_se <= MEM_STORE_RD and access_fault;
 
 exception_se <= (EXCEPTION_RD or load_adress_misaligned_se or load_access_fault_se or store_access_fault_se or store_adress_misaligned_se) and reset_n;
 
+wb_se       <= '0' when exception_se = '1' else WB_RD; 
+load_se     <= '0' when exception_se = '1' else MEM_LOAD_RD; 
+store_se    <= '0' when exception_se = '1' else MEM_STORE_RD; 
+
 -- Output
 RES_RE <= exe_fifo_res;
 DEST_RE <= exe_fifo_dest; 
 EXE2MEM_EMPTY_SE <= exe2mem_empty;
-MEM_LOAD_RE <= exe_fifo_mem_load when exception_se = '0' else '0'; 
-MEM_STORE_RE <= exe_fifo_mem_store when exception_se = '0' else '0'; 
-WB_RE <= exe_fifo_wb when exception_se = '0' else '0'; 
+MEM_LOAD_RE <= exe_fifo_mem_load; 
+MEM_STORE_RE <= exe_fifo_mem_store; 
+WB_RE <= exe_fifo_wb;
 CSR_RDATA_RE <= exe_fifo_csr_data; 
 CSR_WENABLE_RE <= exe_fifo_csr_wenable; 
 
@@ -299,9 +305,9 @@ exe2mem_data(31 downto 0) <= exe_res;
 exe2mem_data(63 downto 32) <= bp_mem_data;
 exe2mem_data(69 downto 64) <= DEST_RD;
 exe2mem_data(71 downto 70) <= MEM_SIZE_RD; 
-exe2mem_data(72) <= WB_RD;
-exe2mem_data(73) <= MEM_LOAD_RD; 
-exe2mem_data(74) <= MEM_STORE_RD; 
+exe2mem_data(72) <= wb_se;
+exe2mem_data(73) <= load_se; 
+exe2mem_data(74) <= store_se; 
 exe2mem_data(75) <= MEM_SIGN_EXTEND_RD;
 exe2mem_data(107 downto 76) <= PC_DEC2EXE_RD; 
 exe2mem_data(108) <= CSR_WENABLE_RD;
