@@ -504,7 +504,7 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 0;
                 IF2DEC_FLUSH_SD= 0;
             } 
-            else if (!jump_sd_s1 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 2) //no jump and S2 prio S1
+            else if (!jump_sd_s2 && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 1) //no jump and S2 prio S1
             // we must pop S2 but not S1 cause S2 is prio
             {
                 IF2DEC_POP_SD_S1= 0;
