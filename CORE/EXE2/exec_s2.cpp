@@ -547,63 +547,54 @@ void exec_s2::bypasses() {
 
     if (RADR1_RD_S2.read() == 0 || BLOCK_BP_RD_S2.read()) 
     {
-        cout << sc_time_stamp() << "1" << endl;
         op1_se_s2.write(OP1_RD_S2.read());
         r1_valid_se = true;
     } 
     else if (DEST_RE_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RE_S2) 
     // E2->E2 and csr
     {
-        cout << sc_time_stamp() << "2" << endl;
         op1_se_s2.write(CSR_RDATA_RE_S2.read());
         r1_valid_se = true;
     }
     else if (DEST_RE_S2.read() == RADR1_RD_S2.read() && !MEM_LOAD_RE_S2) 
     // E2->E2 and no load (normal bypass)
     {
-        cout << sc_time_stamp() << "3" << endl;
         op1_se_s2.write(EXE_RES_RE_S2.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S2) 
     // M2->E2 and csr
     {
-        cout << sc_time_stamp() << "4" << endl;
         op1_se_s2.write(CSR_RDATA_RM_S2.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read()) 
     // M2->E2 normal
     {
-        cout << sc_time_stamp() << "5" << endl;
         op1_se_s2.write(MEM_RES_RM_S2.read());
         r1_valid_se = true;
     }
     else if(DEST_RE_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RE_S1)
     // E1->E2 and csr
     {
-        cout << sc_time_stamp() << "6" << endl;
         op1_se_s2.write(CSR_RDATA_RE_S1.read());
         r1_valid_se = true;
     }
     else if(DEST_RE_S1.read() == RADR1_RD_S2.read() && !MEM_LOAD_RE_S1) 
     // E1->E2 and no load (normal bypass)
     {
-        cout << sc_time_stamp() << "7" << endl;
         op1_se_s2.write(EXE_RES_RE_S1.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S1) 
     // M1->E2 and csr
     {
-        cout << sc_time_stamp() << "8" << endl;
         op1_se_s2.write(CSR_RDATA_RM_S1.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read()) 
     // M1->E2 normal
     {
-        cout << sc_time_stamp() << "9" << endl;
         op1_se_s2 = MEM_RES_RM_S1.read();
         r1_valid_se = true;
     }
@@ -614,25 +605,21 @@ void exec_s2::bypasses() {
     //  add r2,r3,r0
     // stall cause of r3
     {
-        cout << sc_time_stamp() << "10" << endl;
         blocked_var = true;
         r1_valid_se = true;
     }
     else if (DEST_RE_S1.read() == RADR1_RD_S2.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
     // stall in case of load in M2 and data dependencies in exe
     {
-        cout << sc_time_stamp() << "11" << endl;
         blocked_var = true;
         r1_valid_se = true;
     }
     else if(op1_is_saved_re){
-        cout << sc_time_stamp() << "12" << endl;
         r1_valid_se = true ;
         op1_se_s2 = op1_bp_re;
     }
     else 
     {
-        cout << sc_time_stamp() << "13" << endl;
         op1_se_s2.write(OP1_RD_S2.read());
         r1_valid_se = true;
     }

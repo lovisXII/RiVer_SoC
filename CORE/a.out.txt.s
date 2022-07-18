@@ -5,16 +5,29 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00800313          	li	t1,8
-   10058:	00c00393          	li	t2,12
-   1005c:	01000493          	li	s1,16
-
-00010060 <_loop>:
-   10060:	00240413          	addi	s0,s0,2
-   10064:	fe941ee3          	bne	s0,s1,10060 <_loop>
-   10068:	00941463          	bne	s0,s1,10070 <_loop+0x10>
-   1006c:	f99ef06f          	j	4 <_good>
-   10070:	00000013          	nop
+   10054:	00406393          	ori	t2,zero,4
+   10058:	00606413          	ori	s0,zero,6
+   1005c:	01806493          	ori	s1,zero,24
+   10060:	02838533          	mul	a0,t2,s0
+   10064:	00950463          	beq	a0,s1,1006c <_start+0x18>
+   10068:	f99ef06f          	j	0 <_bad>
+   1006c:	80000437          	lui	s0,0x80000
+   10070:	fff40413          	addi	s0,s0,-1 # 7fffffff <_isr_vector+0xfeffff63>
+   10074:	00106493          	ori	s1,zero,1
+   10078:	02839533          	mulh	a0,t2,s0
+   1007c:	00950463          	beq	a0,s1,10084 <_start+0x30>
+   10080:	f81ef06f          	j	0 <_bad>
+   10084:	0283b533          	mulhu	a0,t2,s0
+   10088:	00950463          	beq	a0,s1,10090 <_start+0x3c>
+   1008c:	f75ef06f          	j	0 <_bad>
+   10090:	ffc06413          	ori	s0,zero,-4
+   10094:	ff006493          	ori	s1,zero,-16
+   10098:	02838533          	mul	a0,t2,s0
+   1009c:	00950463          	beq	a0,s1,100a4 <_start+0x50>
+   100a0:	f61ef06f          	j	0 <_bad>
+   100a4:	f61ef06f          	j	4 <_good>
+   100a8:	00000013          	nop
+   100ac:	00000013          	nop
 
 Disassembly of section .riscv.attributes:
 
