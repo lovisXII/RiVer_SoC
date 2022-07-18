@@ -231,7 +231,6 @@ begin
         if ADR_VALID_SI = '1' then 
             if ADR_SI = bad_adr then 
                 assert false report "Test failed" severity error; 
-                --report "PC : " & to_string(ADR_SI) & " || BAD : " & to_string(bad_adr);
                 result <= 1;
                 end_simu <= '1';              
             elsif ADR_SI = good_adr then 
@@ -243,8 +242,6 @@ begin
                 result <= 2;    
                 end_simu <= '1'; 
             else
-                --report "ADR_SI length = " & integer'image(ADR_SI'length);
-                --report "intermed range = (" & integer'image(intermed'left) & " downto " & integer'image(intermed'right) &  ")";
                 intermed    := signed(ADR_SI); 
                 adr_int     := to_integer(intermed);
                 inst_int    := read_mem(adr_int);

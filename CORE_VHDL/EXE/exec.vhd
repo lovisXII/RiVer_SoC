@@ -254,8 +254,8 @@ bp_mem_data <=  exe_fifo_csr_data when (exe_fifo_dest = RADR2_RD and exe_fifo_me
                 MEM_DATA_RD;
 
 op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else 
-        CSR_RDATA_RM when exe_fifo_dest = RADR1_RD and CSR_WENABLE_RM = '1' else 
         exe_fifo_res when exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '0' else 
+        CSR_RDATA_RM when exe_fifo_dest = RADR1_RD and CSR_WENABLE_RM = '1' else 
         MEM_RES_RM when MEM_DEST_RM = RADR1_RD else 
         OP1_RD;
 
