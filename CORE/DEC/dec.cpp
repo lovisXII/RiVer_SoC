@@ -838,7 +838,6 @@ void decod::bypasses() {
     block_in_dec.write((RADR1_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()) ||
                        (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()));
 }
-
 void decod::stall_method() {
     csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
     
@@ -1055,6 +1054,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, remu_i_sd_s1, GET_NAME(remu_i_sd_s1));
     sc_trace(tf, csrrw_i_sd_s1, GET_NAME(csrrw_i_sd_s1));
     sc_trace(tf, csrrs_i_sd_s1, GET_NAME(csrrs_i_sd_s1));
+    sc_trace(tf, MEM2WBK_EMPTY_SM_S2, GET_NAME(MEM2WBK_EMPTY_SM_S2));
     sc_trace(tf, csrrc_i_sd_s1, GET_NAME(csrrc_i_sd_s1));
     sc_trace(tf, csrrwi_i_sd_s1, GET_NAME(csrrwi_i_sd_s1));
     sc_trace(tf, csrrsi_i_sd_s1, GET_NAME(csrrsi_i_sd_s1));

@@ -768,24 +768,28 @@ SC_MODULE(decod) {
 
         SC_METHOD(stall_method)
         sensitive 
-			<< b_type_inst_sd_s1 
-			<< jalr_type_inst_sd_s1 
-			<< j_type_inst_sd_s1 
-			<< r1_valid_sd_s1 
-			<< r2_valid_sd_s1
+			<< CSR_WENABLE_RD_S1
+            << DEC2EXE_EMPTY_SD_S1
+            << CSR_WENABLE_RE_S1
+            << EXE2MEM_EMPTY_SE_S1
+            << csr_wenable_sd_s1
+            << csr_wenable_sd_s2
+            << r1_valid_sd_s1
+            << r2_valid_sd_s1
+            << b_type_inst_sd_s1
+            << jalr_type_inst_sd_s1
+            << j_type_inst_sd_s1
+            << block_in_dec
+            << r1_valid_sd_s2
+            << r2_valid_sd_s2
+            << b_type_inst_sd_s2
+            << jalr_type_inst_sd_s2
+            << j_type_inst_sd_s2
             << reg_dependencies_sd
-			<< csr_wenable_sd_s1 
-			<< DEC2EXE_EMPTY_SD_S1 
-			<< CSR_WENABLE_RD_S1 
-			<< CSR_WENABLE_RE_S1
-                  
-			<< EXE2MEM_EMPTY_SE_S1 
-			<< csr_in_progress_s1 
-			<< block_in_dec 
-			<< IF2DEC_EMPTY_SI_S1 
-			<< dec2exe_full_sd_s1
-                  
-			<< csr_in_progress_s1;
+            << IF2DEC_EMPTY_SI_S1
+            << IF2DEC_EMPTY_SI_S2
+            << dec2exe_full_sd_s1
+            << dec2exe_full_sd_s2;
 
         SC_METHOD(decoding_instruction_type_s1)
         sensitive 

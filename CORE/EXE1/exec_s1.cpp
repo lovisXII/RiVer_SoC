@@ -602,7 +602,7 @@ void exec_s1::bypasses() {
     // M2->E1 normal
     {
         op1_se_s1 = MEM_RES_RM_S2.read();
-        r1_valid_se = MEM2WBK_EMPTY_SM_S1;
+        r1_valid_se = true;
     }
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
     //stall in case of load in M1 and data dependencies in exe
