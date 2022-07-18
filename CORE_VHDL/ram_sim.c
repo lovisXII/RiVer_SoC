@@ -40,7 +40,7 @@ int read_mem(int a) {
     return 0; 
 }
 
-int write_mem(int a, int data, int byt_sel) {
+int write_mem(int a, int data, int byt_sel, int time) {
     int addr1, addr2, addr3, addr4;
     int tmp = 0; 
     int mask = 0;
@@ -83,7 +83,7 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    //printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
+    //printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
     return 0; 
 }   
 
@@ -214,7 +214,7 @@ int main(int argc, char const* argv[]) {
     {
         for(int j = 0 ; j < (pObj->size[i]); j+=4){     
             //printf("%8x : %8x\n",(pObj->Section_Hdr[i]->sh_addr)+j, mem_lw(pObj->Section_Hdr[i]->sh_addr+j)) ;
-            write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15);
+            write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15, 0);
         }
     }
 
