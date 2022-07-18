@@ -226,8 +226,8 @@ SC_MODULE(exec_s1) {
 
     // Superscalar :
 
-    sc_signal<bool> bp_s2_E2_is_taken;
-    sc_signal<bool> bp_s2_M2_is_taken;
+    // sc_signal<bool> bp_s2_E2_is_taken;
+    // sc_signal<bool> bp_s2_M2_is_taken;
 
     // Instance used :
 
