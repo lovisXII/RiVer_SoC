@@ -7,7 +7,7 @@ entity csa is
         B   :   in  std_logic_vector(63 downto 0);
         C   :   in  std_logic_vector(63 downto 0);
         S0  :   out std_logic_vector(63 downto 0);
-        S1  :   out std_logic_vector(63 downto 0);
+        S1  :   out std_logic_vector(63 downto 0)
     );
 end csa; 
 
