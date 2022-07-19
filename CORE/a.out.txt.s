@@ -5,41 +5,29 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00a00093          	li	ra,10
-   10058:	00a00113          	li	sp,10
-   1005c:	00000013          	nop
-   10060:	00000013          	nop
-   10064:	00000013          	nop
-   10068:	00000013          	nop
-   1006c:	00000013          	nop
-   10070:	00000013          	nop
-   10074:	02208863          	beq	ra,sp,100a4 <_branch1>
-   10078:	f89ef06f          	j	0 <_bad>
-
-0001007c <_label1>:
-   1007c:	00d10113          	addi	sp,sp,13
-   10080:	00000013          	nop
-   10084:	00000013          	nop
-   10088:	00000013          	nop
-   1008c:	00000013          	nop
-   10090:	00000013          	nop
-   10094:	0020ca63          	blt	ra,sp,100a8 <_branch2>
-   10098:	f69ef06f          	j	0 <_bad>
-
-0001009c <_label2>:
-   1009c:	00115863          	bge	sp,ra,100ac <_branch3>
-
-000100a0 <_label3>:
-   100a0:	f65ef06f          	j	4 <_good>
-
-000100a4 <_branch1>:
-   100a4:	fd9ff06f          	j	1007c <_label1>
-
-000100a8 <_branch2>:
-   100a8:	ff5ff06f          	j	1009c <_label2>
-
-000100ac <_branch3>:
-   100ac:	ff5ff06f          	j	100a0 <_label3>
+   10054:	00406393          	ori	t2,zero,4
+   10058:	00606413          	ori	s0,zero,6
+   1005c:	01806493          	ori	s1,zero,24
+   10060:	02838533          	mul	a0,t2,s0
+   10064:	00950463          	beq	a0,s1,1006c <_start+0x18>
+   10068:	f99ef06f          	j	0 <_bad>
+   1006c:	80000437          	lui	s0,0x80000
+   10070:	fff40413          	addi	s0,s0,-1 # 7fffffff <_isr_vector+0xfeffff63>
+   10074:	00106493          	ori	s1,zero,1
+   10078:	02839533          	mulh	a0,t2,s0
+   1007c:	00950463          	beq	a0,s1,10084 <_start+0x30>
+   10080:	f81ef06f          	j	0 <_bad>
+   10084:	0283b533          	mulhu	a0,t2,s0
+   10088:	00950463          	beq	a0,s1,10090 <_start+0x3c>
+   1008c:	f75ef06f          	j	0 <_bad>
+   10090:	ffc06413          	ori	s0,zero,-4
+   10094:	ff006493          	ori	s1,zero,-16
+   10098:	02838533          	mul	a0,t2,s0
+   1009c:	00950463          	beq	a0,s1,100a4 <_start+0x50>
+   100a0:	f61ef06f          	j	0 <_bad>
+   100a4:	f61ef06f          	j	4 <_good>
+   100a8:	00000013          	nop
+   100ac:	00000013          	nop
 
 Disassembly of section .riscv.attributes:
 
