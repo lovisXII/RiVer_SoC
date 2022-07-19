@@ -5,29 +5,14 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00406393          	ori	t2,zero,4
-   10058:	00606413          	ori	s0,zero,6
-   1005c:	01806493          	ori	s1,zero,24
-   10060:	02838533          	mul	a0,t2,s0
-   10064:	00950463          	beq	a0,s1,1006c <_start+0x18>
-   10068:	f99ef06f          	j	0 <_bad>
-   1006c:	80000437          	lui	s0,0x80000
-   10070:	fff40413          	addi	s0,s0,-1 # 7fffffff <_isr_vector+0xfeffff63>
-   10074:	00106493          	ori	s1,zero,1
-   10078:	02839533          	mulh	a0,t2,s0
-   1007c:	00950463          	beq	a0,s1,10084 <_start+0x30>
-   10080:	f81ef06f          	j	0 <_bad>
-   10084:	0283b533          	mulhu	a0,t2,s0
-   10088:	00950463          	beq	a0,s1,10090 <_start+0x3c>
-   1008c:	f75ef06f          	j	0 <_bad>
-   10090:	ffc06413          	ori	s0,zero,-4
-   10094:	ff006493          	ori	s1,zero,-16
-   10098:	02838533          	mul	a0,t2,s0
-   1009c:	00950463          	beq	a0,s1,100a4 <_start+0x50>
-   100a0:	f61ef06f          	j	0 <_bad>
-   100a4:	f61ef06f          	j	4 <_good>
-   100a8:	00000013          	nop
-   100ac:	00000013          	nop
+   10054:	7e400113          	li	sp,2020
+   10058:	00202223          	sw	sp,4(zero) # 4 <_good>
+   1005c:	00402183          	lw	gp,4(zero) # 4 <_good>
+   10060:	00302223          	sw	gp,4(zero) # 4 <_good>
+   10064:	00402183          	lw	gp,4(zero) # 4 <_good>
+   10068:	00311463          	bne	sp,gp,10070 <_start+0x1c>
+   1006c:	f99ef06f          	j	4 <_good>
+   10070:	00000013          	nop
 
 Disassembly of section .riscv.attributes:
 
