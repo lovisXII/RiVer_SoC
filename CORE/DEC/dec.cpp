@@ -12,26 +12,27 @@ void decod::dependencies(){
     // sw x2, 0(x2)
     bool dependencies = ((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) && (adr_dest_sd_s1.read() != 0) ;
     
-        cout << sc_time_stamp() << " dep " << endl ;
-    if(dependencies && !jump_sd_s1 && !jump_sd_s2 && !stall_sd_s1)
-    {
+    cout << sc_time_stamp() << " dep " << endl ;
+    if(dependencies)
         reg_dependencies_sd = true ;
-        if(!dec2exe_full_sd_s1 && !dec2exe_full_sd_s2)
-            prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
-    }
-    else if((jump_sd_s1 || jump_sd_s2) && !stall_sd_s1)
-    {
+    else
         reg_dependencies_sd = false ;
-        if(!dec2exe_full_sd_s1 && !dec2exe_full_sd_s2)
-            prioritary_pipeline_sd = 0;
-    }
-    else{
-        reg_dependencies_sd = false ;
-        prioritary_pipeline_sd = prioritary_pipeline_rd ;
-    }
 }
 
-void decod::prio_pipeline_affectation(){
+
+void decod::prio_pipeline_signal(){
+
+    cout << sc_time_stamp() << " prio " << endl ;
+    if  (reg_dependencies_sd && !stall_sd_s1 && !jump_sd_s1 && !jump_sd_s2 
+        && !dec2exe_full_sd_s1 && !dec2exe_full_sd_s2)
+        prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
+    else if((jump_sd_s1 || jump_sd_s2) && !stall_sd_s1)
+        prioritary_pipeline_sd = 0;
+    else
+        prioritary_pipeline_sd = prioritary_pipeline_rd;
+}
+
+void decod::prio_pipeline_reg_gestion(){
     if(!RESET_N.read())
         prioritary_pipeline_rd = 0;
     else

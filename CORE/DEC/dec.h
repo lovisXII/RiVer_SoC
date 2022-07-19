@@ -576,7 +576,7 @@ SC_MODULE(decod) {
     void concat_dec2exe_s2() ;
     void unconcat_dec2exe_s2();
     
-    void prio_pipeline_affectation();
+    void prio_pipeline_reg_gestion();
 
     void concat_dec2if();
     void unconcat_dec2if();
@@ -592,7 +592,7 @@ SC_MODULE(decod) {
     void bypasses();
     void stall_method();
     void dependencies() ;
-
+    void prio_pipeline_signal();
     //FSM :
 
 
@@ -630,13 +630,16 @@ SC_MODULE(decod) {
         sensitive   
 			<< adr_dest_sd_s1
 			<< RADR1_SD_S2
-			<< RADR2_SD_S2  
-            << dec2exe_full_sd_s1     
-            << dec2exe_full_sd_s2     
-            << jump_sd_s1
-            << jump_sd_s2
-            << stall_sd_s1;
-        SC_METHOD(prio_pipeline_affectation)
+			<< RADR2_SD_S2;
+        SC_METHOD(prio_pipeline_signal)
+        sensitive   << reg_dependencies_sd
+                    << stall_sd_s1
+                    << jump_sd_s1
+                    << jump_sd_s2
+                    << dec2exe_full_sd_s1
+                    << dec2exe_full_sd_s2
+                    << prioritary_pipeline_rd;
+        SC_METHOD(prio_pipeline_reg_gestion)
         sensitive 
 			<< CLK.pos();
         SC_METHOD(concat_dec2exe_s1)
