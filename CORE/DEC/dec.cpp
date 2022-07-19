@@ -13,7 +13,6 @@ void decod::dependencies(){
     bool dependencies = ((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) 
     && (adr_dest_sd_s1.read() != 0) ;
     
-    cout << sc_time_stamp() << " dep " << endl ;
     if(dependencies)
         reg_dependencies_sd = true ;
     else
@@ -23,8 +22,7 @@ void decod::dependencies(){
 
 void decod::prio_pipeline_signal(){
 
-    cout << sc_time_stamp() << " prio " << endl ;
-    if  (reg_dependencies_sd && !stall_sd_s1 && !jump_sd_s1 && !jump_sd_s2)
+    if  (reg_dependencies_sd && !stall_sd_s1 && !jump_sd_s1)
         prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
     else if((jump_sd_s1 || jump_sd_s2) && !stall_sd_s1)
         prioritary_pipeline_sd = 0;
@@ -34,7 +32,6 @@ void decod::prio_pipeline_signal(){
 
 void decod::prio_pipeline_reg_gestion(){
 
-    cout << sc_time_stamp() << " reg " << endl ;
     if(!RESET_N.read())
         prioritary_pipeline_rd = 0;
     else
@@ -467,7 +464,6 @@ void decod::pc_inc() {
             - If there is a jump on s1, we flush
             - If there is no jump we pop only S1
         */
-       cout << sc_time_stamp() << " pop condition " << endl;
             if ((jump_sd_s1.read() || jump_sd_s2) && !stall_sd_s1 && !reg_dependencies_sd ) 
             // If one one the 2 inst jump and no data dependencies and no stall we flush  
             {

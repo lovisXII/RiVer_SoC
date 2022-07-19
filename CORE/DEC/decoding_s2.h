@@ -371,7 +371,6 @@ void decod::pre_reg_read_decoding_s2() {
                 env_call_s_mode_sd_s2 = 0;
                 env_call_m_mode_sd_s2 = 1;
             } else {
-                cout << "other " << sc_time_stamp() << endl;
                 env_call_u_mode_sd_s2 = 0;
                 env_call_s_mode_sd_s2 = 0;
                 env_call_m_mode_sd_s2 = 0;

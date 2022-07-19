@@ -5,30 +5,78 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00406393          	ori	t2,zero,4
-   10058:	00606413          	ori	s0,zero,6
-   1005c:	01806493          	ori	s1,zero,24
-   10060:	02838533          	mul	a0,t2,s0
-   10064:	00950463          	beq	a0,s1,1006c <_start+0x18>
+   10054:	00306093          	ori	ra,zero,3
+   10058:	00a06113          	ori	sp,zero,10
+   
+   1005c:	01406193          	ori	gp,zero,20
+   10060:	00708093          	addi	ra,ra,7
+   
+   10064:	00208463          	beq	ra,sp,1006c <_start+0x18>
    10068:	f99ef06f          	j	0 <_bad>
-   1006c:	80000437          	lui	s0,0x80000
-   10070:	fff40413          	addi	s0,s0,-1 # 7fffffff <_isr_vector+0xfeffff63>
-   10074:	00106493          	ori	s1,zero,1
-   10078:	02839533          	mulh	a0,t2,s0
-   1007c:	00950463          	beq	a0,s1,10084 <_start+0x30>
-   10080:	f81ef06f          	j	0 <_bad>
-   10084:	0283b533          	mulhu	a0,t2,s0
-   10088:	00950463          	beq	a0,s1,10090 <_start+0x3c>
-   1008c:	f75ef06f          	j	0 <_bad>
-   10090:	ffc06413          	ori	s0,zero,-4
-   10094:	ff006493          	ori	s1,zero,-16
-   10098:	02838533          	mul	a0,t2,s0
-   1009c:	00950463          	beq	a0,s1,100a4 <_start+0x50>
-   100a0:	f61ef06f          	j	0 <_bad>
-   100a4:	f61ef06f          	j	4 <_good>
-   100a8:	00000013          	nop
-   100ac:	00000013          	nop
+   
+   1006c:	002080b3          	add	ra,ra,sp
+   10070:	00308463          	beq	ra,gp,10078 <_start+0x24>
+   
+   10070:	00308463          	beq	ra,gp,10078 <_start+0x24>
+   10074:	f8def06f          	j	0 <_bad>
 
+   
+   10078:	ffd02093          	slti	ra,zero,-3
+   1007c:	00100463          	beq	zero,ra,10084 <_start+0x30>
+   
+   1007c:	00100463          	beq	zero,ra,10084 <_start+0x30>
+   10080:	f81ef06f          	j	0 <_bad>
+   
+   10084:	ffd03093          	sltiu	ra,zero,-3
+   10088:	00101463          	bne	zero,ra,10090 <_start+0x3c>
+
+   10088:	00101463          	bne	zero,ra,10090 <_start+0x3c>
+   1008c:	f75ef06f          	j	0 <_bad>
+   
+   10090:	00302093          	slti	ra,zero,3
+   10094:	00101463          	bne	zero,ra,1009c <_start+0x48>
+   
+   10094:	00101463          	bne	zero,ra,1009c <_start+0x48>
+   10098:	f69ef06f          	j	0 <_bad>
+   
+   1009c:	00a14093          	xori	ra,sp,10
+   100a0:	00100463          	beq	zero,ra,100a8 <_start+0x54>
+
+
+   100a0:	00100463          	beq	zero,ra,100a8 <_start+0x54>
+   100a4:	f5def06f          	j	0 <_bad>
+   
+   100a8:	00a17093          	andi	ra,sp,10
+   100ac:	00110463          	beq	sp,ra,100b4 <_start+0x60>
+   
+   100ac:	00110463          	beq	sp,ra,100b4 <_start+0x60>
+   100b0:	f51ef06f          	j	0 <_bad>
+   
+   100b4:	00111093          	slli	ra,sp,0x1
+   100b8:	00308463          	beq	ra,gp,100c0 <_start+0x6c>
+
+   100b8:	00308463          	beq	ra,gp,100c0 <_start+0x6c>
+   100bc:	f45ef06f          	j	0 <_bad>
+   
+   100c0:	fec06213          	ori	tp,zero,-20
+   100c4:	ff606293          	ori	t0,zero,-10
+   
+   100c8:	40125093          	srai	ra,tp,0x1
+   100cc:	00508463          	beq	ra,t0,100d4 <_start+0x80>
+   
+   100d0:	f31ef06f          	j	0 <_bad>
+   100d4:	00106313          	ori	t1,zero,1
+   
+   100d8:	01d31313          	slli	t1,t1,0x1d
+   100dc:	00125093          	srli	ra,tp,0x1
+   
+   100e0:	0060d463          	bge	ra,t1,100e8 <_start+0x94>
+   100e4:	f1def06f          	j	0 <_bad>
+   
+   100e8:	f1def06f          	j	4 <_good>
+   100ec:	00000013          	nop
+
+   100f0:	00000013          	nop
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
