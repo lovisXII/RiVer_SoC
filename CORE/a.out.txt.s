@@ -5,50 +5,77 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00406393          	ori	t2,zero,4
-   10058:	00606413          	ori	s0,zero,6
-   1005c:	01806493          	ori	s1,zero,24
-   10060:	02838533          	mul	a0,t2,s0
-   10064:	00950463          	beq	a0,s1,1006c <_start+0x18>
-   10068:	f99ef06f          	j	0 <_bad>
-   1006c:	80000437          	lui	s0,0x80000
-   10070:	fff40413          	addi	s0,s0,-1 # 7fffffff <_isr_vector+0xfeffff63>
-   10074:	00106493          	ori	s1,zero,1
-   10078:	02839533          	mulh	a0,t2,s0
-   1007c:	00950463          	beq	a0,s1,10084 <_start+0x30>
-   10080:	f81ef06f          	j	0 <_bad>
-   10084:	0283b533          	mulhu	a0,t2,s0
-   10088:	00950463          	beq	a0,s1,10090 <_start+0x3c>
-   1008c:	f75ef06f          	j	0 <_bad>
-   10090:	ffc06413          	ori	s0,zero,-4
-   10094:	ff006493          	ori	s1,zero,-16
-   10098:	02838533          	mul	a0,t2,s0
-   1009c:	00950463          	beq	a0,s1,100a4 <_start+0x50>
-   100a0:	f61ef06f          	j	0 <_bad>
-   100a4:	f61ef06f          	j	4 <_good>
-   100a8:	00000013          	nop
-   100ac:	00000013          	nop
+   10054:	00408093          	addi	ra,ra,4
+   10058:	40110133          	sub	sp,sp,ra
+   1005c:	014002ef          	jal	t0,10070 <main>
+
+00010060 <modulo>:
+   10060:	00b54663          	blt	a0,a1,1006c <modulo+0xc>
+   10064:	40b50533          	sub	a0,a0,a1
+   10068:	feb55ee3          	bge	a0,a1,10064 <modulo+0x4>
+   1006c:	00008067          	ret
+
+Disassembly of section .text.startup:
+
+00010070 <main>:
+   10070:	ff010113          	addi	sp,sp,-16
+   10074:	00112623          	sw	ra,12(sp)
+   10078:	00100713          	li	a4,1
+   1007c:	00400693          	li	a3,4
+   10080:	00300793          	li	a5,3
+   10084:	40e787b3          	sub	a5,a5,a4
+   10088:	fee7dee3          	bge	a5,a4,10084 <main+0x14>
+   1008c:	02078463          	beqz	a5,100b4 <main+0x44>
+   10090:	00170713          	addi	a4,a4,1
+   10094:	fed716e3          	bne	a4,a3,10080 <main+0x10>
+   10098:	00100793          	li	a5,1
+   1009c:	02f60863          	beq	a2,a5,100cc <main+0x5c>
+   100a0:	f61ef0ef          	jal	ra,0 <_bad>
+   100a4:	00c12083          	lw	ra,12(sp)
+   100a8:	00000513          	li	a0,0
+   100ac:	01010113          	addi	sp,sp,16
+   100b0:	00008067          	ret
+   100b4:	00700793          	li	a5,7
+   100b8:	40e787b3          	sub	a5,a5,a4
+   100bc:	fee7dee3          	bge	a5,a4,100b8 <main+0x48>
+   100c0:	fc0798e3          	bnez	a5,10090 <main+0x20>
+   100c4:	00070613          	mv	a2,a4
+   100c8:	fc9ff06f          	j	10090 <main+0x20>
+   100cc:	f39ef0ef          	jal	ra,4 <_good>
+   100d0:	fd5ff06f          	j	100a4 <main+0x34>
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3120                	fld	fs0,96(a0)
+   c:	2e30                	fld	fa2,88(a2)
+   e:	2e32                	fld	ft8,264(sp)
+  10:	0030                	addi	a2,sp,8
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
-   0:	2241                	jal	180 <_exception_occur+0x178>
+   0:	2441                	jal	280 <_exception_occur+0x278>
    2:	0000                	unimp
    4:	7200                	flw	fs0,32(a2)
    6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
-   c:	0018                	0x18
+   c:	001a                	c.slli	zero,0x6
    e:	0000                	unimp
-  10:	7205                	lui	tp,0xfffe1
-  12:	3376                	fld	ft6,376(sp)
-  14:	6932                	flw	fs2,12(sp)
-  16:	7032                	flw	ft0,44(sp)
-  18:	5f30                	lw	a2,120(a4)
-  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
-  1c:	3070                	fld	fa2,224(s0)
-  1e:	0800                	addi	s0,sp,16
-  20:	0a01                	addi	s4,s4,0
-  22:	0b              	Address 0x0000000000000022 is out of bounds.
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	5f30                	lw	a2,120(a4)
+  1c:	326d                	jal	fffff9c6 <_isr_vector+0x7efff92a>
+  1e:	3070                	fld	fa2,224(s0)
+  20:	0800                	addi	s0,sp,16
+  22:	0a01                	addi	s4,s4,0
+  24:	0b              	Address 0x0000000000000024 is out of bounds.
 
 
 Disassembly of section text:
