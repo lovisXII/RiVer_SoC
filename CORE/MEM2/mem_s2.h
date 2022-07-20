@@ -34,6 +34,11 @@ SC_MODULE(mem_s2) {
     sc_in<bool>        WB_RE_S2;
     sc_in<bool>        SIGN_EXTEND_RE_S2;     // taille fifo entrée : 74
     sc_in<bool>        LOAD_RE_S2, STORE_RE_S2;  // 15
+
+
+    sc_in<bool>        LOAD_RE_S1;
+    sc_in<bool>        STORE_RE_S1;
+
     sc_in<bool>        MULT_INST_RE_S2;
 
     sc_in<bool>        CSR_WENABLE_RE_S2;
@@ -132,6 +137,11 @@ SC_MODULE(mem_s2) {
     sc_signal<sc_uint<32>> return_adress_sm;
     sc_signal<bool>        mret_sm;
 
+    // Superscalar-signals
+
+    sc_signal<bool> mem_access_is_prio_sd_s2;
+    sc_signal<bool> mem_access_is_prio_rd_s2;
+
     // FIFO
     fifo<mem2wbk_size> fifo_inst;
 
@@ -142,6 +152,8 @@ SC_MODULE(mem_s2) {
     void sign_extend();
     void interruption();
     void csr_exception();
+    void memory_access_prio() ;
+    void reg_mem_prio();
     void trace(sc_trace_file * tf);
 
     SC_CTOR(mem_s2) : fifo_inst("mem2wbk") {
@@ -154,6 +166,14 @@ SC_MODULE(mem_s2) {
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
+        SC_METHOD(memory_access_prio);
+        sensitive   << LOAD_RE_S1
+                    << LOAD_RE_S2
+                    << STORE_RE_S1
+                    << STORE_RE_S2;
+
+        SC_METHOD(reg_mem_prio);
+        sensitive << CLK.pos();
         SC_METHOD(mem2wbk_concat);
         sensitive << data_sm << DEST_RE_S2 << wb_sm << CSR_WENABLE_RE_S2 << CSR_RDATA_RE_S2 << exception_sm << mret_sm
                   << return_adress_sm;

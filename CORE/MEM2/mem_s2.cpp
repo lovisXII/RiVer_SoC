@@ -40,6 +40,21 @@ with the least 2 significant bits equal to 01
 So it will store the data in the corresponding case adress with is the 2nd one.
 
 */
+
+void mem_s2::memory_access_prio(){
+    if((LOAD_RE_S1 || STORE_RE_S1) && (LOAD_RE_S2 || STORE_RE_S2))
+    {
+        mem_access_is_prio_rd_s2 = !mem_access_is_prio_sd_s2;
+    }
+}
+
+void mem_s2::reg_mem_prio(){
+    if(RESET)
+        mem_access_is_prio_rd_s2 = 0;
+    else
+        mem_access_is_prio_rd_s2 = mem_access_is_prio_sd_s2;
+}
+
 void mem_s2::mem2wbk_concat() {
     sc_bv<mem2wbk_size> ff_din;
 

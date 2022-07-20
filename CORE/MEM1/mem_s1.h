@@ -33,7 +33,12 @@ SC_MODULE(mem_s1) {
     sc_in<sc_uint<32>> PC_EXE2MEM_RE_S1;
     sc_in<bool>        WB_RE_S1;
     sc_in<bool>        SIGN_EXTEND_RE_S1;     // taille fifo entrée : 74
-    sc_in<bool>        LOAD_RE_S1, STORE_RE_S1;  // 15
+    sc_in<bool>        LOAD_RE_S1;
+    sc_in<bool>        STORE_RE_S1;  // 15
+
+    sc_in<bool>        LOAD_RE_S2;
+    sc_in<bool>        STORE_RE_S2;
+
     sc_in<bool>        MULT_INST_RE_S1;
 
     sc_in<bool>        CSR_WENABLE_RE_S1;
