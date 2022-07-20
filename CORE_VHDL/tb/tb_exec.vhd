@@ -19,7 +19,7 @@ signal MEM_SIZE_RD : std_logic_vector(1 downto 0) := "00";
 signal NEG_OP2_RD : std_logic := '0';
 signal WB_RD : std_logic := '0';
 signal MEM_SIGN_EXTEND_RD : std_logic := '0';
-signal SELECT_SHIFT_RD : std_logic := '0';
+signal SELECT_OPERATION_RD : std_logic := '0';
 signal MEM_LOAD_RD, MEM_STORE_RD : std_logic := '0';
 signal EXE2MEM_POP_SM : std_logic := '0';
 signal DEC2EXE_EMPTY_SD : std_logic := '0';
@@ -40,7 +40,7 @@ begin
 
 exec_i : entity work.exec 
     port map(clk, reset_n, OP1_RD, OP2_RD, RADR1_RD, RADR2_RD, MEM_DATA_RD, DEST_RD, CMD_RD, 
-            MEM_SIZE_RD, NEG_OP2_RD, WB_RD,MEM_SIGN_EXTEND_RD, SELECT_SHIFT_RD, MEM_LOAD_RD, MEM_STORE_RD,
+            MEM_SIZE_RD, NEG_OP2_RD, WB_RD,MEM_SIGN_EXTEND_RD, SELECT_OPERATION_RD, MEM_LOAD_RD, MEM_STORE_RD,
             EXE2MEM_POP_SM, DEC2EXE_EMPTY_SD, SLT_RD, SLTU_RD,
             EXE_RES_RE, MEM_DATA_RE, DEST_RE, MEM_SIZE_RE, WB_RE, MEM_SIGN_EXTEND_RE,
             MEM_LOAD_RE, MEM_STORE_RE, EXE2MEM_EMPTY_SE, DEC2EXE_POP_SE
@@ -55,7 +55,7 @@ CMD_RD <= "00", "01" after 25 ns, "10" after 35 ns, "11" after 45 ns, "00" after
 SLT_RD <= '0', '1' after 85 ns, '0' after 95 ns;
 SLTU_RD <= '0', '1' after 95 ns, '0' after 105 ns;
 NEG_OP2_RD <= '0', '1' after 15 ns, '0' after 25 ns, '1' after 85 ns, '0' after 105 ns; 
-SELECT_SHIFT_RD <= '0', '1' after 55 ns, '0' after 85 ns; 
+SELECT_OPERATION_RD <= '0', '1' after 55 ns, '0' after 85 ns; 
 EXE2MEM_POP_SM <= '0', '1' after 15 ns; 
 
 end simu;

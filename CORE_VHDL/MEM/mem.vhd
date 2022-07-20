@@ -22,6 +22,10 @@ entity mem is
 
         PC_EXE2MEM_RE : in std_logic_vector(31 downto 0);
 
+        -- Multiplier
+        MULT_INST_RE :  in  std_logic;
+        MULT_INST_RM :  out std_logic;
+
         -- exe2mem interface
         EXE2MEM_EMPTY_SE : in std_logic;
         EXE2MEM_POP_SM : out std_logic;
@@ -79,7 +83,7 @@ entity mem is
 end mem;
 
 architecture archi of mem is 
-signal mem2wbk_din, mem2wbk_dout : std_logic_vector(71 downto 0);
+signal mem2wbk_din, mem2wbk_dout : std_logic_vector(72 downto 0);
 signal mem2wbk_push, mem2wbk_full : std_logic;
 signal stall_sm, wb : std_logic;
 
@@ -101,6 +105,9 @@ signal mstatus_x : std_logic_vector(31 downto 0);
 signal mcause_x  : std_logic_vector(31 downto 0);
 signal mtval_x   : std_logic_vector(31 downto 0);
 
+
+signal mem_fifo_mult_inst : std_logic;
+
 component fifo
     generic(N : integer);
     port(
@@ -120,7 +127,7 @@ begin
 
 -- Intanciation 
 mem2wbk : fifo
-    generic map(N => 72)
+    generic map(N => 73)
     port map(
         clk => clk,
         reset_n => reset_n,
@@ -133,20 +140,20 @@ mem2wbk : fifo
     );
     
 -- fifo concat   
-mem2wbk_din(31 downto 0) <= data_sm; 
-mem2wbk_din(37 downto 32) <= DEST_RE; 
-mem2wbk_din(38) <= wb;
---mem2wbk_din(70 downto 39) <= PC_EXE2MEM_RE;
-mem2wbk_din(39) <= CSR_WENABLE_RE; 
-mem2wbk_din(71 downto 40) <= CSR_RDATA_RE;
+mem2wbk_din(31 downto 0)    <= data_sm; 
+mem2wbk_din(37 downto 32)   <= DEST_RE; 
+mem2wbk_din(38)             <= wb;
+mem2wbk_din(39)             <= CSR_WENABLE_RE; 
+mem2wbk_din(71 downto 40)   <= CSR_RDATA_RE;
+mem2wbk_din(72)             <= MULT_INST_RE; 
 
 -- fifo unconcat 
-MEM_RES_RM <= mem2wbk_dout(31 downto 0);
-MEM_DEST_RM <= mem2wbk_dout(37 downto 32);
-WB_RM <= mem2wbk_dout(38);
---PC_MEM2WBK_RM <= mem2wbk_dout(70 downto 39);
-CSR_WENABLE_RM <= mem2wbk_dout(39);
-CSR_RDATA_RM <= mem2wbk_dout(71 downto 40);
+MEM_RES_RM          <= mem2wbk_dout(31 downto 0);
+MEM_DEST_RM         <= mem2wbk_dout(37 downto 32);
+WB_RM               <= mem2wbk_dout(38);
+CSR_WENABLE_RM      <= mem2wbk_dout(39);
+CSR_RDATA_RM        <= mem2wbk_dout(71 downto 40);
+mem_fifo_mult_inst  <= mem2wbk_dout(72);
 
 -- fifo manage 
 stall_sm <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SE;
@@ -170,7 +177,7 @@ MCACHE_DATA_SM <= data_store_sm;
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;
-MCACHE_ADR_VALID_SM <= (not EXE2MEM_EMPTY_SE) and (STORE_RE or LOAD_RE);
+MCACHE_ADR_VALID_SM <= (not(EXE2MEM_EMPTY_SE) or not(mem_fifo_mult_inst)) and (STORE_RE or LOAD_RE);
 
 -- sign extend and load size 
 load_byte(31 downto 8)  <=  x"000000" when SIGN_EXTEND_RE = '0' else 
@@ -291,5 +298,7 @@ CURRENT_MODE_SM <= mode_sm;
 MRET_SM <= MRET_RE and exception;
 MIP_WDATA_SM <= x"00000000"; 
 MTVAL_WDATA_SM <= mtval_x; 
-MCAUSE_WDATA_SM <= mcause_x;    
+MCAUSE_WDATA_SM <= mcause_x;   
+MULT_INST_RM <= mem_fifo_mult_inst;
+
 end archi;
