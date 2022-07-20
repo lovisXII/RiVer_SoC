@@ -14,7 +14,7 @@ end csa;
 architecture archi of csa is 
 
 signal AxB  : std_logic_vector(63 downto 0);
-signal shf  : std_logic_vector(63 downto 0);
+signal shf  : std_logic_vector(63 downto 0) := x"0000000000000000";
 
 begin 
 
@@ -23,7 +23,7 @@ shf <=  (A and B) or (AxB and C);
 
 S0  <=  AxB xor C;
 
-S1(63 downto 1) <=  shf(63 downto 1);
+S1(63 downto 1) <=  shf(62 downto 0);
 S1(0)           <=  '0';  
 
 end archi; 

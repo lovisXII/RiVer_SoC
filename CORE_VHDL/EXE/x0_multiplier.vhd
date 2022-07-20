@@ -81,8 +81,11 @@ x0x1 : fifo
         DOUT    => x0x1_dout
     );
 
+-- need clarification
+signed_type     <=  '0' when (MULT_CMD_RD = "10" or MULT_CMD_RD = "01") and (OP1_SE(31) = '1' and OP2_SE(31) = '1')  else 
+                    '1' when (MULT_CMD_RD /= "11") else 
+                    '0';
 
-signed_type     <=  '1' when (MULT_CMD_RD /= "11") and ((OP1_SE(31) and OP2_SE(31)) = '0')  else '0';
 signed_res_sx0  <=  '0' when (OP1_SE(31) = '1' and OP2_SE(31) = '1') else '1'; -- else  ?? 
 select_msb_sx0  <=  '1' when MULT_CMD_RD /= "01" else '0'; 
 
