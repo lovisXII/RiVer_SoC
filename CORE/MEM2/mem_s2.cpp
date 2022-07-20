@@ -495,6 +495,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, CURRENT_MODE_SM_S2, GET_NAME(CURRENT_MODE_SM_S2));
     sc_trace(tf, MRET_RE_S2, GET_NAME(MRET_RE_S2));
     sc_trace(tf, MRET_SM_S2, GET_NAME(MRET_SM_S2));
+    sc_trace(tf, PC_EXE2MEM_RE_S2, GET_NAME(PC_EXE2MEM_RE_S2));
     sc_trace(tf, RETURN_ADRESS_SM_S2, GET_NAME(RETURN_ADRESS_SM_S2));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     sc_trace(tf, MEM_SIZE_SM_S2, GET_NAME(MEM_SIZE_SM_S2));

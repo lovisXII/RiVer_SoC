@@ -173,7 +173,7 @@ int sc_main(int argc, char* argv[]) {
                     cout << "Found rvtest_code_end at adr " << std::hex << rvtest_code_end << endl;
                 }
                 if (name == "rvtest_entry_point") {
-                    reset_adr = value - 4;
+                    start_adr = value - 4;
                     cout << "Found rvtest_entry_point at adr " << std::hex << reset_adr << endl;
                 }
                 if (name == "begin_signature") {
@@ -212,7 +212,8 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<2>>  MEM_SIZE_SM_S1;
     sc_signal<sc_uint<2>>  MEM_SIZE_SM_S2;
 
-    sc_signal<sc_uint<32>> MEM_RESULT;
+    sc_signal<sc_uint<32>> MEM_RESULT_S1;
+    sc_signal<sc_uint<32>> MEM_RESULT_S2;
     sc_signal<bool>        MEM_STALL;
 
 #ifdef DCACHE_ON
@@ -257,7 +258,7 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_ADR_VALID_SM_S1(MEM_ADR_VALID_S1);
     core_inst.MCACHE_STORE_SM_S1(MEM_STORE_S1);
     core_inst.MCACHE_LOAD_SM_S1(MEM_LOAD_S1);
-    core_inst.MCACHE_RESULT_SM_S1(MEM_RESULT);
+    core_inst.MCACHE_RESULT_SM_S1(MEM_RESULT_S1);
     core_inst.MCACHE_STALL_SM_S1(MEM_STALL);
     core_inst.MEM_SIZE_SM_S1(MEM_SIZE_SM_S1);
 
@@ -266,7 +267,7 @@ int sc_main(int argc, char* argv[]) {
     core_inst.MCACHE_ADR_VALID_SM_S2(MEM_ADR_VALID_S2);
     core_inst.MCACHE_STORE_SM_S2(MEM_STORE_S2);
     core_inst.MCACHE_LOAD_SM_S2(MEM_LOAD_S2);
-    core_inst.MCACHE_RESULT_SM_S2(MEM_RESULT);
+    core_inst.MCACHE_RESULT_SM_S2(MEM_RESULT_S2);
     core_inst.MCACHE_STALL_SM_S2(MEM_STALL);
     core_inst.MEM_SIZE_SM_S2(MEM_SIZE_SM_S2);
 
@@ -357,8 +358,10 @@ int sc_main(int argc, char* argv[]) {
     int if_adr_s2;
     int if_result_s1;
     int if_result_s2;
-    int mem_adr;
-    int mem_size;
+    int mem_adr_s1;
+    int mem_adr_s2;
+    int mem_size_s1;
+    int mem_size_s2;
 
 #ifdef DEBUG_MAX_ITERATIONS
     int cpt = 0;
@@ -427,13 +430,24 @@ int sc_main(int argc, char* argv[]) {
                 break;
         }
 #else
-        mem_adr                    = MEM_ADR_S1.read() & 0XfffffffC;  // removing the least 2 significant bits
-        mem_size                   = MEM_SIZE_SM_S1.read();
-        bool         mem_adr_valid = MEM_ADR_VALID_S1.read();
-        unsigned int mem_data      = MEM_DATA_S1.read();
-        bool         mem_store     = MEM_STORE_S1.read();
-        bool         mem_load      = MEM_LOAD_S1.read();
-        unsigned int mem_result;
+        mem_adr_s1                    = MEM_ADR_S1.read() & 0XfffffffC;  // removing the least 2 significant bits
+        mem_size_s1                   = MEM_SIZE_SM_S1.read();
+
+        mem_adr_s2                    = MEM_ADR_S2.read() & 0XfffffffC;  // removing the least 2 significant bits
+        mem_size_s2                   = MEM_SIZE_SM_S2.read();
+
+        bool         mem_adr_valid_s1 = MEM_ADR_VALID_S1.read();
+        unsigned int mem_data_s1      = MEM_DATA_S1.read();
+        bool         mem_store_s1     = MEM_STORE_S1.read();
+        bool         mem_load_s1      = MEM_LOAD_S1.read();
+        
+        bool         mem_adr_valid_s2 = MEM_ADR_VALID_S2.read();
+        unsigned int mem_data_s2      = MEM_DATA_S2.read();
+        bool         mem_store_s2     = MEM_STORE_S2.read();
+        bool         mem_load_s2      = MEM_LOAD_S2.read();
+        
+        unsigned int mem_result_s1;
+        unsigned int mem_result_s2;
 #endif
 
 #ifdef ICACHE_ON
@@ -516,10 +530,10 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl;
             cout << "end_signature :" << end_signature << endl;
 
-            for (int i = begin_signature; i < end_signature; i += 4) {
-                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
-            }
+            // for (int i = begin_signature; i < end_signature; i += 4) {
+            //     // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
+            //     cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+            // }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
@@ -543,10 +557,13 @@ int sc_main(int argc, char* argv[]) {
         // mem_result = (ram[rounded_mem_adr] & mask) >> offset;
 
 #ifndef DCACHE_ON
-        if (mem_store && mem_adr_valid) {
-            int          temporary_value       = ram[mem_adr];
-            unsigned int temporary_store_value = mem_data;
-            if (mem_size == 2) {  // access in byte
+
+        // S1 GESTION :
+
+        if (mem_store_s1 && mem_adr_valid_s1) {
+            int          temporary_value       = ram[mem_adr_s1];
+            unsigned int temporary_store_value = mem_data_s1;
+            if (mem_size_s1 == 2) {  // access in byte
                 // doing a mask on the least 2 significant bits
                 int mask_adr = MEM_ADR_S1.read() & 0x00000003;
                 // The switch will allow to keep only the bits we want to store
@@ -554,51 +571,110 @@ int sc_main(int argc, char* argv[]) {
                     case 0:
                         temporary_store_value = temporary_store_value & 0x000000FF;
                         temporary_value       = 0xFFFFFF00 & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
                         break;
                     case 1:
                         temporary_store_value = temporary_store_value & 0x0000FF00;
                         temporary_value       = 0xFFFF00FF & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
                         break;
                     case 2:
-                        cout << "byte access 3d case at adr : " << mem_adr << endl;
+                        cout << "byte access 3d case at adr : " << mem_adr_s1 << endl;
                         cout << "value to be store " << std::hex << temporary_store_value << endl;
                         temporary_store_value = temporary_store_value & 0x00FF0000;
                         temporary_value       = 0xFF00FFFF & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
                         break;
                     case 3:
                         temporary_store_value = temporary_store_value & 0xFF000000;
                         temporary_value       = 0x00FFFFFF & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
-                        cout << ram[mem_adr] << endl;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
+                        cout << ram[mem_adr_s1] << endl;
                         break;
                     default: break;
                 }
-            } else if (mem_size == 1) {  // access in half word
+            } else if (mem_size_s1 == 1) {  // access in half word
                 int mask_adr = MEM_ADR_S1.read() & 0x00000003;
                 switch (mask_adr) {
                     case 0:
                         temporary_store_value = temporary_store_value & 0x0000FFFF;
                         temporary_value       = 0xFFFF0000 & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
                         break;
                     case 2:
                         temporary_store_value = temporary_store_value & 0xFFFF0000;
                         temporary_value       = 0x00000FFFF & temporary_value;
-                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        ram[mem_adr_s1]          = temporary_value | temporary_store_value;
                         break;
                     default: break;
                 }
             } else  // access in word
             {
-                ram[mem_adr] = mem_data;
+                ram[mem_adr_s1] = mem_data_s1;
             }
         }
-        mem_result = ram[mem_adr];
-        MEM_RESULT.write(mem_result);
+        mem_result_s1 = ram[mem_adr_s1];
+        MEM_RESULT_S1.write(mem_result_s1);
         MEM_STALL.write(false);
+        // S2 Gestion :
+
+        if (mem_store_s2 && mem_adr_valid_s2) {
+            int          temporary_value       = ram[mem_adr_s2];
+            unsigned int temporary_store_value = mem_data_s2;
+            if (mem_size_s2 == 2) {  // access in byte
+                // doing a mask on the least 2 significant bits
+                int mask_adr = MEM_ADR_S2.read() & 0x00000003;
+                // The switch will allow to keep only the bits we want to store
+                switch (mask_adr) {
+                    case 0:
+                        temporary_store_value = temporary_store_value & 0x000000FF;
+                        temporary_value       = 0xFFFFFF00 & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        break;
+                    case 1:
+                        temporary_store_value = temporary_store_value & 0x0000FF00;
+                        temporary_value       = 0xFFFF00FF & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        break;
+                    case 2:
+                        cout << "byte access 3d case at adr : " << mem_adr_s2 << endl;
+                        cout << "value to be store " << std::hex << temporary_store_value << endl;
+                        temporary_store_value = temporary_store_value & 0x00FF0000;
+                        temporary_value       = 0xFF00FFFF & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        break;
+                    case 3:
+                        temporary_store_value = temporary_store_value & 0xFF000000;
+                        temporary_value       = 0x00FFFFFF & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        cout << ram[mem_adr_s2] << endl;
+                        break;
+                    default: break;
+                }
+            } else if (mem_size_s2 == 1) {  // access in half word
+                int mask_adr = MEM_ADR_S2.read() & 0x00000003;
+                switch (mask_adr) {
+                    case 0:
+                        temporary_store_value = temporary_store_value & 0x0000FFFF;
+                        temporary_value       = 0xFFFF0000 & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        break;
+                    case 2:
+                        temporary_store_value = temporary_store_value & 0xFFFF0000;
+                        temporary_value       = 0x00000FFFF & temporary_value;
+                        ram[mem_adr_s2]          = temporary_value | temporary_store_value;
+                        break;
+                    default: break;
+                }
+            } else  // access in word
+            {
+                ram[mem_adr_s2] = mem_data_s2;
+            }
+        }
+        mem_result_s2 = ram[mem_adr_s2];
+        MEM_RESULT_S2.write(mem_result_s2);
+
+
 #endif
 
 #ifndef ICACHE_ON
