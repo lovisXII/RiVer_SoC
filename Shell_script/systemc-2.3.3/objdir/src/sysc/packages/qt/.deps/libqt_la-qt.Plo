@@ -1,0 +1,11 @@
+libqt_la-qt.lo: ../../../../../src/sysc/packages/qt/qt.c \
+ /usr/include/stdc-predef.h \
+ ../../../../../src/sysc/packages/qt/copyright.h \
+ ../../../../../src/sysc/packages/qt/qt.h \
+ ../../../../../src/sysc/packages/qt/qtmd.h \
+ ../../../../../src/sysc/packages/qt/md/iX86_64.h
+/usr/include/stdc-predef.h:
+../../../../../src/sysc/packages/qt/copyright.h:
+../../../../../src/sysc/packages/qt/qt.h:
+../../../../../src/sysc/packages/qt/qtmd.h:
+../../../../../src/sysc/packages/qt/md/iX86_64.h:
