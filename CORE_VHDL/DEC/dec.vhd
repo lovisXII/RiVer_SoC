@@ -583,12 +583,12 @@ mult_dependency     <= '1' when (   (radr1_sd = dec_fifo_rdest and dec_fifo_mult
 bpc_instr_in_exe1   <= '1' when radr1_sd = dec_fifo_rdest and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
 bpc_load_in_mem1    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
 bpc_ed1             <= '1' when radr1_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
-bpc_md1             <= '1' when radr1_sd = BP_DEST_RM and radr1_sd /= "000000" else '0';           
+bpc_md1             <= '1' when radr1_sd = BP_DEST_RM and BP_MEM2WBK_EMPTY_SM = '0' and radr1_sd /= "000000" else '0';           
 
 bpc_instr_in_exe2   <= '1' when radr2_sd = dec_fifo_rdest and dec2exe_empty = '0' and radr2_sd /= "000000" else '0'; 
 bpc_load_in_mem2    <= '1' when radr2_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr2_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
 bpc_ed2             <= '1' when radr2_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr2_sd /= "000000" else '0'; 
-bpc_md2             <= '1' when radr2_sd = BP_DEST_RM and radr2_sd /= "000000" else '0';           
+bpc_md2             <= '1' when radr2_sd = BP_DEST_RM and BP_MEM2WBK_EMPTY_SM = '0' and radr2_sd /= "000000" else '0';           
 
 
 bpc_mult_exe1       <= '1' when radr1_sd = BP_DEST_RE and MULT_INST_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0' else '0';
@@ -604,7 +604,7 @@ rdata1_sd   <=  BP_EXE_RES_RE   when bpc_ed1 = '1' and CSR_WENABLE_RE = '0' else
                 CSR_RDATA_RM    when bpc_md1 = '1' and CSR_WENABLE_RM = '1' else 
                 RDATA1_SR; 
 
-r1_valid_sd <=  not(bpc_instr_in_exe1 or bpc_load_in_mem1 or bpc_mult_exe1);
+r1_valid_sd <=  not(bpc_instr_in_exe1 or bpc_load_in_mem1 or bpc_mult_exe1 or bpc_mult_mem1);
 
 rdata2_sd   <=  BP_EXE_RES_RE   when bpc_ed2 = '1' and CSR_WENABLE_RE = '0' else 
                 CSR_RDATA_RE    when bpc_ed2 = '1' and CSR_WENABLE_RE = '1' else 
@@ -612,7 +612,7 @@ rdata2_sd   <=  BP_EXE_RES_RE   when bpc_ed2 = '1' and CSR_WENABLE_RE = '0' else
                 CSR_RDATA_RM    when bpc_md2 = '1' and CSR_WENABLE_RM = '1' else 
                 RDATA2_SR; 
 
-r2_valid_sd <=  not(bpc_instr_in_exe2 or bpc_load_in_mem2 or bpc_mult_mem2);
+r2_valid_sd <=  not(bpc_instr_in_exe2 or bpc_load_in_mem2 or bpc_mult_exe2 or bpc_mult_mem2);
 
 
 exception_sd <= (illegal_inst_sd or instruction_adress_misaligned_sd or env_call_u_mode_sd or
