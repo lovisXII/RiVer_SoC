@@ -19,7 +19,7 @@ entity exec is
         NEG_OP2_RD : in std_logic;
         WB_RD : in std_logic;
         MEM_SIGN_EXTEND_RD : in std_logic;
-        SELECT_SHIFT_RD : in std_logic;
+        SELECT_OPERATION_RD : in std_logic_vector(3 downto 0);
         MEM_LOAD_RD, MEM_STORE_RD : in std_logic;
         EXE2MEM_POP_SM : in std_logic;
         DEC2EXE_EMPTY_SD : in std_logic;
@@ -44,11 +44,18 @@ entity exec is
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         CSR_WENABLE_RM : in std_logic;
         CSR_RDATA_RM : in std_logic_vector(31 downto 0);
+        BP_MEM2WBK_EMPTY_SM : in std_logic;
 
         -- CSR 
         CSR_WENABLE_RD : in std_logic;
         CSR_WADR_RD   : in std_logic_vector(11 downto 0);
         CSR_RDATA_RD  : in std_logic_vector(31 downto 0);
+
+        -- Multiplier 
+        MULT_INST_RM    :   in  std_logic;
+        MULT_INST_RD    :   in  std_logic;  
+        MULT_INST_RE    :   out std_logic;
+        OP1_SE, OP2_SE  :   out std_logic_vector(31 downto 0);
 
         -- Exception 
         EXCEPTION_SM    : in std_logic;
@@ -80,8 +87,8 @@ end exec;
 
 architecture archi of exec is 
 
-signal exe2mem_data, exe2mem_x : std_logic_vector(198 downto 0);
-signal exe2mem_din, exe2mem_dout : std_logic_vector(198 downto 0);
+signal exe2mem_data, exe2mem_x : std_logic_vector(199 downto 0);
+signal exe2mem_din, exe2mem_dout : std_logic_vector(199 downto 0);
 
 signal op1, op2 : std_logic_vector(31 downto 0);
 signal alu_op2 : std_logic_vector(31 downto 0);
@@ -125,6 +132,7 @@ signal exe_fifo_mem_store, exe_fifo_mem_load : std_logic;
 signal exe_fifo_wb : std_logic; 
 signal exe_fifo_csr_data : std_logic_vector(31 downto 0);
 signal exe_fifo_csr_wenable : std_logic;
+signal exe_fifo_mult_inst   : std_logic;
 
 component alu
     port(
@@ -172,24 +180,25 @@ alu_i : alu
 
 shifter_i : shifter
     port map(
-        DIN_SE => OP1, 
-        SHIFT_VAL_SE => OP2(4 downto 0),
-        CMD_SE => CMD_RD, 
-        DOUT_SE => shifter_res
+        DIN_SE          => OP1, 
+        SHIFT_VAL_SE    => OP2(4 downto 0),
+        CMD_SE          => CMD_RD, 
+        DOUT_SE         => shifter_res
     );
 
 exe2mem : fifo
-    generic map(N => 199)
+    generic map(N => 200)
     port map(
-        clk => clk,
-        reset_n => reset_n,
-        DIN => exe2mem_din,
-        PUSH => exe2mem_push,
-        POP => EXE2MEM_POP_SM, 
-        FULL => exe2mem_full,
-        EMPTY => exe2mem_empty, 
-        DOUT => exe2mem_dout 
+        clk         => clk,
+        reset_n     => reset_n,
+        DIN         => exe2mem_din,
+        PUSH        => exe2mem_push,
+        POP         => EXE2MEM_POP_SM, 
+        FULL        => exe2mem_full,
+        EMPTY       => exe2mem_empty, 
+        DOUT        => exe2mem_dout 
     );
+
 
 -- ALU OP2 selection 
 alu_op2 <= not op2 when NEG_OP2_RD = '1' else op2; 
@@ -206,9 +215,10 @@ sltu_res <= x"00000000" when (op1(31) = '1' and op2(31) = '0') else
             (x"0000000"&"000"&(alu_res(31)));
 
 -- exe result selection
-exe_res <=  shifter_res when SELECT_SHIFT_RD = '1' else 
-            slt_res when SLT_RD = '1' else
-            sltu_res when SLTU_RD = '1' else
+
+exe_res <=  shifter_res when SELECT_OPERATION_RD = "0010"                   else 
+            slt_res     when SELECT_OPERATION_RD = "0001" and SLT_RD = '1'  else
+            sltu_res    when SELECT_OPERATION_RD = "0001" and SLTU_RD = '1' else
             alu_res;
 
 -- fifo 
@@ -217,8 +227,17 @@ exe2mem_push <= not stall_se;
 DEC2EXE_POP_SE <= not stall_se;
 
 -- Bypasses 
-r1_valid_se <= '1'; 
-r2_valid_se <= '1';
+r1_valid_se <=  '1' when    (   (RADR1_RD = "000000" or BLOCK_BP_RD = '1')          or
+                                (RADR1_RD = exe_fifo_dest and exe_fifo_csr_wenable = '1') or 
+                                (RADR1_RD = MEM_DEST_RM and CSR_WENABLE_RM = '1')   or 
+                                (RADR1_RD = exe_fifo_dest and exe_fifo_mem_load = '1' and exe2mem_empty = '0')
+                            ) else 
+                (not(exe_fifo_mult_inst) or exe2mem_empty) when (RADR1_RD = exe_fifo_dest and exe_fifo_mem_load = '0') else 
+                (not(MULT_INST_RM) or BP_MEM2WBK_EMPTY_SM) when (RADR1_RD = MEM_DEST_RM) else 
+                '1'; 
+
+r2_valid_se <=  '1';
+
 
 bpc_disable1    <= '1' when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else '0'; 
 bpc_disable2    <= '1' when RADR2_RD = "000000" or BLOCK_BP_RD = '1' or MEM_LOAD_RD = '1' else '0'; 
@@ -248,10 +267,10 @@ bpc_me2 <=  '1' when MEM_DEST_RM = RADR2_RD and bpc_disable2 = '0' else '0';
 
 
 
-bp_mem_data <=  exe_fifo_csr_data when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and bpc_disable2 = '0' and exe_fifo_csr_wenable = '1') else 
-                exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and bpc_disable2 = '0') else 
-                MEM_RES_RM when (MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' and bpc_disable2 = '0') else
-                MEM_DATA_RD;
+bp_mem_data <=  exe_fifo_csr_data when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and exe_fifo_mult_inst = '0' and bpc_disable2 = '0' and exe_fifo_csr_wenable = '1') else 
+                exe_fifo_res when (exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and exe_fifo_mult_inst = '0' and bpc_disable2 = '0') else 
+                MEM_RES_RM when (MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' and MULT_INST_RM = '0' and bpc_disable2 = '0') else
+                MEM_DATA_RD; 
 
 op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else   
         exe_fifo_csr_data when exe_fifo_dest = RADR1_RD and exe_fifo_csr_wenable = '1' else
@@ -260,12 +279,18 @@ op1 <=  OP1_RD when RADR1_RD = "000000" or BLOCK_BP_RD = '1' else
         MEM_RES_RM when MEM_DEST_RM = RADR1_RD else 
         OP1_RD;
 
+--op2 <=  OP2_RD when (RADR2_RD = "000000" or MEM_LOAD_RD = '1' or BLOCK_BP_RD = '1') else
+--        exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and MEM_STORE_RD = '0' else
+--        OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
+--        MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
+--        OP2_RD;
+ 
 op2 <=  OP2_RD when (RADR2_RD = "000000" or MEM_LOAD_RD = '1' or BLOCK_BP_RD = '1') else
-        exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and MEM_STORE_RD = '0' else
-        OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' else 
-        MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' else 
+        exe_fifo_res when exe_fifo_dest = RADR2_RD and exe_fifo_mem_load = '0' and MEM_STORE_RD = '0' and exe_fifo_mult_inst = '0' else
+        OP2_RD when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '1' and MULT_INST_RM = '0' else 
+        MEM_RES_RM when MEM_DEST_RM = RADR2_RD and MEM_STORE_RD = '0' and MULT_INST_RM = '0' else 
         OP2_RD;
-        
+     
 
 
 blocked_se <=   '1' when ((exe_fifo_dest = RADR1_RD and exe_fifo_mem_load = '1' and exe2mem_empty = '0') 
@@ -300,6 +325,11 @@ MEM_STORE_RE <= exe_fifo_mem_store;
 WB_RE <= exe_fifo_wb;
 CSR_RDATA_RE <= exe_fifo_csr_data; 
 CSR_WENABLE_RE <= exe_fifo_csr_wenable; 
+MULT_INST_RE <= exe_fifo_mult_inst;
+
+-- Multiplier
+OP1_SE <= op1;
+OP2_SE <= op2; 
 
 -- fifo 
 exe2mem_data(31 downto 0) <= exe_res;
@@ -329,10 +359,11 @@ exe2mem_data(164) <= store_access_fault_se;
 exe2mem_data(165) <= INSTRUCTION_ACCESS_FAULT_RD; 
 exe2mem_data(166) <= EBREAK_RD; 
 exe2mem_data(198 downto 167) <= PC_BRANCH_VALUE_RD; 
+exe2mem_data(199) <= MULT_INST_RD; 
 
 exe2mem_x(75 downto 0) <= (others => '0');
 exe2mem_x(107 downto 76) <= PC_DEC2EXE_RD; 
-exe2mem_x(198 downto 108) <= (others => '0');
+exe2mem_x(199 downto 108) <= (others => '0');
 
 exe2mem_din <=  exe2mem_data when EXCEPTION_SM = '0' else 
                 exe2mem_x; 
@@ -364,6 +395,6 @@ STORE_ACCESS_FAULT_RE <= exe2mem_dout(164);
 INSTRUCTION_ACCESS_FAULT_RE <= exe2mem_dout(165);
 EBREAK_RE <= exe2mem_dout(166);
 PC_BRANCH_VALUE_RE <= exe2mem_dout(198 downto 167);
-
+exe_fifo_mult_inst <= exe2mem_dout(199);
 
 end archi;
