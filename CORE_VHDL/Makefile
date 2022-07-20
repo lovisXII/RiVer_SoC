@@ -18,7 +18,7 @@ all: run
 run: core_tb exception.o
 
 	cp app.ld exception.o sim/
-	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd
+	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd --wave=$(SIM_DIR)/$(TB).ghw
 
 core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
@@ -44,4 +44,4 @@ warning :
 	@echo You have to do : make TEST=pth_to_the_test/test_name
 	@echo
 clean:
-	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.out *.out.txt
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.ghw *.out *.out.txt
