@@ -9,13 +9,12 @@ cd $TEMPORARY_PATH
 
 echo "Please run in sudo"
 echo "Installing python"
+echo "If you are running on Ubuntu 22.04 you can have some issue installing riscof, if so please run install_python_ub_22_04.sh"
 
-# sudo apt-get install python3.6
-# pip3 install --upgrade pip
-# sudo add-apt-repository ppa:deadsnakes/ppa
-# sudo apt-get update
-# sudo apt-get install python3.6 -y
-# pip3 install --upgrade pip
+add-apt-repository ppa:deadsnakes/ppa
+apt-get update
+apt-get install python3.6 -y
+pip3 install --upgrade pip
 
 
 ################### RISCOF SETUP ################### 
