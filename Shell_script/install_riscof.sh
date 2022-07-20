@@ -92,23 +92,23 @@ rm config.ini
 echo "
 [RISCOF]
 ReferencePlugin=spike
-ReferencePluginPath=$PWD/RISC-V-project/riscof/spike
+ReferencePluginPath=$PWD/spike
 DUTPlugin=projet
-DUTPluginPath=$PWD/RISC-V-project/riscof/projet
+DUTPluginPath=$PWD/projet
 
 [spike]
-pluginpath=$PWD/RISC-V-project/riscof/spike
-ispec=$PWD/RISC-V-project/riscof/spike/spike_isa.yaml
-pspec=$PWD/RISC-V-project/riscof/spike/spike_platform.yaml
+pluginpath=$PWD/spike
+ispec=$PWD/spike/spike_isa.yaml
+pspec=$PWD/spike/spike_platform.yaml
 target_run=1
 
 [sail_cSim]
-pluginpath=$PWD/RISC-V-project/riscof/sail_cSim
+pluginpath=$PWD/sail_cSim
 
 [projet]
-pluginpath=$PWD/RISC-V-project/riscof/projet
-ispec=$PWD/RISC-V-project/riscof/projet/projet_isa.yaml
-pspec=$PWD/RISC-V-project/riscof/projet/projet_platform.yaml
-PATH=$PWD/RISC-V-project/CORE/core_tb">>config.ini
+pluginpath=$PWD/projet
+ispec=$PWD/projet/projet_isa.yaml
+pspec=$PWD/projet/projet_platform.yaml
+PATH=$PWD/../CORE/core_tb">>config.ini
 
 riscof --verbose info arch-test --clone
