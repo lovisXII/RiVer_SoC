@@ -16,7 +16,7 @@ entity divider is
 
         DONE_DIV        :   out std_logic;
         BUSY_DIV        :   out std_logic;
-        RES_DIV     :   out std_logic_vector(31 downto 0)
+        RES_DIV         :   out std_logic_vector(31 downto 0)
     );
 end divider; 
 
@@ -154,10 +154,14 @@ begin
                 end if; 
                 shift_cpt <= std_logic_vector(unsigned(shift_cpt_reg) + unsigned(one_ext_6));
                 divisor_se  <= '0' & divisor_reg(63 downto 1);
+                DONE_DIV <= '0'; 
+                BUSY_DIV <= '1'; 
 
             end if; 
-            BUSY_DIV <= '1'; 
-            DONE_DIV <= '0'; 
+         --  if shift_cpt_reg >= "011111" then 
+         --       DONE_DIV <= '1'; 
+         --       BUSY_DIV <= '1'; 
+         --   end if;
 
         when others => 
             BUSY_DIV    <= '0'; 
