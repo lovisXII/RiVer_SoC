@@ -5,21 +5,46 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	fec00093          	li	ra,-20
-   10058:	ff600113          	li	sp,-10
-
-   1005c:	00102023          	sw	ra,0(zero) # 0 <_bad>
-   10060:	00002283          	lw	t0,0(zero) # 0 <_bad>
-   
-   10064:	00202223          	sw	sp,4(zero) # 4 <_good>
-   10068:	00402303          	lw	t1,4(zero) # 4 <_good>
-   
-   1006c:	00128463          	beq	t0,ra,10074 <_start+0x20>
-   10070:	f91ef06f          	j	0 <_bad>
-   
-   10074:	00230463          	beq	t1,sp,1007c <_start+0x28>
-   10078:	f89ef06f          	j	0 <_bad>
-   1007c:	f89ef06f          	j	4 <_good>
+   10054:	00306093          	ori	ra,zero,3
+   10058:	00a06113          	ori	sp,zero,10
+   1005c:	01406193          	ori	gp,zero,20
+   10060:	00708093          	addi	ra,ra,7
+   10064:	00208463          	beq	ra,sp,1006c <_start+0x18>
+   10068:	f99ef06f          	j	0 <_bad>
+   1006c:	002080b3          	add	ra,ra,sp
+   10070:	00308463          	beq	ra,gp,10078 <_start+0x24>
+   10074:	f8def06f          	j	0 <_bad>
+   10078:	ffd02093          	slti	ra,zero,-3
+   1007c:	00100463          	beq	zero,ra,10084 <_start+0x30>
+   10080:	f81ef06f          	j	0 <_bad>
+   10084:	ffd03093          	sltiu	ra,zero,-3
+   10088:	00101463          	bne	zero,ra,10090 <_start+0x3c>
+   1008c:	f75ef06f          	j	0 <_bad>
+   10090:	00302093          	slti	ra,zero,3
+   10094:	00101463          	bne	zero,ra,1009c <_start+0x48>
+   10098:	f69ef06f          	j	0 <_bad>
+   1009c:	00a14093          	xori	ra,sp,10
+   100a0:	00100463          	beq	zero,ra,100a8 <_start+0x54>
+   100a4:	f5def06f          	j	0 <_bad>
+   100a8:	00a17093          	andi	ra,sp,10
+   100ac:	00110463          	beq	sp,ra,100b4 <_start+0x60>
+   100b0:	f51ef06f          	j	0 <_bad>
+   100b4:	00111093          	slli	ra,sp,0x1
+   100b8:	00308463          	beq	ra,gp,100c0 <_start+0x6c>
+   100bc:	f45ef06f          	j	0 <_bad>
+   100c0:	fec06213          	ori	tp,zero,-20
+   100c4:	ff606293          	ori	t0,zero,-10
+   100c8:	40125093          	srai	ra,tp,0x1
+   100cc:	00508463          	beq	ra,t0,100d4 <_start+0x80>
+   100d0:	f31ef06f          	j	0 <_bad>
+   100d4:	00106313          	ori	t1,zero,1
+   100d8:	01d31313          	slli	t1,t1,0x1d
+   100dc:	00125093          	srli	ra,tp,0x1
+   100e0:	0060d463          	bge	ra,t1,100e8 <_start+0x94>
+   100e4:	f1def06f          	j	0 <_bad>
+   100e8:	f1def06f          	j	4 <_good>
+   100ec:	00000013          	nop
+   100f0:	00000013          	nop
 
 Disassembly of section .riscv.attributes:
 

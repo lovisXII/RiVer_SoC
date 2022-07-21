@@ -710,7 +710,7 @@ void exec_s1::bypasses() {
         if (MEM_STORE_RD_S1.read()) //case of a store 
         {  // on stores we need to bypass to the data not adr
             bp_mem_data_var = bp_value;
-            op2_se.write(OP2_RD_S2.read());
+            op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
         }
         else 

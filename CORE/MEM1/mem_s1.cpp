@@ -481,6 +481,7 @@ void mem_s1::trace(sc_trace_file* tf) {
              GET_NAME(INSTRUCTION_ADRESS_MISSALIGNED_RE_S1));  // branch offset is misaligned
     sc_trace(tf, ENV_CALL_S_MODE_RE_S1, GET_NAME(ENV_CALL_S_MODE_RE_S1));
     sc_trace(tf, ENV_CALL_M_MODE_RE_S1, GET_NAME(ENV_CALL_M_MODE_RE_S1));
+    sc_trace(tf, PC_EXE2MEM_RE_S1, GET_NAME(PC_EXE2MEM_RE_S1));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
     sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
     sc_trace(tf, MSTATUS_WDATA_RM_S1, GET_NAME(MSTATUS_WDATA_RM_S1));

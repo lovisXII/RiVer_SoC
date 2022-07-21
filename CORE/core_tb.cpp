@@ -530,10 +530,10 @@ int sc_main(int argc, char* argv[]) {
             cout << "begin_signature :" << begin_signature << endl;
             cout << "end_signature :" << end_signature << endl;
 
-            // for (int i = begin_signature; i < end_signature; i += 4) {
-            //     // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-            //     cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
-            // }
+            for (int i = begin_signature; i < end_signature; i += 4) {
+                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
+                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
+            }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
@@ -610,6 +610,7 @@ int sc_main(int argc, char* argv[]) {
                 }
             } else  // access in word
             {
+                cout << sc_time_stamp() << " adr  : " << mem_adr_s1 << " data  : " << mem_data_s1 << endl;
                 ram[mem_adr_s1] = mem_data_s1;
             }
         }

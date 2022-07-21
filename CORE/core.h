@@ -878,6 +878,9 @@ SC_MODULE(core) {
         mem_inst_s1.SIGN_EXTEND_RE_S1(MEM_SIGN_EXTEND_RE_S1);
         mem_inst_s1.LOAD_RE_S1(MEM_LOAD_RE_S1);
         mem_inst_s1.STORE_RE_S1(MEM_STORE_RE_S1);
+
+        mem_inst_s1.LOAD_RE_S2(MEM_LOAD_RE_S2);
+        mem_inst_s1.STORE_RE_S2(MEM_STORE_RE_S2);
         mem_inst_s1.MULT_INST_RE_S1(MULT_INST_RE_S1);
         mem_inst_s1.MULT_INST_RM_S1(MULT_INST_RM_S1);
         mem_inst_s1.EXE2MEM_EMPTY_SE_S1(EXE2MEM_EMPTY_SE_S1);
@@ -966,6 +969,9 @@ SC_MODULE(core) {
         mem_inst_s2.SIGN_EXTEND_RE_S2(MEM_SIGN_EXTEND_RE_S2);
         mem_inst_s2.LOAD_RE_S2(MEM_LOAD_RE_S2);
         mem_inst_s2.STORE_RE_S2(MEM_STORE_RE_S2);
+
+        mem_inst_s2.LOAD_RE_S1(MEM_LOAD_RE_S1);
+        mem_inst_s2.STORE_RE_S1(MEM_STORE_RE_S1);
         mem_inst_s2.MULT_INST_RE_S2(MULT_INST_RE_S2);
         mem_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
         mem_inst_s2.EXE2MEM_EMPTY_SE_S2(EXE2MEM_EMPTY_SE_S2);
