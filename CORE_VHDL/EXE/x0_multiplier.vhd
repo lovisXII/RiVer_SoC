@@ -89,15 +89,15 @@ signed_type     <=  '0' when (MULT_CMD_RD = "10" or MULT_CMD_RD = "01") and (OP1
 signed_res_sx0  <=  '0' when (OP1_SE(31) = '1' and OP2_SE(31) = '1') else '1'; -- else  ?? 
 select_msb_sx0  <=  '1' when MULT_CMD_RD /= "01" else '0'; 
 
-op1             <=  std_logic_vector(unsigned(not(OP1_SE)) + unsigned(one_ext_32)) when (OP1_SE(31) = '1' and OP2_SE(31) = '1') else 
-                    OP2_SE when OP1_SE(31) = '0' and OP2_SE(31) = '1' else 
+op1             <=  std_logic_vector(unsigned(not(OP1_SE)) + unsigned(one_ext_32)) when ((OP1_SE(31) = '1' and OP2_SE(31) = '1') and (MULT_CMD_RD = "10" or MULT_CMD_RD = "01")) else 
+                    OP2_SE when (OP1_SE(31) = '0' and OP2_SE(31) = '1') and (MULT_CMD_RD = "10" or MULT_CMD_RD = "01") else 
                     OP1_SE; 
 
-op2             <=  std_logic_vector(unsigned(not(OP2_SE)) + unsigned(one_ext_32)) when (OP1_SE(31) = '1' and OP2_SE(31) = '1') else 
-                    OP1_SE when OP1_SE(31) = '0' and OP2_SE(31) = '1' else 
+op2             <=  std_logic_vector(unsigned(not(OP2_SE)) + unsigned(one_ext_32)) when ((OP1_SE(31) = '1' and OP2_SE(31) = '1') and (MULT_CMD_RD = "10" or MULT_CMD_RD = "01")) else 
+                    OP1_SE when (OP1_SE(31) = '0' and OP2_SE(31) = '1') and (MULT_CMD_RD = "10" or MULT_CMD_RD = "01") else 
                     OP2_SE; 
 
-partial_product : process(op1, op2, signed_type)
+partial_product : process(clk, op1, op2, signed_type)
 variable prod : std_logic_vector(63 downto 0) := x"0000000000000000";
 begin 
     l0 : for i in 0 to 31 loop 
@@ -107,7 +107,7 @@ begin
                 prod(j) := op1(j-i) and op2(i);
             end loop; 
             if signed_type = '1' and op1(31) = '1' then 
-                l2 : for k in i+31 to 63 loop
+                l2 : for k in i+32 to 63 loop
                     prod(k) := '1'; 
                 end loop; 
             end if; 
