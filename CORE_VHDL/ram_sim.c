@@ -165,6 +165,7 @@ int main(int argc, char const* argv[]) {
             fprintf(stderr, "Opening %s was successfull\n", signature_name);
         }
     }
+    
 
     char temp_text[512];
     char point = '.' ;
