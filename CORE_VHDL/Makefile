@@ -4,7 +4,7 @@ RISC=riscv32-unknown-elf-gcc
 TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
-COMPONENTS=UTIL/fifo UTIL/util UTIL/csa core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec EXE/x0_multiplier MEM/mem MEM/x1_multiplier REG/reg WBK/wbk WBK/x2_multiplier CSR/csr 
+COMPONENTS=UTIL/fifo UTIL/util UTIL/csa core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec EXE/x0_multiplier EXE/divider MEM/mem MEM/x1_multiplier REG/reg WBK/wbk WBK/x2_multiplier CSR/csr 
 TB=core_tb
 MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))

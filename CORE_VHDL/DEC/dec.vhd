@@ -125,6 +125,7 @@ signal auipc_i_sd : std_logic;
 signal j_i_sd, jalr_i_sd : std_logic;
 
 signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
+signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
 
 -- System instructions
 signal system_inst_sd : std_logic;
@@ -353,6 +354,10 @@ mul_i_sd    <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "000" else
 mulh_i_sd   <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "001" else '0'; 
 mulhsu_i_sd <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "010" else '0';
 mulhu_i_sd  <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "011" else '0';
+div_i_sd    <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "100" else '0';  
+divu_i_sd   <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "101" else '0'; 
+rem_i_sd    <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "110" else '0'; 
+remu_i_sd   <=  '1' when m_type_sd = '1' and INSTR_RI(14 downto 12) = "111" else '0'; 
 
 -- System type 
 ecall_i_sd  <=  '1' when system_inst_sd = '1' and INSTR_RI(14 downto 12) = "000" and INSTR_RI(31 downto 20) = x"000" else '0';
@@ -443,12 +448,13 @@ dec2exe_op2_sd <=   rdata2_sd       when ((r_type_sd  or b_type_sd or (u_type_sd
 -- neg
 neg_op2_sd <= sub_i_sd or slt_i_sd or slti_i_sd or sltu_i_sd or sltiu_i_sd; 
 -- alu 
-exe_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd or csrrc_i_sd or csrrci_i_sd or mul_i_sd) = '1') else 
-                "10" when ((or_i_sd or ori_i_sd or sra_i_sd or srai_i_sd or csrrs_i_sd or csrrsi_i_sd or mulh_i_sd) = '1') else
-                "11" when ((xor_i_sd or xori_i_sd or mulhu_i_sd) = '1') else 
+exe_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd or csrrc_i_sd or csrrci_i_sd or mul_i_sd or div_i_sd) = '1') else 
+                "10" when ((or_i_sd or ori_i_sd or sra_i_sd or srai_i_sd or csrrs_i_sd or csrrsi_i_sd or mulh_i_sd or divu_i_sd) = '1') else
+                "11" when ((xor_i_sd or xori_i_sd or mulhu_i_sd or rem_i_sd) = '1') else 
                 "00";
 
-select_operation_sd <=  "0100"  when    ((mul_i_sd or mulh_i_sd or mulhsu_i_sd or mulhu_i_sd) = '1')                        else 
+select_operation_sd <=  "1000"  when    ((div_i_sd or divu_i_sd or rem_i_sd or remu_i_sd) = '1') else 
+                        "0100"  when    ((mul_i_sd or mulh_i_sd or mulhsu_i_sd or mulhu_i_sd) = '1')                        else 
                         "0010"  when    ((sll_i_sd or slli_i_sd or srl_i_sd or srli_i_sd or sra_i_sd or srai_i_sd) = '1')   else 
                         "0001";
 

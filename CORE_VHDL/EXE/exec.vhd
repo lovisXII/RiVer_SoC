@@ -125,6 +125,12 @@ signal load_access_fault_se : std_logic := '0';
 signal store_access_fault_se : std_logic := '0';
 signal exception_se : std_logic := '0';
 
+-- divider
+signal start_div    : std_logic;
+signal done_div     : std_logic;
+signal busy_div     : std_logic;
+signal res_div      : std_logic_vector(31 downto 0);
+
 -- exe output readable 
 signal exe_fifo_res : std_logic_vector(31 downto 0); 
 signal exe_fifo_dest : std_logic_vector(5 downto 0);
@@ -166,6 +172,21 @@ component fifo
     );
 end component;
 
+component divider
+    port(
+        -- global interface
+        clk, reset_n    :   in  std_logic;
+
+        OP1_SE, OP2_SE  :   in  std_logic_vector(31 downto 0);
+        CMD_RD          :   in  std_logic_vector(1 downto 0);
+        START_DIV       :   in  std_logic;
+
+        DONE_DIV        :   out std_logic;
+        BUSY_DIV        :   out std_logic;
+        RES_DIV         :   out std_logic_vector(31 downto 0)
+    );
+end component;
+
 begin 
 
 --  Instances
@@ -199,6 +220,20 @@ exe2mem : fifo
         DOUT        => exe2mem_dout 
     );
 
+divider_i : divider
+    port map(
+        clk         =>  clk, 
+        reset_n     =>  reset_n,
+
+        OP1_SE      =>  op1,
+        OP2_SE      =>  op2,
+        CMD_RD      =>  CMD_RD, 
+        START_DIV   =>  start_div, 
+
+        DONE_DIV    =>  done_div, 
+        BUSY_DIV    =>  busy_div,
+        RES_DIV     =>  res_div
+    );
 
 -- ALU OP2 selection 
 alu_op2 <= not op2 when NEG_OP2_RD = '1' else op2; 
@@ -216,13 +251,16 @@ sltu_res <= x"00000000" when (op1(31) = '1' and op2(31) = '0') else
 
 -- exe result selection
 
-exe_res <=  shifter_res when SELECT_OPERATION_RD = "0010"                   else 
+exe_res <=  res_div     when SELECT_OPERATION_RD = "1000"                   else 
+            shifter_res when SELECT_OPERATION_RD = "0010"                   else 
             slt_res     when SELECT_OPERATION_RD = "0001" and SLT_RD = '1'  else
             sltu_res    when SELECT_OPERATION_RD = "0001" and SLTU_RD = '1' else
             alu_res;
 
+
+start_div   <=  '1'     when SELECT_OPERATION_RD = "1000" and DEC2EXE_EMPTY_SD = '0' and (done_div = '0') else '0'; 
 -- fifo 
-stall_se <= exe2mem_full or DEC2EXE_EMPTY_SD or blocked_se or not(r1_valid_se) or not(r2_valid_se);
+stall_se <= exe2mem_full or DEC2EXE_EMPTY_SD or blocked_se or not(r1_valid_se) or not(r2_valid_se) or busy_div;
 exe2mem_push <= not stall_se; 
 DEC2EXE_POP_SE <= not stall_se;
 
