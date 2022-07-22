@@ -14,7 +14,7 @@ entity exec is
         RADR1_RD, RADR2_RD : in std_logic_vector(5 downto 0);
         MEM_DATA_RD : in std_logic_vector(31 downto 0);
         DEST_RD : in std_logic_vector(5 downto 0);
-        CMD_RD : in std_logic_vector(1 downto 0);
+        CMD_RD : in     std_logic_vector(1 downto 0);
         MEM_SIZE_RD : in std_logic_vector(1 downto 0);
         NEG_OP2_RD : in std_logic;
         WB_RD : in std_logic;
@@ -258,11 +258,13 @@ exe_res <=  res_div     when SELECT_OPERATION_RD = "1000"                   else
             alu_res;
 
 
-start_div   <=  '1'     when SELECT_OPERATION_RD = "1000" and DEC2EXE_EMPTY_SD = '0' and (done_div = '0') else '0'; 
+start_div   <=  '1'     when SELECT_OPERATION_RD = "1000" and DEC2EXE_EMPTY_SD = '0' and (busy_div = '0' and done_div = '0') else '0'; --and (done_div = '0') else '0'; 
+
+
 -- fifo 
-stall_se <= exe2mem_full or DEC2EXE_EMPTY_SD or blocked_se or not(r1_valid_se) or not(r2_valid_se) or busy_div;
+stall_se <= exe2mem_full or DEC2EXE_EMPTY_SD or blocked_se or not(r1_valid_se) or not(r2_valid_se) or (busy_div and (not(done_div)));
 exe2mem_push <= not stall_se; 
-DEC2EXE_POP_SE <= not stall_se;
+DEC2EXE_POP_SE <= not (stall_se or start_div);
 
 -- Bypasses 
 r1_valid_se <=  '1' when    (   (RADR1_RD = "000000" or BLOCK_BP_RD = '1')          or
@@ -365,7 +367,7 @@ CSR_RDATA_RE <= exe_fifo_csr_data;
 CSR_WENABLE_RE <= exe_fifo_csr_wenable; 
 MULT_INST_RE <= exe_fifo_mult_inst;
 
--- Multiplier
+-- Multiplier and divider operands 
 OP1_SE <= op1;
 OP2_SE <= op2; 
 
