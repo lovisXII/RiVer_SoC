@@ -197,7 +197,7 @@ remind      <=  reminder_reg(31 downto 0) when reminder_sign_se = '0' else
 quotient    <=  quotient_reg    when    quotient_sign_se = '0'  else 
                 std_logic_vector(unsigned(not(quotient_reg)) + unsigned(one_ext_32));    
 
-RES_DIV <=  remind  when    (cmd_reg = "11" or cmd_reg   = "00")    else 
+RES_DIV <=  remind  when    (cmd_reg = "11" or cmd_reg = "00")    else 
                 quotient; 
 
 end archi; 

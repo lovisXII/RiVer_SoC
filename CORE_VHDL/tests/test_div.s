@@ -17,7 +17,7 @@ _start:
 
     remu x10, x9, x7
     bne x10, x0, _bad
-    
+
     ori x7, x0, 5
     ori x9, x0, 1
     rem x10, x8, x7
