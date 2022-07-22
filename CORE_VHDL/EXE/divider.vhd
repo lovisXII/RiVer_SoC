@@ -24,7 +24,7 @@ architecture archi of divider is
 
 constant one_ext_6 : std_logic_vector(5 downto 0) := "000001";
 
-type state is (idle, setup, zero, run, done);
+type state is (idle, setup, zero, same_ops, run, done);
 signal EP, EF : state; 
 
 signal cmd_reg : std_logic_vector(1 downto 0);
@@ -41,10 +41,6 @@ signal quotient_sign_se, reminder_sign_se : std_logic;
 
 signal remind : std_logic_vector(31 downto 0);
 
-signal sign_debug : std_logic;
-
-signal debug_div_remind : std_logic := '0'; 
-signal debug_process : integer := 0; 
 begin 
 
 -- state transition
@@ -73,13 +69,16 @@ begin
 
     case EP is 
         when idle   =>  EF  <=  idle;
-            if START_DIV = '1' and OP2_SE /= x"00000000" then 
+            if  START_DIV = '1' and OP2_SE /= x"00000000" and OP1_SE = OP2_SE then 
+                EF  <=  same_ops;    
+            elsif START_DIV = '1' and OP2_SE /= x"00000000" then 
                 EF  <=  setup;  
             elsif START_DIV = '1' and OP2_SE = x"00000000" then 
                 EF  <=  zero;   
             end if; 
         when setup  =>  EF  <=  run;
-        when zero   =>  EF  <=  done;       
+        when zero   =>  EF  <=  done;  
+        when same_ops => EF <= done;      
         when run    =>  EF  <=  run;
             if shift_cpt_reg = "011111" then 
                 EF  <=  done; 
@@ -88,7 +87,7 @@ begin
     end case; 
 end process; 
 
-fsm_output : process(EP, START_DIV, OP1_SE, OP2_SE, op1, op2, CMD_RD, reminder_reg, divisor_reg, quotient_reg, shift_cpt_reg)
+fsm_output : process(EP, START_DIV, CMD_RD, reminder_reg, divisor_reg, quotient_reg, shift_cpt_reg)
 variable signed_inst : std_logic; 
 variable reminder_sign : std_logic; 
 variable quotient_sign : std_logic; 
@@ -116,15 +115,15 @@ begin
             end if; 
             quotient_sign := (op1(31) xor op2(31)) and signed_inst; 
             reminder_sign := op1(31) and signed_inst; 
-            
+
             if op1(31) = '1' and signed_inst = '1' then 
-                op1_var := std_logic_vector(unsigned(not(OP1_SE)) + unsigned(one_ext_32));
+                op1_var := std_logic_vector(signed(not(OP1_SE)) + signed(one_ext_32));
             else 
                 op1_var := OP1_SE;
             end if; 
 
             if OP2_SE(31) = '1' and signed_inst = '1' then 
-                op2_var := std_logic_vector(unsigned(not(op2)) + unsigned(one_ext_32));
+                op2_var := std_logic_vector(signed(not(op2)) + signed(one_ext_32));
             else 
                 op2_var := op2; 
             end if; 
@@ -141,6 +140,16 @@ begin
             DONE_DIV        <=  '0';
             BUSY_DIV        <=  '1'; 
 
+        when same_ops => 
+            quotient_sign_se <= '0'; 
+            reminder_sign_se <= '0'; 
+            reminder_se <= x"0000000000000000"; 
+            quotient_se <= x"00000001"; 
+            shift_cpt_se   <= "100000";
+
+            DONE_DIV        <=  '0';
+            BUSY_DIV        <=  '1'; 
+            
         when zero => 
             quotient_sign_se <= '0'; 
             reminder_sign_se <= '0'; 
@@ -155,13 +164,9 @@ begin
             if shift_cpt_reg < "100000" then 
                 if divisor_reg > reminder_reg then 
                     quotient_se <= quotient_reg(30 downto 0) & '0';
-                    debug_div_remind <= '1';  
-                    debug_process <= debug_process + 1;
-
                 else 
                     quotient_se <= quotient_reg(30 downto 0) & '1';
                     reminder_se <= std_logic_vector(unsigned(reminder_reg) - unsigned(divisor_reg)); 
-                    debug_div_remind <= '0'; 
                 end if; 
                 shift_cpt_se <= std_logic_vector(unsigned(shift_cpt_reg) + unsigned(one_ext_6));
                 divisor_se  <= '0' & divisor_reg(63 downto 1);      
@@ -183,21 +188,20 @@ begin
             DONE_DIV        <= '0'; 
             shift_cpt_se    <= "000000";
             quotient_se     <= x"00000000"; 
-            reminder_se     <= x"ABCDEF0100000000";--x"0000000000000000"; 
+            reminder_se     <= x"0000000000000000"; 
             divisor_se      <= x"0000000000000000";
     end case; 
 
-    sign_debug <= signed_inst;
 end process; 
 
 -- Ouput
-remind      <=  reminder_reg(31 downto 0) when reminder_sign_se = '0' else 
+remind      <=  reminder_reg(31 downto 0)   when reminder_sign_se = '0'       else 
                 std_logic_vector(unsigned(not(reminder_reg(31 downto 0))) + unsigned(one_ext_32));
 
-quotient    <=  quotient_reg    when    quotient_sign_se = '0'  else 
+quotient    <=  quotient_reg                when    quotient_sign_se = '0'              else 
                 std_logic_vector(unsigned(not(quotient_reg)) + unsigned(one_ext_32));    
 
-RES_DIV <=  remind  when    (cmd_reg = "11" or cmd_reg = "00")    else 
+RES_DIV     <=  remind                      when    (cmd_reg = "11" or cmd_reg = "00")  else 
                 quotient; 
 
 end archi; 
