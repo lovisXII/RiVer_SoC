@@ -165,7 +165,7 @@ signal dec2exe_op1_sd, dec2exe_op2_sd, op1_u_type_sd, op2_i_type_sd, op2_s_type_
 signal radr1_sd, radr2_sd, rdest_sd : std_logic_vector(5 downto 0);
 signal rdata1_sd, rdata2_sd : std_logic_vector(31 downto 0);
 signal neg_op2_sd : std_logic;
-signal exe_cmd_sd : std_logic_vector(1 downto 0);
+signal exe_cmd_sd, alu_cmd, mult_cmd, div_cmd : std_logic_vector(1 downto 0);
 signal select_operation_sd : std_logic_vector(3 downto 0);
 signal mem_data_sd : std_logic_vector(31 downto 0);
 signal mem_load_sd,mem_store_sd, mem_sign_extend_sd : std_logic;
@@ -447,11 +447,25 @@ dec2exe_op2_sd <=   rdata2_sd       when ((r_type_sd  or b_type_sd or (u_type_sd
 -------------------------
 -- neg
 neg_op2_sd <= sub_i_sd or slt_i_sd or slti_i_sd or sltu_i_sd or sltiu_i_sd; 
--- alu 
-exe_cmd_sd <=   "01" when ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd or csrrc_i_sd or csrrci_i_sd or mul_i_sd or div_i_sd) = '1') else 
-                "10" when ((or_i_sd or ori_i_sd or sra_i_sd or srai_i_sd or csrrs_i_sd or csrrsi_i_sd or mulh_i_sd or divu_i_sd) = '1') else
-                "11" when ((xor_i_sd or xori_i_sd or mulhu_i_sd or rem_i_sd) = '1') else 
+-- exe command 
+alu_cmd     <=  "01"    when    ((and_i_sd or andi_i_sd or srl_i_sd or srli_i_sd or csrrc_i_sd or csrrci_i_sd) = '1') else 
+                "10"    when    ((or_i_sd or ori_i_sd or sra_i_sd or srai_i_sd or csrrs_i_sd or csrrsi_i_sd) = '1') else
+                "11"    when    ((xor_i_sd or xori_i_sd) = '1') else 
                 "00";
+
+mult_cmd    <=  "01"    when    mul_i_sd = '1'      else 
+                "10"    when    mulh_i_sd = '1'     else 
+                "11"    when    mulhu_i_sd = '1'    else
+                "00";
+
+div_cmd     <=  "01"    when    div_i_sd = '1'      else 
+                "10"    when    divu_i_sd = '1'     else
+                "11"    when    rem_i_sd = '1'      else 
+                "00";  
+
+exe_cmd_sd  <=  div_cmd     when    select_operation_sd = "1000" else 
+                mult_cmd    when    select_operation_sd = "0100" else 
+                alu_cmd;
 
 select_operation_sd <=  "1000"  when    ((div_i_sd or divu_i_sd or rem_i_sd or remu_i_sd) = '1') else 
                         "0100"  when    ((mul_i_sd or mulh_i_sd or mulhsu_i_sd or mulhu_i_sd) = '1')                        else 
