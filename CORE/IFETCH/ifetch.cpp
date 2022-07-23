@@ -101,6 +101,7 @@ void ifetch::write_pred_reg()
             BRANCH_ADR_REG[pred_write_pointer_si.read()] = BRANCH_INST_ADR_RD.read();
             PREDICTED_ADR_REG[pred_write_pointer_si.read()] = ADR_TO_BRANCH_RD.read();
             PRED_STATE_REG[pred_write_pointer_si.read()] = weakly_taken;
+            VALID_PRED_REG[pred_write_pointer_si.read()] = true;
             sc_uint<size_of_pred_pointer> pointer = pred_write_pointer_si.read();
             pred_write_pointer_si = pred_write_pointer_si.read() + 1;
         }
@@ -115,7 +116,7 @@ void ifetch::read_pred_reg()
     bool found = false;
     for(int i = 0; i < predictor_register_size; ++i)
     {
-        if(BRANCH_ADR_REG[i].read() == PC_RD.read())
+        if(BRANCH_ADR_REG[i].read() == PC_RD.read() && VALID_PRED_REG[i].read())
         {
             #ifdef BRANCH_PREDICTION
             found = true;
@@ -154,63 +155,78 @@ void ifetch::calc_prob_pred()
             break;
         }
     }
-}
+} 
 void ifetch::write_pred_ret_reg()
 {
+    bool found = false;
     if(RET_INST_RD.read() && !IF2DEC_EMPTY_SI.read())
     {
         for(int i = 0; i < ret_predictor_register_size; ++i)
         {
             if(RET_ADR_RI[i] == BRANCH_INST_ADR_RD.read())
             {
-                RET_ADR_RI[ret_write_pointer_si.read()] = BRANCH_INST_ADR_RD.read();
-                ret_write_pointer_si = ret_write_pointer_si.read() << 1;
+                found = true;
                 break;
             }
+        }
+        if(!found)
+        {
+            RET_ADR_RI[ret_write_pointer_si.read()] = BRANCH_INST_ADR_RD.read();
+            VALID_RET_REG[ret_write_pointer_si.read()] = true;
+            ret_write_pointer_si = ret_write_pointer_si.read() << 1;
         }
     }
 }
 void ifetch::ret_stack()
 {
-    bool found = false;
-    for(int i = 0; i < ret_predictor_register_size; ++i)
+    if(!RESET)
     {
-        if(RET_ADR_RI[i].read() == PC_RD.read())
-        {
-            #ifdef RET_BRANCH_PREDICTION
-            found = true;
-            #endif
-            break;
-        }
+        ret_stack_pointer_si = 1;
     }
-    pred_ret_taken_si = found;
-
-    if(!IF2DEC_EMPTY_SI.read())
+    else
     {
-        if(PUSH_ADR_RAS_RD.read())
+        bool found = false;
+        for(int i = 0; i < ret_predictor_register_size; ++i)
         {
-            // ret inst found on decod stage => pop @
-            for(int i = 0; i < ret_stack_size; i++)
-                if(ret_stack_pointer_si.read()[i])
-                    RET_STACK_RI[i] = ADR_TO_RET_RD.read();
-
-            ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
-        }
-        else if(POP_ADR_RAS_RD.read())
-        {
-            // push valid adr to ret on stack
-            ret_stack_pointer_si = ret_stack_pointer_si.read() << 1;
-        }
-
-        if(found)
-        {
-            // pc@ == ret inst => pop @ to ret
-            for(int i = 0; i < ret_stack_size; i++)
+            if(RET_ADR_RI[i].read() == PC_RD.read() && VALID_RET_REG[i].read())
             {
-                if(ret_stack_pointer_si.read()[i])
-                    pred_ret_next_adr_si = RET_STACK_RI[i];
+                #ifdef RET_BRANCH_PREDICTION
+                found = true;
+                #endif
+                break;
             }
-            ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+        }
+        pred_ret_taken_si = found;
+
+        if(!IF2DEC_EMPTY_SI.read())
+        {
+            if(PUSH_ADR_RAS_RD.read())
+            {
+                // ret inst found on decod stage => pop @
+                for(int i = 0; i < ret_stack_size; i++)
+                    if(ret_stack_pointer_si.read()[i])
+                        RET_STACK_RI[i] = ADR_TO_RET_RD.read();
+
+                ret_stack_pointer_si = ret_stack_pointer_si.read() << 1;
+            }
+            else if(POP_ADR_RAS_RD.read())
+            {
+                // push valid adr to ret on stack
+                ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+            }
+
+            if(found)
+            {
+                // pc@ == ret inst => pop @ to ret
+                for(int i = 0; i < ret_stack_size-1; i++)
+                {
+                    if(ret_stack_pointer_si.read()[i+1])
+                    {
+                        pred_ret_next_adr_si = RET_STACK_RI[i];
+                    }
+                }
+                ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+            }
         }
     }
 }
@@ -273,6 +289,30 @@ void ifetch::trace(sc_trace_file* tf) {
         regname += std::to_string(i);
         sc_trace(tf, PRED_STATE_REG[i], signal_get_name(PRED_STATE_REG[i].name(), regname.c_str()));
     }
+
+    for(int i = 0; i < ret_stack_size; i++)
+    {
+        std::string regname = "STACK_ADR_";
+        regname += std::to_string(i);
+        sc_trace(tf, RET_STACK_RI[i], signal_get_name(RET_STACK_RI[i].name(), regname.c_str()));
+    }
+    
+    for(int i = 0; i < ret_predictor_register_size; i++)
+    {
+        std::string regname = "RET_REG_ADR_";
+        regname += std::to_string(i);
+        sc_trace(tf, RET_ADR_RI[i], signal_get_name(RET_ADR_RI[i].name(), regname.c_str()));
+    }
+
+    sc_trace(tf, PUSH_ADR_RAS_RD, GET_NAME(PUSH_ADR_RAS_RD));
+    sc_trace(tf, POP_ADR_RAS_RD, GET_NAME(POP_ADR_RAS_RD));
+    sc_trace(tf, ADR_TO_RET_RD, GET_NAME(ADR_TO_RET_RD));
+    sc_trace(tf, RET_INST_RD, GET_NAME(RET_INST_RD));
+    sc_trace(tf, ret_stack_pointer_si, GET_NAME(ret_stack_pointer_si));
+    sc_trace(tf, pred_branch_taken_si, GET_NAME(pred_branch_taken_si));
+    sc_trace(tf, pred_ret_taken_si, GET_NAME(pred_ret_taken_si));
+    sc_trace(tf, pred_ret_next_adr_si, GET_NAME(pred_ret_next_adr_si));
+    sc_trace(tf, pred_branch_next_adr_si, GET_NAME(pred_branch_next_adr_si));
     
     fifo_inst.trace(tf);
 }

@@ -6,7 +6,7 @@
 
 
 #define BRANCH_PREDICTION
-//#define RET_BRANCH_PREDICTION
+#define RET_BRANCH_PREDICTION
 
 #define nop_encoding 0x0000013
 #define if2dec_size  97
@@ -100,6 +100,7 @@ SC_MODULE(ifetch) {
     sc_signal<sc_uint<32>> BRANCH_ADR_REG[predictor_register_size];
     sc_signal<sc_uint<32>> PREDICTED_ADR_REG[predictor_register_size];
     sc_signal<sc_uint<4>>  PRED_STATE_REG[predictor_register_size];
+    sc_signal<bool>        VALID_PRED_REG[predictor_register_size];
     sc_signal<sc_uint<size_of_pred_pointer>> pred_write_pointer_si;
 
     sc_signal<sc_uint<32>> pred_branch_next_adr_si;
@@ -109,6 +110,7 @@ SC_MODULE(ifetch) {
 
     // function return prediction register
     sc_signal<sc_uint<32>> RET_ADR_RI[ret_predictor_register_size];
+    sc_signal<bool>        VALID_RET_REG[ret_predictor_register_size];
     sc_signal<sc_uint<ret_predictor_pointer_size>> ret_write_pointer_si;
 
     sc_signal<sc_uint<32>> RET_STACK_RI[ret_stack_size];
@@ -159,7 +161,9 @@ SC_MODULE(ifetch) {
         << PRED_ADR_RI
         << PRED_TAKEN_RI
         << PRED_SUCCESS_RD
-        << PRED_FAILED_RD;
+        << PRED_FAILED_RD
+        << PRED_ADR_TAKEN_SI
+        << PRED_NEXT_ADR_SI;
         SC_METHOD(exception);
         sensitive << RESET << EXCEPTION_SM ;
 
@@ -173,12 +177,12 @@ SC_MODULE(ifetch) {
         sensitive << PRED_FAILED_RD << PRED_SUCCESS_RD;
 
         // ret prediction
-        /*
+        
         SC_METHOD(write_pred_ret_reg);
         sensitive << CLK.neg();
 
         SC_METHOD(ret_stack);
-        sensitive << CLK.neg();*/
+        sensitive << CLK.neg() << RESET;
         
         SC_METHOD(next_pred_adr);
         sensitive << pred_branch_taken_si << pred_ret_taken_si << pred_ret_next_adr_si << pred_branch_next_adr_si;

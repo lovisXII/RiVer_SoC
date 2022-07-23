@@ -139,10 +139,10 @@ void decod::concat_dec2if()
     bool rd_link  = (adr_dest_sd.read() == 1) || (adr_dest_sd.read() == 5);
     bool rs1_link = (RADR1_SD.read() == 1) || (RADR1_SD.read() == 5);
 
-    dec2if_in_var[133] = rd_link;
-    dec2if_in_var[132] = (!rd_link && rs1_link) || (rd_link && rs1_link && (adr_dest_sd.read() != RADR1_SD.read()));
+    dec2if_in_var[133] = rd_link && (jal_i_sd || jalr_i_sd);
+    dec2if_in_var[132] = ((!rd_link && rs1_link) || (rd_link && rs1_link && (adr_dest_sd.read() != RADR1_SD.read()))) && !PRED_TAKEN_RI.read();
     dec2if_in_var.range(131, 100) = PC_IF2DEC_RI.read() + 4;
-    dec2if_in_var[99] = jalr_type_inst_sd && (adr_dest_sd.read() == 0) && (offset_branch_sd.read() == 0) && (RADR1_SD.read() == 1);
+    dec2if_in_var[99] = jalr_type_inst_sd && (adr_dest_sd.read() == 0) && (offset_branch_sd.read() == 4) && (RADR1_SD.read() == 1);
     dec2if_in_var[98] = pred_failed_sd;
     dec2if_in_var[97] = pred_success_sd;
     dec2if_in_var[96] = b_type_inst_sd | j_type_inst_sd;
@@ -1282,6 +1282,11 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
     sc_trace(tf, ADR_TO_BRANCH_RD, GET_NAME(ADR_TO_BRANCH_RD));
     sc_trace(tf, PC_RD, GET_NAME(PC_RD));
+    
+    sc_trace(tf, PUSH_ADR_RAS_RD, GET_NAME(PUSH_ADR_RAS_RD));
+    sc_trace(tf, POP_ADR_RAS_RD, GET_NAME(POP_ADR_RAS_RD));
+    sc_trace(tf, ADR_TO_RET_RD, GET_NAME(ADR_TO_RET_RD));
+    sc_trace(tf, RET_INST_RD, GET_NAME(RET_INST_RD));
 
     // Interface with IF2DEC :
 
