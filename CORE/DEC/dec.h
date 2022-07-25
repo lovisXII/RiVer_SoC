@@ -1,10 +1,11 @@
 #include <systemc.h>
 #include <iostream>
 #include "../UTIL/fifo.h"
+#include "../config.h"
 
-#define dec2exe_size        252
-#define dec2if_size         134
-#define start_kernel_adress 0xF0000000
+
+//stats
+extern int nb_jump_taken;
 
 SC_MODULE(decod) {
     // Interface with REG :
@@ -344,7 +345,10 @@ SC_MODULE(decod) {
     void bypasses();
     void stall_method();
     void pred_reg_data();
+
+    //debug
     void trace(sc_trace_file * tf);
+    void branch_taken_counter();
 
     SC_CTOR(decod) : dec2if("dec2if"), dec2exe("dec2exe") {
         dec2if.DIN_S(dec2if_in_sd);
@@ -471,6 +475,10 @@ SC_MODULE(decod) {
                   << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
         SC_METHOD(pred_reg_data);
         sensitive << PRED_ADR_RI << PRED_TAKEN_RI;
+
+        SC_METHOD(branch_taken_counter);
+        sensitive << CLK.pos() << RESET_N;
+
         reset_signal_is(RESET_N, false);
     }
 };

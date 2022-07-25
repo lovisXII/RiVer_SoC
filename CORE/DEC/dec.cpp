@@ -1,5 +1,7 @@
 #include "dec.h"
 
+//stats
+int nb_jump_taken = 0;
 
 // ---------------------------------------------DECODING INSTRUCTION
 // :---------------------------------------------
@@ -1477,4 +1479,11 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, dependence_on_mult, GET_NAME(dependence_on_mult));
     sc_trace(tf, res_pc_sd, GET_NAME(res_pc_sd));
     sc_trace(tf, branch_adr_sd, GET_NAME(branch_adr_sd));
+}
+void decod::branch_taken_counter()
+{
+    if(!RESET_N)
+        nb_jump_taken = 0;
+    else if(jump_sd && !stall_sd)
+        nb_jump_taken++;
 }

@@ -3,21 +3,9 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
+#include "../config.h"
 
 
-#define BRANCH_PREDICTION
-#define RET_BRANCH_PREDICTION
-
-#define nop_encoding 0x0000013
-#define if2dec_size  97
-
-#define predictor_register_size 128
-#define size_of_pred_pointer    7          //2^n = predictor_register_size
-
-#define ret_predictor_register_size 16
-#define ret_predictor_pointer_size  4
-
-#define ret_stack_size              16
 
 enum // PREDICTION STATE
 { // 1,2,4,8 -> one-hot

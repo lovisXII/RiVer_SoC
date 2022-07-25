@@ -8,13 +8,12 @@
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
-
+#include "config.h"
 
 using namespace std;
 using namespace ELFIO;
 
-//#define ICACHE_ON
-//#define DCACHE_ON
+
 
 #ifdef ICACHE_ON
 
@@ -539,6 +538,7 @@ int sc_main(int argc, char* argv[]) {
 
         unsigned int pc_adr = PC_VALUE.read();
         NB_CYCLES = sc_time_stamp().to_double()/1000;
+        
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
@@ -547,7 +547,8 @@ int sc_main(int argc, char* argv[]) {
             if(stats)
             {
                 cout <<"#-- STATS -- #"<<endl<<endl;
-                cout << "NBCYCLES = "<<std::dec<<NB_CYCLES<<endl<<endl;
+                cout << "NBCYCLES        = "<<std::dec<<NB_CYCLES<<endl;
+                cout << "NB BRANCH TAKEN = "<<nb_jump_taken<<endl<<endl;
                 cout <<"#------------#"<<endl;
             }
             
