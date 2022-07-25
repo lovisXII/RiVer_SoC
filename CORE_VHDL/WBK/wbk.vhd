@@ -21,6 +21,10 @@ entity wbk is
         MEM2WBK_EMPTY_SM : in std_logic;
         MEM2WBK_POP_SW : out std_logic;
 
+        -- Multiplier 
+        MULT_INST_RM : in std_logic;
+        RES_RX2     : in std_logic_vector(31 downto 0);
+
         -- Reg interface
         DATA_SW : out std_logic_vector(31 downto 0);
         DEST_SW : out std_logic_vector(5 downto 0);
@@ -38,7 +42,8 @@ DEST_SW <= MEM_DEST_RM;
 WB_SW <= '1' when (WB_RM = '1' and MEM2WBK_EMPTY_SM = '0') else '0';
 
 MEM2WBK_POP_SW <= not MEM2WBK_EMPTY_SM; 
-DATA_SW <=  CSR_RDATA_RM when CSR_WENABLE_RM = '1' else 
+DATA_SW <=  CSR_RDATA_RM    when CSR_WENABLE_RM = '1'   else 
+            RES_RX2         when MULT_INST_RM = '1'     else
             MEM_RES_RM; 
 
 end archi;

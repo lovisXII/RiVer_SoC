@@ -12,6 +12,7 @@ int NB_INSTR;
 
 int good_adr = 0; 
 int bad_adr = 0; 
+int exception_adr = 0; 
 
 int*** ram[256];
 
@@ -33,32 +34,13 @@ int read_mem(int a) {
     addr3 = (a >> 16) & 0xFF; 
     addr4 = (a >> 24) & 0xFF; 
     if(ram[addr1] && ram[addr1][addr2] && ram[addr1][addr2][addr3]) {
-        printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
+        //printf("[read mem] : at @ %x data %x\n", adr, ram[addr1][addr2][addr3][addr4]);
         return ram[addr1][addr2][addr3][addr4];
     }
     return 0; 
 }
 
-int end_simulation(int result, int riscof_enable) {
-    if(!riscof_enable)
-        exit(result);
-    else{
-        if(begin_signature && end_signature)
-        {    
-            signature_size = (end_signature - begin_signature)/4 ;
-            signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
-            for(int i = 0 ; i < signature_size ; i++)
-            {
-                signature_value[i] = read_mem(begin_signature+i*4) ;
-                fprintf(riscof_signature,"%08x\n",signature_value[i]) ;
-            }
-        }
-        exit(result);
-    }
-    
-}
-
-int write_mem(int a, int data, int byt_sel) {
+int write_mem(int a, int data, int byt_sel, int time) {
     int addr1, addr2, addr3, addr4;
     int tmp = 0; 
     int mask = 0;
@@ -101,9 +83,27 @@ int write_mem(int a, int data, int byt_sel) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("[write mem] : at @ %x writting %x, data w : %x, byt_sel = %d\n", adr, data, dataw, byt_sel);
+    printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
     return 0; 
 }   
+
+int end_simulation(int result, int riscof_enable) {
+    if(!riscof_enable)
+        exit(result);
+    else{
+        if(begin_signature && end_signature)
+        {    
+            signature_size = (end_signature - begin_signature)/4 ;
+            signature_value = calloc(signature_size*sizeof(int), signature_size*sizeof(int));
+            for(int i = 0 ; i < signature_size ; i++)
+            {
+                signature_value[i] = read_mem(begin_signature+i*4) ;
+                fprintf(riscof_signature,"%08x\n",signature_value[i]) ;
+            }
+        }
+        exit(result);
+    }
+}
 
 int get_startpc(int z) {
     return start_pc; 
@@ -132,8 +132,8 @@ extern int ghdl_main(int argc, char const* argv[]);
 int main(int argc, char const* argv[]) {
     
     char   signature_name[200] ="";
-    char   opt[20] = "";
-    char   input_file[50] ;
+    char   opt[50] = "";
+    char   input_file[200] ;
     char   output[50] ;
     char   test[512] = "> a.out.txt";
     int nargs = 1;
@@ -158,13 +158,14 @@ int main(int argc, char const* argv[]) {
         riscof_signature = fopen(signature_name,"w") ;
         if( riscof_signature == NULL)
         {
-            fprintf(stderr, "error while opening %s\n", signature_name);
+            fprintf(stderr, "error while opening signature file : %s\n", signature_name);
             exit(1) ;
         }
         else{
             fprintf(stderr, "Opening %s was successfull\n", signature_name);
         }
     }
+    
 
     char temp_text[512];
     char point = '.' ;
@@ -214,7 +215,7 @@ int main(int argc, char const* argv[]) {
     {
         for(int j = 0 ; j < (pObj->size[i]); j+=4){     
             //printf("%8x : %8x\n",(pObj->Section_Hdr[i]->sh_addr)+j, mem_lw(pObj->Section_Hdr[i]->sh_addr+j)) ;
-            write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15);
+            write_mem((pObj->Section_Hdr[i]->sh_addr)+j,mem_lw(pObj->Section_Hdr[i]->sh_addr+j), 15, 0);
         }
     }
 
@@ -230,6 +231,10 @@ int main(int argc, char const* argv[]) {
     if(Elf32_SymAdr(pObj,&end_signature,"end_signature")==0)
                 fprintf(stderr, "Found end_signature at : 0x%8x\n", end_signature);
    
+    if(Elf32_SymAdr(pObj,&exception_adr,"_exception_occur")==0)
+                fprintf(stderr, "Found _exception_occur at : 0x%8x\n", end_signature);
+   
+
     if(rvtest_entry_point)
         start_pc = rvtest_entry_point;
     else

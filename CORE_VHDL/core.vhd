@@ -2,6 +2,9 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
+library work; 
+use work.util.all;
+
 entity core is 
     port(
         -- global interface
@@ -46,7 +49,8 @@ signal MEM_DATA_RD : std_logic_vector(31 downto 0);
 signal DEST_RD : std_logic_vector(5 downto 0);
 signal CMD_RD : std_logic_vector(1 downto 0);
 signal MEM_SIZE_RD : std_logic_vector(1 downto 0);
-signal NEG_OP2_RD, WB_RD, SELECT_SHIFT_RD : std_logic;
+signal NEG_OP2_RD, WB_RD : std_logic;
+signal SELECT_OPERATION_RD  : std_logic_vector(3 downto 0);
 signal MEM_LOAD_RD, MEM_STORE_RD, MEM_SIGN_EXTEND_RD : std_logic; 
 signal SLT_RD, SLTU_RD : std_logic;
 
@@ -111,7 +115,6 @@ signal CSR_RDATA_SC, CSR_RDATA_RD : std_logic_vector(31 downto 0);
 signal ILLEGAL_INSTRUCTION_RD, ADRESS_MISALIGNED_RD, INSTRUCTION_ACCESS_FAULT_RD, EBREAK_RD : std_logic;
 signal ILLEGAL_INSTRUCTION_RE, ADRESS_MISALIGNED_RE, INSTRUCTION_ACCESS_FAULT_RE, EBREAK_RE : std_logic;
 signal EXCEPTION_RI, EXCEPTION_RD, EXCEPTION_RE : std_logic;
-signal INSTRUCTION_ADRESS_MISALIGNED_RE : std_logic;
 signal STORE_ADRESS_MISALIGNED_RE, STORE_ACCESS_FAULT_RE : std_logic;
 signal LOAD_ADRESS_MISALIGNED_RE, LOAD_ACCESS_FAULT_RE : std_logic;
 signal ENV_CALL_U_MODE_RD, ENV_CALL_S_MODE_RD, ENV_CALL_M_MODE_RD : std_logic;
@@ -132,6 +135,30 @@ signal RETURN_ADRESS_SM : std_logic_vector(31 downto 0);
 signal MRET_SM : std_logic;
 
 signal PC_EXE2MEM_RE, PC_DEC2EXE_RD, PC_BRANCH_VALUE_RD, PC_MEM2WBK_RM : std_logic_vector(31 downto 0);
+
+
+signal MULT_INST_RM, MULT_INST_RD, MULT_INST_RE : std_logic;
+
+-- x0 multiplier
+signal X0X1_POP_SX1 : std_logic;
+signal RES_RX0 : std_logic_vector(319 downto 0);
+signal SELECT_MSB_RX0 : std_logic;
+signal SIGNED_RES_RX0 : std_logic;
+signal X0X1_EMPTY_SX0 : std_logic;
+
+signal OP1_SE, OP2_SE : std_logic_vector(31 downto 0);
+
+-- x1 multiplier
+signal X1X2_POP_SX2 : std_logic;     
+
+signal RES_RX1 : std_logic_vector(127 downto 0);       
+signal SELECT_MSB_RX1 : std_logic;  
+signal SIGNED_RES_RX1 : std_logic;  
+
+signal X1X2_EMPTY_SX1 : std_logic;  
+
+signal RES_RX2 : std_logic_vector(31 downto 0);
+
 
 component ifetch 
     port(
@@ -181,7 +208,7 @@ component dec
         NEG_OP2_RD : out std_logic; 
         WB_RD : out std_logic;
         DEST_RD : out std_logic_vector(5 downto 0);
-        SELECT_SHIFT_RD : out std_logic;
+        SELECT_OPERATION_RD : out std_logic_vector(3 downto 0);
         SLT_RD, SLTU_RD : out std_logic;    
         MEM_DATA_RD : out std_logic_vector(31 downto 0);
         MEM_LOAD_RD , MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
@@ -208,6 +235,11 @@ component dec
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
         DEC2EXE_EMPTY_SD : out std_logic;
+
+        -- Multiplier
+        MULT_INST_RD    :   out std_logic;
+        MULT_INST_RE    :   in  std_logic;
+        MULT_INST_RM    :   in  std_logic;
 
         -- Bypasses
         BP_DEST_RE : in std_logic_vector(5 downto 0);
@@ -261,7 +293,7 @@ component exec
         NEG_OP2_RD : in std_logic;
         WB_RD : in std_logic;
         MEM_SIGN_EXTEND_RD : in std_logic;
-        SELECT_SHIFT_RD : in std_logic;
+        SELECT_OPERATION_RD : in std_logic_vector(3 downto 0);
         MEM_LOAD_RD, MEM_STORE_RD : in std_logic;
         EXE2MEM_POP_SM : in std_logic;
         DEC2EXE_EMPTY_SD : in std_logic;
@@ -286,11 +318,18 @@ component exec
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         CSR_WENABLE_RM : in std_logic;
         CSR_RDATA_RM : in std_logic_vector(31 downto 0);
+        BP_MEM2WBK_EMPTY_SM : in std_logic;
 
         -- CSR 
         CSR_WENABLE_RD : in std_logic;
         CSR_WADR_RD   : in std_logic_vector(11 downto 0);
         CSR_RDATA_RD  : in std_logic_vector(31 downto 0);
+
+        -- Multiplier 
+        MULT_INST_RM    :   in  std_logic;
+        MULT_INST_RD    :   in  std_logic;  
+        MULT_INST_RE    :   out std_logic;
+        OP1_SE, OP2_SE  :   out std_logic_vector(31 downto 0);
 
         -- Exception 
         EXCEPTION_SM    : in std_logic;
@@ -340,6 +379,10 @@ component mem
         WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
         
         PC_EXE2MEM_RE : std_logic_vector(31 downto 0);
+
+        -- Multiplier
+        MULT_INST_RE :  in  std_logic;
+        MULT_INST_RM :  out std_logic;
 
         -- exe2mem interface
         EXE2MEM_EMPTY_SE : in std_logic;
@@ -416,6 +459,10 @@ component wbk
         MEM2WBK_EMPTY_SM : in std_logic;
         MEM2WBK_POP_SW : out std_logic;
 
+        -- Multiplier 
+        MULT_INST_RM : in std_logic;
+        RES_RX2     : in std_logic_vector(31 downto 0);
+
         -- Reg interface
         DATA_SW : out std_logic_vector(31 downto 0);
         DEST_SW : out std_logic_vector(5 downto 0);
@@ -473,6 +520,57 @@ component csr
     
         CSR_RADR_SD         : in std_logic_vector(11 downto 0);
         CSR_RDATA_SC        : out std_logic_vector(31 downto 0)
+    );
+end component; 
+
+component x0_multiplier 
+    port(
+        -- global inteface 
+        clk, reset_n    :   in  std_logic;
+        OP1_SE, OP2_SE  :   in  std_logic_vector(31 downto 0);
+        MULT_CMD_RD     :   in  std_logic_vector(1 downto 0);
+
+        X0X1_POP_SX1    :   in  std_logic; 
+        DEC2X0_EMPTY_SD :   in  std_logic;
+
+        RES_RX0         :   out std_logic_vector(319 downto 0);
+        SELECT_MSB_RX0  :   out std_logic;
+        SIGNED_RES_RX0  :   out std_logic;
+        X0X1_EMPTY_SX0  :   out std_logic
+    );
+end component; 
+
+component x1_multiplier 
+    port(
+        -- global interface
+        clk, reset_n    :   in  std_logic;
+
+        RES_RX0         :   in  std_logic_vector(319 downto 0);
+        SELECT_MSB_RX0  :   in  std_logic;
+        SIGNED_RES_RX0  :   in  std_logic;
+        X0X1_EMPTY_SX0  :   in  std_logic;
+        
+        X1X2_POP_SX2    :   in  std_logic;
+        RES_RX1         :   out std_logic_vector(127 downto 0);
+        SELECT_MSB_RX1  :   out std_logic;
+        SIGNED_RES_RX1  :   out  std_logic;
+        X1X2_EMPTY_SX1  :   out std_logic;
+        X0X1_POP_SX1    :   out std_logic
+    );
+end component; 
+
+component x2_multiplier 
+    port(
+        -- global interface
+        clk, reset_n    :   in  std_logic;
+
+        RES_RX1         :   in  std_logic_vector(127 downto 0);
+        SELECT_MSB_RX1  :   in  std_logic;
+        SIGNED_RES_RX1  :   in  std_logic;
+        X1X2_EMPTY_SX1  :   in  std_logic;
+
+        RES_RX2         :   out std_logic_vector(31 downto 0);
+        X1X2_POP_SX2    :   out std_logic
     );
 end component; 
 
@@ -534,7 +632,7 @@ dec_i : dec
         NEG_OP2_RD          => NEG_OP2_RD, 
         WB_RD               => WB_RD,
         DEST_RD             => DEST_RD,
-        SELECT_SHIFT_RD     => SELECT_SHIFT_RD ,
+        SELECT_OPERATION_RD     => SELECT_OPERATION_RD ,
         SLT_RD              => SLT_RD, 
         SLTU_RD             => SLTU_RD,    
         MEM_DATA_RD         => MEM_DATA_RD,
@@ -567,6 +665,11 @@ dec_i : dec
         -- dec2exe interface
         DEC2EXE_POP_SE      => DEC2EXE_POP_SE,
         DEC2EXE_EMPTY_SD    => DEC2EXE_EMPTY_SD,
+
+        -- Multiplier
+        MULT_INST_RD        => MULT_INST_RD,
+        MULT_INST_RE        => MULT_INST_RE,
+        MULT_INST_RM        => MULT_INST_RM,
 
         -- Bypasses
         BP_DEST_RE             => DEST_RE,
@@ -628,7 +731,7 @@ exec_i : exec
         NEG_OP2_RD          => NEG_OP2_RD,
         WB_RD               => WB_RD,
         MEM_SIGN_EXTEND_RD  => MEM_SIGN_EXTEND_RD,
-        SELECT_SHIFT_RD     => SELECT_SHIFT_RD,
+        SELECT_OPERATION_RD     => SELECT_OPERATION_RD,
         MEM_LOAD_RD         => MEM_LOAD_RD, 
         MEM_STORE_RD        => MEM_STORE_RD,
         EXE2MEM_POP_SM      => EXE2MEM_POP_SM,
@@ -657,10 +760,19 @@ exec_i : exec
         CSR_WENABLE_RM      => CSR_WENABLE_RM,
         CSR_RDATA_RM        => CSR_RDATA_RM,
 
+        BP_MEM2WBK_EMPTY_SM => MEM2WBK_EMPTY_SM,
+
         -- CSR 
         CSR_WENABLE_RD      => CSR_WENABLE_RD,
         CSR_WADR_RD         => CSR_WADR_RD, 
         CSR_RDATA_RD        => CSR_RDATA_RD, 
+
+        -- Multiplier 
+        MULT_INST_RM        => MULT_INST_RM,
+        MULT_INST_RD        => MULT_INST_RD,
+        MULT_INST_RE        => MULT_INST_RE,
+        OP1_SE              => OP1_SE,
+        OP2_SE              => OP2_SE,
 
         -- Exception 
         EXCEPTION_SM        => EXCEPTION_SM, 
@@ -723,9 +835,13 @@ mem_i : mem
         WB_RE               => WB_RE, 
         SIGN_EXTEND_RE      => MEM_SIGN_EXTEND_RE, 
         LOAD_RE             => MEM_LOAD_RE,
-        STORE_RE        => MEM_STORE_RE,
+        STORE_RE            => MEM_STORE_RE,
 
         PC_EXE2MEM_RE       => PC_EXE2MEM_RE,
+
+        -- Multiplier
+        MULT_INST_RE        => MULT_INST_RE,
+        MULT_INST_RM        => MULT_INST_RM,
 
         -- exe2mem interface
         EXE2MEM_EMPTY_SE    => EXE2MEM_EMPTY_SE,
@@ -769,7 +885,7 @@ mem_i : mem
         LOAD_ADRESS_MISALIGNED_RE           => LOAD_ADRESS_MISALIGNED_RE, 
         LOAD_ACCESS_FAULT_RE                => LOAD_ACCESS_FAULT_RE, 
         ILLEGAL_INSTRUCTION_RE              => ILLEGAL_INSTRUCTION_RE, 
-        INSTRUCTION_ADRESS_MISALIGNED_RE    => INSTRUCTION_ADRESS_MISALIGNED_RE, 
+        INSTRUCTION_ADRESS_MISALIGNED_RE    => ADRESS_MISALIGNED_RE, 
         INSTRUCTION_ACCESS_FAULT_RE         => INSTRUCTION_ACCESS_FAULT_RE,
         STORE_ADRESS_MISALIGNED_RE          => STORE_ADRESS_MISALIGNED_RE, 
         STORE_ACCESS_FAULT_RE               => STORE_ACCESS_FAULT_RE, 
@@ -809,6 +925,10 @@ wbk_i : wbk
         MEM2WBK_EMPTY_SM    => MEM2WBK_EMPTY_SM,
         MEM2WBK_POP_SW      => MEM2WBK_POP_SW,
 
+        -- Multiplier 
+        MULT_INST_RM        => MULT_INST_RM,      
+        RES_RX2             => RES_RX2,
+
         -- Reg interface
         DATA_SW         => REG_DATA_SW,
         DEST_SW         => REG_DEST_SW,
@@ -826,8 +946,8 @@ reg_i : reg
         -- read
         RDATA1_SR           => RDATA1_SR, 
         RDATA2_SR           => RDATA2_SR, 
-        RADR1_SD         => RADR1_SD, 
-        RADR2_SD         => RADR2_SD, 
+        RADR1_SD            => RADR1_SD, 
+        RADR2_SD            => RADR2_SD, 
         
         -- write 
         WDATA_SW            => REG_DATA_SW, 
@@ -867,6 +987,58 @@ csr_i : csr
         CSR_RDATA_SC        => CSR_RDATA_SC
     );
 
+
+x0_mult : x0_multiplier 
+    port map(
+        clk                 => clk,
+        reset_n             => reset_n,
+        OP1_SE              => OP1_SE,
+        OP2_SE              => OP2_SE,
+        MULT_CMD_RD         => CMD_RD,
+
+        X0X1_POP_SX1        => X0X1_POP_SX1,
+        DEC2X0_EMPTY_SD     => DEC2EXE_EMPTY_SD,
+
+        RES_RX0             => RES_RX0,
+        SELECT_MSB_RX0      => SELECT_MSB_RX0,
+        SIGNED_RES_RX0      => SIGNED_RES_RX0,
+        X0X1_EMPTY_SX0      => X0X1_EMPTY_SX0
+    );
+
+x1_mult : x1_multiplier
+    port map(
+        clk             =>  clk,
+        reset_n         =>  reset_n,
+
+        RES_RX0         =>  RES_RX0,
+        SELECT_MSB_RX0  =>  SELECT_MSB_RX0,
+        SIGNED_RES_RX0  =>  SIGNED_RES_RX0,
+        X0X1_EMPTY_SX0  =>  X0X1_EMPTY_SX0,
+        X1X2_POP_SX2    =>  X1X2_POP_SX2, 
+
+        RES_RX1         =>  RES_RX1,
+        SELECT_MSB_RX1  =>  SELECT_MSB_RX1,
+        SIGNED_RES_RX1  =>  SIGNED_RES_RX1, 
+
+        X1X2_EMPTY_SX1  =>  X1X2_EMPTY_SX1,
+        X0X1_POP_SX1    =>  X0X1_POP_SX1
+    );
+
+x2_mult : x2_multiplier 
+    port map(
+        clk             =>  clk,
+        reset_n         =>  reset_n,
+
+        RES_RX1         =>  RES_RX1,
+        SELECT_MSB_RX1  =>  SELECT_MSB_RX1,
+        SIGNED_RES_RX1  =>  SIGNED_RES_RX1,
+
+        X1X2_EMPTY_SX1  =>  X1X2_EMPTY_SX1,
+        RES_RX2         =>  RES_RX2,
+        X1X2_POP_SX2    =>  X1X2_POP_SX2
+    );
+
 DEBUG_PC_READ   <= READ_PC_SR; 
 BUS_ERROR_SX    <= '0';
+
 end archi;

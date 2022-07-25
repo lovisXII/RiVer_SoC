@@ -6,7 +6,6 @@
 #include "../config.h"
 
 
-
 enum // PREDICTION STATE
 { // 1,2,4,8 -> one-hot
     strongly_taken = 1,

@@ -22,6 +22,10 @@ entity mem is
 
         PC_EXE2MEM_RE : in std_logic_vector(31 downto 0);
 
+        -- Multiplier
+        MULT_INST_RE :  in  std_logic;
+        MULT_INST_RM :  out std_logic;
+
         -- exe2mem interface
         EXE2MEM_EMPTY_SE : in std_logic;
         EXE2MEM_POP_SM : out std_logic;
@@ -79,7 +83,7 @@ entity mem is
 end mem;
 
 architecture archi of mem is 
-signal mem2wbk_din, mem2wbk_dout : std_logic_vector(71 downto 0);
+signal mem2wbk_din, mem2wbk_dout : std_logic_vector(72 downto 0);
 signal mem2wbk_push, mem2wbk_full : std_logic;
 signal stall_sm, wb : std_logic;
 
@@ -95,10 +99,14 @@ signal exception : std_logic := '0';
 signal mode_sm : std_logic_vector(1 downto 0) := "11";
 signal new_mode : std_logic_vector(1 downto 0);
 signal machine_mode_condition : std_logic;
+signal old_mode : std_logic_vector(1 downto 0);
 
 signal mstatus_x : std_logic_vector(31 downto 0);
 signal mcause_x  : std_logic_vector(31 downto 0);
 signal mtval_x   : std_logic_vector(31 downto 0);
+
+
+signal mem_fifo_mult_inst : std_logic;
 
 component fifo
     generic(N : integer);
@@ -119,7 +127,7 @@ begin
 
 -- Intanciation 
 mem2wbk : fifo
-    generic map(N => 72)
+    generic map(N => 73)
     port map(
         clk => clk,
         reset_n => reset_n,
@@ -132,20 +140,20 @@ mem2wbk : fifo
     );
     
 -- fifo concat   
-mem2wbk_din(31 downto 0) <= data_sm; 
-mem2wbk_din(37 downto 32) <= DEST_RE; 
-mem2wbk_din(38) <= wb;
---mem2wbk_din(70 downto 39) <= PC_EXE2MEM_RE;
-mem2wbk_din(39) <= CSR_WENABLE_RE; 
-mem2wbk_din(71 downto 40) <= CSR_RDATA_RE;
+mem2wbk_din(31 downto 0)    <= data_sm; 
+mem2wbk_din(37 downto 32)   <= DEST_RE; 
+mem2wbk_din(38)             <= wb;
+mem2wbk_din(39)             <= CSR_WENABLE_RE; 
+mem2wbk_din(71 downto 40)   <= CSR_RDATA_RE;
+mem2wbk_din(72)             <= MULT_INST_RE; 
 
 -- fifo unconcat 
-MEM_RES_RM <= mem2wbk_dout(31 downto 0);
-MEM_DEST_RM <= mem2wbk_dout(37 downto 32);
-WB_RM <= mem2wbk_dout(38);
---PC_MEM2WBK_RM <= mem2wbk_dout(70 downto 39);
-CSR_WENABLE_RM <= mem2wbk_dout(39);
-CSR_RDATA_RM <= mem2wbk_dout(71 downto 40);
+MEM_RES_RM          <= mem2wbk_dout(31 downto 0);
+MEM_DEST_RM         <= mem2wbk_dout(37 downto 32);
+WB_RM               <= mem2wbk_dout(38);
+CSR_WENABLE_RM      <= mem2wbk_dout(39);
+CSR_RDATA_RM        <= mem2wbk_dout(71 downto 40);
+mem_fifo_mult_inst  <= mem2wbk_dout(72);
 
 -- fifo manage 
 stall_sm <= MCACHE_STALL_SM or mem2wbk_full or EXE2MEM_EMPTY_SE;
@@ -169,7 +177,7 @@ MCACHE_DATA_SM <= data_store_sm;
 MCACHE_ADR_SM <= RES_RE;
 MCACHE_LOAD_SM <= LOAD_RE;
 MCACHE_STORE_SM <= STORE_RE;
-MCACHE_ADR_VALID_SM <= (not EXE2MEM_EMPTY_SE) and (STORE_RE or LOAD_RE);
+MCACHE_ADR_VALID_SM <= (not(EXE2MEM_EMPTY_SE) or not(mem_fifo_mult_inst)) and (STORE_RE or LOAD_RE);
 
 -- sign extend and load size 
 load_byte(31 downto 8)  <=  x"000000" when SIGN_EXTEND_RE = '0' else 
@@ -220,7 +228,7 @@ CSR_ENABLE_SM   <= CSR_WENABLE_RE and not exception;
 -- MSTATUS 
 mstatus_x(31)           <= '0'; 
 mstatus_x(30 downto 13) <= MSTATUS_RC(30 downto 13); 
-mstatus_x(12 downto 11) <= mode_sm; 
+mstatus_x(12 downto 11) <= old_mode; 
 mstatus_x(10 downto 8)  <= MSTATUS_RC(10 downto 8);
 mstatus_x(7)            <= MSTATUS_RC(3);
 mstatus_x(6 downto 4)   <= MSTATUS_RC(6 downto 4);
@@ -228,43 +236,55 @@ mstatus_x(3)            <= '0';
 mstatus_x(2 downto 0)   <= MSTATUS_RC(2 downto 0);
 
 -- MCAUSE
-mcause_x    <=  x"00000018" when ENV_CALL_WRONG_MODE_RE = '1'       else 
-                x"00000007" when STORE_ACCESS_FAULT_RE  = '1'       else
-                x"00000005" when ENV_CALL_WRONG_MODE_RE = '1'       else 
-                x"00000006" when STORE_ADRESS_MISALIGNED_RE = '1'  else 
-                x"00000004" when LOAD_ADRESS_MISALIGNED_RE = '1'   else 
-                x"0000000B" when ENV_CALL_M_MODE_RE     = '1'       else 
-                x"00000009" when ENV_CALL_S_MODE_RE     = '1'       else 
-                x"00000008" when ENV_CALL_U_MODE_RE     = '1'       else 
-                x"00000003" when EBREAK_RE              = '1'       else 
+mcause_x    <=  x"00000018" when ENV_CALL_WRONG_MODE_RE = '1'           else 
+                x"00000007" when STORE_ACCESS_FAULT_RE  = '1'           else
+                x"00000005" when LOAD_ACCESS_FAULT_RE   = '1'           else 
+                x"00000005" when ENV_CALL_WRONG_MODE_RE = '1'           else 
+                x"00000006" when STORE_ADRESS_MISALIGNED_RE = '1'       else 
+                x"00000004" when LOAD_ADRESS_MISALIGNED_RE = '1'        else 
+                x"0000000B" when ENV_CALL_M_MODE_RE     = '1'           else 
+                x"00000009" when ENV_CALL_S_MODE_RE     = '1'           else 
+                x"00000008" when ENV_CALL_U_MODE_RE     = '1'           else 
+                x"00000003" when EBREAK_RE              = '1'           else 
                 x"00000000" when INSTRUCTION_ADRESS_MISALIGNED_RE = '1' else 
-                x"00000002" when ILLEGAL_INSTRUCTION_RE = '1'       else 
-                x"00000001" when INSTRUCTION_ACCESS_FAULT_RE = '1'  else 
+                x"00000002" when ILLEGAL_INSTRUCTION_RE = '1'           else 
+                x"00000001" when INSTRUCTION_ACCESS_FAULT_RE = '1'      else 
                 x"00000000"; -- or debug value
 
 -- MTVAL
 mtval_x     <=  RES_RE when ((STORE_ACCESS_FAULT_RE or LOAD_ACCESS_FAULT_RE or STORE_ADRESS_MISALIGNED_RE or LOAD_ADRESS_MISALIGNED_RE) = '1') else 
                 PC_BRANCH_VALUE_RE when INSTRUCTION_ADRESS_MISALIGNED_RE = '1' else
+                PC_EXE2MEM_RE when EBREAK_RE = '1' else
                 x"00000000"; 
 
-machine_mode_condition <= ENV_CALL_WRONG_MODE_RE or STORE_ACCESS_FAULT_RE or LOAD_ACCESS_FAULT_RE or STORE_ADRESS_MISALIGNED_RE or LOAD_ADRESS_MISALIGNED_RE or ENV_CALL_M_MODE_RE or ENV_CALL_S_MODE_RE or ENV_CALL_U_MODE_RE or EBREAK_RE or INSTRUCTION_ADRESS_MISALIGNED_RE or ILLEGAL_INSTRUCTION_RE or INSTRUCTION_ACCESS_FAULT_RE;   
+machine_mode_condition  <=  ENV_CALL_WRONG_MODE_RE              or 
+                            STORE_ACCESS_FAULT_RE               or 
+                            LOAD_ACCESS_FAULT_RE                or 
+                            STORE_ADRESS_MISALIGNED_RE          or 
+                            LOAD_ADRESS_MISALIGNED_RE           or 
+                            ENV_CALL_M_MODE_RE                  or 
+                            ENV_CALL_S_MODE_RE                  or 
+                            ENV_CALL_U_MODE_RE                  or 
+                            EBREAK_RE                           or 
+                            INSTRUCTION_ADRESS_MISALIGNED_RE    or 
+                            ILLEGAL_INSTRUCTION_RE              or 
+                            INSTRUCTION_ACCESS_FAULT_RE;   
 
 new_mode <= "11" when machine_mode_condition = '1' else 
             "00";
 
-
--- to verify
-mode : process(clk, reset_n)
+reg_mode : process(clk, reset_n)
 begin 
     if reset_n = '0' then 
-        mode_sm <= "11"; 
+        old_mode <= "11";
     elsif rising_edge(clk) then 
-        if exception = '1' then 
-            mode_sm <= new_mode;
-        end if; 
+        old_mode <= mode_sm; 
     end if; 
 end process; 
 
+mode_sm <=  new_mode when exception = '1' else
+            old_mode; 
+        
 
 RETURN_ADRESS_SM <= MEPC_SC when MRET_RE = '1' else 
                     x"00000000";
@@ -278,5 +298,7 @@ CURRENT_MODE_SM <= mode_sm;
 MRET_SM <= MRET_RE and exception;
 MIP_WDATA_SM <= x"00000000"; 
 MTVAL_WDATA_SM <= mtval_x; 
-MCAUSE_WDATA_SM <= mcause_x; 
+MCAUSE_WDATA_SM <= mcause_x;   
+MULT_INST_RM <= mem_fifo_mult_inst;
+
 end archi;

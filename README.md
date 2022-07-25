@@ -5,7 +5,7 @@ This README file isn't complete, everything here is subject to change.
 # Introduction :
 
 This project started as a project of our 1st year Master and aimed to modernise the architecture studied at Sorbonne University.\
-We were offered to continue this project during a 3 month Internship from July 2022 to August 2022.\
+We were offered to continue this project during a 3 month Internship from June 2022 to August 2022.\
 This project is the result of about 8 months of works.\
 It was realised by :
 
@@ -16,7 +16,12 @@ It was realised by :
 
 
 For more than a decade, class from Master SESI used MIPS32 architecture. In this project we aim to create a material description of a RISCV architecture based on the 5 stage pipeline MIPS32 used in class.\
-The implementation uses the standard instruction set from [RISCV fondation](https://riscv.org/technical/specifications/). We choosed to implement a **RV32IM** with **Zicsr** extension and a **user** and **machine** mode.
+The implementation uses the standard instruction set from [RISCV fondation](https://riscv.org/technical/specifications/). We choosed to implement a **RV32IM** with **Zicsr** extension and a **user** and **machine** mode. On this git you will find :
+- A RISCV 5 stages scalar processor in SystemC
+- A RISCV 5 stages scalar processor in VHDL
+- A RISCV 2 ways super-scalar processor in SystemC
+
+All of our implementation aren't done yet, meaning if you're trying to use it, it could not work properly.
 
 Our Kernel architecture supports :
 * direct and vectorize mode for mtvec
