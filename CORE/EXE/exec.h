@@ -6,9 +6,8 @@
 #include "../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
+#include "../config.h"
 
-#define exe2mem_size        200
-#define start_kernel_adress 0xF0000000
 
 SC_MODULE(exec) {
     // Input/Output of EXE :

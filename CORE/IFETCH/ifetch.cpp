@@ -182,6 +182,7 @@ void ifetch::ret_stack()
     if(!RESET)
     {
         ret_stack_pointer_si = 1;
+        pred_ret_taken_si = false;
     }
     else
     {

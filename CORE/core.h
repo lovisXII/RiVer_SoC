@@ -16,6 +16,7 @@
 //Divider
 #include "EXE/Diviseur.h"
 
+
 SC_MODULE(core) {
     // Global Interface :
 

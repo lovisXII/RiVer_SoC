@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-#define mem2wbk_size 108
+#include "../config.h"
 /*
 Assuming the following stuff :
 
