@@ -520,11 +520,17 @@ void decod::pc_inc() {
 
         // DEC2EXE_S1 Gestion
         
-        if (stall_sd_s1) {
+        if (stall_sd_s1) 
+        {
             dec2exe_push_sd_s1= 0;
             dec2exe_push_sd_s2 = 0;
-        } else {
-            dec2exe_push_sd_s1= 1;
+        } else if(jump_sd_s1 && !stall_sd_s1)
+        {
+            dec2exe_push_sd_s1=  1;
+            dec2exe_push_sd_s2 = 0;
+        }
+        else{
+            dec2exe_push_sd_s1=  1;
             dec2exe_push_sd_s2 = 1;
         }
 }
