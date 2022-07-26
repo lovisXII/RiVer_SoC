@@ -1,5 +1,4 @@
 #include "core.h"
-
 void core::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_INIT, GET_NAME(PC_INIT));
     sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));

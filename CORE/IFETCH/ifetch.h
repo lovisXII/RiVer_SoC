@@ -3,15 +3,7 @@
 #include <iostream>
 #include "../UTIL/debug_util.h"
 #include "../UTIL/fifo.h"
-
-
-#define BRANCH_PREDICTION
-
-#define nop_encoding 0x0000013
-#define if2dec_size  97
-
-#define predictor_register_size 128
-#define size_of_pred_pointer 7          //2^n = predictor_register_size
+#include "../config.h"
 
 
 enum // PREDICTION STATE
@@ -45,6 +37,15 @@ SC_MODULE(ifetch) {
 
     sc_in<sc_uint<32>> PRED_ADR_SD;
     sc_in<bool>        PRED_TAKEN_SD;
+
+    // RAS : return-address stack
+    sc_in<bool>        PUSH_ADR_RAS_RD;
+    sc_in<bool>        POP_ADR_RAS_RD;
+    
+    sc_in<sc_uint<32>> ADR_TO_RET_RD;    
+
+    sc_in<bool>        RET_INST_RD;
+
     // if2dec interface
 
     sc_in<bool>      IF2DEC_FLUSH_SD;  // allow to flush if2dec in case of a branch
@@ -86,12 +87,28 @@ SC_MODULE(ifetch) {
     sc_signal<sc_uint<32>> BRANCH_ADR_REG[predictor_register_size];
     sc_signal<sc_uint<32>> PREDICTED_ADR_REG[predictor_register_size];
     sc_signal<sc_uint<4>>  PRED_STATE_REG[predictor_register_size];
+    sc_signal<bool>        VALID_PRED_REG[predictor_register_size];
     sc_signal<sc_uint<size_of_pred_pointer>> pred_write_pointer_si;
 
-    sc_signal<sc_uint<32>> PRED_NEXT_ADR_SI;
-    sc_signal<bool>        PRED_ADR_TAKEN_SI;
+    sc_signal<sc_uint<32>> pred_branch_next_adr_si;
+    sc_signal<bool>        pred_branch_taken_si;
 
     sc_signal<sc_uint<4>> next_state_pred_si;
+
+    // function return prediction register
+    sc_signal<sc_uint<32>> RET_ADR_RI[ret_predictor_register_size];
+    sc_signal<bool>        VALID_RET_REG[ret_predictor_register_size];
+    sc_signal<sc_uint<ret_predictor_pointer_size>> ret_write_pointer_si;
+
+    sc_signal<sc_uint<32>> RET_STACK_RI[ret_stack_size];
+    sc_signal<sc_uint<ret_stack_size>> ret_stack_pointer_si;
+
+    sc_signal<sc_uint<32>> pred_ret_next_adr_si;
+    sc_signal<bool>        pred_ret_taken_si;
+
+    
+    sc_signal<sc_uint<32>> PRED_NEXT_ADR_SI;
+    sc_signal<bool>        PRED_ADR_TAKEN_SI;
 
     void fetch_method();
 
@@ -100,6 +117,12 @@ SC_MODULE(ifetch) {
 
     void calc_prob_pred();
     void apply_prob();
+
+    void write_pred_ret_reg();
+
+    void ret_stack();
+
+    void next_pred_adr();
 
     void trace(sc_trace_file * tf);
     void exception();
@@ -125,7 +148,9 @@ SC_MODULE(ifetch) {
         << PRED_ADR_RI
         << PRED_TAKEN_RI
         << PRED_SUCCESS_RD
-        << PRED_FAILED_RD;
+        << PRED_FAILED_RD
+        << PRED_ADR_TAKEN_SI
+        << PRED_NEXT_ADR_SI;
         SC_METHOD(exception);
         sensitive << RESET << EXCEPTION_SM ;
 
@@ -137,5 +162,16 @@ SC_MODULE(ifetch) {
 
         SC_METHOD(calc_prob_pred);
         sensitive << PRED_FAILED_RD << PRED_SUCCESS_RD;
+
+        // ret prediction
+        
+        SC_METHOD(write_pred_ret_reg);
+        sensitive << CLK.neg();
+
+        SC_METHOD(ret_stack);
+        sensitive << CLK.neg() << RESET;
+        
+        SC_METHOD(next_pred_adr);
+        sensitive << pred_branch_taken_si << pred_ret_taken_si << pred_ret_next_adr_si << pred_branch_next_adr_si;
     }
 };

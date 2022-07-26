@@ -16,6 +16,7 @@
 //Divider
 #include "EXE/Diviseur.h"
 
+
 SC_MODULE(core) {
     // Global Interface :
 
@@ -37,6 +38,13 @@ SC_MODULE(core) {
 
     sc_signal<sc_uint<32>> PRED_ADR_SD;
     sc_signal<bool>        PRED_TAKEN_SD;
+
+    sc_signal<bool>        PUSH_ADR_RAS_RD;
+    sc_signal<bool>        POP_ADR_RAS_RD;
+
+    sc_signal<sc_uint<32>> ADR_TO_RET_RD;
+
+    sc_signal<bool>        RET_INST_RD;
     // IF2DEC :
 
     sc_signal<sc_bv<32>>   INSTR_RI;
@@ -297,6 +305,11 @@ SC_MODULE(core) {
         ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
         ifetch_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
 
+        ifetch_inst.PUSH_ADR_RAS_RD(PUSH_ADR_RAS_RD);
+        ifetch_inst.POP_ADR_RAS_RD(POP_ADR_RAS_RD);
+        ifetch_inst.ADR_TO_RET_RD(ADR_TO_RET_RD);
+        ifetch_inst.RET_INST_RD(RET_INST_RD);
+
         ifetch_inst.PRED_ADR_SD(PRED_ADR_SD);
         ifetch_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
 
@@ -385,6 +398,12 @@ SC_MODULE(core) {
 
         dec_inst.PRED_ADR_SD(PRED_ADR_SD);
         dec_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
+
+        dec_inst.PUSH_ADR_RAS_RD(PUSH_ADR_RAS_RD);
+        dec_inst.POP_ADR_RAS_RD(POP_ADR_RAS_RD); 
+        dec_inst.ADR_TO_RET_RD(ADR_TO_RET_RD);
+
+        dec_inst.RET_INST_RD(RET_INST_RD);
 
         dec_inst.BP_R1_VALID_RD(BP_R1_VALID_RD);
         dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);
