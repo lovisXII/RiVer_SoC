@@ -562,18 +562,6 @@ void exec_s2::bypasses() {
         op1_se_s2.write(EXE_RES_RE_S2.read());
         r1_valid_se = true;
     }
-    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S2) 
-    // M2->E2 and csr
-    {
-        op1_se_s2.write(CSR_RDATA_RM_S2.read());
-        r1_valid_se = true;
-    }
-    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read()) 
-    // M2->E2 normal
-    {
-        op1_se_s2.write(MEM_RES_RM_S2.read());
-        r1_valid_se = true;
-    }
     else if(DEST_RE_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RE_S1)
     // E1->E2 and csr
     {
@@ -584,6 +572,18 @@ void exec_s2::bypasses() {
     // E1->E2 and no load (normal bypass)
     {
         op1_se_s2.write(EXE_RES_RE_S1.read());
+        r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S2) 
+    // M2->E2 and csr
+    {
+        op1_se_s2.write(CSR_RDATA_RM_S2.read());
+        r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read()) 
+    // M2->E2 normal
+    {
+        op1_se_s2.write(MEM_RES_RM_S2.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S1) 
@@ -665,6 +665,28 @@ void exec_s2::bypasses() {
             r2_valid_se = true;
         }
     } 
+    else if(DEST_RE_S1.read() == RADR2_RD_S2.read() && !MEM_LOAD_RE_S1) 
+    // E1->E2 bypass
+    {
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RE_S1) // case with csr
+            bp_value = CSR_RDATA_RE_S1;
+        else
+            bp_value = EXE_RES_RE_S1;
+
+        if (MEM_STORE_RD_S2.read()) //case of a store 
+        {  // on stores we need to bypass to the data not adr
+
+            bp_mem_data_var = bp_value;
+            op2_se.write(OP2_RD_S2.read());
+            r2_valid_se = true;
+        }
+        else 
+        {
+            op2_se.write(bp_value);
+            r2_valid_se = true;
+        }
+    } 
     else if (MEM_DEST_RM_S2.read() == RADR2_RD_S2.read()) 
     // M2->E2
     {
@@ -688,28 +710,6 @@ void exec_s2::bypasses() {
         blocked_var = true;
         r2_valid_se = true;
     }
-    else if(DEST_RE_S1.read() == RADR2_RD_S2.read() && !MEM_LOAD_RE_S1) 
-    // E1->E2 bypass
-    {
-        sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S1) // case with csr
-            bp_value = CSR_RDATA_RE_S1;
-        else
-            bp_value = EXE_RES_RE_S1;
-
-        if (MEM_STORE_RD_S2.read()) //case of a store 
-        {  // on stores we need to bypass to the data not adr
-
-            bp_mem_data_var = bp_value;
-            op2_se.write(OP2_RD_S2.read());
-            r2_valid_se = true;
-        }
-        else 
-        {
-            op2_se.write(bp_value);
-            r2_valid_se = true;
-        }
-    } 
     else if(MEM_DEST_RM_S1.read() == RADR2_RD_S2.read()) 
     // M1->E2
     {
