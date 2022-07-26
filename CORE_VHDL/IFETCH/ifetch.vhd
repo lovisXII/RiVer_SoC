@@ -40,8 +40,8 @@ entity ifetch is
         BRANCH_INST_ADR_RD  :   in  std_logic_vector(31 downto 0);
         ADR_TO_BRANCH_RD    :   in  std_logic_vector(31 downto 0);
 
-        PRED_ADR_RD         :   in  std_logic_vector(31 downto 0);
-        PRED_TAKEN_rD       :   in  std_logic;
+        PRED_ADR_SD         :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_SD       :   in  std_logic;
 
         PUSH_ADR_RAS_RD     :   in  std_logic;
         POP_ADR_RAS_RD      :   in  std_logic;
@@ -91,10 +91,10 @@ signal reg_adr_reg : ret_adr_reg_t;
 signal ret_valid_reg : std_logic_vector(RET_PRED_REG_SIZE-1 downto 0);
 
 signal pred_write_pointer_si : std_logic_vector(PRED_POINTER_SIZE-1 downto 0);
-signal pred_branch_next_adr : std_logic_vector(31 downto 0);
+signal pred_branch_next_adr : std_logic_vector(31 downto 0) := x"22222200";
 
-signal pred_next_adr_si : std_logic_vector(31 downto 0);
-signal pred_branch_taken, pred_ret_taken, pred_taken_si : std_logic; 
+signal pred_next_adr_si : std_logic_vector(31 downto 0) := x"11111100";
+signal pred_branch_taken, pred_ret_taken, pred_taken_si : std_logic := '0'; 
 
 begin 
 
@@ -118,7 +118,7 @@ if2dec_push_si  <= not stall_si when (IF2DEC_FLUSH_SD = '0') else '0';
 DEC2IF_POP_SI   <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
 ADR_VALID_SI    <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM /= '1') else '0';
 
-ADR_SI <=   PRED_ADR_RD when    PRED_TAKEN_RD = '1' and PRED_FAILED_RD = '0'    else 
+ADR_SI <=   PRED_ADR_SD when    PRED_TAKEN_SD = '1' and PRED_FAILED_RD = '0'    else 
             PC_RD;
       
 pred_state_updt : process(clk, reset_n)
@@ -220,7 +220,7 @@ IF2DEC_EMPTY_SI <= if2dec_empty;
 
 -- fifo
 -- Input
-if2dec_din(31 downto 0)     <=  PRED_ADR_RD when    PRED_TAKEN_RD = '1' and PRED_FAILED_RD = '0' else 
+if2dec_din(31 downto 0)     <=  PRED_ADR_SD when    PRED_TAKEN_SD = '1' and PRED_FAILED_RD = '0' else 
                                 PC_RD;
 if2dec_din(63 downto 32)    <=  IC_INST_SI  when    EXCEPTION_SM = '0'  else
                                 nop_i;

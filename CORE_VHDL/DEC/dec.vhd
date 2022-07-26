@@ -55,8 +55,8 @@ entity dec is
         BRANCH_INST_ADR_RD          :   out std_logic_vector(31 downto 0);
         ADR_TO_BRANCH_RD            :   out std_logic_vector(31 downto 0);
 
-        PRED_ADR_RD                 :   out std_logic_vector(31 downto 0);
-        PRED_TAKEN_RD               :   out std_logic;
+        PRED_ADR_SD                 :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_SD               :   out std_logic;
 
         PUSH_ADR_RAS_RD             :   out std_logic;
         POP_ADR_RAS_RD              :   out std_logic;
@@ -205,8 +205,10 @@ signal new_pc : std_logic_vector(31 downto 0);
 signal pc_branch_value_sd : std_logic_vector(31 downto 0);
 signal branch_adr_sd : std_logic_vector(31 downto 0);
 signal rd_link, rs1_link : std_logic; 
-signal pred_success_sd, pred_failed_sd : std_logic; 
+signal pred_success_sd, pred_failed_sd : std_logic := '0'; 
 signal ret_sd : std_logic; 
+
+signal pc_no_jump, pc_jump : std_logic_vector(31 downto 0);
 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
@@ -225,6 +227,7 @@ signal dec2exe_empty : std_logic;
 signal dec_fifo_rdest : std_logic_vector(5 downto 0);
 signal csr_wenable_fifo : std_logic;
 signal dec_fifo_mult_inst : std_logic;
+signal dec_fifo_pred_success, dec_fifo_pred_failed : std_logic; 
 
 component fifo
     generic(N : integer);
@@ -246,7 +249,7 @@ begin
 -- Instanciation 
 -------------------------
 dec2if : fifo
-    generic map(N => 32)
+    generic map(N => 134)
     port map(
         clk => clk, 
         reset_n => reset_n,
@@ -291,9 +294,9 @@ stall_sd    <=  '1' when    (
                 '0'; 
 
 -- if2dec 
-IF2DEC_POP_SD   <=  not stall_sd; 
+IF2DEC_POP_SD   <=  not stall_sd;
 
-IF2DEC_FLUSH_SD <=  '1' when jump_sd = '1' and stall_sd = '0' else  
+IF2DEC_FLUSH_SD <=  '1' when (PRED_TAKEN_RI = '1' and (jump_sd = '0' and stall_sd = '0')) or (jump_sd = '1' and stall_sd = '0') else  
                     '0'; 
 
 dec2if_push_sd  <=  '1' when   ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
@@ -583,12 +586,19 @@ begin
     end if; 
 end process; 
 
-resetting_sd <= reset_sync_sd xor reset_n; 
+resetting_sd    <=  reset_sync_sd xor reset_n; 
 
-pc  <=  READ_PC_SR when resetting_sd = '1' else
-        std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value)) when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
-        std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd)) when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1'else 
-        x"00000000"; 
+pc_no_jump      <=  std_logic_vector(signed(PRED_ADR_RI) + signed(inc_value))   when    PRED_TAKEN_RI = '1' and stall_sd = '1' and (dec_fifo_pred_success = '0' and dec_fifo_pred_failed = '0') else 
+                    std_logic_vector(signed(PC_IF2DEC_RI) + signed(inc_value))  when    PRED_TAKEN_RI = '1' and stall_sd = '0' else 
+                    std_logic_vector(signed(READ_PC_SR) + signed(inc_value));
+
+pc_jump         <=  std_logic_vector(signed(PRED_ADR_RI) + signed(inc_value))   when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' else 
+                    branch_adr_sd;
+
+pc  <=  READ_PC_SR  when resetting_sd = '1' else
+        pc_no_jump  when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
+        pc_jump     when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1' else
+        x"ABCDEF00"; 
 
 instruction_access_fault_sd <= '1' when EXCEPTION_SM = '0' and CURRENT_MODE_SM /= "11" and pc > kernel_adr else '0'; 
 instruction_adress_misaligned_sd <= '1' when pc(1 downto 0) /= "00" or (RETURN_ADRESS_SM(1 downto 0) /= "00" and EXCEPTION_SM = '1') else '0';  
@@ -607,6 +617,15 @@ new_pc  <=  MTVEC_VALUE_RC when MRET_SM = '0' and EXCEPTION_SM = '1' and MTVEC_V
 pc_branch_value_sd <= new_pc; 
 
 WRITE_PC_SD <= new_pc; 
+
+-- branch prediction 
+pred_success_sd <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0'  else 
+                    '0'; 
+pred_failed_sd  <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '0' and dec2if_full_sd = '0' and IF2DEC_EMPTY_SI = '0' else 
+                    '0'; 
+
+PRED_ADR_SD     <=  PRED_ADR_RI;
+PRED_TAKEN_SD   <=  PRED_TAKEN_RI;
 
 -------------------------
 -- Bypass
@@ -662,10 +681,6 @@ exception_sd <= (illegal_inst_sd or instruction_adress_misaligned_sd or env_call
 env_call_m_mode_sd or env_call_s_mode_sd or env_call_wrong_mode or mret_i_sd or
 instruction_access_fault_sd or ebreak_i_sd);
 
-
--- branch prediction
-
-
 -------------------------
 -- Ouput
 -------------------------
@@ -678,6 +693,8 @@ DEST_RD <= dec_fifo_rdest;
 CSR_WENABLE_RD <= csr_wenable_fifo;
 CSR_RADR_SD <= csr_radr;
 MULT_INST_RD <= dec_fifo_mult_inst; 
+PRED_SUCCESS_RD <= dec_fifo_pred_success;
+PRED_FAILED_RD <= dec_fifo_pred_failed;
 
 -------------------------
 -- fifo  
@@ -692,15 +709,15 @@ dec2if_din(97)              <=  pred_success_sd;
 dec2if_din(98)              <=  pred_failed_sd; 
 dec2if_din(99)              <=  ret_sd; 
 dec2if_din(131 downto 100)  <=  std_logic_vector(signed(PC_IF2DEC_RI) + signed(inc_value));
-dec2if_din(132)             <=  '0'; -- to do 
+dec2if_din(132)             <=  '0'; -- to do  ret
 dec2if_din(133)             <=  '0';
 
 PC_RD                       <=  dec2if_dout(31 downto 0);
 ADR_TO_BRANCH_RD            <=  dec2if_dout(63 downto 32);
 BRANCH_INST_ADR_RD          <=  dec2if_dout(95 downto 64);
 BRANCH_INST_RD              <=  dec2if_dout(96);
-PRED_SUCCESS_RD             <=  dec2if_dout(97);
-PRED_FAILED_RD              <=  dec2if_dout(98);
+dec_fifo_pred_success       <=  dec2if_dout(97);
+dec_fifo_pred_failed        <=  dec2if_dout(98);
 RET_INST_RD                 <=  dec2if_dout(99);
 ADR_TO_RET_RD               <=  dec2if_dout(131 downto 100);
 POP_ADR_RAS_RD              <=  dec2if_dout(132);

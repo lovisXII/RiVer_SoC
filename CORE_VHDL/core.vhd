@@ -166,8 +166,8 @@ signal BRANCH_INST_RD      : std_logic;
 signal BRANCH_INST_ADR_RD  : std_logic_vector(31 downto 0);
 signal ADR_TO_BRANCH_RD    : std_logic_vector(31 downto 0);
 
-signal PRED_ADR_RD         : std_logic_vector(31 downto 0);
-signal PRED_TAKEN_RD       : std_logic;
+signal PRED_ADR_SD         : std_logic_vector(31 downto 0);
+signal PRED_TAKEN_SD       : std_logic;
 
 signal PUSH_ADR_RAS_RD     : std_logic;
 signal POP_ADR_RAS_RD      : std_logic;
@@ -212,8 +212,8 @@ component ifetch
         BRANCH_INST_ADR_RD  :   in  std_logic_vector(31 downto 0);
         ADR_TO_BRANCH_RD    :   in  std_logic_vector(31 downto 0);
 
-        PRED_ADR_RD         :   in  std_logic_vector(31 downto 0);
-        PRED_TAKEN_RD       :   in  std_logic;
+        PRED_ADR_SD         :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_SD       :   in  std_logic;
 
         PUSH_ADR_RAS_RD     :   in  std_logic;
         POP_ADR_RAS_RD      :   in  std_logic;
@@ -276,8 +276,8 @@ component dec
 
         ADR_TO_BRANCH_RD            :   out std_logic_vector(31 downto 0);
 
-        PRED_ADR_RD                 :   out std_logic_vector(31 downto 0);
-        PRED_TAKEN_RD               :   out std_logic;
+        PRED_ADR_SD                 :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_SD               :   out std_logic;
 
         PUSH_ADR_RAS_RD             :   out std_logic;
         POP_ADR_RAS_RD              :   out std_logic;
@@ -672,8 +672,8 @@ ifetch_i : ifetch
         BRANCH_INST_ADR_RD  => BRANCH_INST_ADR_RD,
         ADR_TO_BRANCH_RD    => ADR_TO_BRANCH_RD,
 
-        PRED_ADR_RD         => PRED_ADR_RD,
-        PRED_TAKEN_RD       => PRED_TAKEN_RD,
+        PRED_ADR_SD         => PRED_ADR_SD,
+        PRED_TAKEN_SD       => PRED_TAKEN_SD,
 
         PUSH_ADR_RAS_RD     => PUSH_ADR_RAS_RD,
         POP_ADR_RAS_RD      => POP_ADR_RAS_RD,
@@ -742,8 +742,8 @@ dec_i : dec
 
         ADR_TO_BRANCH_RD            => ADR_TO_BRANCH_RD,
 
-        PRED_ADR_RD                 => PRED_ADR_RD,
-        PRED_TAKEN_RD               => PRED_TAKEN_RD,
+        PRED_ADR_SD                 => PRED_ADR_SD,
+        PRED_TAKEN_SD               => PRED_TAKEN_SD,
 
         PUSH_ADR_RAS_RD             => PUSH_ADR_RAS_RD,
         POP_ADR_RAS_RD              => POP_ADR_RAS_RD,
