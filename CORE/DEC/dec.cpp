@@ -331,7 +331,7 @@ void decod::pc_inc() {
     sc_uint<32> offset_branch_var_s2 = offset_branch_sd_s2.read();
     
     add_offset_to_pc_s1 = jump_sd_s1.read() && !IF2DEC_EMPTY_SI_S1 ;
-    add_offset_to_pc_s2 = jump_sd_s2.read() && !IF2DEC_EMPTY_SI_S2 ;
+    add_offset_to_pc_s2 = jump_sd_s2.read() && !IF2DEC_EMPTY_SI_S2 && !reg_dependencies_sd;
     
 
     // PC Incrementation
@@ -464,16 +464,16 @@ void decod::pc_inc() {
             - If there is a jump on s1, we flush
             - If there is no jump we pop only S1
         */
-            if ((jump_sd_s1.read() || jump_sd_s2) && !stall_sd_s1 && !reg_dependencies_sd ) 
+            if ((add_offset_to_pc_s1.read() || add_offset_to_pc_s2) && !stall_sd_s1 && !reg_dependencies_sd ) 
             // If one one the 2 inst jump and no data dependencies and no stall we flush  
             {
                 IF2DEC_POP_SD_S1 = 1;
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             } 
-            else if(jump_sd_s1 && !stall_sd_s1 && reg_dependencies_sd 
+            else if(add_offset_to_pc_s1 && !stall_sd_s1 && reg_dependencies_sd 
             && PRIORITARY_PIPELINE_RD.read() == 0
-            || jump_sd_s2 && !stall_sd_s1 && reg_dependencies_sd 
+            || add_offset_to_pc_s2 && !stall_sd_s1 && reg_dependencies_sd 
             && PRIORITARY_PIPELINE_RD.read() == 1)
             // S1 prio and jump or S2 prio and jump
             {
@@ -481,14 +481,14 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             }
-            else if (!jump_sd_s1 && !stall_sd_s1 && !reg_dependencies_sd) 
+            else if (!add_offset_to_pc_s1 && !stall_sd_s1 && !reg_dependencies_sd) 
             // Case where no jump && no dependencies
             {
                 IF2DEC_POP_SD_S1= 1;
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 0;
             } 
-            else if(!jump_sd_s1  && reg_dependencies_sd.read() 
+            else if(!add_offset_to_pc_s1  && reg_dependencies_sd.read() 
             && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 0) 
             // no jump && data dependencies and S1 prio S2
             // we must pop S1 but not S2 cause S1 is prio
@@ -497,7 +497,7 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 0;
                 IF2DEC_FLUSH_SD= 0;
             } 
-            else if(!jump_sd_s1 && reg_dependencies_sd.read() 
+            else if(!add_offset_to_pc_s1 && reg_dependencies_sd.read() 
             && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 1) 
             // no jump && data dependencies and S2 prio S1
             // we must pop S2 but not S1 cause S2 is prio
@@ -705,20 +705,20 @@ void decod::bypasses() {
         rdata1_sd_s2= RDATA1_SR_S2.read();
         r1_valid_sd_s2= true;
     } 
-    else if ((RADR1_SD_S2.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read())
-    || (RADR1_SD_S2.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read())) 
+    else if (((RADR1_SD_S2.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read())
+    || (RADR1_SD_S2.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read())) && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= false;
     } 
-    else if ((RADR1_SD_S2.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)
-    || (RADR1_SD_S2.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1)) 
+    else if (((RADR1_SD_S2.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)
+    || (RADR1_SD_S2.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1)) && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= false;
     } 
 
     // bypass E1->D
 
-    else if (RADR1_SD_S2.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) 
+    else if (RADR1_SD_S2.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1 && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S1.read())
@@ -729,7 +729,7 @@ void decod::bypasses() {
 
     // bypass E2->D
 
-    else if (RADR1_SD_S2.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2) 
+    else if (RADR1_SD_S2.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2 && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S2.read())
@@ -740,7 +740,7 @@ void decod::bypasses() {
 
     // bypass M1->D
 
-    else if (RADR1_SD_S2.read() == DEST_RM_S1.read() && !MEM2WBK_EMPTY_SM_S1.read()) 
+    else if (RADR1_SD_S2.read() == DEST_RM_S1.read() && !MEM2WBK_EMPTY_SM_S1.read() && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S1.read())
@@ -751,7 +751,7 @@ void decod::bypasses() {
 
     // bypass M2->D
 
-    else if (RADR1_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR1_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read() && !reg_dependencies_sd) 
     {  
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())
@@ -776,19 +776,19 @@ void decod::bypasses() {
         rdata2_sd_s2= RDATA2_SR_S2.read();
         r2_valid_sd_s2= true;
     } 
-    else if ((RADR2_SD_S2.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read())
-    || (RADR2_SD_S2.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read())) 
+    else if (((RADR2_SD_S2.read() == EXE_DEST_RD_S1.read() && !DEC2EXE_EMPTY_SD_S1.read())
+    || (RADR2_SD_S2.read() == EXE_DEST_RD_S2.read() && !DEC2EXE_EMPTY_SD_S2.read())) && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= false;
     } 
-    else if ((RADR2_SD_S2.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1)
-    || (RADR2_SD_S2.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)) 
+    else if (((RADR2_SD_S2.read() == DEST_RE_S1.read() && MEM_LOAD_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1)
+    || (RADR2_SD_S2.read() == DEST_RE_S2.read() && MEM_LOAD_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2)) && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= false;
     }
     // bypass E1->D
 
-    else if (RADR2_SD_S2.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1) 
+    else if (RADR2_SD_S2.read() == DEST_RE_S1.read() && !EXE2MEM_EMPTY_SE_S1 && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S1.read())
@@ -799,7 +799,7 @@ void decod::bypasses() {
 
     // bypass E2->D
 
-    else if (RADR2_SD_S2.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2) 
+    else if (RADR2_SD_S2.read() == DEST_RE_S2.read() && !EXE2MEM_EMPTY_SE_S2 && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S2.read())
@@ -810,7 +810,7 @@ void decod::bypasses() {
 
     // bypass M1->D
 
-    else if (RADR2_SD_S2.read() == DEST_RM_S1.read() && !MEM2WBK_EMPTY_SM_S1.read()) 
+    else if (RADR2_SD_S2.read() == DEST_RM_S1.read() && !MEM2WBK_EMPTY_SM_S1.read() && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S1.read())
@@ -821,7 +821,7 @@ void decod::bypasses() {
 
     // bypass M2->D
 
-    else if (RADR2_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read()) 
+    else if (RADR2_SD_S2.read() == DEST_RM_S2.read() && !MEM2WBK_EMPTY_SM_S2.read() && !reg_dependencies_sd) 
     {  
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())

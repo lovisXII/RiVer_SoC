@@ -1230,7 +1230,7 @@ SC_MODULE(decod) {
 			<< DEC2EXE_EMPTY_SD_S2 
                     
 			<< MEM_LOAD_RE_S2 
-                    
+            << reg_dependencies_sd
 			<< MEM2WBK_EMPTY_SM_S2;
         reset_signal_is(RESET_N, false);
     }
