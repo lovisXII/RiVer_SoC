@@ -371,7 +371,7 @@ SC_MODULE(decod) {
 
     // Pipeline Gestion
 
-    sc_signal<bool> stall_sd_s1;
+    sc_signal<bool> stall_sd;
     // Internal signals :
 
     sc_signal<sc_uint<6>>  adr_dest_sd_s1;
@@ -633,7 +633,7 @@ SC_MODULE(decod) {
 			<< RADR2_SD_S2;
         SC_METHOD(prio_pipeline_signal)
         sensitive   << reg_dependencies_sd
-                    << stall_sd_s1
+                    << stall_sd
                     << jump_sd_s1
                     << jump_sd_s2
                     << dec2exe_full_sd_s1
@@ -923,7 +923,7 @@ SC_MODULE(decod) {
 			<< READ_PC_SR
 
                   
-			<< stall_sd_s1 
+			<< stall_sd 
 			<< dec2if_push_sd 
 			<< add_i_sd_s1 
 			<< slt_i_sd_s1 
@@ -1048,7 +1048,7 @@ SC_MODULE(decod) {
 			<< READ_PC_SR
 
                   
-			<< stall_sd_s1 
+			<< stall_sd 
 			<< dec2if_push_sd 
 			<< add_i_sd_s2 
 			<< slt_i_sd_s2 
@@ -1164,7 +1164,7 @@ SC_MODULE(decod) {
                   
 			<< MCAUSE_WDATA_SM_S1
                   
-			<< stall_sd_s1
+			<< stall_sd
                   
 			<< add_offset_to_pc_s1
                   

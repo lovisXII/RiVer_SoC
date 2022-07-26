@@ -22,9 +22,9 @@ void decod::dependencies(){
 
 void decod::prio_pipeline_signal(){
 
-    if  (reg_dependencies_sd && !stall_sd_s1 && !jump_sd_s1)
+    if  (reg_dependencies_sd && !stall_sd && !jump_sd_s1)
         prioritary_pipeline_sd = !prioritary_pipeline_rd.read();
-    else if((jump_sd_s1 || jump_sd_s2) && !stall_sd_s1)
+    else if((jump_sd_s1 || jump_sd_s2) && !stall_sd)
         prioritary_pipeline_sd = 0;
     else
         prioritary_pipeline_sd = prioritary_pipeline_rd;
@@ -346,13 +346,13 @@ void decod::pc_inc() {
         pc_out_s2 = pc + 8;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
-    } else if (add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd_s1) {//branch in s1 -> prio
+    } else if (add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd) {//branch in s1 -> prio
         pc_out_s1 = PC_IF2DEC_RI_S1.read() + offset_branch_var_s1;
         pc_out_s2 = PC_IF2DEC_RI_S1.read() + offset_branch_var_s1 + 4;
         WRITE_PC_ENABLE_SD  = 1;
         dec2if_push_sd      = 1;
     } 
-    else if(add_offset_to_pc_s2 && !add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd_s1){// branch only in s2
+    else if(add_offset_to_pc_s2 && !add_offset_to_pc_s1 && !dec2if_full_sd && !stall_sd){// branch only in s2
         pc_out_s1 = PC_IF2DEC_RI_S2.read() + offset_branch_var_s2;
         pc_out_s2 = PC_IF2DEC_RI_S2.read() + offset_branch_var_s2 + 4 ;
         WRITE_PC_ENABLE_SD = 1 ;
@@ -464,16 +464,16 @@ void decod::pc_inc() {
             - If there is a jump on s1, we flush
             - If there is no jump we pop only S1
         */
-            if ((add_offset_to_pc_s1.read() || add_offset_to_pc_s2) && !stall_sd_s1 && !reg_dependencies_sd ) 
+            if ((add_offset_to_pc_s1.read() || add_offset_to_pc_s2) && !stall_sd && !reg_dependencies_sd ) 
             // If one one the 2 inst jump and no data dependencies and no stall we flush  
             {
                 IF2DEC_POP_SD_S1 = 1;
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             } 
-            else if(add_offset_to_pc_s1 && !stall_sd_s1 && reg_dependencies_sd 
+            else if(add_offset_to_pc_s1 && !stall_sd && reg_dependencies_sd 
             && PRIORITARY_PIPELINE_RD.read() == 0
-            || add_offset_to_pc_s2 && !stall_sd_s1 && reg_dependencies_sd 
+            || add_offset_to_pc_s2 && !stall_sd && reg_dependencies_sd 
             && PRIORITARY_PIPELINE_RD.read() == 1)
             // S1 prio and jump or S2 prio and jump
             {
@@ -481,7 +481,7 @@ void decod::pc_inc() {
                 IF2DEC_POP_SD_S2= 1;
                 IF2DEC_FLUSH_SD= 1;
             }
-            else if (!add_offset_to_pc_s1 && !stall_sd_s1 && !reg_dependencies_sd) 
+            else if (!add_offset_to_pc_s1 && !stall_sd && !reg_dependencies_sd) 
             // Case where no jump && no dependencies
             {
                 IF2DEC_POP_SD_S1= 1;
@@ -489,7 +489,7 @@ void decod::pc_inc() {
                 IF2DEC_FLUSH_SD= 0;
             } 
             else if(!add_offset_to_pc_s1  && reg_dependencies_sd.read() 
-            && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 0) 
+            && !stall_sd && PRIORITARY_PIPELINE_RD.read() == 0) 
             // no jump && data dependencies and S1 prio S2
             // we must pop S1 but not S2 cause S1 is prio
             {
@@ -498,7 +498,7 @@ void decod::pc_inc() {
                 IF2DEC_FLUSH_SD= 0;
             } 
             else if(!add_offset_to_pc_s1 && reg_dependencies_sd.read() 
-            && !stall_sd_s1 && PRIORITARY_PIPELINE_RD.read() == 1) 
+            && !stall_sd && PRIORITARY_PIPELINE_RD.read() == 1) 
             // no jump && data dependencies and S2 prio S1
             // we must pop S2 but not S1 cause S2 is prio
             {
@@ -520,11 +520,11 @@ void decod::pc_inc() {
 
         // DEC2EXE_S1 Gestion
         
-        if (stall_sd_s1) 
+        if (stall_sd) 
         {
             dec2exe_push_sd_s1= 0;
             dec2exe_push_sd_s2 = 0;
-        } else if(jump_sd_s1 && !stall_sd_s1)
+        } else if(jump_sd_s1 && !stall_sd)
         {
             dec2exe_push_sd_s1=  1;
             dec2exe_push_sd_s2 = 0;
@@ -841,7 +841,7 @@ void decod::bypasses() {
 void decod::stall_method() {
     csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
     
-    stall_sd_s1        = ((csr_in_progress_s1   || csr_in_progress_s2) 
+    stall_sd        = ((csr_in_progress_s1   || csr_in_progress_s2) 
     || ((!r1_valid_sd_s1 || !r2_valid_sd_s1)    && (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
     || (((!r1_valid_sd_s2 || !r2_valid_sd_s2)   && (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec)))
     || (IF2DEC_EMPTY_SI_S1 && IF2DEC_EMPTY_SI_S2) || dec2exe_full_sd_s1 || dec2exe_full_sd_s2);
@@ -987,7 +987,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, r2_valid_sd_s1, GET_NAME(r2_valid_sd_s1));
     sc_trace(tf, r1_valid_sd_s2, GET_NAME(r1_valid_sd_s2));
     sc_trace(tf, r2_valid_sd_s2, GET_NAME(r2_valid_sd_s2));
-    sc_trace(tf, stall_sd_s1, GET_NAME(stall_sd_s1));
+    sc_trace(tf, stall_sd, GET_NAME(stall_sd));
     sc_trace(tf, block_in_dec, GET_NAME(block_in_dec));
     sc_trace(tf, dec2if_push_sd, GET_NAME(dec2if_push_sd));
     sc_trace(tf, dec2if_empty_sd, GET_NAME(dec2if_empty_sd));

@@ -779,7 +779,7 @@ void decod::post_reg_read_decoding_s2() {
     exe_op2_sd_s2.write(dec2exe_op2_var);
     mem_data_sd_s2.write(mem_data_var);
     // inc_pc_sd_s2.write(((inc_pc_var || IF2DEC_EMPTY_SI_S1) && dec2if_push_sd.read()) && !EXCEPTION_SM_S1);
-    // add_offset_to_pc_sd.write((!stall_sd_s1 && !inc_pc_var && (b_type_inst_sd_s2 || j_type_inst_sd_s2
+    // add_offset_to_pc_sd.write((!stall_sd && !inc_pc_var && (b_type_inst_sd_s2 || j_type_inst_sd_s2
     //                             || jalr_type_inst_sd_s2) &&
     //                            dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI_S1) &&
     //                           !EXCEPTION_SM_S1);

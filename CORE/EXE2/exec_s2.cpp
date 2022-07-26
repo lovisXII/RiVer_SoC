@@ -687,6 +687,18 @@ void exec_s2::bypasses() {
             r2_valid_se = true;
         }
     } 
+    else if (DEST_RE_S1.read() == RADR2_RD_S2.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
+    // block in case where load still in EXE_S1
+    {
+        blocked_var = true;
+        r2_valid_se = true;
+    }
+    else if (DEST_RE_S2.read() == RADR2_RD_S2.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
+    // block in case where load still in EXE_S2
+    {
+        blocked_var = true;
+        r2_valid_se = true;
+    }
     else if (MEM_DEST_RM_S2.read() == RADR2_RD_S2.read()) 
     // M2->E2
     {
@@ -703,12 +715,6 @@ void exec_s2::bypasses() {
             op2_se.write(MEM_RES_RM_S2.read());
             r2_valid_se = true;
         }
-    }
-    else if (DEST_RE_S2.read() == RADR2_RD_S2.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
-    //M2->E2 with load so need to stall
-    {
-        blocked_var = true;
-        r2_valid_se = true;
     }
     else if(MEM_DEST_RM_S1.read() == RADR2_RD_S2.read()) 
     // M1->E2
@@ -727,11 +733,6 @@ void exec_s2::bypasses() {
             op2_se.write(MEM_RES_RM_S1.read());
             r2_valid_se = true;
         }
-    }
-    else if (DEST_RE_S1.read() == RADR2_RD_S2.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
-    {
-        blocked_var = true;
-        r2_valid_se = true;
     }
     else if(op2_is_saved_re){
         r2_valid_se = true ;
@@ -866,6 +867,7 @@ void exec_s2::trace(sc_trace_file* tf) {
     // Fifo exe2mem interface :
 
     sc_trace(tf, EXE_RES_RE_S2, GET_NAME(EXE_RES_RE_S2));
+    sc_trace(tf, EXE_RES_RE_S1, GET_NAME(EXE_RES_RE_S1));
     sc_trace(tf, MEM_DATA_RE_S2, GET_NAME(MEM_DATA_RE_S2));
     sc_trace(tf, DEST_RE_S2, GET_NAME(DEST_RE_S2));
     sc_trace(tf, MEM_SIZE_RE_S2, GET_NAME(MEM_SIZE_RE_S2));
@@ -874,6 +876,7 @@ void exec_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, WB_RE_S2, GET_NAME(WB_RE_S2));
     sc_trace(tf, MEM_SIGN_EXTEND_RE_S2, GET_NAME(MEM_SIGN_EXTEND_RE_S2));
     sc_trace(tf, MEM_LOAD_RE_S2, GET_NAME(MEM_LOAD_RE_S2));
+    sc_trace(tf, MEM_LOAD_RE_S1, GET_NAME(MEM_LOAD_RE_S1));
     sc_trace(tf, MEM_STORE_RE_S2, GET_NAME(MEM_STORE_RE_S2));
     sc_trace(tf, EXE2MEM_EMPTY_SE_S2, GET_NAME(EXE2MEM_EMPTY_SE_S2));
     sc_trace(tf, DEC2EXE_POP_SE_S2, GET_NAME(DEC2EXE_POP_SE_S2));
