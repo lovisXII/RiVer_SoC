@@ -159,6 +159,23 @@ signal X1X2_EMPTY_SX1 : std_logic;
 
 signal RES_RX2 : std_logic_vector(31 downto 0);
 
+        -- Branch prediction 
+signal PRED_FAILED_RD      : std_logic;
+signal PRED_SUCCESS_RD     : std_logic;
+signal BRANCH_INST_RD      : std_logic;
+signal BRANCH_INST_ADR_RD  : std_logic_vector(31 downto 0);
+signal ADR_TO_BRANCH_RD    : std_logic_vector(31 downto 0);
+
+signal PRED_ADR_RD         : std_logic_vector(31 downto 0);
+signal PRED_TAKEN_RD       : std_logic;
+
+signal PUSH_ADR_RAS_RD     : std_logic;
+signal POP_ADR_RAS_RD      : std_logic;
+signal ADR_TO_RET_RD       : std_logic_vector(31 downto 0);
+signal RET_INST_RD         : std_logic;
+
+signal PRED_ADR_RI         : std_logic_vector(31 downto 0);
+signal PRED_TAKEN_RI       : std_logic;
 
 component ifetch 
     port(
@@ -186,7 +203,26 @@ component ifetch
 
         -- Exception 
         EXCEPTION_SM : in std_logic; 
-        EXCEPTION_RI : out std_logic
+        EXCEPTION_RI : out std_logic;
+
+        -- Branch prediction 
+        PRED_FAILED_RD      :   in  std_logic;
+        PRED_SUCCESS_RD     :   in  std_logic;
+        BRANCH_INST_RD      :   in  std_logic;
+        BRANCH_INST_ADR_RD  :   in  std_logic_vector(31 downto 0);
+        ADR_TO_BRANCH_RD    :   in  std_logic_vector(31 downto 0);
+
+        PRED_ADR_RD         :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_RD       :   in  std_logic;
+
+        PUSH_ADR_RAS_RD     :   in  std_logic;
+        POP_ADR_RAS_RD      :   in  std_logic;
+        ADR_TO_RET_RD       :   in  std_logic_vector(31 downto 0);
+        RET_INST_RD         :   in  std_logic;
+
+        PRED_ADR_RI         :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_RI       :   out std_logic
+
     );
 end component; 
 
@@ -231,6 +267,25 @@ component dec
         IF2DEC_EMPTY_SI : in std_logic;
         IF2DEC_POP_SD : out std_logic;
         IF2DEC_FLUSH_SD : out std_logic;
+
+        -- branch prediction
+        PRED_FAILED_RD              :   out std_logic;
+        PRED_SUCCESS_RD             :   out std_logic;
+        BRANCH_INST_ADR_RD          :   out std_logic_vector(31 downto 0);
+        BRANCH_INST_RD              :   out std_logic;
+
+        ADR_TO_BRANCH_RD            :   out std_logic_vector(31 downto 0);
+
+        PRED_ADR_RD                 :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_RD               :   out std_logic;
+
+        PUSH_ADR_RAS_RD             :   out std_logic;
+        POP_ADR_RAS_RD              :   out std_logic;
+        ADR_TO_RET_RD               :   out std_logic_vector(31 downto 0);
+        RET_INST_RD                 :   out std_logic;
+
+        PRED_ADR_RI                 :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_RI               :   in  std_logic;
 
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
@@ -607,7 +662,26 @@ ifetch_i : ifetch
 
         -- Exception 
         EXCEPTION_SM        => EXCEPTION_SM,
-        EXCEPTION_RI        => EXCEPTION_RI       
+        EXCEPTION_RI        => EXCEPTION_RI,
+        
+        
+        -- Branch prediction 
+        PRED_FAILED_RD      => PRED_FAILED_RD,
+        PRED_SUCCESS_RD     => PRED_SUCCESS_RD,
+        BRANCH_INST_RD      => BRANCH_INST_RD,
+        BRANCH_INST_ADR_RD  => BRANCH_INST_ADR_RD,
+        ADR_TO_BRANCH_RD    => ADR_TO_BRANCH_RD,
+
+        PRED_ADR_RD         => PRED_ADR_RD,
+        PRED_TAKEN_RD       => PRED_TAKEN_RD,
+
+        PUSH_ADR_RAS_RD     => PUSH_ADR_RAS_RD,
+        POP_ADR_RAS_RD      => POP_ADR_RAS_RD,
+        ADR_TO_RET_RD       => ADR_TO_RET_RD,
+        RET_INST_RD         => RET_INST_RD,
+
+        PRED_ADR_RI         => PRED_ADR_RI,
+        PRED_TAKEN_RI       => PRED_TAKEN_RI 
     );
 
 dec_i : dec
@@ -641,14 +715,12 @@ dec_i : dec
         MEM_SIGN_EXTEND_RD  => MEM_SIGN_EXTEND_RD,
         MEM_SIZE_RD         => MEM_SIZE_RD,
 
-
         CSR_WENABLE_RD      => CSR_WENABLE_RD, 
         CSR_WADR_RD         => CSR_WADR_RD,
         CSR_RDATA_RD        => CSR_RDATA_RD,
 
         PC_DEC2EXE_RD       => PC_DEC2EXE_RD,
         PC_BRANCH_VALUE_RD  => PC_BRANCH_VALUE_RD,
-
 
         -- dec2if interface
         DEC2IF_POP_SI       => DEC2IF_POP_SI, 
@@ -661,6 +733,26 @@ dec_i : dec
         IF2DEC_EMPTY_SI     => IF2DEC_EMPTY_SI,
         IF2DEC_POP_SD       => IF2DEC_POP_SD,
         IF2DEC_FLUSH_SD     => IF2DEC_FLUSH_SD,
+
+        -- branch prediction
+        PRED_FAILED_RD              => PRED_FAILED_RD,
+        PRED_SUCCESS_RD             => PRED_SUCCESS_RD,
+        BRANCH_INST_ADR_RD          => BRANCH_INST_ADR_RD,
+        BRANCH_INST_RD              => BRANCH_INST_RD,
+
+        ADR_TO_BRANCH_RD            => ADR_TO_BRANCH_RD,
+
+        PRED_ADR_RD                 => PRED_ADR_RD,
+        PRED_TAKEN_RD               => PRED_TAKEN_RD,
+
+        PUSH_ADR_RAS_RD             => PUSH_ADR_RAS_RD,
+        POP_ADR_RAS_RD              => POP_ADR_RAS_RD,
+        ADR_TO_RET_RD               => ADR_TO_RET_RD,
+        RET_INST_RD                 => RET_INST_RD,
+
+        PRED_ADR_RI                 => PRED_ADR_RI,
+        PRED_TAKEN_RI               => PRED_TAKEN_RI,
+
 
         -- dec2exe interface
         DEC2EXE_POP_SE      => DEC2EXE_POP_SE,

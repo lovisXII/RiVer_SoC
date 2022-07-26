@@ -11,41 +11,60 @@ entity dec is
         clk, reset_n : in std_logic;
 
         -- Reg interface
-        RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
-        REG_ADR1_SD, REG_ADR2_SD : out std_logic_vector(5 downto 0);
-        WRITE_PC_SD : out std_logic_vector(31 downto 0);
-        WRITE_PC_ENABLE_SD : out std_logic;
-        READ_PC_SR : in std_logic_vector(31 downto 0);
+        RDATA1_SR, RDATA2_SR        :   in  std_logic_vector(31 downto 0);
+        REG_ADR1_SD, REG_ADR2_SD    :   out std_logic_vector(5 downto 0);
+        WRITE_PC_SD                 :   out std_logic_vector(31 downto 0);
+        WRITE_PC_ENABLE_SD          :   out std_logic;
+        READ_PC_SR                  :   in  std_logic_vector(31 downto 0);
 
         -- Exe interface 
-        OP1_RD, OP2_RD : out std_logic_vector(31 downto 0);
-        CMD_RD : out std_logic_vector(1 downto 0);
-        NEG_OP2_RD : out std_logic; 
-        WB_RD : out std_logic;
-        DEST_RD : out std_logic_vector(5 downto 0);
-        SELECT_OPERATION_RD : out std_logic_vector(3 downto 0);
-        SLT_RD, SLTU_RD : out std_logic;    
-        MEM_DATA_RD : out std_logic_vector(31 downto 0);
-        MEM_LOAD_RD, MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
-        MEM_SIZE_RD : out std_logic_vector(1 downto 0);
+        OP1_RD, OP2_RD              :   out std_logic_vector(31 downto 0);
+        CMD_RD                      :   out std_logic_vector(1 downto 0);
+        NEG_OP2_RD                  :   out std_logic; 
+        WB_RD                       :   out std_logic;
+        DEST_RD                     :   out std_logic_vector(5 downto 0);
+        SELECT_OPERATION_RD         :   out std_logic_vector(3 downto 0);
+        SLT_RD, SLTU_RD             :   out std_logic;    
+        MEM_DATA_RD                 :   out std_logic_vector(31 downto 0);
+        MEM_LOAD_RD, MEM_STORE_RD   :   out std_logic;
+        MEM_SIGN_EXTEND_RD          :   out std_logic;
+        MEM_SIZE_RD                 :   out std_logic_vector(1 downto 0);
 
-        PC_DEC2EXE_RD : out std_logic_vector(31 downto 0);
-        PC_BRANCH_VALUE_RD : out std_logic_vector(31 downto 0);
+        PC_DEC2EXE_RD               :   out std_logic_vector(31 downto 0);
+        PC_BRANCH_VALUE_RD          :   out std_logic_vector(31 downto 0);
 
-        CSR_WENABLE_RD  : out std_logic; 
-        CSR_WADR_RD     : out std_logic_vector(11 downto 0);
-        CSR_RDATA_RD    : out std_logic_vector(31 downto 0);
+        CSR_WENABLE_RD              :   out std_logic; 
+        CSR_WADR_RD                 :   out std_logic_vector(11 downto 0);
+        CSR_RDATA_RD                :   out std_logic_vector(31 downto 0);
 
         -- dec2if interface
-        DEC2IF_POP_SI : in std_logic; 
-        DEC2IF_EMPTY_SD : out std_logic;
-        PC_RD : out std_logic_vector(31 downto 0);
+        DEC2IF_POP_SI               :   in  std_logic; 
+        DEC2IF_EMPTY_SD             :   out std_logic;
+        PC_RD                       :   out std_logic_vector(31 downto 0);
 
         -- if2dec interface
-        INSTR_RI, PC_IF2DEC_RI : in std_logic_vector(31 downto 0);
-        IF2DEC_EMPTY_SI : in std_logic;
-        IF2DEC_POP_SD : out std_logic;
-        IF2DEC_FLUSH_SD : out std_logic;
+        INSTR_RI, PC_IF2DEC_RI      :   in  std_logic_vector(31 downto 0);
+        IF2DEC_EMPTY_SI             :   in  std_logic;
+        IF2DEC_POP_SD               :   out std_logic;
+        IF2DEC_FLUSH_SD             :   out std_logic;
+
+        -- branch prediction
+        PRED_FAILED_RD              :   out std_logic;
+        PRED_SUCCESS_RD             :   out std_logic;
+        BRANCH_INST_RD              :   out std_logic;
+        BRANCH_INST_ADR_RD          :   out std_logic_vector(31 downto 0);
+        ADR_TO_BRANCH_RD            :   out std_logic_vector(31 downto 0);
+
+        PRED_ADR_RD                 :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_RD               :   out std_logic;
+
+        PUSH_ADR_RAS_RD             :   out std_logic;
+        POP_ADR_RAS_RD              :   out std_logic;
+        ADR_TO_RET_RD               :   out std_logic_vector(31 downto 0);
+        RET_INST_RD                 :   out std_logic;
+
+        PRED_ADR_RI                 :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_RI               :   in  std_logic;
 
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
@@ -101,7 +120,7 @@ constant inc_value : std_logic_vector(31 downto 0) := x"00000004";
 signal reset_sync_sd : std_logic := '0';
 signal resetting_sd : std_logic := '0' ; 
 -- fifo 
-signal dec2if_din, dec2if_dout : std_logic_vector(31 downto 0);
+signal dec2if_din, dec2if_dout : std_logic_vector(133 downto 0);
 signal dec2if_full_sd, dec2if_push_sd : std_logic;
 
 signal dec2exe_din, dec2exe_data, dec2exe_x, dec2exe_dout : std_logic_vector(251 downto 0);
@@ -184,6 +203,10 @@ signal pc : std_logic_vector(31 downto 0) := x"00000000";
 signal init_pc : std_logic_vector(31 downto 0); 
 signal new_pc : std_logic_vector(31 downto 0);
 signal pc_branch_value_sd : std_logic_vector(31 downto 0);
+signal branch_adr_sd : std_logic_vector(31 downto 0);
+signal rd_link, rs1_link : std_logic; 
+signal pred_success_sd, pred_failed_sd : std_logic; 
+signal ret_sd : std_logic; 
 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
@@ -550,6 +573,8 @@ WRITE_PC_ENABLE_SD  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd 
                                 or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0'))  else 
                         '0';  
 
+branch_adr_sd       <=  std_logic_vector(signed(PC_IF2DEC_RI) + signed(offset_branch_sd));
+
 -- initialize pc
 process(clk, reset_n)
 begin 
@@ -637,6 +662,10 @@ exception_sd <= (illegal_inst_sd or instruction_adress_misaligned_sd or env_call
 env_call_m_mode_sd or env_call_s_mode_sd or env_call_wrong_mode or mret_i_sd or
 instruction_access_fault_sd or ebreak_i_sd);
 
+
+-- branch prediction
+
+
 -------------------------
 -- Ouput
 -------------------------
@@ -655,9 +684,27 @@ MULT_INST_RD <= dec_fifo_mult_inst;
 -------------------------
 
 -- dec2if 
-dec2if_din <= new_pc;  
+dec2if_din(31 downto 0)     <=  new_pc;
+dec2if_din(63 downto 32)    <=  branch_adr_sd; 
+dec2if_din(95 downto 64)    <=  PC_IF2DEC_RI; 
+dec2if_din(96)              <=  b_type_sd or j_type_sd; 
+dec2if_din(97)              <=  pred_success_sd; 
+dec2if_din(98)              <=  pred_failed_sd; 
+dec2if_din(99)              <=  ret_sd; 
+dec2if_din(131 downto 100)  <=  std_logic_vector(signed(PC_IF2DEC_RI) + signed(inc_value));
+dec2if_din(132)             <=  '0'; -- to do 
+dec2if_din(133)             <=  '0';
 
-PC_RD <= dec2if_dout; 
+PC_RD                       <=  dec2if_dout(31 downto 0);
+ADR_TO_BRANCH_RD            <=  dec2if_dout(63 downto 32);
+BRANCH_INST_ADR_RD          <=  dec2if_dout(95 downto 64);
+BRANCH_INST_RD              <=  dec2if_dout(96);
+PRED_SUCCESS_RD             <=  dec2if_dout(97);
+PRED_FAILED_RD              <=  dec2if_dout(98);
+RET_INST_RD                 <=  dec2if_dout(99);
+ADR_TO_RET_RD               <=  dec2if_dout(131 downto 100);
+POP_ADR_RAS_RD              <=  dec2if_dout(132);
+PUSH_ADR_RAS_RD             <=  dec2if_dout(133);
 
 -- dec2exe 
 dec2exe_data(251) <= mul_i_sd or mulh_i_sd or mulhsu_i_sd or mulhu_i_sd;  
