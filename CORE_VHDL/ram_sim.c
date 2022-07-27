@@ -135,7 +135,7 @@ int main(int argc, char const* argv[]) {
     char   opt[50] = "";
     char   input_file[200] ;
     char   output[50] ;
-    char   test[512] = "> a.out.txt.s";
+    char   test[512] = "> a.out.txt";
     int nargs = 1;
     int rvtest_entry_point = 0;
 

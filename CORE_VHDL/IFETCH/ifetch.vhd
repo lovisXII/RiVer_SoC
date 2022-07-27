@@ -243,13 +243,13 @@ begin
         if RET_INST_RD = '1' and if2dec_empty = '0' then 
             l0 : for i in 0 to RET_PRED_REG_SIZE-1 loop
                 if ret_adr_reg(i) = BRANCH_INST_ADR_RD then 
-                    found := '1';
+                    --found := '1';
                 end if; 
             end loop;
             if found = '0' then 
                 ret_adr_reg(to_integer(unsigned(ret_write_pointer_si)))     <=  BRANCH_INST_ADR_RD;
                 ret_valid_reg(to_integer(unsigned(ret_write_pointer_si)))   <=  '1'; 
-                ret_write_pointer_si                                        <=  ret_write_pointer_si(RET_PRED_POINTER_SIZE-2 downto 1) & '0'; 
+                ret_write_pointer_si                                        <=  ret_write_pointer_si(RET_PRED_POINTER_SIZE-2 downto 0) & '0'; 
             end if; 
         end if; 
     end if; 
@@ -258,16 +258,18 @@ end process;
 read_pred_ret : process(clk, reset_n)
 variable found : std_logic;
 variable ret_stack_pointer : std_logic_vector(RET_STACK_SIZE-1 downto 0);
+
 begin
     if reset_n = '0' then 
         pred_ret_taken          <=  '0';
         ret_stack_pointer       :=  one_ext_ret_stack_size;
 
     elsif falling_edge(clk) then 
+        found               :=  '0';
         ret_stack_pointer   :=  ret_stack_pointer_si;
         search_ret : for i in 0 to RET_PRED_REG_SIZE-1 loop
             if ret_adr_reg(i) = PC_RD and ret_valid_reg(i) = '1' then 
-                found := '1'; 
+              --  found := '1'; 
             end if; 
         end loop;
         pred_ret_taken  <=  found; 
@@ -278,8 +280,8 @@ begin
                     if ret_stack_pointer(i) = '1' then
                         ret_stack_reg(i) <= ADR_TO_RET_RD;
                     end if;
-                end loop;
-                ret_stack_pointer   :=  ret_stack_pointer(RET_PRED_REG_SIZE-2 downto 1) & '0'; 
+                end loop;   
+                ret_stack_pointer   :=  ret_stack_pointer(RET_STACK_SIZE-2 downto 0) & '0'; 
             elsif POP_ADR_RAS_RD = '1' then 
                 ret_stack_pointer :=    '0' & ret_stack_pointer(RET_STACK_SIZE-1 downto 1);
             end if; 
