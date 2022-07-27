@@ -5,53 +5,62 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	00408093          	addi	ra,ra,4
-   10058:	40110133          	sub	sp,sp,ra
-   1005c:	004002ef          	jal	t0,10060 <main>
+   10054:	00a00093          	li	ra,10
+   10058:	00a00113          	li	sp,10
+   1005c:	00000013          	nop
+   10060:	00000013          	nop
+   10064:	00000013          	nop
+   10068:	00000013          	nop
+   1006c:	00000013          	nop
+   10070:	00000013          	nop
+   10074:	02208863          	beq	ra,sp,100a4 <_branch1>
+   10078:	f89ef06f          	j	0 <_bad>
 
-Disassembly of section .text.startup:
+0001007c <_label1>:
+   1007c:	00d10113          	addi	sp,sp,13
+   10080:	00000013          	nop
+   10084:	00000013          	nop
+   10088:	00000013          	nop
+   1008c:	00000013          	nop
+   10090:	00000013          	nop
+   10094:	0020ca63          	blt	ra,sp,100a8 <_branch2>
+   10098:	f69ef06f          	j	0 <_bad>
 
-00010060 <main>:
-   10060:	ff010113          	addi	sp,sp,-16
-   10064:	00112623          	sw	ra,12(sp)
-   10068:	f9def0ef          	jal	ra,4 <_good>
-   1006c:	00c12083          	lw	ra,12(sp)
-   10070:	00000513          	li	a0,0
-   10074:	01010113          	addi	sp,sp,16
-   10078:	00008067          	ret
+0001009c <_label2>:
+   1009c:	00115863          	bge	sp,ra,100ac <_branch3>
 
-Disassembly of section .comment:
+000100a0 <_label3>:
+   100a0:	f65ef06f          	j	4 <_good>
 
-00000000 <.comment>:
-   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
-   4:	2820                	fld	fs0,80(s0)
-   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
-   a:	3120                	fld	fs0,96(a0)
-   c:	2e30                	fld	fa2,88(a2)
-   e:	2e32                	fld	ft8,264(sp)
-  10:	0030                	addi	a2,sp,8
+000100a4 <_branch1>:
+   100a4:	fd9ff06f          	j	1007c <_label1>
+
+000100a8 <_branch2>:
+   100a8:	ff5ff06f          	j	1009c <_label2>
+
+000100ac <_branch3>:
+   100ac:	ff5ff06f          	j	100a0 <_label3>
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
-   0:	2441                	jal	280 <_exception_occur+0x278>
+   0:	2241                	jal	180 <_exception_occur+0x178>
    2:	0000                	unimp
    4:	7200                	flw	fs0,32(a2)
    6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
-   c:	001a                	c.slli	zero,0x6
+   c:	0018                	0x18
    e:	0000                	unimp
-  10:	1004                	addi	s1,sp,32
-  12:	7205                	lui	tp,0xfffe1
-  14:	3376                	fld	ft6,376(sp)
-  16:	6932                	flw	fs2,12(sp)
-  18:	7032                	flw	ft0,44(sp)
-  1a:	5f30                	lw	a2,120(a4)
-  1c:	326d                	jal	fffff9c6 <_isr_vector+0x7efff92a>
-  1e:	3070                	fld	fa2,224(s0)
-  20:	0800                	addi	s0,sp,16
-  22:	0a01                	addi	s4,s4,0
-  24:	0b              	Address 0x0000000000000024 is out of bounds.
+  10:	7205                	lui	tp,0xfffe1
+  12:	3376                	fld	ft6,376(sp)
+  14:	6932                	flw	fs2,12(sp)
+  16:	7032                	flw	ft0,44(sp)
+  18:	5f30                	lw	a2,120(a4)
+  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
+  1c:	3070                	fld	fa2,224(s0)
+  1e:	0800                	addi	s0,sp,16
+  20:	0a01                	addi	s4,s4,0
+  22:	0b              	Address 0x0000000000000022 is out of bounds.
 
 
 Disassembly of section text:

@@ -10,15 +10,15 @@ OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o \
 EXE/shifter.o EXE/x0_multiplier.o EXE/Diviseur.o EXE/exec.o MEM/mem.o MEM/x1_multiplier.o \
 REG/reg.o WBK/wbk.o WBK/x2_multiplier.o CSR/csr.o CACHES/icache.o \
 CACHES/dcache.o CACHES/buffercache.o TIMER/timer.o
-LD_SCRIPT= -T kernel.ld
+SW_DIR=../SW
+LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
-
 all: core_tb
 
 core_tb: $(OBJECTS) kernel
 	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
-kernel: exception.s reset.s
+kernel: $(SW_DIR)/exception.s $(SW_DIR)/reset.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 	
 %.o: %.cpp  %.h
