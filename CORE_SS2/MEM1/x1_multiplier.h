@@ -7,25 +7,38 @@
 
 SC_MODULE(x1_multiplier) {
     // input :
-    sc_in<sc_bv<384>> IN_RX0;
-    sc_in<bool>       SIGNED_OP_RX0;
-    sc_in<bool>       CARRY_RX0;
+    sc_in<sc_bv<320>> IN_RX0;
+    sc_in<bool>       SELECT_HIGHER_BITS_RX0;
+    sc_in<bool>       SIGNED_RES_RX0;
     sc_in<bool>       X02X1_EMPTY_SX0;
     sc_in<bool>       X12X2_POP_SX2;
 
     // output :
+<<<<<<< HEAD:CORE_SS2/MEM1/x1_multiplier.h
     sc_out<sc_bv<128>> RES_RX1;
     sc_out<bool>       SIGNED_OP_RX1;
     sc_out<bool>       CARRY_RX1;
     sc_out<bool>       X12X2_EMPTY_SX1;
     sc_out<bool>       X02X1_POP_SX1;
+=======
+    sc_out<sc_bv<128>>        RES_RX1;
+    sc_out<bool>              SELECT_HIGHER_BITS_RX1;
+    sc_out<bool>              SIGNED_RES_RX1;
+    sc_out<bool>              X12X2_EMPTY_SX1;
+    sc_out<bool>              X02X1_POP_SX1;
+>>>>>>> main:CORE/MEM/x1_multiplier.h
 
     // General interace :
     sc_in_clk   CLK;
     sc_in<bool> RESET;
 
+<<<<<<< HEAD:CORE_SS2/MEM1/x1_multiplier.h
     // data from input
     sc_signal<sc_bv<64>> M[6];
+=======
+    //data from input
+    sc_signal<sc_bv<64>> M[5];
+>>>>>>> main:CORE/MEM/x1_multiplier.h
 
     // Res from stage 6
     sc_signal<sc_bv<64>> product_s6[4];
@@ -75,20 +88,18 @@ SC_MODULE(x1_multiplier) {
         sensitive << IN_RX0;
         SC_METHOD(CSA1);
         sensitive << M[0] << M[1] << M[2];
-        SC_METHOD(CSA2);
-        sensitive << M[3] << M[4] << M[5];
 
         SC_METHOD(CSA3);
-        sensitive << product_s6[0] << product_s6[1] << product_s6[2];
+        sensitive << product_s6[0] << product_s6[1] << M[3];
 
         SC_METHOD(CSA4);
-        sensitive << product_s7[0] << product_s7[1] << product_s6[3];
+        sensitive << product_s7[0] << product_s7[1] << M[4];
 
         SC_METHOD(manage_fifo);
         sensitive << x12x2_full_sx1 << X02X1_EMPTY_SX0;
 
         SC_METHOD(fifo_concat);
-        sensitive << SIGNED_OP_RX0 << product_s8[0] << product_s8[1];
+        sensitive << SELECT_HIGHER_BITS_RX0 << product_s8[0] << product_s8[1] << SIGNED_RES_RX0;
 
         SC_METHOD(fifo_unconcat);
         sensitive << x12x2_dout_sx1;

@@ -22,6 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Cache riscv
         id: cache-riscv
@@ -29,7 +31,7 @@ jobs:
         env:
           cache-name: cache-riscv
         with:
-          # systemC is installed in /usr/local/systemc-2.3.3/
+          # riscv is installed in ~/riscv
           path: ~/riscv
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
@@ -47,7 +49,7 @@ jobs:
         env:
           cache-name: cache-systemc
         with:
-          # systemC is installed in /usr/local/systemc-2.3.3/
+          # systemC is installed in ~/systemc-2.3.3/
           path: ~/systemc-2.3.3/
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
@@ -62,5 +64,5 @@ jobs:
       - name: Build
         run: ./scripts/build_systemc_core.sh
 
-      - name: Run tests
+      - name: Run basic tests
         run: ./scripts/test_systemc_core.sh

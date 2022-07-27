@@ -10,20 +10,21 @@ __asm__("addi x1,x1, 4");
 __asm__("sub x2, x2,x1 ");
 __asm__("jal x5, main");
 
-
-int fact(int a)
+#define val 6//20
+#define res -720//2432902008176640000
+long long fact(int a)
 {
-    int b = 1;
+    long long b = 1;
     for(int i = 2; i <= a; i++)
     {
-        b = b*i;
+        b = b*-i;
     }
     return b;
 }
 int main() {
-    int b = fact(5);
+    long long b = fact(val);
 
-    if (b == 120) {
+    if (b == (long long)res) {
         _good();
     }
     _bad();

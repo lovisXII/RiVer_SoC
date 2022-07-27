@@ -14,8 +14,14 @@ SC_MODULE(buffercache) {
 
     sc_in<sc_uint<32>> DATA_C;
     sc_in<sc_uint<32>> ADR_C;
+<<<<<<< HEAD:CORE_SS2/CACHES/buffercache.h
     sc_in<bool>        STORE_C;
     sc_in<bool>        LOAD_C;
+=======
+    sc_in<bool> STORE_C;
+    sc_in<bool> LOAD_C;
+    sc_in<sc_uint<2>> SIZE_C;
+>>>>>>> main:CORE/CACHES/buffercache.h
 
     // OUTPUT
     // TO DCACHE
@@ -25,8 +31,14 @@ SC_MODULE(buffercache) {
     // TO RAM
     sc_out<sc_uint<32>> DATA_MP;  // MP mem primaire
     sc_out<sc_uint<32>> ADR_MP;
+<<<<<<< HEAD:CORE_SS2/CACHES/buffercache.h
     sc_out<bool>        STORE_MP;
     sc_out<bool>        LOAD_MP;
+=======
+    sc_out<bool> STORE_MP;
+    sc_out<bool> LOAD_MP;
+    sc_out<sc_uint<2>> SIZE_MP;
+>>>>>>> main:CORE/CACHES/buffercache.h
 
     // signals
     // buffers
@@ -34,16 +46,30 @@ SC_MODULE(buffercache) {
     // buff0
     sc_signal<sc_uint<32>> buff0_DATA;
     sc_signal<sc_uint<32>> buff0_DATA_ADR;
+<<<<<<< HEAD:CORE_SS2/CACHES/buffercache.h
     sc_signal<bool>        buff0_STORE;
     sc_signal<bool>        buff0_LOAD;
     sc_signal<bool>        buff0_VALIDATE;  // data valid on buffer
+=======
+    sc_signal<bool> buff0_STORE;
+    sc_signal<bool> buff0_LOAD;
+    sc_signal<sc_uint<2>> buff0_SIZE;
+    sc_signal<bool> buff0_VALIDATE;  // data valid on buffer
+>>>>>>> main:CORE/CACHES/buffercache.h
 
     // buff1
     sc_signal<sc_uint<32>> buff1_DATA;
     sc_signal<sc_uint<32>> buff1_DATA_ADR;
+<<<<<<< HEAD:CORE_SS2/CACHES/buffercache.h
     sc_signal<bool>        buff1_STORE;
     sc_signal<bool>        buff1_LOAD;
     sc_signal<bool>        buff1_VALIDATE;  // data valid on buffer
+=======
+    sc_signal<bool> buff1_STORE;
+    sc_signal<bool> buff1_LOAD;
+    sc_signal<sc_uint<2>> buff1_SIZE;
+    sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
+>>>>>>> main:CORE/CACHES/buffercache.h
 
     // debug
     sc_signal<sc_uint<5>> buff_readed;
@@ -55,10 +81,10 @@ SC_MODULE(buffercache) {
 
     SC_CTOR(buffercache) {
         SC_METHOD(fifo);
-        sensitive << CLK.neg() << WRITE_OBUFF.pos();
+        sensitive << CLK.pos() << WRITE_OBUFF.pos();
 
         SC_METHOD(bufferfull);
-        sensitive << buff0_VALIDATE << buff1_VALIDATE;
+        sensitive << CLK.pos();
 
         reset_signal_is(RESET_N, false);
     }

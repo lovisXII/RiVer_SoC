@@ -1,0 +1,113 @@
+name: 'riscof tests'
+
+# **What it does**: Run tests 
+# **Why we have it**: To make sure nobody breaks things
+# **Who does it impact**: Not much
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - test_actions
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Cache riscv
+        id: cache-riscv
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-riscv
+        with:
+          # riscv is installed in ~/riscv
+          path: ~/riscv
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-riscv.outputs.cache-hit != 'true' }}
+        name: Get riscv
+        run: 
+          ./scripts/install_cross_compile.sh
+      - name: Cache systemC
+        id: cache-systemc
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-systemc
+        with:
+          # systemC is installed in ~/systemc-2.3.3/
+          path: ~/systemc-2.3.3/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-systemc.outputs.cache-hit != 'true' }}
+        name: Build systemC
+        run: ./scripts/install_systemc.sh
+
+      - name: Build
+        run: ./scripts/build_systemc_core.sh
+
+      - name: Cache riscof
+        id: cache-riscof
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-riscof
+        with:
+          path: ~/venv/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-riscof.outputs.cache-hit != 'true' }}
+        name: Install riscof
+        run: 
+          ./scripts/install_riscof.sh
+      
+      - name: Source env
+        run: source ~/venv/bin/activate
+
+      - name: Cache spike
+        id: cache-spike
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-spike
+        with:
+          path: ~/spike/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+      - if: ${{ steps.cache-spike.outputs.cache-hit != 'true' }}
+        name: Install spike
+        run: 
+          ./scripts/install_spike.sh
+      
+      - name: Copy riscof config
+        run: 
+          cp scripts/github_config_file riscof/config.ini
+      - name: Run riscof
+        run: 
+          sudo apt-get install device-tree-compiler &&
+          ./scripts/test_systemc_core_riscof.sh
+
+      

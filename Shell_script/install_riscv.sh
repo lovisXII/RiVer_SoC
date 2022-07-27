@@ -19,5 +19,8 @@ if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) then
     source ~/.bashrc
   fi
   rm -f riscv32-unknown-elf.gcc-10.2.0.rv32i.ilp32.newlib.tar.gz
+<<<<<<< HEAD
 fi
-
+=======
+fi
+>>>>>>> 6884fe6c (update before change branch)
