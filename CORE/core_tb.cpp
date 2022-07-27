@@ -610,7 +610,7 @@ int sc_main(int argc, char* argv[]) {
                 }
             } else  // access in word
             {
-                cout << sc_time_stamp() << " adr  : " << mem_adr_s1 << " data  : " << mem_data_s1 << endl;
+                //cout << sc_time_stamp() << " adr  : " << mem_adr_s1 << " data  : " << mem_data_s1 << endl;
                 ram[mem_adr_s1] = mem_data_s1;
             }
         }

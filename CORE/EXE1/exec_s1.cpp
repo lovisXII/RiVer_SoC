@@ -556,18 +556,6 @@ void exec_s1::bypasses() {
         op1_se_s1.write(OP1_RD_S1.read());
         r1_valid_se = true;
     } 
-    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1 && !bp_s2_E2_is_taken) 
-    // E1->E1 and csr
-    {
-        op1_se_s1.write(CSR_RDATA_RE_S1.read());
-        r1_valid_se = true;
-    }
-    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
-    // E1->E1 and no load (normal bypass)
-    {
-        op1_se_s1.write(EXE_RES_RE_S1.read());
-        r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
-    }
     else if(DEST_RE_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S2)
     // E2->E1 and csr
     {
@@ -580,29 +568,17 @@ void exec_s1::bypasses() {
         op1_se_s1.write(EXE_RES_RE_S2.read());
         r1_valid_se = true;
     }
-    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S1 && !bp_s2_M2_is_taken) 
-    // M1->E1 and csr
+    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1 && !bp_s2_E2_is_taken) 
+    // E1->E1 and csr
     {
-        op1_se_s1.write(CSR_RDATA_RM_S1.read());
+        op1_se_s1.write(CSR_RDATA_RE_S1.read());
         r1_valid_se = true;
     }
-    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && !bp_s2_M2_is_taken) 
-    // M1->E1 normal
+    else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
+    // E1->E1 and no load (normal bypass)
     {
-        op1_se_s1.write(MEM_RES_RM_S1.read());
-        r1_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
-    }
-    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S2) 
-    // M2->E1 and csr
-    {
-        op1_se_s1.write(CSR_RDATA_RM_S2.read());
-        r1_valid_se = true;
-    }
-    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read()) 
-    // M2->E1 normal
-    {
-        op1_se_s1 = MEM_RES_RM_S2.read();
-        r1_valid_se = true;
+        op1_se_s1.write(EXE_RES_RE_S1.read());
+        r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
     }
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
     //stall in case of load in M1 and data dependencies in exe
@@ -619,6 +595,30 @@ void exec_s1::bypasses() {
     {
         blocked_var = true;
         r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S2) 
+    // M2->E1 and csr
+    {
+        op1_se_s1.write(CSR_RDATA_RM_S2.read());
+        r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read()) 
+    // M2->E1 normal
+    {
+        op1_se_s1 = MEM_RES_RM_S2.read();
+        r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S1 && !bp_s2_M2_is_taken) 
+    // M1->E1 and csr
+    {
+        op1_se_s1.write(CSR_RDATA_RM_S1.read());
+        r1_valid_se = true;
+    }
+    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && !bp_s2_M2_is_taken) 
+    // M1->E1 normal
+    {
+        op1_se_s1.write(MEM_RES_RM_S1.read());
+        r1_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
     }
     else if(op1_is_saved_re){
         r1_valid_se = true ;
@@ -650,27 +650,6 @@ void exec_s1::bypasses() {
         op2_se.write(OP2_RD_S1.read());
         r2_valid_se = true;
     } 
-    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
-    // E1->E1 bypass
-    {
-        sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S1) // case with csr
-            bp_value = CSR_RDATA_RE_S1;
-        else
-            bp_value = EXE_RES_RE_S1;
-
-        if (MEM_STORE_RD_S1.read()) //case of a store 
-        {  // on stores we need to bypass to the data not adr
-            bp_mem_data_var = bp_value;
-            op2_se.write(OP2_RD_S1.read());
-            r2_valid_se = true;
-        }
-        else 
-        {
-            op2_se.write(bp_value);
-            r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
-        }
-    } 
     else if(DEST_RE_S2.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S2) 
     // E2->E1 bypass
     {
@@ -692,29 +671,34 @@ void exec_s1::bypasses() {
             r2_valid_se = true;
         }
     } 
-    else if (MEM_DEST_RM_S1.read() == RADR2_RD_S1.read() && !bp_s2_M2_is_taken) 
-    // M1->E1
+    else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
+    // E1->E1 bypass
     {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RM_S1)
-            bp_value = CSR_RDATA_RM_S1;
+        if (CSR_WENABLE_RE_S1) // case with csr
+            bp_value = CSR_RDATA_RE_S1;
         else
-            bp_value = MEM_RES_RM_S1;
-        
-        if (MEM_STORE_RD_S1.read()) 
-        {
-            bp_mem_data_var = MEM_RES_RM_S1.read();
+            bp_value = EXE_RES_RE_S1;
+
+        if (MEM_STORE_RD_S1.read()) //case of a store 
+        {  // on stores we need to bypass to the data not adr
+            bp_mem_data_var = bp_value;
             op2_se.write(OP2_RD_S1.read());
             r2_valid_se = true;
         }
         else 
         {
-            op2_se.write(MEM_RES_RM_S1.read());
-            r2_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
+            op2_se.write(bp_value);
+            r2_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
         }
-    }
+    } 
     else if (DEST_RE_S1.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1 && !bp_s2_M2_is_taken) 
     //M1->E1 with load so need to stall
+    {
+        blocked_var = true;
+        r2_valid_se = true;
+    }
+    else if (DEST_RE_S2.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
     {
         blocked_var = true;
         r2_valid_se = true;
@@ -737,10 +721,26 @@ void exec_s1::bypasses() {
             r2_valid_se = true;
         }
     }
-    else if (DEST_RE_S2.read() == RADR2_RD_S1.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
+    else if (MEM_DEST_RM_S1.read() == RADR2_RD_S1.read() && !bp_s2_M2_is_taken) 
+    // M1->E1
     {
-        blocked_var = true;
-        r2_valid_se = true;
+        sc_uint<32> bp_value;
+        if (CSR_WENABLE_RM_S1)
+            bp_value = CSR_RDATA_RM_S1;
+        else
+            bp_value = MEM_RES_RM_S1;
+        
+        if (MEM_STORE_RD_S1.read()) 
+        {
+            bp_mem_data_var = MEM_RES_RM_S1.read();
+            op2_se.write(OP2_RD_S1.read());
+            r2_valid_se = true;
+        }
+        else 
+        {
+            op2_se.write(MEM_RES_RM_S1.read());
+            r2_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
+        }
     }
     else if(op2_is_saved_re){
         r2_valid_se = true ;
