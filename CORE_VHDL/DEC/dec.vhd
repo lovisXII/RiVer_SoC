@@ -209,6 +209,8 @@ signal pred_success_sd, pred_failed_sd : std_logic := '0';
 signal ret_sd : std_logic; 
 
 signal pc_no_jump, pc_jump : std_logic_vector(31 downto 0);
+signal pop_adr_ras_sd   :   std_logic;  
+signal push_adr_ras_sd  :   std_logic; 
 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
@@ -535,7 +537,7 @@ offset_branch_j(0)              <=  '0';
 jalr_offset(31 downto 12)       <=  (others => INSTR_RI(31));
 jalr_offset(11 downto 0)        <=  INSTR_RI(31 downto 20);
 
-jalr_offset_calc    <=  std_logic_vector(signed(jalr_offset) + signed(rdata1_sd) - signed(READ_PC_SR) + signed(inc_value)); 
+jalr_offset_calc    <=  std_logic_vector(unsigned(jalr_offset) + unsigned(rdata1_sd) - unsigned(READ_PC_SR) + unsigned(inc_value)); 
 
 offset_branch_jalr(31 downto 1) <=  jalr_offset_calc(31 downto 1);
 offset_branch_jalr(0)           <=  '0';
@@ -547,7 +549,7 @@ offset_branch_sd    <=  offset_branch_b when b_type_sd = '1' else
 
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
-res_compare <= std_logic_vector(signed(dec2exe_op1_sd) - signed(dec2exe_op2_sd));
+res_compare <= std_logic_vector(unsigned(dec2exe_op1_sd) - unsigned(dec2exe_op2_sd));
 different_sign <= dec2exe_op1_sd(31) xor dec2exe_op2_sd(31) ;
 
 jump_sd <=  '1' when b_type_sd = '1'    and (   (bne_i_sd = '1' and (res /= x"00000000")) 
@@ -576,7 +578,7 @@ WRITE_PC_ENABLE_SD  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd 
                                 or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0'))  else 
                         '0';  
 
-branch_adr_sd       <=  std_logic_vector(signed(PC_IF2DEC_RI) + signed(offset_branch_sd));
+branch_adr_sd       <=  std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd));
 
 -- initialize pc
 process(clk, reset_n)
@@ -588,11 +590,11 @@ end process;
 
 resetting_sd    <=  reset_sync_sd xor reset_n; 
 
-pc_no_jump      <=  std_logic_vector(signed(PRED_ADR_RI) + signed(inc_value))   when    PRED_TAKEN_RI = '1' and stall_sd = '1' and (dec_fifo_pred_success = '0' and dec_fifo_pred_failed = '0') else 
-                    std_logic_vector(signed(PC_IF2DEC_RI) + signed(inc_value))  when    PRED_TAKEN_RI = '1' and stall_sd = '0' else 
-                    std_logic_vector(signed(READ_PC_SR) + signed(inc_value));
+pc_no_jump      <=  std_logic_vector(unsigned(PRED_ADR_RI) + unsigned(inc_value))   when    PRED_TAKEN_RI = '1' and stall_sd = '1' and (dec_fifo_pred_success = '0' and dec_fifo_pred_failed = '0') else 
+                    std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(inc_value))  when    PRED_TAKEN_RI = '1' and stall_sd = '0' else 
+                    std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value));
 
-pc_jump         <=  std_logic_vector(signed(PRED_ADR_RI) + signed(inc_value))   when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' else 
+pc_jump         <=  std_logic_vector(unsigned(PRED_ADR_RI) + unsigned(inc_value))   when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' else 
                     branch_adr_sd;
 
 pc  <=  READ_PC_SR  when resetting_sd = '1' else
@@ -627,6 +629,19 @@ pred_failed_sd  <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '0' a
 PRED_ADR_SD     <=  PRED_ADR_RI;
 PRED_TAKEN_SD   <=  PRED_TAKEN_RI;
 
+rd_link     <=  '1' when rdest_sd = "000001" or rdest_sd = "000101" else 
+                '0';
+    
+rs1_link    <=  '1' when radr1_sd = "000001" or rdest_sd = "000101" else 
+                '0'; 
+
+pop_adr_ras_sd  <=  '1' when PRED_TAKEN_RI = '0' and ((rd_link = '0' and rs1_link = '1') or (rd_link = '1' and rs1_link = '1' and (rdest_sd /= radr1_sd))) else 
+                    '0'; 
+push_adr_ras_sd <=  '1' when rd_link = '1' and (j_i_sd = '1' or jalr_i_sd = '1') else 
+                    '0'; 
+
+ret_sd          <=  '1' when jalr_type_sd = '1' and rdest_sd = "000000" and offset_branch_sd = x"00000004" and radr1_sd = "000001" else 
+                    '0'; 
 -------------------------
 -- Bypass
 -------------------------
@@ -708,9 +723,9 @@ dec2if_din(96)              <=  b_type_sd or j_type_sd;
 dec2if_din(97)              <=  pred_success_sd; 
 dec2if_din(98)              <=  pred_failed_sd; 
 dec2if_din(99)              <=  ret_sd; 
-dec2if_din(131 downto 100)  <=  std_logic_vector(signed(PC_IF2DEC_RI) + signed(inc_value));
-dec2if_din(132)             <=  '0'; -- to do  ret
-dec2if_din(133)             <=  '0';
+dec2if_din(131 downto 100)  <=  std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(inc_value));
+dec2if_din(132)             <=  pop_adr_ras_sd; 
+dec2if_din(133)             <=  push_adr_ras_sd; 
 
 PC_RD                       <=  dec2if_dout(31 downto 0);
 ADR_TO_BRANCH_RD            <=  dec2if_dout(63 downto 32);

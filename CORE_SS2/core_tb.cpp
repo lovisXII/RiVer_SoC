@@ -81,7 +81,7 @@ int sc_main(int argc, char* argv[]) {
         char temp[512];
 
         sprintf(temp,
-                "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s %s",
+                "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s",
                 opt.c_str(),
                 path.c_str());  // writting "riscv32-unknown-elf-gcc -nostdlib
                                 // path" in temp
@@ -90,7 +90,7 @@ int sc_main(int argc, char* argv[]) {
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld  %s %s"
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld  %s %s"
         , opt.c_str()
         , path.c_str());
         

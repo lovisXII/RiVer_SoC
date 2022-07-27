@@ -135,7 +135,7 @@ int main(int argc, char const* argv[]) {
     char   opt[50] = "";
     char   input_file[200] ;
     char   output[50] ;
-    char   test[512] = "> a.out.txt";
+    char   test[512] = "> a.out.txt.s";
     int nargs = 1;
     int rvtest_entry_point = 0;
 
@@ -175,14 +175,14 @@ int main(int argc, char const* argv[]) {
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
