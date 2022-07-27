@@ -171,7 +171,6 @@ core0 : core
         DEBUG_PC_READ
     );
 
-
 clk_gen : process
 variable r0 : integer;
 variable un : integer := 1;

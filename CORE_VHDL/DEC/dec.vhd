@@ -296,7 +296,7 @@ stall_sd    <=  '1' when    (
 -- if2dec 
 IF2DEC_POP_SD   <=  not stall_sd;
 
-IF2DEC_FLUSH_SD <=  '1' when (PRED_TAKEN_RI = '1' and (jump_sd = '0' and stall_sd = '0')) or (jump_sd = '1' and stall_sd = '0') else  
+IF2DEC_FLUSH_SD <=  '1' when (PRED_TAKEN_RI = '1' and (jump_sd = '0' and stall_sd = '0')) or (PRED_TAKEN_RI = '0' and (jump_sd = '1' and stall_sd = '0')) else  
                     '0'; 
 
 dec2if_push_sd  <=  '1' when   ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
