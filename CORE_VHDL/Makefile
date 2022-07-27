@@ -45,4 +45,5 @@ warning :
 	@echo You have to do : make TEST=pth_to_the_test/test_name
 	@echo
 clean:
-	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.ghw *.out *.out.txt
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.ghw *.out \
+	*.out.txt *.out.txt.s

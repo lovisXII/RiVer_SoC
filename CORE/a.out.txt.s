@@ -7,19 +7,73 @@ Disassembly of section seg_text:
 00010054 <_start>:
    10054:	00408093          	addi	ra,ra,4
    10058:	40110133          	sub	sp,sp,ra
-   1005c:	004002ef          	jal	t0,10060 <main>
+   1005c:	04c002ef          	jal	t0,100a8 <main>
 
-Disassembly of section .text.startup:
+00010060 <modulo>:
+   10060:	fe010113          	addi	sp,sp,-32
+   10064:	00812e23          	sw	s0,28(sp)
+   10068:	02010413          	addi	s0,sp,32
+   1006c:	fea42623          	sw	a0,-20(s0)
+   10070:	feb42423          	sw	a1,-24(s0)
+   10074:	0140006f          	j	10088 <modulo+0x28>
+   10078:	fec42703          	lw	a4,-20(s0)
+   1007c:	fe842783          	lw	a5,-24(s0)
+   10080:	40f707b3          	sub	a5,a4,a5
+   10084:	fef42623          	sw	a5,-20(s0)
+   10088:	fec42703          	lw	a4,-20(s0)
+   1008c:	fe842783          	lw	a5,-24(s0)
+   10090:	fef754e3          	bge	a4,a5,10078 <modulo+0x18>
+   10094:	fec42783          	lw	a5,-20(s0)
+   10098:	00078513          	mv	a0,a5
+   1009c:	01c12403          	lw	s0,28(sp)
+   100a0:	02010113          	addi	sp,sp,32
+   100a4:	00008067          	ret
 
-00010060 <main>:
-   10060:	ff010113          	addi	sp,sp,-16
-   10064:	00112623          	sw	ra,12(sp)
-   10068:	f9def0ef          	jal	ra,4 <_good>
-   1006c:	f95ef0ef          	jal	ra,0 <_bad>
-   10070:	00c12083          	lw	ra,12(sp)
-   10074:	00000513          	li	a0,0
-   10078:	01010113          	addi	sp,sp,16
-   1007c:	00008067          	ret
+000100a8 <main>:
+   100a8:	fe010113          	addi	sp,sp,-32
+   100ac:	00112e23          	sw	ra,28(sp)
+   100b0:	00812c23          	sw	s0,24(sp)
+   100b4:	02010413          	addi	s0,sp,32
+   100b8:	00300793          	li	a5,3
+   100bc:	fef42223          	sw	a5,-28(s0)
+   100c0:	00700793          	li	a5,7
+   100c4:	fef42023          	sw	a5,-32(s0)
+   100c8:	00100793          	li	a5,1
+   100cc:	fef42423          	sw	a5,-24(s0)
+   100d0:	0400006f          	j	10110 <main+0x68>
+   100d4:	fe842583          	lw	a1,-24(s0)
+   100d8:	fe442503          	lw	a0,-28(s0)
+   100dc:	f85ff0ef          	jal	ra,10060 <modulo>
+   100e0:	00050793          	mv	a5,a0
+   100e4:	02079063          	bnez	a5,10104 <main+0x5c>
+   100e8:	fe842583          	lw	a1,-24(s0)
+   100ec:	fe042503          	lw	a0,-32(s0)
+   100f0:	f71ff0ef          	jal	ra,10060 <modulo>
+   100f4:	00050793          	mv	a5,a0
+   100f8:	00079663          	bnez	a5,10104 <main+0x5c>
+   100fc:	fe842783          	lw	a5,-24(s0)
+   10100:	fef42623          	sw	a5,-20(s0)
+   10104:	fe842783          	lw	a5,-24(s0)
+   10108:	00178793          	addi	a5,a5,1
+   1010c:	fef42423          	sw	a5,-24(s0)
+   10110:	fe842703          	lw	a4,-24(s0)
+   10114:	fe442783          	lw	a5,-28(s0)
+   10118:	00e7c863          	blt	a5,a4,10128 <main+0x80>
+   1011c:	fe842703          	lw	a4,-24(s0)
+   10120:	fe042783          	lw	a5,-32(s0)
+   10124:	fae7d8e3          	bge	a5,a4,100d4 <main+0x2c>
+   10128:	fec42703          	lw	a4,-20(s0)
+   1012c:	00100793          	li	a5,1
+   10130:	00f71663          	bne	a4,a5,1013c <main+0x94>
+   10134:	ed1ef0ef          	jal	ra,4 <_good>
+   10138:	0080006f          	j	10140 <main+0x98>
+   1013c:	ec5ef0ef          	jal	ra,0 <_bad>
+   10140:	00000793          	li	a5,0
+   10144:	00078513          	mv	a0,a5
+   10148:	01c12083          	lw	ra,28(sp)
+   1014c:	01812403          	lw	s0,24(sp)
+   10150:	02010113          	addi	sp,sp,32
+   10154:	00008067          	ret
 
 Disassembly of section .comment:
 

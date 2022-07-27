@@ -28,5 +28,5 @@ kernel: $(SW_DIR)/exception.s $(SW_DIR)/reset.s
 	$(CC) -c $< $(C_ARGS) -o $@
 
 clean: 
-	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out
-	rm kernel
+	rm -f *.o main alu_tb shifter_tb exec_tb *.vcd $(OBJECTS) core_tb a.out \
+	kernel *.out.txt *.out.txt.s
