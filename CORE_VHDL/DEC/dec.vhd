@@ -209,6 +209,8 @@ signal pred_success_sd, pred_failed_sd : std_logic := '0';
 signal ret_sd : std_logic; 
 
 signal pc_no_jump, pc_jump : std_logic_vector(31 downto 0);
+signal pop_adr_ras_sd   :   std_logic;  
+signal push_adr_ras_sd  :   std_logic; 
 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
@@ -627,6 +629,19 @@ pred_failed_sd  <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '0' a
 PRED_ADR_SD     <=  PRED_ADR_RI;
 PRED_TAKEN_SD   <=  PRED_TAKEN_RI;
 
+rd_link     <=  '1' when rdest_sd = "000001" or rdest_sd = "000101" else 
+                '0';
+    
+rs1_link    <=  '1' when radr1_sd = "000001" or rdest_sd = "000101" else 
+                '0'; 
+
+pop_adr_ras_sd  <=  '1' when PRED_TAKEN_RI = '0' and ((rd_link = '0' and rs1_link = '1') or (rd_link = '1' and rs1_link = '1' and (rdest_sd /= radr1_sd))) else 
+                    '0'; 
+push_adr_ras_sd <=  '1' when rd_link = '1' and (j_i_sd = '1' or jalr_i_sd = '1') else 
+                    '0'; 
+
+ret_sd          <=  '1' when jalr_type_sd = '1' and rdest_sd = "000000" and offset_branch_sd = x"00000004" and radr1_sd = "000001" else 
+                    '0'; 
 -------------------------
 -- Bypass
 -------------------------
@@ -709,8 +724,8 @@ dec2if_din(97)              <=  pred_success_sd;
 dec2if_din(98)              <=  pred_failed_sd; 
 dec2if_din(99)              <=  ret_sd; 
 dec2if_din(131 downto 100)  <=  std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(inc_value));
-dec2if_din(132)             <=  '0'; -- to do  ret
-dec2if_din(133)             <=  '0';
+dec2if_din(132)             <=  pop_adr_ras_sd; 
+dec2if_din(133)             <=  push_adr_ras_sd; 
 
 PC_RD                       <=  dec2if_dout(31 downto 0);
 ADR_TO_BRANCH_RD            <=  dec2if_dout(63 downto 32);

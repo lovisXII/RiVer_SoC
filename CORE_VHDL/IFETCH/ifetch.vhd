@@ -92,7 +92,7 @@ signal pred_write_pointer_si : std_logic_vector(PRED_POINTER_SIZE-1 downto 0);
 
 -- Ret prediction 
 type ret_adr_reg_t is array (0 to RET_PRED_REG_SIZE-1) of std_logic_vector(31 downto 0);
-signal reg_adr_reg : ret_adr_reg_t;
+signal ret_adr_reg : ret_adr_reg_t;
 
 type ret_stack_reg_t is array (0 to RET_STACK_SIZE-1) of std_logic_vector(31 downto 0);
 signal ret_stack_reg : ret_stack_reg_t; 
@@ -101,12 +101,11 @@ signal ret_valid_reg : std_logic_vector(RET_PRED_REG_SIZE-1 downto 0);
 
 signal ret_write_pointer_si : std_logic_vector(RET_PRED_POINTER_SIZE-1 downto 0);
 signal pred_branch_next_adr : std_logic_vector(31 downto 0) := x"22222200";
-signal ret_stack_pointer_si : std_logic_vector()
+signal ret_stack_pointer_si : std_logic_vector(RET_STACK_SIZE-1 downto 0);
 
+signal pred_ret_next_adr : std_logic_vector(31 downto 0) := x"33333300"; 
 
-signal pred_next_ret_adr_si : std_logic_vector(31 downto 0) := x"33333300"; 
-
-signal pred_branch_taken, pred_ret_taken, pred_taken_si : std_logic := '0'; 
+signal pred_branch_taken, pred_ret_taken : std_logic := '0'; 
 
 begin 
 
@@ -181,8 +180,8 @@ variable pred_write_pointer : std_logic_vector(PRED_POINTER_SIZE-1 downto 0);
 begin 
     index := 0;
     if reset_n = '0' then 
-        pred_write_pointer := (others => '0');
-        pred_branch_taken = '0'; 
+        pred_write_pointer  := (others => '0');
+        pred_branch_taken   <= '0'; 
     elsif falling_edge(clk) then 
         if BRANCH_INST_RD = '1' and if2dec_empty = '0' then 
             found := '0'; 
@@ -250,7 +249,7 @@ begin
             if found = '0' then 
                 ret_adr_reg(to_integer(unsigned(ret_write_pointer_si)))     <=  BRANCH_INST_ADR_RD;
                 ret_valid_reg(to_integer(unsigned(ret_write_pointer_si)))   <=  '1'; 
-                ret_write_pointer_si                                        <=  ret_write_pointer_si(RET_PRED_REG_SIZE-1 downto 1) & '0'; 
+                ret_write_pointer_si                                        <=  ret_write_pointer_si(RET_PRED_POINTER_SIZE-2 downto 1) & '0'; 
             end if; 
         end if; 
     end if; 
@@ -266,18 +265,18 @@ begin
 
     elsif falling_edge(clk) then 
         ret_stack_pointer   :=  ret_stack_pointer_si;
-        search_ret : for i in 0 to RET_PRED_SIZE-1 loop
-            if ret_adr_reg = PC_RD and ret_valid_reg(i) = '1' then 
+        search_ret : for i in 0 to RET_PRED_REG_SIZE-1 loop
+            if ret_adr_reg(i) = PC_RD and ret_valid_reg(i) = '1' then 
                 found := '1'; 
             end if; 
         end loop;
         pred_ret_taken  <=  found; 
 
-        if IF2DEC_EMPTY_SI = '0' then 
+        if if2dec_empty = '0' then 
             if PUSH_ADR_RAS_RD = '1' then 
                 ret_inst_search : for i in 0 to RET_PRED_REG_SIZE-1 loop
                     if ret_stack_pointer(i) = '1' then
-                        ret_stack_reg(i) = ADR_TO_RET_RD;
+                        ret_stack_reg(i) <= ADR_TO_RET_RD;
                     end if;
                 end loop;
                 ret_stack_pointer   :=  ret_stack_pointer(RET_PRED_REG_SIZE-2 downto 1) & '0'; 
@@ -288,7 +287,7 @@ begin
             if found = '1' then 
                 found_ret : for i in 0 to RET_STACK_SIZE-2 loop
                     if ret_stack_pointer(i+1) = '1' then 
-                        pret_ret_next_adr_si ret_stack_reg(i);
+                        pred_ret_next_adr <= ret_stack_reg(i);
                     end if; 
                 end loop;
                 ret_stack_pointer :=    '0' & ret_stack_pointer(RET_PRED_REG_SIZE-1 downto 1);
@@ -309,8 +308,11 @@ if2dec_din(31 downto 0)     <=  PRED_ADR_SD when    PRED_TAKEN_SD = '1' and PRED
                                 PC_RD;
 if2dec_din(63 downto 32)    <=  IC_INST_SI  when    EXCEPTION_SM = '0'  else
                                 nop_i;
-if2dec_din(95 downto 64)    <=  pred_branch_next_adr; 
-if2dec_din(96)              <=  pred_branch_taken;
+if2dec_din(95 downto 64)    <=  pred_branch_next_adr    when    pred_branch_taken = '1' else
+                                pred_ret_next_adr       when    pred_ret_taken = '1'    else
+                                x"44444400"; 
+                
+if2dec_din(96)              <=  pred_branch_taken or pred_ret_taken;
 
 -- Ouput
 PC_IF2DEC_RI                <=  if2dec_dout(31 downto 0);
