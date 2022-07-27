@@ -5,13 +5,8 @@
 SC_MODULE(x2_multiplier) {
     // Input :
     sc_in<sc_bv<128>> IN_RX1;
-<<<<<<< HEAD:CORE_SS2/WBK1/x2_multiplier.h
     sc_in<bool>       SIGNED_OP_RX1;
     sc_in<bool>       CARRY_RX1;
-=======
-    sc_in<bool> SELECT_HIGHER_BITS_RX1;
-    sc_in<bool> SIGNED_RES_RX1;
->>>>>>> main:CORE/WBK/x2_multiplier.h
 
     sc_in<bool> X12X2_EMPTY_SX1;
 
@@ -25,30 +20,22 @@ SC_MODULE(x2_multiplier) {
 
     sc_signal<sc_bv<64>> a;
     sc_signal<sc_bv<64>> b;
-<<<<<<< HEAD:CORE_SS2/WBK1/x2_multiplier.h
     sc_signal<bool>      S[64];
     sc_signal<bool>      G[64];
     sc_signal<bool>      P[64];
-=======
->>>>>>> main:CORE/WBK/x2_multiplier.h
 
-    sc_signal<sc_bv<64>> result;
+    sc_signal<bool> c[64];
 
-<<<<<<< HEAD:CORE_SS2/WBK1/x2_multiplier.h
     void pre_process();
     // modified full adder
     void MFA_0();
     void C_gen_1();
 
     void RES();
-=======
-    void process();
->>>>>>> main:CORE/WBK/x2_multiplier.h
 
     void manage_fifo();
     void trace(sc_trace_file * tf);
 
-<<<<<<< HEAD:CORE_SS2/WBK1/x2_multiplier.h
     SC_CTOR(x2_multiplier) {
         SC_METHOD(pre_process);
         sensitive << IN_RX1 << CARRY_RX1 << SIGNED_OP_RX1 << CLK;
@@ -62,12 +49,6 @@ SC_MODULE(x2_multiplier) {
         for (int i = 0; i < 64; i++)
             sensitive << S[i];
         sensitive << SIGNED_OP_RX1 << CLK;
-=======
-    SC_CTOR(x2_multiplier)
-    {
-        SC_METHOD(process);
-        sensitive << IN_RX1 << SIGNED_RES_RX1 << SELECT_HIGHER_BITS_RX1;
->>>>>>> main:CORE/WBK/x2_multiplier.h
 
         SC_METHOD(manage_fifo);
         sensitive << X12X2_EMPTY_SX1;

@@ -345,7 +345,7 @@ int sc_main(int argc, char* argv[]) {
     RESET.write(false);  // reset
     
     //PC_RESET.write(reset_adr);
-    PC_RESET.write(reset_adr);
+    PC_RESET.write(start_adr);
     
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
