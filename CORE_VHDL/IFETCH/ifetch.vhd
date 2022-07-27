@@ -180,10 +180,10 @@ begin
             end loop;   
 
             if found = '0' then 
-                branch_adr_reg(to_integer(signed(pred_write_pointer)))      <=  BRANCH_INST_ADR_RD;
-                predicted_adr_reg(to_integer(signed(pred_write_pointer)))   <=  ADR_TO_BRANCH_RD;
-                pred_state_reg(to_integer(signed(pred_write_pointer)))      <=  weakly_taken;
-                pred_valid_reg(to_integer(signed(pred_write_pointer)))      <=  '1';
+                branch_adr_reg(to_integer(unsigned(pred_write_pointer)))      <=  BRANCH_INST_ADR_RD;
+                predicted_adr_reg(to_integer(unsigned(pred_write_pointer)))   <=  ADR_TO_BRANCH_RD;
+                pred_state_reg(to_integer(unsigned(pred_write_pointer)))      <=  weakly_taken;
+                pred_valid_reg(to_integer(unsigned(pred_write_pointer)))      <=  '1';
                 pred_write_pointer                                          :=  std_logic_vector(unsigned(pred_write_pointer) + unsigned(one_ext_pred_size));
             else 
                 PRED_STATE_REG(index)                   <=  next_pred_state;
