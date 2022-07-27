@@ -27,4 +27,4 @@ SECTIONS
     }
 }
 
-INPUT(exception.o)
+INPUT(kernel.o)

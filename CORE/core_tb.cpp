@@ -173,7 +173,7 @@ int sc_main(int argc, char* argv[]) {
                     cout << "Found rvtest_code_end at adr " << std::hex << rvtest_code_end << endl;
                 }
                 if (name == "rvtest_entry_point") {
-                    start_adr = value - 4;
+                    reset_adr = value - 4;
                     cout << "Found rvtest_entry_point at adr " << std::hex << reset_adr << endl;
                 }
                 if (name == "begin_signature") {
@@ -345,7 +345,7 @@ int sc_main(int argc, char* argv[]) {
     RESET.write(false);  // reset
     
     //PC_RESET.write(reset_adr);
-    PC_RESET.write(start_adr);
+    PC_RESET.write(reset_adr);
     
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
