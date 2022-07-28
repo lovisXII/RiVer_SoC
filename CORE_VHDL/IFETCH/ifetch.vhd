@@ -125,11 +125,11 @@ if2dec : fifo
 
 stall_si <= IC_STALL_SI or if2dec_full_si or DEC2IF_EMPTY_SD;
 
-if2dec_push_si  <= not stall_si when (IF2DEC_FLUSH_SD = '0') else '0'; 
-DEC2IF_POP_SI   <= not stall_si when IF2DEC_FLUSH_SD = '0' else '1';
-ADR_VALID_SI    <= not DEC2IF_EMPTY_SD when (IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM /= '1') else '0';
+if2dec_push_si  <= not stall_si when IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0' else '0'; 
+DEC2IF_POP_SI   <= not stall_si when IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0' else '1';
+ADR_VALID_SI    <= not DEC2IF_EMPTY_SD when IF2DEC_FLUSH_SD = '0' and EXCEPTION_SM = '0' else '0';
 
-ADR_SI <=   PRED_ADR_SD when    PRED_TAKEN_SD = '1' and PRED_FAILED_RD = '0'    else 
+ADR_SI  <=  PRED_ADR_SD when    PRED_TAKEN_SD = '1' and PRED_FAILED_RD = '0'    else 
             PC_RD;
       
 
@@ -181,7 +181,6 @@ begin
     index := 0;
     if reset_n = '0' then 
         pred_write_pointer  := (others => '0');
-        pred_branch_taken   <= '0'; 
     elsif falling_edge(clk) then 
         if BRANCH_INST_RD = '1' and if2dec_empty = '0' then 
             found := '0'; 
@@ -211,22 +210,28 @@ begin
 end process;
 
 read_pred_reg : process(PC_RD)
-variable found : std_logic;
+variable found, pred_good : std_logic;
 begin 
     found := '0';
+    pred_good := '0'; 
     search_branch : for i in 0 to PRED_REG_SIZE-1 loop 
         if branch_adr_reg(i) = PC_RD and pred_valid_reg(i) = '1' then 
-            found := '1';
-            pred_branch_next_adr    <=  predicted_adr_reg(i);
-            if pred_state_reg(i) = strongly_taken or pred_state_reg(i) = weakly_taken then 
-                pred_branch_taken <= '1'; 
-            else 
-                pred_branch_taken <= '0';
+            if found = '0' then 
+                found := '1';
+                pred_branch_next_adr    <=  predicted_adr_reg(i);
+                if pred_state_reg(i) = strongly_taken or pred_state_reg(i) = weakly_taken then 
+                    pred_good := '1';
+                else 
+                    pred_good := '0';
+                end if; 
             end if; 
         end if; 
     end loop; 
-    if found = '0' then 
-        pred_branch_taken <= '0';
+    
+    if found = '1' and pred_good = '1' then 
+        pred_branch_taken <= '1';
+    else 
+        pred_branch_taken <= '0'; 
     end if;
 end process;
 

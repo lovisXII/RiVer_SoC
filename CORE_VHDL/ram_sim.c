@@ -83,7 +83,7 @@ int write_mem(int a, int data, int byt_sel, int time) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
+    //printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
     return 0; 
 }   
 
