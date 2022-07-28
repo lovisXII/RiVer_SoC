@@ -141,7 +141,7 @@ signal beq_i_sd, bne_i_sd, blt_i_sd, bge_i_sd, bltu_i_sd, bgeu_i_sd : std_logic;
 signal lui_i_sd : std_logic;
 signal auipc_i_sd : std_logic;
 
-signal j_i_sd, jalr_i_sd : std_logic;
+signal jal_i_sd, jalr_i_sd : std_logic;
 
 signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
 signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
@@ -362,7 +362,7 @@ lui_i_sd <= u_type_sd;
 auipc_i_sd <= '1' when INSTR_RI(6 downto 0) = "0010111" else '0';
 
 -- J type 
-j_i_sd <= j_type_sd; 
+jal_i_sd <= j_type_sd; 
 jalr_i_sd <= jalr_type_sd;
 
 -- Mem access 
@@ -408,7 +408,7 @@ fence_i_sd  <=  '1' when INSTR_RI(6 downto 0) = "0001111" and INSTR_RI(14 downto
 illegal_inst    <=  not (add_i_sd or sub_i_sd or slt_i_sd or sltu_i_sd or and_i_sd or or_i_sd or xor_i_sd or sll_i_sd or srl_i_sd or sra_i_sd or
                     addi_i_sd or slti_i_sd or sltiu_i_sd or andi_i_sd or ori_i_sd or xori_i_sd or
                     slli_i_sd or srli_i_sd or srai_i_sd or
-                    beq_i_sd or bne_i_sd or blt_i_sd or bge_i_sd or bltu_i_sd or bgeu_i_sd or lui_i_sd or auipc_i_sd or j_i_sd or jalr_i_sd or 
+                    beq_i_sd or bne_i_sd or blt_i_sd or bge_i_sd or bltu_i_sd or bgeu_i_sd or lui_i_sd or auipc_i_sd or jal_i_sd or jalr_i_sd or 
                     lw_i_sd or lh_i_sd or lhu_i_sd or lb_i_sd or lbu_i_sd or sw_i_sd or sh_i_sd or sb_i_sd or 
                     mul_i_sd or mulh_i_sd or mulhu_i_sd or mulhsu_i_sd or 
                     ecall_i_sd or ebreak_i_sd or csrrw_i_sd or csrrs_i_sd or csrrc_i_sd or csrrwi_i_sd or csrrsi_i_sd or csrrci_i_sd or mret_i_sd or sret_i_sd or fence_i_sd);
@@ -632,12 +632,12 @@ PRED_TAKEN_SD   <=  PRED_TAKEN_RI;
 rd_link     <=  '1' when rdest_sd = "000001" or rdest_sd = "000101" else 
                 '0';
     
-rs1_link    <=  '1' when radr1_sd = "000001" or rdest_sd = "000101" else 
+rs1_link    <=  '1' when radr1_sd = "000001" or radr1_sd = "000101" else 
                 '0'; 
 
 pop_adr_ras_sd  <=  '1' when PRED_TAKEN_RI = '0' and ((rd_link = '0' and rs1_link = '1') or (rd_link = '1' and rs1_link = '1' and (rdest_sd /= radr1_sd))) else 
                     '0'; 
-push_adr_ras_sd <=  '1' when rd_link = '1' and (j_i_sd = '1' or jalr_i_sd = '1') else 
+push_adr_ras_sd <=  '1' when rd_link = '1' and (jal_i_sd = '1' or jalr_i_sd = '1') else 
                     '0'; 
 
 ret_sd          <=  '1' when jalr_type_sd = '1' and rdest_sd = "000000" and offset_branch_sd = x"00000004" and radr1_sd = "000001" else 

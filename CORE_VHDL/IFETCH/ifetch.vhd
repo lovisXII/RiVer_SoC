@@ -107,6 +107,9 @@ signal pred_ret_next_adr : std_logic_vector(31 downto 0) := x"33333300";
 
 signal pred_branch_taken, pred_ret_taken : std_logic := '0'; 
 
+
+signal debug_in_loop : integer := 0;
+
 begin 
 
 -- Instanciation 
@@ -180,7 +183,8 @@ variable pred_write_pointer : std_logic_vector(PRED_POINTER_SIZE-1 downto 0);
 begin 
     index := 0;
     if reset_n = '0' then 
-        pred_write_pointer  := (others => '0');
+        pred_write_pointer  :=  (others => '0');
+        pred_valid_reg      <=  (others => '0'); 
     elsif falling_edge(clk) then 
         if BRANCH_INST_RD = '1' and if2dec_empty = '0' then 
             found := '0'; 
@@ -243,12 +247,13 @@ variable found : std_logic;
 begin 
     if reset_n = '0' then 
         ret_write_pointer_si    <=  one_ext_ret_size;
+        ret_valid_reg           <=  (others => '0');
     elsif falling_edge(clk) then 
         found := '0';
         if RET_INST_RD = '1' and if2dec_empty = '0' then 
             l0 : for i in 0 to RET_PRED_REG_SIZE-1 loop
                 if ret_adr_reg(i) = BRANCH_INST_ADR_RD then 
-                    --found := '1';
+                    found := '1';
                 end if; 
             end loop;
             if found = '0' then 
@@ -274,7 +279,7 @@ begin
         ret_stack_pointer   :=  ret_stack_pointer_si;
         search_ret : for i in 0 to RET_PRED_REG_SIZE-1 loop
             if ret_adr_reg(i) = PC_RD and ret_valid_reg(i) = '1' then 
-              --  found := '1'; 
+                found := '1'; 
             end if; 
         end loop;
         pred_ret_taken  <=  found; 
@@ -288,12 +293,15 @@ begin
                 end loop;   
                 ret_stack_pointer   :=  ret_stack_pointer(RET_STACK_SIZE-2 downto 0) & '0'; 
             elsif POP_ADR_RAS_RD = '1' then 
+            debug_in_loop <= debug_in_loop + 1;
+
                 ret_stack_pointer :=    '0' & ret_stack_pointer(RET_STACK_SIZE-1 downto 1);
             end if; 
 
             if found = '1' then 
                 found_ret : for i in 0 to RET_STACK_SIZE-2 loop
-                    if ret_stack_pointer(i+1) = '1' then 
+                    if ret_stack_pointer(i+1) = '1' and ret_valid_reg(i) = '1' then
+                        report "found ret : " & integer'image(to_integer(unsigned(ret_stack_reg(i))));    
                         pred_ret_next_adr <= ret_stack_reg(i);
                     end if; 
                 end loop;
