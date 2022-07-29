@@ -199,21 +199,27 @@ void ifetch::ret_stack()
         }
         pred_ret_taken_si = found;
 
+        sc_uint<ret_stack_size> ras_temp = ret_stack_pointer_si.read();
+        bool adr_pushed = false;
         if(!IF2DEC_EMPTY_SI.read())
         {
             if(PUSH_ADR_RAS_RD.read())
             {
                 // ret inst found on decod stage => pop @
                 for(int i = 0; i < ret_stack_size; i++)
-                    if(ret_stack_pointer_si.read()[i])
+                    if(ras_temp[i])
+                    {
                         RET_STACK_RI[i] = ADR_TO_RET_RD.read();
+                        adr_pushed = true;
+                    }
 
-                ret_stack_pointer_si = ret_stack_pointer_si.read() << 1;
+                ras_temp = ras_temp << 1;
+
             }
             else if(POP_ADR_RAS_RD.read())
             {
                 // push valid adr to ret on stack
-                ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+                ras_temp = ras_temp >> 1;
             }
 
             if(found)
@@ -221,14 +227,15 @@ void ifetch::ret_stack()
                 // pc@ == ret inst => pop @ to ret
                 for(int i = 0; i < ret_stack_size-1; i++)
                 {
-                    if(ret_stack_pointer_si.read()[i+1])
+                    if(ras_temp[i+1])
                     {
-                        pred_ret_next_adr_si = RET_STACK_RI[i];
+                        pred_ret_next_adr_si = adr_pushed?ADR_TO_RET_RD.read():RET_STACK_RI[i];
                     }
                 }
-                ret_stack_pointer_si = ret_stack_pointer_si.read() >> 1;
+                ras_temp = ras_temp >> 1;
             }
         }
+        ret_stack_pointer_si = ras_temp;
     }
 }
 
