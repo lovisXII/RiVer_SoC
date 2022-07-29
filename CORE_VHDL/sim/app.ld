@@ -15,11 +15,6 @@ SECTIONS
     {
         *(.text)
     }
-    . = 0x11054 ;
-    seg_result :
-    {
-        *(.result)
-    }
     . = 0x80000000 ;
     seg_reset :
     {
@@ -32,4 +27,4 @@ SECTIONS
     }
 }
 
-INPUT(exception.o)
+INPUT(kernel)

@@ -171,7 +171,6 @@ core0 : core
         DEBUG_PC_READ
     );
 
-
 clk_gen : process
 variable r0 : integer;
 variable un : integer := 1;
@@ -189,7 +188,11 @@ begin
         end if;
     end if; 
     if end_simu = '1' or cpt_end = cpt_max then 
+<<<<<<< HEAD
         assert false report "end of simulation" severity note; 
+=======
+        assert false report "end of simulation, done in " & integer'image(CYCLES) & " cycles" severity note; 
+>>>>>>> main
         r0 := end_simulation(result,un);
         wait; 
     end if; 

@@ -83,7 +83,7 @@ int write_mem(int a, int data, int byt_sel, int time) {
     tmp &= ~mask; 
     tmp |= dataw; 
     ram[addr1][addr2][addr3][addr4] = tmp;
-    printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
+    //printf("%d ns [write mem] : at @ %x writting %x\n", time, adr, dataw);
     return 0; 
 }   
 
@@ -175,14 +175,14 @@ int main(int argc, char const* argv[]) {
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;

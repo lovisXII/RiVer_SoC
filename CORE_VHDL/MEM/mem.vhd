@@ -5,80 +5,92 @@ use ieee.numeric_std.all;
 entity mem is
     port(
         -- global interface
-        clk, reset_n : in std_logic;
+        clk, reset_n                        :   in  std_logic;
 
         -- Mcache interface
-        MCACHE_RESULT_SM : in std_logic_vector(31 downto 0);
-        MCACHE_STALL_SM : in std_logic;
-        MCACHE_ADR_SM, MCACHE_DATA_SM : out std_logic_vector(31 downto 0);
-        MCACHE_ADR_VALID_SM, MCACHE_STORE_SM, MCACHE_LOAD_SM : out std_logic;
-        byt_sel : out std_logic_vector(3 downto 0);
+        MCACHE_RESULT_SM                    :   in  std_logic_vector(31 downto 0);
+        MCACHE_STALL_SM                     :   in  std_logic;
+        MCACHE_ADR_SM, MCACHE_DATA_SM       :   out std_logic_vector(31 downto 0);
+        MCACHE_ADR_VALID_SM                 :   out std_logic;
+        MCACHE_STORE_SM, MCACHE_LOAD_SM     :   out std_logic;
+        byt_sel                             :   out std_logic_vector(3 downto 0);
 
         -- Exe interface
-        RES_RE, MEM_DATA_RE : in std_logic_vector(31 downto 0);
-        DEST_RE : in std_logic_vector(5 downto 0);
-        MEM_SIZE_RE : in std_logic_vector(1 downto 0);
-        WB_RE, SIGN_EXTEND_RE, LOAD_RE, STORE_RE : in std_logic;
+        RES_RE, MEM_DATA_RE                 :   in  std_logic_vector(31 downto 0);
+        DEST_RE                             :   in  std_logic_vector(5 downto 0);
+        MEM_SIZE_RE                         :   in  std_logic_vector(1 downto 0);
+        WB_RE, SIGN_EXTEND_RE               :   in  std_logic;
+        LOAD_RE, STORE_RE                   :   in  std_logic;
 
-        PC_EXE2MEM_RE : in std_logic_vector(31 downto 0);
+        PC_EXE2MEM_RE                       :   in  std_logic_vector(31 downto 0);
+
+        -- Multiplier
+        MULT_INST_RE                        :   in  std_logic;
+        MULT_INST_RM                        :   out std_logic;
 
         -- Multiplier
         MULT_INST_RE :  in  std_logic;
         MULT_INST_RM :  out std_logic;
 
         -- exe2mem interface
-        EXE2MEM_EMPTY_SE : in std_logic;
-        EXE2MEM_POP_SM : out std_logic;
+        EXE2MEM_EMPTY_SE                    :   in  std_logic;
+        EXE2MEM_POP_SM                      :   out std_logic;
 
         -- mem2wbk interface
-        MEM2WBK_POP_SW : in std_logic;
-        MEM2WBK_EMPTY_SM : out std_logic;
+        MEM2WBK_POP_SW                      :   in  std_logic;
+        MEM2WBK_EMPTY_SM                    :   out std_logic;
         
         -- Wbk interface
-        MEM_RES_RM : out std_logic_vector(31 downto 0);
-        MEM_DEST_RM : out std_logic_vector(5 downto 0);
-        WB_RM : out std_logic;
-        CSR_RDATA_RM : out std_logic_vector(31 downto 0);
-        CSR_WENABLE_RM : out std_logic;
+        MEM_RES_RM                          :   out std_logic_vector(31 downto 0);
+        MEM_DEST_RM                         :   out std_logic_vector(5 downto 0);
+        WB_RM                               :   out std_logic;
+        CSR_RDATA_RM                        :   out std_logic_vector(31 downto 0);
+        CSR_WENABLE_RM                      :   out std_logic;
         
         -- CSR 
-        CSR_WENABLE_RE  : in std_logic;
-        CSR_WADR_RE     : in std_logic_vector(11 downto 0);
-        CSR_RDATA_RE    : in std_logic_vector(31 downto 0);
+        CSR_WENABLE_RE                      :   in  std_logic;
+        CSR_WADR_RE                         :   in  std_logic_vector(11 downto 0);
+        CSR_RDATA_RE                        :   in  std_logic_vector(31 downto 0);
 
-        CSR_WADR_SM     : out std_logic_vector(11 downto 0);
-        CSR_WDATA_SM    : out std_logic_vector(31 downto 0);
-        CSR_ENABLE_SM   : out std_logic; 
+        CSR_WADR_SM                         :   out std_logic_vector(11 downto 0);
+        CSR_WDATA_SM                        :   out std_logic_vector(31 downto 0);
+        CSR_ENABLE_SM                       :   out std_logic; 
 
-        MSTATUS_WDATA_SM    : out std_logic_vector(31 downto 0);
-        MIP_WDATA_SM        : out std_logic_vector(31 downto 0);
-        MEPC_WDATA_SM       : out std_logic_vector(31 downto 0);
-        MCAUSE_WDATA_SM     : out std_logic_vector(31 downto 0);
-        MTVAL_WDATA_SM      : out std_logic_vector(31 downto 0);
+        MSTATUS_WDATA_SM                    :   out std_logic_vector(31 downto 0);
+        MIP_WDATA_SM                        :   out std_logic_vector(31 downto 0);
+        MEPC_WDATA_SM                       :   out std_logic_vector(31 downto 0);
+        MCAUSE_WDATA_SM                     :   out std_logic_vector(31 downto 0);
+        MTVAL_WDATA_SM                      :   out std_logic_vector(31 downto 0);
 
-        MEPC_SC             : in std_logic_vector(31 downto 0);
-        MSTATUS_RC          : in std_logic_vector(31 downto 0);
-        MTVEC_VALUE_RC      : in std_logic_vector(31 downto 0);
-        MIP_VALUE_RC        : in std_logic_vector(31 downto 0);
-        MIE_VALUE_RC        : in std_logic_vector(31 downto 0);
+        MEPC_SC                             :   in  std_logic_vector(31 downto 0);
+        MSTATUS_RC                          :   in  std_logic_vector(31 downto 0);
+        MTVEC_VALUE_RC                      :   in  std_logic_vector(31 downto 0);
+        MIP_VALUE_RC                        :   in  std_logic_vector(31 downto 0);
+        MIE_VALUE_RC                        :   in  std_logic_vector(31 downto 0);
 
         -- Exception 
-        EXCEPTION_RE    : in std_logic;
-        LOAD_ADRESS_MISALIGNED_RE, LOAD_ACCESS_FAULT_RE, ILLEGAL_INSTRUCTION_RE : in std_logic;
-        INSTRUCTION_ADRESS_MISALIGNED_RE, INSTRUCTION_ACCESS_FAULT_RE : in std_logic;
-        STORE_ADRESS_MISALIGNED_RE, STORE_ACCESS_FAULT_RE : in std_logic;
-        ENV_CALL_U_MODE_RE, ENV_CALL_S_MODE_RE, ENV_CALL_M_MODE_RE : in std_logic;
-        ENV_CALL_WRONG_MODE_RE : in std_logic;
-        MRET_RE : in std_logic;
-        EBREAK_RE : in std_logic; 
-        PC_BRANCH_VALUE_RE : in std_logic_vector(31 downto 0);
+        EXCEPTION_RE                        :   in  std_logic;
+        LOAD_ADRESS_MISALIGNED_RE           :   in  std_logic;
+        LOAD_ACCESS_FAULT_RE                :   in  std_logic;
+        ILLEGAL_INSTRUCTION_RE              :   in  std_logic;
+        INSTRUCTION_ADRESS_MISALIGNED_RE    :   in  std_logic;
+        INSTRUCTION_ACCESS_FAULT_RE         :   in  std_logic;
+        STORE_ADRESS_MISALIGNED_RE          :   in  std_logic;
+        STORE_ACCESS_FAULT_RE               :   in  std_logic;
+        ENV_CALL_U_MODE_RE                  :   in  std_logic;
+        ENV_CALL_S_MODE_RE                  :   in  std_logic;
+        ENV_CALL_M_MODE_RE                  :   in  std_logic;
+        ENV_CALL_WRONG_MODE_RE              :   in  std_logic;
+        MRET_RE                             :   in  std_logic;
+        EBREAK_RE                           :   in  std_logic; 
+        PC_BRANCH_VALUE_RE                  :   in  std_logic_vector(31 downto 0);
 
-        BUS_ERROR_SX : in std_logic;
+        BUS_ERROR_SX                        :   in  std_logic;
 
-        EXCEPTION_SM : out std_logic;
-        CURRENT_MODE_SM : out std_logic_vector(1 downto 0);
-        RETURN_ADRESS_SM : out std_logic_vector(31 downto 0);
-        MRET_SM : out std_logic
+        EXCEPTION_SM                        :   out std_logic;
+        CURRENT_MODE_SM                     :   out std_logic_vector(1 downto 0);
+        RETURN_ADRESS_SM                    :   out std_logic_vector(31 downto 0);
+        MRET_SM                             :   out std_logic
     ); 
 end mem;
 

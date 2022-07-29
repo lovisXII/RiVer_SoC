@@ -10,14 +10,15 @@ MODS=$(TB) $(COMPONENTS)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
-LD_SCRIPT= -T kernel.ld
+SW_DIR=../SW
+LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: run		
 
-run: core_tb exception.o
+run: core_tb kernel
 
-	cp app.ld exception.o sim/
+	cp ../SW/app.ld kernel sim/
 	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd --wave=$(SIM_DIR)/$(TB).ghw
 
 core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
@@ -35,7 +36,7 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 $(BUILD)/core_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
-exception.o : exception.s reset.s
+kernel: $(SW_DIR)/exception.s $(SW_DIR)/reset.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 
 warning :
@@ -44,4 +45,5 @@ warning :
 	@echo You have to do : make TEST=pth_to_the_test/test_name
 	@echo
 clean:
-	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.ghw *.out *.out.txt
+	rm $(BUILD)/* $(SIM_DIR)/* -f *.lst *.o *.cf core_tb *.vcd *.ghw *.out \
+	*.out.txt *.out.txt.s

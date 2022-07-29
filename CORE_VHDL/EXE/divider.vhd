@@ -81,10 +81,10 @@ begin
             elsif START_DIV = '1' and OP2_SE = x"00000000" then 
                 EF  <=  zero;   
             end if; 
-        when setup  =>  EF  <=  run;
-        when zero   =>  EF  <=  done;  
-        when same_ops => EF <= done;      
-        when run    =>  EF  <=  run;
+        when setup      =>  EF  <=  run;
+        when zero       =>  EF  <=  done;  
+        when same_ops   =>  EF  <=  done;      
+        when run        =>  EF  <=  run;
             if shift_cpt_reg = "011111" then 
                 EF  <=  done; 
             end if; 

@@ -11,41 +11,60 @@ entity dec is
         clk, reset_n : in std_logic;
 
         -- Reg interface
-        RDATA1_SR, RDATA2_SR : in std_logic_vector(31 downto 0);
-        REG_ADR1_SD, REG_ADR2_SD : out std_logic_vector(5 downto 0);
-        WRITE_PC_SD : out std_logic_vector(31 downto 0);
-        WRITE_PC_ENABLE_SD : out std_logic;
-        READ_PC_SR : in std_logic_vector(31 downto 0);
+        RDATA1_SR, RDATA2_SR        :   in  std_logic_vector(31 downto 0);
+        REG_ADR1_SD, REG_ADR2_SD    :   out std_logic_vector(5 downto 0);
+        WRITE_PC_SD                 :   out std_logic_vector(31 downto 0);
+        WRITE_PC_ENABLE_SD          :   out std_logic;
+        READ_PC_SR                  :   in  std_logic_vector(31 downto 0);
 
         -- Exe interface 
-        OP1_RD, OP2_RD : out std_logic_vector(31 downto 0);
-        CMD_RD : out std_logic_vector(1 downto 0);
-        NEG_OP2_RD : out std_logic; 
-        WB_RD : out std_logic;
-        DEST_RD : out std_logic_vector(5 downto 0);
-        SELECT_OPERATION_RD : out std_logic_vector(3 downto 0);
-        SLT_RD, SLTU_RD : out std_logic;    
-        MEM_DATA_RD : out std_logic_vector(31 downto 0);
-        MEM_LOAD_RD, MEM_STORE_RD, MEM_SIGN_EXTEND_RD : out std_logic;
-        MEM_SIZE_RD : out std_logic_vector(1 downto 0);
+        OP1_RD, OP2_RD              :   out std_logic_vector(31 downto 0);
+        CMD_RD                      :   out std_logic_vector(1 downto 0);
+        NEG_OP2_RD                  :   out std_logic; 
+        WB_RD                       :   out std_logic;
+        DEST_RD                     :   out std_logic_vector(5 downto 0);
+        SELECT_OPERATION_RD         :   out std_logic_vector(3 downto 0);
+        SLT_RD, SLTU_RD             :   out std_logic;    
+        MEM_DATA_RD                 :   out std_logic_vector(31 downto 0);
+        MEM_LOAD_RD, MEM_STORE_RD   :   out std_logic;
+        MEM_SIGN_EXTEND_RD          :   out std_logic;
+        MEM_SIZE_RD                 :   out std_logic_vector(1 downto 0);
 
-        PC_DEC2EXE_RD : out std_logic_vector(31 downto 0);
-        PC_BRANCH_VALUE_RD : out std_logic_vector(31 downto 0);
+        PC_DEC2EXE_RD               :   out std_logic_vector(31 downto 0);
+        PC_BRANCH_VALUE_RD          :   out std_logic_vector(31 downto 0);
 
-        CSR_WENABLE_RD  : out std_logic; 
-        CSR_WADR_RD     : out std_logic_vector(11 downto 0);
-        CSR_RDATA_RD    : out std_logic_vector(31 downto 0);
+        CSR_WENABLE_RD              :   out std_logic; 
+        CSR_WADR_RD                 :   out std_logic_vector(11 downto 0);
+        CSR_RDATA_RD                :   out std_logic_vector(31 downto 0);
 
         -- dec2if interface
-        DEC2IF_POP_SI : in std_logic; 
-        DEC2IF_EMPTY_SD : out std_logic;
-        PC_RD : out std_logic_vector(31 downto 0);
+        DEC2IF_POP_SI               :   in  std_logic; 
+        DEC2IF_EMPTY_SD             :   out std_logic;
+        PC_RD                       :   out std_logic_vector(31 downto 0);
 
         -- if2dec interface
-        INSTR_RI, PC_IF2DEC_RI : in std_logic_vector(31 downto 0);
-        IF2DEC_EMPTY_SI : in std_logic;
-        IF2DEC_POP_SD : out std_logic;
-        IF2DEC_FLUSH_SD : out std_logic;
+        INSTR_RI, PC_IF2DEC_RI      :   in  std_logic_vector(31 downto 0);
+        IF2DEC_EMPTY_SI             :   in  std_logic;
+        IF2DEC_POP_SD               :   out std_logic;
+        IF2DEC_FLUSH_SD             :   out std_logic;
+
+        -- branch prediction
+        PRED_FAILED_RD              :   out std_logic;
+        PRED_SUCCESS_RD             :   out std_logic;
+        BRANCH_INST_RD              :   out std_logic;
+        BRANCH_INST_ADR_RD          :   out std_logic_vector(31 downto 0);
+        ADR_TO_BRANCH_RD            :   out std_logic_vector(31 downto 0);
+
+        PRED_ADR_SD                 :   out std_logic_vector(31 downto 0);
+        PRED_TAKEN_SD               :   out std_logic;
+
+        PUSH_ADR_RAS_RD             :   out std_logic;
+        POP_ADR_RAS_RD              :   out std_logic;
+        ADR_TO_RET_RD               :   out std_logic_vector(31 downto 0);
+        RET_INST_RD                 :   out std_logic;
+
+        PRED_ADR_RI                 :   in  std_logic_vector(31 downto 0);
+        PRED_TAKEN_RI               :   in  std_logic;
 
         -- dec2exe interface
         DEC2EXE_POP_SE : in std_logic;
@@ -101,7 +120,7 @@ constant inc_value : std_logic_vector(31 downto 0) := x"00000004";
 signal reset_sync_sd : std_logic := '0';
 signal resetting_sd : std_logic := '0' ; 
 -- fifo 
-signal dec2if_din, dec2if_dout : std_logic_vector(31 downto 0);
+signal dec2if_din, dec2if_dout : std_logic_vector(133 downto 0);
 signal dec2if_full_sd, dec2if_push_sd : std_logic;
 
 signal dec2exe_din, dec2exe_data, dec2exe_x, dec2exe_dout : std_logic_vector(251 downto 0);
@@ -122,7 +141,10 @@ signal beq_i_sd, bne_i_sd, blt_i_sd, bge_i_sd, bltu_i_sd, bgeu_i_sd : std_logic;
 signal lui_i_sd : std_logic;
 signal auipc_i_sd : std_logic;
 
-signal j_i_sd, jalr_i_sd : std_logic;
+signal jal_i_sd, jalr_i_sd : std_logic;
+
+signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
+signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
 
 signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
 signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
@@ -184,6 +206,14 @@ signal pc : std_logic_vector(31 downto 0) := x"00000000";
 signal init_pc : std_logic_vector(31 downto 0); 
 signal new_pc : std_logic_vector(31 downto 0);
 signal pc_branch_value_sd : std_logic_vector(31 downto 0);
+signal branch_adr_sd : std_logic_vector(31 downto 0);
+signal rd_link, rs1_link : std_logic; 
+signal pred_success_sd, pred_failed_sd : std_logic := '0'; 
+signal ret_sd : std_logic; 
+
+signal pc_no_jump, pc_jump : std_logic_vector(31 downto 0);
+signal pop_adr_ras_sd   :   std_logic;  
+signal push_adr_ras_sd  :   std_logic; 
 
 -- bypass
 signal stall_sd, block_in_dec : std_logic;
@@ -202,6 +232,7 @@ signal dec2exe_empty : std_logic;
 signal dec_fifo_rdest : std_logic_vector(5 downto 0);
 signal csr_wenable_fifo : std_logic;
 signal dec_fifo_mult_inst : std_logic;
+signal dec_fifo_pred_success, dec_fifo_pred_failed : std_logic; 
 
 component fifo
     generic(N : integer);
@@ -223,7 +254,7 @@ begin
 -- Instanciation 
 -------------------------
 dec2if : fifo
-    generic map(N => 32)
+    generic map(N => 134)
     port map(
         clk => clk, 
         reset_n => reset_n,
@@ -268,9 +299,9 @@ stall_sd    <=  '1' when    (
                 '0'; 
 
 -- if2dec 
-IF2DEC_POP_SD   <=  not stall_sd; 
+IF2DEC_POP_SD   <=  not stall_sd;
 
-IF2DEC_FLUSH_SD <=  '1' when jump_sd = '1' and stall_sd = '0' else  
+IF2DEC_FLUSH_SD <=  '1' when (PRED_TAKEN_RI = '1' and (jump_sd = '0' and stall_sd = '0')) or (PRED_TAKEN_RI = '0' and (jump_sd = '1' and stall_sd = '0')) else  
                     '0'; 
 
 dec2if_push_sd  <=  '1' when   ((add_offset_to_pc = '0' and dec2if_full_sd = '0') 
@@ -334,7 +365,7 @@ lui_i_sd <= u_type_sd;
 auipc_i_sd <= '1' when INSTR_RI(6 downto 0) = "0010111" else '0';
 
 -- J type 
-j_i_sd <= j_type_sd; 
+jal_i_sd <= j_type_sd; 
 jalr_i_sd <= jalr_type_sd;
 
 -- Mem access 
@@ -380,7 +411,7 @@ fence_i_sd  <=  '1' when INSTR_RI(6 downto 0) = "0001111" and INSTR_RI(14 downto
 illegal_inst    <=  not (add_i_sd or sub_i_sd or slt_i_sd or sltu_i_sd or and_i_sd or or_i_sd or xor_i_sd or sll_i_sd or srl_i_sd or sra_i_sd or
                     addi_i_sd or slti_i_sd or sltiu_i_sd or andi_i_sd or ori_i_sd or xori_i_sd or
                     slli_i_sd or srli_i_sd or srai_i_sd or
-                    beq_i_sd or bne_i_sd or blt_i_sd or bge_i_sd or bltu_i_sd or bgeu_i_sd or lui_i_sd or auipc_i_sd or j_i_sd or jalr_i_sd or 
+                    beq_i_sd or bne_i_sd or blt_i_sd or bge_i_sd or bltu_i_sd or bgeu_i_sd or lui_i_sd or auipc_i_sd or jal_i_sd or jalr_i_sd or 
                     lw_i_sd or lh_i_sd or lhu_i_sd or lb_i_sd or lbu_i_sd or sw_i_sd or sh_i_sd or sb_i_sd or 
                     mul_i_sd or mulh_i_sd or mulhu_i_sd or mulhsu_i_sd or 
                     ecall_i_sd or ebreak_i_sd or csrrw_i_sd or csrrs_i_sd or csrrc_i_sd or csrrwi_i_sd or csrrsi_i_sd or csrrci_i_sd or mret_i_sd or sret_i_sd or fence_i_sd);
@@ -509,7 +540,7 @@ offset_branch_j(0)              <=  '0';
 jalr_offset(31 downto 12)       <=  (others => INSTR_RI(31));
 jalr_offset(11 downto 0)        <=  INSTR_RI(31 downto 20);
 
-jalr_offset_calc    <=  std_logic_vector(signed(jalr_offset) + signed(rdata1_sd) - signed(READ_PC_SR) + signed(inc_value)); 
+jalr_offset_calc    <=  std_logic_vector(unsigned(jalr_offset) + unsigned(rdata1_sd) - unsigned(READ_PC_SR) + unsigned(inc_value)); 
 
 offset_branch_jalr(31 downto 1) <=  jalr_offset_calc(31 downto 1);
 offset_branch_jalr(0)           <=  '0';
@@ -521,7 +552,7 @@ offset_branch_sd    <=  offset_branch_b when b_type_sd = '1' else
 
 
 res <= dec2exe_op1_sd xor dec2exe_op2_sd; 
-res_compare <= std_logic_vector(signed(dec2exe_op1_sd) - signed(dec2exe_op2_sd));
+res_compare <= std_logic_vector(unsigned(dec2exe_op1_sd) - unsigned(dec2exe_op2_sd));
 different_sign <= dec2exe_op1_sd(31) xor dec2exe_op2_sd(31) ;
 
 jump_sd <=  '1' when b_type_sd = '1'    and (   (bne_i_sd = '1' and (res /= x"00000000")) 
@@ -550,6 +581,8 @@ WRITE_PC_ENABLE_SD  <=  '1' when    ((add_offset_to_pc = '0' and dec2if_full_sd 
                                 or   (add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0'))  else 
                         '0';  
 
+branch_adr_sd       <=  std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd));
+
 -- initialize pc
 process(clk, reset_n)
 begin 
@@ -558,12 +591,19 @@ begin
     end if; 
 end process; 
 
-resetting_sd <= reset_sync_sd xor reset_n; 
+resetting_sd    <=  reset_sync_sd xor reset_n; 
 
-pc  <=  READ_PC_SR when resetting_sd = '1' else
-        std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value)) when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
-        std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(offset_branch_sd)) when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1'else 
-        x"00000000"; 
+pc_no_jump      <=  std_logic_vector(unsigned(PRED_ADR_RI) + unsigned(inc_value))   when    PRED_TAKEN_RI = '1' and stall_sd = '1' and (dec_fifo_pred_success = '0' and dec_fifo_pred_failed = '0') else 
+                    std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(inc_value))  when    PRED_TAKEN_RI = '1' and stall_sd = '0' else 
+                    std_logic_vector(unsigned(READ_PC_SR) + unsigned(inc_value));
+
+pc_jump         <=  std_logic_vector(unsigned(PRED_ADR_RI) + unsigned(inc_value))   when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' else 
+                    branch_adr_sd;
+
+pc  <=  READ_PC_SR  when resetting_sd = '1' else
+        pc_no_jump  when add_offset_to_pc = '0' and dec2if_full_sd = '0' and reset_n = '1' else 
+        pc_jump     when add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0' and reset_n = '1' else
+        x"ABCDEF00"; 
 
 instruction_access_fault_sd <= '1' when EXCEPTION_SM = '0' and CURRENT_MODE_SM /= "11" and pc > kernel_adr else '0'; 
 instruction_adress_misaligned_sd <= '1' when pc(1 downto 0) /= "00" or (RETURN_ADRESS_SM(1 downto 0) /= "00" and EXCEPTION_SM = '1') else '0';  
@@ -583,6 +623,28 @@ pc_branch_value_sd <= new_pc;
 
 WRITE_PC_SD <= new_pc; 
 
+-- branch prediction 
+pred_success_sd <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '1' and dec2if_full_sd = '0' and stall_sd = '0'  else 
+                    '0'; 
+pred_failed_sd  <=  '1' when    PRED_TAKEN_RI = '1' and add_offset_to_pc = '0' and dec2if_full_sd = '0' and IF2DEC_EMPTY_SI = '0' else 
+                    '0'; 
+
+PRED_ADR_SD     <=  PRED_ADR_RI;
+PRED_TAKEN_SD   <=  PRED_TAKEN_RI;
+
+rd_link     <=  '1' when rdest_sd = "000001" or rdest_sd = "000101" else 
+                '0';
+    
+rs1_link    <=  '1' when radr1_sd = "000001" or radr1_sd = "000101" else 
+                '0'; 
+
+pop_adr_ras_sd  <=  '1' when PRED_TAKEN_RI = '0' and ((rd_link = '0' and rs1_link = '1') or (rd_link = '1' and rs1_link = '1' and (rdest_sd /= radr1_sd))) else 
+                    '0'; 
+push_adr_ras_sd <=  '1' when rd_link = '1' and (jal_i_sd = '1' or jalr_i_sd = '1') else 
+                    '0'; 
+
+ret_sd          <=  '1' when jalr_type_sd = '1' and rdest_sd = "000000" and offset_branch_sd = x"00000004" and radr1_sd = "000001" else 
+                    '0'; 
 -------------------------
 -- Bypass
 -------------------------
@@ -649,15 +711,35 @@ DEST_RD <= dec_fifo_rdest;
 CSR_WENABLE_RD <= csr_wenable_fifo;
 CSR_RADR_SD <= csr_radr;
 MULT_INST_RD <= dec_fifo_mult_inst; 
+PRED_SUCCESS_RD <= dec_fifo_pred_success;
+PRED_FAILED_RD <= dec_fifo_pred_failed;
 
 -------------------------
 -- fifo  
 -------------------------
 
 -- dec2if 
-dec2if_din <= new_pc;  
+dec2if_din(31 downto 0)     <=  new_pc;
+dec2if_din(63 downto 32)    <=  branch_adr_sd; 
+dec2if_din(95 downto 64)    <=  PC_IF2DEC_RI; 
+dec2if_din(96)              <=  b_type_sd or j_type_sd; 
+dec2if_din(97)              <=  pred_success_sd; 
+dec2if_din(98)              <=  pred_failed_sd; 
+dec2if_din(99)              <=  ret_sd; 
+dec2if_din(131 downto 100)  <=  std_logic_vector(unsigned(PC_IF2DEC_RI) + unsigned(inc_value));
+dec2if_din(132)             <=  pop_adr_ras_sd; 
+dec2if_din(133)             <=  push_adr_ras_sd; 
 
-PC_RD <= dec2if_dout; 
+PC_RD                       <=  dec2if_dout(31 downto 0);
+ADR_TO_BRANCH_RD            <=  dec2if_dout(63 downto 32);
+BRANCH_INST_ADR_RD          <=  dec2if_dout(95 downto 64);
+BRANCH_INST_RD              <=  dec2if_dout(96);
+dec_fifo_pred_success       <=  dec2if_dout(97);
+dec_fifo_pred_failed        <=  dec2if_dout(98);
+RET_INST_RD                 <=  dec2if_dout(99);
+ADR_TO_RET_RD               <=  dec2if_dout(131 downto 100);
+POP_ADR_RAS_RD              <=  dec2if_dout(132);
+PUSH_ADR_RAS_RD             <=  dec2if_dout(133);
 
 -- dec2exe 
 dec2exe_data(251) <= mul_i_sd or mulh_i_sd or mulhsu_i_sd or mulhu_i_sd;  
