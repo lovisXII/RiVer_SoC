@@ -159,8 +159,6 @@ signal X1X2_EMPTY_SX1 : std_logic;
 
 signal RES_RX2 : std_logic_vector(31 downto 0);
 
-<<<<<<< HEAD
-=======
         -- Branch prediction 
 signal PRED_FAILED_RD      : std_logic;
 signal PRED_SUCCESS_RD     : std_logic;
@@ -178,7 +176,6 @@ signal RET_INST_RD         : std_logic;
 
 signal PRED_ADR_RI         : std_logic_vector(31 downto 0);
 signal PRED_TAKEN_RI       : std_logic;
->>>>>>> main
 
 component ifetch 
     port(
