@@ -266,7 +266,7 @@ begin
 end process; 
 
 read_pred_ret : process(clk, reset_n)
-variable found : std_logic;
+variable found, adr_pushed : std_logic;
 variable ret_stack_pointer : std_logic_vector(RET_STACK_SIZE-1 downto 0);
 
 begin
@@ -276,6 +276,7 @@ begin
 
     elsif falling_edge(clk) then 
         found               :=  '0';
+        adr_pushed          :=  '0';
         ret_stack_pointer   :=  ret_stack_pointer_si;
         search_ret : for i in 0 to RET_PRED_REG_SIZE-1 loop
             if ret_adr_reg(i) = PC_RD and ret_valid_reg(i) = '1' then 
@@ -283,26 +284,27 @@ begin
             end if; 
         end loop;
         pred_ret_taken  <=  found; 
-
         if if2dec_empty = '0' then 
             if PUSH_ADR_RAS_RD = '1' then 
-                ret_inst_search : for i in 0 to RET_PRED_REG_SIZE-1 loop
+                ret_inst_search : for i in 0 to RET_STACK_SIZE-1 loop
                     if ret_stack_pointer(i) = '1' then
-                        ret_stack_reg(i) <= ADR_TO_RET_RD;
+                        ret_stack_reg(i)    <=  ADR_TO_RET_RD;
+                        adr_pushed          :=  '1';
                     end if;
                 end loop;   
                 ret_stack_pointer   :=  ret_stack_pointer(RET_STACK_SIZE-2 downto 0) & '0'; 
             elsif POP_ADR_RAS_RD = '1' then 
-            debug_in_loop <= debug_in_loop + 1;
-
                 ret_stack_pointer :=    '0' & ret_stack_pointer(RET_STACK_SIZE-1 downto 1);
             end if; 
 
             if found = '1' then 
                 found_ret : for i in 0 to RET_STACK_SIZE-2 loop
-                    if ret_stack_pointer(i+1) = '1' and ret_valid_reg(i) = '1' then
-                        report "found ret : " & integer'image(to_integer(unsigned(ret_stack_reg(i))));    
-                        pred_ret_next_adr <= ret_stack_reg(i);
+                    if ret_stack_pointer(i+1) = '1' then
+                        if adr_pushed = '1' then 
+                            pred_ret_next_adr <=    ADR_TO_RET_RD;
+                        else   
+                            pred_ret_next_adr <=    ret_stack_reg(i); 
+                        end if;
                     end if; 
                 end loop;
                 ret_stack_pointer :=    '0' & ret_stack_pointer(RET_PRED_REG_SIZE-1 downto 1);

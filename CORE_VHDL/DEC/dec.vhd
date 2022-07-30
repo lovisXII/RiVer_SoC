@@ -146,9 +146,6 @@ signal jal_i_sd, jalr_i_sd : std_logic;
 signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
 signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
 
-signal mul_i_sd, mulh_i_sd, mulhsu_i_sd, mulhu_i_sd : std_logic;
-signal div_i_sd, divu_i_sd, rem_i_sd, remu_i_sd : std_logic;
-
 -- System instructions
 signal system_inst_sd : std_logic;
 signal ecall_i_sd : std_logic;

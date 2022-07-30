@@ -28,10 +28,6 @@ entity mem is
         MULT_INST_RE                        :   in  std_logic;
         MULT_INST_RM                        :   out std_logic;
 
-        -- Multiplier
-        MULT_INST_RE :  in  std_logic;
-        MULT_INST_RM :  out std_logic;
-
         -- exe2mem interface
         EXE2MEM_EMPTY_SE                    :   in  std_logic;
         EXE2MEM_POP_SM                      :   out std_logic;
