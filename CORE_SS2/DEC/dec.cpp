@@ -10,8 +10,13 @@ void decod::dependencies(){
     // Need to add the case where there is store dependencies
     // addi x2,x0,10
     // sw x2, 0(x2)
-    bool dependencies = ((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) 
-    && (adr_dest_sd_s1.read() != 0) ;
+
+    csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
+    csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE_S2 && !EXE2MEM_EMPTY_SE_S2);
+  
+
+    bool dependencies = (((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) 
+    && (adr_dest_sd_s1.read() != 0)) || csr_in_progress_s1 || csr_in_progress_s2 || csr_wenable_sd_s2 ;
     
     if(dependencies)
         reg_dependencies_sd = true ;
@@ -837,14 +842,12 @@ void decod::bypasses() {
                        (RADR2_SD_S1.read() == EXE_DEST_RD_S1.read() && MEM_LOAD_RD_S1 && !DEC2EXE_EMPTY_SD_S1.read()));
 }
 void decod::stall_method() {
-    csr_in_progress_s1 = (CSR_WENABLE_RD_S1 && !DEC2EXE_EMPTY_SD_S1) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
-    
+  
     stall_sd        = ((csr_in_progress_s1   || csr_in_progress_s2) 
     || ((!r1_valid_sd_s1 || !r2_valid_sd_s1)    && (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
     || (((!r1_valid_sd_s2 || !r2_valid_sd_s2)   && (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec)))
     || (IF2DEC_EMPTY_SI_S1 && IF2DEC_EMPTY_SI_S2) || dec2exe_full_sd_s1 || dec2exe_full_sd_s2);
 
-    //csr_in_progress_s2 = (CSR_WENABLE_RD_S2 && !DEC2EXE_EMPTY_SD_S2) || (CSR_WENABLE_RE_S1 && !EXE2MEM_EMPTY_SE_S1);
 
 }
 
