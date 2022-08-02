@@ -645,7 +645,6 @@ SC_MODULE(decod) {
             << DEC2EXE_EMPTY_SD_S2
             << CSR_WENABLE_RE_S2
 
-            << csr_wenable_sd_s1
             << csr_wenable_sd_s2
 
             << EXE2MEM_EMPTY_SE_S2

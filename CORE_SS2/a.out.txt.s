@@ -574,6 +574,7 @@ Disassembly of section .data:
 	...
 =======
 00010054 <_start>:
+<<<<<<< HEAD
    10054:	00000e97          	auipc	t4,0x0
    10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
    1005c:	002ede93          	srli	t4,t4,0x2
@@ -602,20 +603,58 @@ Disassembly of section .data:
    100b0:	f51ef06f          	j	0 <_bad>
    100b4:	f4def06f          	j	0 <_bad>
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
+=======
+   10054:	00a06093          	ori	ra,zero,10
+   10058:	00c06113          	ori	sp,zero,12
+   1005c:	00106193          	ori	gp,zero,1
+   10060:	0030a233          	slt	tp,ra,gp
+   10064:	0010b233          	sltu	tp,ra,ra
+   10068:	0031f2b3          	and	t0,gp,gp
+   1006c:	0020e333          	or	t1,ra,sp
+   10070:	005243b3          	xor	t2,tp,t0
+   10074:	00311433          	sll	s0,sp,gp
+   10078:	003154b3          	srl	s1,sp,gp
+   1007c:	0030d533          	srl	a0,ra,gp
+   10080:	4030d5b3          	sra	a1,ra,gp
+   10084:	00a58633          	add	a2,a1,a0
+   10088:	008486b3          	add	a3,s1,s0
+   1008c:	00638733          	add	a4,t2,t1
+   10090:	00d607b3          	add	a5,a2,a3
+   10094:	00e78833          	add	a6,a5,a4
+   10098:	410808b3          	sub	a7,a6,a6
+   1009c:	00088463          	beqz	a7,100a4 <_start+0x50>
+   100a0:	f61ef06f          	j	0 <_bad>
+   100a4:	002080b3          	add	ra,ra,sp
+   100a8:	00089463          	bnez	a7,100b0 <_start+0x5c>
+   100ac:	f59ef06f          	j	4 <_good>
+   100b0:	00000013          	nop
+   100b4:	00000013          	nop
+>>>>>>> f8e6ffde (solving issue with stall with csr)
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
+<<<<<<< HEAD
    0:	1d41                	addi	s10,s10,-16
    2:	0000                	unimp
    4:	7200                	flw	fs0,32(a2)
    6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <value+0x4>
    c:	00000013          	nop
+=======
+   0:	2241                	jal	180 <_exception_occur+0x178>
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
+   c:	0018                	0x18
+   e:	0000                	unimp
+>>>>>>> f8e6ffde (solving issue with stall with csr)
   10:	7205                	lui	tp,0xfffe1
   12:	3376                	fld	ft6,376(sp)
   14:	6932                	flw	fs2,12(sp)
   16:	7032                	flw	ft0,44(sp)
+<<<<<<< HEAD
 <<<<<<< HEAD
   18:	0030                	addi	a2,sp,8
   1a:	0108                	addi	a0,sp,128
@@ -623,11 +662,18 @@ Disassembly of section .riscv.attributes:
 =======
   18:	5f30                	lw	a2,120(a4)
   1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff91c>
+=======
+  18:	5f30                	lw	a2,120(a4)
+  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
+>>>>>>> f8e6ffde (solving issue with stall with csr)
   1c:	3070                	fld	fa2,224(s0)
   1e:	0800                	addi	s0,sp,16
   20:	0a01                	addi	s4,s4,0
   22:	0b              	Address 0x0000000000000022 is out of bounds.
+<<<<<<< HEAD
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
+=======
+>>>>>>> f8e6ffde (solving issue with stall with csr)
 
 Disassembly of section .debug_line:
 
