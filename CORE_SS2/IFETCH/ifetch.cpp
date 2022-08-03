@@ -5,7 +5,7 @@ void ifetch::fetch_method() {
     sc_bv<if2dec_size> if2dec_in_var_s2;
     sc_bv<if2dec_size> instr_ri_var_s1 = instr_si_s1.read();
     sc_bv<if2dec_size> instr_ri_var_s2 = instr_si_s2.read();
-    if (EXCEPTION_SM_S1.read() == 0) {
+    if (EXCEPTION_SM.read() == 0) {
 
         ADR_SI_S1 = PC_DEC2IF_RD_S1.read();
         ADR_SI_S2 = PC_DEC2IF_RD_S2.read();
@@ -142,9 +142,9 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, instr_si_s1, GET_NAME(instr_si_s1));
     sc_trace(tf, instr_si_s2, GET_NAME(instr_si_s2));
     sc_trace(tf, EXCEPTION_RI, GET_NAME(EXCEPTION_RI));
-    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
+    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
-    sc_trace(tf, MRET_SM_S1, GET_NAME(MRET_SM_S1));
+    sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     buffer_inst_1.trace(tf);
     buffer_inst_2.trace(tf);
 }

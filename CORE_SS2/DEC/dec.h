@@ -200,7 +200,7 @@ SC_MODULE(decod) {
     sc_out<bool>      MRET_RD_S2;
     sc_out<bool>      EXCEPTION_RD_S2;
     sc_out<bool>      EBREAK_RD_S2;
-    sc_in<sc_uint<2>> CURRENT_MODE_SM_S1;
+    sc_in<sc_uint<2>> CURRENT_MODE_SM;
 
     // Interruption :
 
@@ -208,13 +208,13 @@ SC_MODULE(decod) {
 
     // General Interface :
 
-    sc_in<bool>        EXCEPTION_SM_S1;
-    sc_in<sc_uint<32>> MTVEC_VALUE_RC_S1;
+    sc_in<bool>        EXCEPTION_SM;
+    sc_in<sc_uint<32>> MTVEC_VALUE_RC;
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_in_clk          CLK;
     sc_in<bool>        RESET_N;
-    sc_in<bool>        MRET_SM_S1;
-    sc_in<sc_uint<32>> RETURN_ADRESS_SM_S1;
+    sc_in<bool>        MRET_SM;
+    sc_in<sc_uint<32>> RETURN_ADRESS_SM;
 
     // Signals :
 
@@ -650,7 +650,8 @@ SC_MODULE(decod) {
                     << jump_sd_s2
                     << dec2exe_full_sd_s1
                     << dec2exe_full_sd_s2
-                    << prioritary_pipeline_rd;
+                    << prioritary_pipeline_rd
+                    << EXCEPTION_SM;
         SC_METHOD(prio_pipeline_reg_gestion)
         sensitive 
 			<< CLK.pos();
@@ -687,7 +688,7 @@ SC_MODULE(decod) {
 			<< RADR2_SD_S1
                   
 			<< r1_valid_sd_s1 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< r2_valid_sd_s1 
 			<< PC_IF2DEC_RI_S1 
 			<< csr_wenable_sd_s1
@@ -743,7 +744,7 @@ SC_MODULE(decod) {
 			<< RADR2_SD_S2
                   
 			<< r1_valid_sd_s1 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< r2_valid_sd_s1 
 			<< PC_IF2DEC_RI_S2 
 			<< csr_wenable_sd_s2
@@ -861,7 +862,7 @@ SC_MODULE(decod) {
 			<< mret_i_sd_s1 
 			<< sret_i_sd_s1 
 			<< RESET_N 
-			<< CURRENT_MODE_SM_S1;
+			<< CURRENT_MODE_SM;
 
         SC_METHOD(pre_reg_read_decoding_s2)
         sensitive 
@@ -899,7 +900,7 @@ SC_MODULE(decod) {
 			<< mret_i_sd_s2 
 			<< sret_i_sd_s2 
 			<< RESET_N 
-			<< CURRENT_MODE_SM_S1;
+			<< CURRENT_MODE_SM;
 
         SC_METHOD(post_reg_read_decoding_s1)
         sensitive 
@@ -1020,7 +1021,7 @@ SC_MODULE(decod) {
 			<< ebreak_i_sd_s1 
 			<< fence_i_sd_s1 
 			<< PC_IF2DEC_RI_S1 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< mret_i_sd_s1 
 			<< sret_i_sd_s1
             << PC_IF2DEC_RI_S1
@@ -1145,7 +1146,7 @@ SC_MODULE(decod) {
 			<< ebreak_i_sd_s2 
 			<< fence_i_sd_s2 
 			<< PC_IF2DEC_RI_S2 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< mret_i_sd_s2 
 			<< sret_i_sd_s2
             << jump_sd_s1
@@ -1165,13 +1166,13 @@ SC_MODULE(decod) {
                   
 			<< jump_sd_s2 
                   
-			<< MTVEC_VALUE_RC_S1
+			<< MTVEC_VALUE_RC
                   
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
                   
 			<< PC_IF2DEC_RI_S1 
                   
-			<< MRET_SM_S1 
+			<< MRET_SM 
                   
 			<< dec2if_full_sd 
                   
