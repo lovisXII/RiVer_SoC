@@ -29,6 +29,7 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S1); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S1); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S1); break;  // mstatus
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // mstatus
                 default: break;
             }
         }
@@ -59,6 +60,7 @@ void csr::reading_csr() {
         case 0x343: CSR_RDATA_SC_S1.write(csr_rc[10]); break;
         case 0x344: CSR_RDATA_SC_S1.write(csr_rc[11]); break;
         case 0x340: CSR_RDATA_SC_S1.write(csr_rc[12]); break;
+        case 0x800: CSR_RDATA_SC_S1.write(csr_rc[13]); break;
         default: CSR_RDATA_SC_S1.write(0); break;
     }
     MEPC_SC.write(csr_rc[8]);
@@ -66,6 +68,7 @@ void csr::reading_csr() {
     MTVEC_VALUE_RC.write(csr_rc[6]);
     MIP_VALUE_RC.write(csr_rc[11]);
     MCAUSE_SC.write(csr_rc[9]);
+    KERNEL_ADR_SC.write(csr_rc[13]);
 }
 
 void csr::trace(sc_trace_file* tf) {
@@ -100,6 +103,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[10], signal_get_name(csr_rc[10].name(), "mtval"));
     sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(), "mip"));
     sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mscratch"));
+    sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "kernel_adr"));
 
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));

@@ -27,6 +27,7 @@ SC_MODULE(csr) {
     sc_out<sc_uint<32>> MTVEC_VALUE_RC;
     sc_out<sc_uint<32>> MIP_VALUE_RC;
     sc_out<sc_uint<32>> MCAUSE_SC;
+    sc_out<sc_uint<32>> KERNEL_ADR_SC;
 
     // Output :
 
@@ -53,6 +54,7 @@ SC_MODULE(csr) {
      * 10: mtval 0x343
      * 11: mip 0x344
      * 12: mscratch 0x340
+     * 13 : kernel_adr 0x800 (custom)
      ***/
     sc_signal<sc_uint<32>> csr_rc[N_CSR];
     sc_signal<sc_uint<32>> test_sc;
