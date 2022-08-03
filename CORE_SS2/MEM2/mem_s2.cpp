@@ -530,6 +530,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, RETURN_ADRESS_SM_S2, GET_NAME(RETURN_ADRESS_SM_S2));
     sc_trace(tf, mret_sm, GET_NAME(mret_sm));
     sc_trace(tf, MEM_SIZE_SM_S2, GET_NAME(MEM_SIZE_SM_S2));
+    sc_trace(tf, mem_access_is_prio_rd_s2, GET_NAME(mem_access_is_prio_rd_s2));
     sc_trace(tf, PC_BRANCH_VALUE_RE_S2, GET_NAME(PC_BRANCH_VALUE_RE_S2));
     sc_trace(tf, STORE_ACCESS_FAULT_RE_S2, GET_NAME(STORE_ACCESS_FAULT_RE_S2));
     sc_trace(tf, STORE_ADRESS_MISSALIGNED_RE_S2, GET_NAME(STORE_ADRESS_MISSALIGNED_RE_S2));
