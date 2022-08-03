@@ -61,10 +61,10 @@ void csr::reading_csr() {
         case 0x340: CSR_RDATA_SC_S1.write(csr_rc[12]); break;
         default: CSR_RDATA_SC_S1.write(0); break;
     }
-    MEPC_SC_S1.write(csr_rc[8]);
-    MSTATUS_RC_S1.write(csr_rc[3]);
-    MTVEC_VALUE_RC_S1.write(csr_rc[6]);
-    MIP_VALUE_RC_S1.write(csr_rc[11]);
+    MEPC_SC.write(csr_rc[8]);
+    MSTATUS_RC.write(csr_rc[3]);
+    MTVEC_VALUE_RC.write(csr_rc[6]);
+    MIP_VALUE_RC.write(csr_rc[11]);
     MCAUSE_SC.write(csr_rc[9]);
 }
 
@@ -78,8 +78,8 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, MIP_WDATA_RM_S1, GET_NAME(MIP_WDATA_RM_S1));
     sc_trace(tf, MEPC_WDATA_RM_S1, GET_NAME(MEPC_WDATA_RM_S1));
     sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
-    sc_trace(tf, MTVEC_VALUE_RC_S1, GET_NAME(MTVEC_VALUE_RC_S1));
-    sc_trace(tf, MIP_VALUE_RC_S1, GET_NAME(MIP_VALUE_RC_S1));
+    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
+    sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
 
     // Output :
 

@@ -159,7 +159,7 @@ SC_MODULE(exec_s2) {
 
     // General Interface :
 
-    sc_in<bool> EXCEPTION_SM_S1;
+    sc_in<bool> EXCEPTION_SM;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
     sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
@@ -346,7 +346,7 @@ SC_MODULE(exec_s2) {
 			<< store_access_fault_se
                   
 			<< store_adress_missaligned_se 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< MRET_RD_S2 
 			<< INSTRUCTION_ACCESS_FAULT_RD_S2
                   
