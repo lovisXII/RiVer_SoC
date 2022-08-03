@@ -881,7 +881,11 @@ Disassembly of section .debug_aranges:
 80000030:	800d9073          	csrw	0x800,s11
 80000034:	00010137          	lui	sp,0x10
 80000038:	01000497          	auipc	s1,0x1000
+<<<<<<< HEAD
 8000003c:	07048493          	addi	s1,s1,112 # 810000a8 <_isr_vector>
+=======
+8000003c:	06448493          	addi	s1,s1,100 # 8100009c <_isr_vector>
+>>>>>>> f8109c37 (solving issue with curr mode)
 80000040:	01000517          	auipc	a0,0x1000
 80000044:	ff050513          	addi	a0,a0,-16 # 81000030 <_instruction_address_fault>
 80000048:	01000597          	auipc	a1,0x1000
@@ -891,9 +895,15 @@ Disassembly of section .debug_aranges:
 80000058:	01000697          	auipc	a3,0x1000
 8000005c:	02068693          	addi	a3,a3,32 # 81000078 <_env_call_u_mode>
 80000060:	01000717          	auipc	a4,0x1000
+<<<<<<< HEAD
 80000064:	02470713          	addi	a4,a4,36 # 81000084 <_env_call_s_mode>
 80000068:	01000797          	auipc	a5,0x1000
 8000006c:	02878793          	addi	a5,a5,40 # 81000090 <_env_call_m_mode>
+=======
+80000064:	02070713          	addi	a4,a4,32 # 81000080 <_env_call_s_mode>
+80000068:	01000797          	auipc	a5,0x1000
+8000006c:	02078793          	addi	a5,a5,32 # 81000088 <_env_call_m_mode>
+>>>>>>> f8109c37 (solving issue with curr mode)
 80000070:	01000817          	auipc	a6,0x1000
 80000074:	fd880813          	addi	a6,a6,-40 # 81000048 <_load_adress_missaligned>
 80000078:	01000897          	auipc	a7,0x1000
@@ -903,7 +913,11 @@ Disassembly of section .debug_aranges:
 80000088:	01000997          	auipc	s3,0x1000
 8000008c:	fe498993          	addi	s3,s3,-28 # 8100006c <_store_access_fault>
 80000090:	01000a17          	auipc	s4,0x1000
+<<<<<<< HEAD
 80000094:	00ca0a13          	addi	s4,s4,12 # 8100009c <_env_call_wrong_mode>
+=======
+80000094:	000a0a13          	mv	s4,s4
+>>>>>>> f8109c37 (solving issue with curr mode)
 80000098:	00c4a023          	sw	a2,0(s1)
 8000009c:	00a4a223          	sw	a0,4(s1)
 800000a0:	00b4a423          	sw	a1,8(s1)
@@ -939,7 +953,10 @@ Disassembly of section .debug_aranges:
 80000118:	00000c13          	li	s8,0
 8000011c:	00000c93          	li	s9,0
 80000120:	30200073          	mret
+<<<<<<< HEAD
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
+=======
+>>>>>>> f8109c37 (solving issue with curr mode)
 
 00000000 <.debug_aranges>:
    0:	0024                	addi	s1,sp,8

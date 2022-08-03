@@ -207,7 +207,7 @@ void mem_s2::csr_exception() {
     EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
-    if (!RESET) CURRENT_MODE_SM_S2 = CURRENT_MODE_SM;
+    if (!RESET) CURRENT_MODE_SM_S2 = 3;
 
     if (!EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
     {

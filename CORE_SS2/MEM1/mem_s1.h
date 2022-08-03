@@ -86,7 +86,7 @@ SC_MODULE(mem_s1) {
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM_S1;
-    sc_out<sc_uint<2>>  CURRENT_MODE_SM;
+    sc_out<sc_uint<2>>  CURRENT_MODE_SM_S1;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM_S1;
     sc_out<bool>        MRET_SM_S1;  // 46
 
