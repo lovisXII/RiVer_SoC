@@ -240,10 +240,6 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> CSR_RDATA_SC_S2;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     sc_signal<sc_uint<32>> KERNEL_ADR_SC;
-
-    sc_signal<bool>        CSRRC_I_RD_S1;
-    sc_signal<bool>        CSRRC_I_RD_S2;
-    
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR_S1;
     sc_signal<sc_uint<32>> RDATA2_SR_S1;
@@ -662,9 +658,6 @@ SC_MODULE(core) {
         exec_inst_s1.MULT_INST_RD_S1(MULT_INST_RD_S1);
         exec_inst_s1.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         exec_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
-
-        exec_inst_s1.CSRRC_I_RD_S1(CSRRC_I_RD_S1);
-        exec_inst_s1.CSRRC_I_RD_S2(CSRRC_I_RD_S2);
 
         exec_inst_s1.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
@@ -1217,18 +1210,8 @@ SC_MODULE(core) {
         csr_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
         csr_inst.MCAUSE_SC(MCAUSE_SC);
+        csr_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);
         csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
-
-        csr_inst.CSR_WADR_SM_S2(CSR_WADR_SM_S2);
-        csr_inst.CSR_WDATA_SM_S2(CSR_WDATA_SM_S2);
-        csr_inst.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);
-        csr_inst.MSTATUS_WDATA_RM_S2(MSTATUS_WDATA_RM_S2);
-        csr_inst.MIP_WDATA_RM_S2(MIP_WDATA_RM_S2);
-        csr_inst.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
-        csr_inst.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
-        csr_inst.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);
-        csr_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
-        csr_inst.CSR_RDATA_SC_S2(CSR_RDATA_SC_S2);
 
 
         csr_inst.CLK(CLK);

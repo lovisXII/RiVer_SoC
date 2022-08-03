@@ -577,6 +577,7 @@ Disassembly of section .data:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
    10054:	00000e97          	auipc	t4,0x0
    10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
    1005c:	002ede93          	srli	t4,t4,0x2
@@ -606,6 +607,8 @@ Disassembly of section .data:
    100b4:	f4def06f          	j	0 <_bad>
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 =======
+=======
+>>>>>>> 7b0db4ad (new csr for kernel adr)
    10054:	00a06093          	ori	ra,zero,10
    10058:	00c06113          	ori	sp,zero,12
    1005c:	00106193          	ori	gp,zero,1
@@ -631,6 +634,7 @@ Disassembly of section .data:
    100ac:	f59ef06f          	j	4 <_good>
    100b0:	00000013          	nop
    100b4:	00000013          	nop
+<<<<<<< HEAD
 >>>>>>> f8e6ffde (solving issue with stall with csr)
 =======
    10054:	00408093          	addi	ra,ra,4
@@ -664,6 +668,8 @@ Disassembly of section .comment:
    10054:	900001b7          	lui	gp,0x90000
    10058:	0001a203          	lw	tp,0(gp) # 90000000 <_isr_vector+0xeffff64>
 >>>>>>> da404326 (start working on exception issue)
+=======
+>>>>>>> 7b0db4ad (new csr for kernel adr)
 
 Disassembly of section .riscv.attributes:
 

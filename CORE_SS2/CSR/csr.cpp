@@ -32,27 +32,7 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S1); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S1); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S1); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // kernel
-                default: break;
-            }
-        }
-        else if(CSR_ENABLE_SM_S2.read()) {
-            sc_uint<32> csr_wadr_sm = CSR_WADR_SM_S2.read();
-            switch (csr_wadr_sm) {
-                case 0xF11: break;                                  // mvendorid
-                case 0xF12: break;                                  // marchid
-                case 0xF13: break;                                  // mimpid
-                case 0x301: break;                                  // misa
-                case 0x304: csr_rc[5].write(CSR_WDATA_SM_S2); break;   // mie
-                case 0x305: csr_rc[6].write(CSR_WDATA_SM_S2); break;   // mtvec
-                case 0x310: break;                                  // mstatush
-                case 0x341: csr_rc[8].write(CSR_WDATA_SM_S2); break;   // mepc
-                case 0x342: csr_rc[9].write(CSR_WDATA_SM_S2); break;   // mcause
-                case 0x343: csr_rc[10].write(CSR_WDATA_SM_S2); break;  // mtval
-                case 0x344: csr_rc[11].write(CSR_WDATA_SM_S2); break;  // mip
-                case 0x300: csr_rc[3].write(CSR_WDATA_SM_S2); break;   // mstatus
-                case 0x340: csr_rc[12].write(CSR_WDATA_SM_S2); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S2); break;  // kernel
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // mstatus
                 default: break;
             }
         }

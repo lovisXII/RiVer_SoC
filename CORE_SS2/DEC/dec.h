@@ -45,7 +45,6 @@ SC_MODULE(decod) {
 
     sc_in<sc_uint<32>>  CSR_RDATA_SC_S1;  // data read from CSR
     sc_in<sc_uint<32>>  CSR_RDATA_SC_S2;  // data read from CSR
-    
     sc_in<sc_uint<32>>  KERNEL_ADR_SC;
     // Interface with REG :
 
