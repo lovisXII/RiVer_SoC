@@ -109,7 +109,7 @@ SC_MODULE(exec_s2) {
     // Exception coming from Decod :
 
     sc_in<bool>         EXCEPTION_RD_S2;  // tells if an instruction have been made in DEC
-    sc_in<sc_uint<2>>   CURRENT_MODE_SM_S2;
+    sc_in<sc_uint<2>>   CURRENT_MODE_SM;
     sc_in<sc_uint<32>>  PC_BRANCH_VALUE_RD_S2;
     sc_out<sc_uint<32>> PC_BRANCH_VALUE_RE_S2;
 
@@ -309,8 +309,10 @@ SC_MODULE(exec_s2) {
 			<< SLT_RD_S2 
 			<< SLTU_RD_S2
                   
+            << KERNEL_ADR_SC
+
 			<< SELECT_TYPE_OPERATIONS_RD_S2 
-			<< CURRENT_MODE_SM_S2 
+			<< CURRENT_MODE_SM 
 			<< MEM_LOAD_RD_S2 
 			<< MEM_STORE_RD_S2
             << MEM_SIZE_RD_S2

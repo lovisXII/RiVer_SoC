@@ -191,6 +191,7 @@ SC_MODULE(core) {
     sc_signal<bool>        ENV_CALL_S_MODE_RE_S2;
     sc_signal<bool>        ENV_CALL_M_MODE_RE_S2;
     sc_signal<bool>        BLOCK_BP_RD_S2;
+    sc_signal<sc_uint<2>>        CURRENT_MODE_SM_S1;
     sc_signal<sc_uint<2>>        CURRENT_MODE_SM_S2;
     sc_signal<bool>        INSTRUCTION_ACCESS_FAULT_RD_S2;
     sc_signal<bool>        INSTRUCTION_ACCESS_FAULT_RE_S2;
@@ -424,7 +425,9 @@ SC_MODULE(core) {
                     << MRET_SM_S1
                     << MRET_SM_S2
                     << RETURN_ADRESS_SM_S1
-                    << RETURN_ADRESS_SM_S2;
+                    << RETURN_ADRESS_SM_S2
+                    << CURRENT_MODE_SM_S1
+                    << CURRENT_MODE_SM_S2;
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
@@ -848,7 +851,7 @@ SC_MODULE(core) {
         exec_inst_s2.ENV_CALL_M_MODE_RE_S2(ENV_CALL_M_MODE_RE_S2);
         exec_inst_s2.EXCEPTION_SM(EXCEPTION_SM);
         exec_inst_s2.BLOCK_BP_RD_S2(BLOCK_BP_RD_S2);
-        exec_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
+        exec_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
         exec_inst_s2.MRET_RE_S2(MRET_RE_S2);
         exec_inst_s2.INSTRUCTION_ACCESS_FAULT_RD_S2(INSTRUCTION_ACCESS_FAULT_RD_S2);
         exec_inst_s2.INSTRUCTION_ACCESS_FAULT_RE_S2(INSTRUCTION_ACCESS_FAULT_RE_S2);
@@ -951,7 +954,7 @@ SC_MODULE(core) {
         mem_inst_s1.BUS_ERROR_SX(BUS_ERROR_SX);
 
         mem_inst_s1.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
-        mem_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        mem_inst_s1.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         mem_inst_s1.RETURN_ADRESS_SM_S1(RETURN_ADRESS_SM_S1);
         mem_inst_s1.MRET_SM_S1(MRET_SM_S1);
 
@@ -1043,7 +1046,7 @@ SC_MODULE(core) {
 
         mem_inst_s2.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
         mem_inst_s2.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
-        mem_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        mem_inst_s2.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         mem_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
         mem_inst_s2.RETURN_ADRESS_SM_S2(RETURN_ADRESS_SM_S2);
         mem_inst_s2.MRET_SM_S2(MRET_SM_S2);
@@ -1154,7 +1157,7 @@ SC_MODULE(core) {
         wbk_inst_s2.PC_MEM2WBK_RM_S2(PC_MEM2WBK_RM_S2);
 
         wbk_inst_s2.INTERRUPTION_SE_S2(INTERRUPTION_SE_S2);
-        wbk_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
+        wbk_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
         
         wbk_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
         wbk_inst_s2.X2_RES_RX2(multiplier_out_sx2);

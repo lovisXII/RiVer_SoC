@@ -401,7 +401,7 @@ void exec_s2::select_exec_res() {
                     load_adress_missaligned_se.write(0);
                     store_adress_missaligned_se.write(0);
                 }
-                if ((CURRENT_MODE_SM_S2.read() == 0))  // If in User Mode
+                if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
                 {
                     if (alu_out_se.read() > KERNEL_ADR_SC) {
                         if (MEM_LOAD_RD_S2)
