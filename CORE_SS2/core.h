@@ -238,6 +238,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> CSR_RDATA_SC_S1;
     sc_signal<sc_uint<32>> CSR_RDATA_SC_S2;
     sc_signal<sc_uint<32>> MCAUSE_SC;
+    sc_signal<sc_uint<32>> KERNEL_ADR_SC;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR_S1;
     sc_signal<sc_uint<32>> RDATA2_SR_S1;
@@ -488,6 +489,8 @@ SC_MODULE(core) {
         dec_inst.SLT_RD_S1(SLT_RD_S1);
         dec_inst.SLTU_RD_S1(SLTU_RD_S1);
 
+        dec_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
+
         dec_inst.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
         dec_inst.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
         dec_inst.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
@@ -652,6 +655,8 @@ SC_MODULE(core) {
         exec_inst_s1.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         exec_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
 
+        exec_inst_s1.KERNEL_ADR_SC(KERNEL_ADR_SC);
+
         exec_inst_s1.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
         exec_inst_s1.MEM_LOAD_RD_S1(MEM_LOAD_RD_S1);
         exec_inst_s1.MEM_STORE_RD_S1(MEM_STORE_RD_S1);
@@ -759,6 +764,8 @@ SC_MODULE(core) {
         exec_inst_s2.EBREAK_RD_S2(EBREAK_RD_S2);
         exec_inst_s2.EBREAK_RE_S2(EBREAK_RE_S2);
 
+
+        exec_inst_s2.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         exec_inst_s2.DEST_RE_S1(DEST_RE_S1);
         exec_inst_s2.CSR_WENABLE_RE_S1(CSR_WENABLE_RE_S1);
@@ -1185,6 +1192,8 @@ SC_MODULE(core) {
         csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
         csr_inst.MCAUSE_SC(MCAUSE_SC);
         csr_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);
+        csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
+
 
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
