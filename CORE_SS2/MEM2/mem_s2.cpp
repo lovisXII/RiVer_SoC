@@ -41,6 +41,16 @@ So it will store the data in the corresponding case adress with is the 2nd one.
 
 */
 
+
+
+/* EXCEPTION MECHANISM :
+When an exception occur we need to check which of the stage is prio. The signal MEM_ACCES_IS_PRIO_RD_S2
+indicate which stage is prio.
+If MEM_ACCES_IS_PRIO_RD_S2 then M1 is prio otherwise it's M2.
+So if an exception occur at the same time in M1 and M2 M1 is prio.
+*/
+
+
 void mem_s2::memory_access_prio(){
     // if((LOAD_RE_S1 || STORE_RE_S1) && (LOAD_RE_S2 || STORE_RE_S2))
     // {
@@ -188,11 +198,12 @@ void mem_s2::sign_extend() {
 
 void mem_s2::csr_exception() {
     EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
-    sc_uint<32> mstatus_new = MSTATUS_RC_S2.read();
+    sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
-    if (!RESET) CURRENT_MODE_SM_S2 = 3;
+    if (!RESET) CURRENT_MODE_SM_S2 = CURRENT_MODE_SM;
 
-    if (!EXCEPTION_SM_S2) {
+    if (!EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
+    {
         if (CSR_WENABLE_RE_S2.read()) {
             CSR_WADR_SM_S2.write(CSR_WADR_SE_S2.read());
             CSR_WDATA_SM_S2.write(EXE_RES_RE_S2.read());
@@ -203,7 +214,12 @@ void mem_s2::csr_exception() {
             CSR_ENABLE_BEFORE_FIFO_SM_S2.write(0);
         }
         MRET_SM_S2 = 0;
-    } else {
+    } 
+    else if (
+    (mem_access_is_prio_rd_s2 && EXCEPTION_SM_S2 && EXCEPTION_SM_S1)
+    || (EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1)
+    )
+    {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
         // THEY ARE IN A SPECIFIC ORDER
@@ -256,7 +272,7 @@ void mem_s2::csr_exception() {
             // loading return value (main) from EPC to PC :
             // The adress will be send to ifetch
 
-            RETURN_ADRESS_SM_S2 = MEPC_SC_S2;
+            RETURN_ADRESS_SM_S2 = MEPC_SC;
 
             // Informing IFETCH that a return instruction have been received
 
@@ -502,7 +518,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, MIP_WDATA_RM_S2, GET_NAME(MIP_WDATA_RM_S2));
     sc_trace(tf, MEPC_WDATA_RM_S2, GET_NAME(MEPC_WDATA_RM_S2));
     sc_trace(tf, MCAUSE_WDATA_SM_S2, GET_NAME(MCAUSE_WDATA_SM_S2));
-    sc_trace(tf, MIP_VALUE_RC_S2, GET_NAME(MIP_VALUE_RC_S2));
+    sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM_S2, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM_S2));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     sc_trace(tf, MULT_INST_RM_S2, GET_NAME(MULT_INST_RM_S2));

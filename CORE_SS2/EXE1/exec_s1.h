@@ -107,7 +107,7 @@ SC_MODULE(exec_s1) {
     // Exception coming from Decod :
 
     sc_in<bool>         EXCEPTION_RD_S1;  // tells if an instruction have been made in DEC
-    sc_in<sc_uint<2>>   CURRENT_MODE_SM_S1;
+    sc_in<sc_uint<2>>   CURRENT_MODE_SM;
     sc_in<sc_uint<32>>  PC_BRANCH_VALUE_RD_S1;
     sc_out<sc_uint<32>> PC_BRANCH_VALUE_RE_S1;
 
@@ -157,7 +157,7 @@ SC_MODULE(exec_s1) {
 
     // General Interface :
 
-    sc_in<bool> EXCEPTION_SM_S1;
+    sc_in<bool> EXCEPTION_SM;
     sc_in_clk   CLK;
     sc_in<bool> RESET;
     sc_in<bool> MACHINE_SOFTWARE_INTERRUPT_SX;
@@ -303,7 +303,7 @@ SC_MODULE(exec_s1) {
 			<< SLTU_RD_S1
                   
 			<< SELECT_TYPE_OPERATIONS_RD_S1 
-			<< CURRENT_MODE_SM_S1 
+			<< CURRENT_MODE_SM 
 			<< MEM_LOAD_RD_S1 
 			<< MEM_STORE_RD_S1
                   
@@ -339,7 +339,7 @@ SC_MODULE(exec_s1) {
 			<< store_access_fault_se
                   
 			<< store_adress_missaligned_se 
-			<< EXCEPTION_SM_S1 
+			<< EXCEPTION_SM 
 			<< MRET_RD_S1 
 			<< INSTRUCTION_ACCESS_FAULT_RD_S1
                   

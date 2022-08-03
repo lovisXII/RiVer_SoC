@@ -86,7 +86,7 @@ SC_MODULE(mem_s1) {
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM_S1;
-    sc_out<sc_uint<2>>  CURRENT_MODE_SM_S1;
+    sc_out<sc_uint<2>>  CURRENT_MODE_SM;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM_S1;
     sc_out<bool>        MRET_SM_S1;  // 46
 
@@ -111,10 +111,11 @@ SC_MODULE(mem_s1) {
     sc_out<sc_uint<32>> MEPC_WDATA_RM_S1;
     sc_out<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_out<sc_uint<32>> MTVAL_WDATA_SM_S1;
-    sc_in<sc_uint<32>>  MEPC_SC_S1;
-    sc_in<sc_uint<32>>  MSTATUS_RC_S1;  // 57
-    sc_in<sc_uint<32>>  MTVEC_VALUE_RC_S1;
-    sc_in<sc_uint<32>>  MIP_VALUE_RC_S1;
+
+    sc_in<sc_uint<32>>  MEPC_SC;
+    sc_in<sc_uint<32>>  MSTATUS_RC;  // 57
+    sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
+    sc_in<sc_uint<32>>  MIP_VALUE_RC;
 
     // Internal signals
 
@@ -172,11 +173,11 @@ SC_MODULE(mem_s1) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE_S1 << SIGN_EXTEND_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << LOAD_RE_S1;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC_S1 << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
+        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
                   << INSTRUCTION_ACCESS_FAULT_RE_S1 << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
                   << ENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
                   << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE_S1
-                  << EXCEPTION_SM_S1 << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM_S1 << RESET << MSTATUS_RC_S1
-                  << EXE_RES_RE_S1 << MEPC_SC_S1;
+                  << EXCEPTION_SM_S1 << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM_S1 << RESET << MSTATUS_RC
+                  << EXE_RES_RE_S1 << MEPC_SC;
     }
 };

@@ -21,10 +21,11 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
 
-    sc_out<sc_uint<32>> MEPC_SC_S1;
-    sc_out<sc_uint<32>> MSTATUS_RC_S1;
-    sc_out<sc_uint<32>> MTVEC_VALUE_RC_S1;
-    sc_out<sc_uint<32>> MIP_VALUE_RC_S1;
+
+    sc_out<sc_uint<32>> MEPC_SC;
+    sc_out<sc_uint<32>> MSTATUS_RC;
+    sc_out<sc_uint<32>> MTVEC_VALUE_RC;
+    sc_out<sc_uint<32>> MIP_VALUE_RC;
     sc_out<sc_uint<32>> MCAUSE_SC;
 
     // Output :

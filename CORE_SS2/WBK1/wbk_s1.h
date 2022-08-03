@@ -25,7 +25,7 @@ SC_MODULE(wbk_s1) {
     sc_in<sc_uint<32>> PC_MEM2WBK_RM_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
     sc_in<bool>        CSR_WENABLE_RM_S1;
-    sc_in<sc_uint<2>>  CURRENT_MODE_SM_S1;
+    sc_in<sc_uint<2>>  CURRENT_MODE_SM;
 
     sc_in<bool>        MULT_INST_RM_S1;
     sc_in<sc_uint<32>> X2_RES_RX2;

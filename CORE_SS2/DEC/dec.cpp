@@ -37,7 +37,7 @@ void decod::prio_pipeline_signal(){
 
 void decod::prio_pipeline_reg_gestion(){
 
-    if(!RESET_N.read())
+    if(!RESET_N.read() || EXCEPTION_SM)
         prioritary_pipeline_rd = 0;
     else
         prioritary_pipeline_rd = prioritary_pipeline_sd ;
@@ -51,7 +51,7 @@ void decod::prio_pipeline_reg_gestion(){
 
 void decod::concat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_in_var;
-    if (!EXCEPTION_SM_S1.read()) {
+    if (!EXCEPTION_SM.read()) {
 
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s1;  
         dec2exe_in_var[219] = mul_i_sd_s1 || mulh_i_sd_s1 || mulhsu_i_sd_s1 || mulhu_i_sd_s1;  
@@ -137,7 +137,7 @@ void decod::concat_dec2exe_s1() {
 
 void decod::concat_dec2exe_s2() {
     sc_bv<dec2exe_size_s2> dec2exe_in_var;
-    if (!EXCEPTION_SM_S1.read() && !reg_dependencies_sd.read()) {
+    if (!EXCEPTION_SM.read() && !reg_dependencies_sd.read()) {
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
         dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
         dec2exe_in_var[218] = ebreak_i_sd_s2;
@@ -370,7 +370,7 @@ void decod::pc_inc() {
 
         DEC2IF_EMPTY_SD     = dec2if_empty_sd ;
     
-    if (EXCEPTION_SM_S1.read() == 0 ) {
+    if (EXCEPTION_SM.read() == 0 ) {
         dec2if_pc_sd_s1 = pc_out_s1 ;
         dec2if_pc_sd_s2 = pc_out_s2 ;
 
@@ -379,12 +379,12 @@ void decod::pc_inc() {
         pc_branch_value_sd_s1 = pc_out_s1 ; // sent to mem for exception
         pc_branch_value_sd_s2 = pc_out_s2 ;
 
-        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM_S1.read() != 3) {
+        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s1 = 1;
         } else {
             instruction_access_fault_sd_s1 = 0;
         }
-        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM_S1.read() != 3) {
+        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s2 = 1;
         } else {
             instruction_access_fault_sd_s2 = 0;
@@ -392,7 +392,7 @@ void decod::pc_inc() {
         
     }
     //Instruction adress missaligned exception :
-    if ((pc_out_s1 & 0b11) != 0 || (((RETURN_ADRESS_SM_S1.read() & 0b11) != 0) && EXCEPTION_SM_S1.read()))
+    if ((pc_out_s1 & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
     {
         instruction_adress_missaligned_sd_s1 = 1;
     } 
@@ -400,7 +400,7 @@ void decod::pc_inc() {
         instruction_adress_missaligned_sd_s1 = 0;
     }
     //Instruction adress missaligned exception :
-    if ((pc_out_s2 & 0b11) != 0 || (((RETURN_ADRESS_SM_S1.read() & 0b11) != 0) && EXCEPTION_SM_S1.read()))
+    if ((pc_out_s2 & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read()))
     {
         instruction_adress_missaligned_sd_s2 = 1;
     } 
@@ -410,8 +410,9 @@ void decod::pc_inc() {
 
     // Exception & fifo gestion
 
-    if (EXCEPTION_SM_S1.read() == 1) {
-        if (!MRET_SM_S1) {
+    if (EXCEPTION_SM.read() == 1) 
+    {
+        if (!MRET_SM) {
             // Need to check MTVEC value, bits 1,0 indicate :
             // =0 -> direct type, so pc just get value of mtvec.range(31,2)
             // =1 -> vectorise, so pc get value of mtvec.range(31,2) + 4*mcause
@@ -419,14 +420,14 @@ void decod::pc_inc() {
             sc_uint<32> WRITE_PC_VAR;
             sc_uint<32> MTVEC_VALUE_VAR;
 
-            MTVEC_VALUE_VAR.range(31, 2) = MTVEC_VALUE_RC_S1.read().range(31, 2);
+            MTVEC_VALUE_VAR.range(31, 2) = MTVEC_VALUE_RC.read().range(31, 2);
             MTVEC_VALUE_VAR.range(1, 0)  = 0;
 
-            if (MTVEC_VALUE_RC_S1.read().range(1, 0) == 0) {  // direct
+            if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
                 dec2if_pc_sd_s1 = MTVEC_VALUE_VAR;
                 WRITE_PC_SD  = MTVEC_VALUE_VAR;
                 WRITE_PC_ENABLE_SD= 1;
-            } else if (MTVEC_VALUE_RC_S1.read().range(1, 0) == 1) {  // vectorise
+            } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
                 sc_uint<32> MCAUSE_VAR;
                 // MCAUSE * 4 :
                 MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM_S1.read().range(29, 0);
@@ -437,9 +438,12 @@ void decod::pc_inc() {
             }
 
         } else {
-            dec2if_pc_sd_s1= RETURN_ADRESS_SM_S1.read();
-            WRITE_PC_SD= RETURN_ADRESS_SM_S1.read();
+            if(MRET_SM){
+            dec2if_pc_sd_s1= RETURN_ADRESS_SM.read();
+            dec2if_pc_sd_s2= RETURN_ADRESS_SM.read() + 4;
+            WRITE_PC_SD= RETURN_ADRESS_SM.read() + 4;
             WRITE_PC_ENABLE_SD= 1;
+            }
         }          
             
         
@@ -447,7 +451,7 @@ void decod::pc_inc() {
         
         IF2DEC_POP_SD_S1= 1;
         IF2DEC_POP_SD_S2= 1;
-        IF2DEC_FLUSH_SD= 0;
+        IF2DEC_FLUSH_SD= 1;
 
         // DEC2EXE Gestion
 
@@ -977,8 +981,8 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, EXCEPTION_RD_S1, GET_NAME(EXCEPTION_RD_S1));
     // General Interface :
 
-    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
-    sc_trace(tf, MTVEC_VALUE_RC_S1, GET_NAME(MTVEC_VALUE_RC_S1));
+    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
+    sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
     sc_trace(tf, INTERRUPTION_SE_S1, GET_NAME(INTERRUPTION_SE_S1));
@@ -1201,10 +1205,9 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
              GET_NAME(instruction_adress_missaligned_sd_s2));  // branch offset is misaligned
     sc_trace(tf, env_call_m_mode_sd_s2, GET_NAME(env_call_m_mode_sd_s2));
     sc_trace(tf, env_call_s_mode_sd_s2, GET_NAME(env_call_s_mode_sd_s2));
-    sc_trace(tf, CURRENT_MODE_SM_S1, GET_NAME(CURRENT_MODE_SM_S1));
+    sc_trace(tf, CURRENT_MODE_SM, GET_NAME(CURRENT_MODE_SM));
     sc_trace(tf, MRET_RD_S1, GET_NAME(MRET_RD_S1));
-    sc_trace(tf, MRET_SM_S1, GET_NAME(MRET_SM_S1));
-    sc_trace(tf, RETURN_ADRESS_SM_S1, GET_NAME(RETURN_ADRESS_SM_S1));
+    sc_trace(tf, RETURN_ADRESS_SM, GET_NAME(RETURN_ADRESS_SM));
     sc_trace(tf, env_call_u_mode_sd_s1, GET_NAME(env_call_u_mode_sd_s1));
     sc_trace(tf, instruction_access_fault_sd_s1, GET_NAME(instruction_access_fault_sd_s1));
     sc_trace(tf, INSTRUCTION_ACCESS_FAULT_RD_S1, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S1));
@@ -1217,6 +1220,7 @@ sc_trace(tf, rdata1_sd_s2, GET_NAME(rdata1_sd_s2));
     sc_trace(tf,EBREAK_RD_S2, GET_NAME(EBREAK_RD_S2));
     sc_trace(tf,INSTRUCTION_ACCESS_FAULT_RD_S2, GET_NAME(INSTRUCTION_ACCESS_FAULT_RD_S2));
     sc_trace(tf,MRET_RD_S2, GET_NAME(MRET_RD_S2));
+    sc_trace(tf,MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf,BLOCK_BP_RD_S2, GET_NAME(BLOCK_BP_RD_S2));
     sc_trace(tf,EXCEPTION_RD_S2, GET_NAME(EXCEPTION_RD_S2));
     sc_trace(tf,ENV_CALL_WRONG_MODE_RD_S2, GET_NAME(ENV_CALL_WRONG_MODE_RD_S2));
