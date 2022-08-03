@@ -304,6 +304,8 @@ SC_MODULE(exec_s1) {
 			<< SLT_RD_S1 
 			<< SLTU_RD_S1
                   
+            << KERNEL_ADR_SC
+
 			<< SELECT_TYPE_OPERATIONS_RD_S1 
 			<< CURRENT_MODE_SM 
 			<< MEM_LOAD_RD_S1 
