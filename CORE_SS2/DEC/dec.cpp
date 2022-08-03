@@ -379,12 +379,12 @@ void decod::pc_inc() {
         pc_branch_value_sd_s1 = pc_out_s1 ; // sent to mem for exception
         pc_branch_value_sd_s2 = pc_out_s2 ;
 
-        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s1 > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s1 = 1;
         } else {
             instruction_access_fault_sd_s1 = 0;
         }
-        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s2 > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s2 = 1;
         } else {
             instruction_access_fault_sd_s2 = 0;

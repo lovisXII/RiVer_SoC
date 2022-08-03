@@ -156,6 +156,7 @@ SC_MODULE(exec_s2) {
     sc_in<bool>        CSR_WENABLE_RM_S1;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S2;
     sc_in<sc_uint<32>> CSR_RDATA_RM_S1;
+    sc_in<sc_uint<32>> KERNEL_ADR_SC;
 
     // General Interface :
 

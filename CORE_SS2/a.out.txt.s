@@ -5,8 +5,31 @@ a.out:     file format elf32-littleriscv
 Disassembly of section seg_text:
 
 00010054 <_start>:
-   10054:	900001b7          	lui	gp,0x90000
-   10058:	0001a203          	lw	tp,0(gp) # 90000000 <_isr_vector+0xeffff64>
+   10054:	00a06093          	ori	ra,zero,10
+   10058:	00c06113          	ori	sp,zero,12
+   1005c:	00106193          	ori	gp,zero,1
+   10060:	0030a233          	slt	tp,ra,gp
+   10064:	0010b233          	sltu	tp,ra,ra
+   10068:	0031f2b3          	and	t0,gp,gp
+   1006c:	0020e333          	or	t1,ra,sp
+   10070:	005243b3          	xor	t2,tp,t0
+   10074:	00311433          	sll	s0,sp,gp
+   10078:	003154b3          	srl	s1,sp,gp
+   1007c:	0030d533          	srl	a0,ra,gp
+   10080:	4030d5b3          	sra	a1,ra,gp
+   10084:	00a58633          	add	a2,a1,a0
+   10088:	008486b3          	add	a3,s1,s0
+   1008c:	00638733          	add	a4,t2,t1
+   10090:	00d607b3          	add	a5,a2,a3
+   10094:	00e78833          	add	a6,a5,a4
+   10098:	410808b3          	sub	a7,a6,a6
+   1009c:	00088463          	beqz	a7,100a4 <_start+0x50>
+   100a0:	f61ef06f          	j	0 <_bad>
+   100a4:	002080b3          	add	ra,ra,sp
+   100a8:	00089463          	bnez	a7,100b0 <_start+0x5c>
+   100ac:	f59ef06f          	j	4 <_good>
+   100b0:	00000013          	nop
+   100b4:	00000013          	nop
 
 Disassembly of section .riscv.attributes:
 
