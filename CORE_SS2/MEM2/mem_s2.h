@@ -87,15 +87,11 @@ SC_MODULE(mem_s2) {
 
     sc_in<bool>         EXCEPTION_SM_S1;
     sc_out<bool>        EXCEPTION_SM_S2;
-    sc_out<bool>        EXCEPTION_SM;
-
-    
-    sc_in<sc_uint<2>>   CURRENT_MODE_SM_S1;
+    sc_in<sc_uint<2>>   CURRENT_MODE_SM;
 
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S2;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM_S2;
     sc_out<bool>        MRET_SM_S2;  // 54
-    sc_in<bool>        MRET_SM_S1;  // 55
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
@@ -130,7 +126,6 @@ SC_MODULE(mem_s2) {
     sc_in<sc_uint<32>>  MSTATUS_RC;  // 71
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
-    sc_in<sc_uint<32>>  MCAUSE_SC;
 
     // SS2 :
 
@@ -211,41 +206,11 @@ SC_MODULE(mem_s2) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE_S2 << SIGN_EXTEND_RE_S2 << MCACHE_RESULT_SM_S2 << EXE_RES_RE_S2 << LOAD_RE_S2;
         SC_METHOD(csr_exception);
-        sensitive   << EXCEPTION_RE_S2 
-                    << CSR_WENABLE_RE_S2 
-                    << MIP_VALUE_RC 
-                    << PC_EXE2MEM_RE_S2 
-                    << CSR_WADR_SE_S2 
-                    << EXE_RES_RE_S2
-                    << INSTRUCTION_ACCESS_FAULT_RE_S2 
-                    << ILLEGAL_INSTRUCTION_RE_S2 
-                    << INSTRUCTION_ADRESS_MISSALIGNED_RE_S2
-                    << ENV_CALL_U_MODE_RE_S2 
-                    << ENV_CALL_S_MODE_RE_S2 
-                    << ENV_CALL_M_MODE_RE_S2 
-                    << LOAD_ADRESS_MISSALIGNED_RE_S2
-                    << STORE_ADRESS_MISSALIGNED_RE_S2 
-                    << LOAD_ACCESS_FAULT_RE_S2 
-                    << STORE_ACCESS_FAULT_RE_S2 
-                    << MRET_RE_S2
-                    << EXCEPTION_SM_S2 
-                    << ENV_CALL_WRONG_MODE_RE_S2 
-                    << BUS_ERROR_SX 
-                    << EXCEPTION_SM_S2 
-                    <<  MSTATUS_RC
-                    << EXE_RES_RE_S2 
-                    << MEPC_SC 
-                    << current_mode_rm_s2 
-                    << MRET_SM_S1 
-                    << EXCEPTION_SM_S1 
-                    << mem_access_is_prio_rd_s2
-                    << EXE2MEM_EMPTY_SE_S2
-                    << MSTATUS_WDATA_SM_S1
-                    << MIP_WDATA_SM_S1
-                    << MEPC_WDATA_SM_S1
-                    << MCAUSE_SC
-                    << MIP_VALUE_RC
-                    << MCAUSE_WDATA_SM_S1
-                    << MTVAL_WDATA_SM_S1;
+        sensitive << EXCEPTION_RE_S2 << CSR_WENABLE_RE_S2 << MIP_VALUE_RC << PC_EXE2MEM_RE_S2 << CSR_WADR_SE_S2 << EXE_RES_RE_S2
+                  << INSTRUCTION_ACCESS_FAULT_RE_S2 << ILLEGAL_INSTRUCTION_RE_S2 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S2
+                  << ENV_CALL_U_MODE_RE_S2 << ENV_CALL_S_MODE_RE_S2 << ENV_CALL_M_MODE_RE_S2 << LOAD_ADRESS_MISSALIGNED_RE_S2
+                  << STORE_ADRESS_MISSALIGNED_RE_S2 << LOAD_ACCESS_FAULT_RE_S2 << STORE_ACCESS_FAULT_RE_S2 << MRET_RE_S2
+                  << EXCEPTION_SM_S2 << ENV_CALL_WRONG_MODE_RE_S2 << BUS_ERROR_SX << EXCEPTION_SM_S2 << RESET << MSTATUS_RC
+                  << EXE_RES_RE_S2 << MEPC_SC;
     }
 };

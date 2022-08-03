@@ -139,8 +139,6 @@ void decod::concat_dec2exe_s1() {
 void decod::concat_dec2exe_s2() {
     sc_bv<dec2exe_size_s2> dec2exe_in_var;
     if (!EXCEPTION_SM.read() && !reg_dependencies_sd.read()) {
-
-        dec2exe_in_var[252] = csrrc_i_sd_s2;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
         dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
         dec2exe_in_var[218] = ebreak_i_sd_s2;
@@ -385,12 +383,12 @@ void decod::pc_inc() {
         pc_branch_value_sd_s1 = pc_out_s1 ; // sent to mem for exception
         pc_branch_value_sd_s2 = pc_out_s2 ;
 
-        if (pc_out_s1 > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s1 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s1 = 1;
         } else {
             instruction_access_fault_sd_s1 = 0;
         }
-        if (pc_out_s2 > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out_s2 > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd_s2 = 1;
         } else {
             instruction_access_fault_sd_s2 = 0;

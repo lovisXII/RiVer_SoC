@@ -86,23 +86,6 @@ void csr::reading_csr() {
         case 0x800: CSR_RDATA_SC_S1.write(csr_rc[13]); break;
         default: CSR_RDATA_SC_S1.write(0); break;
     }
-    switch (CSR_RADR_SD_S2.read()) {
-        case 0xF11: CSR_RDATA_SC_S2.write(csr_rc[0]); break;
-        case 0xF12: CSR_RDATA_SC_S2.write(csr_rc[1]); break;
-        case 0xF13: CSR_RDATA_SC_S2.write(csr_rc[2]); break;
-        case 0x300: CSR_RDATA_SC_S2.write(csr_rc[3]); break;
-        case 0x301: CSR_RDATA_SC_S2.write(csr_rc[4]); break;
-        case 0x304: CSR_RDATA_SC_S2.write(csr_rc[5]); break;
-        case 0x305: CSR_RDATA_SC_S2.write(csr_rc[6]); break;
-        case 0x310: CSR_RDATA_SC_S2.write(csr_rc[7]); break;
-        case 0x341: CSR_RDATA_SC_S2.write(csr_rc[8]); break;
-        case 0x342: CSR_RDATA_SC_S2.write(csr_rc[9]); break;
-        case 0x343: CSR_RDATA_SC_S2.write(csr_rc[10]); break;
-        case 0x344: CSR_RDATA_SC_S2.write(csr_rc[11]); break;
-        case 0x340: CSR_RDATA_SC_S2.write(csr_rc[12]); break;
-        case 0x800: CSR_RDATA_SC_S2.write(csr_rc[13]); break;
-        default: CSR_RDATA_SC_S2.write(0); break;
-    }
     MEPC_SC.write(csr_rc[8]);
     MSTATUS_RC.write(csr_rc[3]);
     MTVEC_VALUE_RC.write(csr_rc[6]);
@@ -116,6 +99,11 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WDATA_SM_S1, GET_NAME(CSR_WDATA_SM_S1));
     sc_trace(tf, CSR_ENABLE_SM_S1, GET_NAME(CSR_ENABLE_SM_S1));
 
+    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
+    sc_trace(tf, MSTATUS_WDATA_RM_S1, GET_NAME(MSTATUS_WDATA_RM_S1));
+    sc_trace(tf, MIP_WDATA_RM_S1, GET_NAME(MIP_WDATA_RM_S1));
+    sc_trace(tf, MEPC_WDATA_RM_S1, GET_NAME(MEPC_WDATA_RM_S1));
+    sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
 

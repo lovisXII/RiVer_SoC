@@ -575,6 +575,7 @@ Disassembly of section .data:
 =======
 00010054 <_start>:
 <<<<<<< HEAD
+<<<<<<< HEAD
    10054:	00000e97          	auipc	t4,0x0
    10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
    1005c:	002ede93          	srli	t4,t4,0x2
@@ -630,10 +631,39 @@ Disassembly of section .data:
    100b0:	00000013          	nop
    100b4:	00000013          	nop
 >>>>>>> f8e6ffde (solving issue with stall with csr)
+=======
+   10054:	00408093          	addi	ra,ra,4
+   10058:	40110133          	sub	sp,sp,ra
+   1005c:	004002ef          	jal	t0,10060 <main>
+
+Disassembly of section .text.startup:
+
+00010060 <main>:
+   10060:	ff010113          	addi	sp,sp,-16
+   10064:	00112623          	sw	ra,12(sp)
+   10068:	f9def0ef          	jal	ra,4 <_good>
+   1006c:	f95ef0ef          	jal	ra,0 <_bad>
+   10070:	00c12083          	lw	ra,12(sp)
+   10074:	00000513          	li	a0,0
+   10078:	01010113          	addi	sp,sp,16
+   1007c:	00008067          	ret
+
+Disassembly of section .comment:
+
+00000000 <.comment>:
+   0:	3a434347          	fmsub.d	ft6,ft6,ft4,ft7,rmm
+   4:	2820                	fld	fs0,80(s0)
+   6:	29554e47          	fmsub.s	ft8,fa0,fs5,ft5,rmm
+   a:	3120                	fld	fs0,96(a0)
+   c:	2e30                	fld	fa2,88(a2)
+   e:	2e32                	fld	ft8,264(sp)
+  10:	0030                	addi	a2,sp,8
+>>>>>>> 32240fe1 (kernel is working)
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
+<<<<<<< HEAD
 <<<<<<< HEAD
    0:	1d41                	addi	s10,s10,-16
    2:	0000                	unimp
@@ -643,12 +673,16 @@ Disassembly of section .riscv.attributes:
    c:	00000013          	nop
 =======
    0:	2241                	jal	180 <_exception_occur+0x178>
+=======
+   0:	2441                	jal	280 <_exception_occur+0x278>
+>>>>>>> 32240fe1 (kernel is working)
    2:	0000                	unimp
    4:	7200                	flw	fs0,32(a2)
    6:	7369                	lui	t1,0xffffa
    8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
-   c:	0018                	0x18
+   c:	001a                	c.slli	zero,0x6
    e:	0000                	unimp
+<<<<<<< HEAD
 >>>>>>> f8e6ffde (solving issue with stall with csr)
   10:	7205                	lui	tp,0xfffe1
   12:	3376                	fld	ft6,376(sp)
@@ -674,6 +708,19 @@ Disassembly of section .riscv.attributes:
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 =======
 >>>>>>> f8e6ffde (solving issue with stall with csr)
+=======
+  10:	1004                	addi	s1,sp,32
+  12:	7205                	lui	tp,0xfffe1
+  14:	3376                	fld	ft6,376(sp)
+  16:	6932                	flw	fs2,12(sp)
+  18:	7032                	flw	ft0,44(sp)
+  1a:	5f30                	lw	a2,120(a4)
+  1c:	326d                	jal	fffff9c6 <_isr_vector+0x7efff92a>
+  1e:	3070                	fld	fa2,224(s0)
+  20:	0800                	addi	s0,sp,16
+  22:	0a01                	addi	s4,s4,0
+  24:	0b              	Address 0x0000000000000024 is out of bounds.
+>>>>>>> 32240fe1 (kernel is working)
 
 Disassembly of section .debug_line:
 

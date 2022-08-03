@@ -405,6 +405,7 @@ SC_MODULE(core) {
     x2_multiplier      x2_multiplier_inst;
 
     void core_method();
+    void exception_gestion();
     void trace(sc_trace_file * tf);
     SC_CTOR(core) : 
           ifetch_inst("ifetch"),
@@ -422,6 +423,13 @@ SC_MODULE(core) {
           csr_inst("csr") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
+        SC_METHOD(exception_gestion);
+        sensitive   << EXCEPTION_SM_S1
+                    << EXCEPTION_SM_S2
+                    << MRET_SM_S1
+                    << MRET_SM_S2
+                    << RETURN_ADRESS_SM_S1
+                    << RETURN_ADRESS_SM_S2;
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
@@ -450,9 +458,9 @@ SC_MODULE(core) {
         ifetch_inst.INTERRUPTION_SE_S1(INTERRUPTION_SE_S1);
         ifetch_inst.EXCEPTION_RI(EXCEPTION_RI);
         ifetch_inst.EXCEPTION_SM(EXCEPTION_SM);
-        ifetch_inst.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
-        ifetch_inst.MRET_SM(MRET_SM_S2);
-        ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM_S2);
+        ifetch_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
+        ifetch_inst.MRET_SM(MRET_SM);
+        ifetch_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         ifetch_inst.PRIORITARY_PIPELINE_RD(PRIORITARY_PIPELINE_RD);
 
  
@@ -615,11 +623,11 @@ SC_MODULE(core) {
         dec_inst.BLOCK_BP_RD_S2(BLOCK_BP_RD_S2);
 
         dec_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
-        dec_inst.MRET_SM(MRET_SM_S2);
+        dec_inst.MRET_SM(MRET_SM);
         dec_inst.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
-        dec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
+        dec_inst.CURRENT_MODE_SM(CURRENT_MODE_SM);
         dec_inst.MRET_RD_S1(MRET_RD_S1);
-        dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM_S2);
+        dec_inst.RETURN_ADRESS_SM(RETURN_ADRESS_SM);
         dec_inst.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         dec_inst.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
         dec_inst.MULT_INST_RD_S1(MULT_INST_RD_S1);
@@ -732,7 +740,7 @@ SC_MODULE(core) {
         exec_inst_s1.ENV_CALL_M_MODE_RE_S1(ENV_CALL_M_MODE_RE_S1);
         exec_inst_s1.EXCEPTION_SM(EXCEPTION_SM);
         exec_inst_s1.BLOCK_BP_RD_S1(BLOCK_BP_RD_S1);
-        exec_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
+        exec_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM);
         exec_inst_s1.MRET_RE_S1(MRET_RE_S1);
         exec_inst_s1.INSTRUCTION_ACCESS_FAULT_RD_S1(INSTRUCTION_ACCESS_FAULT_RD_S1);
         exec_inst_s1.INSTRUCTION_ACCESS_FAULT_RE_S1(INSTRUCTION_ACCESS_FAULT_RE_S1);
@@ -957,7 +965,7 @@ SC_MODULE(core) {
         mem_inst_s1.BUS_ERROR_SX(BUS_ERROR_SX);
 
         mem_inst_s1.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
-        mem_inst_s1.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        mem_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM);
         mem_inst_s1.RETURN_ADRESS_SM_S1(RETURN_ADRESS_SM_S1);
         mem_inst_s1.MRET_SM_S1(MRET_SM_S1);
 
@@ -965,10 +973,6 @@ SC_MODULE(core) {
         mem_inst_s1.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
         mem_inst_s1.MEPC_WDATA_SM_S1(MEPC_WDATA_SM_S1);
         mem_inst_s1.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
-
-        mem_inst_s1.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
-        mem_inst_s1.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
-        mem_inst_s1.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
 
         mem_inst_s1.MEPC_SC(MEPC_SC);
         mem_inst_s1.MSTATUS_RC(MSTATUS_RC);
@@ -1055,8 +1059,7 @@ SC_MODULE(core) {
 
         mem_inst_s2.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
         mem_inst_s2.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
-        mem_inst_s2.EXCEPTION_SM(EXCEPTION_SM);
-        mem_inst_s2.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
+        mem_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
         mem_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
         mem_inst_s2.RETURN_ADRESS_SM_S2(RETURN_ADRESS_SM_S2);
         mem_inst_s2.MRET_SM_S2(MRET_SM_S2);
@@ -1072,6 +1075,13 @@ SC_MODULE(core) {
         mem_inst_s2.MIP_WDATA_RM_S2(MIP_WDATA_RM_S2);
         mem_inst_s2.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
         mem_inst_s2.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
+
+        mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
+
+        mem_inst_s2.MEPC_SC(MEPC_SC);
+        mem_inst_s2.MSTATUS_RC(MSTATUS_RC);
+        mem_inst_s2.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
+        mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
         mem_inst_s2.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);  // 54
 
         mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
@@ -1148,7 +1158,7 @@ SC_MODULE(core) {
         wbk_inst_s1.PC_MEM2WBK_RM_S1(PC_MEM2WBK_RM_S1);
 
         wbk_inst_s1.INTERRUPTION_SE_S1(INTERRUPTION_SE_S1);
-        wbk_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
+        wbk_inst_s1.CURRENT_MODE_SM(CURRENT_MODE_SM);
         
         wbk_inst_s1.MULT_INST_RM_S1(MULT_INST_RM_S1);
         wbk_inst_s1.X2_RES_RX2(multiplier_out_sx2);

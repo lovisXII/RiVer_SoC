@@ -16,19 +16,6 @@ SC_MODULE(csr) {
 
     // Input from M2
 
-    sc_in<sc_uint<12>> CSR_WADR_SM_S2;
-    sc_in<sc_uint<32>> CSR_WDATA_SM_S2;
-    sc_in<bool>        CSR_ENABLE_SM_S2;
-        
-    sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S2;
-    sc_in<sc_uint<32>> MIP_WDATA_RM_S2;
-    sc_in<sc_uint<32>> MEPC_WDATA_RM_S2;
-    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S2;
-    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S2;
-
-    // Reading csr :
-
-    sc_in<bool>        EXCEPTION_SM;
 
     sc_out<sc_uint<32>> MEPC_SC;
     sc_out<sc_uint<32>> MSTATUS_RC;
