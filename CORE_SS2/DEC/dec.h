@@ -1155,7 +1155,7 @@ SC_MODULE(decod) {
         SC_METHOD(pc_inc)
         sensitive 
 			<< CLK.pos() 
-                  
+            << KERNEL_ADR_SC
 			<< READ_PC_SR 
                   
 			<< offset_branch_sd_s1 
