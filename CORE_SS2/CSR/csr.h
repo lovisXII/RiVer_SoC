@@ -14,8 +14,32 @@ SC_MODULE(csr) {
     sc_in<sc_uint<32>> CSR_WDATA_SM_S1;
     sc_in<bool>        CSR_ENABLE_SM_S1;
 
+<<<<<<< HEAD
+    // Input from M2
+=======
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MIP_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
+>>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
+
     // Input from M2
 
+    sc_in<sc_uint<12>> CSR_WADR_SM_S2;
+    sc_in<sc_uint<32>> CSR_WDATA_SM_S2;
+    sc_in<bool>        CSR_ENABLE_SM_S2;
+        
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MIP_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S2;
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S2;
+
+    // Reading csr :
+
+    sc_in<bool>        EXCEPTION_SM_S1;
+    sc_in<bool>        EXCEPTION_SM_S2;
 
     sc_out<sc_uint<32>> MEPC_SC;
     sc_out<sc_uint<32>> MSTATUS_RC;
@@ -64,8 +88,13 @@ SC_MODULE(csr) {
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
+<<<<<<< HEAD
         sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
         << CSR_RADR_SD_S2 ;
+=======
+        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1 << EXCEPTION_SM_S1 << MSTATUS_WDATA_RM_S1
+                  << MIP_WDATA_RM_S1 << MEPC_WDATA_RM_S1 << MCAUSE_WDATA_SM_S1;
+>>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }

@@ -1083,6 +1083,7 @@ SC_MODULE(core) {
         mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
         mem_inst_s2.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);  // 54
 
+<<<<<<< HEAD
         mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
 
         mem_inst_s2.MEPC_SC(MEPC_SC);
@@ -1090,6 +1091,8 @@ SC_MODULE(core) {
         mem_inst_s2.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
 
+=======
+>>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
         mem_inst_s2.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);  // 55
         mem_inst_s2.PC_BRANCH_VALUE_RE_S2(PC_BRANCH_VALUE_RE_S2);  
 
@@ -1222,6 +1225,18 @@ SC_MODULE(core) {
         csr_inst.MCAUSE_SC(MCAUSE_SC);
         csr_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);
         csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
+
+        csr_inst.CSR_WADR_SM_S2(CSR_WADR_SM_S2);
+        csr_inst.CSR_WDATA_SM_S2(CSR_WDATA_SM_S2);
+        csr_inst.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);
+        csr_inst.MSTATUS_WDATA_RM_S2(MSTATUS_WDATA_RM_S2);
+        csr_inst.MIP_WDATA_RM_S2(MIP_WDATA_RM_S2);
+        csr_inst.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
+        csr_inst.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
+        csr_inst.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);
+        csr_inst.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
+        csr_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
+        csr_inst.CSR_RDATA_SC_S2(CSR_RDATA_SC_S2);
 
 
         csr_inst.CLK(CLK);

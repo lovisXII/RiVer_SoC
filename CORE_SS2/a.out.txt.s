@@ -578,6 +578,7 @@ Disassembly of section .data:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
    10054:	00000e97          	auipc	t4,0x0
    10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
    1005c:	002ede93          	srli	t4,t4,0x2
@@ -670,6 +671,23 @@ Disassembly of section .comment:
 >>>>>>> da404326 (start working on exception issue)
 =======
 >>>>>>> 7b0db4ad (new csr for kernel adr)
+=======
+   10054:	800020b7          	lui	ra,0x80002
+   10058:	31408093          	addi	ra,ra,788 # 80002314 <_isr_vector+0xff002278>
+   1005c:	90002137          	lui	sp,0x90002
+   10060:	31410113          	addi	sp,sp,788 # 90002314 <_isr_vector+0xf002278>
+   10064:	0180006f          	j	1007c <_test>
+   10068:	34109073          	csrw	mepc,ra
+
+0001006c <_return>:
+   1006c:	341011f3          	csrrw	gp,mepc,zero
+   10070:	00119463          	bne	gp,ra,10078 <_return+0xc>
+   10074:	f91ef06f          	j	4 <_good>
+   10078:	f89ef06f          	j	0 <_bad>
+
+0001007c <_test>:
+   1007c:	ff1ff06f          	j	1006c <_return>
+>>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
 
 Disassembly of section .riscv.attributes:
 
