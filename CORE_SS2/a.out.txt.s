@@ -1,9 +1,10 @@
 
-../riscof/riscof_work/rv32i_m/privilege/src/ecall.S/dut/my.elf:     file format elf32-littleriscv
+a.out:     file format elf32-littleriscv
 
 
-Disassembly of section .text.init:
+Disassembly of section seg_text:
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1253,10 +1254,22 @@ Disassembly of section .data:
 80002224:	deadbeef          	jal	t4,7ffdd80e <value+0x7ffdd7fe>
 	...
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+00010054 <_start>:
+   10054:	000020b7          	lui	ra,0x2
+   10058:	65408093          	addi	ra,ra,1620 # 2654 <_exception_occur+0x264c>
+   1005c:	0170e113          	ori	sp,ra,23
+   10060:	00f67613          	andi	a2,a2,15
+   10064:	00101463          	bne	zero,ra,1006c <_start+0x18>
+   10068:	f99ef06f          	j	0 <_bad>
+   1006c:	00000073          	ecall
+   10070:	0000a183          	lw	gp,0(ra)
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1294,10 +1307,20 @@ Disassembly of section .riscv.attributes:
    8:	01007663          	bgeu	zero,a6,14 <value+0x4>
    c:	00000013          	nop
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+   0:	2241                	jal	180 <_exception_occur+0x178>
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
+   c:	0018                	0x18
+   e:	0000                	unimp
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
   10:	7205                	lui	tp,0xfffe1
   12:	3376                	fld	ft6,376(sp)
   14:	6932                	flw	fs2,12(sp)
   16:	7032                	flw	ft0,44(sp)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1316,10 +1339,15 @@ Disassembly of section .riscv.attributes:
   18:	5f30                	lw	a2,120(a4)
   1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
 >>>>>>> da404326 (start working on exception issue)
+=======
+  18:	5f30                	lw	a2,120(a4)
+  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
   1c:	3070                	fld	fa2,224(s0)
   1e:	0800                	addi	s0,sp,16
   20:	0a01                	addi	s4,s4,0
   22:	0b              	Address 0x0000000000000022 is out of bounds.
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
@@ -1345,125 +1373,30 @@ Disassembly of section .riscv.attributes:
   1a:	0108                	addi	a0,sp,128
   1c:	0b0a                	slli	s6,s6,0x2
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 
-Disassembly of section .debug_line:
 
-00000000 <.debug_line>:
-   0:	00d6                	slli	ra,ra,0x15
-   2:	0000                	unimp
-   4:	007a0003          	lb	zero,7(s4)
-   8:	0000                	unimp
-   a:	0101                	addi	sp,sp,0
-   c:	000d0efb          	0xd0efb
-  10:	0101                	addi	sp,sp,0
-  12:	0101                	addi	sp,sp,0
-  14:	0000                	unimp
-  16:	0100                	addi	s0,sp,128
-  18:	0000                	unimp
-  1a:	2f01                	jal	72a <value+0x71a>
-  1c:	6f68                	flw	fa0,92(a4)
-  1e:	656d                	lui	a0,0x1b
-  20:	766f6c2f          	0x766f6c2f
-  24:	7369                	lui	t1,0xffffa
-  26:	7365442f          	0x7365442f
-  2a:	706f746b          	0x706f746b
-  2e:	5669522f          	0x5669522f
-  32:	7265                	lui	tp,0xffff9
-  34:	535f 436f 722f      	0x722f436f535f
-  3a:	7369                	lui	t1,0xffffa
-  3c:	2f666f63          	bltu	a2,s6,33a <value+0x32a>
-  40:	6972                	flw	fs2,28(sp)
-  42:	2d766373          	csrrsi	t1,0x2d7,12
-  46:	7261                	lui	tp,0xffff8
-  48:	742d6863          	bltu	s10,sp,798 <value+0x788>
-  4c:	7365                	lui	t1,0xffff9
-  4e:	2f74                	fld	fa3,216(a4)
-  50:	6972                	flw	fs2,28(sp)
-  52:	2d766373          	csrrsi	t1,0x2d7,12
-  56:	6574                	flw	fa3,76(a0)
-  58:	732d7473          	csrrci	s0,0x732,26
-  5c:	6975                	lui	s2,0x1d
-  5e:	6574                	flw	fa3,76(a0)
-  60:	3376722f          	0x3376722f
-  64:	6932                	flw	fs2,12(sp)
-  66:	6d5f 702f 6972      	0x6972702f6d5f
-  6c:	6976                	flw	fs2,92(sp)
-  6e:	656c                	flw	fa1,76(a0)
-  70:	732f6567          	0x732f6567
-  74:	6372                	flw	ft6,28(sp)
-  76:	0000                	unimp
-  78:	6365                	lui	t1,0x19
-  7a:	6c61                	lui	s8,0x18
-  7c:	2e6c                	fld	fa1,216(a2)
-  7e:	00010053          	fadd.s	ft0,ft2,ft0,rne
-  82:	0000                	unimp
-  84:	0500                	addi	s0,sp,640
-  86:	0002                	c.slli64	zero
-  88:	0000                	unimp
-  8a:	0380                	addi	s0,sp,448
-  8c:	0112                	slli	sp,sp,0x4
-  8e:	04090603          	lb	a2,64(s2) # 1d040 <value+0x1d030>
-  92:	0101                	addi	sp,sp,0
-  94:	08090203          	lb	tp,128(s2)
-  98:	0100                	addi	s0,sp,128
-  9a:	08090103          	lb	sp,128(s2)
-  9e:	0100                	addi	s0,sp,128
-  a0:	04090103          	lb	sp,64(s2)
-  a4:	0100                	addi	s0,sp,128
-  a6:	04090103          	lb	sp,64(s2)
-  aa:	0100                	addi	s0,sp,128
-  ac:	04090103          	lb	sp,64(s2)
-  b0:	0100                	addi	s0,sp,128
-  b2:	04090103          	lb	sp,64(s2)
-  b6:	0100                	addi	s0,sp,128
-  b8:	0c090b03          	lb	s6,192(s2)
-  bc:	0100                	addi	s0,sp,128
-  be:	88090103          	lb	sp,-1920(s2)
-  c2:	0104                	addi	s1,sp,128
-  c4:	1009                	c.nop	-30
-  c6:	0000                	unimp
-  c8:	0101                	addi	sp,sp,0
-  ca:	0500                	addi	s0,sp,640
-  cc:	1c02                	slli	s8,s8,0x20
-  ce:	0020                	addi	s0,sp,8
-  d0:	0380                	addi	s0,sp,448
-  d2:	012d                	addi	sp,sp,11
-  d4:	1409                	addi	s0,s0,-30
-  d6:	0002                	c.slli64	zero
-  d8:	0101                	addi	sp,sp,0
+Disassembly of section text:
 
-Disassembly of section .debug_info:
+00000000 <_bad>:
+   0:	00000013          	nop
 
-00000000 <.debug_info>:
-   0:	001e                	c.slli	zero,0x7
-   2:	0000                	unimp
-   4:	0002                	c.slli64	zero
-   6:	0000                	unimp
-   8:	0000                	unimp
-   a:	0104                	addi	s1,sp,128
-	...
-  18:	0064                	addi	s1,sp,12
-  1a:	0000                	unimp
-  1c:	000000b7          	lui	ra,0x0
-  20:	8001                	c.srli64	s0
+00000004 <_good>:
+   4:	00000013          	nop
 
-Disassembly of section .debug_abbrev:
+00000008 <_exception_occur>:
+   8:	00000013          	nop
 
-00000000 <.debug_abbrev>:
-   0:	1101                	addi	sp,sp,-32
-   2:	1000                	addi	s0,sp,32
-   4:	5506                	lw	a0,96(sp)
-   6:	0306                	slli	t1,t1,0x1
-   8:	1b0e                	slli	s6,s6,0x23
-   a:	250e                	fld	fa0,192(sp)
-   c:	130e                	slli	t1,t1,0x23
-   e:	0005                	c.nop	1
-	...
+Disassembly of section seg_reset:
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 Disassembly of section .debug_aranges:
 =======
+=======
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 80000000 <_reset>:
 80000000:	00010e37          	lui	t3,0x10
 80000004:	054e0e13          	addi	t3,t3,84 # 10054 <_start>
@@ -1481,10 +1414,14 @@ Disassembly of section .debug_aranges:
 80000034:	00010137          	lui	sp,0x10
 80000038:	01000497          	auipc	s1,0x1000
 <<<<<<< HEAD
+<<<<<<< HEAD
 8000003c:	07048493          	addi	s1,s1,112 # 810000a8 <_isr_vector>
 =======
 8000003c:	06448493          	addi	s1,s1,100 # 8100009c <_isr_vector>
 >>>>>>> f8109c37 (solving issue with curr mode)
+=======
+8000003c:	06448493          	addi	s1,s1,100 # 8100009c <_isr_vector>
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 80000040:	01000517          	auipc	a0,0x1000
 80000044:	ff050513          	addi	a0,a0,-16 # 81000030 <_instruction_address_fault>
 80000048:	01000597          	auipc	a1,0x1000
@@ -1495,6 +1432,7 @@ Disassembly of section .debug_aranges:
 8000005c:	02068693          	addi	a3,a3,32 # 81000078 <_env_call_u_mode>
 80000060:	01000717          	auipc	a4,0x1000
 <<<<<<< HEAD
+<<<<<<< HEAD
 80000064:	02470713          	addi	a4,a4,36 # 81000084 <_env_call_s_mode>
 80000068:	01000797          	auipc	a5,0x1000
 8000006c:	02878793          	addi	a5,a5,40 # 81000090 <_env_call_m_mode>
@@ -1503,6 +1441,11 @@ Disassembly of section .debug_aranges:
 80000068:	01000797          	auipc	a5,0x1000
 8000006c:	02078793          	addi	a5,a5,32 # 81000088 <_env_call_m_mode>
 >>>>>>> f8109c37 (solving issue with curr mode)
+=======
+80000064:	02070713          	addi	a4,a4,32 # 81000080 <_env_call_s_mode>
+80000068:	01000797          	auipc	a5,0x1000
+8000006c:	02078793          	addi	a5,a5,32 # 81000088 <_env_call_m_mode>
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 80000070:	01000817          	auipc	a6,0x1000
 80000074:	fd880813          	addi	a6,a6,-40 # 81000048 <_load_adress_missaligned>
 80000078:	01000897          	auipc	a7,0x1000
@@ -1513,10 +1456,14 @@ Disassembly of section .debug_aranges:
 8000008c:	fe498993          	addi	s3,s3,-28 # 8100006c <_store_access_fault>
 80000090:	01000a17          	auipc	s4,0x1000
 <<<<<<< HEAD
+<<<<<<< HEAD
 80000094:	00ca0a13          	addi	s4,s4,12 # 8100009c <_env_call_wrong_mode>
 =======
 80000094:	000a0a13          	mv	s4,s4
 >>>>>>> f8109c37 (solving issue with curr mode)
+=======
+80000094:	000a0a13          	mv	s4,s4
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 80000098:	00c4a023          	sw	a2,0(s1)
 8000009c:	00a4a223          	sw	a0,4(s1)
 800000a0:	00b4a423          	sw	a1,8(s1)
@@ -1553,41 +1500,32 @@ Disassembly of section .debug_aranges:
 8000011c:	00000c93          	li	s9,0
 80000120:	30200073          	mret
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 =======
 >>>>>>> f8109c37 (solving issue with curr mode)
 =======
 Disassembly of section .debug_aranges:
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 
-00000000 <.debug_aranges>:
-   0:	0024                	addi	s1,sp,8
-   2:	0000                	unimp
-   4:	0002                	c.slli64	zero
-   6:	0000                	unimp
-   8:	0000                	unimp
-   a:	0004                	0x4
-   c:	0000                	unimp
-   e:	0000                	unimp
-  10:	0000                	unimp
-  12:	8000                	0x8000
-  14:	05c8                	addi	a0,sp,708
-  16:	0000                	unimp
-  18:	2000                	fld	fs0,0(s0)
-  1a:	8000                	0x8000
-  1c:	0230                	addi	a2,sp,264
-	...
+Disassembly of section seg_kernel:
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 Disassembly of section .debug_str:
 =======
+=======
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 81000000 <_exception>:
 81000000:	34205573          	csrrwi	a0,mcause,0
 81000004:	3400f5f3          	csrrci	a1,mscratch,1
 81000008:	00a5a023          	sw	a0,0(a1)
 8100000c:	00251513          	slli	a0,a0,0x2
 81000010:	00000597          	auipc	a1,0x0
+<<<<<<< HEAD
 81000014:	09858593          	addi	a1,a1,152 # 810000a8 <_isr_vector>
 81000018:	00a585b3          	add	a1,a1,a0
 8100001c:	0005a603          	lw	a2,0(a1)
@@ -1596,80 +1534,24 @@ Disassembly of section .debug_str:
 =======
 Disassembly of section .debug_str:
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+81000014:	08c58593          	addi	a1,a1,140 # 8100009c <_isr_vector>
+81000018:	00a585b3          	add	a1,a1,a0
+8100001c:	0005a603          	lw	a2,0(a1)
+81000020:	00060067          	jr	a2
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 
-00000000 <.debug_str>:
-   0:	6d6f682f          	0x6d6f682f
-   4:	2f65                	jal	7bc <value+0x7ac>
-   6:	6f6c                	flw	fa1,92(a4)
-   8:	6976                	flw	fs2,92(sp)
-   a:	65442f73          	csrrs	t5,0x654,s0
-   e:	6f746b73          	csrrsi	s6,0x6f7,8
-  12:	2f70                	fld	fa2,216(a4)
-  14:	6952                	flw	fs2,20(sp)
-  16:	6556                	flw	fa0,84(sp)
-  18:	5f72                	lw	t5,60(sp)
-  1a:	2f436f53          	0x2f436f53
-  1e:	6972                	flw	fs2,28(sp)
-  20:	666f6373          	csrrsi	t1,0x666,30
-  24:	7369722f          	0x7369722f
-  28:	612d7663          	bgeu	s10,s2,634 <value+0x624>
-  2c:	6372                	flw	ft6,28(sp)
-  2e:	2d68                	fld	fa0,216(a0)
-  30:	6574                	flw	fa3,76(a0)
-  32:	722f7473          	csrrci	s0,0x722,30
-  36:	7369                	lui	t1,0xffffa
-  38:	742d7663          	bgeu	s10,sp,784 <value+0x774>
-  3c:	7365                	lui	t1,0xffff9
-  3e:	2d74                	fld	fa3,216(a0)
-  40:	74697573          	csrrci	a0,0x746,18
-  44:	2f65                	jal	7fc <value+0x7ec>
-  46:	7672                	flw	fa2,60(sp)
-  48:	5f693233          	0x5f693233
-  4c:	2f6d                	jal	806 <value+0x7f6>
-  4e:	7270                	flw	fa2,100(a2)
-  50:	7669                	lui	a2,0xffffa
-  52:	6c69                	lui	s8,0x1a
-  54:	6765                	lui	a4,0x19
-  56:	2f65                	jal	80e <value+0x7fe>
-  58:	2f637273          	csrrci	tp,0x2f6,6
-  5c:	6365                	lui	t1,0x19
-  5e:	6c61                	lui	s8,0x18
-  60:	2e6c                	fld	fa1,216(a2)
-  62:	682f0053          	0x682f0053
-  66:	2f656d6f          	jal	s10,5635c <value+0x5634c>
-  6a:	6f6c                	flw	fa1,92(a4)
-  6c:	6976                	flw	fs2,92(sp)
-  6e:	65442f73          	csrrs	t5,0x654,s0
-  72:	6f746b73          	csrrsi	s6,0x6f7,8
-  76:	2f70                	fld	fa2,216(a4)
-  78:	6952                	flw	fs2,20(sp)
-  7a:	6556                	flw	fa0,84(sp)
-  7c:	5f72                	lw	t5,60(sp)
-  7e:	2f436f53          	0x2f436f53
-  82:	6972                	flw	fs2,28(sp)
-  84:	666f6373          	csrrsi	t1,0x666,30
-  88:	7369722f          	0x7369722f
-  8c:	5f666f63          	bltu	a2,s6,68a <value+0x67a>
-  90:	6b726f77          	0x6b726f77
-  94:	3376722f          	0x3376722f
-  98:	6932                	flw	fs2,12(sp)
-  9a:	6d5f 702f 6972      	0x6972702f6d5f
-  a0:	6976                	flw	fs2,92(sp)
-  a2:	656c                	flw	fa1,76(a0)
-  a4:	732f6567          	0x732f6567
-  a8:	6372                	flw	ft6,28(sp)
-  aa:	6163652f          	0x6163652f
-  ae:	6c6c                	flw	fa1,92(s0)
-  b0:	532e                	lw	t1,232(sp)
-  b2:	7475642f          	0x7475642f
-  b6:	4700                	lw	s0,8(a4)
-  b8:	554e                	lw	a0,240(sp)
-  ba:	4120                	lw	s0,64(a0)
-  bc:	2e322053          	0x2e322053
-  c0:	          	snez	a0,zero
+81000024 <_instruction_address_misagligned>:
+81000024:	00000013          	nop
+81000028:	00800093          	li	ra,8
+8100002c:	00008067          	ret
 
-Disassembly of section .debug_ranges:
+81000030 <_instruction_address_fault>:
+81000030:	00000013          	nop
+81000034:	00800093          	li	ra,8
+81000038:	00008067          	ret
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -1690,6 +1572,8 @@ Disassembly of section .debug_ranges:
 	...
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
 8100003c <_illegal_instruction>:
 8100003c:	00000013          	nop
 81000040:	00800093          	li	ra,8
@@ -1717,6 +1601,7 @@ Disassembly of section .debug_ranges:
 
 81000078 <_env_call_u_mode>:
 81000078:	00000013          	nop
+<<<<<<< HEAD
 8100007c:	00800093          	li	ra,8
 81000080:	00008067          	ret
 
@@ -1737,3 +1622,19 @@ Disassembly of section .debug_ranges:
 >>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 =======
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+8100007c:	30200073          	mret
+
+81000080 <_env_call_s_mode>:
+81000080:	00000013          	nop
+81000084:	30200073          	mret
+
+81000088 <_env_call_m_mode>:
+81000088:	00000013          	nop
+8100008c:	30200073          	mret
+
+81000090 <_env_call_wrong_mode>:
+81000090:	00000013          	nop
+81000094:	00800093          	li	ra,8
+81000098:	00008067          	ret
+>>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
