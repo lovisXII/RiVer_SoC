@@ -8,7 +8,7 @@ C_ARGS=-I$(INCLUDE_PATH) -L$(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 
 all: alu_tb shifter_tb exec_tb
 
-exec_tb: alu.o shifter.o exec.o exec_tb.o ../UTIL/fifo_78b/fifo_78b.o
+exec_tb: alu.o shifter.o exec.o exec_tb.o ../../UTIL/fifo_78b/fifo_78b.o
 	$(CC) $^ -o $@ $(C_ARGS)
 
 alu_tb: alu.o alu_tb.o
@@ -23,9 +23,9 @@ div_tb: Diviseur.o Diviseur_tb.o
 %.o: %.cpp
 	$(CC) -c $^ $(C_ARGS) 
 	 
-../UTIL/fifo_78b/fifo_78b.o: ../UTIL/fifo_78b/fifo_78b.cpp
-	make -C ../UTIL/fifo_78b/
+../../UTIL/fifo_78b/fifo_78b.o: ../../UTIL/fifo_78b/fifo_78b.cpp
+	make -C ../../UTIL/fifo_78b/
 
 clean: 
 	rm -f *.o main div_tb alu_tb shifter_tb exec_tb *.vcd
-	cd ../UTIL/fifo_78b/ && make clean
+	cd ../../UTIL/fifo_78b/ && make clean

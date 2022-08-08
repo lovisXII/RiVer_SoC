@@ -59,22 +59,22 @@ void csr::writing_csr() {
 
 void csr::reading_csr() {
     switch (CSR_RADR_SD.read()) {
-        case 0xF11: CSR_RDATA_SC.write(csr_rc[0]); break;
-        case 0xF12: CSR_RDATA_SC.write(csr_rc[1]); break;
-        case 0xF13: CSR_RDATA_SC.write(csr_rc[2]); break;
-        case 0x300: CSR_RDATA_SC.write(csr_rc[3]); break;
-        case 0x301: CSR_RDATA_SC.write(csr_rc[4]); break;
-        case 0x304: CSR_RDATA_SC.write(csr_rc[5]); break;
-        case 0x305: CSR_RDATA_SC.write(csr_rc[6]); break;
-        case 0x310: CSR_RDATA_SC.write(csr_rc[7]); break;
-        case 0x341: CSR_RDATA_SC.write(csr_rc[8]); break;
-        case 0x342: CSR_RDATA_SC.write(csr_rc[9]); break;
-        case 0x343: CSR_RDATA_SC.write(csr_rc[10]); break;
-        case 0x344: CSR_RDATA_SC.write(csr_rc[11]); break;
-        case 0x340: CSR_RDATA_SC.write(csr_rc[12]); break;
-        case 0xC01: CSR_RDATA_SC.write(TIME_RT.read().range(31, 0)); break;   // time
-        case 0xC81: CSR_RDATA_SC.write(TIME_RT.read().range(63, 32)); break;  // timeh
-        default: CSR_RDATA_SC.write(0); break;
+        case 0xF11: CSR_RDATA_O.write(csr_rc[0]); break;
+        case 0xF12: CSR_RDATA_O.write(csr_rc[1]); break;
+        case 0xF13: CSR_RDATA_O.write(csr_rc[2]); break;
+        case 0x300: CSR_RDATA_O.write(csr_rc[3]); break;
+        case 0x301: CSR_RDATA_O.write(csr_rc[4]); break;
+        case 0x304: CSR_RDATA_O.write(csr_rc[5]); break;
+        case 0x305: CSR_RDATA_O.write(csr_rc[6]); break;
+        case 0x310: CSR_RDATA_O.write(csr_rc[7]); break;
+        case 0x341: CSR_RDATA_O.write(csr_rc[8]); break;
+        case 0x342: CSR_RDATA_O.write(csr_rc[9]); break;
+        case 0x343: CSR_RDATA_O.write(csr_rc[10]); break;
+        case 0x344: CSR_RDATA_O.write(csr_rc[11]); break;
+        case 0x340: CSR_RDATA_O.write(csr_rc[12]); break;
+        case 0xC01: CSR_RDATA_O.write(TIME_RT.read().range(31, 0)); break;   // time
+        case 0xC81: CSR_RDATA_O.write(TIME_RT.read().range(63, 32)); break;  // timeh
+        default: CSR_RDATA_O.write(0); break;
     }
     MEPC_SC.write(csr_rc[8]);
     MSTATUS_RC.write(csr_rc[3]);
@@ -100,7 +100,7 @@ void csr::trace(sc_trace_file* tf) {
     // Output :
 
     sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));
-    sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));
+    sc_trace(tf, CSR_RDATA_O, GET_NAME(CSR_RDATA_O));
 
     // General Interface :
     sc_trace(tf, csr_rc[0], signal_get_name(csr_rc[0].name(), "mvendorid"));

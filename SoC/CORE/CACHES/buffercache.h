@@ -2,7 +2,7 @@
 #define BUFFER_CACHE
 
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(buffercache)
 {
@@ -61,10 +61,10 @@ SC_MODULE(buffercache)
     SC_CTOR(buffercache)
     {
         SC_METHOD(fifo);
-        sensitive << CLK.pos() << WRITE_OBUFF.pos();
+        sensitive << CLK.neg() << WRITE_OBUFF.pos();
 
         SC_METHOD(bufferfull);
-        sensitive << CLK.pos();
+        sensitive << buff0_VALIDATE << buff1_VALIDATE;
 
         reset_signal_is(RESET_N, false);
     }

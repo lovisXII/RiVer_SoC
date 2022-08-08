@@ -41,8 +41,7 @@ void icache::transition()
 
     int cpt = 0;
     bool dta_valid;
-    sc_uint<8> current_address_index;
-    sc_uint<20>  current_address_tag;
+
     bool adr_valid;
 
     bool debug = true;
@@ -68,26 +67,26 @@ void icache::transition()
                 }
                 break;
             case WAIT_MEM:
-                if(SLAVE_ACK_SP.read())
+                if(ACK.read())
                 {
                     fsm_current_state = UPDT;
 
-                    data[current_address_index][cpt++] = DT.read();
-                    tag[current_address_index] = current_address_tag;
-                    data_validate[current_address_index] = false;
-                    
-
+                    data[current_address_index.read()][cpt++] = DT.read();
+                    tag[current_address_index.read()] = current_address_tag.read();
+                    data_validate[current_address_index.read()] = false;
                 }
+                else
+                    dta_valid = true;
             break;
             case UPDT:
-                if(!SLAVE_ACK_SP.read())
+                if(!ACK.read())
                 {
                     fsm_current_state = IDLE;
-                    data_validate[current_address_index] = true;
+                    data_validate[current_address_index.read()] = true;
                 }
                 else
                 {
-                    data[current_address_index][cpt++] = DT.read();
+                    data[current_address_index.read()][cpt++] = DT.read();
                 }
             break;
             default:
@@ -130,7 +129,7 @@ void icache::trace(sc_trace_file* tf)
     sc_trace(tf, A, GET_NAME(A));
     sc_trace(tf, DTA_VALID, GET_NAME(DTA_VALID));
 
-    sc_trace(tf, SLAVE_ACK_SP, GET_NAME(SLAVE_ACK_SP));
+    sc_trace(tf, ACK, GET_NAME(ACK));
 
     sc_trace(tf, hit, GET_NAME(hit));
 
@@ -138,7 +137,11 @@ void icache::trace(sc_trace_file* tf)
     sc_trace(tf, address_index, GET_NAME(address_index));
     sc_trace(tf, address_offset, GET_NAME(address_offset));
 
+    sc_trace(tf, current_address_tag, GET_NAME(current_address_tag));
+    sc_trace(tf, current_address_index, GET_NAME(current_address_index));
+
     sc_trace(tf, fsm_state, GET_NAME(fsm_state));
+    
 
     for (int i = 0; i < 256; i++) {
         std::string icname = "ICACHE_";

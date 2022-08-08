@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
-#include "../UTIL/fifo.h"
+#include "../../UTIL/debug_util.h"
+#include "../../UTIL/fifo.h"
 
 #define x02x1_size          322
 

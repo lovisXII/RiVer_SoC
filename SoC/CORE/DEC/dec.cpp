@@ -24,7 +24,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[210]            = instruction_adress_missaligned_sd.read();
         dec2exe_in_var[209]            = env_call_m_mode_sd.read();
         dec2exe_in_var[208]            = env_call_s_mode_sd.read();
-        dec2exe_in_var.range(207, 176) = CSR_RDATA_SC.read();
+        dec2exe_in_var.range(207, 176) = CSR_RDATA_O.read();
         dec2exe_in_var[175]            = csr_wenable_sd.read();
         dec2exe_in_var.range(174, 163) = csr_radr_sd.read();
         dec2exe_in_var.range(162, 131) = PC_IF2DEC_RI.read();
@@ -852,7 +852,7 @@ void decod::post_reg_read_decoding() {
             // If instruction are write one, the value of rs1 just
             // erase what's inside the csr
             if (csrrs_i_sd || csrrc_i_sd || csrrsi_i_sd || csrrci_i_sd) {
-                dec2exe_op2_var = CSR_RDATA_SC;
+                dec2exe_op2_var = CSR_RDATA_O;
             } else {
                 dec2exe_op2_var = 0;
             }
@@ -1311,7 +1311,7 @@ void decod::trace(sc_trace_file* tf) {
     // Interface with CSR :
 
     sc_trace(tf, CSR_RADR_SD, GET_NAME(CSR_RADR_SD));    // CSR adress sent to CSR to get data
-    sc_trace(tf, CSR_RDATA_SC, GET_NAME(CSR_RDATA_SC));  // data read from CSR
+    sc_trace(tf, CSR_RDATA_O, GET_NAME(CSR_RDATA_O));  // data read from CSR
 
     // Bypasses
 

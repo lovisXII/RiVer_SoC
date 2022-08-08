@@ -100,7 +100,7 @@ SC_MODULE(core) {
 
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD;
-    sc_signal<sc_uint<32>> CSR_RDATA_SC;
+    sc_signal<sc_uint<32>> CSR_RDATA_O;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR;
@@ -231,7 +231,7 @@ SC_MODULE(core) {
     // Timer interface
     sc_signal<bool>        TIMER_CONFIG_WB_SC;
     sc_signal<bool>        TIMER_DIVIDER_WB_SC;
-    sc_signal<sc_uint<32>> DATA_SC;
+    sc_signal<sc_uint<32>> DATA_O;
     sc_signal<sc_uint<64>> TIME_RT;
     sc_signal<bool>        TIMER_INT_ST;
     sc_signal<bool>        ACK_SP;
@@ -420,7 +420,7 @@ SC_MODULE(core) {
         dec_inst.CSR_WENABLE_RD(CSR_WENABLE_RD);
         dec_inst.CSR_WADR_RD(CSR_WADR_RD);
         dec_inst.CSR_RADR_SD(CSR_RADR_SD);
-        dec_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+        dec_inst.CSR_RDATA_O(CSR_RDATA_O);
         dec_inst.CSR_RDATA_RD(CSR_RDATA_RD);
         dec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         dec_inst.EXCEPTION_RI(EXCEPTION_RI);
@@ -738,7 +738,7 @@ SC_MODULE(core) {
         csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
 
         csr_inst.CSR_RADR_SD(CSR_RADR_SD);
-        csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
+        csr_inst.CSR_RDATA_O(CSR_RDATA_O);
 
         csr_inst.EXCEPTION_SM(EXCEPTION_SM);
         csr_inst.MSTATUS_WDATA_RM(MSTATUS_WDATA_RM);
@@ -765,7 +765,7 @@ SC_MODULE(core) {
 
         timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
-        timer_inst.DATA_SC(CSR_WDATA_SM);
+        timer_inst.DATA_O(CSR_WDATA_SM);
         timer_inst.TIME_RT(TIME_RT);
         timer_inst.TIMER_INT_ST(TIMER_INT_ST);
         timer_inst.ACK_SP(ACK_SP);

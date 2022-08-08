@@ -3,7 +3,7 @@
 
 #include <systemc.h>
 #include "buffercache.h"
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 //cache N-way associatif, write through et buffet
 // taille du cache 1024
@@ -23,10 +23,10 @@
 
 typedef enum // MAE STATES
   {
-    IDLE = 0,
-    WAIT_MEM = 2,
-    UPDT = 3
-  } states_fsm;
+    DC_IDLE = 0,
+    DC_WAIT_MEM = 2,
+    DC_UPDT = 3
+  } dcache_states_fsm;
 
 SC_MODULE(dcache)
 {
@@ -41,7 +41,7 @@ SC_MODULE(dcache)
   sc_in<bool> VALID_ADR_SM;
   sc_in<sc_uint<2>> MEM_SIZE_SM;
 
-  sc_out<sc_uint<32>> DATA_SC;
+  sc_out<sc_uint<32>> DATA_O;
   sc_out<bool> STALL_SC;               // if stall donc miss else hit
 // interface MP
   sc_out<bool> DTA_VALID_SC;
@@ -50,12 +50,12 @@ SC_MODULE(dcache)
 
   // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
   // la MP ou du CACHE
-  sc_out<sc_uint<32>> DT_SC;
-  sc_out<sc_uint<32>> A_SC;
+  sc_out<sc_uint<32>> DT_O;
+  sc_out<sc_uint<32>> A_O;
 
-  sc_in<sc_uint<32>> DT_SP;
-  sc_in<sc_uint<32>> A_SP;
-  sc_in<bool> SLAVE_ACK_SP;          // slave answer (slave dt valid)
+  sc_in<sc_uint<32>> DT_I;
+  sc_in<sc_uint<32>> A_I;
+  sc_in<bool> ACK;          // slave answer (slave dt valid)
 
 //signals
   //parse address from CPU
@@ -95,7 +95,6 @@ SC_MODULE(dcache)
   sc_signal<bool> full, empty;
 
   sc_signal<sc_uint<32>> adr_sc;
-  sc_signal<sc_uint<32>> dt_sc;
 
   int burst_cpt;
   sc_signal<sc_uint<32>> data_mask_sc;
@@ -121,7 +120,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM << A_SP;
+    sensitive << DATA_ADR_SM << A_I;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
@@ -154,8 +153,8 @@ SC_MODULE(dcache)
     buffcache_inst.SIZE_C(MEM_SIZE_SM);
     buffcache_inst.FULL(full);
     buffcache_inst.EMPTY(empty);
-    buffcache_inst.DATA_MP(DT_SC);
-    buffcache_inst.ADR_MP(A_SC);
+    buffcache_inst.DATA_MP(DT_O);
+    buffcache_inst.ADR_MP(A_O);
     buffcache_inst.STORE_MP(WRITE_SC);
     buffcache_inst.LOAD_MP(READ_SC);
     buffcache_inst.SIZE_MP(SIZE_SC);

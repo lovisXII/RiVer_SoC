@@ -2,8 +2,8 @@
 #include <systemc.h>
 #include <iostream>
 #include <string>
-#include "../UTIL/debug_util.h"
-#include "../UTIL/fifo.h"
+#include "../../UTIL/debug_util.h"
+#include "../../UTIL/fifo.h"
 #include "alu.h"
 #include "shifter.h"
 #include "../config.h"

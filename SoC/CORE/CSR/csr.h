@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 #define N_CSR        13
 #define adress_mtvec 0x80000000
@@ -31,7 +31,7 @@ SC_MODULE(csr) {
     // Output :
 
     sc_in<sc_uint<12>>  CSR_RADR_SD;
-    sc_out<sc_uint<32>> CSR_RDATA_SC;
+    sc_out<sc_uint<32>> CSR_RDATA_O;
 
     // Timer interface
     sc_out<bool>       TIMER_CONFIG_WB_SC;

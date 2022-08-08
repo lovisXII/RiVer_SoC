@@ -1,6 +1,6 @@
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo.h"
+#include "../../UTIL/fifo.h"
 #include "../config.h"
 
 
@@ -91,7 +91,7 @@ SC_MODULE(decod) {
     // Interface with CSR :
 
     sc_out<sc_uint<12>> CSR_RADR_SD;   // CSR adress sent to CSR to get data
-    sc_in<sc_uint<32>>  CSR_RDATA_SC;  // data read from CSR
+    sc_in<sc_uint<32>>  CSR_RDATA_O;  // data read from CSR
 
     // Bypasses
 
@@ -377,7 +377,7 @@ SC_MODULE(decod) {
                   << mem_sign_extend_sd << mem_size_sd << select_type_operations_sd << adr_dest_sd << slti_i_sd
                   << slt_i_sd
 
-                  << sltiu_i_sd << sltu_i_sd << RADR1_SD << CSR_RDATA_SC << csr_radr_sd << RADR2_SD << r1_valid_sd
+                  << sltiu_i_sd << sltu_i_sd << RADR1_SD << CSR_RDATA_O << csr_radr_sd << RADR2_SD << r1_valid_sd
                   << EXCEPTION_SM << r2_valid_sd << PC_IF2DEC_RI << csr_wenable_sd << illegal_instruction_sd
                   << instruction_adress_missaligned_sd << env_call_m_mode_sd << block_bp_sd << env_call_s_mode_sd
                   << env_call_u_mode_sd << env_call_wrong_mode << mret_i_sd << instruction_access_fault_sd << mul_i_sd
@@ -450,10 +450,10 @@ SC_MODULE(decod) {
 
                   << rdata1_sd << rdata2_sd << r1_valid_sd << r2_valid_sd << system_type_inst_sd << csrrw_i_sd
 
-                  << csrrs_i_sd << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << CSR_RDATA_SC << ecall_i_sd
+                  << csrrs_i_sd << csrrc_i_sd << csrrwi_i_sd << csrrsi_i_sd << csrrci_i_sd << CSR_RDATA_O << ecall_i_sd
 
                   << ebreak_i_sd << fence_i_sd << PC_IF2DEC_RI << EXCEPTION_SM << mret_i_sd << sret_i_sd
-                  << CSR_RDATA_SC;
+                  << CSR_RDATA_O;
         SC_METHOD(pc_inc);
         sensitive << CLK.pos() << READ_PC_SR 
                   << offset_branch_sd << inc_pc_sd 

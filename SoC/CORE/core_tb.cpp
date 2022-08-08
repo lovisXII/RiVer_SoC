@@ -1,10 +1,9 @@
-
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "UTIL/colors.h"
+#include "../UTIL/colors.h"
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
@@ -12,6 +11,7 @@
 
 using namespace std;
 using namespace ELFIO;
+
 
 
 #ifdef ICACHE_ON
@@ -66,7 +66,7 @@ int sc_main(int argc, char* argv[]) {
     int                     begin_signature;
     int                     end_signature;
 
-    char   test[512] = "> a.out.txt.s";
+    char   test[512] = "> a.out.txt";
     string opt;
     string signature_name;
     bool   riscof;
@@ -87,7 +87,7 @@ int sc_main(int argc, char* argv[]) {
         char temp[512];
 
         sprintf(temp,
-                "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s",
+                "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s %s",
                 opt.c_str(),
                 path.c_str());  // writting "riscv32-unknown-elf-gcc -nostdlib
                                 // path" in temp
@@ -96,7 +96,7 @@ int sc_main(int argc, char* argv[]) {
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s", opt.c_str(), path.c_str());
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T app.ld %s %s", opt.c_str(), path.c_str());
         system((char*)temp);
         path = "a.out";
     }
@@ -225,7 +225,7 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> MP_DT;
     sc_signal<sc_uint<32>> MP_A;
-    sc_signal<bool> MP_ACK_DCACHE;
+    sc_signal<bool> ACK;
 #endif
 
     // Icache interface
@@ -281,17 +281,17 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.STORE_SM(MEM_STORE);
     dcache_inst.MEM_SIZE_SM(MEM_SIZE_SM);
     dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
-    dcache_inst.DATA_SC(MEM_RESULT);
+    dcache_inst.DATA_O(MEM_RESULT);
     dcache_inst.STALL_SC(MEM_STALL);
     //MP side
     dcache_inst.DTA_VALID_SC(DCACHE_DTA_VALID);
     dcache_inst.READ_SC(DCACHE_LOAD);
     dcache_inst.WRITE_SC(DCACHE_STORE);
-    dcache_inst.DT_SC(DCACHE_DT);
-    dcache_inst.A_SC(DCACHE_A);
-    dcache_inst.DT_SP(MP_DT);
-    dcache_inst.A_SP(MP_A);
-    dcache_inst.SLAVE_ACK_SP(MP_ACK_DCACHE);
+    dcache_inst.DT_O(DCACHE_DT);
+    dcache_inst.A_O(DCACHE_A);
+    dcache_inst.DT_I(MP_DT);
+    dcache_inst.A_I(MP_A);
+    dcache_inst.ACK(ACK);
     dcache_inst.SIZE_SC(SIZE_SC);
 
     DC_FSM DC_fsm_current_state = DC_IDLE;
@@ -315,7 +315,7 @@ int sc_main(int argc, char* argv[]) {
     icache_inst.DT(ICACHE_DT);
     icache_inst.A(ICACHE_A);
     icache_inst.DTA_VALID(ICACHE_DTA_VALID);
-    icache_inst.SLAVE_ACK_SP(MP_ACK_ICACHE);
+    icache_inst.ACK(MP_ACK_ICACHE);
 
     //init MAE state
     IC_FSM IC_fsm_current_state = IC_IDLE;
@@ -365,11 +365,11 @@ int sc_main(int argc, char* argv[]) {
 
                         MP_DT.write(ram[mem_adr]);
                         MP_A.write(mem_adr);
-                        MP_ACK_DCACHE.write(true);
+                        ACK.write(true);
                         DC_fsm_current_state = DC_CLK_SIMU0;
                     }
                     else
-                        MP_ACK_DCACHE.write(false);
+                        ACK.write(false);
 
                     if(write)
                     {
@@ -436,7 +436,7 @@ int sc_main(int argc, char* argv[]) {
                 }       
                 else
                 {
-                    MP_ACK_DCACHE.write(false);
+                    ACK.write(false);
                 }
             break;
             case DC_CLK_SIMU0:
@@ -445,7 +445,7 @@ int sc_main(int argc, char* argv[]) {
             case DC_SEND_DTA_1:
                 MP_DT.write(ram[mem_adr+4]);
                 MP_A.write(mem_adr+4);
-                MP_ACK_DCACHE.write(true);
+                ACK.write(true);
                 DC_fsm_current_state = DC_CLK_SIMU1;
             break;
             case DC_CLK_SIMU1:
@@ -454,7 +454,7 @@ int sc_main(int argc, char* argv[]) {
             case DC_SEND_DTA_2:
                 MP_DT.write(ram[mem_adr+8]);
                 MP_A.write(mem_adr+8);
-                MP_ACK_DCACHE.write(true);
+                ACK.write(true);
                 DC_fsm_current_state = DC_CLK_SIMU2;
             break;
             case DC_CLK_SIMU2:
@@ -463,12 +463,12 @@ int sc_main(int argc, char* argv[]) {
             case DC_SEND_DTA_3:
                 MP_DT.write(ram[mem_adr+12]);
                 MP_A.write(mem_adr+12);
-                MP_ACK_DCACHE.write(true);
+                ACK.write(true);
                 DC_fsm_current_state = DC_END_BURST;
             break;
             case DC_END_BURST:
                 DC_fsm_current_state = DC_IDLE;
-                MP_ACK_DCACHE.write(false);
+                ACK.write(false);
             break;
         }
 #else     
@@ -586,7 +586,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
-            int temporary_value = ram[mem_adr] ; 
+            int temporary_value = ram[mem_adr]; 
             unsigned int temporary_store_value = mem_data;
             if(mem_size == 2){//access in byte
             // doing a mask on the least 2 significant bits
@@ -638,7 +638,8 @@ int sc_main(int argc, char* argv[]) {
             }
             else//access in word
             {
-                ram[mem_adr] = mem_data;}
+                ram[mem_adr] = mem_data;
+            }
         }
         mem_result = ram[mem_adr];
         MEM_RESULT.write(mem_result);

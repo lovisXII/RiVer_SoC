@@ -2,7 +2,7 @@
 #define I_CACHE
 
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(icache)
 {
@@ -21,7 +21,7 @@ SC_MODULE(icache)
     sc_out<sc_uint<32>> A;
     sc_out<bool> DTA_VALID;
 
-    sc_in<bool> SLAVE_ACK_SP;
+    sc_in<bool> ACK;
 
     //signals
     sc_signal<sc_bv<32>> data[256][4];
@@ -31,6 +31,9 @@ SC_MODULE(icache)
     sc_signal<sc_uint<20>> address_tag;
     sc_signal<sc_uint<8>> address_index;
     sc_signal<sc_uint<4>> address_offset;
+
+    sc_signal<sc_uint<20>> current_address_tag;
+    sc_signal<sc_uint<8>> current_address_index;
 
     sc_signal<bool> hit;
 
@@ -61,7 +64,7 @@ SC_MODULE(icache)
         }
 
         SC_THREAD(transition);
-        sensitive << CLK.neg() << DT << SLAVE_ACK_SP;
+        sensitive << CLK.neg();
 
         reset_signal_is(RESET_N, false);
     }
