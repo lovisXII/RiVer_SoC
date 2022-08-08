@@ -16,7 +16,7 @@ void decod::dependencies(){
   
 
     bool dependencies = (((adr_dest_sd_s1 == radr1_sd_s2) || (adr_dest_sd_s1 == radr2_sd_s2)) 
-    && (adr_dest_sd_s1.read() != 0)) || csr_in_progress_s1 || csr_in_progress_s2 || csr_wenable_sd_s2 ;
+    && (adr_dest_sd_s1.read() != 0)) || (csr_wenable_sd_s1 && csr_wenable_sd_s2) ;
     
     if(dependencies)
         reg_dependencies_sd = true ;
