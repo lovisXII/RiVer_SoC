@@ -207,11 +207,11 @@ void mem_s2::csr_exception() {
         if (CSR_WENABLE_RE_S2.read()) {
             CSR_WADR_SM_S2.write(CSR_WADR_SE_S2.read());
             CSR_WDATA_SM_S2.write(EXE_RES_RE_S2.read());
-            CSR_ENABLE_BEFORE_FIFO_SM_S2.write(true);
+            CSR_ENABLE_SM_S2.write(true);
         } else {
             CSR_WADR_SM_S2.write(0);
             CSR_WDATA_SM_S2.write(0);
-            CSR_ENABLE_BEFORE_FIFO_SM_S2.write(0);
+            CSR_ENABLE_SM_S2.write(0);
         }
         MRET_SM_S2 = 0;
     } 
@@ -519,7 +519,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, MEPC_WDATA_RM_S2, GET_NAME(MEPC_WDATA_RM_S2));
     sc_trace(tf, MCAUSE_WDATA_SM_S2, GET_NAME(MCAUSE_WDATA_SM_S2));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
-    sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM_S2, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM_S2));
+    sc_trace(tf, CSR_ENABLE_SM_S2, GET_NAME(CSR_ENABLE_SM_S2));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     sc_trace(tf, MULT_INST_RM_S2, GET_NAME(MULT_INST_RM_S2));
     // sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));

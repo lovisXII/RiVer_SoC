@@ -685,7 +685,7 @@ void decod::post_reg_read_decoding_s2() {
             // If instruction are write one, the value of rs2 just
             // erase what's inside the csr
             if (csrrs_i_sd_s2 || csrrc_i_sd_s2 || csrrsi_i_sd_s2 || csrrci_i_sd_s2) {
-                dec2exe_op2_var = CSR_RDATA_SC_S1;
+                dec2exe_op2_var = CSR_RDATA_SC_S2;
             } else {
                 dec2exe_op2_var = 0;
             }

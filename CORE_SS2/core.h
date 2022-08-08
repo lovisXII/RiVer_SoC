@@ -356,14 +356,14 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MTVEC_VALUE_RC;
     sc_signal<sc_uint<32>> MIP_VALUE_RC;
     sc_signal<sc_uint<32>> MTVAL_WDATA_SM_S1;
-    sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM_S1;
+    sc_signal<bool>        CSR_ENABLE_SM_S1;
 
     sc_signal<sc_uint<32>> MSTATUS_WDATA_RM_S2;
     sc_signal<sc_uint<32>> MIP_WDATA_RM_S2;
     sc_signal<sc_uint<32>> MEPC_WDATA_RM_S2;
     sc_signal<sc_uint<32>> MCAUSE_WDATA_SM_S2;
     sc_signal<sc_uint<32>> MTVAL_WDATA_SM_S2;
-    sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM_S2;
+    sc_signal<bool>        CSR_ENABLE_SM_S2;
 
     // MEM-IFETCH
 
@@ -969,7 +969,7 @@ SC_MODULE(core) {
         mem_inst_s1.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
         mem_inst_s1.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
 
-        mem_inst_s1.CSR_ENABLE_BEFORE_FIFO_SM_S1(CSR_ENABLE_BEFORE_FIFO_SM_S1);  // 55
+        mem_inst_s1.CSR_ENABLE_SM_S1(CSR_ENABLE_SM_S1);  // 55
         mem_inst_s1.PC_BRANCH_VALUE_RE_S1(PC_BRANCH_VALUE_RE_S1);  
 
         mem_inst_s1.CLK(CLK);
@@ -1064,7 +1064,7 @@ SC_MODULE(core) {
         mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
         mem_inst_s2.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);  // 54
 
-        mem_inst_s2.CSR_ENABLE_BEFORE_FIFO_SM_S2(CSR_ENABLE_BEFORE_FIFO_SM_S2);  // 55
+        mem_inst_s2.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);  // 55
         mem_inst_s2.PC_BRANCH_VALUE_RE_S2(PC_BRANCH_VALUE_RE_S2);  
 
         mem_inst_s2.CLK(CLK);
@@ -1178,7 +1178,7 @@ SC_MODULE(core) {
 
         csr_inst.CSR_WADR_SM_S1(CSR_WADR_SM_S1);
         csr_inst.CSR_WDATA_SM_S1(CSR_WDATA_SM_S1);
-        csr_inst.CSR_ENABLE_BEFORE_FIFO_SM_S1(CSR_ENABLE_BEFORE_FIFO_SM_S1);
+        csr_inst.CSR_ENABLE_SM_S1(CSR_ENABLE_SM_S1);
 
         csr_inst.CSR_RADR_SD_S1(CSR_RADR_SD_S1);
         csr_inst.CSR_RDATA_SC_S1(CSR_RDATA_SC_S1);
@@ -1196,6 +1196,18 @@ SC_MODULE(core) {
         csr_inst.MCAUSE_SC(MCAUSE_SC);
         csr_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);
         csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
+
+        csr_inst.CSR_WADR_SM_S2(CSR_WADR_SM_S2);
+        csr_inst.CSR_WDATA_SM_S2(CSR_WDATA_SM_S2);
+        csr_inst.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);
+        csr_inst.MSTATUS_WDATA_RM_S2(MSTATUS_WDATA_RM_S2);
+        csr_inst.MIP_WDATA_RM_S2(MIP_WDATA_RM_S2);
+        csr_inst.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
+        csr_inst.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
+        csr_inst.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);
+        csr_inst.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
+        csr_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
+        csr_inst.CSR_RDATA_SC_S2(CSR_RDATA_SC_S2);
 
 
         csr_inst.CLK(CLK);

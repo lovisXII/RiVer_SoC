@@ -8,19 +8,34 @@
 #define main_adresse 0x10054
 
 SC_MODULE(csr) {
-    // Input :
+    // Input from M1:
 
     sc_in<sc_uint<12>> CSR_WADR_SM_S1;
     sc_in<sc_uint<32>> CSR_WDATA_SM_S1;
-    sc_in<bool>        CSR_ENABLE_BEFORE_FIFO_SM_S1;
+    sc_in<bool>        CSR_ENABLE_SM_S1;
 
-    sc_in<bool>        EXCEPTION_SM_S1;
     sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S1;
     sc_in<sc_uint<32>> MIP_WDATA_RM_S1;
     sc_in<sc_uint<32>> MEPC_WDATA_RM_S1;
     sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
 
+    // Input from M2
+
+    sc_in<sc_uint<12>> CSR_WADR_SM_S2;
+    sc_in<sc_uint<32>> CSR_WDATA_SM_S2;
+    sc_in<bool>        CSR_ENABLE_SM_S2;
+        
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MIP_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM_S2;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S2;
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S2;
+
+    // Reading csr :
+
+    sc_in<bool>        EXCEPTION_SM_S1;
+    sc_in<bool>        EXCEPTION_SM_S2;
 
     sc_out<sc_uint<32>> MEPC_SC;
     sc_out<sc_uint<32>> MSTATUS_RC;
@@ -29,10 +44,15 @@ SC_MODULE(csr) {
     sc_out<sc_uint<32>> MCAUSE_SC;
     sc_out<sc_uint<32>> KERNEL_ADR_SC;
 
-    // Output :
+    // Output for S1:
 
     sc_in<sc_uint<12>>  CSR_RADR_SD_S1;
     sc_out<sc_uint<32>> CSR_RDATA_SC_S1;
+    
+    // Output for S2:
+
+    sc_in<sc_uint<12>>  CSR_RADR_SD_S2;
+    sc_out<sc_uint<32>> CSR_RDATA_SC_S2;
 
     // General Interface :
 
@@ -64,7 +84,7 @@ SC_MODULE(csr) {
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_BEFORE_FIFO_SM_S1 << EXCEPTION_SM_S1 << MSTATUS_WDATA_RM_S1
+        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1 << EXCEPTION_SM_S1 << MSTATUS_WDATA_RM_S1
                   << MIP_WDATA_RM_S1 << MEPC_WDATA_RM_S1 << MCAUSE_WDATA_SM_S1;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
