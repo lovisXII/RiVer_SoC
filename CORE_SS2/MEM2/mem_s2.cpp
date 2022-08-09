@@ -505,6 +505,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, LOAD_RE_S2, GET_NAME(LOAD_RE_S2));
     sc_trace(tf, STORE_RE_S2, GET_NAME(STORE_RE_S2));
     sc_trace(tf, EXE2MEM_EMPTY_SE_S2, GET_NAME(EXE2MEM_EMPTY_SE_S2));
+    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
     sc_trace(tf, EXE2MEM_POP_SM_S2, GET_NAME(EXE2MEM_POP_SM_S2));
     sc_trace(tf, MEM2WBK_POP_SW_S2, GET_NAME(MEM2WBK_POP_SW_S2));
     sc_trace(tf, mem2wbk_push_sm, GET_NAME(mem2wbk_push_sm));
