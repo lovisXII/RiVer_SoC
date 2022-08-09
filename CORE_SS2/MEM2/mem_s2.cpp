@@ -197,15 +197,15 @@ void mem_s2::sign_extend() {
 }
 
 void mem_s2::current_mode_reg(){
-    current_mode_rm_s2 = CURRENT_MODE_SM_S2;
+    if(!RESET)
+        current_mode_rm_s2 = 3;
+    else
+        current_mode_rm_s2 = CURRENT_MODE_SM_S2;
 }
 
 void mem_s2::csr_exception() {
     EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
-
-    if (!RESET) CURRENT_MODE_SM_S2 = 3;
-
 
     //mem_acces_is_prio is a signal that is never use in this implementation. 
     // It allows to unable constant prio of M1 on M2
