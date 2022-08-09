@@ -188,9 +188,9 @@ void mem_s1::csr_exception() {
             CSR_ENABLE_SM_S1.write(0);
         }
         MRET_SM_S1 = 0;
-    } 
-    else if (EXCEPTION_SM_S1) 
-    {
+    } else if ((EXCEPTION_SM_S1 && !EXCEPTION_SM_S2) ||
+    (!MEM_ACCESS_IS_PRIO_RD_S2 && EXCEPTION_SM_S1)
+    ) {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
         // THEY ARE IN A SPECIFIC ORDER
@@ -427,6 +427,10 @@ void mem_s1::csr_exception() {
             MCAUSE_WDATA_SM_S1.write(1);
             CURRENT_MODE_SM_S1 = 3;
         }
+        // else if ((!EXCEPTION_SM_S1 && EXCEPTION_SM_S2)
+        // || (MEM_ACCESS_IS_PRIO_RD_S2 && EXCEPTION_SM_S2) ){ 
+        //     cout << sc_time_stamp() << " lla" << endl;
+        //     CURRENT_MODE_SM_S1 = CURRENT_MODE_SM_S2 ;}
         if (!MRET_RE_S1.read()) MRET_SM_S1 = 0;
     }
 }

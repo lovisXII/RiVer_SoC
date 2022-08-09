@@ -197,10 +197,7 @@ void mem_s2::sign_extend() {
 }
 
 void mem_s2::current_mode_reg(){
-    if(!RESET)
-        current_mode_rm_s2 = 3;
-    else
-        current_mode_rm_s2 = CURRENT_MODE_SM_S2;
+    current_mode_rm_s2 = CURRENT_MODE_SM_S2;
 }
 
 void mem_s2::csr_exception() {
@@ -209,7 +206,21 @@ void mem_s2::csr_exception() {
 
     if (!RESET) CURRENT_MODE_SM_S2 = 3;
 
+
+    //mem_acces_is_prio is a signal that is never use in this implementation. 
+    // It allows to unable constant prio of M1 on M2
+    // Logic have been made using the signal but in our case he's 
+    // always equal to 0
+
+    /*
+    Several case can occur :
+    - no excp
+    - excp in S1 and S1 is prio or not
+    - excp in S2 and S2 is prio or not
+    - excp in both, need to check who has prio
+    */
     if (!EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
+    // no excp
     {
         if (CSR_WENABLE_RE_S2.read()) {
             CSR_WADR_SM_S2.write(CSR_WADR_SE_S2.read());
@@ -222,11 +233,20 @@ void mem_s2::csr_exception() {
         }
         CURRENT_MODE_SM_S2 =  current_mode_rm_s2;
         MRET_SM_S2 = 0;
-    } 
-    else if (
-    (mem_access_is_prio_rd_s2 && EXCEPTION_SM_S2 && EXCEPTION_SM_S1)
-    || (EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1)
+    }
+    else if ( (EXCEPTION_SM_S1 && ! EXCEPTION_SM_S2) 
+    || (!mem_access_is_prio_rd_s2 && EXCEPTION_SM_S1)
     )
+    // Exception in S1
+    {
+        MRET_SM_S2 = MRET_SM_S1;
+        CURRENT_MODE_SM_S2 = CURRENT_MODE_SM_S1;
+        RETURN_ADRESS_SM_S2 = MEPC_SC;
+    }
+    else if ((EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
+    || (mem_access_is_prio_rd_s2 && EXCEPTION_SM_S2)
+    )
+    // Exception in S1
     {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER

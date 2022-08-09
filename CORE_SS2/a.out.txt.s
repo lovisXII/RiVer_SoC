@@ -1256,15 +1256,35 @@ Disassembly of section .data:
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
 =======
 00010054 <_start>:
-   10054:	000020b7          	lui	ra,0x2
-   10058:	65408093          	addi	ra,ra,1620 # 2654 <_exception_occur+0x264c>
-   1005c:	0170e113          	ori	sp,ra,23
-   10060:	00f67613          	andi	a2,a2,15
-   10064:	00101463          	bne	zero,ra,1006c <_start+0x18>
-   10068:	f99ef06f          	j	0 <_bad>
+   10054:	00000e97          	auipc	t4,0x0
+   10058:	020e8e93          	addi	t4,t4,32 # 10074 <_trampoline>
+   1005c:	002ede93          	srli	t4,t4,0x2
+   10060:	002e9e93          	slli	t4,t4,0x2
+   10064:	001e8e93          	addi	t4,t4,1
+   10068:	305e9073          	csrw	mtvec,t4
    1006c:	00000073          	ecall
+<<<<<<< HEAD
    10070:	0000a183          	lw	gp,0(ra)
 >>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
+=======
+   10070:	00000013          	nop
+
+00010074 <_trampoline>:
+   10074:	f8def06f          	j	0 <_bad>
+   10078:	f89ef06f          	j	0 <_bad>
+   1007c:	f85ef06f          	j	0 <_bad>
+   10080:	f81ef06f          	j	0 <_bad>
+   10084:	f7def06f          	j	0 <_bad>
+   10088:	f79ef06f          	j	0 <_bad>
+   1008c:	f75ef06f          	j	0 <_bad>
+   10090:	f71ef06f          	j	0 <_bad>
+   10094:	f71ef06f          	j	4 <_good>
+   10098:	f69ef06f          	j	0 <_bad>
+   1009c:	f65ef06f          	j	0 <_bad>
+   100a0:	f61ef06f          	j	0 <_bad>
+   100a4:	f5def06f          	j	0 <_bad>
+   100a8:	f59ef06f          	j	0 <_bad>
+>>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
 
 Disassembly of section .riscv.attributes:
 
