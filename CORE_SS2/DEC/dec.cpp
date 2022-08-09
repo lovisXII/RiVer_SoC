@@ -1080,6 +1080,7 @@ void decod::trace(sc_trace_file* tf) {
     // Internal signals :
 
     sc_trace(tf, adr_dest_sd_s1, GET_NAME(adr_dest_sd_s1));
+    sc_trace(tf, env_call_u_mode_sd_s2, GET_NAME(env_call_u_mode_sd_s2));
     sc_trace(tf, exe_op1_sd_s1, GET_NAME(exe_op1_sd_s1));
     sc_trace(tf, exe_op2_sd_s1, GET_NAME(exe_op2_sd_s1));
     sc_trace(tf, mem_data_sd_s1, GET_NAME(mem_data_sd_s1));
