@@ -66,13 +66,16 @@ _store_access_fault :
     jalr x0, 0(x1) 
 _env_call_u_mode :
     nop
-    mret 
+    la x1, _exception_occur
+    jalr x0, 0(x1) 
 _env_call_s_mode :
     nop
-    mret
+    la x1, _exception_occur
+    jalr x0, 0(x1) 
 _env_call_m_mode :
     nop
-    mret
+    la x1, _exception_occur
+    jalr x0, 0(x1) 
 _env_call_wrong_mode :
     nop
     la x1, _exception_occur

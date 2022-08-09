@@ -10,6 +10,9 @@ _start :
     csrrw x0, 0x305,x29  # writting exception handler adress in mtvec
     ecall
     nop
+    nop
+    nop
+    nop
 
 _trampoline: 
    j _bad

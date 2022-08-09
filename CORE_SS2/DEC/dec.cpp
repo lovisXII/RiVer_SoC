@@ -425,15 +425,17 @@ void decod::pc_inc() {
 
             if (MTVEC_VALUE_RC.read().range(1, 0) == 0) {  // direct
                 dec2if_pc_sd_s1 = MTVEC_VALUE_VAR;
-                WRITE_PC_SD  = MTVEC_VALUE_VAR;
+                dec2if_pc_sd_s2 = MTVEC_VALUE_VAR+4;
+                WRITE_PC_SD  = MTVEC_VALUE_VAR + 4;
                 WRITE_PC_ENABLE_SD= 1;
             } else if (MTVEC_VALUE_RC.read().range(1, 0) == 1) {  // vectorise
                 sc_uint<32> MCAUSE_VAR;
                 // MCAUSE * 4 :
                 MCAUSE_VAR.range(31, 2) = MCAUSE_WDATA_SM_S1.read().range(29, 0);
                 MCAUSE_VAR.range(1, 0)  = 0;
-                dec2if_pc_sd_s1.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
-                WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR);
+                dec2if_pc_sd_s1 = (MCAUSE_VAR + MTVEC_VALUE_VAR + 4);
+                dec2if_pc_sd_s2 = (MCAUSE_VAR + MTVEC_VALUE_VAR + 4);
+                WRITE_PC_SD.write(MCAUSE_VAR + MTVEC_VALUE_VAR + 4);
                 WRITE_PC_ENABLE_SD= 1;
             }
 
@@ -847,7 +849,7 @@ void decod::bypasses() {
 }
 void decod::stall_method() {
   
-    stall_sd        = ((csr_in_progress_s1   || csr_in_progress_s2) 
+    stall_sd        = ((csr_in_progress_s1   || csr_in_progress_s2) && (csr_wenable_sd_s1 || csr_wenable_sd_s2) 
     || ((!r1_valid_sd_s1 || !r2_valid_sd_s1)    && (b_type_inst_sd_s1 || jalr_type_inst_sd_s1 || j_type_inst_sd_s1 || block_in_dec))
     || (((!r1_valid_sd_s2 || !r2_valid_sd_s2)   && (b_type_inst_sd_s2 || jalr_type_inst_sd_s2 || j_type_inst_sd_s2 || block_in_dec)))
     || (IF2DEC_EMPTY_SI_S1 && IF2DEC_EMPTY_SI_S2) || dec2exe_full_sd_s1 || dec2exe_full_sd_s2);
