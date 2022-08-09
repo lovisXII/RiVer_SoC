@@ -6,29 +6,32 @@ Disassembly of section seg_text:
 
 00010054 <_start>:
    10054:	00000e97          	auipc	t4,0x0
-   10058:	020e8e93          	addi	t4,t4,32 # 10074 <_trampoline>
+   10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
    1005c:	002ede93          	srli	t4,t4,0x2
    10060:	002e9e93          	slli	t4,t4,0x2
    10064:	001e8e93          	addi	t4,t4,1
    10068:	305e9073          	csrw	mtvec,t4
    1006c:	00000073          	ecall
    10070:	00000013          	nop
+   10074:	00000013          	nop
+   10078:	00000013          	nop
+   1007c:	00000013          	nop
 
-00010074 <_trampoline>:
-   10074:	f8def06f          	j	0 <_bad>
-   10078:	f89ef06f          	j	0 <_bad>
-   1007c:	f85ef06f          	j	0 <_bad>
+00010080 <_trampoline>:
    10080:	f81ef06f          	j	0 <_bad>
    10084:	f7def06f          	j	0 <_bad>
    10088:	f79ef06f          	j	0 <_bad>
    1008c:	f75ef06f          	j	0 <_bad>
    10090:	f71ef06f          	j	0 <_bad>
-   10094:	f71ef06f          	j	4 <_good>
+   10094:	f6def06f          	j	0 <_bad>
    10098:	f69ef06f          	j	0 <_bad>
    1009c:	f65ef06f          	j	0 <_bad>
-   100a0:	f61ef06f          	j	0 <_bad>
+   100a0:	f65ef06f          	j	4 <_good>
    100a4:	f5def06f          	j	0 <_bad>
    100a8:	f59ef06f          	j	0 <_bad>
+   100ac:	f55ef06f          	j	0 <_bad>
+   100b0:	f51ef06f          	j	0 <_bad>
+   100b4:	f4def06f          	j	0 <_bad>
 
 Disassembly of section .riscv.attributes:
 
@@ -45,7 +48,7 @@ Disassembly of section .riscv.attributes:
   14:	6932                	flw	fs2,12(sp)
   16:	7032                	flw	ft0,44(sp)
   18:	5f30                	lw	a2,120(a4)
-  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
+  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff91c>
   1c:	3070                	fld	fa2,224(s0)
   1e:	0800                	addi	s0,sp,16
   20:	0a01                	addi	s4,s4,0
@@ -81,7 +84,7 @@ Disassembly of section seg_reset:
 80000030:	800d9073          	csrw	0x800,s11
 80000034:	00010137          	lui	sp,0x10
 80000038:	01000497          	auipc	s1,0x1000
-8000003c:	06448493          	addi	s1,s1,100 # 8100009c <_isr_vector>
+8000003c:	07048493          	addi	s1,s1,112 # 810000a8 <_isr_vector>
 80000040:	01000517          	auipc	a0,0x1000
 80000044:	ff050513          	addi	a0,a0,-16 # 81000030 <_instruction_address_fault>
 80000048:	01000597          	auipc	a1,0x1000
@@ -91,9 +94,9 @@ Disassembly of section seg_reset:
 80000058:	01000697          	auipc	a3,0x1000
 8000005c:	02068693          	addi	a3,a3,32 # 81000078 <_env_call_u_mode>
 80000060:	01000717          	auipc	a4,0x1000
-80000064:	02070713          	addi	a4,a4,32 # 81000080 <_env_call_s_mode>
+80000064:	02470713          	addi	a4,a4,36 # 81000084 <_env_call_s_mode>
 80000068:	01000797          	auipc	a5,0x1000
-8000006c:	02078793          	addi	a5,a5,32 # 81000088 <_env_call_m_mode>
+8000006c:	02878793          	addi	a5,a5,40 # 81000090 <_env_call_m_mode>
 80000070:	01000817          	auipc	a6,0x1000
 80000074:	fd880813          	addi	a6,a6,-40 # 81000048 <_load_adress_missaligned>
 80000078:	01000897          	auipc	a7,0x1000
@@ -103,7 +106,7 @@ Disassembly of section seg_reset:
 80000088:	01000997          	auipc	s3,0x1000
 8000008c:	fe498993          	addi	s3,s3,-28 # 8100006c <_store_access_fault>
 80000090:	01000a17          	auipc	s4,0x1000
-80000094:	000a0a13          	mv	s4,s4
+80000094:	00ca0a13          	addi	s4,s4,12 # 8100009c <_env_call_wrong_mode>
 80000098:	00c4a023          	sw	a2,0(s1)
 8000009c:	00a4a223          	sw	a0,4(s1)
 800000a0:	00b4a423          	sw	a1,8(s1)
@@ -148,7 +151,7 @@ Disassembly of section seg_kernel:
 81000008:	00a5a023          	sw	a0,0(a1)
 8100000c:	00251513          	slli	a0,a0,0x2
 81000010:	00000597          	auipc	a1,0x0
-81000014:	08c58593          	addi	a1,a1,140 # 8100009c <_isr_vector>
+81000014:	09858593          	addi	a1,a1,152 # 810000a8 <_isr_vector>
 81000018:	00a585b3          	add	a1,a1,a0
 8100001c:	0005a603          	lw	a2,0(a1)
 81000020:	00060067          	jr	a2
@@ -190,17 +193,20 @@ Disassembly of section seg_kernel:
 
 81000078 <_env_call_u_mode>:
 81000078:	00000013          	nop
-8100007c:	30200073          	mret
+8100007c:	00800093          	li	ra,8
+81000080:	00008067          	ret
 
-81000080 <_env_call_s_mode>:
-81000080:	00000013          	nop
-81000084:	30200073          	mret
+81000084 <_env_call_s_mode>:
+81000084:	00000013          	nop
+81000088:	00800093          	li	ra,8
+8100008c:	00008067          	ret
 
-81000088 <_env_call_m_mode>:
-81000088:	00000013          	nop
-8100008c:	30200073          	mret
-
-81000090 <_env_call_wrong_mode>:
+81000090 <_env_call_m_mode>:
 81000090:	00000013          	nop
 81000094:	00800093          	li	ra,8
 81000098:	00008067          	ret
+
+8100009c <_env_call_wrong_mode>:
+8100009c:	00000013          	nop
+810000a0:	00800093          	li	ra,8
+810000a4:	00008067          	ret
