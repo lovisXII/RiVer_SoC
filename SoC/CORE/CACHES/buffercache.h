@@ -50,8 +50,6 @@ SC_MODULE(buffercache)
     sc_signal<sc_uint<2>> buff1_SIZE;
     sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
 
-    //debug
-    sc_signal<sc_uint<5>> buff_readed;
     void fifo();
 
     void bufferfull(); 

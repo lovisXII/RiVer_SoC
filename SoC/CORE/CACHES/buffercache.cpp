@@ -39,58 +39,55 @@ void buffercache::fifo()
     }
 
     //READ ON BUFFER
-    /*std::cout << " buffercache :" << buff0_VALIDATE 
-            << "      " << buff1_VALIDATE << std::endl; 
-    */
-    if(READ_OBUFF.read())
+    if(buff0_VALIDATE & buff1_VALIDATE)
     {
-        if(buff0_VALIDATE & buff1_VALIDATE)
-        {
-            if(b_LRU.range(1,0) == 0b01)
-            {
-                DATA_MP.write(buff1_DATA.read());
-                ADR_MP.write(buff1_DATA_ADR.read());
-                STORE_MP.write(buff1_STORE.read());
-                LOAD_MP.write(buff1_LOAD.read());
-                SIZE_MP.write(buff1_SIZE.read());
-
-                buff1_VALIDATE.write(false);
-                buff_readed.write(0b0001);
-            }
-            else if(b_LRU.range(1,0) == 0b10)
-            {
-                DATA_MP.write(buff0_DATA.read());
-                ADR_MP.write(buff0_DATA_ADR.read());
-                STORE_MP.write(buff0_STORE.read());
-                LOAD_MP.write(buff0_LOAD.read());
-                SIZE_MP.write(buff0_SIZE.read());
-
-                buff0_VALIDATE.write(false);
-                buff_readed.write(0b0010);
-            }
-        }
-        else if(buff0_VALIDATE & !buff1_VALIDATE)
-        {
-            DATA_MP.write(buff0_DATA.read());
-            ADR_MP.write(buff0_DATA_ADR.read());
-            STORE_MP.write(buff0_STORE.read());
-            LOAD_MP.write(buff0_LOAD.read());
-            SIZE_MP.write(buff0_SIZE.read());
-
-            buff0_VALIDATE.write(false);
-            buff_readed.write(0b0100);
-        }
-        else if(!buff0_VALIDATE & buff1_VALIDATE)
+        if(b_LRU.range(1,0) == 0b01)
         {
             DATA_MP.write(buff1_DATA.read());
             ADR_MP.write(buff1_DATA_ADR.read());
             STORE_MP.write(buff1_STORE.read());
             LOAD_MP.write(buff1_LOAD.read());
             SIZE_MP.write(buff1_SIZE.read());
-
-            buff1_VALIDATE.write(false);
-            buff_readed.write(0b1000);
         }
+        else if(b_LRU.range(1,0) == 0b10)
+        {
+            DATA_MP.write(buff0_DATA.read());
+            ADR_MP.write(buff0_DATA_ADR.read());
+            STORE_MP.write(buff0_STORE.read());
+            LOAD_MP.write(buff0_LOAD.read());
+            SIZE_MP.write(buff0_SIZE.read());
+        }
+    }
+    else if(buff0_VALIDATE & !buff1_VALIDATE)
+    {
+        DATA_MP.write(buff0_DATA.read());
+        ADR_MP.write(buff0_DATA_ADR.read());
+        STORE_MP.write(buff0_STORE.read());
+        LOAD_MP.write(buff0_LOAD.read());
+        SIZE_MP.write(buff0_SIZE.read());
+    }
+    else if(!buff0_VALIDATE & buff1_VALIDATE)
+    {
+        DATA_MP.write(buff1_DATA.read());
+        ADR_MP.write(buff1_DATA_ADR.read());
+        STORE_MP.write(buff1_STORE.read());
+        LOAD_MP.write(buff1_LOAD.read());
+        SIZE_MP.write(buff1_SIZE.read());
+    }
+
+    if(READ_OBUFF.read())
+    {
+        if(buff0_VALIDATE & buff1_VALIDATE)
+        {
+            if(b_LRU.range(1,0) == 0b01)
+                buff1_VALIDATE.write(false);
+            else if(b_LRU.range(1,0) == 0b10)
+                buff0_VALIDATE.write(false);
+        }
+        else if(buff0_VALIDATE & !buff1_VALIDATE)
+            buff0_VALIDATE.write(false);
+        else if(!buff0_VALIDATE & buff1_VALIDATE)
+            buff1_VALIDATE.write(false);
     }
 
     if(!READ_OBUFF.read() && !WRITE_OBUFF.read())
@@ -144,6 +141,4 @@ void buffercache::trace(sc_trace_file* tf)
     sc_trace(tf, buff1_VALIDATE, GET_NAME(buff1_VALIDATE));
     sc_trace(tf, buff1_SIZE, GET_NAME(buff1_SIZE));
 
-    //debug
-    sc_trace(tf, buff_readed, GET_NAME(buff_readed));
 }

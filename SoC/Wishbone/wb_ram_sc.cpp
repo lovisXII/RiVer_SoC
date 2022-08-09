@@ -51,6 +51,7 @@ void wb_ram_sc::mae_output()
             
             if(WE_I)
             {
+                ACK_O = true;
                 RAM_DT_O = DAT_I;
                 RAM_SEL_O = SEL_I;
                 RAM_ADR_O = ADR_I.read();
@@ -93,7 +94,6 @@ void wb_ram_sc::mae_output()
             DAT_O = RAM_DT_I;
         break;
     }
-    std::cout << sc_time_stamp() << "   " << ADR_REG << std::endl;
 }
 
 void wb_ram_sc::trace(sc_trace_file* tf)

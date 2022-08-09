@@ -23,6 +23,8 @@ SC_MODULE(icache)
 
     sc_in<bool> ACK;
 
+    sc_in<bool> STALL_I;
+
     //signals
     sc_signal<sc_bv<32>> data[256][4];
     sc_signal<sc_uint<20>> tag[256];

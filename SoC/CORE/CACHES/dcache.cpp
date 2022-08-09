@@ -89,7 +89,6 @@ void dcache::mae_output()
   switch(current_state.read())
   {
     case DC_IDLE:
-      read_buff = true;
       write_buff = ((LOAD_SM.read() && miss) || STORE_SM.read()) && VALID_ADR_SM.read() && !full;
       DTA_VALID_SC = !empty;
       
@@ -178,7 +177,6 @@ void dcache::mae_output()
       } 
       break;
     case DC_WAIT_MEM:
-      read_buff = false;
       if(ACK.read())
       {
         DTA_VALID_SC = false;
@@ -206,7 +204,6 @@ void dcache::mae_output()
       write_buff = false;
       break;
     case DC_UPDT:
-      read_buff = false;
       if(!ACK.read())
       {
         LRU_bit_check[mp_address_index.read()] = !LRU_bit_check[mp_address_index.read()];
@@ -266,7 +263,8 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, future_state, GET_NAME(future_state));
 
   sc_trace(tf, write_buff, GET_NAME(write_buff));
-  sc_trace(tf, read_buff, GET_NAME(read_buff));
+
+  sc_trace(tf, READ_BUFF, GET_NAME(READ_BUFF));
 
   sc_trace(tf, address_tag, GET_NAME(address_tag));
   sc_trace(tf, address_index, GET_NAME(address_index));

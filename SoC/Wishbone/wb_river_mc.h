@@ -47,6 +47,9 @@ SC_MODULE(wb_river_mc)
     sc_out<sc_uint<32>> DT_RM;
     sc_out<sc_uint<32>> A_RM;
     sc_out<bool>        ACK_DC;
+
+    sc_out<bool>        STALL_O;
+    sc_out<bool>        READ_BUFF_DCACHE_O;
     
     //interface with BCU
     sc_in<bool>        GRANT_I;

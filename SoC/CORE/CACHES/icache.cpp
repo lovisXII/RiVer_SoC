@@ -22,7 +22,6 @@ void icache::miss_detection()
     else{
         hit = false;
         IC_STALL_SI.write(true);
-    
     }
 
 }
@@ -54,15 +53,14 @@ void icache::transition()
             case IDLE:
                 if(ADR_VALID_SI.read() & RESET_N.read())
                 {
-                    if(!hit)
+                    if(!hit && !STALL_I.read())
                     {
                         fsm_current_state = WAIT_MEM;
                         A.write(ADR_SI.read() & 0xFFFFFFF0);
                         current_address_index = address_index;
                         current_address_tag = address_tag;
                         dta_valid = true;
-                        cpt = 0;
-                        
+                        cpt = 0;   
                     }
                 }
                 break;
