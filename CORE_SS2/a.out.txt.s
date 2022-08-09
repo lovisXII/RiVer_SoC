@@ -1,18 +1,22 @@
 
-a.out:     file format elf32-littleriscv
+../riscof/riscof_work/rv32i_m/privilege/src/ecall.S/dut/my.elf:     file format elf32-littleriscv
 
 
-Disassembly of section seg_text:
+Disassembly of section .text.init:
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+>>>>>>> ceefda69 (push for desktop)
 80000000 <rvtest_entry_point>:
 80000000:	00000097          	auipc	ra,0x0
 80000004:	13408093          	addi	ra,ra,308 # 80000134 <init_mscratch>
 80000008:	000080e7          	jalr	ra
+<<<<<<< HEAD
 <<<<<<< HEAD
 
 8000000c <rvtest_prolog_done>:
@@ -686,6 +690,9 @@ Disassembly of section .comment:
 =======
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
 
+=======
+
+>>>>>>> ceefda69 (push for desktop)
 8000000c <rvtest_prolog_done>:
 8000000c:	feedc0b7          	lui	ra,0xfeedc
 80000010:	ead08093          	addi	ra,ra,-339 # feedbead <_end+0x7eed9c7d>
@@ -751,10 +758,13 @@ Disassembly of section .comment:
 80000100:	ab7f8f93          	addi	t6,t6,-1353 # fbb6fab7 <_end+0x7bb6d887>
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 0001007c <_test>:
    1007c:	ff1ff06f          	j	1006c <_return>
 >>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
 =======
+=======
+>>>>>>> ceefda69 (push for desktop)
 80000104 <rvtest_code_begin>:
 80000104:	00002097          	auipc	ra,0x2
 80000108:	10c08093          	addi	ra,ra,268 # 80002210 <begin_signature>
@@ -1253,6 +1263,7 @@ Disassembly of section .data:
 80002220:	deadbeef          	jal	t4,7ffdd80a <value+0x7ffdd7fa>
 80002224:	deadbeef          	jal	t4,7ffdd80e <value+0x7ffdd7fe>
 	...
+<<<<<<< HEAD
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
 =======
 00010054 <_start>:
@@ -1291,10 +1302,13 @@ Disassembly of section .data:
    100b0:	f51ef06f          	j	0 <_bad>
    100b4:	f4def06f          	j	0 <_bad>
 >>>>>>> fe20ae18 (solving issue with ecall and except gestion just wtf)
+=======
+>>>>>>> ceefda69 (push for desktop)
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1342,10 +1356,19 @@ Disassembly of section .riscv.attributes:
    c:	0018                	0x18
    e:	0000                	unimp
 >>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
+=======
+   0:	1d41                	addi	s10,s10,-16
+   2:	0000                	unimp
+   4:	7200                	flw	fs0,32(a2)
+   6:	7369                	lui	t1,0xffffa
+   8:	01007663          	bgeu	zero,a6,14 <value+0x4>
+   c:	00000013          	nop
+>>>>>>> ceefda69 (push for desktop)
   10:	7205                	lui	tp,0xfffe1
   12:	3376                	fld	ft6,376(sp)
   14:	6932                	flw	fs2,12(sp)
   16:	7032                	flw	ft0,44(sp)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1405,21 +1428,127 @@ Disassembly of section .riscv.attributes:
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
 =======
 >>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
+=======
+  18:	0030                	addi	a2,sp,8
+  1a:	0108                	addi	a0,sp,128
+  1c:	0b0a                	slli	s6,s6,0x2
+>>>>>>> ceefda69 (push for desktop)
 
+Disassembly of section .debug_line:
 
-Disassembly of section text:
+00000000 <.debug_line>:
+   0:	00d6                	slli	ra,ra,0x15
+   2:	0000                	unimp
+   4:	007a0003          	lb	zero,7(s4)
+   8:	0000                	unimp
+   a:	0101                	addi	sp,sp,0
+   c:	000d0efb          	0xd0efb
+  10:	0101                	addi	sp,sp,0
+  12:	0101                	addi	sp,sp,0
+  14:	0000                	unimp
+  16:	0100                	addi	s0,sp,128
+  18:	0000                	unimp
+  1a:	2f01                	jal	72a <value+0x71a>
+  1c:	6f68                	flw	fa0,92(a4)
+  1e:	656d                	lui	a0,0x1b
+  20:	766f6c2f          	0x766f6c2f
+  24:	7369                	lui	t1,0xffffa
+  26:	7365442f          	0x7365442f
+  2a:	706f746b          	0x706f746b
+  2e:	5669522f          	0x5669522f
+  32:	7265                	lui	tp,0xffff9
+  34:	535f 436f 722f      	0x722f436f535f
+  3a:	7369                	lui	t1,0xffffa
+  3c:	2f666f63          	bltu	a2,s6,33a <value+0x32a>
+  40:	6972                	flw	fs2,28(sp)
+  42:	2d766373          	csrrsi	t1,0x2d7,12
+  46:	7261                	lui	tp,0xffff8
+  48:	742d6863          	bltu	s10,sp,798 <value+0x788>
+  4c:	7365                	lui	t1,0xffff9
+  4e:	2f74                	fld	fa3,216(a4)
+  50:	6972                	flw	fs2,28(sp)
+  52:	2d766373          	csrrsi	t1,0x2d7,12
+  56:	6574                	flw	fa3,76(a0)
+  58:	732d7473          	csrrci	s0,0x732,26
+  5c:	6975                	lui	s2,0x1d
+  5e:	6574                	flw	fa3,76(a0)
+  60:	3376722f          	0x3376722f
+  64:	6932                	flw	fs2,12(sp)
+  66:	6d5f 702f 6972      	0x6972702f6d5f
+  6c:	6976                	flw	fs2,92(sp)
+  6e:	656c                	flw	fa1,76(a0)
+  70:	732f6567          	0x732f6567
+  74:	6372                	flw	ft6,28(sp)
+  76:	0000                	unimp
+  78:	6365                	lui	t1,0x19
+  7a:	6c61                	lui	s8,0x18
+  7c:	2e6c                	fld	fa1,216(a2)
+  7e:	00010053          	fadd.s	ft0,ft2,ft0,rne
+  82:	0000                	unimp
+  84:	0500                	addi	s0,sp,640
+  86:	0002                	c.slli64	zero
+  88:	0000                	unimp
+  8a:	0380                	addi	s0,sp,448
+  8c:	0112                	slli	sp,sp,0x4
+  8e:	04090603          	lb	a2,64(s2) # 1d040 <value+0x1d030>
+  92:	0101                	addi	sp,sp,0
+  94:	08090203          	lb	tp,128(s2)
+  98:	0100                	addi	s0,sp,128
+  9a:	08090103          	lb	sp,128(s2)
+  9e:	0100                	addi	s0,sp,128
+  a0:	04090103          	lb	sp,64(s2)
+  a4:	0100                	addi	s0,sp,128
+  a6:	04090103          	lb	sp,64(s2)
+  aa:	0100                	addi	s0,sp,128
+  ac:	04090103          	lb	sp,64(s2)
+  b0:	0100                	addi	s0,sp,128
+  b2:	04090103          	lb	sp,64(s2)
+  b6:	0100                	addi	s0,sp,128
+  b8:	0c090b03          	lb	s6,192(s2)
+  bc:	0100                	addi	s0,sp,128
+  be:	88090103          	lb	sp,-1920(s2)
+  c2:	0104                	addi	s1,sp,128
+  c4:	1009                	c.nop	-30
+  c6:	0000                	unimp
+  c8:	0101                	addi	sp,sp,0
+  ca:	0500                	addi	s0,sp,640
+  cc:	1c02                	slli	s8,s8,0x20
+  ce:	0020                	addi	s0,sp,8
+  d0:	0380                	addi	s0,sp,448
+  d2:	012d                	addi	sp,sp,11
+  d4:	1409                	addi	s0,s0,-30
+  d6:	0002                	c.slli64	zero
+  d8:	0101                	addi	sp,sp,0
 
-00000000 <_bad>:
-   0:	00000013          	nop
+Disassembly of section .debug_info:
 
-00000004 <_good>:
-   4:	00000013          	nop
+00000000 <.debug_info>:
+   0:	001e                	c.slli	zero,0x7
+   2:	0000                	unimp
+   4:	0002                	c.slli64	zero
+   6:	0000                	unimp
+   8:	0000                	unimp
+   a:	0104                	addi	s1,sp,128
+	...
+  18:	0064                	addi	s1,sp,12
+  1a:	0000                	unimp
+  1c:	000000b7          	lui	ra,0x0
+  20:	8001                	c.srli64	s0
 
-00000008 <_exception_occur>:
-   8:	00000013          	nop
+Disassembly of section .debug_abbrev:
 
-Disassembly of section seg_reset:
+00000000 <.debug_abbrev>:
+   0:	1101                	addi	sp,sp,-32
+   2:	1000                	addi	s0,sp,32
+   4:	5506                	lw	a0,96(sp)
+   6:	0306                	slli	t1,t1,0x1
+   8:	1b0e                	slli	s6,s6,0x23
+   a:	250e                	fld	fa0,192(sp)
+   c:	130e                	slli	t1,t1,0x23
+   e:	0005                	c.nop	1
+	...
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1553,9 +1682,29 @@ Disassembly of section .debug_aranges:
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
 =======
 >>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
+=======
+Disassembly of section .debug_aranges:
+>>>>>>> ceefda69 (push for desktop)
 
-Disassembly of section seg_kernel:
+00000000 <.debug_aranges>:
+   0:	0024                	addi	s1,sp,8
+   2:	0000                	unimp
+   4:	0002                	c.slli64	zero
+   6:	0000                	unimp
+   8:	0000                	unimp
+   a:	0004                	0x4
+   c:	0000                	unimp
+   e:	0000                	unimp
+  10:	0000                	unimp
+  12:	8000                	0x8000
+  14:	05c8                	addi	a0,sp,708
+  16:	0000                	unimp
+  18:	2000                	fld	fs0,0(s0)
+  1a:	8000                	0x8000
+  1c:	0230                	addi	a2,sp,264
+	...
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1588,22 +1737,91 @@ Disassembly of section .debug_str:
 8100001c:	0005a603          	lw	a2,0(a1)
 81000020:	00060067          	jr	a2
 >>>>>>> 3fc7ad98 (7 tests left to pass. Issue comes from current mode i think)
+=======
+Disassembly of section .debug_str:
+>>>>>>> ceefda69 (push for desktop)
 
-81000024 <_instruction_address_misagligned>:
-81000024:	00000013          	nop
-81000028:	00800093          	li	ra,8
-8100002c:	00008067          	ret
+00000000 <.debug_str>:
+   0:	6d6f682f          	0x6d6f682f
+   4:	2f65                	jal	7bc <value+0x7ac>
+   6:	6f6c                	flw	fa1,92(a4)
+   8:	6976                	flw	fs2,92(sp)
+   a:	65442f73          	csrrs	t5,0x654,s0
+   e:	6f746b73          	csrrsi	s6,0x6f7,8
+  12:	2f70                	fld	fa2,216(a4)
+  14:	6952                	flw	fs2,20(sp)
+  16:	6556                	flw	fa0,84(sp)
+  18:	5f72                	lw	t5,60(sp)
+  1a:	2f436f53          	0x2f436f53
+  1e:	6972                	flw	fs2,28(sp)
+  20:	666f6373          	csrrsi	t1,0x666,30
+  24:	7369722f          	0x7369722f
+  28:	612d7663          	bgeu	s10,s2,634 <value+0x624>
+  2c:	6372                	flw	ft6,28(sp)
+  2e:	2d68                	fld	fa0,216(a0)
+  30:	6574                	flw	fa3,76(a0)
+  32:	722f7473          	csrrci	s0,0x722,30
+  36:	7369                	lui	t1,0xffffa
+  38:	742d7663          	bgeu	s10,sp,784 <value+0x774>
+  3c:	7365                	lui	t1,0xffff9
+  3e:	2d74                	fld	fa3,216(a0)
+  40:	74697573          	csrrci	a0,0x746,18
+  44:	2f65                	jal	7fc <value+0x7ec>
+  46:	7672                	flw	fa2,60(sp)
+  48:	5f693233          	0x5f693233
+  4c:	2f6d                	jal	806 <value+0x7f6>
+  4e:	7270                	flw	fa2,100(a2)
+  50:	7669                	lui	a2,0xffffa
+  52:	6c69                	lui	s8,0x1a
+  54:	6765                	lui	a4,0x19
+  56:	2f65                	jal	80e <value+0x7fe>
+  58:	2f637273          	csrrci	tp,0x2f6,6
+  5c:	6365                	lui	t1,0x19
+  5e:	6c61                	lui	s8,0x18
+  60:	2e6c                	fld	fa1,216(a2)
+  62:	682f0053          	0x682f0053
+  66:	2f656d6f          	jal	s10,5635c <value+0x5634c>
+  6a:	6f6c                	flw	fa1,92(a4)
+  6c:	6976                	flw	fs2,92(sp)
+  6e:	65442f73          	csrrs	t5,0x654,s0
+  72:	6f746b73          	csrrsi	s6,0x6f7,8
+  76:	2f70                	fld	fa2,216(a4)
+  78:	6952                	flw	fs2,20(sp)
+  7a:	6556                	flw	fa0,84(sp)
+  7c:	5f72                	lw	t5,60(sp)
+  7e:	2f436f53          	0x2f436f53
+  82:	6972                	flw	fs2,28(sp)
+  84:	666f6373          	csrrsi	t1,0x666,30
+  88:	7369722f          	0x7369722f
+  8c:	5f666f63          	bltu	a2,s6,68a <value+0x67a>
+  90:	6b726f77          	0x6b726f77
+  94:	3376722f          	0x3376722f
+  98:	6932                	flw	fs2,12(sp)
+  9a:	6d5f 702f 6972      	0x6972702f6d5f
+  a0:	6976                	flw	fs2,92(sp)
+  a2:	656c                	flw	fa1,76(a0)
+  a4:	732f6567          	0x732f6567
+  a8:	6372                	flw	ft6,28(sp)
+  aa:	6163652f          	0x6163652f
+  ae:	6c6c                	flw	fa1,92(s0)
+  b0:	532e                	lw	t1,232(sp)
+  b2:	7475642f          	0x7475642f
+  b6:	4700                	lw	s0,8(a4)
+  b8:	554e                	lw	a0,240(sp)
+  ba:	4120                	lw	s0,64(a0)
+  bc:	2e322053          	0x2e322053
+  c0:	          	snez	a0,zero
 
-81000030 <_instruction_address_fault>:
-81000030:	00000013          	nop
-81000034:	00800093          	li	ra,8
-81000038:	00008067          	ret
+Disassembly of section .debug_ranges:
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
 >>>>>>> 052abf6d (new test for csr dependencies and trying to debeug riscof)
+=======
+>>>>>>> ceefda69 (push for desktop)
 00000000 <.debug_ranges>:
    0:	ffff                	0xffff
    2:	ffff                	0xffff
@@ -1618,6 +1836,7 @@ Disassembly of section .debug_str:
   14:	2230                	fld	fa2,64(a2)
   16:	8000                	0x8000
 	...
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -1696,3 +1915,5 @@ Disassembly of section .debug_str:
 810000a0:	00800093          	li	ra,8
 810000a4:	00008067          	ret
 >>>>>>> fe20ae18 (solving issue with ecall and except gestion just wtf)
+=======
+>>>>>>> ceefda69 (push for desktop)
