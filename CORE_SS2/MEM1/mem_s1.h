@@ -86,6 +86,11 @@ SC_MODULE(mem_s1) {
     // Global Interface :
 
     sc_out<bool>        EXCEPTION_SM_S1;
+    
+    sc_in<bool>        EXCEPTION_SM_S2;
+    sc_in<bool>        MEM_ACCESS_IS_PRIO_RD_S2;
+    sc_in<sc_uint<2>>  CURRENT_MODE_SM_S2;
+
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S1;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM_S1;
     sc_out<bool>        MRET_SM_S1;  // 46
@@ -173,11 +178,32 @@ SC_MODULE(mem_s1) {
         SC_METHOD(sign_extend);
         sensitive << MEM_SIZE_RE_S1 << SIGN_EXTEND_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << LOAD_RE_S1;
         SC_METHOD(csr_exception);
-        sensitive << EXCEPTION_RE_S1 << CSR_WENABLE_RE_S1 << MIP_VALUE_RC << PC_EXE2MEM_RE_S1 << CSR_WADR_SE_S1 << EXE_RES_RE_S1
-                  << INSTRUCTION_ACCESS_FAULT_RE_S1 << ILLEGAL_INSTRUCTION_RE_S1 << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
-                  << ENV_CALL_U_MODE_RE_S1 << ENV_CALL_S_MODE_RE_S1 << ENV_CALL_M_MODE_RE_S1 << LOAD_ADRESS_MISSALIGNED_RE_S1
-                  << STORE_ADRESS_MISSALIGNED_RE_S1 << LOAD_ACCESS_FAULT_RE_S1 << STORE_ACCESS_FAULT_RE_S1 << MRET_RE_S1
-                  << EXCEPTION_SM_S1 << ENV_CALL_WRONG_MODE_RE_S1 << BUS_ERROR_SX << EXCEPTION_SM_S1 << RESET << MSTATUS_RC
-                  << EXE_RES_RE_S1 << MEPC_SC;
+        sensitive << EXCEPTION_RE_S1 
+        << CSR_WENABLE_RE_S1 
+        << MIP_VALUE_RC 
+        << PC_EXE2MEM_RE_S1 
+        << CSR_WADR_SE_S1 
+        << EXE_RES_RE_S1
+                  << INSTRUCTION_ACCESS_FAULT_RE_S1 
+                  << ILLEGAL_INSTRUCTION_RE_S1 
+                  << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
+                  << ENV_CALL_U_MODE_RE_S1 
+                  << ENV_CALL_S_MODE_RE_S1 
+                  << ENV_CALL_M_MODE_RE_S1 
+                  << LOAD_ADRESS_MISSALIGNED_RE_S1
+                  << STORE_ADRESS_MISSALIGNED_RE_S1 
+                  << LOAD_ACCESS_FAULT_RE_S1 
+                  << STORE_ACCESS_FAULT_RE_S1 
+                  << MRET_RE_S1
+                  << EXCEPTION_SM_S1 
+                  << ENV_CALL_WRONG_MODE_RE_S1 
+                  << BUS_ERROR_SX  
+                  << RESET 
+                  << MSTATUS_RC
+                  << EXE_RES_RE_S1 
+                  << MEPC_SC 
+                  << CURRENT_MODE_SM_S2
+                  << MEM_ACCESS_IS_PRIO_RD_S2 
+                  << EXCEPTION_SM_S2;
     }
 };

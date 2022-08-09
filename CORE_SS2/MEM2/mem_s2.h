@@ -92,6 +92,7 @@ SC_MODULE(mem_s2) {
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S2;
     sc_out<sc_uint<32>> RETURN_ADRESS_SM_S2;
     sc_out<bool>        MRET_SM_S2;  // 54
+    sc_in<bool>        MRET_SM_S1;  // 55
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
@@ -150,6 +151,7 @@ SC_MODULE(mem_s2) {
 
     sc_signal<bool> mem_access_is_prio_sd_s2;
     sc_signal<bool> mem_access_is_prio_rd_s2;
+    sc_signal<sc_uint<2>> current_mode_rm_s2;
 
     // FIFO
     fifo<mem2wbk_size> fifo_inst;
@@ -163,6 +165,7 @@ SC_MODULE(mem_s2) {
     void csr_exception();
     void memory_access_prio() ;
     void reg_mem_prio();
+    void current_mode_reg();
     void trace(sc_trace_file * tf);
 
     SC_CTOR(mem_s2) : fifo_inst("mem2wbk") {
@@ -175,6 +178,8 @@ SC_MODULE(mem_s2) {
         fifo_inst.CLK(CLK);
         fifo_inst.RESET_N(RESET);
 
+        SC_METHOD(current_mode_reg)
+        sensitive << CLK.pos();
         SC_METHOD(memory_access_prio);
         sensitive   << LOAD_RE_S1
                     << LOAD_RE_S2
@@ -201,6 +206,6 @@ SC_MODULE(mem_s2) {
                   << ENV_CALL_U_MODE_RE_S2 << ENV_CALL_S_MODE_RE_S2 << ENV_CALL_M_MODE_RE_S2 << LOAD_ADRESS_MISSALIGNED_RE_S2
                   << STORE_ADRESS_MISSALIGNED_RE_S2 << LOAD_ACCESS_FAULT_RE_S2 << STORE_ACCESS_FAULT_RE_S2 << MRET_RE_S2
                   << EXCEPTION_SM_S2 << ENV_CALL_WRONG_MODE_RE_S2 << BUS_ERROR_SX << EXCEPTION_SM_S2 << RESET << MSTATUS_RC
-                  << EXE_RES_RE_S2 << MEPC_SC;
+                  << EXE_RES_RE_S2 << MEPC_SC << current_mode_rm_s2;
     }
 };
