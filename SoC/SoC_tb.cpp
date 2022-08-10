@@ -191,7 +191,7 @@ int sc_main(int argc, char* argv[])
         if (countdown) countdown--;
         cycles++;
 
-        if(cycles > 2000)
+        if(cycles > 20000)
             break;
 
         unsigned int pc_adr = PC_VALUE.read();
@@ -236,5 +236,5 @@ int sc_main(int argc, char* argv[])
 
         sc_start(500, SC_PS);
     }
-    return 0;   
+    return -1;   
 }

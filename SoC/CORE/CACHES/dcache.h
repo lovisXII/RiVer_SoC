@@ -58,7 +58,6 @@ SC_MODULE(dcache)
   sc_in<bool> ACK;          // slave answer (slave dt valid)
 
   sc_in<bool> STALL_I;
-  sc_in<bool> READ_BUFF;
 
 //signals
   //parse address from CPU
@@ -137,10 +136,11 @@ SC_MODULE(dcache)
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
-    sensitive << CLK.neg() << RESET_N;
+    sensitive << current_state << RESET_N;
     SC_METHOD(mae_output);
-    sensitive << CLK.neg() << RESET_N << mp_address_tag 
-              << mp_address_index << mp_address_offset << empty << full;
+    sensitive << current_state << RESET_N << mp_address_tag 
+              << mp_address_index << mp_address_offset << empty 
+              << full << STORE_SM;
 
     reset_signal_is(RESET_N, false);
 
@@ -148,7 +148,7 @@ SC_MODULE(dcache)
     buffcache_inst.RESET_N(RESET_N);
     buffcache_inst.CLK(CLK);
     buffcache_inst.WRITE_OBUFF(write_buff);
-    buffcache_inst.READ_OBUFF(READ_BUFF);
+    buffcache_inst.ACK(ACK);
     buffcache_inst.DATA_C(DATA_SM);
     buffcache_inst.ADR_C(DATA_ADR_SM);
     buffcache_inst.STORE_C(STORE_SM);

@@ -71,15 +71,15 @@ void wb_river_mc::mae_output()
             CYC_O = false;
             STB_O = false;
             ACK_IC = false;
+            ACK_DC = false;
             STALL_O = false;
-            READ_BUFF_DCACHE_O = false;
         break;
         case R_REQ:
             CYC_O = true;
             STB_O = false;
             ACK_IC = false;
+            ACK_DC = false;
             STALL_O = true;
-            READ_BUFF_DCACHE_O = false;
         break;
         case R_DC_READ:
             CYC_O = true;
@@ -89,15 +89,15 @@ void wb_river_mc::mae_output()
             SEL_O = SIZE_SEL_DC;
             WE_O = false;
             ACK_IC = false;
+            ACK_DC = ACK_I;
             STALL_O = true;
-            READ_BUFF_DCACHE_O = true;
         break;
         case R_DC_END_BURST:
             CYC_O = true;
             STB_O = false;
             ACK_IC = false;
+            ACK_DC = ACK_I;
             STALL_O = true;
-            READ_BUFF_DCACHE_O = false;
         break;
         case R_DC_WRITE:
             CYC_O = true;
@@ -108,8 +108,8 @@ void wb_river_mc::mae_output()
             SEL_O = SIZE_SEL_DC;
             WE_O = true;
             ACK_IC = false;
+            ACK_DC = ACK_I;
             STALL_O = true;
-            READ_BUFF_DCACHE_O = true;
         break;
         case R_IC:
             CYC_O = true;
@@ -117,18 +117,20 @@ void wb_river_mc::mae_output()
 
             ADR_O = A_IC;
             SEL_O = 0;
-            ACK_IC = false;
+
+            DT_IC = DAT_I;
+            ACK_IC = ACK_I;
+            ACK_DC = false;
             STALL_O = true;
             WE_O = false;
-            READ_BUFF_DCACHE_O = false;
         break;
         case R_IC_END_BURST:
             CYC_O = true;
             STB_O = false; 
             DT_IC = DAT_I;
-            ACK_IC = true;
+            ACK_IC = ACK_I;
+            ACK_DC = false;
             STALL_O = true;
-            READ_BUFF_DCACHE_O = false;
         break;
     }
 }
@@ -164,8 +166,6 @@ void wb_river_mc::trace(sc_trace_file* tf)
     sc_trace(tf, ACK_DC, GET_NAME(ACK_DC));
     sc_trace(tf, STALL_O, GET_NAME(STALL_O));
     
-    sc_trace(tf, READ_BUFF_DCACHE_O, GET_NAME(READ_BUFF_DCACHE_O));
-
     sc_trace(tf, current_state, GET_NAME(current_state));
     sc_trace(tf, future_state, GET_NAME(future_state));
 }

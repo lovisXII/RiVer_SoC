@@ -11,7 +11,7 @@ SC_MODULE(buffercache)
 
     //INPUT from DCACHE
     sc_in<bool> WRITE_OBUFF;
-    sc_in<bool> READ_OBUFF;
+    sc_in<bool> ACK;
 
     sc_in<sc_uint<32>> DATA_C;
     sc_in<sc_uint<32>> ADR_C;
@@ -33,7 +33,7 @@ SC_MODULE(buffercache)
 
     //signals
     // buffers
-    sc_signal<sc_uint<2>> buffer_LRU;
+    sc_signal<sc_uint<2>> buffer_choice;
     //buff0
     sc_signal<sc_uint<32>> buff0_DATA;
     sc_signal<sc_uint<32>> buff0_DATA_ADR;
@@ -50,19 +50,31 @@ SC_MODULE(buffercache)
     sc_signal<sc_uint<2>> buff1_SIZE;
     sc_signal<bool> buff1_VALIDATE;  // data valid on buffer
 
-    void fifo();
+    sc_signal<bool> busreq_we;
+    sc_signal<bool> wait_for_ack_falling_edge;
 
+    void fifo();
+    void write_output();
     void bufferfull(); 
+    void read_buffer_choice();
+
+    void choice_buff();
 
     void trace(sc_trace_file*);
 
     SC_CTOR(buffercache)
     {
         SC_METHOD(fifo);
-        sensitive << CLK.neg() << WRITE_OBUFF.pos();
+        sensitive << CLK.neg() << ACK;
+
+        SC_METHOD(write_output);
+        sensitive << buffer_choice << buff0_VALIDATE << buff1_VALIDATE;
 
         SC_METHOD(bufferfull);
         sensitive << buff0_VALIDATE << buff1_VALIDATE;
+
+        SC_METHOD(choice_buff);
+        sensitive << RESET_N << ACK;
 
         reset_signal_is(RESET_N, false);
     }

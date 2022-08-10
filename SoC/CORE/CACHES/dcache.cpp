@@ -264,8 +264,6 @@ void dcache::trace(sc_trace_file* tf)
 
   sc_trace(tf, write_buff, GET_NAME(write_buff));
 
-  sc_trace(tf, READ_BUFF, GET_NAME(READ_BUFF));
-
   sc_trace(tf, address_tag, GET_NAME(address_tag));
   sc_trace(tf, address_index, GET_NAME(address_index));
   sc_trace(tf, address_offset, GET_NAME(address_offset));

@@ -16,6 +16,10 @@ void wb_arbiter::master_selector()
         {
             GRANT_0_O = true;
         }
+        else
+        {
+            GRANT_0_O = false;
+        }
     }
 }
 void wb_arbiter::slave_selector()

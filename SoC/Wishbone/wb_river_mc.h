@@ -49,7 +49,6 @@ SC_MODULE(wb_river_mc)
     sc_out<bool>        ACK_DC;
 
     sc_out<bool>        STALL_O;
-    sc_out<bool>        READ_BUFF_DCACHE_O;
     
     //interface with BCU
     sc_in<bool>        GRANT_I;
@@ -75,6 +74,6 @@ SC_MODULE(wb_river_mc)
                   << GRANT_I << WRITE_DC << READ_DC << ACK_I;
 
         SC_METHOD(mae_output);
-        sensitive << current_state << DAT_I;
+        sensitive << current_state << DAT_I << ACK_I;
     }
 };

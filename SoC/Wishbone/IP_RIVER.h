@@ -50,7 +50,6 @@ SC_MODULE(IP_RIVER)
     sc_signal<bool>        DCACHE_ACK;
 
     sc_signal<bool>        STALL_O;
-    sc_signal<bool>        READ_BUFF;
 
     //ICache-Wrapper
     sc_signal<bool>                 ICACHE_ACK;
@@ -117,7 +116,6 @@ SC_MODULE(IP_RIVER)
         dcache_inst.ACK(DCACHE_ACK);
         dcache_inst.SIZE_SC(SIZE_SC);
         dcache_inst.STALL_I(STALL_O);
-        dcache_inst.READ_BUFF(READ_BUFF);
 
         //ICache map
         icache_inst.CLK(CLK);
@@ -160,6 +158,5 @@ SC_MODULE(IP_RIVER)
         wrapper_inst.GRANT_I(GRANT);
         wrapper_inst.CYC_O(CYC);
         wrapper_inst.STALL_O(STALL_O);
-        wrapper_inst.READ_BUFF_DCACHE_O(READ_BUFF);
     }
 };
