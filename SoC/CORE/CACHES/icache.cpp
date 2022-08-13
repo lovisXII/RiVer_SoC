@@ -53,7 +53,7 @@ void icache::transition()
             case IDLE:
                 if(ADR_VALID_SI.read() & RESET_N.read())
                 {
-                    if(!hit && !STALL_I.read())
+                    if(!hit)
                     {
                         fsm_current_state = WAIT_MEM;
                         A.write(ADR_SI.read() & 0xFFFFFFF0);

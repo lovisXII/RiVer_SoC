@@ -24,8 +24,8 @@
 typedef enum // MAE STATES
   {
     DC_IDLE = 0,
-    DC_WAIT_MEM = 2,
-    DC_UPDT = 3
+    DC_WAIT_MEM = 1,
+    DC_UPDT = 2
   } dcache_states_fsm;
 
 SC_MODULE(dcache)
@@ -54,7 +54,6 @@ SC_MODULE(dcache)
   sc_out<sc_uint<32>> A_O;
 
   sc_in<sc_uint<32>> DT_I;
-  sc_in<sc_uint<32>> A_I;
   sc_in<bool> ACK;          // slave answer (slave dt valid)
 
   sc_in<bool> STALL_I;
@@ -100,9 +99,11 @@ SC_MODULE(dcache)
 
   int burst_cpt;
   sc_signal<sc_uint<32>> data_mask_sc;
+
+  sc_signal<sc_uint<32>>  adr_sent_to_wrapper;
 //FMS signal debug
-  sc_signal<sc_uint<3>> current_state;
-  sc_signal<sc_uint<3>> future_state;
+  sc_signal<sc_uint<2>> current_state;
+  sc_signal<sc_uint<2>> future_state;
 
   void adresse_parcer();
 
@@ -122,7 +123,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM << A_I;
+    sensitive << DATA_ADR_SM << adr_sent_to_wrapper;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
@@ -136,11 +137,11 @@ SC_MODULE(dcache)
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
-    sensitive << current_state << RESET_N;
+    sensitive << current_state << RESET_N << LOAD_SM << ACK;
     SC_METHOD(mae_output);
     sensitive << current_state << RESET_N << mp_address_tag 
               << mp_address_index << mp_address_offset << empty 
-              << full << STORE_SM;
+              << full << STORE_SM << LOAD_SM << ACK << A_O;
 
     reset_signal_is(RESET_N, false);
 

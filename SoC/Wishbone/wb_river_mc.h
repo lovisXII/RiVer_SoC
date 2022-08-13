@@ -45,7 +45,6 @@ SC_MODULE(wb_river_mc)
     sc_in<sc_uint<32>>  A_DC;
 
     sc_out<sc_uint<32>> DT_RM;
-    sc_out<sc_uint<32>> A_RM;
     sc_out<bool>        ACK_DC;
 
     sc_out<bool>        STALL_O;

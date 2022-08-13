@@ -33,7 +33,7 @@ SC_MODULE(buffercache)
 
     //signals
     // buffers
-    sc_signal<sc_uint<2>> buffer_choice;
+    sc_signal<bool> buffer_choice;
     //buff0
     sc_signal<sc_uint<32>> buff0_DATA;
     sc_signal<sc_uint<32>> buff0_DATA_ADR;
@@ -68,7 +68,8 @@ SC_MODULE(buffercache)
         sensitive << CLK.neg() << ACK;
 
         SC_METHOD(write_output);
-        sensitive << buffer_choice << buff0_VALIDATE << buff1_VALIDATE;
+        sensitive << buffer_choice << buff0_VALIDATE << buff1_VALIDATE 
+                  << buff0_LOAD << buff0_STORE << buff1_LOAD << buff1_STORE;
 
         SC_METHOD(bufferfull);
         sensitive << buff0_VALIDATE << buff1_VALIDATE;

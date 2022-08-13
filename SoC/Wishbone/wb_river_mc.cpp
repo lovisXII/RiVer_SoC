@@ -39,7 +39,7 @@ void wb_river_mc::state_transition()
             else if(!ACK_I & !DTA_VALID_IC)
                 future_state = R_IDLE;
             else
-                future_state = R_DC_WRITE;
+                future_state = R_DC_END_BURST;
         break;
         case R_DC_WRITE:
             if(ACK_I & DTA_VALID_IC)
@@ -162,7 +162,6 @@ void wb_river_mc::trace(sc_trace_file* tf)
     sc_trace(tf, DT_DC, GET_NAME(DT_DC));
     sc_trace(tf, A_DC, GET_NAME(A_DC));
     sc_trace(tf, DT_RM, GET_NAME(DT_RM));
-    sc_trace(tf, A_RM, GET_NAME(A_RM));
     sc_trace(tf, ACK_DC, GET_NAME(ACK_DC));
     sc_trace(tf, STALL_O, GET_NAME(STALL_O));
     

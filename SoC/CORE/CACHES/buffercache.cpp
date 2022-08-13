@@ -9,7 +9,28 @@ void buffercache::fifo()
     {
         if(WRITE_OBUFF.read())
         {
-            if(!buff0_VALIDATE)
+            if(!buff0_VALIDATE && !buff1_VALIDATE)
+            {
+                if(buffer_choice.read())
+                {
+                    buff1_DATA.write(DATA_C.read());
+                    buff1_DATA_ADR.write(ADR_C.read());
+                    buff1_STORE.write(STORE_C.read());
+                    buff1_LOAD.write(LOAD_C.read());
+                    buff1_VALIDATE.write(STORE_C.read() || LOAD_C.read());
+                    buff1_SIZE.write(SIZE_C.read());
+                }
+                else
+                {
+                    buff0_DATA.write(DATA_C.read());
+                    buff0_DATA_ADR.write(ADR_C.read());
+                    buff0_STORE.write(STORE_C.read());
+                    buff0_LOAD.write(LOAD_C.read());
+                    buff0_VALIDATE.write(STORE_C.read() || LOAD_C.read());
+                    buff0_SIZE.write(SIZE_C.read());
+                }
+            }
+            else if(!buff0_VALIDATE)
             {
                 buff0_DATA.write(DATA_C.read());
                 buff0_DATA_ADR.write(ADR_C.read());
