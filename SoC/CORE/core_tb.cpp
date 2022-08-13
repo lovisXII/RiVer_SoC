@@ -39,7 +39,7 @@ enum IC_FSM
 // DCACHE ANSWER MAE STATES
 enum DC_FSM
 {
-    DC_IDLE,
+    DC_IDLE0,
     DC_CLK_SIMU0,
     DC_SEND_DTA_1,
     DC_CLK_SIMU1,
@@ -215,6 +215,8 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<32>> MEM_RESULT;
     sc_signal<bool>        MEM_STALL;
 
+    sc_signal<bool>        STALL;
+
 #ifdef DCACHE_ON
     //MP interface DCACHE
     sc_signal<bool> DCACHE_LOAD, DCACHE_STORE;
@@ -290,11 +292,11 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.DT_O(DCACHE_DT);
     dcache_inst.A_O(DCACHE_A);
     dcache_inst.DT_I(MP_DT);
-    dcache_inst.A_I(MP_A);
     dcache_inst.ACK(ACK);
     dcache_inst.SIZE_SC(SIZE_SC);
+    dcache_inst.STALL_I(STALL);
 
-    DC_FSM DC_fsm_current_state = DC_IDLE;
+    DC_FSM DC_fsm_current_state = DC_IDLE0;
 
     bool dcache_dta_valid;
     bool read, write;
@@ -316,6 +318,7 @@ int sc_main(int argc, char* argv[]) {
     icache_inst.A(ICACHE_A);
     icache_inst.DTA_VALID(ICACHE_DTA_VALID);
     icache_inst.ACK(MP_ACK_ICACHE);
+    icache_inst.STALL_I(STALL);
 
     //init MAE state
     IC_FSM IC_fsm_current_state = IC_IDLE;
@@ -353,10 +356,11 @@ int sc_main(int argc, char* argv[]) {
 
         read = DCACHE_LOAD.read();
         write = DCACHE_STORE.read();
+        STALL = false;
 
         switch (DC_fsm_current_state)
         {
-            case DC_IDLE:
+            case DC_IDLE0:
                 if(dcache_dta_valid)
                 {
                     if(read)
@@ -467,7 +471,7 @@ int sc_main(int argc, char* argv[]) {
                 DC_fsm_current_state = DC_END_BURST;
             break;
             case DC_END_BURST:
-                DC_fsm_current_state = DC_IDLE;
+                DC_fsm_current_state = DC_IDLE0;
                 ACK.write(false);
             break;
         }
@@ -586,6 +590,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
+            std::cout <<sc_time_stamp()<< " - storing "<<mem_data<<"   at   "<<mem_adr<<"       size: "<<mem_size<<std::endl;
             int temporary_value = ram[mem_adr]; 
             unsigned int temporary_store_value = mem_data;
             if(mem_size == 2){//access in byte
@@ -640,9 +645,14 @@ int sc_main(int argc, char* argv[]) {
             {
                 ram[mem_adr] = mem_data;
             }
+            std::cout << "             result ram["<<mem_adr<<"] : "<<ram[mem_adr]<<std::endl<<std::endl;
         }
-        mem_result = ram[mem_adr];
-        MEM_RESULT.write(mem_result);
+        if(mem_load && mem_adr_valid)
+        {
+            std::cout <<sc_time_stamp()<< " - loading    data: "<<ram[mem_adr]<<"    at  "<<mem_adr<<std::endl;
+            mem_result = ram[mem_adr];
+            MEM_RESULT.write(mem_result);
+        }
         MEM_STALL.write(false);
 #endif
 

@@ -91,6 +91,7 @@ void wb_river_mc::mae_output()
             ACK_IC = false;
             ACK_DC = ACK_I;
             STALL_O = true;
+            DT_RM = DAT_I;
         break;
         case R_DC_END_BURST:
             CYC_O = true;
@@ -98,6 +99,7 @@ void wb_river_mc::mae_output()
             ACK_IC = false;
             ACK_DC = ACK_I;
             STALL_O = true;
+            DT_RM = DAT_I;
         break;
         case R_DC_WRITE:
             CYC_O = true;
@@ -146,13 +148,7 @@ void wb_river_mc::trace(sc_trace_file* tf)
     sc_trace(tf, ADR_O, GET_NAME(ADR_O));
     sc_trace(tf, CYC_O, GET_NAME(CYC_O));
     sc_trace(tf, SEL_O, GET_NAME(SEL_O));
-    sc_trace(tf, STB_O, GET_NAME(STB_O));
-    sc_trace(tf, WE_O, GET_NAME(WE_O));
-    sc_trace(tf, GRANT_I, GET_NAME(GRANT_I));
-
-    sc_trace(tf, A_IC, GET_NAME(A_IC));
-    sc_trace(tf, DTA_VALID_IC, GET_NAME(DTA_VALID_IC));
-    sc_trace(tf, DT_IC, GET_NAME(DT_IC));
+    sc_trace(tf, STB_O, GET_NAME(DT_IC));
     sc_trace(tf, ACK_IC, GET_NAME(ACK_IC));
 
     sc_trace(tf, DTA_VALID_DC, GET_NAME(DTA_VALID_DC));
@@ -164,6 +160,8 @@ void wb_river_mc::trace(sc_trace_file* tf)
     sc_trace(tf, DT_RM, GET_NAME(DT_RM));
     sc_trace(tf, ACK_DC, GET_NAME(ACK_DC));
     sc_trace(tf, STALL_O, GET_NAME(STALL_O));
+    sc_trace(tf, A_IC, GET_NAME(A_IC));
+    sc_trace(tf, GRANT_I, GET_NAME(GRANT_I));
     
     sc_trace(tf, current_state, GET_NAME(current_state));
     sc_trace(tf, future_state, GET_NAME(future_state));

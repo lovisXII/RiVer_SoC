@@ -137,11 +137,9 @@ SC_MODULE(dcache)
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
-    sensitive << current_state << RESET_N << LOAD_SM << ACK;
+    sensitive << CLK.neg() << RESET_N;
     SC_METHOD(mae_output);
-    sensitive << current_state << RESET_N << mp_address_tag 
-              << mp_address_index << mp_address_offset << empty 
-              << full << STORE_SM << LOAD_SM << ACK << A_O;
+    sensitive << CLK.neg() << RESET_N;
 
     reset_signal_is(RESET_N, false);
 
