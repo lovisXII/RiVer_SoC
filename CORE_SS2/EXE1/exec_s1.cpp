@@ -557,7 +557,7 @@ void exec_s1::bypasses() {
         r1_valid_se = true;
     } 
     else if(DEST_RE_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S2)
-    // E2->E1 and csr
+    // E2->E1 and csr but not csrrc
     {
         op1_se_s1.write(CSR_RDATA_RE_S2.read());
         r1_valid_se = true;
@@ -565,11 +565,14 @@ void exec_s1::bypasses() {
     else if(DEST_RE_S2.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S2) 
     // E2->E1 and no load (normal bypass)
     {
-        op1_se_s1.write(EXE_RES_RE_S2.read());
+        if(!CSRRC_I_RD_S1)
+            op1_se_s1.write(EXE_RES_RE_S2.read());
+        else
+            op1_se_s1.write(~EXE_RES_RE_S2.read());
         r1_valid_se = true;
     }
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RE_S1 && !bp_s2_E2_is_taken) 
-    // E1->E1 and csr
+    // E1->E1 and csr but not csrrc
     {
         op1_se_s1.write(CSR_RDATA_RE_S1.read());
         r1_valid_se = true;
@@ -577,7 +580,10 @@ void exec_s1::bypasses() {
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && !MEM_LOAD_RE_S1 && !bp_s2_E2_is_taken) 
     // E1->E1 and no load (normal bypass)
     {
-        op1_se_s1.write(EXE_RES_RE_S1.read());
+        if(!CSRRC_I_RD_S1)
+            op1_se_s1.write(EXE_RES_RE_S1.read());
+        else
+            op1_se_s1.write(~EXE_RES_RE_S1.read());
         r1_valid_se = !MULT_INST_RE_S1 || EXE2MEM_EMPTY_SE_S1;
     }
     else if (DEST_RE_S1.read() == RADR1_RD_S1.read() && MEM_LOAD_RE_S1 && !EXE2MEM_EMPTY_SE_S1) 
@@ -597,7 +603,7 @@ void exec_s1::bypasses() {
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S2) 
-    // M2->E1 and csr
+    // M2->E1 and csr but not csrrc
     {
         op1_se_s1.write(CSR_RDATA_RM_S2.read());
         r1_valid_se = true;
@@ -605,11 +611,14 @@ void exec_s1::bypasses() {
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S1.read()) 
     // M2->E1 normal
     {
-        op1_se_s1 = MEM_RES_RM_S2.read();
+        if(!CSRRC_I_RD_S1)
+            op1_se_s1.write(MEM_RES_RM_S2.read());
+        else
+            op1_se_s1.write(~MEM_RES_RM_S2.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && CSR_WENABLE_RM_S1 && !bp_s2_M2_is_taken) 
-    // M1->E1 and csr
+    // M1->E1 and csr but not csrrc
     {
         op1_se_s1.write(CSR_RDATA_RM_S1.read());
         r1_valid_se = true;
@@ -617,7 +626,10 @@ void exec_s1::bypasses() {
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S1.read() && !bp_s2_M2_is_taken) 
     // M1->E1 normal
     {
-        op1_se_s1.write(MEM_RES_RM_S1.read());
+        if(!CSRRC_I_RD_S1)
+            op1_se_s1.write(MEM_RES_RM_S1.read());
+        else
+            op1_se_s1.write(~MEM_RES_RM_S1.read());
         r1_valid_se = !MULT_INST_RM_S1 || MEM2WBK_EMPTY_SM_S1;
     }
     else if(op1_is_saved_re){
@@ -654,8 +666,10 @@ void exec_s1::bypasses() {
     // E2->E1 bypass
     {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S1) // case with csr
+        if (CSR_WENABLE_RE_S1) // case with csr but not csrrc
             bp_value = CSR_RDATA_RE_S2;
+        else if (CSRRC_I_RD_S1) // case with csrrc
+            bp_value = ~EXE_RES_RE_S2.read();
         else
             bp_value = EXE_RES_RE_S2;
 
@@ -675,8 +689,10 @@ void exec_s1::bypasses() {
     // E1->E1 bypass
     {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S1) // case with csr
+        if (CSR_WENABLE_RE_S1)  // case with csr but not csrrc
             bp_value = CSR_RDATA_RE_S1;
+        else if (CSRRC_I_RD_S1)  // case with csrrc
+            bp_value = ~EXE_RES_RE_S1.read();
         else
             bp_value = EXE_RES_RE_S1;
 
@@ -709,6 +725,8 @@ void exec_s1::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM_S2)
             bp_value = CSR_RDATA_RM_S2;
+        else if (CSRRC_I_RD_S1)
+            bp_value = ~MEM_RES_RM_S2.read();
         else
             bp_value = MEM_RES_RM_S2;
 
@@ -727,6 +745,8 @@ void exec_s1::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM_S1)
             bp_value = CSR_RDATA_RM_S1;
+        else if (CSRRC_I_RD_S1)
+            bp_value = ~MEM_RES_RM_S1.read();
         else
             bp_value = MEM_RES_RM_S1;
         
@@ -753,7 +773,7 @@ void exec_s1::bypasses() {
     }
     bp_mem_data_sd.write(bp_mem_data_var);
     blocked.write(blocked_var);
-}
+}   
 
 void exec_s1::save_op_bp_in_register(){
     if((RADR1_RD_S1 == MEM_DEST_RM_S1 || RADR1_RD_S1 == MEM_DEST_RM_S2) && blocked)
@@ -846,6 +866,7 @@ void exec_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, ENV_CALL_S_MODE_RE_S1, GET_NAME(ENV_CALL_S_MODE_RE_S1));
     sc_trace(tf, ENV_CALL_M_MODE_RE_S1, GET_NAME(ENV_CALL_M_MODE_RE_S1));
     sc_trace(tf, PC_BRANCH_VALUE_RD_S1, GET_NAME(PC_BRANCH_VALUE_RD_S1));
+    sc_trace(tf, CSRRC_I_RD_S1, GET_NAME(CSRRC_I_RD_S1));
     sc_trace(tf, PC_BRANCH_VALUE_RE_S1, GET_NAME(PC_BRANCH_VALUE_RE_S1));
 
     // Interruption :

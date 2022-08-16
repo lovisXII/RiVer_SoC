@@ -240,6 +240,10 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> CSR_RDATA_SC_S2;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     sc_signal<sc_uint<32>> KERNEL_ADR_SC;
+
+    sc_signal<bool>        CSRRC_I_RD_S1;
+    sc_signal<bool>        CSRRC_I_RD_S2;
+    
     // DEC-REG interface
     sc_signal<sc_uint<32>> RDATA1_SR_S1;
     sc_signal<sc_uint<32>> RDATA2_SR_S1;
@@ -516,6 +520,9 @@ SC_MODULE(core) {
         dec_inst.CSR_WADR_RD_S2(CSR_WADR_RD_S2);
         dec_inst.CSR_RDATA_RD_S2(CSR_RDATA_RD_S2);
 
+        dec_inst.CSRRC_I_RD_S1(CSRRC_I_RD_S1);
+        dec_inst.CSRRC_I_RD_S2(CSRRC_I_RD_S2);
+
         dec_inst.DEC2EXE_POP_SE_S1(DEC2EXE_POP_SE_S1);
         dec_inst.DEC2EXE_EMPTY_SD_S1(DEC2EXE_EMPTY_SD_S1);
 
@@ -652,6 +659,8 @@ SC_MODULE(core) {
         exec_inst_s1.PC_DEC2EXE_RD_S1(PC_DEC2EXE_RD_S1);
         exec_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
 
+        exec_inst_s1.CSRRC_I_RD_S1(CSRRC_I_RD_S1);
+
         exec_inst_s1.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         exec_inst_s1.MEM_DATA_RD_S1(MEM_DATA_RD_S1);
@@ -781,6 +790,8 @@ SC_MODULE(core) {
         exec_inst_s2.MULT_INST_RD_S2(MULT_INST_RD_S2);
         exec_inst_s2.PC_DEC2EXE_RD_S2(PC_DEC2EXE_RD_S2);
         exec_inst_s2.PC_EXE2MEM_RE_S2(PC_EXE2MEM_RE_S2);
+
+        exec_inst_s2.CSRRC_I_RD_S2(CSRRC_I_RD_S2);
 
         exec_inst_s2.MEM_DATA_RD_S2(MEM_DATA_RD_S2);
         exec_inst_s2.MEM_LOAD_RD_S2(MEM_LOAD_RD_S2);

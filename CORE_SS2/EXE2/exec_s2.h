@@ -99,6 +99,7 @@ SC_MODULE(exec_s2) {
     sc_in<bool> SLT_RD_S2;
     sc_in<bool> SLTU_RD_S2;
 
+    sc_in<bool>         CSRRC_I_RD_S2;
     sc_in<bool>        CSR_WENABLE_RD_S2;
     sc_in<sc_uint<12>> CSR_WADR_RD_S2;
     sc_in<sc_uint<32>> CSR_RDATA_RD_S2;
@@ -371,7 +372,8 @@ SC_MODULE(exec_s2) {
         SC_METHOD(bypasses);
         sensitive   
 			<< OP1_VALID_RD_S2                 
-			<< OP2_VALID_RD_S2                       
+			<< OP2_VALID_RD_S2    
+            << CSRRC_I_RD_S2                   
 			<< MEM_DEST_RM_S2                 
 			<< MEM_DEST_RM_S1                        
 			<< MEM_RES_RM_S2 

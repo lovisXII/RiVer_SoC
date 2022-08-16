@@ -559,7 +559,10 @@ void exec_s2::bypasses() {
     else if (DEST_RE_S2.read() == RADR1_RD_S2.read() && !MEM_LOAD_RE_S2) 
     // E2->E2 and no load (normal bypass)
     {
-        op1_se_s2.write(EXE_RES_RE_S2.read());
+        if(CSRRC_I_RD_S2)
+            op1_se_s2.write(~EXE_RES_RE_S2.read());
+        else
+            op1_se_s2.write(EXE_RES_RE_S2.read());
         r1_valid_se = true;
     }
     else if(DEST_RE_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RE_S1)
@@ -571,7 +574,10 @@ void exec_s2::bypasses() {
     else if(DEST_RE_S1.read() == RADR1_RD_S2.read() && !MEM_LOAD_RE_S1) 
     // E1->E2 and no load (normal bypass)
     {
-        op1_se_s2.write(EXE_RES_RE_S1.read());
+        if(CSRRC_I_RD_S2)
+            op1_se_s2.write(~EXE_RES_RE_S1.read());
+        else
+            op1_se_s2.write(EXE_RES_RE_S1.read());
         r1_valid_se = true;
     }
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S2) 
@@ -583,10 +589,13 @@ void exec_s2::bypasses() {
     else if (MEM_DEST_RM_S2.read() == RADR1_RD_S2.read()) 
     // M2->E2 normal
     {
-        op1_se_s2.write(MEM_RES_RM_S2.read());
+        if(CSRRC_I_RD_S2)
+            op1_se_s2.write(~MEM_RES_RM_S2.read());
+        else
+            op1_se_s2.write(MEM_RES_RM_S2.read());
         r1_valid_se = true;
     }
-    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S1) 
+    else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read() && CSR_WENABLE_RM_S1)
     // M1->E2 and csr
     {
         op1_se_s2.write(CSR_RDATA_RM_S1.read());
@@ -595,7 +604,10 @@ void exec_s2::bypasses() {
     else if (MEM_DEST_RM_S1.read() == RADR1_RD_S2.read()) 
     // M1->E2 normal
     {
-        op1_se_s2 = MEM_RES_RM_S1.read();
+        if(CSRRC_I_RD_S2)
+            op1_se_s2.write(~MEM_RES_RM_S1.read());
+        else
+            op1_se_s2.write(MEM_RES_RM_S1.read());
         r1_valid_se = true;
     }
     else if (DEST_RE_S2.read() == RADR1_RD_S2.read() && MEM_LOAD_RE_S2 && !EXE2MEM_EMPTY_SE_S2) 
@@ -650,6 +662,8 @@ void exec_s2::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE_S2) // case with csr
             bp_value = CSR_RDATA_RE_S2;
+        else if (CSRRC_I_RD_S2) // case with csr
+            bp_value = ~EXE_RES_RE_S2.read();
         else
             bp_value = EXE_RES_RE_S2;
 
@@ -671,6 +685,8 @@ void exec_s2::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE_S1) // case with csr
             bp_value = CSR_RDATA_RE_S1;
+        else if (CSRRC_I_RD_S2) // case with csr
+            bp_value = ~EXE_RES_RE_S1.read();
         else
             bp_value = EXE_RES_RE_S1;
 
@@ -705,6 +721,8 @@ void exec_s2::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM_S2)
             bp_value = CSR_RDATA_RM_S2;
+        else if (CSRRC_I_RD_S2)
+            bp_value = ~MEM_RES_RM_S2.read();
         else
             bp_value = MEM_RES_RM_S2;
         if (MEM_STORE_RD_S2.read()) {
@@ -722,6 +740,8 @@ void exec_s2::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM_S1)
             bp_value = CSR_RDATA_RM_S1;
+        else if (CSRRC_I_RD_S2)
+            bp_value = ~MEM_RES_RM_S1.read();
         else
             bp_value = MEM_RES_RM_S1;
 
@@ -906,6 +926,7 @@ void exec_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, wb_re, GET_NAME(wb_re));
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, MEM2WBK_EMPTY_SM_S2, GET_NAME(MEM2WBK_EMPTY_SM_S2));
+    sc_trace(tf, CSRRC_I_RD_S2, GET_NAME(CSRRC_I_RD_S2));
     sc_trace(tf, mem_store_re, GET_NAME(mem_store_re));
     sc_trace(tf, mem_load_re, GET_NAME(mem_load_re));
     sc_trace(tf, MULT_INST_RE_S2, GET_NAME(MULT_INST_RE_S2));
