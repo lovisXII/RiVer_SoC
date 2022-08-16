@@ -188,9 +188,9 @@ void mem_s1::csr_exception() {
             CSR_ENABLE_SM_S1.write(0);
         }
         MRET_SM_S1 = 0;
-    } else if ((EXCEPTION_SM_S1 && !EXCEPTION_SM_S2) ||
-    (!MEM_ACCESS_IS_PRIO_RD_S2 && EXCEPTION_SM_S1)
-    ) {
+    } 
+    else if (EXCEPTION_SM_S1) 
+    {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
         // THEY ARE IN A SPECIFIC ORDER
@@ -249,7 +249,7 @@ void mem_s1::csr_exception() {
 
             MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
-            MRET_SM_S1        = MRET_RE_S1;
+            MRET_SM_S1        = 1;
         } else if (STORE_ACCESS_FAULT_RE_S1) {
             save_restore_sm = 0;  // Need to save context
             mpp_sm          = CURRENT_MODE_SM_S1;
@@ -499,6 +499,7 @@ void mem_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_SM_S1, GET_NAME(CSR_ENABLE_SM_S1));
+    sc_trace(tf, EBREAK_RE_S1, GET_NAME(EBREAK_RE_S1));
     sc_trace(tf, exception_sm, GET_NAME(exception_sm));
     sc_trace(tf, MULT_INST_RM_S1, GET_NAME(MULT_INST_RM_S1));
     // sc_trace(tf, MCACHE_MEM_SIZE_SM, GET_NAME(MCACHE_MEM_SIZE_SM));

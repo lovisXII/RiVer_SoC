@@ -9,6 +9,7 @@ void csr::writing_csr() {
     }
     csr_rc[3].write(0x00000000);  // mstatus
     csr_rc[4].write(0x40100100);  // misa
+    csr_rc[13].write(0xFFFFFFFF);  // misa
 
     wait(3);
 
@@ -31,7 +32,7 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S1); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S1); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S1); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // mstatus
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // kernel
                 default: break;
             }
         }
@@ -51,19 +52,12 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S2); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S2); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S2); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S2); break;  // mstatus
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S2); break;  // kernel
                 default: break;
             }
         }
 
-        if (EXCEPTION_SM_S1.read()) {
-            csr_rc[3]  = MSTATUS_WDATA_RM_S1.read();
-            csr_rc[11] = MIP_WDATA_RM_S1.read();
-            csr_rc[8]  = MEPC_WDATA_RM_S1.read();
-            csr_rc[9]  = MCAUSE_WDATA_SM_S1.read();
-            csr_rc[10] = MTVAL_WDATA_SM_S1;
-        }
-        else if (EXCEPTION_SM_S2.read()) {
+        if (EXCEPTION_SM.read()) {
             csr_rc[3]  = MSTATUS_WDATA_RM_S2.read();
             csr_rc[11] = MIP_WDATA_RM_S2.read();
             csr_rc[8]  = MEPC_WDATA_RM_S2.read();
@@ -122,11 +116,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WDATA_SM_S1, GET_NAME(CSR_WDATA_SM_S1));
     sc_trace(tf, CSR_ENABLE_SM_S1, GET_NAME(CSR_ENABLE_SM_S1));
 
-    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
-    sc_trace(tf, MSTATUS_WDATA_RM_S1, GET_NAME(MSTATUS_WDATA_RM_S1));
-    sc_trace(tf, MIP_WDATA_RM_S1, GET_NAME(MIP_WDATA_RM_S1));
-    sc_trace(tf, MEPC_WDATA_RM_S1, GET_NAME(MEPC_WDATA_RM_S1));
-    sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
 
