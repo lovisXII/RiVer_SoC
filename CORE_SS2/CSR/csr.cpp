@@ -143,6 +143,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mscratch"));
     sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "kernel_adr"));
 
+    sc_trace(tf, MSTATUS_RC, signal_get_name(MSTATUS_RC.name(), "MSTATUS_RC"));
     sc_trace(tf, MEPC_SC, signal_get_name(MEPC_SC.name(), "MEPC_SC"));
     sc_trace(tf, MSTATUS_RC, signal_get_name(MSTATUS_RC.name(), "MSTATUS_RC"));
     sc_trace(tf, MTVEC_VALUE_RC, signal_get_name(MTVEC_VALUE_RC.name(), "MTVEC_VALUE_RC"));
@@ -151,6 +152,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, KERNEL_ADR_SC, signal_get_name(KERNEL_ADR_SC.name(), "KERNEL_ADR_SC"));
 
 
+    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
 }

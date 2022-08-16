@@ -1077,9 +1077,9 @@ SC_MODULE(core) {
 =======
 >>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
 
-        mem_inst_s2.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
-        mem_inst_s2.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
-        mem_inst_s2.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
+        mem_inst_s2.MSTATUS_WDATA_SM_S1(MSTATUS_WDATA_SM_S1);
+        mem_inst_s2.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
+        mem_inst_s2.MEPC_WDATA_SM_S1(MEPC_WDATA_SM_S1);
         mem_inst_s2.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
         mem_inst_s2.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
 

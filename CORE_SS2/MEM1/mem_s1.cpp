@@ -172,7 +172,7 @@ void mem_s1::sign_extend() {
 }
 
 void mem_s1::csr_exception() {
-    EXCEPTION_SM_S1            = EXCEPTION_RE_S1.read() || BUS_ERROR_SX.read();
+    EXCEPTION_SM_S1            = ((EXCEPTION_RE_S1.read() || BUS_ERROR_SX.read()) && !EXE2MEM_EMPTY_SE_S1);
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     if (!RESET) CURRENT_MODE_SM_S1 = 3;
@@ -427,10 +427,6 @@ void mem_s1::csr_exception() {
             MCAUSE_WDATA_SM_S1.write(1);
             CURRENT_MODE_SM_S1 = 3;
         }
-        // else if ((!EXCEPTION_SM_S1 && EXCEPTION_SM_S2)
-        // || (MEM_ACCESS_IS_PRIO_RD_S2 && EXCEPTION_SM_S2) ){ 
-        //     cout << sc_time_stamp() << " lla" << endl;
-        //     CURRENT_MODE_SM_S1 = CURRENT_MODE_SM_S2 ;}
         if (!MRET_RE_S1.read()) MRET_SM_S1 = 0;
     }
 }
