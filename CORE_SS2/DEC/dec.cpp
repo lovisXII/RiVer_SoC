@@ -139,6 +139,8 @@ void decod::concat_dec2exe_s1() {
 void decod::concat_dec2exe_s2() {
     sc_bv<dec2exe_size_s2> dec2exe_in_var;
     if (!EXCEPTION_SM.read() && !reg_dependencies_sd.read()) {
+
+        dec2exe_in_var[252] = csrrc_i_sd_s2;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
         dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
         dec2exe_in_var[218] = ebreak_i_sd_s2;

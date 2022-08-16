@@ -666,9 +666,9 @@ void exec_s1::bypasses() {
     // E2->E1 bypass
     {
         sc_uint<32> bp_value;
-        if (CSR_WENABLE_RE_S2) // case with csr but not csrrc
+        if (CSR_WENABLE_RE_S1) // case with csr but not csrrc
             bp_value = CSR_RDATA_RE_S2;
-        else if (CSRRC_I_RD_S2) // case with csrrc
+        else if (CSRRC_I_RD_S1) // case with csrrc
             bp_value = ~EXE_RES_RE_S2.read();
         else
             bp_value = EXE_RES_RE_S2;

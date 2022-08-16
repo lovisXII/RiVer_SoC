@@ -4,7 +4,7 @@
 #include "../UTIL/fifo.h"
 
 #define dec2exe_size_s1 255
-#define dec2exe_size_s2 254
+#define dec2exe_size_s2 253
 #define dec2if_size     64
 
 #define start_kernel_adress 0xF0000000
