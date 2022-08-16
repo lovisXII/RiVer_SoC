@@ -3,8 +3,8 @@
 #include <iostream>
 #include "../UTIL/fifo.h"
 
-#define dec2exe_size_s1 254
-#define dec2exe_size_s2 252
+#define dec2exe_size_s1 255
+#define dec2exe_size_s2 253
 #define dec2if_size     64
 
 #define start_kernel_adress 0xF0000000
@@ -84,6 +84,9 @@ SC_MODULE(decod) {
     sc_out<bool>        MEM_STORE_RD_S1;        // say to mem if we do a store
     sc_out<bool>        MEM_SIGN_EXTEND_RD_S1;
     sc_out<sc_uint<2>>  MEM_SIZE_RD_S1;  // tells to mem if we do an acces in word, hw or byte
+    
+    sc_out<bool>        CSRRC_I_RD_S1;
+
 
     sc_inout<bool> CSR_WENABLE_RD_S1;     // indicate if we do a csr operation,
                                           // if so need to WBK CSR in rd
@@ -110,6 +113,9 @@ SC_MODULE(decod) {
     sc_out<bool>        MEM_STORE_RD_S2;        // say to mem if we do a store
     sc_out<bool>        MEM_SIGN_EXTEND_RD_S2;
     sc_out<sc_uint<2>>  MEM_SIZE_RD_S2;  // tells to mem if we do an acces in word, hw or byte
+
+    sc_out<bool>        CSRRC_I_RD_S2;
+
 
     sc_inout<bool> CSR_WENABLE_RD_S2;     // indicate if we do a csr operation,
                                           // if so need to WBK CSR in rd
@@ -665,7 +671,7 @@ SC_MODULE(decod) {
 			<< exe_op2_sd_s1 
 			<< exe_cmd_sd_s1 
 			<< exe_neg_op2_sd_s1
-                  
+            << csrrc_i_sd_s1
 			<< exe_wb_sd_s1
 
                   
@@ -723,7 +729,7 @@ SC_MODULE(decod) {
 			<< exe_neg_op2_sd_s2
                   
 			<< exe_wb_sd_s2
-
+            << csrrc_i_sd_s2
                   
 			<< mem_data_sd_s2 
 			<< mem_load_sd_s2 
@@ -1198,7 +1204,8 @@ SC_MODULE(decod) {
 			<< RDATA1_SR_S1 
                     
 			<< RDATA2_SR_S1 
-                    
+            << csrrc_i_sd_s1 
+            << csrrc_i_sd_s2
 			<< DEST_RE_S1 
                     
 			<< EXE_RES_RE_S1

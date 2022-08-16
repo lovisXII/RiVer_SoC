@@ -103,7 +103,7 @@ SC_MODULE(exec_s1) {
     sc_in<sc_uint<32>> CSR_RDATA_RD_S1;
     sc_in<sc_uint<32>> KERNEL_ADR_SC;
 
-
+    sc_in<bool> CSRRC_I_RD_S1;
     sc_in<bool> MULT_INST_RM_S1;
     sc_in<bool> MEM2WBK_EMPTY_SM_S1;
     // Exception coming from Decod :
@@ -365,7 +365,7 @@ SC_MODULE(exec_s1) {
         SC_METHOD(bypasses);
         sensitive   
 			<< OP1_VALID_RD_S1 
-                    
+            << CSRRC_I_RD_S1
 			<< OP2_VALID_RD_S1 
                     
 			<< MEM_DEST_RM_S1 
