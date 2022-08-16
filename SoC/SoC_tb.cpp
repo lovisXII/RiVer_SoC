@@ -158,7 +158,8 @@ int sc_main(int argc, char* argv[])
     }
 
     sc_signal<sc_uint<32>> PC_RESET;
-    sc_signal<sc_uint<32>> PC_VALUE;
+    sc_signal<sc_uint<32>> PC0_VALUE;
+    sc_signal<sc_uint<32>> PC1_VALUE;
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
 
@@ -170,7 +171,8 @@ int sc_main(int argc, char* argv[])
     bus_inst.CLK(CLK);
     bus_inst.RESET_N(RESET);
     bus_inst.PC_RESET(PC_RESET);
-    bus_inst.PC_VALUE(PC_VALUE);
+    bus_inst.PC1_VALUE(PC0_VALUE);
+    bus_inst.PC0_VALUE(PC1_VALUE);
 
     bus_inst.trace(tf);
     bus_inst.init_mem(&ram);
@@ -194,7 +196,7 @@ int sc_main(int argc, char* argv[])
         if(cycles > 20000)
             break;
 
-        unsigned int pc_adr = PC_VALUE.read();
+        unsigned int pc_adr = PC0_VALUE.read();
         
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
