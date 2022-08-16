@@ -111,9 +111,9 @@ SC_MODULE(mem_s1) {
     sc_out<sc_uint<32>> CSR_WDATA_SM_S1;
     sc_out<bool>        CSR_ENABLE_SM_S1;
 
-    sc_out<sc_uint<32>> MSTATUS_WDATA_RM_S1;
-    sc_out<sc_uint<32>> MIP_WDATA_RM_S1;
-    sc_out<sc_uint<32>> MEPC_WDATA_RM_S1;
+    sc_out<sc_uint<32>> MSTATUS_WDATA_SM_S1;
+    sc_out<sc_uint<32>> MIP_WDATA_SM_S1;
+    sc_out<sc_uint<32>> MEPC_WDATA_SM_S1;
     sc_out<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_out<sc_uint<32>> MTVAL_WDATA_SM_S1;
 
@@ -142,7 +142,7 @@ SC_MODULE(mem_s1) {
 
     sc_signal<sc_uint<32>> return_adress_sm;
     sc_signal<bool>        mret_sm;
-
+    
     // FIFO
     fifo<mem2wbk_size> fifo_inst;
 
@@ -179,11 +179,11 @@ SC_MODULE(mem_s1) {
         sensitive << MEM_SIZE_RE_S1 << SIGN_EXTEND_RE_S1 << MCACHE_RESULT_SM_S1 << EXE_RES_RE_S1 << LOAD_RE_S1;
         SC_METHOD(csr_exception);
         sensitive << EXCEPTION_RE_S1 
-        << CSR_WENABLE_RE_S1 
-        << MIP_VALUE_RC 
-        << PC_EXE2MEM_RE_S1 
-        << CSR_WADR_SE_S1 
-        << EXE_RES_RE_S1
+                << CSR_WENABLE_RE_S1 
+                << MIP_VALUE_RC 
+                << PC_EXE2MEM_RE_S1 
+                << CSR_WADR_SE_S1 
+                << EXE_RES_RE_S1
                   << INSTRUCTION_ACCESS_FAULT_RE_S1 
                   << ILLEGAL_INSTRUCTION_RE_S1 
                   << INSTRUCTION_ADRESS_MISSALIGNED_RE_S1
@@ -202,8 +202,9 @@ SC_MODULE(mem_s1) {
                   << MSTATUS_RC
                   << EXE_RES_RE_S1 
                   << MEPC_SC 
-                  << CURRENT_MODE_SM_S2
                   << MEM_ACCESS_IS_PRIO_RD_S2 
-                  << EXCEPTION_SM_S2;
+                  << EXCEPTION_SM_S2
+                  << EXE2MEM_EMPTY_SE_S1
+                  << CURRENT_MODE_SM_S1;
     }
 };

@@ -172,7 +172,7 @@ void mem_s1::sign_extend() {
 }
 
 void mem_s1::csr_exception() {
-    EXCEPTION_SM_S1            = EXCEPTION_RE_S1.read() || BUS_ERROR_SX.read();
+    EXCEPTION_SM_S1            = ((EXCEPTION_RE_S1.read() || BUS_ERROR_SX.read()) && !EXE2MEM_EMPTY_SE_S1);
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     if (!RESET) CURRENT_MODE_SM_S1 = 3;
@@ -207,7 +207,7 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
             // MCAUSE_WDATA_SM_S1.write(5);
         } else if (ENV_CALL_WRONG_MODE_RE_S1) {
@@ -220,9 +220,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(24);
             CURRENT_MODE_SM_S1 = 3;
@@ -236,7 +236,7 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
             CURRENT_MODE_SM_S1 = 0;  // Retrun in user mode
 
@@ -247,7 +247,7 @@ void mem_s1::csr_exception() {
 
             // Informing IFETCH that a return instruction have been received
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MRET_SM_S1        = 1;
         } else if (STORE_ACCESS_FAULT_RE_S1) {
@@ -260,9 +260,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM_S1.write(7);
             CURRENT_MODE_SM_S1 = 3;
@@ -276,9 +276,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM_S1.write(5);
             CURRENT_MODE_SM_S1 = 3;
@@ -292,9 +292,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM_S1.write(6);
             CURRENT_MODE_SM_S1 = 3;
@@ -308,9 +308,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = EXE_RES_RE_S1;
             MCAUSE_WDATA_SM_S1.write(4);
             CURRENT_MODE_SM_S1 = 3;
@@ -324,9 +324,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(11);
             CURRENT_MODE_SM_S1 = 3;
@@ -340,9 +340,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(9);
             CURRENT_MODE_SM_S1 = 3;
@@ -356,9 +356,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(8);
             CURRENT_MODE_SM_S1 = 3;
@@ -372,9 +372,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = PC_EXE2MEM_RE_S1;
             MCAUSE_WDATA_SM_S1.write(3);
             CURRENT_MODE_SM_S1 = 3;
@@ -388,9 +388,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = PC_BRANCH_VALUE_RE_S1;
             MCAUSE_WDATA_SM_S1.write(0);
             CURRENT_MODE_SM_S1 = 3;
@@ -404,9 +404,9 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(2);
             CURRENT_MODE_SM_S1 = 3;
@@ -420,17 +420,13 @@ void mem_s1::csr_exception() {
             mstatus_new.range(12, 11) = mpp_sm;
             mstatus_new[7]            = mpie_sm;
             mstatus_new[3]            = mie_sm;
-            MSTATUS_WDATA_RM_S1          = mstatus_new;
+            MSTATUS_WDATA_SM_S1          = mstatus_new;
 
-            MEPC_WDATA_RM_S1.write(PC_EXE2MEM_RE_S1.read());
+            MEPC_WDATA_SM_S1.write(PC_EXE2MEM_RE_S1.read());
             MTVAL_WDATA_SM_S1 = 0;
             MCAUSE_WDATA_SM_S1.write(1);
             CURRENT_MODE_SM_S1 = 3;
         }
-        // else if ((!EXCEPTION_SM_S1 && EXCEPTION_SM_S2)
-        // || (MEM_ACCESS_IS_PRIO_RD_S2 && EXCEPTION_SM_S2) ){ 
-        //     cout << sc_time_stamp() << " lla" << endl;
-        //     CURRENT_MODE_SM_S1 = CURRENT_MODE_SM_S2 ;}
         if (!MRET_RE_S1.read()) MRET_SM_S1 = 0;
     }
 }
@@ -493,9 +489,9 @@ void mem_s1::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_EXE2MEM_RE_S1, GET_NAME(PC_EXE2MEM_RE_S1));
     sc_trace(tf, BUS_ERROR_SX, GET_NAME(BUS_ERROR_SX));
     sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
-    sc_trace(tf, MSTATUS_WDATA_RM_S1, GET_NAME(MSTATUS_WDATA_RM_S1));
-    sc_trace(tf, MIP_WDATA_RM_S1, GET_NAME(MIP_WDATA_RM_S1));
-    sc_trace(tf, MEPC_WDATA_RM_S1, GET_NAME(MEPC_WDATA_RM_S1));
+    sc_trace(tf, MSTATUS_WDATA_SM_S1, GET_NAME(MSTATUS_WDATA_SM_S1));
+    sc_trace(tf, MIP_WDATA_SM_S1, GET_NAME(MIP_WDATA_SM_S1));
+    sc_trace(tf, MEPC_WDATA_SM_S1, GET_NAME(MEPC_WDATA_SM_S1));
     sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
     sc_trace(tf, CSR_ENABLE_SM_S1, GET_NAME(CSR_ENABLE_SM_S1));

@@ -351,9 +351,9 @@ SC_MODULE(core) {
     sc_signal<sc_uint<12>> CSR_WADR_SM_S2;
     sc_signal<sc_uint<32>> CSR_WDATA_SM_S2;
 
-    sc_signal<sc_uint<32>> MSTATUS_WDATA_RM_S1;
-    sc_signal<sc_uint<32>> MIP_WDATA_RM_S1;
-    sc_signal<sc_uint<32>> MEPC_WDATA_RM_S1;
+    sc_signal<sc_uint<32>> MSTATUS_WDATA_SM_S1;
+    sc_signal<sc_uint<32>> MIP_WDATA_SM_S1;
+    sc_signal<sc_uint<32>> MEPC_WDATA_SM_S1;
     sc_signal<sc_uint<32>> MCAUSE_WDATA_SM_S1;
     sc_signal<sc_uint<32>> MEPC_SC;
     sc_signal<sc_uint<32>> MSTATUS_RC;
@@ -959,9 +959,9 @@ SC_MODULE(core) {
         mem_inst_s1.RETURN_ADRESS_SM_S1(RETURN_ADRESS_SM_S1);
         mem_inst_s1.MRET_SM_S1(MRET_SM_S1);
 
-        mem_inst_s1.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
-        mem_inst_s1.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
-        mem_inst_s1.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
+        mem_inst_s1.MSTATUS_WDATA_SM_S1(MSTATUS_WDATA_SM_S1);
+        mem_inst_s1.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
+        mem_inst_s1.MEPC_WDATA_SM_S1(MEPC_WDATA_SM_S1);
         mem_inst_s1.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
 
         mem_inst_s1.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
@@ -1058,9 +1058,9 @@ SC_MODULE(core) {
         mem_inst_s2.MRET_SM_S2(MRET_SM_S2);
         mem_inst_s2.MRET_SM_S1(MRET_SM_S1);
 
-        mem_inst_s2.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
-        mem_inst_s2.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
-        mem_inst_s2.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
+        mem_inst_s2.MSTATUS_WDATA_SM_S1(MSTATUS_WDATA_SM_S1);
+        mem_inst_s2.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
+        mem_inst_s2.MEPC_WDATA_SM_S1(MEPC_WDATA_SM_S1);
         mem_inst_s2.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
         mem_inst_s2.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
 
