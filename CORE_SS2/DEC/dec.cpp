@@ -53,6 +53,7 @@ void decod::concat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_in_var;
     if (!EXCEPTION_SM.read()) {
 
+        dec2exe_in_var[252] = csrrc_i_sd_s1;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s1;  
         dec2exe_in_var[219] = mul_i_sd_s1 || mulh_i_sd_s1 || mulhsu_i_sd_s1 || mulhu_i_sd_s1;  
         dec2exe_in_var[218] = ebreak_i_sd_s1;
@@ -138,6 +139,8 @@ void decod::concat_dec2exe_s1() {
 void decod::concat_dec2exe_s2() {
     sc_bv<dec2exe_size_s2> dec2exe_in_var;
     if (!EXCEPTION_SM.read() && !reg_dependencies_sd.read()) {
+
+        dec2exe_in_var[252] = csrrc_i_sd_s2;
         dec2exe_in_var.range(251,220) = pc_branch_value_sd_s2;  
         dec2exe_in_var[219] = mul_i_sd_s2 || mulh_i_sd_s2 || mulhsu_i_sd_s2 || mulhu_i_sd_s2;  
         dec2exe_in_var[218] = ebreak_i_sd_s2;
@@ -179,6 +182,7 @@ void decod::concat_dec2exe_s2() {
         dec2exe_in_var[1]            = slt_i_sd_s2.read() | slti_i_sd_s2.read();
         dec2exe_in_var[0]            = sltu_i_sd_s2.read() | sltiu_i_sd_s2.read();
     } else {
+        dec2exe_in_var[252]            = 0;
         dec2exe_in_var.range(251,220)  = 0;
         dec2exe_in_var[219]            = 0;
         dec2exe_in_var[218]            = 0; 
@@ -222,6 +226,7 @@ void decod::concat_dec2exe_s2() {
 void decod::unconcat_dec2exe_s1() {
     sc_bv<dec2exe_size_s1> dec2exe_out_var = dec2exe_out_sd_s1.read();
 
+    CSRRC_I_RD_S1.write((bool)dec2exe_out_var[252]);
     PC_BRANCH_VALUE_RD_S1.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD_S1.write((bool)dec2exe_out_var[219]);
     EBREAK_RD_S1.write((bool)dec2exe_out_var[218]);
@@ -267,6 +272,7 @@ void decod::unconcat_dec2exe_s1() {
 void decod::unconcat_dec2exe_s2(){
     sc_bv<dec2exe_size_s2> dec2exe_out_var = dec2exe_out_sd_s2.read();
 
+    CSRRC_I_RD_S2.write((bool)dec2exe_out_var[252]);
     PC_BRANCH_VALUE_RD_S2.write((sc_bv_base)dec2exe_out_var.range(251, 220));
     MULT_INST_RD_S2.write((bool)dec2exe_out_var[219]);
     EBREAK_RD_S2.write((bool)dec2exe_out_var[218]);
@@ -582,6 +588,8 @@ void decod::bypasses() {
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S2.read())
             rdata1_sd_s1= CSR_RDATA_RE_S2.read();
+        else if(csrrc_i_sd_s1)
+            rdata1_sd_s1 = ~EXE_RES_RE_S2.read();
         else
             rdata1_sd_s1= EXE_RES_RE_S2.read();
     }
@@ -592,6 +600,8 @@ void decod::bypasses() {
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata1_sd_s1= CSR_RDATA_RE_S1.read();
+        else if(csrrc_i_sd_s1)
+            rdata1_sd_s1 = ~EXE_RES_RE_S1.read();
         else
             rdata1_sd_s1= EXE_RES_RE_S1.read();
     }  
@@ -603,6 +613,8 @@ void decod::bypasses() {
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S2.read())
             rdata1_sd_s1 = CSR_RDATA_RM_S2.read();
+        else if(csrrc_i_sd_s1)
+            rdata1_sd_s1 = ~MEM_RES_RM_S2.read();
         else
             rdata1_sd_s1 = MEM_RES_RM_S2.read();
     } 
@@ -613,6 +625,8 @@ void decod::bypasses() {
         r1_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata1_sd_s1= CSR_RDATA_RM_S1.read();
+        else if(csrrc_i_sd_s1)
+            rdata1_sd_s1 = ~MEM_RES_RM_S1.read();
         else
             rdata1_sd_s1= MEM_RES_RM_S1.read();
     } 
@@ -660,6 +674,8 @@ void decod::bypasses() {
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S2.read())
             rdata2_sd_s1= CSR_RDATA_RE_S2.read();
+        else if(csrrc_i_sd_s1)
+            rdata2_sd_s1= ~EXE_RES_RE_S2.read();
         else
             rdata2_sd_s1= EXE_RES_RE_S2.read();
     }  
@@ -670,6 +686,8 @@ void decod::bypasses() {
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata2_sd_s1= CSR_RDATA_RE_S1.read();
+        else if(csrrc_i_sd_s1)
+            rdata2_sd_s1= ~EXE_RES_RE_S1.read();
         else
             rdata2_sd_s1= EXE_RES_RE_S1.read();
     }
@@ -681,6 +699,8 @@ void decod::bypasses() {
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S2.read())
             rdata2_sd_s1= CSR_RDATA_RM_S2.read();
+        else if(csrrc_i_sd_s1)
+            rdata2_sd_s1= ~MEM_RES_RM_S2.read();
         else
             rdata2_sd_s1= MEM_RES_RM_S2.read();
     } 
@@ -691,6 +711,8 @@ void decod::bypasses() {
         r2_valid_sd_s1= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata2_sd_s1= CSR_RDATA_RM_S1.read();
+        else if(csrrc_i_sd_s1)
+            rdata2_sd_s1= ~MEM_RES_RM_S1.read();
         else
             rdata2_sd_s1= MEM_RES_RM_S1.read();
     } 
@@ -732,6 +754,8 @@ void decod::bypasses() {
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata1_sd_s2= CSR_RDATA_RE_S1.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~EXE_RES_RE_S1.read();
         else
             rdata1_sd_s2= EXE_RES_RE_S1.read();
     } 
@@ -743,6 +767,8 @@ void decod::bypasses() {
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S2.read())
             rdata1_sd_s2= CSR_RDATA_RE_S2.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~EXE_RES_RE_S2.read();
         else
             rdata1_sd_s2= EXE_RES_RE_S2.read();
     } 
@@ -754,6 +780,8 @@ void decod::bypasses() {
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata1_sd_s2 = CSR_RDATA_RM_S1.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~MEM_RES_RM_S1.read();
         else
             rdata1_sd_s2 = MEM_RES_RM_S1.read();
     } 
@@ -765,6 +793,8 @@ void decod::bypasses() {
         r1_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())
             rdata1_sd_s2= CSR_RDATA_RM_S2.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~MEM_RES_RM_S2.read();
         else
             rdata1_sd_s2= MEM_RES_RM_S2.read();
     } 
@@ -802,6 +832,8 @@ void decod::bypasses() {
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S1.read())
             rdata2_sd_s2= CSR_RDATA_RE_S1.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~EXE_RES_RE_S1.read();
         else
             rdata2_sd_s2= EXE_RES_RE_S1.read();
     }
@@ -813,6 +845,8 @@ void decod::bypasses() {
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RE_S2.read())
             rdata2_sd_s2= CSR_RDATA_RE_S2.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~EXE_RES_RE_S2.read();
         else
             rdata2_sd_s2= EXE_RES_RE_S2.read();
     }   
@@ -824,6 +858,8 @@ void decod::bypasses() {
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S1.read())
             rdata2_sd_s2= CSR_RDATA_RM_S1.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~MEM_RES_RM_S1.read();
         else
             rdata2_sd_s2= MEM_RES_RM_S1.read();
     } 
@@ -835,6 +871,8 @@ void decod::bypasses() {
         r2_valid_sd_s2= true;
         if (CSR_WENABLE_RM_S2.read())
             rdata2_sd_s2= CSR_RDATA_RM_S2.read();
+        else if(csrrc_i_sd_s2)
+            rdata1_sd_s2= ~MEM_RES_RM_S2.read();
         else
             rdata2_sd_s2= MEM_RES_RM_S2.read();
     } 
@@ -1052,6 +1090,10 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, sh_i_sd_s1, GET_NAME(sh_i_sd_s1));
     sc_trace(tf, sb_i_sd_s1, GET_NAME(sb_i_sd_s1));
     sc_trace(tf, mul_i_sd_s1, GET_NAME(mul_i_sd_s1));
+
+    sc_trace(tf, CSRRC_I_RD_S1, GET_NAME(CSRRC_I_RD_S1));
+    sc_trace(tf, CSRRC_I_RD_S2, GET_NAME(CSRRC_I_RD_S2));
+
     sc_trace(tf, mulh_i_sd_s1, GET_NAME(mulh_i_sd_s1));
     sc_trace(tf, mulhsu_i_sd_s1, GET_NAME(mulhsu_i_sd_s1));
     sc_trace(tf, mulhu_i_sd_s1, GET_NAME(mulhu_i_sd_s1));
