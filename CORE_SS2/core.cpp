@@ -21,6 +21,3 @@ void core::trace(sc_trace_file* tf) {
 void core::core_method() {
     DEBUG_PC_READ.write(READ_PC_SR.read());
 }
-void core::exception_gestion() {
-    EXCEPTION_SM = EXCEPTION_SM_S1.read() | EXCEPTION_SM_S2.read();
-}
