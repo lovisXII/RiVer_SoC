@@ -204,7 +204,7 @@ void mem_s2::current_mode_reg(){
 }
 
 void mem_s2::csr_exception() {
-    EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
+    bool EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     //mem_acces_is_prio is a signal that is never use in this implementation. 
@@ -239,14 +239,22 @@ void mem_s2::csr_exception() {
     )
     // Exception in S1
     {
+        cout << sc_time_stamp() << "exception in S1 and not S2" << endl ;
         MRET_SM_S2 = MRET_SM_S1;
         CURRENT_MODE_SM_S2 = CURRENT_MODE_SM_S1;
         RETURN_ADRESS_SM_S2 = MEPC_SC;
+
+        MSTATUS_WDATA_RM_S2 = MSTATUS_WDATA_RM_S1;
+        MIP_WDATA_RM_S2     = MIP_WDATA_RM_S1;
+        MEPC_WDATA_RM_S2    = MEPC_WDATA_RM_S1;
+        MCAUSE_WDATA_SM_S2  = MCAUSE_WDATA_SM_S1;
+        MTVAL_WDATA_SM_S2   = MTVAL_WDATA_SM_S1;
+
     }
     else if ((EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
     || (mem_access_is_prio_rd_s2 && EXCEPTION_SM_S2)
     )
-    // Exception in S1
+    // Exception in S2
     {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
@@ -296,9 +304,6 @@ void mem_s2::csr_exception() {
             MSTATUS_WDATA_RM_S2          = mstatus_new;
 
             CURRENT_MODE_SM_S2 = 0;  // Retrun in user mode
-
-            // loading return value (main) from EPC to PC :
-            // The adress will be send to ifetch
 
             RETURN_ADRESS_SM_S2 = MEPC_SC;
 
@@ -486,6 +491,7 @@ void mem_s2::csr_exception() {
         }
         if (!MRET_RE_S2.read()) MRET_SM_S2 = 0;
     }
+    EXCEPTION_SM = EXCEPTION_SM_S1 || EXCEPTION_SM_S2;
 }
 
 void mem_s2::trace(sc_trace_file* tf) {
@@ -508,6 +514,7 @@ void mem_s2::trace(sc_trace_file* tf) {
     sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
     sc_trace(tf, EXE2MEM_POP_SM_S2, GET_NAME(EXE2MEM_POP_SM_S2));
     sc_trace(tf, MEM2WBK_POP_SW_S2, GET_NAME(MEM2WBK_POP_SW_S2));
+    sc_trace(tf, EBREAK_RE_S2, GET_NAME(EBREAK_RE_S2));
     sc_trace(tf, mem2wbk_push_sm, GET_NAME(mem2wbk_push_sm));
     sc_trace(tf, mem2wbk_full_sm, GET_NAME(mem2wbk_full_sm));
     sc_trace(tf, MEM2WBK_EMPTY_SM_S2, GET_NAME(MEM2WBK_EMPTY_SM_S2));
