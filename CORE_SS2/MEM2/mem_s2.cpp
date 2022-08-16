@@ -204,7 +204,7 @@ void mem_s2::current_mode_reg(){
 }
 
 void mem_s2::csr_exception() {
-    bool EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
+    bool EXCEPTION_SM_S2            = (EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read()) && !EXE2MEM_EMPTY_SE_S2;
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     //mem_acces_is_prio is a signal that is never use in this implementation. 
@@ -244,9 +244,9 @@ void mem_s2::csr_exception() {
         CURRENT_MODE_SM_S2 = CURRENT_MODE_SM_S1;
         RETURN_ADRESS_SM_S2 = MEPC_SC;
 
-        MSTATUS_WDATA_RM_S2 = MSTATUS_WDATA_RM_S1;
-        MIP_WDATA_RM_S2     = MIP_WDATA_RM_S1;
-        MEPC_WDATA_RM_S2    = MEPC_WDATA_RM_S1;
+        MSTATUS_WDATA_RM_S2 = MSTATUS_WDATA_SM_S1;
+        MIP_WDATA_RM_S2     = MIP_WDATA_SM_S1;
+        MEPC_WDATA_RM_S2    = MEPC_WDATA_SM_S1;
         MCAUSE_WDATA_SM_S2  = MCAUSE_WDATA_SM_S1;
         MTVAL_WDATA_SM_S2   = MTVAL_WDATA_SM_S1;
 
