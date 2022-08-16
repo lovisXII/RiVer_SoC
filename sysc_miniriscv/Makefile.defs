@@ -1,0 +1,34 @@
+## Variable that points to SystemC installation path
+
+INCDIR = -I$(SYSTEMC_INCLUDE_DIRS) -Iminiriscv/include/
+LIBDIR = -L$(SYSTEMC_LIBRARY_DIRS)
+
+LIBS   =  -lsystemc $(EXTRA_LIBS)
+
+EXE    = $(MODULE).exe
+
+.SUFFIXES: .cc .cpp .o .exe
+
+.PHONY:	all clean
+
+all:	$(EXE)
+
+$(EXE): $(OBJS) 
+	$(CXX) $(CXXFLAGS) $(INCDIR) $(LIBDIR) -o $@ $(OBJS) $(LIBS) 2>&1 | c++filt
+
+.cpp.o:
+	$(CXX) $(CXXFLAGS) $(INCDIR) -c $< -o $@
+
+.cc.o:
+	$(CXX) $(CXXFLAGS) $(INCDIR) -c $< -o $@
+
+clean::
+	rm -f $(OBJS) *~ $(EXE) core *.vcd
+
+ultraclean: clean
+	rm -f Makefile.deps
+
+Makefile.deps:
+	$(CXX) $(CXXFLAGS) $(INCDIR) -M $(SRCS) > Makefile.deps
+
+include Makefile.deps
