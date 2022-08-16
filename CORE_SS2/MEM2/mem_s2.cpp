@@ -204,7 +204,7 @@ void mem_s2::current_mode_reg(){
 }
 
 void mem_s2::csr_exception() {
-    EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
+    bool EXCEPTION_SM_S2            = EXCEPTION_RE_S2.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     //mem_acces_is_prio is a signal that is never use in this implementation. 
@@ -239,14 +239,22 @@ void mem_s2::csr_exception() {
     )
     // Exception in S1
     {
+        cout << sc_time_stamp() << "exception in S1 and not S2" << endl ;
         MRET_SM_S2 = MRET_SM_S1;
         CURRENT_MODE_SM_S2 = CURRENT_MODE_SM_S1;
         RETURN_ADRESS_SM_S2 = MEPC_SC;
+
+        MSTATUS_WDATA_RM_S2 = MSTATUS_WDATA_RM_S1;
+        MIP_WDATA_RM_S2     = MIP_WDATA_RM_S1;
+        MEPC_WDATA_RM_S2    = MEPC_WDATA_RM_S1;
+        MCAUSE_WDATA_SM_S2  = MCAUSE_WDATA_SM_S1;
+        MTVAL_WDATA_SM_S2   = MTVAL_WDATA_SM_S1;
+
     }
     else if ((EXCEPTION_SM_S2 && ! EXCEPTION_SM_S1) 
     || (mem_access_is_prio_rd_s2 && EXCEPTION_SM_S2)
     )
-    // Exception in S1
+    // Exception in S2
     {
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
@@ -296,9 +304,6 @@ void mem_s2::csr_exception() {
             MSTATUS_WDATA_RM_S2          = mstatus_new;
 
             CURRENT_MODE_SM_S2 = 0;  // Retrun in user mode
-
-            // loading return value (main) from EPC to PC :
-            // The adress will be send to ifetch
 
             RETURN_ADRESS_SM_S2 = MEPC_SC;
 

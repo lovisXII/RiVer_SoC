@@ -87,6 +87,9 @@ SC_MODULE(mem_s2) {
 
     sc_in<bool>         EXCEPTION_SM_S1;
     sc_out<bool>        EXCEPTION_SM_S2;
+    sc_out<bool>        EXCEPTION_SM;
+
+    
     sc_in<sc_uint<2>>   CURRENT_MODE_SM_S1;
 
     sc_out<sc_uint<2>>  CURRENT_MODE_SM_S2;
@@ -119,6 +122,13 @@ SC_MODULE(mem_s2) {
     sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
 =======
 >>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
+
+
+    sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MIP_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MEPC_WDATA_RM_S1;
+    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
+    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
 
     sc_out<sc_uint<32>> MSTATUS_WDATA_RM_S2;
     sc_out<sc_uint<32>> MIP_WDATA_RM_S2;
@@ -215,6 +225,6 @@ SC_MODULE(mem_s2) {
                   << ENV_CALL_U_MODE_RE_S2 << ENV_CALL_S_MODE_RE_S2 << ENV_CALL_M_MODE_RE_S2 << LOAD_ADRESS_MISSALIGNED_RE_S2
                   << STORE_ADRESS_MISSALIGNED_RE_S2 << LOAD_ACCESS_FAULT_RE_S2 << STORE_ACCESS_FAULT_RE_S2 << MRET_RE_S2
                   << EXCEPTION_SM_S2 << ENV_CALL_WRONG_MODE_RE_S2 << BUS_ERROR_SX << EXCEPTION_SM_S2 <<  MSTATUS_RC
-                  << EXE_RES_RE_S2 << MEPC_SC << current_mode_rm_s2;
+                  << EXE_RES_RE_S2 << MEPC_SC << current_mode_rm_s2 << MRET_SM_S1 << EXCEPTION_SM_S1 << mem_access_is_prio_rd_s2;
     }
 };

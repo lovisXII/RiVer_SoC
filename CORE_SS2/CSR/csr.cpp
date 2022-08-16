@@ -32,7 +32,7 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S1); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S1); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S1); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // mstatus
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S1); break;  // kernel
                 default: break;
             }
         }
@@ -52,19 +52,12 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM_S2); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM_S2); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM_S2); break;  // mstatus
-                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S2); break;  // mstatus
+                case 0x800: csr_rc[13].write(CSR_WDATA_SM_S2); break;  // kernel
                 default: break;
             }
         }
 
         if (EXCEPTION_SM.read()) {
-            csr_rc[3]  = MSTATUS_WDATA_RM_S2.read();
-            csr_rc[11] = MIP_WDATA_RM_S2.read();
-            csr_rc[8]  = MEPC_WDATA_RM_S2.read();
-            csr_rc[9]  = MCAUSE_WDATA_SM_S2.read();
-            csr_rc[10] = MTVAL_WDATA_SM_S2;
-        }
-        else if (EXCEPTION_SM_S2.read()) {
             csr_rc[3]  = MSTATUS_WDATA_RM_S2.read();
             csr_rc[11] = MIP_WDATA_RM_S2.read();
             csr_rc[8]  = MEPC_WDATA_RM_S2.read();
@@ -123,11 +116,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WDATA_SM_S1, GET_NAME(CSR_WDATA_SM_S1));
     sc_trace(tf, CSR_ENABLE_SM_S1, GET_NAME(CSR_ENABLE_SM_S1));
 
-    sc_trace(tf, EXCEPTION_SM_S1, GET_NAME(EXCEPTION_SM_S1));
-    sc_trace(tf, MSTATUS_WDATA_RM_S1, GET_NAME(MSTATUS_WDATA_RM_S1));
-    sc_trace(tf, MIP_WDATA_RM_S1, GET_NAME(MIP_WDATA_RM_S1));
-    sc_trace(tf, MEPC_WDATA_RM_S1, GET_NAME(MEPC_WDATA_RM_S1));
-    sc_trace(tf, MCAUSE_WDATA_SM_S1, GET_NAME(MCAUSE_WDATA_SM_S1));
     sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
 
@@ -155,10 +143,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mscratch"));
     sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "kernel_adr"));
 
-<<<<<<< HEAD
-    sc_trace(tf, MSTATUS_RC, signal_get_name(MSTATUS_RC.name(), "MSTATUS_RC"));
-=======
->>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
     sc_trace(tf, MEPC_SC, signal_get_name(MEPC_SC.name(), "MEPC_SC"));
     sc_trace(tf, MSTATUS_RC, signal_get_name(MSTATUS_RC.name(), "MSTATUS_RC"));
     sc_trace(tf, MTVEC_VALUE_RC, signal_get_name(MTVEC_VALUE_RC.name(), "MTVEC_VALUE_RC"));
@@ -167,10 +151,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, KERNEL_ADR_SC, signal_get_name(KERNEL_ADR_SC.name(), "KERNEL_ADR_SC"));
 
 
-<<<<<<< HEAD
-    sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
-=======
->>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));
 }

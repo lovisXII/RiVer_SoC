@@ -405,7 +405,6 @@ SC_MODULE(core) {
     x2_multiplier      x2_multiplier_inst;
 
     void core_method();
-    void exception_gestion();
     void trace(sc_trace_file * tf);
     SC_CTOR(core) : 
           ifetch_inst("ifetch"),
@@ -423,9 +422,6 @@ SC_MODULE(core) {
           csr_inst("csr") {
         SC_METHOD(core_method);
         sensitive << READ_PC_SR;
-        SC_METHOD(exception_gestion);
-        sensitive   << EXCEPTION_SM_S1
-                    << EXCEPTION_SM_S2;
 
         ifetch_inst.DEC2IF_POP_SI(DEC2IF_POP_SI);
         ifetch_inst.DEC2IF_EMPTY_SI(DEC2IF_EMPTY_SI);
@@ -1065,6 +1061,7 @@ SC_MODULE(core) {
 
         mem_inst_s2.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
         mem_inst_s2.EXCEPTION_SM_S1(EXCEPTION_SM_S1);
+        mem_inst_s2.EXCEPTION_SM(EXCEPTION_SM);
         mem_inst_s2.CURRENT_MODE_SM_S1(CURRENT_MODE_SM_S1);
         mem_inst_s2.CURRENT_MODE_SM_S2(CURRENT_MODE_SM_S2);
         mem_inst_s2.RETURN_ADRESS_SM_S2(RETURN_ADRESS_SM_S2);
@@ -1080,10 +1077,17 @@ SC_MODULE(core) {
 =======
 >>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
 
+        mem_inst_s2.MSTATUS_WDATA_RM_S1(MSTATUS_WDATA_RM_S1);
+        mem_inst_s2.MIP_WDATA_RM_S1(MIP_WDATA_RM_S1);
+        mem_inst_s2.MEPC_WDATA_RM_S1(MEPC_WDATA_RM_S1);
+        mem_inst_s2.MCAUSE_WDATA_SM_S1(MCAUSE_WDATA_SM_S1);
+        mem_inst_s2.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
+
         mem_inst_s2.MSTATUS_WDATA_RM_S2(MSTATUS_WDATA_RM_S2);
         mem_inst_s2.MIP_WDATA_RM_S2(MIP_WDATA_RM_S2);
         mem_inst_s2.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
         mem_inst_s2.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
+        mem_inst_s2.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);  // 54
 
         mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
 
@@ -1091,7 +1095,6 @@ SC_MODULE(core) {
         mem_inst_s2.MSTATUS_RC(MSTATUS_RC);
         mem_inst_s2.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
-        mem_inst_s2.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);  // 54
 
 <<<<<<< HEAD
         mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
@@ -1237,7 +1240,6 @@ SC_MODULE(core) {
         csr_inst.MTVEC_VALUE_RC(MTVEC_VALUE_RC);
         csr_inst.MIP_VALUE_RC(MIP_VALUE_RC);
         csr_inst.MCAUSE_SC(MCAUSE_SC);
-        csr_inst.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);
         csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         csr_inst.CSR_WADR_SM_S2(CSR_WADR_SM_S2);
@@ -1248,7 +1250,6 @@ SC_MODULE(core) {
         csr_inst.MEPC_WDATA_RM_S2(MEPC_WDATA_RM_S2);
         csr_inst.MCAUSE_WDATA_SM_S2(MCAUSE_WDATA_SM_S2);
         csr_inst.MTVAL_WDATA_SM_S2(MTVAL_WDATA_SM_S2);
-        csr_inst.EXCEPTION_SM_S2(EXCEPTION_SM_S2);
         csr_inst.CSR_RADR_SD_S2(CSR_RADR_SD_S2);
         csr_inst.CSR_RDATA_SC_S2(CSR_RDATA_SC_S2);
 
