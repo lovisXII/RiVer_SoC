@@ -92,6 +92,7 @@ SC_MODULE(csr) {
         SC_METHOD(reading_csr);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
         << CSR_RADR_SD_S2 ;
 =======
@@ -101,6 +102,10 @@ SC_MODULE(csr) {
 =======
         sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1 ;
 >>>>>>> ef8c4ebb (issue with mret trying to solve it)
+=======
+        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
+        << CSR_RADR_SD_S2 ;
+>>>>>>> 8a97bd69 (solving bp issue)
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }

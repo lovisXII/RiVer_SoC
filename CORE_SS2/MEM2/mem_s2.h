@@ -112,16 +112,6 @@ SC_MODULE(mem_s2) {
     sc_out<sc_uint<12>> CSR_WADR_SM_S2;
     sc_out<sc_uint<32>> CSR_WDATA_SM_S2;
     sc_out<bool>        CSR_ENABLE_SM_S2;
-<<<<<<< HEAD
-
-
-    sc_in<sc_uint<32>> MSTATUS_WDATA_SM_S1;
-    sc_in<sc_uint<32>> MIP_WDATA_SM_S1;
-    sc_in<sc_uint<32>> MEPC_WDATA_SM_S1;
-    sc_in<sc_uint<32>> MCAUSE_WDATA_SM_S1;
-    sc_in<sc_uint<32>> MTVAL_WDATA_SM_S1;
-=======
->>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
 
 
     sc_in<sc_uint<32>> MSTATUS_WDATA_SM_S1;
@@ -140,6 +130,7 @@ SC_MODULE(mem_s2) {
     sc_in<sc_uint<32>>  MSTATUS_RC;  // 71
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
+    sc_in<sc_uint<32>>  MCAUSE_SC;
 
     // SS2 :
 
@@ -252,6 +243,8 @@ SC_MODULE(mem_s2) {
                     << MSTATUS_WDATA_SM_S1
                     << MIP_WDATA_SM_S1
                     << MEPC_WDATA_SM_S1
+                    << MCAUSE_SC
+                    << MIP_VALUE_RC
                     << MCAUSE_WDATA_SM_S1
                     << MTVAL_WDATA_SM_S1;
     }
