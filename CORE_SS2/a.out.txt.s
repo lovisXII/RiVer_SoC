@@ -4,6 +4,7 @@
 
 Disassembly of section .text.init:
 
+<<<<<<< HEAD
 80000000 <rvtest_entry_point>:
 80000000:	00000097          	auipc	ra,0x0
 80000004:	13408093          	addi	ra,ra,308 # 80000134 <init_mscratch>
@@ -571,6 +572,36 @@ Disassembly of section .data:
 80002220:	deadbeef          	jal	t4,7ffdd80a <value+0x7ffdd7fa>
 80002224:	deadbeef          	jal	t4,7ffdd80e <value+0x7ffdd7fe>
 	...
+=======
+00010054 <_start>:
+   10054:	00000e97          	auipc	t4,0x0
+   10058:	02ce8e93          	addi	t4,t4,44 # 10080 <_trampoline>
+   1005c:	002ede93          	srli	t4,t4,0x2
+   10060:	002e9e93          	slli	t4,t4,0x2
+   10064:	001e8e93          	addi	t4,t4,1
+   10068:	305e9073          	csrw	mtvec,t4
+   1006c:	00000073          	ecall
+   10070:	00000013          	nop
+   10074:	00000013          	nop
+   10078:	00000013          	nop
+   1007c:	00000013          	nop
+
+00010080 <_trampoline>:
+   10080:	f81ef06f          	j	0 <_bad>
+   10084:	f7def06f          	j	0 <_bad>
+   10088:	f79ef06f          	j	0 <_bad>
+   1008c:	f75ef06f          	j	0 <_bad>
+   10090:	f71ef06f          	j	0 <_bad>
+   10094:	f6def06f          	j	0 <_bad>
+   10098:	f69ef06f          	j	0 <_bad>
+   1009c:	f65ef06f          	j	0 <_bad>
+   100a0:	f65ef06f          	j	4 <_good>
+   100a4:	f5def06f          	j	0 <_bad>
+   100a8:	f59ef06f          	j	0 <_bad>
+   100ac:	f55ef06f          	j	0 <_bad>
+   100b0:	f51ef06f          	j	0 <_bad>
+   100b4:	f4def06f          	j	0 <_bad>
+>>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 
 Disassembly of section .riscv.attributes:
 
@@ -585,9 +616,18 @@ Disassembly of section .riscv.attributes:
   12:	3376                	fld	ft6,376(sp)
   14:	6932                	flw	fs2,12(sp)
   16:	7032                	flw	ft0,44(sp)
+<<<<<<< HEAD
   18:	0030                	addi	a2,sp,8
   1a:	0108                	addi	a0,sp,128
   1c:	0b0a                	slli	s6,s6,0x2
+=======
+  18:	5f30                	lw	a2,120(a4)
+  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff91c>
+  1c:	3070                	fld	fa2,224(s0)
+  1e:	0800                	addi	s0,sp,16
+  20:	0a01                	addi	s4,s4,0
+  22:	0b              	Address 0x0000000000000022 is out of bounds.
+>>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 
 Disassembly of section .debug_line:
 
@@ -703,7 +743,84 @@ Disassembly of section .debug_abbrev:
    e:	0005                	c.nop	1
 	...
 
+<<<<<<< HEAD
 Disassembly of section .debug_aranges:
+=======
+80000000 <_reset>:
+80000000:	00010e37          	lui	t3,0x10
+80000004:	054e0e13          	addi	t3,t3,84 # 10054 <_start>
+80000008:	01000e97          	auipc	t4,0x1000
+8000000c:	ff8e8e93          	addi	t4,t4,-8 # 81000000 <_exception>
+80000010:	90000f37          	lui	t5,0x90000
+80000014:	80000db7          	lui	s11,0x80000
+80000018:	002ede93          	srli	t4,t4,0x2
+8000001c:	002e9e93          	slli	t4,t4,0x2
+80000020:	000e8e93          	mv	t4,t4
+80000024:	341e1073          	csrw	mepc,t3
+80000028:	305e9073          	csrw	mtvec,t4
+8000002c:	340f1073          	csrw	mscratch,t5
+80000030:	800d9073          	csrw	0x800,s11
+80000034:	00010137          	lui	sp,0x10
+80000038:	01000497          	auipc	s1,0x1000
+8000003c:	07048493          	addi	s1,s1,112 # 810000a8 <_isr_vector>
+80000040:	01000517          	auipc	a0,0x1000
+80000044:	ff050513          	addi	a0,a0,-16 # 81000030 <_instruction_address_fault>
+80000048:	01000597          	auipc	a1,0x1000
+8000004c:	ff458593          	addi	a1,a1,-12 # 8100003c <_illegal_instruction>
+80000050:	01000617          	auipc	a2,0x1000
+80000054:	fd460613          	addi	a2,a2,-44 # 81000024 <_instruction_address_misagligned>
+80000058:	01000697          	auipc	a3,0x1000
+8000005c:	02068693          	addi	a3,a3,32 # 81000078 <_env_call_u_mode>
+80000060:	01000717          	auipc	a4,0x1000
+80000064:	02470713          	addi	a4,a4,36 # 81000084 <_env_call_s_mode>
+80000068:	01000797          	auipc	a5,0x1000
+8000006c:	02878793          	addi	a5,a5,40 # 81000090 <_env_call_m_mode>
+80000070:	01000817          	auipc	a6,0x1000
+80000074:	fd880813          	addi	a6,a6,-40 # 81000048 <_load_adress_missaligned>
+80000078:	01000897          	auipc	a7,0x1000
+8000007c:	fe888893          	addi	a7,a7,-24 # 81000060 <_store_adress_missaligned>
+80000080:	01000917          	auipc	s2,0x1000
+80000084:	fd490913          	addi	s2,s2,-44 # 81000054 <_load_access_fault>
+80000088:	01000997          	auipc	s3,0x1000
+8000008c:	fe498993          	addi	s3,s3,-28 # 8100006c <_store_access_fault>
+80000090:	01000a17          	auipc	s4,0x1000
+80000094:	00ca0a13          	addi	s4,s4,12 # 8100009c <_env_call_wrong_mode>
+80000098:	00c4a023          	sw	a2,0(s1)
+8000009c:	00a4a223          	sw	a0,4(s1)
+800000a0:	00b4a423          	sw	a1,8(s1)
+800000a4:	0104a823          	sw	a6,16(s1)
+800000a8:	0124aa23          	sw	s2,20(s1)
+800000ac:	0114ac23          	sw	a7,24(s1)
+800000b0:	0134ae23          	sw	s3,28(s1)
+800000b4:	02d4a023          	sw	a3,32(s1)
+800000b8:	02e4a223          	sw	a4,36(s1)
+800000bc:	02f4a423          	sw	a5,40(s1)
+800000c0:	0744a023          	sw	s4,96(s1)
+800000c4:	00000193          	li	gp,0
+800000c8:	00000213          	li	tp,0
+800000cc:	00000293          	li	t0,0
+800000d0:	00000313          	li	t1,0
+800000d4:	00000393          	li	t2,0
+800000d8:	00000413          	li	s0,0
+800000dc:	00000493          	li	s1,0
+800000e0:	00000513          	li	a0,0
+800000e4:	00000593          	li	a1,0
+800000e8:	00000613          	li	a2,0
+800000ec:	00000693          	li	a3,0
+800000f0:	00000713          	li	a4,0
+800000f4:	00000793          	li	a5,0
+800000f8:	00000813          	li	a6,0
+800000fc:	00000893          	li	a7,0
+80000100:	00000913          	li	s2,0
+80000104:	00000993          	li	s3,0
+80000108:	00000a13          	li	s4,0
+8000010c:	00000a93          	li	s5,0
+80000110:	00000b13          	li	s6,0
+80000114:	00000b93          	li	s7,0
+80000118:	00000c13          	li	s8,0
+8000011c:	00000c93          	li	s9,0
+80000120:	30200073          	mret
+>>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 
 00000000 <.debug_aranges>:
    0:	0024                	addi	s1,sp,8
@@ -723,7 +840,20 @@ Disassembly of section .debug_aranges:
   1c:	0230                	addi	a2,sp,264
 	...
 
+<<<<<<< HEAD
 Disassembly of section .debug_str:
+=======
+81000000 <_exception>:
+81000000:	34205573          	csrrwi	a0,mcause,0
+81000004:	3400f5f3          	csrrci	a1,mscratch,1
+81000008:	00a5a023          	sw	a0,0(a1)
+8100000c:	00251513          	slli	a0,a0,0x2
+81000010:	00000597          	auipc	a1,0x0
+81000014:	09858593          	addi	a1,a1,152 # 810000a8 <_isr_vector>
+81000018:	00a585b3          	add	a1,a1,a0
+8100001c:	0005a603          	lw	a2,0(a1)
+81000020:	00060067          	jr	a2
+>>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
 
 00000000 <.debug_str>:
    0:	6d6f682f          	0x6d6f682f
@@ -798,6 +928,7 @@ Disassembly of section .debug_str:
 
 Disassembly of section .debug_ranges:
 
+<<<<<<< HEAD
 00000000 <.debug_ranges>:
    0:	ffff                	0xffff
    2:	ffff                	0xffff
@@ -812,3 +943,49 @@ Disassembly of section .debug_ranges:
   14:	2230                	fld	fa2,64(a2)
   16:	8000                	0x8000
 	...
+=======
+8100003c <_illegal_instruction>:
+8100003c:	00000013          	nop
+81000040:	00800093          	li	ra,8
+81000044:	00008067          	ret
+
+81000048 <_load_adress_missaligned>:
+81000048:	00000013          	nop
+8100004c:	00800093          	li	ra,8
+81000050:	00008067          	ret
+
+81000054 <_load_access_fault>:
+81000054:	00000013          	nop
+81000058:	00800093          	li	ra,8
+8100005c:	00008067          	ret
+
+81000060 <_store_adress_missaligned>:
+81000060:	00000013          	nop
+81000064:	00800093          	li	ra,8
+81000068:	00008067          	ret
+
+8100006c <_store_access_fault>:
+8100006c:	00000013          	nop
+81000070:	00800093          	li	ra,8
+81000074:	00008067          	ret
+
+81000078 <_env_call_u_mode>:
+81000078:	00000013          	nop
+8100007c:	00800093          	li	ra,8
+81000080:	00008067          	ret
+
+81000084 <_env_call_s_mode>:
+81000084:	00000013          	nop
+81000088:	00800093          	li	ra,8
+8100008c:	00008067          	ret
+
+81000090 <_env_call_m_mode>:
+81000090:	00000013          	nop
+81000094:	00800093          	li	ra,8
+81000098:	00008067          	ret
+
+8100009c <_env_call_wrong_mode>:
+8100009c:	00000013          	nop
+810000a0:	00800093          	li	ra,8
+810000a4:	00008067          	ret
+>>>>>>> 31e2ff08 (solving issue with ecall and except gestion just wtf)
