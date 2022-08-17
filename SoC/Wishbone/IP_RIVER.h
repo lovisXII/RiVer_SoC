@@ -10,6 +10,7 @@ SC_MODULE(IP_RIVER)
 {
     sc_in_clk           CLK;
     sc_in<bool>         RESET_N;
+    sc_in<sc_uint<32>>         PROC_ID;
 
     //interface bus
     sc_in<bool>        ACK;

@@ -47,6 +47,7 @@ _cpu0 :
     sw x15, 40(x9)
     sw x20, 96(x9) #_env_call_wrong mode set in custom use 24
 
+<<<<<<< HEAD
     #unlock cpu1
     li x22, 1
     sw x22, 0(x21)
@@ -84,6 +85,8 @@ _next :
     csrrw x0,mscratch,x30    
     
 
+=======
+>>>>>>> 72136ea2 (Push some modifs)
     # reseting register value
 
     la x3, 0

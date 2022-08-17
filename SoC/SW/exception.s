@@ -90,6 +90,7 @@ _env_call_wrong_mode :
 
 _isr_vector :
 # just a label to load the adresses of the isr function
+<<<<<<< HEAD
 # @_isr_vector + 0 :_instruction_adress_missaligned
 .space 32
 .global _lock_proc0
@@ -98,3 +99,6 @@ _lock_proc0:
 #when asserted proc0 is locked
 _lock_proc1:
 #when asserted proc1 is locked
+=======
+# @_isr_vector + 0 :_instruction_adress_missaligned
+>>>>>>> 72136ea2 (Push some modifs)
