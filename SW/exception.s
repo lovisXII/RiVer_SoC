@@ -2,6 +2,7 @@
 .global _good
 .global _bad
 .global _exception_occur
+.space 16
 _bad :
     nop
 _good :

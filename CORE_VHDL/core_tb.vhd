@@ -188,7 +188,7 @@ begin
         end if;
     end if; 
     if end_simu = '1' or cpt_end = cpt_max then 
-        assert false report "end of simulation" severity note; 
+        assert false report "end of simulation, done in " & integer'image(CYCLES) & " cycles" severity note; 
         r0 := end_simulation(result,un);
         wait; 
     end if; 
