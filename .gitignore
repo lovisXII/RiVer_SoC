@@ -24,3 +24,4 @@ riverOS/target
 riverOS/Cargo.lock
 vivado*
 *.ghw
+*.out.txt.s
