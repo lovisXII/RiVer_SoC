@@ -1,4 +1,4 @@
-    #! /bin/bash
+#! /bin/bash
 # This script allow you to setup the riscof test frimework
 # You will need it if you really want to test our design, otherwise it will be
 # useless for you to run this script
