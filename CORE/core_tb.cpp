@@ -562,7 +562,7 @@ int sc_main(int argc, char* argv[]) {
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
-            countdown = 20;
+            countdown = 50;
             cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
