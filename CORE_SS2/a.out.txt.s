@@ -1,10 +1,9 @@
 
-../riscof/riscof_work/rv32i_m/privilege/src/ebreak.S/dut/my.elf:     file format elf32-littleriscv
+../riscof/riscof_work/rv32i_m/privilege/src/ecall.S/dut/my.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .text.init:
 
-<<<<<<< HEAD
 80000000 <rvtest_entry_point>:
 80000000:	00000097          	auipc	ra,0x0
 80000004:	13408093          	addi	ra,ra,308 # 80000134 <init_mscratch>
@@ -79,7 +78,7 @@ Disassembly of section .text.init:
 80000108:	10c08093          	addi	ra,ra,268 # 80002210 <begin_signature>
 8000010c:	11111137          	lui	sp,0x11111
 80000110:	11110113          	addi	sp,sp,273 # 11111111 <value+0x11111101>
-80000114:	00100073          	ebreak
+80000114:	00000073          	ecall
 80000118:	00000013          	nop
 8000011c:	00000013          	nop
 80000120:	0000a023          	sw	zero,0(ra)
@@ -572,20 +571,10 @@ Disassembly of section .data:
 80002220:	deadbeef          	jal	t4,7ffdd80a <value+0x7ffdd7fa>
 80002224:	deadbeef          	jal	t4,7ffdd80e <value+0x7ffdd7fe>
 	...
-=======
-00010054 <_start>:
-   10054:	08000537          	lui	a0,0x8000
-   10058:	00057593          	andi	a1,a0,0
-   1005c:	00059463          	bnez	a1,10064 <_start+0x10>
-   10060:	fa5ef06f          	j	4 <_good>
-   10064:	00000013          	nop
-   10068:	00000013          	nop
->>>>>>> dad5b688 (new test for csr dependencies and trying to debeug riscof)
 
 Disassembly of section .riscv.attributes:
 
 00000000 <.riscv.attributes>:
-<<<<<<< HEAD
    0:	1d41                	addi	s10,s10,-16
    2:	0000                	unimp
    4:	7200                	flw	fs0,32(a2)
@@ -603,8 +592,9 @@ Disassembly of section .riscv.attributes:
 Disassembly of section .debug_line:
 
 00000000 <.debug_line>:
-   0:	000000d7          	0xd7
-   4:	007b0003          	lb	zero,7(s6)
+   0:	00d6                	slli	ra,ra,0x15
+   2:	0000                	unimp
+   4:	007a0003          	lb	zero,7(s4)
    8:	0000                	unimp
    a:	0101                	addi	sp,sp,0
    c:	000d0efb          	0xd0efb
@@ -645,55 +635,45 @@ Disassembly of section .debug_line:
   70:	732f6567          	0x732f6567
   74:	6372                	flw	ft6,28(sp)
   76:	0000                	unimp
-  78:	6265                	lui	tp,0x19
-  7a:	6572                	flw	fa0,28(sp)
-  7c:	6b61                	lui	s6,0x18
-  7e:	532e                	lw	t1,232(sp)
-  80:	0100                	addi	s0,sp,128
+  78:	6365                	lui	t1,0x19
+  7a:	6c61                	lui	s8,0x18
+  7c:	2e6c                	fld	fa1,216(a2)
+  7e:	00010053          	fadd.s	ft0,ft2,ft0,rne
   82:	0000                	unimp
-  84:	0000                	unimp
-  86:	0205                	addi	tp,tp,1
+  84:	0500                	addi	s0,sp,640
+  86:	0002                	c.slli64	zero
   88:	0000                	unimp
-  8a:	8000                	0x8000
-  8c:	03011203          	lh	tp,48(sp)
-  90:	0906                	slli	s2,s2,0x1
-  92:	0104                	addi	s1,sp,128
-  94:	0301                	addi	t1,t1,0
-  96:	0902                	c.slli64	s2
-  98:	0008                	0x8
-  9a:	0301                	addi	t1,t1,0
-  9c:	0901                	addi	s2,s2,0
-  9e:	0008                	0x8
-  a0:	0301                	addi	t1,t1,0
-  a2:	0901                	addi	s2,s2,0
-  a4:	0004                	0x4
-  a6:	0301                	addi	t1,t1,0
-  a8:	0901                	addi	s2,s2,0
-  aa:	0004                	0x4
-  ac:	0301                	addi	t1,t1,0
-  ae:	0901                	addi	s2,s2,0
-  b0:	0004                	0x4
-  b2:	0301                	addi	t1,t1,0
-  b4:	0901                	addi	s2,s2,0
-  b6:	0004                	0x4
-  b8:	0301                	addi	t1,t1,0
-  ba:	090a                	slli	s2,s2,0x2
-  bc:	000c                	0xc
-  be:	0301                	addi	t1,t1,0
-  c0:	0901                	addi	s2,s2,0
-  c2:	0488                	addi	a0,sp,576
-  c4:	0901                	addi	s2,s2,0
-  c6:	0010                	0x10
-  c8:	0100                	addi	s0,sp,128
-  ca:	0001                	nop
-  cc:	0205                	addi	tp,tp,1
-  ce:	201c                	fld	fa5,0(s0)
-  d0:	8000                	0x8000
-  d2:	09012c03          	lw	s8,144(sp)
-  d6:	0214                	addi	a3,sp,256
-  d8:	0100                	addi	s0,sp,128
-  da:	01              	Address 0x00000000000000da is out of bounds.
-
+  8a:	0380                	addi	s0,sp,448
+  8c:	0112                	slli	sp,sp,0x4
+  8e:	04090603          	lb	a2,64(s2) # 1d040 <value+0x1d030>
+  92:	0101                	addi	sp,sp,0
+  94:	08090203          	lb	tp,128(s2)
+  98:	0100                	addi	s0,sp,128
+  9a:	08090103          	lb	sp,128(s2)
+  9e:	0100                	addi	s0,sp,128
+  a0:	04090103          	lb	sp,64(s2)
+  a4:	0100                	addi	s0,sp,128
+  a6:	04090103          	lb	sp,64(s2)
+  aa:	0100                	addi	s0,sp,128
+  ac:	04090103          	lb	sp,64(s2)
+  b0:	0100                	addi	s0,sp,128
+  b2:	04090103          	lb	sp,64(s2)
+  b6:	0100                	addi	s0,sp,128
+  b8:	0c090b03          	lb	s6,192(s2)
+  bc:	0100                	addi	s0,sp,128
+  be:	88090103          	lb	sp,-1920(s2)
+  c2:	0104                	addi	s1,sp,128
+  c4:	1009                	c.nop	-30
+  c6:	0000                	unimp
+  c8:	0101                	addi	sp,sp,0
+  ca:	0500                	addi	s0,sp,640
+  cc:	1c02                	slli	s8,s8,0x20
+  ce:	0020                	addi	s0,sp,8
+  d0:	0380                	addi	s0,sp,448
+  d2:	012d                	addi	sp,sp,11
+  d4:	1409                	addi	s0,s0,-30
+  d6:	0002                	c.slli64	zero
+  d8:	0101                	addi	sp,sp,0
 
 Disassembly of section .debug_info:
 
@@ -705,10 +685,9 @@ Disassembly of section .debug_info:
    8:	0000                	unimp
    a:	0104                	addi	s1,sp,128
 	...
-  18:	0065                	c.nop	25
+  18:	0064                	addi	s1,sp,12
   1a:	0000                	unimp
-  1c:	00b9                	addi	ra,ra,14
-  1e:	0000                	unimp
+  1c:	000000b7          	lui	ra,0x0
   20:	8001                	c.srli64	s0
 
 Disassembly of section .debug_abbrev:
@@ -743,25 +722,6 @@ Disassembly of section .debug_aranges:
   1a:	8000                	0x8000
   1c:	0230                	addi	a2,sp,264
 	...
-=======
-   0:	2241                	jal	180 <_exception_occur+0x178>
-   2:	0000                	unimp
-   4:	7200                	flw	fs0,32(a2)
-   6:	7369                	lui	t1,0xffffa
-   8:	01007663          	bgeu	zero,a6,14 <_exception_occur+0xc>
-   c:	0018                	0x18
-   e:	0000                	unimp
-  10:	7205                	lui	tp,0xfffe1
-  12:	3376                	fld	ft6,376(sp)
-  14:	6932                	flw	fs2,12(sp)
-  16:	7032                	flw	ft0,44(sp)
-  18:	5f30                	lw	a2,120(a4)
-  1a:	326d                	jal	fffff9c4 <_isr_vector+0x7efff928>
-  1c:	3070                	fld	fa2,224(s0)
-  1e:	0800                	addi	s0,sp,16
-  20:	0a01                	addi	s4,s4,0
-  22:	0b              	Address 0x0000000000000022 is out of bounds.
->>>>>>> dad5b688 (new test for csr dependencies and trying to debeug riscof)
 
 Disassembly of section .debug_str:
 
@@ -800,48 +760,44 @@ Disassembly of section .debug_str:
   54:	6765                	lui	a4,0x19
   56:	2f65                	jal	80e <value+0x7fe>
   58:	2f637273          	csrrci	tp,0x2f6,6
-  5c:	6265                	lui	tp,0x19
-  5e:	6572                	flw	fa0,28(sp)
-  60:	6b61                	lui	s6,0x18
-  62:	532e                	lw	t1,232(sp)
-  64:	2f00                	fld	fs0,24(a4)
-  66:	6f68                	flw	fa0,92(a4)
-  68:	656d                	lui	a0,0x1b
-  6a:	766f6c2f          	0x766f6c2f
-  6e:	7369                	lui	t1,0xffffa
-  70:	7365442f          	0x7365442f
-  74:	706f746b          	0x706f746b
-  78:	5669522f          	0x5669522f
-  7c:	7265                	lui	tp,0xffff9
-  7e:	535f 436f 722f      	0x722f436f535f
-  84:	7369                	lui	t1,0xffffa
-  86:	2f666f63          	bltu	a2,s6,384 <value+0x374>
-  8a:	6972                	flw	fs2,28(sp)
-  8c:	666f6373          	csrrsi	t1,0x666,30
-  90:	775f 726f 2f6b      	0x2f6b726f775f
-  96:	7672                	flw	fa2,60(sp)
-  98:	5f693233          	0x5f693233
-  9c:	2f6d                	jal	856 <value+0x846>
-  9e:	7270                	flw	fa2,100(a2)
-  a0:	7669                	lui	a2,0xffffa
-  a2:	6c69                	lui	s8,0x1a
-  a4:	6765                	lui	a4,0x19
-  a6:	2f65                	jal	85e <value+0x84e>
-  a8:	2f637273          	csrrci	tp,0x2f6,6
-  ac:	6265                	lui	tp,0x19
-  ae:	6572                	flw	fa0,28(sp)
-  b0:	6b61                	lui	s6,0x18
-  b2:	532e                	lw	t1,232(sp)
-  b4:	7475642f          	0x7475642f
-  b8:	4700                	lw	s0,8(a4)
-  ba:	554e                	lw	a0,240(sp)
-  bc:	4120                	lw	s0,64(a0)
-  be:	2e322053          	0x2e322053
-  c2:	          	snez	a0,zero
+  5c:	6365                	lui	t1,0x19
+  5e:	6c61                	lui	s8,0x18
+  60:	2e6c                	fld	fa1,216(a2)
+  62:	682f0053          	0x682f0053
+  66:	2f656d6f          	jal	s10,5635c <value+0x5634c>
+  6a:	6f6c                	flw	fa1,92(a4)
+  6c:	6976                	flw	fs2,92(sp)
+  6e:	65442f73          	csrrs	t5,0x654,s0
+  72:	6f746b73          	csrrsi	s6,0x6f7,8
+  76:	2f70                	fld	fa2,216(a4)
+  78:	6952                	flw	fs2,20(sp)
+  7a:	6556                	flw	fa0,84(sp)
+  7c:	5f72                	lw	t5,60(sp)
+  7e:	2f436f53          	0x2f436f53
+  82:	6972                	flw	fs2,28(sp)
+  84:	666f6373          	csrrsi	t1,0x666,30
+  88:	7369722f          	0x7369722f
+  8c:	5f666f63          	bltu	a2,s6,68a <value+0x67a>
+  90:	6b726f77          	0x6b726f77
+  94:	3376722f          	0x3376722f
+  98:	6932                	flw	fs2,12(sp)
+  9a:	6d5f 702f 6972      	0x6972702f6d5f
+  a0:	6976                	flw	fs2,92(sp)
+  a2:	656c                	flw	fa1,76(a0)
+  a4:	732f6567          	0x732f6567
+  a8:	6372                	flw	ft6,28(sp)
+  aa:	6163652f          	0x6163652f
+  ae:	6c6c                	flw	fa1,92(s0)
+  b0:	532e                	lw	t1,232(sp)
+  b2:	7475642f          	0x7475642f
+  b6:	4700                	lw	s0,8(a4)
+  b8:	554e                	lw	a0,240(sp)
+  ba:	4120                	lw	s0,64(a0)
+  bc:	2e322053          	0x2e322053
+  c0:	          	snez	a0,zero
 
 Disassembly of section .debug_ranges:
 
-<<<<<<< HEAD
 00000000 <.debug_ranges>:
    0:	ffff                	0xffff
    2:	ffff                	0xffff
@@ -856,152 +812,3 @@ Disassembly of section .debug_ranges:
   14:	2230                	fld	fa2,64(a2)
   16:	8000                	0x8000
 	...
-=======
-00000004 <_good>:
-   4:	00000013          	nop
-
-00000008 <_exception_occur>:
-   8:	00000013          	nop
-
-Disassembly of section seg_reset:
-
-80000000 <_reset>:
-80000000:	00010e37          	lui	t3,0x10
-80000004:	054e0e13          	addi	t3,t3,84 # 10054 <_start>
-80000008:	01000e97          	auipc	t4,0x1000
-8000000c:	ff8e8e93          	addi	t4,t4,-8 # 81000000 <_exception>
-80000010:	90000f37          	lui	t5,0x90000
-80000014:	80000db7          	lui	s11,0x80000
-80000018:	002ede93          	srli	t4,t4,0x2
-8000001c:	002e9e93          	slli	t4,t4,0x2
-80000020:	000e8e93          	mv	t4,t4
-80000024:	341e1073          	csrw	mepc,t3
-80000028:	305e9073          	csrw	mtvec,t4
-8000002c:	340f1073          	csrw	mscratch,t5
-80000030:	800d9073          	csrw	0x800,s11
-80000034:	00010137          	lui	sp,0x10
-80000038:	01000497          	auipc	s1,0x1000
-8000003c:	06448493          	addi	s1,s1,100 # 8100009c <_isr_vector>
-80000040:	01000517          	auipc	a0,0x1000
-80000044:	ff050513          	addi	a0,a0,-16 # 81000030 <_instruction_address_fault>
-80000048:	01000597          	auipc	a1,0x1000
-8000004c:	ff458593          	addi	a1,a1,-12 # 8100003c <_illegal_instruction>
-80000050:	01000617          	auipc	a2,0x1000
-80000054:	fd460613          	addi	a2,a2,-44 # 81000024 <_instruction_address_misagligned>
-80000058:	01000697          	auipc	a3,0x1000
-8000005c:	02068693          	addi	a3,a3,32 # 81000078 <_env_call_u_mode>
-80000060:	01000717          	auipc	a4,0x1000
-80000064:	02070713          	addi	a4,a4,32 # 81000080 <_env_call_s_mode>
-80000068:	01000797          	auipc	a5,0x1000
-8000006c:	02078793          	addi	a5,a5,32 # 81000088 <_env_call_m_mode>
-80000070:	01000817          	auipc	a6,0x1000
-80000074:	fd880813          	addi	a6,a6,-40 # 81000048 <_load_adress_missaligned>
-80000078:	01000897          	auipc	a7,0x1000
-8000007c:	fe888893          	addi	a7,a7,-24 # 81000060 <_store_adress_missaligned>
-80000080:	01000917          	auipc	s2,0x1000
-80000084:	fd490913          	addi	s2,s2,-44 # 81000054 <_load_access_fault>
-80000088:	01000997          	auipc	s3,0x1000
-8000008c:	fe498993          	addi	s3,s3,-28 # 8100006c <_store_access_fault>
-80000090:	01000a17          	auipc	s4,0x1000
-80000094:	000a0a13          	mv	s4,s4
-80000098:	00c4a023          	sw	a2,0(s1)
-8000009c:	00a4a223          	sw	a0,4(s1)
-800000a0:	00b4a423          	sw	a1,8(s1)
-800000a4:	0104a823          	sw	a6,16(s1)
-800000a8:	0124aa23          	sw	s2,20(s1)
-800000ac:	0114ac23          	sw	a7,24(s1)
-800000b0:	0134ae23          	sw	s3,28(s1)
-800000b4:	02d4a023          	sw	a3,32(s1)
-800000b8:	02e4a223          	sw	a4,36(s1)
-800000bc:	02f4a423          	sw	a5,40(s1)
-800000c0:	0744a023          	sw	s4,96(s1)
-800000c4:	00000193          	li	gp,0
-800000c8:	00000213          	li	tp,0
-800000cc:	00000293          	li	t0,0
-800000d0:	00000313          	li	t1,0
-800000d4:	00000393          	li	t2,0
-800000d8:	00000413          	li	s0,0
-800000dc:	00000493          	li	s1,0
-800000e0:	00000513          	li	a0,0
-800000e4:	00000593          	li	a1,0
-800000e8:	00000613          	li	a2,0
-800000ec:	00000693          	li	a3,0
-800000f0:	00000713          	li	a4,0
-800000f4:	00000793          	li	a5,0
-800000f8:	00000813          	li	a6,0
-800000fc:	00000893          	li	a7,0
-80000100:	00000913          	li	s2,0
-80000104:	00000993          	li	s3,0
-80000108:	00000a13          	li	s4,0
-8000010c:	00000a93          	li	s5,0
-80000110:	00000b13          	li	s6,0
-80000114:	00000b93          	li	s7,0
-80000118:	00000c13          	li	s8,0
-8000011c:	00000c93          	li	s9,0
-80000120:	30200073          	mret
-
-Disassembly of section seg_kernel:
-
-81000000 <_exception>:
-81000000:	34205573          	csrrwi	a0,mcause,0
-81000004:	3400f5f3          	csrrci	a1,mscratch,1
-81000008:	00a5a023          	sw	a0,0(a1)
-8100000c:	00251513          	slli	a0,a0,0x2
-81000010:	00000597          	auipc	a1,0x0
-81000014:	08c58593          	addi	a1,a1,140 # 8100009c <_isr_vector>
-81000018:	00a585b3          	add	a1,a1,a0
-8100001c:	0005a603          	lw	a2,0(a1)
-81000020:	00060067          	jr	a2
-
-81000024 <_instruction_address_misagligned>:
-81000024:	00000013          	nop
-81000028:	00800093          	li	ra,8
-8100002c:	00008067          	ret
-
-81000030 <_instruction_address_fault>:
-81000030:	00000013          	nop
-81000034:	00800093          	li	ra,8
-81000038:	00008067          	ret
-
-8100003c <_illegal_instruction>:
-8100003c:	00000013          	nop
-81000040:	00800093          	li	ra,8
-81000044:	00008067          	ret
-
-81000048 <_load_adress_missaligned>:
-81000048:	00000013          	nop
-8100004c:	00800093          	li	ra,8
-81000050:	00008067          	ret
-
-81000054 <_load_access_fault>:
-81000054:	00000013          	nop
-81000058:	00800093          	li	ra,8
-8100005c:	00008067          	ret
-
-81000060 <_store_adress_missaligned>:
-81000060:	00000013          	nop
-81000064:	00800093          	li	ra,8
-81000068:	00008067          	ret
-
-8100006c <_store_access_fault>:
-8100006c:	00000013          	nop
-81000070:	00800093          	li	ra,8
-81000074:	00008067          	ret
-
-81000078 <_env_call_u_mode>:
-81000078:	00000013          	nop
-8100007c:	30200073          	mret
-
-81000080 <_env_call_s_mode>:
-81000080:	00000013          	nop
-81000084:	30200073          	mret
-
-81000088 <_env_call_m_mode>:
-81000088:	00000013          	nop
-8100008c:	30200073          	mret
-
-81000090 <_env_call_wrong_mode>:
-81000090:	00000013          	nop
-81000094:	00800093          	li	ra,8
-81000098:	00008067          	ret
->>>>>>> dad5b688 (new test for csr dependencies and trying to debeug riscof)
