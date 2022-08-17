@@ -99,6 +99,7 @@ SC_MODULE(exec_s2) {
     sc_in<bool> SLT_RD_S2;
     sc_in<bool> SLTU_RD_S2;
 
+    sc_in<bool>         CSRRC_I_RD_S1;
     sc_in<bool>         CSRRC_I_RD_S2;
     sc_in<bool>        CSR_WENABLE_RD_S2;
     sc_in<sc_uint<12>> CSR_WADR_RD_S2;

@@ -1122,6 +1122,8 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, jump_sd_s1, GET_NAME(jump_sd_s1));
 
     // Internal signals :
+    sc_trace(tf, CSR_WENABLE_RE_S2, GET_NAME(CSR_WENABLE_RE_S2));
+    sc_trace(tf, CSR_WENABLE_RM_S2, GET_NAME(CSR_WENABLE_RM_S2));
 
     sc_trace(tf, adr_dest_sd_s1, GET_NAME(adr_dest_sd_s1));
     sc_trace(tf, env_call_u_mode_sd_s2, GET_NAME(env_call_u_mode_sd_s2));
@@ -1138,6 +1140,11 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, exe_neg_op2_sd_s1, GET_NAME(exe_neg_op2_sd_s1));
     sc_trace(tf, exe_wb_sd_s1, GET_NAME(exe_wb_sd_s1));
     sc_trace(tf, mem_sign_extend_sd_s1, GET_NAME(mem_sign_extend_sd_s1));
+
+    sc_trace(tf, CSR_RADR_SD_S2, GET_NAME(CSR_RADR_SD_S2));
+    sc_trace(tf, CSR_RDATA_RD_S2, GET_NAME(CSR_RDATA_RD_S2));
+    sc_trace(tf, CSR_RDATA_RE_S2, GET_NAME(CSR_RDATA_RE_S2));
+    sc_trace(tf, CSR_RDATA_RM_S2, GET_NAME(CSR_RDATA_RM_S2));
 
     // Exception :
 

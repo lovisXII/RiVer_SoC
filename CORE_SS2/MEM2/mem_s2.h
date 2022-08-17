@@ -130,7 +130,7 @@ SC_MODULE(mem_s2) {
     sc_in<sc_uint<32>>  MSTATUS_RC;  // 71
     sc_in<sc_uint<32>>  MTVEC_VALUE_RC;
     sc_in<sc_uint<32>>  MIP_VALUE_RC;
-
+    sc_in<sc_uint<32>>  MCAUSE_SC;
 
     // SS2 :
 
@@ -243,6 +243,8 @@ SC_MODULE(mem_s2) {
                     << MSTATUS_WDATA_SM_S1
                     << MIP_WDATA_SM_S1
                     << MEPC_WDATA_SM_S1
+                    << MCAUSE_SC
+                    << MIP_VALUE_RC
                     << MCAUSE_WDATA_SM_S1
                     << MTVAL_WDATA_SM_S1;
     }

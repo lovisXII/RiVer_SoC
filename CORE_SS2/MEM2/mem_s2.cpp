@@ -245,9 +245,17 @@ void mem_s2::csr_exception() {
         RETURN_ADRESS_SM_S2 = MEPC_SC;
 
         MSTATUS_WDATA_RM_S2 = MSTATUS_WDATA_SM_S1;
-        MIP_WDATA_RM_S2     = MIP_WDATA_SM_S1;
         MEPC_WDATA_RM_S2    = MEPC_WDATA_SM_S1;
-        MCAUSE_WDATA_SM_S2  = MCAUSE_WDATA_SM_S1;
+        if(!MRET_SM_S1)
+        //MRET must not modify the value of mcause and mip
+        {   
+            MCAUSE_WDATA_SM_S2  = MCAUSE_WDATA_SM_S1;
+            MIP_WDATA_RM_S2     = MIP_WDATA_SM_S1;
+        }
+        else{
+            MCAUSE_WDATA_SM_S2 = MCAUSE_SC;
+            MIP_WDATA_RM_S2     = MIP_VALUE_RC;
+        }
         MTVAL_WDATA_SM_S2   = MTVAL_WDATA_SM_S1;
 
     }

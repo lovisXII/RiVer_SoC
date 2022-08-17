@@ -516,7 +516,7 @@ int sc_main(int argc, char* argv[]) {
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
-        } else if (countdown == 0 && (pc_adr == (rvtest_code_end +4) || (signature_name != "" && cycles > 20000))) {
+        } else if (countdown == 0 && (pc_adr == (rvtest_code_end )|| (signature_name != "" && cycles > 20000))) {
             cerr << "inside if : " << endl;
             countdown = 20;
             cout << "coutndown value : " << countdown << endl;
@@ -535,6 +535,7 @@ int sc_main(int argc, char* argv[]) {
                 cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
+                cout << "adr : " << i << "data : " << ram[i] << endl;
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             exit(0);
@@ -610,7 +611,7 @@ int sc_main(int argc, char* argv[]) {
                 }
             } else  // access in word
             {
-                cout << sc_time_stamp() << " adr  : " << mem_adr_s1 << " data  : " << mem_data_s1 << endl;
+                // cout << sc_time_stamp() << " adr  : " << mem_adr_s1 << " data  : " << mem_data_s1 << endl;
                 ram[mem_adr_s1] = mem_data_s1;
             }
         }
