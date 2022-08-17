@@ -13,7 +13,7 @@ void RAM::reponse()
         {
             int temporary_value = (*RAM_REGISTERS)[ADR_I.read()];
             unsigned int temporary_store_value = DAT_I.read();
-            std::cout << sc_time_stamp() <<" - write "<<temporary_store_value<<"  at "<<ADR_I.read()<<std::endl;
+            //std::cout << sc_time_stamp() <<" - write "<<temporary_store_value<<"  at "<<ADR_I.read()<<std::endl;
             if(MEM_SIZE.read() == 2)//access in byte
             {
                 int mask_adr = ADR_I.read() & 0x00000003 ;

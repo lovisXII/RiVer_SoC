@@ -171,8 +171,8 @@ int sc_main(int argc, char* argv[])
     bus_inst.CLK(CLK);
     bus_inst.RESET_N(RESET);
     bus_inst.PC_RESET(PC_RESET);
-    bus_inst.PC1_VALUE(PC0_VALUE);
-    bus_inst.PC0_VALUE(PC1_VALUE);
+    bus_inst.PC1_VALUE(PC1_VALUE);
+    bus_inst.PC0_VALUE(PC0_VALUE);
 
     bus_inst.trace(tf);
     bus_inst.init_mem(&ram);
