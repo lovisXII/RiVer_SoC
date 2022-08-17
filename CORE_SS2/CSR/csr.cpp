@@ -124,6 +124,9 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_RADR_SD_S1, GET_NAME(CSR_RADR_SD_S1));
     sc_trace(tf, CSR_RDATA_SC_S1, GET_NAME(CSR_RDATA_SC_S1));
 
+
+    sc_trace(tf, CSR_RADR_SD_S2, GET_NAME(CSR_RADR_SD_S2));
+    sc_trace(tf, CSR_RDATA_SC_S2, GET_NAME(CSR_RDATA_SC_S2));
     // General Interface :
     sc_trace(tf, csr_rc[0], signal_get_name(csr_rc[0].name(), "mvendorid"));
     sc_trace(tf, csr_rc[1], signal_get_name(csr_rc[1].name(), "marchid"));

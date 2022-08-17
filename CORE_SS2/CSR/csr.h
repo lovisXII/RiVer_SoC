@@ -77,7 +77,8 @@ SC_MODULE(csr) {
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1 ;
+        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
+        << CSR_RADR_SD_S2 ;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }
