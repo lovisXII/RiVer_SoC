@@ -3,6 +3,7 @@
 void core::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_INIT, GET_NAME(PC_INIT));
     sc_trace(tf, MEM_SIZE_SM_S1, GET_NAME(MEM_SIZE_SM_S1));
+    sc_trace(tf, DEBUG_PC_READ, GET_NAME(DEBUG_PC_READ));
     ifetch_inst.trace(tf);
     dec_inst.trace(tf);
     exec_inst_s1.trace(tf);

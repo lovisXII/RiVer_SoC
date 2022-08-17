@@ -656,6 +656,7 @@ SC_MODULE(core) {
         exec_inst_s1.PC_EXE2MEM_RE_S1(PC_EXE2MEM_RE_S1);
 
         exec_inst_s1.CSRRC_I_RD_S1(CSRRC_I_RD_S1);
+        exec_inst_s1.CSRRC_I_RD_S2(CSRRC_I_RD_S2);
 
         exec_inst_s1.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
@@ -787,6 +788,7 @@ SC_MODULE(core) {
         exec_inst_s2.PC_DEC2EXE_RD_S2(PC_DEC2EXE_RD_S2);
         exec_inst_s2.PC_EXE2MEM_RE_S2(PC_EXE2MEM_RE_S2);
 
+        exec_inst_s2.CSRRC_I_RD_S1(CSRRC_I_RD_S1);
         exec_inst_s2.CSRRC_I_RD_S2(CSRRC_I_RD_S2);
 
         exec_inst_s2.MEM_DATA_RD_S2(MEM_DATA_RD_S2);
@@ -999,6 +1001,8 @@ SC_MODULE(core) {
         mem_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
         mem_inst_s2.EXE2MEM_EMPTY_SE_S2(EXE2MEM_EMPTY_SE_S2);
         mem_inst_s2.EXE2MEM_POP_SM_S2(EXE2MEM_POP_SM_S2);
+
+        mem_inst_s2.MCAUSE_SC(MCAUSE_SC);
 
         mem_inst_s2.MEM_RES_RM_S2(MEM_RES_RM_S2);
         mem_inst_s2.DEST_RM_S2(DEST_RM_S2);
