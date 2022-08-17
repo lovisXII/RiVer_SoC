@@ -22,15 +22,20 @@ SC_MODULE(wb_arbiter)
     //interface bus
     sc_in<sc_uint<32>>  ADR_I;
 
-    //interface masters
+    //interface master0
     sc_in<bool>     CYC_0_I;
     sc_out<bool>    GRANT_0_O;
 
-    //interface slaves
+    //interface master1
+    sc_in<bool>     CYC_1_I;
+    sc_out<bool>    GRANT_1_O;
+
+    //interface slave0
     sc_out<bool>    CYC_O;
     sc_out<bool>    SEL_0_O;
 
     //signals
+    sc_signal<sc_uint<1>> master_priority;
 
     // slave memory const registers
 
@@ -47,7 +52,7 @@ SC_MODULE(wb_arbiter)
     SC_CTOR(wb_arbiter)
     {
         SC_METHOD(master_selector);
-        sensitive << RESET_N << CYC_0_I;
+        sensitive << RESET_N << CYC_0_I << CYC_1_I;
 
         SC_METHOD(slave_selector);
         sensitive << ADR_I;

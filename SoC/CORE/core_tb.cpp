@@ -249,6 +249,7 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<32>> PC_VALUE;
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
+    sc_signal<sc_uint<32>> PROC_ID; 
 
     core_inst.MCACHE_ADR_SM(MEM_ADR);
     core_inst.MCACHE_DATA_SM(MEM_DATA);
@@ -265,6 +266,7 @@ int sc_main(int argc, char* argv[]) {
     core_inst.IC_STALL_SI(IC_STALL);
     core_inst.CLK(CLK);
     core_inst.RESET(RESET);
+    core_inst.PROC_ID(PROC_ID);
 
     core_inst.DEBUG_PC_READ(PC_VALUE);
     core_inst.PC_INIT(PC_RESET);
@@ -329,6 +331,7 @@ int sc_main(int argc, char* argv[]) {
     cout << "Reseting...";
 
     RESET.write(false);  // reset
+    PROC_ID.write(1);
     PC_RESET.write(reset_adr);
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset

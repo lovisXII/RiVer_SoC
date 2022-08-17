@@ -7,8 +7,9 @@ void csr::writing_csr() {
     for (int rid = 0; rid < N_CSR; rid++) {
         csr_rc[rid].write(0);
     }
-    csr_rc[3].write(0x00000000);  // mstatus
-    csr_rc[4].write(0x40100100);  // misa
+    csr_rc[3].write(PROC_ID);
+    csr_rc[4].write(0x00000000);  // mstatus
+    csr_rc[5].write(0x40100100);  // misa
 
     wait(3);
 
@@ -21,6 +22,7 @@ void csr::writing_csr() {
                 case 0xF11: break;                                  // mvendorid
                 case 0xF12: break;                                  // marchid
                 case 0xF13: break;                                  // mimpid
+                case 0xF14: break;                                  // mhartid
                 case 0x301: break;                                  // misa
                 case 0x304: csr_rc[5].write(CSR_WDATA_SM); break;   // mie
                 case 0x305: csr_rc[6].write(CSR_WDATA_SM); break;   // mtvec
@@ -62,16 +64,17 @@ void csr::reading_csr() {
         case 0xF11: CSR_RDATA_O.write(csr_rc[0]); break;
         case 0xF12: CSR_RDATA_O.write(csr_rc[1]); break;
         case 0xF13: CSR_RDATA_O.write(csr_rc[2]); break;
-        case 0x300: CSR_RDATA_O.write(csr_rc[3]); break;
-        case 0x301: CSR_RDATA_O.write(csr_rc[4]); break;
-        case 0x304: CSR_RDATA_O.write(csr_rc[5]); break;
-        case 0x305: CSR_RDATA_O.write(csr_rc[6]); break;
-        case 0x310: CSR_RDATA_O.write(csr_rc[7]); break;
-        case 0x341: CSR_RDATA_O.write(csr_rc[8]); break;
-        case 0x342: CSR_RDATA_O.write(csr_rc[9]); break;
-        case 0x343: CSR_RDATA_O.write(csr_rc[10]); break;
-        case 0x344: CSR_RDATA_O.write(csr_rc[11]); break;
-        case 0x340: CSR_RDATA_O.write(csr_rc[12]); break;
+        case 0xF14: CSR_RDATA_O.write(csr_rc[3]); break;
+        case 0x300: CSR_RDATA_O.write(csr_rc[4]); break;
+        case 0x301: CSR_RDATA_O.write(csr_rc[5]); break;
+        case 0x304: CSR_RDATA_O.write(csr_rc[6]); break;
+        case 0x305: CSR_RDATA_O.write(csr_rc[7]); break;
+        case 0x310: CSR_RDATA_O.write(csr_rc[8]); break;
+        case 0x341: CSR_RDATA_O.write(csr_rc[9]); break;
+        case 0x342: CSR_RDATA_O.write(csr_rc[10]); break;
+        case 0x343: CSR_RDATA_O.write(csr_rc[11]); break;
+        case 0x344: CSR_RDATA_O.write(csr_rc[12]); break;
+        case 0x340: CSR_RDATA_O.write(csr_rc[13]); break;
         case 0xC01: CSR_RDATA_O.write(TIME_RT.read().range(31, 0)); break;   // time
         case 0xC81: CSR_RDATA_O.write(TIME_RT.read().range(63, 32)); break;  // timeh
         default: CSR_RDATA_O.write(0); break;

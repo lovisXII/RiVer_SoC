@@ -22,7 +22,7 @@ SC_MODULE(core) {
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
-
+    sc_in<sc_uint<32>>  PROC_ID;
     // IFETCH-DEC interface
     // DEC2IF :
 
@@ -762,6 +762,7 @@ SC_MODULE(core) {
 
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
+        csr_inst.PROC_ID(PROC_ID);
 
         timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);

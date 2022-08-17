@@ -10,7 +10,7 @@ OBJECTS=SoC_tb.o CORE/core.o CORE/IFETCH/ifetch.o CORE/DEC/dec.o CORE/EXE/alu.o 
 CORE/EXE/shifter.o CORE/EXE/x0_multiplier.o CORE/EXE/Diviseur.o CORE/EXE/exec.o CORE/MEM/mem.o CORE/MEM/x1_multiplier.o \
 CORE/REG/reg.o CORE/WBK/wbk.o CORE/WBK/x2_multiplier.o CORE/CSR/csr.o CORE/CACHES/icache.o \
 CORE/CACHES/dcache.o CORE/CACHES/buffercache.o CORE/TIMER/timer.o Wishbone/wb_bus.o Wishbone/wb_arbiter.o \
-Wishbone/IP_RIVER.o Wishbone/wb_river_mc.o Wishbone/IP_RAM.o Wishbone/wb_ram_sc.o Wishbone/RAM.o
+Wishbone/IP_RIVER.o Wishbone/wb_river_mc.o Wishbone/IP_RAM.o Wishbone/wb_ram_sc.o Wishbone/RAM.o Wishbone/Multiplexor.o
 LD_SCRIPT= -T CORE/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 

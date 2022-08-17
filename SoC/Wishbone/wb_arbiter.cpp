@@ -6,19 +6,46 @@ void wb_arbiter::master_selector()
     if(!RESET_N)
     {
         CYC_O = false;
+        master_priority = 0;
     }
     else
     {
-        // if add more masters change this part of the code by a 
-        // round robin arbiter
-        CYC_O = CYC_0_I; //CYC_0_I | CYC_1_I | CYC_2_I | ../..
-        if(CYC_0_I)
+        CYC_O = CYC_0_I | CYC_1_I; //CYC_0_I | CYC_1_I | CYC_2_I | ../..
+        
+        bool found = false;
+        switch (master_priority.read())
         {
-            GRANT_0_O = true;
+        case 0:
+            if(CYC_0_I)
+            {
+                GRANT_0_O = true;
+                GRANT_1_O = false;
+                master_priority.write(master_priority.read()+1);
+                found = true;
+            }
+            break;
+        case 1:
+            if(CYC_1_I)
+            {
+                GRANT_0_O = false;
+                GRANT_1_O = true;
+                master_priority.write(master_priority.read()+1);
+                found = true;
+            }
+            break;
         }
-        else
+        if(!found)
         {
-            GRANT_0_O = false;
+            if(CYC_0_I)
+            {
+                GRANT_0_O = true;
+                GRANT_1_O = false;
+            }
+            else if(CYC_1_I)
+            {
+                GRANT_0_O = false;
+                GRANT_1_O = true;
+            }
         }
     }
 }
@@ -54,8 +81,12 @@ void wb_arbiter::trace(sc_trace_file* tf)
 
     sc_trace(tf, ADR_I, GET_NAME(ADR_I));
     sc_trace(tf, CYC_0_I, GET_NAME(CYC_0_I));
+    sc_trace(tf, CYC_1_I, GET_NAME(CYC_1_I));
     sc_trace(tf, CYC_O, GET_NAME(CYC_O));
     sc_trace(tf, GRANT_0_O, GET_NAME(GRANT_0_O));
+    sc_trace(tf, GRANT_1_O, GET_NAME(GRANT_1_O));
     sc_trace(tf, SEL_0_O, GET_NAME(SEL_0_O));
+
+    sc_trace(tf, master_priority, GET_NAME(master_priority));
 }
 

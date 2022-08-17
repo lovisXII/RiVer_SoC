@@ -10,6 +10,7 @@ SC_MODULE(IP_RIVER)
 {
     sc_in_clk           CLK;
     sc_in<bool>         RESET_N;
+    sc_in<sc_uint<32>>         PROC_ID;
 
     sc_in<bool>        ACK;
     sc_in<sc_uint<32>> DAT_I;
@@ -79,6 +80,7 @@ SC_MODULE(IP_RIVER)
         core_inst.RESET(RESET_N);
         core_inst.DEBUG_PC_READ(PC_VALUE);
         core_inst.PC_INIT(PC_RESET);
+        core_inst.PROC_ID(PROC_ID);
 
         core_inst.MCACHE_ADR_SM(MEM_ADR);
         core_inst.MCACHE_DATA_SM(MEM_DATA);

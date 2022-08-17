@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../../UTIL/debug_util.h"
 
-#define N_CSR        13
+#define N_CSR        14
 #define adress_mtvec 0x80000000
 #define main_adresse 0x10054
 
@@ -44,22 +44,24 @@ SC_MODULE(csr) {
 
     sc_in_clk   CLK;
     sc_in<bool> RESET_N;
+    sc_in<sc_uint<32>>  PROC_ID;
 
     // Internal signals :
     /*** Register Map ***
      * 0: mvendorid 0xF11
      * 1: marchid 0xF12
      * 2: mimpid 0xF13
-     * 3: mstatus 0x300
-     * 4: misa 0x301
-     * 5: mie 0x304
-     * 6: mtvec 0x305
-     * 7: mstatush 0x310
-     * 8: mepc 0x341
-     * 9: mcause 0x342
-     * 10: mtval 0x343
-     * 11: mip 0x344
-     * 12: mscratch 0x340
+     * 3: mhartid 0xF14
+     * 4: mstatus 0x300
+     * 5: misa 0x301
+     * 6: mie 0x304
+     * 7: mtvec 0x305
+     * 8: mstatush 0x310
+     * 9: mepc 0x341
+     * 10: mcause 0x342
+     * 11: mtval 0x343
+     * 12: mip 0x344
+     * 13: mscratch 0x340
      ***/
     sc_signal<sc_uint<32>> csr_rc[N_CSR];
     sc_signal<sc_uint<32>> test_sc;

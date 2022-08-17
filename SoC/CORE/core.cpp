@@ -2,6 +2,7 @@
 void core::trace(sc_trace_file* tf) {
     sc_trace(tf, PC_INIT, GET_NAME(PC_INIT));
     sc_trace(tf, MEM_SIZE_SM, GET_NAME(MEM_SIZE_SM));
+    sc_trace(tf, PROC_ID, GET_NAME(PROC_ID));
     sc_trace(tf, MCACHE_ADR_VALID_SM, GET_NAME(MCACHE_ADR_VALID_SM));
 
     ifetch_inst.trace(tf);
