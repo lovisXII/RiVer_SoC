@@ -13,5 +13,7 @@ void wb_wait(int delay) {
     int i; 
     int tmp = (FREQ_RIVER*delay)/(1000);
 
-    for(i = 0; i < tmp; ++i);
+    for(i = 0; i < tmp; ++i) {
+        __asm__("nop");
+    }
 }

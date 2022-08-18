@@ -23,5 +23,8 @@ for i in range(nwords):
         w = bindata[4*i : 4*i+4]
         print("%02x%02x%02x%02x" % (w[3], w[2], w[1], w[0]))
     else:
-        print("0")
+        if i == (nwords-1):
+            print("0", end=" ")
+        else:   
+            print("0")
 
