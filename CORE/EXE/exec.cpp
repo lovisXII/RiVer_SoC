@@ -217,38 +217,73 @@ void exec::bypasses() {
     bool        blocked_var     = false;
     sc_uint<32> bp_mem_data_var = MEM_DATA_RD.read();
 
-    if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) {
+    // ###############################
+    // BYPASS ON rs1 :
+    // ###############################
+
+    if (RADR1_RD.read() == 0 || BLOCK_BP_RD.read()) 
+    {
         op1_se.write(OP1_RD.read());
         r1_valid_se = true;
-    } else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) {
+    } 
+    else if (DEST_RE.read() == RADR1_RD.read() && CSR_WENABLE_RE) 
+    //bp E->E and csr enable
+    {
         op1_se.write(CSR_RDATA_RE.read());
         r1_valid_se = true;
-    } else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) {
-        op1_se.write(EXE_RES_RE.read());
+    } 
+    else if (DEST_RE.read() == RADR1_RD.read() && !MEM_LOAD_RE) 
+    //bp E->E and no load, normal bp
+    {
+        if(!CSRRC_I_RD)
+            op1_se.write(EXE_RES_RE.read());
+        else
+            op1_se.write(~EXE_RES_RE.read());
         r1_valid_se = !MULT_INST_RE || EXE2MEM_EMPTY_SE;
-    } else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) {
+    } 
+    else if (MEM_DEST_RM.read() == RADR1_RD.read() && CSR_WENABLE_RM) 
+    //bp M->E and csr
+    {
         op1_se.write(CSR_RDATA_RM.read());
         r1_valid_se = true;
-    } else if (MEM_DEST_RM.read() == RADR1_RD.read()) {
-        op1_se.write(MEM_RES_RM.read());
-        r1_valid_se = !MULT_INST_RM || BP_MEM2WBK_EMPTY_SM;
-    } else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
+    } 
+    else if (MEM_DEST_RM.read() == RADR1_RD.read()) 
+    //bp M->E 
+    {
+        if(!CSRRC_I_RD)
+            op1_se.write(MEM_RES_RM.read());
+        else
+            op1_se.write(~MEM_RES_RM.read());
+        r1_valid_se = !MULT_INST_RM || MEM2WBK_EMPTY_SM;
+    } 
+    else if (DEST_RE.read() == RADR1_RD.read() && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         blocked_var = true;
         r1_valid_se = true;
-    } else {
+    } 
+    else {
         op1_se.write(OP1_RD.read());
         r1_valid_se = true;
     }
 
+    // ###############################
+    // BYPASS ON rs2 :
+    // ###############################
+
     if (RADR2_RD.read() == 0 || MEM_LOAD_RD.read() || BLOCK_BP_RD.read()) {
         op2_se.write(OP2_RD.read());
         r2_valid_se = true;
-    } else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE && !MULT_INST_RE) {
+    } 
+    else if (DEST_RE.read() == RADR2_RD.read() && !MEM_LOAD_RE && !MULT_INST_RE) 
+    //bp E->E
+    {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RE)
             bp_value = CSR_RDATA_RE;
+        else if(CSRRC_I_RD)
+            bp_value = ~EXE_RES_RE.read();
         else
             bp_value = EXE_RES_RE;
+
         if (MEM_STORE_RD.read()) {  // on stores we need to bypass to the data not adr
             bp_mem_data_var = bp_value;
             op2_se.write(OP2_RD.read());
@@ -261,6 +296,8 @@ void exec::bypasses() {
         sc_uint<32> bp_value;
         if (CSR_WENABLE_RM)
             bp_value = CSR_RDATA_RM;
+        if (CSRRC_I_RD)
+            bp_value = ~MEM_RES_RM.read();
         else
             bp_value = MEM_RES_RM;
         if (MEM_STORE_RD.read()) {

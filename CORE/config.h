@@ -22,7 +22,7 @@
 #define ret_stack_size              16
 
 //decode config
-#define dec2exe_size                252
+#define dec2exe_size                253
 #define dec2if_size                 134
 
 //exe config        
