@@ -7,8 +7,12 @@ __asm__("j main");
 #include "driver_lcd.h"
 
 int main(void) {
-    __asm__("li x27, 0xF");
-    __asm__("li x28, 0x40000000");
-    __asm__("sw x27, 0(x28)");
+    int i;
+    for(i=0; i<5; i++) {
+        leds_turn_on();
+        wb_wait(100);
+        leds_turn_off();
+        wb_wait(100);
+    }
     return 0;
 }
