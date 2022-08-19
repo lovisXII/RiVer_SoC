@@ -212,7 +212,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MIP_VALUE_RC;
     sc_signal<sc_uint<32>> MIE_VALUE_RC;
     sc_signal<sc_uint<32>> MTVAL_WDATA_SM;
-    sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
+    sc_signal<bool>        CSR_ENABLE_SM;
 
     // MEM-IFETCH
 
@@ -663,7 +663,7 @@ SC_MODULE(core) {
         mem_inst.MIE_VALUE_RC(MIE_VALUE_RC);
         mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        mem_inst.CSR_ENABLE_SM(CSR_ENABLE_SM);
         mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         mem_inst.CLK(CLK);
@@ -738,7 +738,7 @@ SC_MODULE(core) {
 
         csr_inst.CSR_WADR_SM(CSR_WADR_SM);
         csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);
-        csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        csr_inst.CSR_ENABLE_SM(CSR_ENABLE_SM);
 
         csr_inst.CSR_RADR_SD(CSR_RADR_SD);
         csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
