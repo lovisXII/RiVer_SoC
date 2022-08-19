@@ -13,7 +13,7 @@ void csr::writing_csr() {
     wait(3);
 
     while (1) {
-        if (CSR_ENABLE_BEFORE_FIFO_SM.read()) {
+        if (CSR_ENABLE_SM.read()) {
             sc_uint<32> csr_wadr_sm = CSR_WADR_SM.read();
             TIMER_CONFIG_WB_SC.write(0);
             TIMER_DIVIDER_WB_SC.write(0);
@@ -87,7 +87,7 @@ void csr::reading_csr() {
 void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, CSR_WADR_SM, GET_NAME(CSR_WADR_SM));
     sc_trace(tf, CSR_WDATA_SM, GET_NAME(CSR_WDATA_SM));
-    sc_trace(tf, CSR_ENABLE_BEFORE_FIFO_SM, GET_NAME(CSR_ENABLE_BEFORE_FIFO_SM));
+    sc_trace(tf, CSR_ENABLE_SM, GET_NAME(CSR_ENABLE_SM));
 
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, MSTATUS_WDATA_RM, GET_NAME(MSTATUS_WDATA_RM));
