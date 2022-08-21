@@ -128,6 +128,7 @@ SC_MODULE(wb_bus)
         river0_inst.ACK(ACK);
         river0_inst.DAT_I(DAT_S2M);
         river0_inst.GRANT(GRANT_0);
+        river0_inst.ADR_I(ADR);
         river0_inst.ADR(ADR_0);
         river0_inst.DAT_O(DAT_M0);
         river0_inst.SEL(SEL_0);
@@ -143,6 +144,7 @@ SC_MODULE(wb_bus)
         river1_inst.ACK(ACK);
         river1_inst.DAT_I(DAT_S2M);
         river1_inst.GRANT(GRANT_1);
+        river1_inst.ADR_I(ADR);
         river1_inst.ADR(ADR_1);
         river1_inst.DAT_O(DAT_M1);
         river1_inst.SEL(SEL_1);

@@ -15,6 +15,7 @@ SC_MODULE(IP_RIVER)
     sc_in<bool>        ACK;
     sc_in<sc_uint<32>> DAT_I;
     sc_in<bool>        GRANT;
+    sc_in<sc_uint<32>> ADR_I;
 
     sc_out<sc_uint<32>> ADR;
     sc_out<sc_uint<32>> DAT_O;
