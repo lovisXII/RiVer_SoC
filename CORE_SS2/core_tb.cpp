@@ -76,7 +76,7 @@ int sc_main(int argc, char* argv[]) {
     bool   riscof;
     bool   stats;
     int tmp = test_filename.rfind("/");
-    test_filename = test_filename.substr(tmp+1, test_filename.size());
+    test_filename = test_filename.substr(tmp+1, test_filename.size()) ;
 
 /*
     ##############################################################
@@ -107,15 +107,15 @@ int sc_main(int argc, char* argv[]) {
         stats          = true;
         
         #ifdef BRANCH_PREDICTION 
-        filename_stats = "stats_branch.txt";        
+        filename_stats = "stats_branch_SS2.txt";        
         #elif  RET_BRANCH_PREDICTION
-        filename_stats = "stats_stack_branch.txt";        
+        filename_stats = "stats_stack_branch_SS2.txt";        
         #elif BRANCH_PREDICTION & RET_BRANCH_PREDICTION
-        filename_stats = "stat_all_branch.txt";
+        filename_stats = "stat_all_branch_SS2.txt";
         #elif ICACHE_ON & DCACHE_ON
-        filename_stats = "stats_caches.txt";
+        filename_stats = "stats_caches_SS2.txt";
         #else
-        filename_stats = "test_stats.txt";
+        filename_stats = "test_stats_SS2.txt";
         #endif
         test_stats.open(filename_stats, fstream::app);
         if(!test_stats.is_open())
@@ -399,14 +399,12 @@ int sc_main(int argc, char* argv[]) {
     cout << "Reseting...";
 
     RESET.write(false);  // reset
-    
-    //PC_RESET.write(reset_adr);
     PC_RESET.write(reset_adr);
-    
     sc_start(3, SC_NS);  // wait for 1 cycle
     RESET.write(true);   // end of reset
     cerr << "done." << endl;
 
+    int NB_CYCLES = 0;
     int cycles = 0;
     int countdown;
 
@@ -566,6 +564,7 @@ int sc_main(int argc, char* argv[]) {
 */
 
         unsigned int pc_adr = PC_VALUE.read();
+        NB_CYCLES = sc_time_stamp().to_double()/1000;
         if (signature_name == "" && pc_adr == (bad_adr + 4)) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
@@ -576,7 +575,7 @@ int sc_main(int argc, char* argv[]) {
                 #ifdef BRANCH_PREDICTION || RET_BRANCH_PREDICTION
                     cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
                 #endif
-                test_stats << test_filename << " " << NB_CYCLES << endl;
+                test_stats << test_filename << " " << NB_CYCLES  << " " << "SS2" << endl;
                 test_stats.close();
             }
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
