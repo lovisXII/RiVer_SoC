@@ -75,7 +75,8 @@ int sc_main(int argc, char* argv[]) {
     string signature_name;
     bool   riscof;
     bool   stats;
-
+    int tmp = test_filename.rfind("/");
+    test_filename = test_filename.substr(tmp+1, test_filename.size());
 /*
     ##############################################################
                     PARSING ELF/.s/.c file 
