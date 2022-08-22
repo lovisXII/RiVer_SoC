@@ -44,7 +44,7 @@ entity exec is
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         CSR_WENABLE_RM : in std_logic;
         CSR_RDATA_RM : in std_logic_vector(31 downto 0);
-        MEM2WBK_EMPTY_SM : in std_logic;
+        BP_MEM2WBK_EMPTY_SM : in std_logic;
 
         -- CSR 
         CSR_WENABLE_RD : in std_logic;
@@ -273,7 +273,7 @@ r1_valid_se <=  '1' when    (   (RADR1_RD = "000000" or BLOCK_BP_RD = '1')      
                                 (RADR1_RD = exe_fifo_dest and exe_fifo_mem_load = '1' and exe2mem_empty = '0')
                             ) else 
                 (not(exe_fifo_mult_inst) or exe2mem_empty) when (RADR1_RD = exe_fifo_dest and exe_fifo_mem_load = '0') else 
-                (not(MULT_INST_RM) or MEM2WBK_EMPTY_SM) when (RADR1_RD = MEM_DEST_RM) else 
+                (not(MULT_INST_RM) or BP_MEM2WBK_EMPTY_SM) when (RADR1_RD = MEM_DEST_RM) else 
                 '1'; 
 
 r2_valid_se <=  '1';
