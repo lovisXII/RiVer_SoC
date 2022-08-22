@@ -172,12 +172,10 @@ void mem::sign_extend() {
 }
 
 void mem::csr_exception() {
-    EXCEPTION_SM            = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
     sc_uint<32> mstatus_new = MSTATUS_RC.read();
 
     if (!RESET) CURRENT_MODE_SM = 3;
-
-    if (!EXCEPTION_SM) {
+    if (!(EXCEPTION_RE.read() || BUS_ERROR_SX.read())) {
         int mip            = MIP_VALUE_RC.read();
         int mie            = MIE_VALUE_RC.read();
         int trap_to_handle = mip & mie;
@@ -220,13 +218,16 @@ void mem::csr_exception() {
             CSR_WADR_SM.write(CSR_WADR_SE.read());
             CSR_WDATA_SM.write(EXE_RES_RE.read());
             CSR_ENABLE_SM.write(true);
+            EXCEPTION_SM = false;
         } else {
             CSR_WADR_SM.write(0);
             CSR_WDATA_SM.write(0);
             CSR_ENABLE_SM.write(0);
+            EXCEPTION_SM = false;
         }
         MRET_SM = 0;
     } else {
+        EXCEPTION_SM = EXCEPTION_RE.read() || BUS_ERROR_SX.read();
         // Affectation of the cause
         // PLEASE DO NOT MOVE THE IF ORDER
         // THEY ARE IN A SPECIFIC ORDER
