@@ -64,6 +64,7 @@ int sc_main(int argc, char* argv[]) {
     int                     rvtest_entry_point;
     int                     begin_signature;
     int                     end_signature;
+    int                     rvtest_end;
 
     char   test[512] = "> a.out.txt.s";
     string opt;
@@ -183,6 +184,10 @@ int sc_main(int argc, char* argv[]) {
                 if (name == "end_signature") {
                     end_signature = value;
                     cout << "Found end_signature at adr " << std::hex << end_signature << endl;
+                }
+                if (name == "rvtest_end") {
+                    rvtest_end = value;
+                    cout << "Found rvtest_end at adr " << std::hex << rvtest_end << endl;
                 }
             }
         }
@@ -516,7 +521,7 @@ int sc_main(int argc, char* argv[]) {
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
-        } else if (countdown == 0 && (pc_adr == (rvtest_code_end + 4)|| (signature_name != "" && cycles > 20000))) {
+        } else if (countdown == 0 && (pc_adr == (rvtest_end +4)|| (signature_name != "" && cycles > 20000))) {
             cerr << "inside if : " << endl;
             countdown = 20;
             cout << "coutndown value : " << countdown << endl;
@@ -534,8 +539,11 @@ int sc_main(int argc, char* argv[]) {
                 // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
                 cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
+            cout << "#################################" << endl ;
+            cout << "begin writting signature value " << endl ;
+            cout << "#################################" << endl ;
             for (int i = begin_signature; i < end_signature; i += 4) {
-                cout << "adr : " << i << "data : " << ram[i] << endl;
+                cout << "adr : " << i << " data : " << ram[i] << endl;
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             exit(0);
