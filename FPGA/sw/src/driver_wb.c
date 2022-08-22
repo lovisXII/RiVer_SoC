@@ -17,3 +17,10 @@ void wb_wait(int delay) {
         __asm__("nop");
     }
 }
+
+void river_end() {
+    __asm__("deadloop: nop");
+    __asm__("nop");
+    __asm__("nop");
+    __asm__("j deadloop");
+}

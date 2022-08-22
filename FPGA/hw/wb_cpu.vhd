@@ -58,21 +58,30 @@ signal icache_stall                 :   std_logic;
 signal start_pc, debug_pc           :   std_logic_vector(31 downto 0);
 
 signal trans_i, trans_d             :   std_logic; 
+signal trans_i_reg, trans_d_reg     :   std_logic; 
 signal no_data                      :   std_logic; 
 
 type state is (idle, iread, dread, dwrite);
 signal EP, EF : state; 
 
-constant pc0 : std_logic_vector(31 downto 0) := x"000001a0";
-constant four : std_logic_vector(31 downto 0) := x"00000004";
-
 begin
 
-start_pc <= x"00000000";--std_logic_vector(unsigned(pc0) - unsigned(four));
+start_pc <= x"00000000";
 
-dcache_stall    <=  (not(ACK_I) and trans_d) or no_data;
-icache_stall    <=  (not(ACK_I) and trans_i) or no_data;
+dcache_stall    <=  (not(ACK_I) and trans_d) or (ACK_I and trans_i and dcache_adr_v) or ((trans_i or no_data) and dcache_adr_v and dcache_load);-- or no_data;
+icache_stall    <=  (not(ACK_I) and trans_i) or (ACK_I and trans_d) or no_data; --or no_data;
 
+
+trans_reg : process(clk, reset_n)
+begin 
+    if reset_n = '0' then 
+        trans_d_reg <= '0';
+        trans_i_reg <=  '0';
+    elsif rising_edge(clk) then 
+        trans_d_reg <= trans_d;
+        trans_i_reg <= trans_i;
+    end if; 
+end process;
 
 river_core0 : core 
     port map(
@@ -81,7 +90,7 @@ river_core0 : core
 
         
         MCACHE_RESULT_SM        =>  DAT_I,
-        MCACHE_STALL_SM         =>  icache_stall,
+        MCACHE_STALL_SM         =>  dcache_stall,
 
         MCACHE_ADR_VALID_SM     =>  dcache_adr_v,
         MCACHE_STORE_SM         =>  dcache_store,
@@ -112,28 +121,25 @@ begin
 
     case EP is 
         when idle   =>  EF  <=  idle; 
-            if dcache_adr_v = '1' and dcache_store = '1' then 
-                EF  <=  dwrite; 
-            elsif dcache_adr_v = '1' and dcache_load = '1' then 
+            if dcache_adr_v = '1' and dcache_store = '1' and trans_d_reg = '0' then 
+                EF  <=  dwrite;
+            elsif dcache_adr_v = '1' and dcache_load = '1' and trans_d_reg = '0' then 
                 EF  <=  dread; 
+
             elsif icache_adr_v = '1' then 
                 EF  <=  iread; 
-            end if; 
+
+            end if;
 
         when dwrite =>  EF  <=  dwrite; 
-            if ACK_I = '1' then 
-                if icache_adr_v = '1' then 
-                    EF  <=  iread;
-                else
-                    EF  <=  idle; 
-                end if;
+            if ACK_I = '1' then
+                EF  <=  idle; 
             end if; 
-
+        
         when dread  =>  EF  <=  dread; 
             if ACK_I = '1' then 
                 EF  <=  idle; 
-            end if; 
-
+            end if;
         when iread  =>  EF  <=  iread; 
             if ACK_I = '1' then 
                 EF  <=  idle;
@@ -167,7 +173,7 @@ begin
             WE_O    <=  '0';
             trans_d <=  '0';
             trans_i <=  '1';
-            no_data <=  '0';
+            no_data <=  '0';   
         end case; 
 end process; 
 
