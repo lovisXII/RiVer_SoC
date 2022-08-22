@@ -104,15 +104,15 @@ int sc_main(int argc, char* argv[]) {
         stats          = true;
         
         #ifdef BRANCH_PREDICTION 
-        filename_stats = "stats_branch.txt";        
+        filename_stats = "stats_branch_SS1.txt";        
         #elif  RET_BRANCH_PREDICTION
-        filename_stats = "stats_stack_branch.txt";        
+        filename_stats = "stats_stack_branch_SS1.txt";        
         #elif BRANCH_PREDICTION & RET_BRANCH_PREDICTION
-        filename_stats = "stat_all_branch.txt";
+        filename_stats = "stat_all_branch_SS1.txt";
         #elif ICACHE_ON & DCACHE_ON
-        filename_stats = "stats_caches.txt";
+        filename_stats = "stats_caches_SS1.txt";
         #else
-        filename_stats = "test_stats.txt";
+        filename_stats = "test_stats_SS1.txt";
         #endif
         test_stats.open(filename_stats, fstream::app);
         if(!test_stats.is_open())
@@ -595,7 +595,7 @@ int sc_main(int argc, char* argv[]) {
                 #ifdef BRANCH_PREDICTION || RET_BRANCH_PREDICTION
                     cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
                 #endif
-                test_stats << test_filename << " " << NB_CYCLES << endl;
+                test_stats << test_filename << " " << NB_CYCLES  << " " << "SCALAR" << endl;
                 test_stats.close();
             }
             
