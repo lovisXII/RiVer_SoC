@@ -1,5 +1,4 @@
 
-
 // ######## OPCODE ########
 // instruction type constants corresponding too instruction its [6, 0]
 

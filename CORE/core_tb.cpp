@@ -1,26 +1,24 @@
 
+#include <ncurses.h>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include "UTIL/colors.h"
+#include "config.h"
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
-#include "config.h"
-
 using namespace std;
 using namespace ELFIO;
-
 
 #ifdef ICACHE_ON
 
 #include "CACHES/icache.h"
 
 // ICACHE I/O INTERFACE MAE STATES
-enum IC_FSM
-{
+enum IC_FSM {
     IC_IDLE,
     IC_SEND_INSTRUCTION_1,
     IC_CLK_SIMU0,
@@ -37,8 +35,7 @@ enum IC_FSM
 #include "CACHES/dcache.h"
 
 // DCACHE ANSWER MAE STATES
-enum DC_FSM
-{
+enum DC_FSM {
     DC_IDLE,
     DC_CLK_SIMU0,
     DC_SEND_DTA_1,
@@ -59,7 +56,7 @@ int sc_main(int argc, char* argv[]) {
     int                     reset_adr;
     int                     start_adr;
     int                     good_adr;
-    int                     exception_occur ;
+    int                     exception_occur;
     int                     bad_adr;
     int                     rvtest_code_end;
     int                     rvtest_entry_point;
@@ -71,15 +68,17 @@ int sc_main(int argc, char* argv[]) {
     string signature_name;
     bool   riscof;
     bool   stats;
+    bool   tty;
 
     if (argc >= 3 && std::string(argv[2]) == "-O") {
         opt = "-O2";
     } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
         signature_name = string(argv[3]);
         riscof         = true;
-    } else if(argc >= 3 && std::string(argv[2]) == "--stats")
-    {
-        stats          = true;
+    } else if (argc >= 3 && std::string(argv[2]) == "--stats") {
+        stats = true;
+    } else if (argc >= 3 && std::string(argv[2]) == "--TTY") {
+        tty = true;
     }
 
     char temp_text[512];
@@ -96,7 +95,8 @@ int sc_main(int argc, char* argv[]) {
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s", opt.c_str(), path.c_str());
+        sprintf(
+            temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s", opt.c_str(), path.c_str());
         system((char*)temp);
         path = "a.out";
     }
@@ -191,8 +191,7 @@ int sc_main(int argc, char* argv[]) {
         }
     }
 
-
-// Components instanciation
+    // Components instanciation
 
     core core_inst("core_inst");
 
@@ -216,16 +215,16 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool>        MEM_STALL;
 
 #ifdef DCACHE_ON
-    //MP interface DCACHE
-    sc_signal<bool> DCACHE_LOAD, DCACHE_STORE;
-    sc_signal<bool> DCACHE_DTA_VALID;
+    // MP interface DCACHE
+    sc_signal<bool>        DCACHE_LOAD, DCACHE_STORE;
+    sc_signal<bool>        DCACHE_DTA_VALID;
     sc_signal<sc_uint<32>> DCACHE_DT;
     sc_signal<sc_uint<32>> DCACHE_A;
     sc_signal<sc_uint<2>>  SIZE_SC;
 
     sc_signal<sc_uint<32>> MP_DT;
     sc_signal<sc_uint<32>> MP_A;
-    sc_signal<bool> MP_ACK_DCACHE;
+    sc_signal<bool>        MP_ACK_DCACHE;
 #endif
 
     // Icache interface
@@ -236,11 +235,11 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<bool>      IC_STALL;
 
 #ifdef ICACHE_ON
-    //MP interface ICACHE
-    sc_signal<bool>                 MP_ACK_ICACHE;
-    sc_signal<sc_uint<32>>          ICACHE_DT;
-    sc_signal<sc_uint<32>>          ICACHE_A;
-    sc_signal<bool>                 ICACHE_DTA_VALID;
+    // MP interface ICACHE
+    sc_signal<bool>        MP_ACK_ICACHE;
+    sc_signal<sc_uint<32>> ICACHE_DT;
+    sc_signal<sc_uint<32>> ICACHE_A;
+    sc_signal<bool>        ICACHE_DTA_VALID;
 #endif
 
     sc_signal<sc_uint<32>> PC_RESET;
@@ -270,11 +269,11 @@ int sc_main(int argc, char* argv[]) {
 
 #ifdef DCACHE_ON
 
-    //Dcache map
+    // Dcache map
     dcache_inst.CLK(CLK);
     dcache_inst.RESET_N(RESET);
     dcache_inst.trace(tf);
-    //processor side
+    // processor side
     dcache_inst.DATA_ADR_SM(MEM_ADR);
     dcache_inst.DATA_SM(MEM_DATA);
     dcache_inst.LOAD_SM(MEM_LOAD);
@@ -283,7 +282,7 @@ int sc_main(int argc, char* argv[]) {
     dcache_inst.VALID_ADR_SM(MEM_ADR_VALID);
     dcache_inst.DATA_SC(MEM_RESULT);
     dcache_inst.STALL_SC(MEM_STALL);
-    //MP side
+    // MP side
     dcache_inst.DTA_VALID_SC(DCACHE_DTA_VALID);
     dcache_inst.READ_SC(DCACHE_LOAD);
     dcache_inst.WRITE_SC(DCACHE_STORE);
@@ -306,18 +305,18 @@ int sc_main(int argc, char* argv[]) {
     icache_inst.CLK(CLK);
     icache_inst.RESET_N(RESET);
     icache_inst.trace(tf);
-    //processor side
+    // processor side
     icache_inst.ADR_SI(IF_ADR);
     icache_inst.ADR_VALID_SI(IF_ADR_VALID);
     icache_inst.IC_INST_SI(IC_INST);
     icache_inst.IC_STALL_SI(IC_STALL);
-    //MP side
+    // MP side
     icache_inst.DT(ICACHE_DT);
     icache_inst.A(ICACHE_A);
     icache_inst.DTA_VALID(ICACHE_DTA_VALID);
     icache_inst.SLAVE_ACK_SP(MP_ACK_ICACHE);
 
-    //init MAE state
+    // init MAE state
     IC_FSM IC_fsm_current_state = IC_IDLE;
 
     bool icache_dta_valid;
@@ -343,137 +342,129 @@ int sc_main(int argc, char* argv[]) {
     int if_result;
     int mem_adr;
     int mem_size;
+    initscr();  // Initialise la structure WINDOW et autres paramètres
+    resizeterm(50, 80);
+    nodelay(stdscr, TRUE);
+    noecho();
+    while (1) {
+        if (tty) {
+            int ch = getch();
 
-    while (1) 
-    {
+            if (ch != ERR) {
+                ram[KEYPRESS_ADDRESS]     = ch;
+                ram[KEYPRESS_ADDRESS + 4] = 1;
+            }
+        }
+
         if (countdown) countdown--;
         cycles++;
 #ifdef DCACHE_ON
         dcache_dta_valid = DCACHE_DTA_VALID.read();
 
-        read = DCACHE_LOAD.read();
+        read  = DCACHE_LOAD.read();
         write = DCACHE_STORE.read();
 
-        switch (DC_fsm_current_state)
-        {
+        switch (DC_fsm_current_state) {
             case DC_IDLE:
-                if(dcache_dta_valid)
-                {
-                    if(read)
-                    {
+                if (dcache_dta_valid) {
+                    if (read) {
                         mem_adr = DCACHE_A.read() & 0xFFFFFFF0;
 
                         MP_DT.write(ram[mem_adr]);
                         MP_A.write(mem_adr);
                         MP_ACK_DCACHE.write(true);
                         DC_fsm_current_state = DC_CLK_SIMU0;
-                    }
-                    else
+                    } else
                         MP_ACK_DCACHE.write(false);
 
-                    if(write)
-                    {
-                        mem_adr = DCACHE_A.read() & 0xFFFFFFFC;
+                    if (write) {
+                        mem_adr  = DCACHE_A.read() & 0xFFFFFFFC;
                         mem_size = SIZE_SC.read();
-                        
-                        int temporary_value = ram[mem_adr] ; 
+
+                        int          temporary_value       = ram[mem_adr];
                         unsigned int temporary_store_value = DCACHE_DT.read();
 
-                        if(mem_size == 2)//access in byte
+                        if (mem_size == 2)  // access in byte
                         {
                             // doing a mask on the least 2 significant bits
-                            int mask_adr = DCACHE_A.read() & 0x00000003 ;
+                            int mask_adr = DCACHE_A.read() & 0x00000003;
                             // The switch will allow to keep only the bits we want to store
-                            switch (mask_adr)
-                            {
-                            case 0 :
-                                temporary_store_value = temporary_store_value & 0x000000FF ;
-                                temporary_value = 0xFFFFFF00 & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;
-                            case 1 :
-                                temporary_store_value = temporary_store_value & 0x0000FF00 ;
-                                temporary_value = 0xFFFF00FF & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;
-                            case 2 :
-                                temporary_store_value = temporary_store_value & 0x00FF0000 ;
-                                temporary_value = 0xFF00FFFF & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;
-                            case 3 :      
-                                temporary_store_value = temporary_store_value & 0xFF000000 ;
-                                temporary_value = 0x00FFFFFF & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;
-                            default:
-                                break;
+                            switch (mask_adr) {
+                                case 0:
+                                    temporary_store_value = temporary_store_value & 0x000000FF;
+                                    temporary_value       = 0xFFFFFF00 & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                case 1:
+                                    temporary_store_value = temporary_store_value & 0x0000FF00;
+                                    temporary_value       = 0xFFFF00FF & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                case 2:
+                                    temporary_store_value = temporary_store_value & 0x00FF0000;
+                                    temporary_value       = 0xFF00FFFF & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                case 3:
+                                    temporary_store_value = temporary_store_value & 0xFF000000;
+                                    temporary_value       = 0x00FFFFFF & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                default: break;
                             }
-                        }
-                        else if(mem_size == 1){//access in half word
-                            int mask_adr = DCACHE_A.read() & 0x00000003 ;
-                            switch (mask_adr)
-                            {
-                            case 0 :
-                                temporary_store_value = temporary_store_value & 0x0000FFFF ;
-                                temporary_value = 0xFFFF0000 & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;
-                            case 2 :          
-                                temporary_store_value = temporary_store_value & 0xFFFF0000 ;
-                                temporary_value = 0x00000FFFF & temporary_value ;
-                                ram[mem_adr] = temporary_value | temporary_store_value ;
-                                break ;      
-                            default:
-                                break;
+                        } else if (mem_size == 1) {  // access in half word
+                            int mask_adr = DCACHE_A.read() & 0x00000003;
+                            switch (mask_adr) {
+                                case 0:
+                                    temporary_store_value = temporary_store_value & 0x0000FFFF;
+                                    temporary_value       = 0xFFFF0000 & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                case 2:
+                                    temporary_store_value = temporary_store_value & 0xFFFF0000;
+                                    temporary_value       = 0x00000FFFF & temporary_value;
+                                    ram[mem_adr]          = temporary_value | temporary_store_value;
+                                    break;
+                                default: break;
                             }
-                        }
-                        else//access in word
+                        } else  // access in word
                         {
                             ram[mem_adr] = DCACHE_DT.read();
                         }
                     }
-                }       
-                else
-                {
+                } else {
                     MP_ACK_DCACHE.write(false);
                 }
-            break;
-            case DC_CLK_SIMU0:
-                DC_fsm_current_state = DC_SEND_DTA_1;
-            break;
+                break;
+            case DC_CLK_SIMU0: DC_fsm_current_state = DC_SEND_DTA_1; break;
             case DC_SEND_DTA_1:
-                MP_DT.write(ram[mem_adr+4]);
-                MP_A.write(mem_adr+4);
+                MP_DT.write(ram[mem_adr + 4]);
+                MP_A.write(mem_adr + 4);
                 MP_ACK_DCACHE.write(true);
                 DC_fsm_current_state = DC_CLK_SIMU1;
-            break;
-            case DC_CLK_SIMU1:
-                DC_fsm_current_state = DC_SEND_DTA_2;
-            break;
+                break;
+            case DC_CLK_SIMU1: DC_fsm_current_state = DC_SEND_DTA_2; break;
             case DC_SEND_DTA_2:
-                MP_DT.write(ram[mem_adr+8]);
-                MP_A.write(mem_adr+8);
+                MP_DT.write(ram[mem_adr + 8]);
+                MP_A.write(mem_adr + 8);
                 MP_ACK_DCACHE.write(true);
                 DC_fsm_current_state = DC_CLK_SIMU2;
-            break;
-            case DC_CLK_SIMU2:
-                DC_fsm_current_state = DC_SEND_DTA_3;
-            break;
+                break;
+            case DC_CLK_SIMU2: DC_fsm_current_state = DC_SEND_DTA_3; break;
             case DC_SEND_DTA_3:
-                MP_DT.write(ram[mem_adr+12]);
-                MP_A.write(mem_adr+12);
+                MP_DT.write(ram[mem_adr + 12]);
+                MP_A.write(mem_adr + 12);
                 MP_ACK_DCACHE.write(true);
                 DC_fsm_current_state = DC_END_BURST;
-            break;
+                break;
             case DC_END_BURST:
                 DC_fsm_current_state = DC_IDLE;
                 MP_ACK_DCACHE.write(false);
-            break;
+                break;
         }
-#else     
-        mem_adr       = MEM_ADR.read() & 0XfffffffC; // removing the least 2 significant bits
-        mem_size      = MEM_SIZE_SM.read() ;
+#else
+        mem_adr                    = MEM_ADR.read() & 0XfffffffC;  // removing the least 2 significant bits
+        mem_size                   = MEM_SIZE_SM.read();
         bool         mem_adr_valid = MEM_ADR_VALID.read();
         unsigned int mem_data      = MEM_DATA.read();
         bool         mem_store     = MEM_STORE.read();
@@ -482,100 +473,88 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
 #ifdef ICACHE_ON
-        switch(IC_fsm_current_state)
-        {
+        switch (IC_fsm_current_state) {
             case IC_IDLE:
                 icache_dta_valid = ICACHE_DTA_VALID.read();
-                if(icache_dta_valid)
-                {
+                if (icache_dta_valid) {
                     if_adr = ICACHE_A.read();
 
                     ICACHE_DT.write(ram[if_adr]);
                     ICACHE_A.write(if_adr);
                     MP_ACK_ICACHE.write(true);
                     IC_fsm_current_state = IC_SEND_INSTRUCTION_1;
-                }
-                else
-                {
+                } else {
                     MP_ACK_ICACHE.write(false);
                 }
-            break;
+                break;
             case IC_SEND_INSTRUCTION_1:
-                ICACHE_DT.write(ram[if_adr+4]);
-                ICACHE_A.write(if_adr+4);
+                ICACHE_DT.write(ram[if_adr + 4]);
+                ICACHE_A.write(if_adr + 4);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU0;
-            break;
-            case IC_CLK_SIMU0:
-                IC_fsm_current_state = IC_SEND_INSTRUCTION_2;
-            break;
+                break;
+            case IC_CLK_SIMU0: IC_fsm_current_state = IC_SEND_INSTRUCTION_2; break;
             case IC_SEND_INSTRUCTION_2:
-                ICACHE_DT.write(ram[if_adr+8]);
-                ICACHE_A.write(if_adr+8);
+                ICACHE_DT.write(ram[if_adr + 8]);
+                ICACHE_A.write(if_adr + 8);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_CLK_SIMU1;
-            break;
-            case IC_CLK_SIMU1:
-                IC_fsm_current_state = IC_SEND_INSTRUCTION_3;
-            break;
+                break;
+            case IC_CLK_SIMU1: IC_fsm_current_state = IC_SEND_INSTRUCTION_3; break;
             case IC_SEND_INSTRUCTION_3:
-                ICACHE_DT.write(ram[if_adr+12]);
-                ICACHE_A.write(if_adr+12);
+                ICACHE_DT.write(ram[if_adr + 12]);
+                ICACHE_A.write(if_adr + 12);
                 MP_ACK_ICACHE.write(true);
                 IC_fsm_current_state = IC_END_BURST;
-            break;
+                break;
             case IC_END_BURST:
                 IC_fsm_current_state = IC_IDLE;
                 MP_ACK_ICACHE.write(false);
-            break;
+                break;
         }
 #else
-        if_adr       = IF_ADR.read();
-        bool         if_afr_valid = IF_ADR_VALID.read();
+        if_adr            = IF_ADR.read();
+        bool if_afr_valid = IF_ADR_VALID.read();
 #endif
 
-
         unsigned int pc_adr = PC_VALUE.read();
-        NB_CYCLES = sc_time_stamp().to_double()/1000;
-        
+        NB_CYCLES           = sc_time_stamp().to_double() / 1000;
+
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
         } else if (signature_name == "" && pc_adr == good_adr) {
-            if(stats)
-            {
-                cout <<"#-- STATS -- #"<<endl<<endl;
-                cout << "NBCYCLES        = "<<std::dec<<NB_CYCLES<<endl;
-                cout << "NB BRANCH TAKEN = "<<nb_jump_taken<<endl<<endl;
-                cout <<"#------------#"<<endl;
+            if (stats) {
+                cout << "#-- STATS -- #" << endl << endl;
+                cout << "NBCYCLES        = " << std::dec << NB_CYCLES << endl;
+                cout << "NB BRANCH TAKEN = " << nb_jump_taken << endl << endl;
+                cout << "#------------#" << endl;
             }
-            
+
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(0);
-        } 
-        else if(signature_name == "" && pc_adr == exception_occur){
+        } else if (signature_name == "" && pc_adr == exception_occur) {
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(2);
-        }
-        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
-            cerr << "inside if : " << endl ; 
+        } else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
+            cerr << "inside if : " << endl;
             countdown = 50;
-            cout << "coutndown value : " << countdown << endl ;
+            cout << "coutndown value : " << countdown << endl;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
-            cout << "signature_name :" << signature_name << endl ;
-            cout << "begin_signature :" << begin_signature << endl ;
-            cout << "end_signature :" << end_signature << endl ;
-            
+            cout << "signature_name :" << signature_name << endl;
+            cout << "begin_signature :" << begin_signature << endl;
+            cout << "end_signature :" << end_signature << endl;
+
             int j = 1;
-            for (int i = begin_signature; i < end_signature; i += 4){
+            for (int i = begin_signature; i < end_signature; i += 4) {
                 j++;
             }
             for (int i = begin_signature; i < end_signature; i += 4) {
@@ -586,59 +565,64 @@ int sc_main(int argc, char* argv[]) {
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
-            int temporary_value = ram[mem_adr] ; 
+            int          temporary_value       = ram[mem_adr];
             unsigned int temporary_store_value = mem_data;
-            if(mem_size == 2){//access in byte
-            // doing a mask on the least 2 significant bits
-                int mask_adr = MEM_ADR.read() & 0x00000003 ;
+            if (mem_size == 2) {  // access in byte
+                // doing a mask on the least 2 significant bits
+                int mask_adr = MEM_ADR.read() & 0x00000003;
                 // The switch will allow to keep only the bits we want to store
-                switch (mask_adr)
-                {
-                case 0 :
-                    temporary_store_value = temporary_store_value & 0x000000FF ;
-                    temporary_value = 0xFFFFFF00 & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;
-                case 1 :
-                    temporary_store_value = temporary_store_value & 0x0000FF00 ;
-                    temporary_value = 0xFFFF00FF & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;
-                case 2 :
-                    temporary_store_value = temporary_store_value & 0x00FF0000 ;
-                    temporary_value = 0xFF00FFFF & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;
-                case 3 :      
-                    temporary_store_value = temporary_store_value & 0xFF000000 ;
-                    temporary_value = 0x00FFFFFF & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;
-                default:
-                    break;
+                switch (mask_adr) {
+                    case 0:
+                        temporary_store_value = temporary_store_value & 0x000000FF;
+                        temporary_value       = 0xFFFFFF00 & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    case 1:
+                        temporary_store_value = temporary_store_value & 0x0000FF00;
+                        temporary_value       = 0xFFFF00FF & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    case 2:
+                        temporary_store_value = temporary_store_value & 0x00FF0000;
+                        temporary_value       = 0xFF00FFFF & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    case 3:
+                        temporary_store_value = temporary_store_value & 0xFF000000;
+                        temporary_value       = 0x00FFFFFF & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    default: break;
                 }
-            }
-            else if(mem_size == 1){//access in half word
-                int mask_adr = MEM_ADR.read() & 0x00000003 ;
-                switch (mask_adr)
-                {
-                case 0 :
-                    temporary_store_value = temporary_store_value & 0x0000FFFF ;
-                    temporary_value = 0xFFFF0000 & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;
-                case 2 :          
-                    temporary_store_value = temporary_store_value & 0xFFFF0000 ;
-                    temporary_value = 0x00000FFFF & temporary_value ;
-                    ram[mem_adr] = temporary_value | temporary_store_value ;
-                    break ;      
-                default:
-                    break;
+            } else if (mem_size == 1) {  // access in half word
+                int mask_adr = MEM_ADR.read() & 0x00000003;
+                switch (mask_adr) {
+                    case 0:
+                        temporary_store_value = temporary_store_value & 0x0000FFFF;
+                        temporary_value       = 0xFFFF0000 & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    case 2:
+                        temporary_store_value = temporary_store_value & 0xFFFF0000;
+                        temporary_value       = 0x00000FFFF & temporary_value;
+                        ram[mem_adr]          = temporary_value | temporary_store_value;
+                        break;
+                    default: break;
                 }
-            }
-            else//access in word
+            } else  // access in word
             {
-                ram[mem_adr] = mem_data;}
+                ram[mem_adr] = mem_data;
+            }
+            if (tty && mem_adr >= TTY_BASE_ADDRESS && mem_adr <= TTY_BASE_ADDRESS + TTY_HEIGHT * TTY_WIDTH) {
+                int offset = mem_adr - TTY_BASE_ADDRESS;
+                int x      = offset % TTY_WIDTH;
+                int y      = offset / TTY_WIDTH;
+                move(y, x);
+                char buf[5];
+                *(int*)buf = ram[mem_adr];
+                printw("%s", buf);
+                refresh();
+            }
         }
         mem_result = ram[mem_adr];
         MEM_RESULT.write(mem_result);

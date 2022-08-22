@@ -4,7 +4,7 @@ RISC=riscv32-unknown-elf-gcc
 INCLUDE_PATH=-I$(SYSTEMC)/include -I../ELFIO
 LINK_PATH=-L $(SYSTEMC)/lib-linux64
 LINKER_ARGS=-rpath=$(SYSTEMC)/lib-linux64 
-LIBS=-lsystemc -lm
+LIBS=-lsystemc -lm -lncurses
 C_ARGS=$(INCLUDE_PATH) $(LINK_PATH) -Wl,$(LINKER_ARGS) $(LIBS) -g
 OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o \
 EXE/shifter.o EXE/x0_multiplier.o EXE/Diviseur.o EXE/exec.o MEM/mem.o MEM/x1_multiplier.o \
