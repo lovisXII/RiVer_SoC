@@ -72,6 +72,11 @@ int sc_main(int argc, char* argv[]) {
     bool   riscof;
     bool   stats;
 
+/*
+    ##############################################################
+                    PARSING ELF/.s/.c file 
+    ##############################################################
+*/
     if (argc >= 3 && std::string(argv[2]) == "-O") {
         opt = "-O2";
     } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
@@ -83,24 +88,24 @@ int sc_main(int argc, char* argv[]) {
     }
 
     char temp_text[512];
-    if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
+    if (path.substr(path.find_last_of(".") + 1) == "s") {  
         char temp[512];
 
         sprintf(temp,
                 "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s",
                 opt.c_str(),
-                path.c_str());  // writting "riscv32-unknown-elf-gcc -nostdlib
-                                // path" in temp
-        system((char*)temp);    // send the command in temp to the terminal
-        path = "a.out";         // give the output
+                path.c_str());  
+                                
+        system((char*)temp);    
+        path = "a.out";         
     }
-    if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
+    if (path.substr(path.find_last_of(".") + 1) == "c") { 
         char temp[512];
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s", opt.c_str(), path.c_str());
         system((char*)temp);
         path = "a.out";
     }
-    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle "
+    if (!reader.load(path)) {  
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return -3;
     }
@@ -108,20 +113,14 @@ int sc_main(int argc, char* argv[]) {
     strcat(temp_text, test);
     system((char*)temp_text);
     cout << "Loading ELF file..." << endl;
-
-    /*
-    An Elf binary file consist of segments and sections. Each sections has its
-    own responsability, some contains executable code, others programs
-    data...etc.
-    We need to find out the sections of ELF file. The code below find out theses
-    sections.
-    */
-    // section* text_sec = reader.sections.add( ".section .kernel" );
-    // text_sec->set_type( SHT_PROGBITS );
-    // text_sec->set_flags( SHF_ALLOC | SHF_EXECINSTR );
-    // text_sec->set_address( 0x80000000 );
-
+ 
     int n_sec = reader.sections.size();  // get the total amount of sections
+
+/*
+    ##############################################################
+                    PLACING DATA INTO THE RAM 
+    ##############################################################
+*/
 
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
@@ -133,10 +132,16 @@ int sc_main(int argc, char* argv[]) {
             cout << "Loading data";
             for (int j = 0; j < size; j += 4) {
                 cout << ".";
-                ram[adr + j] = data[j / 4];  // put every adress segment in the ram
+                ram[adr + j] = data[j / 4]; 
             }
             cout << endl;
         }
+
+/*
+    ##############################################################
+                    LOOKING FOR SECTIONS IN ELF FILE 
+    ##############################################################
+*/
 
         if (sec->get_type() == SHT_SYMTAB) {
             cout << "Reading symbols table..." << endl;
@@ -191,8 +196,11 @@ int sc_main(int argc, char* argv[]) {
         }
     }
 
-
-// Components instanciation
+/*
+    ##############################################################
+                    COMPONENT INSTANCIATION
+    ##############################################################
+*/
 
     core core_inst("core_inst");
 
@@ -325,17 +333,14 @@ int sc_main(int argc, char* argv[]) {
 
     cout << "Reseting...";
 
-    RESET.write(false);  // reset
+    RESET.write(false);  
     PC_RESET.write(reset_adr);
-    sc_start(3, SC_NS);  // wait for 1 cycle
-    RESET.write(true);   // end of reset
+    sc_start(3, SC_NS);  
+    RESET.write(true);   
     cerr << "done." << endl;
 
-    // STATS
 
     int NB_CYCLES = 0;
-    //
-
     int cycles = 0;
     int countdown;
 
@@ -535,6 +540,12 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
 
+/*
+    ##############################################################
+                    END OF TEST GESTION
+    ##############################################################
+*/
+
         unsigned int pc_adr = PC_VALUE.read();
         NB_CYCLES = sc_time_stamp().to_double()/1000;
         
@@ -583,6 +594,12 @@ int sc_main(int argc, char* argv[]) {
             }
             exit(0);
         }
+
+/*
+    ##############################################################
+                    MEMORY ACCESS GESTION
+    ##############################################################
+*/
 
 #ifndef DCACHE_ON
         if (mem_store && mem_adr_valid) {
@@ -652,6 +669,6 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
         sc_start(500, SC_PS);
-    }
+}
     return 0;
 }

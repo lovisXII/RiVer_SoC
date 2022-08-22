@@ -45,7 +45,8 @@ SC_MODULE(decod) {
     sc_out<bool> CSRRC_I_RD;
     sc_out<sc_uint<12>> CSR_WADR_RD;   // CSR adress sent to EXE, will allow to wbk csr in MEM
     sc_out<sc_uint<32>> CSR_RDATA_RD;  // CSR read data to be wb in register
-
+    sc_in<sc_uint<32>> KERNEL_ADR_SC;
+    
     // Interface with DEC2IF :
 
     sc_in<bool>        DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
