@@ -16,7 +16,7 @@ using namespace ELFIO;
 
 #ifdef ICACHE_ON
 
-#include "CACHES/icache.h"
+#include "CACHES/icache.h"ios::out
 
 // ICACHE I/O INTERFACE MAE STATES
 enum IC_FSM
@@ -67,6 +67,9 @@ int sc_main(int argc, char* argv[]) {
     int                     begin_signature;
     int                     end_signature;
 
+    fstream test_stats;
+    string filename_stats;
+
     char   test[512] = "> a.out.txt.s";
     string opt;
     string signature_name;
@@ -97,9 +100,13 @@ int sc_main(int argc, char* argv[]) {
     else if(argc >= 3 && std::string(argv[2]) == "--stats")
     {
         stats          = true;
-        string filename_stats("test_stats.txt") ;
-        ofstream test_stats;
-        test_stats.open(filename_stats, ios::out | ios::trunc);
+        filename_stats = "test_stats.txt";
+        test_stats.open(filename_stats, fstream::app);
+        if(!test_stats.is_open())
+        {
+            cout << "Impossible to open " << filename_stats << endl ;
+            exit(1);
+        }
     }
 
     char temp_text[512];
@@ -325,10 +332,7 @@ int sc_main(int argc, char* argv[]) {
 
 #ifdef ICACHE_ON
 
-    // ICache map
-    icache_inst.CLK(CLK);
-    icache_inst.RESET_N(RESET);
-    icache_inst.trace(tf);
+    // ICache mapios::out
     //processor side
     icache_inst.ADR_SI(IF_ADR);
     icache_inst.ADR_VALID_SI(IF_ADR_VALID);
@@ -571,10 +575,11 @@ int sc_main(int argc, char* argv[]) {
         } else if (signature_name == "" && pc_adr == good_adr) {
             if(stats)
             {
-                cout << "#-- STATS -- #"        <<  endl ;
-                cout << "NBCYCLES        = "    <<  std::dec << NB_CYCLES   <<endl;
-                cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
-                cout << "#------------#"        <<  endl;
+                #ifdef BRANCH_PREDICTION || RET_BRANCH_PREDICTION
+                    cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
+                #endif
+                test_stats << test_filename << " " << NB_CYCLES << endl;
+                test_stats.close();
             }
             
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
