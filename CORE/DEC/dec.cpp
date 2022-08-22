@@ -1026,7 +1026,7 @@ void decod::pc_inc() {
             if (PRED_TAKEN_RI.read() && stall_sd && !(PRED_SUCCESS_RD.read() || PRED_FAILED_RD.read())) {
                 pc_out = PRED_ADR_RI.read() + 4;
             } else if (PRED_TAKEN_RI.read() && !stall_sd) {
-                pc_out = pc + 4;
+                pc_out = PC_IF2DEC_RI.read() + 4;
             } else
                 pc_out = pc + 4;
 
