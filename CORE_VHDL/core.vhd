@@ -82,11 +82,11 @@ signal REG_DEST_SW : std_logic_vector(5 downto 0);
 signal REG_WB_SW : std_logic;
 
 -- Bypasses
-signal DEST_RE : std_logic_vector(5 downto 0);
-signal EXE_RES_RE : std_logic_vector(31 downto 0);
-signal MEM_LOAD_RE, EXE2MEM_EMPTY_SE : std_logic;
-signal DEST_RM : std_logic_vector(5 downto 0);
-signal MEM_RES_RM : std_logic_vector(31 downto 0);
+signal BP_DEST_RE : std_logic_vector(5 downto 0);
+signal BP_EXE_RES_RE : std_logic_vector(31 downto 0);
+signal BP_MEM_LOAD_RE, BP_EXE2MEM_EMPTY_SE : std_logic;
+signal BP_DEST_RM : std_logic_vector(5 downto 0);
+signal BP_MEM_RES_RM : std_logic_vector(31 downto 0);
 signal BP_R1_VALID_RD, BP_R2_VALID_RD : std_logic;
 signal BP_RADR1_RD, BP_RADR2_RD : std_logic_vector(5 downto 0);
 
@@ -297,12 +297,12 @@ component dec
         MULT_INST_RM    :   in  std_logic;
 
         -- Bypasses
-        DEST_RE : in std_logic_vector(5 downto 0);
-        EXE_RES_RE : in std_logic_vector(31 downto 0);
-        MEM_LOAD_RE : in std_logic;
-        EXE2MEM_EMPTY_SE, MEM2WBK_EMPTY_SM : in std_logic;
-        DEST_RM : in std_logic_vector(5 downto 0);
-        MEM_RES_RM : in std_logic_vector(31 downto 0);
+        BP_DEST_RE : in std_logic_vector(5 downto 0);
+        BP_EXE_RES_RE : in std_logic_vector(31 downto 0);
+        BP_MEM_LOAD_RE : in std_logic;
+        BP_EXE2MEM_EMPTY_SE, BP_MEM2WBK_EMPTY_SM : in std_logic;
+        BP_DEST_RM : in std_logic_vector(5 downto 0);
+        BP_MEM_RES_RM : in std_logic_vector(31 downto 0);
         BP_R1_VALID_RD, BP_R2_VALID_RD : out std_logic;
         BP_RADR1_RD, BP_RADR2_RD : out std_logic_vector(5 downto 0);
         BLOCK_BP_RD : out std_logic;
@@ -373,7 +373,7 @@ component exec
         MEM_RES_RM : in std_logic_vector(31 downto 0);
         CSR_WENABLE_RM : in std_logic;
         CSR_RDATA_RM : in std_logic_vector(31 downto 0);
-        MEM2WBK_EMPTY_SM : in std_logic;
+        BP_MEM2WBK_EMPTY_SM : in std_logic;
 
         -- CSR 
         CSR_WENABLE_RD : in std_logic;
@@ -764,13 +764,13 @@ dec_i : dec
         MULT_INST_RM        => MULT_INST_RM,
 
         -- Bypasses
-        DEST_RE             => DEST_RE,
-        EXE_RES_RE          => RES_RE,
-        MEM_LOAD_RE         => MEM_LOAD_RE,
-        EXE2MEM_EMPTY_SE    => EXE2MEM_EMPTY_SE, 
-        MEM2WBK_EMPTY_SM    => MEM2WBK_EMPTY_SM,
-        DEST_RM         => MEM_DEST_RM,
-        MEM_RES_RM          => MEM_RES_RM,
+        BP_DEST_RE             => DEST_RE,
+        BP_EXE_RES_RE          => RES_RE,
+        BP_MEM_LOAD_RE         => MEM_LOAD_RE,
+        BP_EXE2MEM_EMPTY_SE    => EXE2MEM_EMPTY_SE, 
+        BP_MEM2WBK_EMPTY_SM    => MEM2WBK_EMPTY_SM,
+        BP_DEST_RM         => MEM_DEST_RM,
+        BP_MEM_RES_RM          => MEM_RES_RM,
         BP_R1_VALID_RD      => BP_R1_VALID_RD, 
         BP_R2_VALID_RD      => BP_R2_VALID_RD,
         BP_RADR1_RD         => BP_RADR1_RD,
@@ -852,7 +852,7 @@ exec_i : exec
         CSR_WENABLE_RM      => CSR_WENABLE_RM,
         CSR_RDATA_RM        => CSR_RDATA_RM,
 
-        MEM2WBK_EMPTY_SM => MEM2WBK_EMPTY_SM,
+        BP_MEM2WBK_EMPTY_SM => MEM2WBK_EMPTY_SM,
 
         -- CSR 
         CSR_WENABLE_RD      => CSR_WENABLE_RD,

@@ -2,13 +2,12 @@
 .global _start
 
 _start:
-    li      x3, 256
-    li      x4, -1
-_loop: 
-    addi    x22, x22, 2
-    sw      x22, 32(x0)
-    bne     x3, x22, _loop
-    sw      x4, 32(x0)
-    j _good
+    ori     x3, x0, 15
+    ori     x4, x0, 1
+    add     x5, x4, x3
+    sw      x5, 60(x0)
+    nop
+    li      x4, 0x40000000
+    sw      x3, 0(x4)
     nop
     nop
