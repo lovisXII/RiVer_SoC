@@ -10,41 +10,44 @@ void wb_arbiter::master_selector()
     }
     else
     {
-        CYC_O = CYC_0_I | CYC_1_I; //CYC_0_I | CYC_1_I | CYC_2_I | ../..
-        
-        bool found = false;
-        switch (master_priority.read())
+        if(!STB_I)
         {
-        case 0:
-            if(CYC_0_I)
+            CYC_O = CYC_0_I | CYC_1_I; //CYC_0_I | CYC_1_I | CYC_2_I | ../..
+
+            bool found = false;
+            switch (master_priority.read())
             {
-                GRANT_0_O = true;
-                GRANT_1_O = false;
-                master_priority.write(master_priority.read()+1);
-                found = true;
+            case 0:
+                if(CYC_0_I)
+                {
+                    GRANT_0_O = true;
+                    GRANT_1_O = false;
+                    master_priority.write(master_priority.read()+1);
+                    found = true;
+                }
+                break;
+            case 1:
+                if(CYC_1_I)
+                {
+                    GRANT_0_O = false;
+                    GRANT_1_O = true;
+                    master_priority.write(master_priority.read()+1);
+                    found = true;
+                }
+                break;
             }
-            break;
-        case 1:
-            if(CYC_1_I)
+            if(!found)
             {
-                GRANT_0_O = false;
-                GRANT_1_O = true;
-                master_priority.write(master_priority.read()+1);
-                found = true;
-            }
-            break;
-        }
-        if(!found)
-        {
-            if(CYC_0_I)
-            {
-                GRANT_0_O = true;
-                GRANT_1_O = false;
-            }
-            else if(CYC_1_I)
-            {
-                GRANT_0_O = false;
-                GRANT_1_O = true;
+                if(CYC_0_I)
+                {
+                    GRANT_0_O = true;
+                    GRANT_1_O = false;
+                }
+                else if(CYC_1_I)
+                {
+                    GRANT_0_O = false;
+                    GRANT_1_O = true;
+                }
             }
         }
     }

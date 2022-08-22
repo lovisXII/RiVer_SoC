@@ -21,7 +21,8 @@ SC_MODULE(wb_arbiter)
 
     //interface bus
     sc_in<sc_uint<32>>  ADR_I;
-
+    sc_in<bool>         STB_I;
+    
     //interface master0
     sc_in<bool>     CYC_0_I;
     sc_out<bool>    GRANT_0_O;

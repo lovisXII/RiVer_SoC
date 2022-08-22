@@ -47,21 +47,7 @@ void dcache::miss_detection()
   miss = (!way0_hit) & (!way1_hit);
   STALL_SC.write((miss && LOAD_SM) || (STORE_SM && full));
 
-  //SNOOPY
-  if(!GRANT.read())
-  {
-    // COMPARE HIT WAY0
-    if(bus_tag == w0_TAG[bus_index.read()])
-    {
-      w0_LINE_VALIDATE[bus_index.read()] = false;
-    }
 
-    // COMPARE HIT WAY1
-    if(bus_tag == w1_TAG[bus_index.read()])
-    {
-      w1_LINE_VALIDATE[bus_index.read()] = false;
-    }
-  }
 }
 void dcache::new_state()
 {
@@ -107,6 +93,21 @@ void dcache::state_transition()
 }
 void dcache::mae_output()
 {
+  //SNOOPY
+  if(!GRANT.read())
+  {
+    // COMPARE HIT WAY0
+    if(bus_tag == w0_TAG[bus_index.read()])
+    {
+      w0_LINE_VALIDATE[bus_index.read()] = false;
+    }
+    // COMPARE HIT WAY1
+    if(bus_tag == w1_TAG[bus_index.read()])
+    {
+      w1_LINE_VALIDATE[bus_index.read()] = false;
+    }
+  }
+
   switch(current_state.read())
   {
     case DC_IDLE:

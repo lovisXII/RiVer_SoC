@@ -5,10 +5,13 @@
 .space 16
 _bad :
     nop
+    j _bad
 _good :
     nop
+    j _good
 _exception_occur :
     nop
+    j _exception_occur
 .section .kernel
 .global _exception
 .global _instruction_address_misagligned 

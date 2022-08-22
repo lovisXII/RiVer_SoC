@@ -85,6 +85,7 @@ SC_MODULE(wb_bus)
         arbiter_inst.CLK(CLK);
         arbiter_inst.RESET_N(RESET_N);
         arbiter_inst.ADR_I(ADR);
+        arbiter_inst.STB_I(STB);
         arbiter_inst.CYC_0_I(CYC_REQ_0);
         arbiter_inst.GRANT_0_O(GRANT_0);
         arbiter_inst.CYC_1_I(CYC_REQ_1);

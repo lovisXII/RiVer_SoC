@@ -19,7 +19,7 @@ all: SoC_tb
 SoC_tb: $(OBJECTS) kernel 
 	$(CC) $(OBJECTS) -o $@ $(C_ARGS) 
 
-kernel: CORE/exception.s ../SW/reset.s
+kernel: SW/exception.s SW/reset.s
 	$(RISC) $(RISC_FLAGS) $^ -o $@
 	
 %.o: %.cpp  %.h

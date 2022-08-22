@@ -24,15 +24,15 @@ void csr::writing_csr() {
                 case 0xF13: break;                                  // mimpid
                 case 0xF14: break;                                  // mhartid
                 case 0x301: break;                                  // misa
-                case 0x304: csr_rc[5].write(CSR_WDATA_SM); break;   // mie
-                case 0x305: csr_rc[6].write(CSR_WDATA_SM); break;   // mtvec
+                case 0x304: csr_rc[6].write(CSR_WDATA_SM); break;   // mie
+                case 0x305: csr_rc[7].write(CSR_WDATA_SM); break;   // mtvec
                 case 0x310: break;                                  // mstatush
-                case 0x341: csr_rc[8].write(CSR_WDATA_SM); break;   // mepc
-                case 0x342: csr_rc[9].write(CSR_WDATA_SM); break;   // mcause
-                case 0x343: csr_rc[10].write(CSR_WDATA_SM); break;  // mtval
-                case 0x344: csr_rc[11].write(CSR_WDATA_SM); break;  // mip
-                case 0x300: csr_rc[3].write(CSR_WDATA_SM); break;   // mstatus
-                case 0x340: csr_rc[12].write(CSR_WDATA_SM); break;  // mstatus
+                case 0x341: csr_rc[9].write(CSR_WDATA_SM); break;   // mepc
+                case 0x342: csr_rc[10].write(CSR_WDATA_SM); break;  // mcause
+                case 0x343: csr_rc[11].write(CSR_WDATA_SM); break;  // mtval
+                case 0x344: csr_rc[12].write(CSR_WDATA_SM); break;  // mip
+                case 0x300: csr_rc[4].write(CSR_WDATA_SM); break;   // mstatus
+                case 0x340: csr_rc[13].write(CSR_WDATA_SM); break;  // mstatus
                 case 0x5C0: TIMER_CONFIG_WB_SC.write(1); break;     // timer config
                 case 0x5C1: TIMER_DIVIDER_WB_SC.write(1); break;    // timer divider
                 case 0xC01: break;                                  // time
@@ -43,17 +43,17 @@ void csr::writing_csr() {
 
         if (TIMER_INT_ST.read()) {
             ACK_SP     = 1;
-            csr_rc[11] = csr_rc[11].read() & (1 << 7);
+            csr_rc[12] = csr_rc[12].read() & (1 << 7);
         } else {
             ACK_SP = 0;
         }
 
         if (EXCEPTION_SM.read()) {
-            csr_rc[3]  = MSTATUS_WDATA_RM.read();
-            csr_rc[11] = MIP_WDATA_RM.read();
-            csr_rc[8]  = MEPC_WDATA_RM.read();
-            csr_rc[9]  = MCAUSE_WDATA_SM.read();
-            csr_rc[10] = MTVAL_WDATA_SM;
+            csr_rc[4]  = MSTATUS_WDATA_RM.read();
+            csr_rc[12] = MIP_WDATA_RM.read();
+            csr_rc[9]  = MEPC_WDATA_RM.read();
+            csr_rc[10]  = MCAUSE_WDATA_SM.read();
+            csr_rc[11] = MTVAL_WDATA_SM;
         }
         wait(1);
     }
@@ -79,12 +79,12 @@ void csr::reading_csr() {
         case 0xC81: CSR_RDATA_O.write(TIME_RT.read().range(63, 32)); break;  // timeh
         default: CSR_RDATA_O.write(0); break;
     }
-    MEPC_SC.write(csr_rc[8]);
-    MSTATUS_RC.write(csr_rc[3]);
-    MTVEC_VALUE_RC.write(csr_rc[6]);
-    MIP_VALUE_RC.write(csr_rc[11]);
-    MIE_VALUE_RC.write(csr_rc[5]);
-    MCAUSE_SC.write(csr_rc[9]);
+    MEPC_SC.write(csr_rc[9]);
+    MSTATUS_RC.write(csr_rc[4]);
+    MTVEC_VALUE_RC.write(csr_rc[7]);
+    MIP_VALUE_RC.write(csr_rc[12]);
+    MIE_VALUE_RC.write(csr_rc[6]);
+    MCAUSE_SC.write(csr_rc[10]);
 }
 
 void csr::trace(sc_trace_file* tf) {
@@ -109,16 +109,17 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[0], signal_get_name(csr_rc[0].name(), "mvendorid"));
     sc_trace(tf, csr_rc[1], signal_get_name(csr_rc[1].name(), "marchid"));
     sc_trace(tf, csr_rc[2], signal_get_name(csr_rc[2].name(), "mimpid"));
-    sc_trace(tf, csr_rc[3], signal_get_name(csr_rc[3].name(), "mstatus"));
-    sc_trace(tf, csr_rc[4], signal_get_name(csr_rc[4].name(), "misa"));
-    sc_trace(tf, csr_rc[5], signal_get_name(csr_rc[5].name(), "mie"));
-    sc_trace(tf, csr_rc[6], signal_get_name(csr_rc[6].name(), "mtvec"));
-    sc_trace(tf, csr_rc[7], signal_get_name(csr_rc[7].name(), "mstatush"));
-    sc_trace(tf, csr_rc[8], signal_get_name(csr_rc[8].name(), "mepc"));
-    sc_trace(tf, csr_rc[9], signal_get_name(csr_rc[9].name(), "mcause"));
-    sc_trace(tf, csr_rc[10], signal_get_name(csr_rc[10].name(), "mtval"));
-    sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(), "mip"));
-    sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mscratch"));
+    sc_trace(tf, csr_rc[3], signal_get_name(csr_rc[3].name(), "mhartid"));
+    sc_trace(tf, csr_rc[4], signal_get_name(csr_rc[4].name(), "mstatus"));
+    sc_trace(tf, csr_rc[5], signal_get_name(csr_rc[5].name(), "misa"));
+    sc_trace(tf, csr_rc[6], signal_get_name(csr_rc[6].name(), "mie"));
+    sc_trace(tf, csr_rc[7], signal_get_name(csr_rc[7].name(), "mtvec"));
+    sc_trace(tf, csr_rc[8], signal_get_name(csr_rc[8].name(), "mstatush"));
+    sc_trace(tf, csr_rc[9], signal_get_name(csr_rc[9].name(), "mepc"));
+    sc_trace(tf, csr_rc[10], signal_get_name(csr_rc[10].name(), "mcause"));
+    sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(), "mtval"));
+    sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mip"));
+    sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "mscratch"));
 
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));

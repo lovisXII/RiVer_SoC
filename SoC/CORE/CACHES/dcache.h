@@ -140,10 +140,7 @@ SC_MODULE(dcache)
               << STORE_SM
               << way0_hit
               << way1_hit
-              << CLK.neg()
-              << GRANT
-              << bus_tag
-              << bus_index;
+              << CLK.neg();
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
