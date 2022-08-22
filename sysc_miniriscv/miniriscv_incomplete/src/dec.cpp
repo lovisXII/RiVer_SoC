@@ -374,13 +374,13 @@ void decod::bypasses() {
          instruction in EXE, and the values sent by the bypass are garbage.
         */
         invalid_operand_sd = true;
-    } else if (RADR1_SD == BP_DEST_RE && BP_MEM_LOAD_RE && !BP_EXE2MEM_EMPTY_SE) {
+    } else if (RADR1_SD == DEST_RE && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         /*
          exactly the same condition, but for MEM, and we check that it is a memory instruction
          to ensure the result is not ready
         */
         invalid_operand_sd = true;
-    } else if (RADR1_SD == BP_DEST_RE && !BP_EXE2MEM_EMPTY_SE) {
+    } else if (RADR1_SD == DEST_RE && !EXE2MEM_EMPTY_SE) {
         /*
          EXE -> DEC Bypass
          If the result if EXE will be written in the register we need, we can use the bypass
@@ -388,15 +388,15 @@ void decod::bypasses() {
          Once again, we need to check the FIFO is not empty to ensure the value is valid.
         */
         invalid_operand_sd = false;
-        rdata1_sd          = BP_EXE_RES_RE;
-    } else if (RADR1_SD == BP_DEST_RM && !BP_MEM2WBK_EMPTY_SM) {
+        rdata1_sd          = EXE_RES_RE;
+    } else if (RADR1_SD == DEST_RM && !MEM2WBK_EMPTY_SM) {
         /*
          EXE -> DEC Bypass
          Same bypass, but in MEM. Bypass in EXE has priority over bypass in MEM, because the value
          is more recent.
         */
         invalid_operand_sd = false;
-        rdata1_sd          = BP_MEM_RES_RM;
+        rdata1_sd          = MEM_RES_RM;
     } else {
         /*
          If none of these conditions is true, we just use the value from registers.
@@ -416,27 +416,27 @@ void decod::bypasses() {
          instruction in EXE, and the values sent by the bypass are garbage.
         */
         invalid_operand_sd = true;
-    } else if (RADR2_SD == BP_DEST_RE && BP_MEM_LOAD_RE && !BP_EXE2MEM_EMPTY_SE) {
+    } else if (RADR2_SD == DEST_RE && MEM_LOAD_RE && !EXE2MEM_EMPTY_SE) {
         /*
          exactly the same condition, but for MEM, and we check that it is a memory instruction
          to ensure the result is not ready
         */
         invalid_operand_sd = true;
-    } else if (RADR2_SD == BP_DEST_RE && !BP_EXE2MEM_EMPTY_SE) {
+    } else if (RADR2_SD == DEST_RE && !EXE2MEM_EMPTY_SE) {
         /*
          EXE -> DEC Bypass
          If the result of EXE will be written in the register we need, we can use the bypass
          to get the value directly, saving clock cycles.
          Once again, we need to check the FIFO is not empty to ensure the value is valid.
         */
-        rdata2_sd = BP_EXE_RES_RE;
-    } else if (RADR2_SD == BP_DEST_RM && !BP_MEM2WBK_EMPTY_SM) {
+        rdata2_sd = EXE_RES_RE;
+    } else if (RADR2_SD == DEST_RM && !MEM2WBK_EMPTY_SM) {
         /*
          MEM -> DEC Bypass
          Same bypass, but in MEM. Bypass in EXE has priority over bypass in MEM, because the value
          is more recent.
         */
-        rdata2_sd = BP_MEM_RES_RM;
+        rdata2_sd = MEM_RES_RM;
     } else {
         /*
          If none of these conditions is true, we just use the value from registers.
@@ -854,13 +854,13 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, DEC2EXE_POP_SE, GET_NAME(DEC2EXE_POP_SE));
     sc_trace(tf, DEC2EXE_EMPTY_SD, GET_NAME(DEC2EXE_EMPTY_SD));
     sc_trace(tf, dec2exe_out_sd, GET_NAME(dec2exe_out_sd));
-    sc_trace(tf, BP_DEST_RE, GET_NAME(BP_DEST_RE));
-    sc_trace(tf, BP_EXE_RES_RE, GET_NAME(BP_EXE_RES_RE));
-    sc_trace(tf, BP_MEM_LOAD_RE, GET_NAME(BP_MEM_LOAD_RE));
-    sc_trace(tf, BP_EXE2MEM_EMPTY_SE, GET_NAME(BP_EXE2MEM_EMPTY_SE));
-    sc_trace(tf, BP_MEM2WBK_EMPTY_SM, GET_NAME(BP_MEM2WBK_EMPTY_SM));
-    sc_trace(tf, BP_DEST_RM, GET_NAME(BP_DEST_RM));
-    sc_trace(tf, BP_MEM_RES_RM, GET_NAME(BP_MEM_RES_RM));
+    sc_trace(tf, DEST_RE, GET_NAME(DEST_RE));
+    sc_trace(tf, EXE_RES_RE, GET_NAME(EXE_RES_RE));
+    sc_trace(tf, MEM_LOAD_RE, GET_NAME(MEM_LOAD_RE));
+    sc_trace(tf, EXE2MEM_EMPTY_SE, GET_NAME(EXE2MEM_EMPTY_SE));
+    sc_trace(tf, MEM2WBK_EMPTY_SM, GET_NAME(MEM2WBK_EMPTY_SM));
+    sc_trace(tf, DEST_RM, GET_NAME(DEST_RM));
+    sc_trace(tf, MEM_RES_RM, GET_NAME(MEM_RES_RM));
     sc_trace(tf, BP_RADR1_RD, GET_NAME(BP_RADR1_RD));
     sc_trace(tf, BP_RADR2_RD, GET_NAME(BP_RADR2_RD));
     sc_trace(tf, block_in_dec_sd, GET_NAME(block_in_dec_sd));

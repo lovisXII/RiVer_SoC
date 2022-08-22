@@ -209,13 +209,13 @@ SC_MODULE(cpu) {
         dec_inst.IF2DEC_FLUSH_SD(IF2DEC_FLUSH_SD);
         dec_inst.DEC2EXE_POP_SE(DEC2EXE_POP_SE);
         dec_inst.DEC2EXE_EMPTY_SD(DEC2EXE_EMPTY_SD);
-        dec_inst.BP_DEST_RE(DEST_RE);
-        dec_inst.BP_EXE_RES_RE(EXE_RES_RE);
-        dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
-        dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        dec_inst.BP_DEST_RM(DEST_RM);
-        dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
-        dec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        dec_inst.DEST_RE(DEST_RE);
+        dec_inst.EXE_RES_RE(EXE_RES_RE);
+        dec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
+        dec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
+        dec_inst.DEST_RM(DEST_RM);
+        dec_inst.MEM_RES_RM(MEM_RES_RM);
+        dec_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
         dec_inst.BP_RADR1_RD(RADR1_RD);
         dec_inst.BP_RADR2_RD(RADR2_RD);
         dec_inst.BLOCK_BP_RD(BLOCK_BP_RD);
@@ -252,9 +252,9 @@ SC_MODULE(cpu) {
         exec_inst.MEM_SIGN_EXTEND_RE(MEM_SIGN_EXTEND_RE);
         exec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
         exec_inst.MEM_STORE_RE(MEM_STORE_RE);
-        exec_inst.BP_DEST_RM(DEST_RM);
-        exec_inst.BP_MEM_RES_RM(MEM_RES_RM);
-        exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        exec_inst.DEST_RM(DEST_RM);
+        exec_inst.MEM_RES_RM(MEM_RES_RM);
+        exec_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
 

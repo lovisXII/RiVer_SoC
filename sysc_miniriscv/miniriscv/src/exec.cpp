@@ -105,13 +105,13 @@ void exec::bypasses() {
          */
         op1_se             = EXE_RES_RE;
         invalid_operand_se = false;
-    } else if (RADR1_RD == BP_DEST_RM && !BP_MEM2WBK_EMPTY_SM) {
+    } else if (RADR1_RD == DEST_RM && !MEM2WBK_EMPTY_SM) {
         /*
          MEM -> EXE Bypass
          Same bypass, but in MEM. Bypass in EXE has priority over bypass in MEM, because the
          value is more recent.
         */
-        op1_se             = BP_MEM_RES_RM;
+        op1_se             = MEM_RES_RM;
         invalid_operand_se = false;
     } else {
         /*
@@ -154,17 +154,17 @@ void exec::bypasses() {
             mem_data_se = MEM_DATA_RD;
         }
         invalid_operand_se = false;
-    } else if (RADR2_RD == BP_DEST_RM && !BP_MEM2WBK_EMPTY_SM) {
+    } else if (RADR2_RD == DEST_RM && !MEM2WBK_EMPTY_SM) {
         /*
          MEM -> EXE Bypass
          Same bypass, but in MEM. Bypass in EXE has priority over bypass in MEM, because the
          value is more recent.
         */
         if (MEM_STORE_RD) {
-            mem_data_se = BP_MEM_RES_RM;
+            mem_data_se = MEM_RES_RM;
             op2_se      = OP2_RD;
         } else {
-            op2_se      = BP_MEM_RES_RM;
+            op2_se      = MEM_RES_RM;
             mem_data_se = MEM_DATA_RD;
         }
         invalid_operand_se = false;
