@@ -669,6 +669,6 @@ int sc_main(int argc, char* argv[]) {
 #endif
 
         sc_start(500, SC_PS);
-    }
+}
     return 0;
 }
