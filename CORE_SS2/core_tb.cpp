@@ -54,6 +54,7 @@ enum DC_FSM {
 int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
     elfio                   reader;  // creation of an elfio object
+    string                  test_filename(argv[1]);
     string                  path(argv[1]);
     int                     reset_adr;
     int                     start_adr;
@@ -66,30 +67,77 @@ int sc_main(int argc, char* argv[]) {
     int                     end_signature;
     int                     rvtest_end;
 
+    fstream test_stats;
+    string filename_stats;
+
     char   test[512] = "> a.out.txt.s";
     string opt;
     string signature_name;
     bool   riscof;
-    if (argc >= 3 && std::string(argv[2]) == "-O") {
+    bool   stats;
+    int tmp = test_filename.rfind("/");
+    test_filename = test_filename.substr(tmp+1, test_filename.size());
+
+/*
+    ##############################################################
+                    PARSING ELF/.s/.c file 
+    ##############################################################
+*/
+
+    if(argc == 2 && std::string(argv[1]) == "--help"){
+        cout << endl << endl;
+        cout << "Usage: ./core_tb test_filename [options] ..." << endl;
+        cout << "Options:" << endl << endl;
+        cout << "-O                          \t Optimise the .c file" << endl;
+        cout << "--riscof signature_filename \t Allow to enable the riscof gestion and store the signature in the file named signature_filename" << endl ;
+        cout << "--stats                     \t Allow to use the statistic such as the number of cycle needed to end the program" << endl;
+        exit(0);
+    }
+    else if (argc >= 3 && std::string(argv[2]) == "-O") 
+    {
         opt = "-O2";
-    } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
+    } 
+    else if (argc >= 3 && std::string(argv[2]) == "--riscof") 
+    {
         signature_name = string(argv[3]);
         riscof         = true;
-    };
+    }
+    else if(argc >= 3 && std::string(argv[2]) == "--stats")
+    {
+        stats          = true;
+        
+        #ifdef BRANCH_PREDICTION 
+        filename_stats = "stats_branch.txt";        
+        #elif  RET_BRANCH_PREDICTION
+        filename_stats = "stats_stack_branch.txt";        
+        #elif BRANCH_PREDICTION & RET_BRANCH_PREDICTION
+        filename_stats = "stat_all_branch.txt";
+        #elif ICACHE_ON & DCACHE_ON
+        filename_stats = "stats_caches.txt";
+        #else
+        filename_stats = "test_stats.txt";
+        #endif
+        test_stats.open(filename_stats, fstream::app);
+        if(!test_stats.is_open())
+        {
+            cout << "Impossible to open " << filename_stats << endl ;
+            exit(1);
+        }
+    }
 
     char temp_text[512];
-    if (path.substr(path.find_last_of(".") + 1) == "s") {  // checking if the argument is a assembly file
+    if (path.substr(path.find_last_of(".") + 1) == "s") {  
         char temp[512];
 
         sprintf(temp,
                 "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s %s",
                 opt.c_str(),
-                path.c_str());  // writting "riscv32-unknown-elf-gcc -nostdlib
-                                // path" in temp
-        system((char*)temp);    // send the command in temp to the terminal
-        path = "a.out";         // give the output
+                path.c_str());  
+                                
+        system((char*)temp);    
+        path = "a.out";         
     }
-    if (path.substr(path.find_last_of(".") + 1) == "c") {  // do the same but for .c file
+    if (path.substr(path.find_last_of(".") + 1) == "c") {  
         char temp[512];
         sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld  %s %s"
         , opt.c_str()
@@ -98,7 +146,7 @@ int sc_main(int argc, char* argv[]) {
         system((char*)temp);
         path = "a.out";
     }
-    if (!reader.load(path)) {  // verify if the path is correctly loadkernelle "
+    if (!reader.load(path)) {  
         std::cout << "Can't find or process ELF file " << argv[1] << std::endl;
         return 2;
     }
@@ -107,19 +155,14 @@ int sc_main(int argc, char* argv[]) {
     system((char*)temp_text);
     cout << "Loading ELF file..." << endl;
 
-    /*
-    An Elf binary file consist of segments and sections. Each sections has its
-    own responsability, some contains executable code, others programs
-    data...etc.
-    We need to find out the sections of ELF file. The code below find out theses
-    sections.
-    */
-    // section* text_sec = reader.sections.add( ".section .kernel" );
-    // text_sec->set_type( SHT_PROGBITS );
-    // text_sec->set_flags( SHF_ALLOC | SHF_EXECINSTR );
-    // text_sec->set_address( 0x80000000 );
 
     int n_sec = reader.sections.size();  // get the total amount of sections
+
+/*
+    ##############################################################
+                    PLACING DATA INTO THE RAM 
+    ##############################################################
+*/
 
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
@@ -135,7 +178,11 @@ int sc_main(int argc, char* argv[]) {
             }
             cout << endl;
         }
-
+/*
+    ##############################################################
+                    LOOKING FOR SECTIONS IN ELF FILE 
+    ##############################################################
+*/
         if (sec->get_type() == SHT_SYMTAB) {
             cout << "Reading symbols table..." << endl;
             const symbol_section_accessor symbols(reader, sec);
@@ -193,7 +240,11 @@ int sc_main(int argc, char* argv[]) {
         }
     }
 
-    // Components instanciation
+/*
+    ##############################################################
+                    COMPONENT INSTANCIATION
+    ##############################################################
+*/
 
     core core_inst("core_inst");
 
@@ -508,12 +559,26 @@ int sc_main(int argc, char* argv[]) {
         bool if_afr_valid = IF_ADR_VALID_S1.read();
 #endif
 
+/*
+    ##############################################################
+                    END OF TEST GESTION
+    ##############################################################
+*/
+
         unsigned int pc_adr = PC_VALUE.read();
         if (signature_name == "" && pc_adr == (bad_adr + 4)) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
         } else if (signature_name == "" && pc_adr == (good_adr + 4)) {
+            if(stats)
+            {
+                #ifdef BRANCH_PREDICTION || RET_BRANCH_PREDICTION
+                    cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
+                #endif
+                test_stats << test_filename << " " << NB_CYCLES << endl;
+                test_stats.close();
+            }
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(0);
@@ -536,19 +601,15 @@ int sc_main(int argc, char* argv[]) {
             cout << "end_signature :" << end_signature << endl;
 
             for (int i = begin_signature; i < end_signature; i += 4) {
-                // 10002210 + 5 * 4 do shit : 10002210 +14 = 10002224
-                cout << "adress is :" << i << " " << setfill('0') << setw(8) << hex << ram[i] << endl;
-            }
-            cout << "#################################" << endl ;
-            cout << "begin writting signature value " << endl ;
-            cout << "#################################" << endl ;
-            for (int i = begin_signature; i < end_signature; i += 4) {
-                cout << "adr : " << i << " data : " << ram[i] << endl;
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
             exit(0);
         }
-
+/*
+    ##############################################################
+                    MEMORY ACCESS GESTION
+    ##############################################################
+*/
         // unsigned int rounded_mem_adr = mem_adr - (mem_adr % 4);
         // unsigned int offset          = 8 * (mem_adr % 4);
         // unsigned int mask;
