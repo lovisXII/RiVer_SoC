@@ -15,8 +15,6 @@ void csr::writing_csr() {
     while (1) {
         if (CSR_ENABLE_SM.read()) {
             sc_uint<32> csr_wadr_sm = CSR_WADR_SM.read();
-            TIMER_CONFIG_WB_SC.write(0);
-            TIMER_DIVIDER_WB_SC.write(0);
             switch (csr_wadr_sm) {
                 case 0xF11: break;                                  // mvendorid
                 case 0xF12: break;                                  // marchid
@@ -31,8 +29,6 @@ void csr::writing_csr() {
                 case 0x344: csr_rc[11].write(CSR_WDATA_SM); break;  // mip
                 case 0x300: csr_rc[3].write(CSR_WDATA_SM); break;   // mstatus
                 case 0x340: csr_rc[12].write(CSR_WDATA_SM); break;  // mstatus
-                case 0x5C0: TIMER_CONFIG_WB_SC.write(1); break;     // timer config
-                case 0x5C1: TIMER_DIVIDER_WB_SC.write(1); break;    // timer divider
                 case 0xC01: break;                                  // time
                 case 0xC81: break;                                  // timeh
                 default: break;
@@ -41,7 +37,7 @@ void csr::writing_csr() {
 
         if (TIMER_INT_ST.read()) {
             ACK_SP     = 1;
-            csr_rc[11] = csr_rc[11].read() & (1 << 7);
+            csr_rc[11] = csr_rc[11].read() | (1 << 7);
         } else {
             ACK_SP = 0;
         }
@@ -54,6 +50,17 @@ void csr::writing_csr() {
             csr_rc[10] = MTVAL_WDATA_SM;
         }
         wait(1);
+    }
+}
+
+void csr::transmit_to_timer() {
+    TIMER_CONFIG_WB_SC.write(0);
+    TIMER_DIVIDER_WB_SC.write(0);
+    if (CSR_ENABLE_SM.read()) {
+        switch (CSR_WADR_SM.read()) {
+            case 0x5C0: TIMER_CONFIG_WB_SC.write(1); break;   // timer config
+            case 0x5C1: TIMER_DIVIDER_WB_SC.write(1); break;  // timer divider
+        }
     }
 }
 

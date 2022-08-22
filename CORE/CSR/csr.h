@@ -65,12 +65,15 @@ SC_MODULE(csr) {
     sc_signal<sc_uint<32>> test_sc;
     void                   writing_csr();
     void                   reading_csr();
+    void                   transmit_to_timer();
     void                   trace(sc_trace_file * tf);
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
+        SC_METHOD(transmit_to_timer);
+        sensitive << CSR_ENABLE_SM << CSR_WADR_SM;
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_SM << EXCEPTION_SM << MSTATUS_WDATA_RM
-                  << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_SM << TIMER_INT_ST;
+        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_SM << EXCEPTION_SM << MSTATUS_WDATA_RM << MIP_WDATA_RM
+                  << MEPC_WDATA_RM << MCAUSE_WDATA_SM << TIMER_INT_ST;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }
