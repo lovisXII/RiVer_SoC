@@ -27,6 +27,7 @@ SC_MODULE(csr) {
     sc_out<sc_uint<32>> MIP_VALUE_RC;
     sc_out<sc_uint<32>> MIE_VALUE_RC;
     sc_out<sc_uint<32>> MCAUSE_SC;
+    sc_out<sc_uint<32>> KERNEL_ADR_SC;
 
     // Output :
 
@@ -60,17 +61,21 @@ SC_MODULE(csr) {
      * 10: mtval 0x343
      * 11: mip 0x344
      * 12: mscratch 0x340
+     * 13 : kernel_adr 0x800 (custom)
      ***/
     sc_signal<sc_uint<32>> csr_rc[N_CSR];
     sc_signal<sc_uint<32>> test_sc;
     void                   writing_csr();
     void                   reading_csr();
+    void                   transmit_to_timer();
     void                   trace(sc_trace_file * tf);
     SC_CTOR(csr) {
         SC_CTHREAD(writing_csr, CLK.pos());
+        SC_METHOD(transmit_to_timer);
+        sensitive << CSR_ENABLE_SM << CSR_WADR_SM;
         SC_METHOD(reading_csr);
-        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_SM << EXCEPTION_SM << MSTATUS_WDATA_RM
-                  << MIP_WDATA_RM << MEPC_WDATA_RM << MCAUSE_WDATA_SM << TIMER_INT_ST;
+        sensitive << CSR_WADR_SM << CSR_RADR_SD << CSR_ENABLE_SM << EXCEPTION_SM << MSTATUS_WDATA_RM << MIP_WDATA_RM
+                  << MEPC_WDATA_RM << MCAUSE_WDATA_SM << TIMER_INT_ST;
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }

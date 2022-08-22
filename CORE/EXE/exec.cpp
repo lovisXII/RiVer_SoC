@@ -79,7 +79,7 @@ void exec::select_exec_res() {
                 }
                 if ((CURRENT_MODE_SM.read() == 0))  // If in User Mode
                 {
-                    if (alu_out_se.read() > start_kernel_adress) {
+                    if (alu_out_se.read() > KERNEL_ADR_SC) {
                         if (MEM_LOAD_RD)
                             load_access_fault_se = 1;
                         else

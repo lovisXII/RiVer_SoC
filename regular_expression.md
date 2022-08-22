@@ -40,13 +40,13 @@ $1>
 ```
 5. 
 ```c
-sc_in<bool>               BP_EXE2MEM_EMPTY_SE ;
-sc_in<sc_uint<6>>                    BP_DEST_RM ;
-sc_in<sc_uint<32>>      BP_MEM_RES_RM 
+sc_in<bool>               EXE2MEM_EMPTY_SE ;
+sc_in<sc_uint<6>>                    DEST_RM ;
+sc_in<sc_uint<32>>      MEM_RES_RM 
 //devient :
-sc_in<bool>             BP_EXE2MEM_EMPTY_SE ;
-sc_in<sc_uint<6>>       BP_DEST_RM ;
-sc_in<sc_uint<32>>      BP_MEM_RES_RM 
+sc_in<bool>             EXE2MEM_EMPTY_SE ;
+sc_in<sc_uint<6>>       DEST_RM ;
+sc_in<sc_uint<32>>      MEM_RES_RM 
 ```   
 ```
 (sc_[\w]+<[\w]+(|<[\w]+>)>)[\s]+([\w]+)[\s]+;

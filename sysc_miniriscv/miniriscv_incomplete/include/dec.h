@@ -93,15 +93,15 @@ SC_MODULE(decod) {
     // see the bypasses process in dec.cpp, or the documentation, for an explanation
 
     // pipeline data coming from the end of EXE
-    sc_in<sc_uint<6>>  BP_DEST_RE;           // the destination register of the data
-    sc_in<sc_uint<32>> BP_EXE_RES_RE;        // the data
-    sc_in<bool>        BP_MEM_LOAD_RE;       // whether it is a memory load
-    sc_in<bool>        BP_EXE2MEM_EMPTY_SE;  // whether the data is valid
+    sc_in<sc_uint<6>>  DEST_RE;           // the destination register of the data
+    sc_in<sc_uint<32>> EXE_RES_RE;        // the data
+    sc_in<bool>        MEM_LOAD_RE;       // whether it is a memory load
+    sc_in<bool>        EXE2MEM_EMPTY_SE;  // whether the data is valid
 
     // pipeline data coming from the end of MEM
-    sc_in<sc_uint<6>>  BP_DEST_RM;           // the destination register of the data
-    sc_in<sc_uint<32>> BP_MEM_RES_RM;        // the data
-    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;  // Whether the data is valid
+    sc_in<sc_uint<6>>  DEST_RM;           // the destination register of the data
+    sc_in<sc_uint<32>> MEM_RES_RM;        // the data
+    sc_in<bool>        MEM2WBK_EMPTY_SM;  // Whether the data is valid
 
     // Bypass outputs for EXE
     sc_out<sc_uint<6>> BP_RADR1_RD;  // the register of the data in OP1
@@ -286,7 +286,7 @@ SC_MODULE(decod) {
 
         SC_METHOD(stall_method)
         sensitive << b_type_inst_sd << jalr_type_inst_sd << j_type_inst_sd << invalid_operand_sd
-                  << DEC2EXE_EMPTY_SD << BP_EXE2MEM_EMPTY_SE << IF2DEC_EMPTY_SI << dec2exe_full_sd
+                  << DEC2EXE_EMPTY_SD << EXE2MEM_EMPTY_SE << IF2DEC_EMPTY_SI << dec2exe_full_sd
                   << block_in_dec_sd;
 
         SC_METHOD(decoding_instruction_type)
@@ -315,9 +315,9 @@ SC_MODULE(decod) {
                   << dec2if_full_sd << IF2DEC_EMPTY_SI << stall_sd;
 
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE << BP_DEST_RM
-                  << BP_MEM_RES_RM << RADR1_SD << EXE_DEST_SD << RADR2_SD << BP_EXE2MEM_EMPTY_SE
-                  << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
+        sensitive << RDATA1_SR << RDATA2_SR << DEST_RE << EXE_RES_RE << DEST_RM
+                  << MEM_RES_RM << RADR1_SD << EXE_DEST_SD << RADR2_SD << EXE2MEM_EMPTY_SE
+                  << DEC2EXE_EMPTY_SD << MEM_LOAD_RE << MEM2WBK_EMPTY_SM;
         reset_signal_is(RESET, false);
     }
 };

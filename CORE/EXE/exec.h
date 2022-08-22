@@ -94,6 +94,7 @@ SC_MODULE(exec) {
     sc_in<sc_uint<32>> MEM_RES_RM;
     sc_in<bool>        CSR_WENABLE_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
+    sc_in<sc_uint<32>> KERNEL_ADR_SC;
 
     // General Interface :
 

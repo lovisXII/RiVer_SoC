@@ -97,7 +97,7 @@ SC_MODULE(core) {
     sc_signal<bool>        ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
     sc_signal<bool>        ENV_CALL_U_MODE_RD;
     sc_signal<bool>        ENV_CALL_M_MODE_RD;
-
+    sc_signal<sc_uint<32>> KERNEL_ADR_SC;
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD;
     sc_signal<bool> CSRRC_I_RD;
@@ -385,6 +385,7 @@ SC_MODULE(core) {
         dec_inst.RADR2_SD(RADR2_SD);
 
         dec_inst.EXE_DEST_RD(EXE_DEST_RD);
+        dec_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         dec_inst.READ_PC_SR(READ_PC_SR);
         dec_inst.WRITE_PC_SD(WRITE_PC_SD);
@@ -498,6 +499,7 @@ SC_MODULE(core) {
 
         exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        exec_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         exec_inst.MACHINE_SOFTWARE_INTERRUPT_SX(MACHINE_SOFTWARE_INTERRUPT_SX);
@@ -760,6 +762,7 @@ SC_MODULE(core) {
         csr_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         csr_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
         csr_inst.TIME_RT(TIME_RT);
+        csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
         csr_inst.TIMER_INT_ST(TIMER_INT_ST);
         csr_inst.ACK_SP(ACK_SP);
 
