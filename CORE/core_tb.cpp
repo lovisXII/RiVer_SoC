@@ -66,6 +66,7 @@ int sc_main(int argc, char* argv[]) {
     int                     rvtest_entry_point;
     int                     begin_signature;
     int                     end_signature;
+    int                     rvtest_end;
 
     fstream test_stats;
     string filename_stats;
@@ -101,7 +102,18 @@ int sc_main(int argc, char* argv[]) {
     else if(argc >= 3 && std::string(argv[2]) == "--stats")
     {
         stats          = true;
+        
+        #ifdef BRANCH_PREDICTION 
+        filename_stats = "stats_branch.txt";        
+        #elif  RET_BRANCH_PREDICTION
+        filename_stats = "stats_stack_branch.txt";        
+        #elif BRANCH_PREDICTION & RET_BRANCH_PREDICTION
+        filename_stats = "stat_all_branch.txt";
+        #elif ICACHE_ON & DCACHE_ON
+        filename_stats = "stats_caches.txt";
+        #else
         filename_stats = "test_stats.txt";
+        #endif
         test_stats.open(filename_stats, fstream::app);
         if(!test_stats.is_open())
         {
@@ -214,6 +226,10 @@ int sc_main(int argc, char* argv[]) {
                 if (name == "end_signature") {
                     cout << "Found end_signature" << endl;
                     end_signature = value;
+                }
+                if (name == "rvtest_end") {
+                    rvtest_end = value;
+                    cout << "Found rvtest_end at adr " << std::hex << rvtest_end << endl;
                 }
             }
         }
@@ -592,7 +608,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
+        else if (countdown == 0 && (pc_adr == rvtest_end || (signature_name != "" && cycles > 2000000))) {
             countdown = 50;
         }
         if (countdown == 1) {
@@ -603,11 +619,7 @@ int sc_main(int argc, char* argv[]) {
             cout << "signature_name :" << signature_name << endl ;
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
-            
-            int j = 1;
-            for (int i = begin_signature; i < end_signature; i += 4){
-                j++;
-            }
+           
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
