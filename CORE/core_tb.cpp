@@ -76,8 +76,6 @@ int sc_main(int argc, char* argv[]) {
     string signature_name;
     bool   riscof;
     bool   stats;
-    int tmp = test_filename.rfind("/");
-    test_filename = test_filename.substr(tmp+1, test_filename.size());
 /*
     ##############################################################
                     PARSING ELF/.s/.c file 
@@ -98,10 +96,40 @@ int sc_main(int argc, char* argv[]) {
     else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
         signature_name = string(argv[3]);
         riscof         = true;
+        stats          = true;
+
+        int tmp = test_filename.find("src/");
+        int tmp2 = test_filename.find("dut/");
+
+        string tempo_string = test_filename.substr(0,tmp);
+        string tempo_string2 = test_filename.substr(0,tmp2);
+        int tmp3 = tempo_string2.size() - (tempo_string.size() + 4);
+
+        test_filename = test_filename.substr(tmp+4, tmp3);
+        
+        #ifdef BRANCH_PREDICTION 
+        filename_stats = "stats_branch_SS1.txt";        
+        #elif  RET_BRANCH_PREDICTION
+        filename_stats = "stats_stack_branch_SS1.txt";        
+        #elif BRANCH_PREDICTION & RET_BRANCH_PREDICTION
+        filename_stats = "stat_all_branch_SS1.txt";
+        #elif ICACHE_ON & DCACHE_ON
+        filename_stats = "stats_caches_SS1.txt";
+        #else
+        filename_stats = "test_stats_SS1.txt";
+        #endif
+        test_stats.open(filename_stats, fstream::app);
+        if(!test_stats.is_open())
+        {
+            cout << "Impossible to open " << filename_stats << endl ;
+            exit(1);
+        }
     } 
     else if(argc >= 3 && std::string(argv[2]) == "--stats")
     {
         stats          = true;
+        int tmp = test_filename.rfind("/");
+        test_filename = test_filename.substr(tmp+1, test_filename.size());
         
         #ifdef BRANCH_PREDICTION 
         filename_stats = "stats_branch_SS1.txt";        
@@ -608,12 +636,18 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && (pc_adr == rvtest_end || (signature_name != "" && cycles > 2000000))) {
+        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 2000000))) {
             countdown = 50;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
+            
+            // Stats Gestion riscof
+            test_stats << test_filename << " " << NB_CYCLES  << " " << "SCALAR" << endl;
+            test_stats.close();
+            
+            
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
             cout << "signature_name :" << signature_name << endl ;
