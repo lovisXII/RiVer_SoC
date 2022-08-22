@@ -1063,7 +1063,7 @@ void decod::pc_inc() {
         res_pc_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
         pc_branch_value_sd = pc_out;
-        if (pc_out > start_kernel_adress && CURRENT_MODE_SM.read() != 3) {
+        if (pc_out > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd = 1;
         } else {
             instruction_access_fault_sd = 0;
