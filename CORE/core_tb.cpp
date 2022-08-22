@@ -55,6 +55,7 @@ enum DC_FSM
 int sc_main(int argc, char* argv[]) {
     unordered_map<int, int> ram;
     elfio                   reader;  // creation of an elfio object
+    string                  test_filename(argv[1]);
     string                  path(argv[1]);
     int                     reset_adr;
     int                     start_adr;
@@ -77,14 +78,28 @@ int sc_main(int argc, char* argv[]) {
                     PARSING ELF/.s/.c file 
     ##############################################################
 */
-    if (argc >= 3 && std::string(argv[2]) == "-O") {
+    if(argc == 2 && std::string(argv[1]) == "--help"){
+        cout << endl << endl;
+        cout << "Usage: ./core_tb test_filename [options] ..." << endl;
+        cout << "Options:" << endl << endl;
+        cout << "-O                          \t Optimise the .c file" << endl;
+        cout << "--riscof signature_filename \t Allow to enable the riscof gestion and store the signature in the file named signature_filename" << endl ;
+        cout << "--stats                     \t Allow to use the statistic such as the number of cycle needed to end the program" << endl;
+        exit(0);
+    }
+    else if (argc >= 3 && std::string(argv[2]) == "-O") {
         opt = "-O2";
-    } else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
+    } 
+    else if (argc >= 3 && std::string(argv[2]) == "--riscof") {
         signature_name = string(argv[3]);
         riscof         = true;
-    } else if(argc >= 3 && std::string(argv[2]) == "--stats")
+    } 
+    else if(argc >= 3 && std::string(argv[2]) == "--stats")
     {
         stats          = true;
+        string filename_stats("test_stats.txt") ;
+        ofstream test_stats;
+        test_stats.open(filename_stats, ios::out | ios::trunc);
     }
 
     char temp_text[512];
@@ -556,10 +571,10 @@ int sc_main(int argc, char* argv[]) {
         } else if (signature_name == "" && pc_adr == good_adr) {
             if(stats)
             {
-                cout <<"#-- STATS -- #"<<endl<<endl;
-                cout << "NBCYCLES        = "<<std::dec<<NB_CYCLES<<endl;
-                cout << "NB BRANCH TAKEN = "<<nb_jump_taken<<endl<<endl;
-                cout <<"#------------#"<<endl;
+                cout << "#-- STATS -- #"        <<  endl ;
+                cout << "NBCYCLES        = "    <<  std::dec << NB_CYCLES   <<endl;
+                cout << "NB BRANCH TAKEN = "    <<  nb_jump_taken   <<  endl;
+                cout << "#------------#"        <<  endl;
             }
             
             cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
@@ -572,9 +587,7 @@ int sc_main(int argc, char* argv[]) {
             exit(2);
         }
         else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
-            cerr << "inside if : " << endl ; 
             countdown = 50;
-            cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
