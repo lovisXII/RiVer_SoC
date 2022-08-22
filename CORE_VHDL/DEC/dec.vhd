@@ -76,12 +76,12 @@ entity dec is
         MULT_INST_RM    :   in  std_logic;
 
         -- Bypasses
-        BP_DEST_RE : in std_logic_vector(5 downto 0);
-        BP_EXE_RES_RE : in std_logic_vector(31 downto 0);
-        BP_MEM_LOAD_RE : in std_logic;
-        BP_EXE2MEM_EMPTY_SE, BP_MEM2WBK_EMPTY_SM : in std_logic;
-        BP_DEST_RM : in std_logic_vector(5 downto 0);
-        BP_MEM_RES_RM : in std_logic_vector(31 downto 0);
+        DEST_RE : in std_logic_vector(5 downto 0);
+        EXE_RES_RE : in std_logic_vector(31 downto 0);
+        MEM_LOAD_RE : in std_logic;
+        EXE2MEM_EMPTY_SE, MEM2WBK_EMPTY_SM : in std_logic;
+        DEST_RM : in std_logic_vector(5 downto 0);
+        MEM_RES_RM : in std_logic_vector(31 downto 0);
         BP_R1_VALID_RD, BP_R2_VALID_RD : out std_logic;
         BP_RADR1_RD, BP_RADR2_RD : out std_logic_vector(5 downto 0);    
         BLOCK_BP_RD : out std_logic;
@@ -280,7 +280,7 @@ dec2exe : fifo
 -- fifo gestion 
 -------------------------
 csr_in_progress <=  '1' when     (csr_wenable_fifo = '1' and dec2exe_empty = '0') 
-                            or  (CSR_WENABLE_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0') else 
+                            or  (CSR_WENABLE_RE = '1' and EXE2MEM_EMPTY_SE = '0') else 
                     '0';
 
 stall_sd    <=  '1' when    (
@@ -650,42 +650,42 @@ block_bp_sd <= jalr_type_sd;
 
 mult_dependency     <= '1' when (   (radr1_sd = dec_fifo_rdest and dec_fifo_mult_inst = '1' and dec2exe_empty = '0')    or 
                                     (radr2_sd = dec_fifo_rdest and dec_fifo_mult_inst = '1' and dec2exe_empty = '0')    or
-                                    (radr1_sd = BP_DEST_RE and MULT_INST_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0')        or 
-                                    (radr2_sd = BP_DEST_RE and MULT_INST_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0')        or
-                                    (radr1_sd = BP_DEST_RM and MULT_INST_RM = '1' and BP_MEM2WBK_EMPTY_SM = '0')        or
-                                    (radr2_sd = BP_DEST_RM and MULT_INST_RM = '1' and BP_MEM2WBK_EMPTY_SM = '0')   
+                                    (radr1_sd = DEST_RE and MULT_INST_RE = '1' and EXE2MEM_EMPTY_SE = '0')        or 
+                                    (radr2_sd = DEST_RE and MULT_INST_RE = '1' and EXE2MEM_EMPTY_SE = '0')        or
+                                    (radr1_sd = DEST_RM and MULT_INST_RM = '1' and MEM2WBK_EMPTY_SM = '0')        or
+                                    (radr2_sd = DEST_RM and MULT_INST_RM = '1' and MEM2WBK_EMPTY_SM = '0')   
                                 ) else 
                         '0'; 
 -- Conditions
 bpc_instr_in_exe1   <= '1' when radr1_sd = dec_fifo_rdest and dec2exe_empty = '0' and radr1_sd /= "000000" else '0'; 
-bpc_load_in_mem1    <= '1' when radr1_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr1_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
-bpc_ed1             <= '1' when radr1_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
-bpc_md1             <= '1' when radr1_sd = BP_DEST_RM and BP_MEM2WBK_EMPTY_SM = '0' and radr1_sd /= "000000" else '0';           
+bpc_load_in_mem1    <= '1' when radr1_sd = DEST_RE and MEM_LOAD_RE = '1' and radr1_sd /= "000000" and EXE2MEM_EMPTY_SE = '0' else '0';  
+bpc_ed1             <= '1' when radr1_sd = DEST_RE and EXE2MEM_EMPTY_SE = '0' and radr1_sd /= "000000" else '0'; 
+bpc_md1             <= '1' when radr1_sd = DEST_RM and MEM2WBK_EMPTY_SM = '0' and radr1_sd /= "000000" else '0';           
 
 bpc_instr_in_exe2   <= '1' when radr2_sd = dec_fifo_rdest and dec2exe_empty = '0' and radr2_sd /= "000000" else '0'; 
-bpc_load_in_mem2    <= '1' when radr2_sd = BP_DEST_RE and BP_MEM_LOAD_RE = '1' and radr2_sd /= "000000" and BP_EXE2MEM_EMPTY_SE = '0' else '0';  
-bpc_ed2             <= '1' when radr2_sd = BP_DEST_RE and BP_EXE2MEM_EMPTY_SE = '0' and radr2_sd /= "000000" else '0'; 
-bpc_md2             <= '1' when radr2_sd = BP_DEST_RM and BP_MEM2WBK_EMPTY_SM = '0' and radr2_sd /= "000000" else '0';           
+bpc_load_in_mem2    <= '1' when radr2_sd = DEST_RE and MEM_LOAD_RE = '1' and radr2_sd /= "000000" and EXE2MEM_EMPTY_SE = '0' else '0';  
+bpc_ed2             <= '1' when radr2_sd = DEST_RE and EXE2MEM_EMPTY_SE = '0' and radr2_sd /= "000000" else '0'; 
+bpc_md2             <= '1' when radr2_sd = DEST_RM and MEM2WBK_EMPTY_SM = '0' and radr2_sd /= "000000" else '0';           
 
 
-bpc_mult_exe1       <= '1' when radr1_sd = BP_DEST_RE and MULT_INST_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0' else '0';
-bpc_mult_exe2       <= '1' when radr2_sd = BP_DEST_RE and MULT_INST_RE = '1' and BP_EXE2MEM_EMPTY_SE = '0' else '0';
+bpc_mult_exe1       <= '1' when radr1_sd = DEST_RE and MULT_INST_RE = '1' and EXE2MEM_EMPTY_SE = '0' else '0';
+bpc_mult_exe2       <= '1' when radr2_sd = DEST_RE and MULT_INST_RE = '1' and EXE2MEM_EMPTY_SE = '0' else '0';
 
-bpc_mult_mem1       <= '1' when radr1_sd = BP_DEST_RM and MULT_INST_RM = '1' and BP_MEM2WBK_EMPTY_SM = '0' else '0'; 
-bpc_mult_mem2       <= '1' when radr2_sd = BP_DEST_RM and MULT_INST_RM = '1' and BP_MEM2WBK_EMPTY_SM = '0' else '0';
+bpc_mult_mem1       <= '1' when radr1_sd = DEST_RM and MULT_INST_RM = '1' and MEM2WBK_EMPTY_SM = '0' else '0'; 
+bpc_mult_mem2       <= '1' when radr2_sd = DEST_RM and MULT_INST_RM = '1' and MEM2WBK_EMPTY_SM = '0' else '0';
 
 -- Affectations
-rdata1_sd   <=  BP_EXE_RES_RE   when bpc_ed1 = '1' and CSR_WENABLE_RE = '0' else
+rdata1_sd   <=  EXE_RES_RE   when bpc_ed1 = '1' and CSR_WENABLE_RE = '0' else
                 CSR_RDATA_RE    when bpc_ed1 = '1' and CSR_WENABLE_RE = '1' else 
-                BP_MEM_RES_RM   when bpc_md1 = '1' and CSR_WENABLE_RM = '0' else 
+                MEM_RES_RM   when bpc_md1 = '1' and CSR_WENABLE_RM = '0' else 
                 CSR_RDATA_RM    when bpc_md1 = '1' and CSR_WENABLE_RM = '1' else 
                 RDATA1_SR; 
 
 r1_valid_sd <=  not(bpc_instr_in_exe1 or bpc_load_in_mem1 or bpc_mult_exe1 or bpc_mult_mem1);
 
-rdata2_sd   <=  BP_EXE_RES_RE   when bpc_ed2 = '1' and CSR_WENABLE_RE = '0' else 
+rdata2_sd   <=  EXE_RES_RE   when bpc_ed2 = '1' and CSR_WENABLE_RE = '0' else 
                 CSR_RDATA_RE    when bpc_ed2 = '1' and CSR_WENABLE_RE = '1' else 
-                BP_MEM_RES_RM   when bpc_md2 = '1' and CSR_WENABLE_RM = '0' else 
+                MEM_RES_RM   when bpc_md2 = '1' and CSR_WENABLE_RM = '0' else 
                 CSR_RDATA_RM    when bpc_md2 = '1' and CSR_WENABLE_RM = '1' else 
                 RDATA2_SR; 
 

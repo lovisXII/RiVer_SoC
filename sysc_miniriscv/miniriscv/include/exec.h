@@ -90,9 +90,9 @@ SC_MODULE(exec) {
     /*****************************************************
                     Bypasses
     ******************************************************/
-    sc_in<sc_uint<6>>  BP_DEST_RM;
-    sc_in<sc_uint<32>> BP_MEM_RES_RM;
-    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
+    sc_in<sc_uint<6>>  DEST_RM;
+    sc_in<sc_uint<32>> MEM_RES_RM;
+    sc_in<bool>        MEM2WBK_EMPTY_SM;
 
     // General Interface :
 
@@ -179,8 +179,8 @@ SC_MODULE(exec) {
         SC_METHOD(manage_fifo);
         sensitive << exe2mem_full_se << DEC2EXE_EMPTY_SD << blocked_se << invalid_operand_se;
         SC_METHOD(bypasses);
-        sensitive << BP_DEST_RM << BP_MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD << BLOCK_BP_RD
+        sensitive << DEST_RM << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD << BLOCK_BP_RD
                   << DEST_RE << MEM_LOAD_RE << RADR2_RD << OP1_RD << OP2_RD << MEM_DATA_RD
-                  << MEM_STORE_RD << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
+                  << MEM_STORE_RD << MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
     }
 };
