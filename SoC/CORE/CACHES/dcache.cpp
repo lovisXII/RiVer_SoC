@@ -11,6 +11,11 @@ void dcache::adresse_parcer()
   mp_address_tag.write(DT_A_I.range(31,11));
   mp_address_index.write(DT_A_I.range(10,4));
   mp_address_offset.write(DT_A_I.range(3,0));
+
+  sc_uint<32> DT_A_BUS = ADR_I.read();
+  bus_tag.write(DT_A_BUS.range(31,11));
+  bus_index.write(DT_A_BUS.range(10,4));
+  bus_offset.write(DT_A_BUS.range(3,0));
 }
 
 void dcache::miss_detection()
@@ -41,6 +46,22 @@ void dcache::miss_detection()
   
   miss = (!way0_hit) & (!way1_hit);
   STALL_SC.write((miss && LOAD_SM) || (STORE_SM && full));
+
+  //SNOOPY
+  if(!GRANT.read())
+  {
+    // COMPARE HIT WAY0
+    if(bus_tag == w0_TAG[bus_index.read()])
+    {
+      w0_LINE_VALIDATE[bus_index.read()] = false;
+    }
+
+    // COMPARE HIT WAY1
+    if(bus_tag == w1_TAG[bus_index.read()])
+    {
+      w1_LINE_VALIDATE[bus_index.read()] = false;
+    }
+  }
 }
 void dcache::new_state()
 {

@@ -73,6 +73,11 @@ void buffercache::fifo()
                     buff0_VALIDATE = false;
         }
     }
+    //snoopy
+    if(buff0_DATA_ADR.read() == ADR_I.read())
+        buff0_VALIDATE = false;
+    if(buff1_DATA_ADR.read() == ADR_I.read())
+        buff1_VALIDATE = false;
 }
 void buffercache::write_output()
 {

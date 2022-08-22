@@ -196,7 +196,7 @@ int sc_main(int argc, char* argv[])
         if(cycles > 20000)
             break;
 
-        unsigned int pc_adr = PC0_VALUE.read();
+        unsigned int pc_adr = PC1_VALUE.read();
         
         if (signature_name == "" && pc_adr == bad_adr) {
             cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;

@@ -10,8 +10,8 @@ SC_MODULE(IP_RIVER)
 {
     sc_in_clk           CLK;
     sc_in<bool>         RESET_N;
-    sc_in<sc_uint<32>>         PROC_ID;
 
+    //interface bus
     sc_in<bool>        ACK;
     sc_in<sc_uint<32>> DAT_I;
     sc_in<bool>        GRANT;
@@ -62,6 +62,7 @@ SC_MODULE(IP_RIVER)
     //Debug CORE
     sc_in<sc_uint<32>>  PC_RESET;
     sc_out<sc_uint<32>> PC_VALUE;
+    sc_in<sc_uint<32>>  PROC_ID;
 
     void trace(sc_trace_file*);
 
@@ -117,6 +118,8 @@ SC_MODULE(IP_RIVER)
         dcache_inst.ACK(DCACHE_ACK);
         dcache_inst.SIZE_SC(SIZE_SC);
         dcache_inst.STALL_I(STALL_O);
+        dcache_inst.ADR_I(ADR_I);
+        dcache_inst.GRANT(GRANT);
 
         //ICache map
         icache_inst.CLK(CLK);

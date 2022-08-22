@@ -19,6 +19,9 @@ SC_MODULE(buffercache)
     sc_in<bool> LOAD_C;
     sc_in<sc_uint<2>> SIZE_C;
 
+    //Snoopy
+    sc_in<sc_uint<32>> ADR_I;
+
     //OUTPUT
     //TO DCACHE
     sc_out<bool> FULL;
@@ -69,7 +72,8 @@ SC_MODULE(buffercache)
 
         SC_METHOD(write_output);
         sensitive << buffer_choice << buff0_VALIDATE << buff1_VALIDATE 
-                  << buff0_LOAD << buff0_STORE << buff1_LOAD << buff1_STORE;
+                  << buff0_LOAD << buff0_STORE << buff1_LOAD << buff1_STORE
+                  << ADR_I;
 
         SC_METHOD(bufferfull);
         sensitive << buff0_VALIDATE << buff1_VALIDATE;

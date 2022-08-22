@@ -56,6 +56,9 @@ SC_MODULE(dcache)
   sc_in<sc_uint<32>> DT_I;
   sc_in<bool> ACK;          // slave answer (slave dt valid)
 
+  sc_in<sc_uint<32>> ADR_I;
+  sc_in<bool>        GRANT;
+
   sc_in<bool> STALL_I;
 
 //signals
@@ -67,6 +70,10 @@ SC_MODULE(dcache)
   sc_signal<sc_uint<21>> mp_address_tag;
   sc_signal<sc_uint<7>> mp_address_index;
   sc_signal<sc_uint<4>> mp_address_offset;
+  //parse address from BUS
+  sc_signal<sc_uint<21>> bus_tag;
+  sc_signal<sc_uint<7>> bus_index;
+  sc_signal<sc_uint<4>> bus_offset;
 
   sc_signal<sc_uint<4>> mp_last_addr_offset;
 
@@ -123,7 +130,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM << adr_sent_to_wrapper;
+    sensitive << DATA_ADR_SM << adr_sent_to_wrapper << ADR_I;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
@@ -133,7 +140,10 @@ SC_MODULE(dcache)
               << STORE_SM
               << way0_hit
               << way1_hit
-              << CLK.neg();
+              << CLK.neg()
+              << GRANT
+              << bus_tag
+              << bus_index;
     SC_METHOD(new_state);
     sensitive << CLK.neg() << RESET_N;
     SC_METHOD(state_transition);
@@ -153,6 +163,7 @@ SC_MODULE(dcache)
     buffcache_inst.STORE_C(STORE_SM);
     buffcache_inst.LOAD_C(LOAD_SM);
     buffcache_inst.SIZE_C(MEM_SIZE_SM);
+    buffcache_inst.ADR_I(ADR_I);
     buffcache_inst.FULL(full);
     buffcache_inst.EMPTY(empty);
     buffcache_inst.DATA_MP(DT_O);
