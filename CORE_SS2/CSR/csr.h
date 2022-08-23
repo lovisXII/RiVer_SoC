@@ -16,6 +16,7 @@ SC_MODULE(csr) {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Input from M2
 =======
     sc_in<sc_uint<32>> MSTATUS_WDATA_RM_S1;
@@ -29,6 +30,10 @@ SC_MODULE(csr) {
 >>>>>>> ef8c4ebb (issue with mret trying to solve it)
     // Input from M2
 
+=======
+    // Input from M2
+
+>>>>>>> main
     sc_in<sc_uint<12>> CSR_WADR_SM_S2;
     sc_in<sc_uint<32>> CSR_WDATA_SM_S2;
     sc_in<bool>        CSR_ENABLE_SM_S2;
@@ -93,6 +98,7 @@ SC_MODULE(csr) {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
         << CSR_RADR_SD_S2 ;
 =======
@@ -106,6 +112,10 @@ SC_MODULE(csr) {
         sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
         << CSR_RADR_SD_S2 ;
 >>>>>>> 8a97bd69 (solving bp issue)
+=======
+        sensitive << CSR_WADR_SM_S1 << CSR_RADR_SD_S1 << CSR_ENABLE_SM_S1
+        << CSR_RADR_SD_S2 ;
+>>>>>>> main
         for (int i = 0; i < N_CSR; i++)
             sensitive << csr_rc[i];
     }

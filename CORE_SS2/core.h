@@ -856,6 +856,7 @@ SC_MODULE(core) {
         exec_inst_s2.BLOCK_BP_RD_S2(BLOCK_BP_RD_S2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         exec_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
 =======
         exec_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
@@ -863,6 +864,9 @@ SC_MODULE(core) {
 =======
         exec_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
 >>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
+=======
+        exec_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
+>>>>>>> main
         exec_inst_s2.MRET_RE_S2(MRET_RE_S2);
         exec_inst_s2.INSTRUCTION_ACCESS_FAULT_RD_S2(INSTRUCTION_ACCESS_FAULT_RD_S2);
         exec_inst_s2.INSTRUCTION_ACCESS_FAULT_RE_S2(INSTRUCTION_ACCESS_FAULT_RE_S2);
@@ -1070,6 +1074,7 @@ SC_MODULE(core) {
         mem_inst_s2.MRET_SM_S2(MRET_SM_S2);
         mem_inst_s2.MRET_SM_S1(MRET_SM_S1);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         mem_inst_s2.MSTATUS_WDATA_SM_S1(MSTATUS_WDATA_SM_S1);
         mem_inst_s2.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
@@ -1078,6 +1083,8 @@ SC_MODULE(core) {
         mem_inst_s2.MTVAL_WDATA_SM_S1(MTVAL_WDATA_SM_S1);  // 54
 =======
 >>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
+=======
+>>>>>>> main
 
         mem_inst_s2.MSTATUS_WDATA_SM_S1(MSTATUS_WDATA_SM_S1);
         mem_inst_s2.MIP_WDATA_SM_S1(MIP_WDATA_SM_S1);
@@ -1099,6 +1106,7 @@ SC_MODULE(core) {
         mem_inst_s2.MIP_VALUE_RC(MIP_VALUE_RC);      // 54
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         mem_inst_s2.MEM_ACCESS_IS_PRIO_RD_S2(MEM_ACCESS_IS_PRIO_RD_S2);
 
         mem_inst_s2.MEPC_SC(MEPC_SC);
@@ -1108,6 +1116,8 @@ SC_MODULE(core) {
 
 =======
 >>>>>>> 0af37f80 (error with csr in S2, try to find the source of it. Rewritte of csr to allow mem2 to write it)
+=======
+>>>>>>> main
         mem_inst_s2.CSR_ENABLE_SM_S2(CSR_ENABLE_SM_S2);  // 55
         mem_inst_s2.PC_BRANCH_VALUE_RE_S2(PC_BRANCH_VALUE_RE_S2);  
 
@@ -1203,6 +1213,7 @@ SC_MODULE(core) {
         wbk_inst_s2.INTERRUPTION_SE_S2(INTERRUPTION_SE_S2);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         wbk_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
 =======
         wbk_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM);
@@ -1210,6 +1221,9 @@ SC_MODULE(core) {
 =======
         wbk_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
 >>>>>>> 9bf58c00 (trying to solve issue with pipeline mode)
+=======
+        wbk_inst_s2.CURRENT_MODE_SM(CURRENT_MODE_SM_S2);
+>>>>>>> main
         
         wbk_inst_s2.MULT_INST_RM_S2(MULT_INST_RM_S2);
         wbk_inst_s2.X2_RES_RX2(multiplier_out_sx2);
