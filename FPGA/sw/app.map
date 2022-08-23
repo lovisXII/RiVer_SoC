@@ -1,0 +1,51 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD /tmp/ccvyd1s4.o
+LOAD /tmp/ccawenDi.o
+LOAD /tmp/ccGY1dwD.o
+
+.memory         0x0000000000000000      0x250
+                0x0000000000000000                . = 0x0
+ *(.init)
+ .init          0x0000000000000000        0x4 /tmp/ccvyd1s4.o
+ *(.text)
+ .text          0x0000000000000004        0x0 /tmp/ccvyd1s4.o
+ .text          0x0000000000000004       0x48 /tmp/ccawenDi.o
+                0x0000000000000004                wb_read_reg
+                0x000000000000000c                wb_write_reg
+                0x0000000000000014                wb_wait
+                0x0000000000000038                river_end
+ .text          0x000000000000004c      0x11c /tmp/ccGY1dwD.o
+                0x000000000000004c                leds_turn_on
+                0x0000000000000090                leds_turn_off
+                0x00000000000000d0                leds_train
+ *(*)
+ .data          0x0000000000000168        0x0 /tmp/ccvyd1s4.o
+ .bss           0x0000000000000168        0x0 /tmp/ccvyd1s4.o
+ .text.startup  0x0000000000000168       0x70 /tmp/ccvyd1s4.o
+                0x0000000000000168                main
+ .comment       0x00000000000001d8       0x12 /tmp/ccvyd1s4.o
+                                         0x13 (size before relaxing)
+ .riscv.attributes
+                0x00000000000001ea       0x21 /tmp/ccvyd1s4.o
+ .data          0x000000000000020b        0x0 /tmp/ccawenDi.o
+ .bss           0x000000000000020b        0x0 /tmp/ccawenDi.o
+ .comment       0x000000000000020b       0x13 /tmp/ccawenDi.o
+ .riscv.attributes
+                0x000000000000020b       0x21 /tmp/ccawenDi.o
+ .data          0x000000000000022c        0x0 /tmp/ccGY1dwD.o
+ .bss           0x000000000000022c        0x0 /tmp/ccGY1dwD.o
+ .comment       0x000000000000022c       0x13 /tmp/ccGY1dwD.o
+ .riscv.attributes
+                0x000000000000022c       0x21 /tmp/ccGY1dwD.o
+                0x0000000000000250                . = ALIGN (0x4)
+ *fill*         0x000000000000024d        0x3 
+                0x0000000000000250                end = .
+LOAD /opt/riscv/bin/../lib/gcc/riscv32-unknown-elf/10.2.0/libgcc.a
+OUTPUT(main.elf elf32-littleriscv)
