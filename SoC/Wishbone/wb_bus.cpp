@@ -25,4 +25,7 @@ void wb_bus::trace(sc_trace_file* tf)
     sc_trace(tf, WE_0, GET_NAME(WE_0));
     sc_trace(tf, GRANT_0, GET_NAME(GRANT_0));
     sc_trace(tf, SEL_0, GET_NAME(SEL_0));
+
+    sc_trace(tf, PC0_VALUE, GET_NAME(PC0_VALUE));
+    sc_trace(tf, PC1_VALUE, GET_NAME(PC1_VALUE));
 }

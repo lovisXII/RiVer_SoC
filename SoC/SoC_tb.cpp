@@ -10,6 +10,21 @@
 
 using namespace ELFIO;
 
+
+int good_adr;
+int exception_occur;
+int bad_adr;
+
+void print_found(unsigned int adr, int proc)
+{
+    if(adr == good_adr)
+        cout << FGRN("Success ! ") <<"Processor "<<proc<< " Found good at adr 0x" << std::hex << adr << endl;
+    else if(adr == bad_adr)
+        cout << FRED("Error ! ") <<"Processor "<<proc<< " Found bad at adr 0x" << std::hex << adr << endl;
+    else if(adr == exception_occur)
+        cout << FYEL("Error ! ") << "Processor "<<proc<< " Found exception_occur at adr 0x" << std::hex << adr << endl;
+}
+
 // arguments
 int sc_main(int argc, char* argv[]) 
 {  
@@ -24,9 +39,7 @@ int sc_main(int argc, char* argv[])
         
     int                          reset_adr;
     int                          start_adr;
-    int                          good_adr;
-    int                          exception_occur ;
-    int                          bad_adr;
+
     int                          rvtest_code_end;
     int                          rvtest_entry_point;
     int                          begin_signature;
@@ -188,37 +201,75 @@ int sc_main(int argc, char* argv[])
     int countdown;
     int cycles = 0;
 
+    unsigned int end_proc0_adr;
+    unsigned int end_proc1_adr;
+    bool end_proc0 = false;
+    bool end_proc1 = false;
+
     while(1)
     {
         if (countdown) countdown--;
         cycles++;
 
-        if(cycles > 20000)
+        if(cycles > 30000)
             break;
 
-        unsigned int pc_adr = PC1_VALUE.read();
-        
-        if (signature_name == "" && pc_adr == bad_adr) {
-            cout << FRED("Error ! ") << "Found bad at adr 0x" << std::hex << pc_adr << endl;
-            sc_start(3, SC_NS);
-            exit(1);
-        } else if (signature_name == "" && pc_adr == good_adr) {            
-            cout << FGRN("Success ! ") << "Found good at adr 0x" << std::hex << pc_adr << endl;
-            sc_start(3, SC_NS);
-            exit(0);
-        } 
-        else if(signature_name == "" && pc_adr == exception_occur){
-            cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
-            sc_start(3, SC_NS);
-            exit(2);
+        unsigned int pc0_adr = PC0_VALUE.read();
+        unsigned int pc1_adr = PC1_VALUE.read();
+
+        if(signature_name == "")
+        {
+            if (pc0_adr == bad_adr)
+            {
+                end_proc0_adr = bad_adr;
+                end_proc0 = true;
+            }
+            else if (pc0_adr == good_adr)
+            {
+                end_proc0_adr = good_adr;
+                end_proc0 = true;
+            }
+            else if (pc0_adr == exception_occur)
+            {
+                end_proc0_adr = good_adr;
+                end_proc0 = true;
+            }
+
+            if (pc1_adr == bad_adr)
+            {
+                end_proc1_adr = bad_adr;
+                end_proc1 = true;
+            }
+            else if (pc1_adr == good_adr)
+            {
+                end_proc1_adr = good_adr;
+                end_proc1 = true;
+            }
+            else if (pc1_adr == exception_occur)
+            {
+                end_proc1_adr = good_adr;
+                end_proc1 = true;
+            }
+
+            if(end_proc0 && end_proc1)
+            {
+                print_found(end_proc0_adr,0);
+                print_found(end_proc1_adr,1);
+                sc_start(3, SC_NS);
+                if(end_proc0_adr == end_proc1_adr && end_proc0_adr == good_adr)
+                    exit(0);
+                else
+                    exit(1);
+            }
+                
         }
-        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
+        else if (countdown == 0 && (pc0_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 
             countdown = 20;
             cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
-            cout << "Test ended at " << std::hex << pc_adr << endl;
+            cout << "Test ended at " << std::hex << pc0_adr << endl;
             sc_start(3, SC_NS);
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
@@ -240,3 +291,5 @@ int sc_main(int argc, char* argv[])
     }
     return -1;   
 }
+
+

@@ -10,9 +10,10 @@ void wb_arbiter::master_selector()
     }
     else
     {
-        if(!STB_I)
+        if(CYC_O.read() && ((GRANT_0_O && !CYC_0_I) || (GRANT_1_O && !CYC_1_I))
+            || !CYC_O.read())
         {
-            CYC_O = CYC_0_I | CYC_1_I; //CYC_0_I | CYC_1_I | CYC_2_I | ../..
+            CYC_O = CYC_0_I | CYC_1_I; // | CYC_2_I | ../..
 
             bool found = false;
             switch (master_priority.read())
