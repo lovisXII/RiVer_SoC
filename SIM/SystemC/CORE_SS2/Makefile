@@ -1,7 +1,7 @@
 SYSTEMC?=/usr/local/systemc-2.3.3/
 CC=g++
 RISC=riscv32-unknown-elf-gcc 
-INCLUDE_PATH=-I$(SYSTEMC)/include -I../ELFIO
+INCLUDE_PATH=-I$(SYSTEMC)/include -I../../ELFIO
 LINK_PATH=-L $(SYSTEMC)/lib-linux64
 LINKER_ARGS=-rpath=$(SYSTEMC)/lib-linux64 
 LIBS=-lsystemc -lm

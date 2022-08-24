@@ -1,7 +1,7 @@
 SYSTEMC?=/usr/local/systemc-2.3.3/
 CC=g++
 RISC=riscv32-unknown-elf-gcc 
-INCLUDE_PATH=-I$(SYSTEMC)/include -I../ELFIO
+INCLUDE_PATH=-I$(SYSTEMC)/include -I../../ELFIO
 LINK_PATH=-L $(SYSTEMC)/lib-linux64
 LINKER_ARGS=-rpath=$(SYSTEMC)/lib-linux64 
 LIBS=-lsystemc -lm
@@ -10,7 +10,7 @@ OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o \
 EXE/shifter.o EXE/x0_multiplier.o EXE/Diviseur.o EXE/exec.o MEM/mem.o MEM/x1_multiplier.o \
 REG/reg.o WBK/wbk.o WBK/x2_multiplier.o CSR/csr.o CACHES/icache.o \
 CACHES/dcache.o CACHES/buffercache.o TIMER/timer.o
-SW_DIR=../SW
+SW_DIR=../../../SOFT/
 LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 all: core_tb
