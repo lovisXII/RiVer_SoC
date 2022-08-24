@@ -107,7 +107,6 @@ SC_MODULE(dcache)
   int burst_cpt;
   sc_signal<sc_uint<32>> data_mask_sc;
 
-  sc_signal<sc_uint<32>>  adr_sent_to_wrapper;
 //FMS signal debug
   sc_signal<sc_uint<2>> current_state;
   sc_signal<sc_uint<2>> future_state;
@@ -130,7 +129,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM << adr_sent_to_wrapper << ADR_I;
+    sensitive << DATA_ADR_SM << A_O << ADR_I;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag

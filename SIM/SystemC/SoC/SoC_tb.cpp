@@ -221,33 +221,39 @@ int sc_main(int argc, char* argv[])
         {
             if (pc0_adr == bad_adr)
             {
+                //std::cout << "Found BAD at "<<sc_time_stamp()<<std::endl;
                 end_proc0_adr = bad_adr;
                 end_proc0 = true;
             }
             else if (pc0_adr == good_adr)
             {
+                //std::cout << "Found GOOD at "<<sc_time_stamp()<<std::endl;
                 end_proc0_adr = good_adr;
                 end_proc0 = true;
             }
             else if (pc0_adr == exception_occur)
             {
-                end_proc0_adr = good_adr;
+                //std::cout << "Found EXCEPTION at "<<sc_time_stamp()<<std::endl;
+                end_proc0_adr = exception_occur;
                 end_proc0 = true;
             }
 
             if (pc1_adr == bad_adr)
             {
+                //std::cout << "Found BAD at "<<sc_time_stamp()<<std::endl;
                 end_proc1_adr = bad_adr;
                 end_proc1 = true;
             }
             else if (pc1_adr == good_adr)
             {
+                //std::cout << "Found GOOD at "<<sc_time_stamp()<<std::endl;
                 end_proc1_adr = good_adr;
                 end_proc1 = true;
             }
             else if (pc1_adr == exception_occur)
             {
-                end_proc1_adr = good_adr;
+                //std::cout << "Found EXCEPTION at "<<sc_time_stamp()<<std::endl;
+                end_proc1_adr = exception_occur;
                 end_proc1 = true;
             }
 

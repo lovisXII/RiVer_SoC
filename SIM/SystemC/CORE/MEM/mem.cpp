@@ -284,7 +284,7 @@ void mem::csr_exception() {
 
             // Informing IFETCH that a return instruction have been received
 
-            MEPC_WDATA_RM.write(0x10054);//PC_EXE2MEM_RE.read());
+            MEPC_WDATA_RM.write(PC_EXE2MEM_RE.read());
             MTVAL_WDATA_SM = 0;
             MRET_SM        = MRET_RE;
         } else if (STORE_ACCESS_FAULT_RE) {

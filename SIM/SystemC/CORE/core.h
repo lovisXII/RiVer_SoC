@@ -22,7 +22,7 @@ SC_MODULE(core) {
 
     sc_in_clk   CLK;
     sc_in<bool> RESET;
-    sc_in<sc_uint<32>>  PROC_ID;
+
     // IFETCH-DEC interface
     // DEC2IF :
 
@@ -257,6 +257,7 @@ SC_MODULE(core) {
     // Debug
     sc_in<sc_uint<32>>  PC_INIT;
     sc_out<sc_uint<32>> DEBUG_PC_READ;
+    sc_in<sc_uint<32>>  PROC_ID;
 
     // Pipeline Mode
 

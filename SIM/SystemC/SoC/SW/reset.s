@@ -103,5 +103,4 @@ _next :
     la x23, 0
     la x24, 0
     la x25, 0
-
     mret
