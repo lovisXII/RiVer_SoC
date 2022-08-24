@@ -106,6 +106,6 @@ pluginpath=$PWD/sail_cSim
 pluginpath=$PWD/projet
 ispec=$PWD/projet/projet_isa.yaml
 pspec=$PWD/projet/projet_platform.yaml
-PATH=$PWD/../CORE/core_tb">>config.ini
+PATH=$PWD/../SIM/SystemC/CORE/core_tb">>config.ini
 
 riscof --verbose info arch-test --clone
