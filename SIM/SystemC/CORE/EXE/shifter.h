@@ -3,7 +3,7 @@
 #include <systemc.h>
 #include <iostream>
 #include <string>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(shifter) {
     sc_in<sc_uint<32>> DIN_SE;        // input
