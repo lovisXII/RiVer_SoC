@@ -3,6 +3,10 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOC='\033[0m'
 export PATH=$PATH:$HOME/riscv/bin
+
+printf"ls"
+ls
+
 cd SIM/SystemC/CORE
 for file in $(ls SOFT/TESTS/I/); do 
     printf "Test ${file} non opt..." 
