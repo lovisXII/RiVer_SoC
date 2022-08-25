@@ -3,12 +3,12 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NOC='\033[0m'
 export PATH=$PATH:$HOME/riscv/bin
-
-printf"ls"
+ 
+printf "ls\n"
 ls
 
 cd SIM/SystemC/CORE
-for file in $(ls SOFT/TESTS/I/); do 
+for file in $(ls ../../../SOFT/TESTS/I/); do 
     printf "Test ${file} non opt..." 
     timeout 40s ./core_tb SOFT/TESTS/I/$file >/dev/null 2>&1
     if (($? == 0)) 
@@ -28,7 +28,7 @@ for file in $(ls SOFT/TESTS/I/); do
         exit -1
     fi
 done
-for file in $(ls SOFT/TESTS/M/); do 
+for file in $(ls ../../../SOFT/TESTS/M/); do 
     printf "Test ${file} non opt..." 
     timeout 40s ./core_tb SOFT/TESTS/M/$file >/dev/null 2>&1
     if (($? == 0)) 
