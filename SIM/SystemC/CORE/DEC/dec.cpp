@@ -1004,7 +1004,7 @@ void decod::pc_inc() {
 
         IF2DEC_POP_SD.write(1);
         IF2DEC_FLUSH_SD.write(0);
-
+        dec2if_push_sd = 1 ;
         // DEC2EXE Gestion
 
         dec2exe_push_sd.write(1);
