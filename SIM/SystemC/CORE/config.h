@@ -10,8 +10,8 @@
 #define if2dec_size                 97
 
 //Branch prediction config
-#define BRANCH_PREDICTION
-#define RET_BRANCH_PREDICTION
+// #define BRANCH_PREDICTION
+// #define RET_BRANCH_PREDICTION
 
 #define predictor_register_size     128
 #define size_of_pred_pointer        7          //2^n = predictor_register_size

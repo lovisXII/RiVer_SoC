@@ -636,7 +636,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 10000))) {
+        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 30000))) {
             countdown = 50;
         }
         if (countdown == 1) {
