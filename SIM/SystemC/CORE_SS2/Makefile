@@ -10,7 +10,7 @@ OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE1/x0_multiplier.o EXE1/exe
 EXE2/exec_s2.o MEM1/mem_s1.o MEM1/x1_multiplier.o MEM2/mem_s2.o REG/reg.o \
 WBK1/wbk_s1.o WBK1/x2_multiplier.o WBK2/wbk_s2.o CSR/csr.o \
 CACHES/icache.o CACHES/dcache.o CACHES/buffercache.o
-SW_DIR=../SW
+SW_DIR=../../../SOFT
 LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
