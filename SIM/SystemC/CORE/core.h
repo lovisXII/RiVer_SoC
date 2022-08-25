@@ -97,9 +97,10 @@ SC_MODULE(core) {
     sc_signal<bool>        ADRESS_MISSALIGNED_RD;   // branch offset is misaligned
     sc_signal<bool>        ENV_CALL_U_MODE_RD;
     sc_signal<bool>        ENV_CALL_M_MODE_RD;
-
+    sc_signal<sc_uint<32>> KERNEL_ADR_SC;
     // DEC-CSR interface
     sc_signal<sc_uint<12>> CSR_RADR_SD;
+    sc_signal<bool> CSRRC_I_RD;
     sc_signal<sc_uint<32>> CSR_RDATA_SC;
     sc_signal<sc_uint<32>> MCAUSE_SC;
     // DEC-REG interface
@@ -109,7 +110,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<6>> RADR1_SD;
     sc_signal<sc_uint<6>> RADR2_SD;
 
-    sc_signal<sc_uint<6>> EXE_DEST_SD;
+    sc_signal<sc_uint<6>> EXE_DEST_RD;
 
     sc_signal<sc_uint<32>> READ_PC_SR;
     sc_signal<sc_uint<32>> WRITE_PC_SD;
@@ -211,7 +212,7 @@ SC_MODULE(core) {
     sc_signal<sc_uint<32>> MIP_VALUE_RC;
     sc_signal<sc_uint<32>> MIE_VALUE_RC;
     sc_signal<sc_uint<32>> MTVAL_WDATA_SM;
-    sc_signal<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
+    sc_signal<bool>        CSR_ENABLE_SM;
 
     // MEM-IFETCH
 
@@ -383,18 +384,19 @@ SC_MODULE(core) {
         dec_inst.RADR1_SD(RADR1_SD);
         dec_inst.RADR2_SD(RADR2_SD);
 
-        dec_inst.EXE_DEST_SD(EXE_DEST_SD);
+        dec_inst.EXE_DEST_RD(EXE_DEST_RD);
+        dec_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         dec_inst.READ_PC_SR(READ_PC_SR);
         dec_inst.WRITE_PC_SD(WRITE_PC_SD);
         dec_inst.WRITE_PC_ENABLE_SD(WRITE_PC_ENABLE_SD);
 
-        dec_inst.BP_DEST_RE(DEST_RE);
-        dec_inst.BP_EXE_RES_RE(EXE_RES_RE);
-        dec_inst.BP_DEST_RM(DEST_RM);
-        dec_inst.BP_MEM_RES_RM(MEM_RES_RM);
-        dec_inst.BP_EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
-        dec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        dec_inst.DEST_RE(DEST_RE);
+        dec_inst.EXE_RES_RE(EXE_RES_RE);
+        dec_inst.DEST_RM(DEST_RM);
+        dec_inst.MEM_RES_RM(MEM_RES_RM);
+        dec_inst.EXE2MEM_EMPTY_SE(EXE2MEM_EMPTY_SE);
+        dec_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
         dec_inst.PRED_ADR_SD(PRED_ADR_SD);
         dec_inst.PRED_TAKEN_SD(PRED_TAKEN_SD);
@@ -409,10 +411,11 @@ SC_MODULE(core) {
         dec_inst.BP_R2_VALID_RD(BP_R2_VALID_RD);
         dec_inst.BP_RADR1_RD(BP_RADR1_RD);
         dec_inst.BP_RADR2_RD(BP_RADR2_RD);
-        dec_inst.BP_MEM_LOAD_RE(MEM_LOAD_RE);
+        dec_inst.MEM_LOAD_RE(MEM_LOAD_RE);
 
         dec_inst.CSR_WENABLE_RE(CSR_WENABLE_RE);
         dec_inst.CSR_RDATA_RE(CSR_RDATA_RE);
+        dec_inst.CSRRC_I_RD(CSRRC_I_RD);
         dec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         dec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
         dec_inst.EBREAK_RD(EBREAK_RD);
@@ -457,7 +460,7 @@ SC_MODULE(core) {
         exec_inst.OP1_RD(OP1_RD);
         exec_inst.OP2_RD(OP2_RD);
         exec_inst.CMD_RD(EXE_CMD_RD);
-        exec_inst.DEST_RD(EXE_DEST_SD);
+        exec_inst.DEST_RD(EXE_DEST_RD);
         exec_inst.NEG_OP2_RD(NEG_OP2_RD);
         exec_inst.WB_RD(WB_RD);
         exec_inst.SELECT_TYPE_OPERATIONS_RD(SELECT_TYPE_OPERATIONS_RD);
@@ -482,6 +485,7 @@ SC_MODULE(core) {
         exec_inst.EXE_RES_RE(EXE_RES_RE);
         exec_inst.MEM_DATA_RE(MEM_DATA_RE);
         exec_inst.DEST_RE(DEST_RE);
+        exec_inst.CSRRC_I_RD(CSRRC_I_RD);
         exec_inst.MEM_SIZE_RE(MEM_SIZE_RE);
 
         exec_inst.WB_RE(MEM_WB);
@@ -495,6 +499,7 @@ SC_MODULE(core) {
 
         exec_inst.CSR_WENABLE_RM(CSR_WENABLE_RM);
         exec_inst.CSR_RDATA_RM(CSR_RDATA_RM);
+        exec_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
 
         exec_inst.INTERRUPTION_SE(INTERRUPTION_SE);
         exec_inst.MACHINE_SOFTWARE_INTERRUPT_SX(MACHINE_SOFTWARE_INTERRUPT_SX);
@@ -547,7 +552,7 @@ SC_MODULE(core) {
         exec_inst.DONE_SE(DONE_SE);
 
         exec_inst.MULT_INST_RM(MULT_INST_RM);
-        exec_inst.BP_MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
+        exec_inst.MEM2WBK_EMPTY_SM(MEM2WBK_EMPTY_SM);
 
         exec_inst.CLK(CLK);
         exec_inst.RESET(RESET);
@@ -660,7 +665,7 @@ SC_MODULE(core) {
         mem_inst.MIE_VALUE_RC(MIE_VALUE_RC);
         mem_inst.MTVAL_WDATA_SM(MTVAL_WDATA_SM);
 
-        mem_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        mem_inst.CSR_ENABLE_SM(CSR_ENABLE_SM);
         mem_inst.PC_BRANCH_VALUE_RE(PC_BRANCH_VALUE_RE);
 
         mem_inst.CLK(CLK);
@@ -735,7 +740,7 @@ SC_MODULE(core) {
 
         csr_inst.CSR_WADR_SM(CSR_WADR_SM);
         csr_inst.CSR_WDATA_SM(CSR_WDATA_SM);
-        csr_inst.CSR_ENABLE_BEFORE_FIFO_SM(CSR_ENABLE_BEFORE_FIFO_SM);
+        csr_inst.CSR_ENABLE_SM(CSR_ENABLE_SM);
 
         csr_inst.CSR_RADR_SD(CSR_RADR_SD);
         csr_inst.CSR_RDATA_SC(CSR_RDATA_SC);
@@ -757,6 +762,7 @@ SC_MODULE(core) {
         csr_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         csr_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
         csr_inst.TIME_RT(TIME_RT);
+        csr_inst.KERNEL_ADR_SC(KERNEL_ADR_SC);
         csr_inst.TIMER_INT_ST(TIMER_INT_ST);
         csr_inst.ACK_SP(ACK_SP);
 

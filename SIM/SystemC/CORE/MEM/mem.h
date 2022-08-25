@@ -100,7 +100,7 @@ SC_MODULE(mem) {
 
     sc_out<sc_uint<12>> CSR_WADR_SM;
     sc_out<sc_uint<32>> CSR_WDATA_SM;
-    sc_out<bool>        CSR_ENABLE_BEFORE_FIFO_SM;
+    sc_out<bool>        CSR_ENABLE_SM;
 
     sc_out<sc_uint<32>> MSTATUS_WDATA_RM;
     sc_out<sc_uint<32>> MIP_WDATA_RM;

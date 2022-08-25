@@ -10,7 +10,7 @@ OBJECTS=core.o core_tb.o IFETCH/ifetch.o DEC/dec.o EXE/alu.o \
 EXE/shifter.o EXE/x0_multiplier.o EXE/Diviseur.o EXE/exec.o MEM/mem.o MEM/x1_multiplier.o \
 REG/reg.o WBK/wbk.o WBK/x2_multiplier.o CSR/csr.o CACHES/icache.o \
 CACHES/dcache.o CACHES/buffercache.o TIMER/timer.o
-SW_DIR=../../../SOFT
+SW_DIR=../../../SOFT/
 LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 all: core_tb
