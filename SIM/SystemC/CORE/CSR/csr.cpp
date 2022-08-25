@@ -7,9 +7,10 @@ void csr::writing_csr() {
     for (int rid = 0; rid < N_CSR; rid++) {
         csr_rc[rid].write(0);
     }
-    csr_rc[3].write(PROC_ID);  // mhartid
+    csr_rc[3].write(PROC_ID);
     csr_rc[4].write(0x00000000);  // mstatus
     csr_rc[5].write(0x40100100);  // misa
+    csr_rc[14].write(0xFFFFFFFF);  // kernel
 
     wait(3);
 
@@ -40,7 +41,7 @@ void csr::writing_csr() {
 
         if (TIMER_INT_ST.read()) {
             ACK_SP     = 1;
-            csr_rc[12] = csr_rc[12].read() | (1 << 7);
+            csr_rc[12] = csr_rc[12].read() & (1 << 7);
         } else {
             ACK_SP = 0;
         }
@@ -55,7 +56,6 @@ void csr::writing_csr() {
         wait(1);
     }
 }
-
 void csr::transmit_to_timer() {
     TIMER_CONFIG_WB_SC.write(0);
     TIMER_DIVIDER_WB_SC.write(0);
@@ -83,7 +83,6 @@ void csr::reading_csr() {
         case 0x343: CSR_RDATA_SC.write(csr_rc[11]); break;
         case 0x344: CSR_RDATA_SC.write(csr_rc[12]); break;
         case 0x340: CSR_RDATA_SC.write(csr_rc[13]); break;
-        case 0x800: CSR_RDATA_SC.write(csr_rc[14]); break;
         case 0xC01: CSR_RDATA_SC.write(TIME_RT.read().range(31, 0)); break;   // time
         case 0xC81: CSR_RDATA_SC.write(TIME_RT.read().range(63, 32)); break;  // timeh
         default: CSR_RDATA_SC.write(0); break;
@@ -109,7 +108,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, MCAUSE_WDATA_SM, GET_NAME(MCAUSE_WDATA_SM));
     sc_trace(tf, MTVEC_VALUE_RC, GET_NAME(MTVEC_VALUE_RC));
     sc_trace(tf, MIP_VALUE_RC, GET_NAME(MIP_VALUE_RC));
-    sc_trace(tf, KERNEL_ADR_SC, GET_NAME(KERNEL_ADR_SC));
 
     // Output :
 
@@ -131,7 +129,6 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(), "mtval"));
     sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mip"));
     sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "mscratch"));
-    sc_trace(tf, csr_rc[14], signal_get_name(csr_rc[14].name(), "kernel_adr"));
 
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));

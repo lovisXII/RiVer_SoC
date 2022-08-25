@@ -96,7 +96,5 @@ _isr_vector :
 .global _lock_proc1
 _lock_proc0:
 #when asserted proc0 is locked
-.space 4
 _lock_proc1:
 #when asserted proc1 is locked
-.space 4

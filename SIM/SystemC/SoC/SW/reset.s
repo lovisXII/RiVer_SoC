@@ -12,6 +12,10 @@ _reset:
     csrr x6,mhartid
     bnez x6,_cpu1
 _cpu0 :
+    #lock _cpu0
+    la x21, _lock_proc0
+    sw x0, 0(x21)
+
     la x28,0x10054           # loading main adress
     li x2,0x10000            # sp initialization
 
@@ -43,28 +47,30 @@ _cpu0 :
     sw x15, 40(x9)
     sw x20, 96(x9) #_env_call_wrong mode set in custom use 24
 
-    #unlock cpu0
-    la x21, _lock_proc0
-    li x22, 1
-    sw x22, 0(x21)    #_lock_proc0
-
-_load_unlock_1:
-    lw x21, _lock_proc1
-    bnez x21, _next
-    j _load_unlock_1
-
-_cpu1 :
-    la x28,0x10054
-    li x2,0x20000            # sp initialization
-
-    #unlock cpu0
-    la x21, _lock_proc1
+    #unlock cpu1
     li x22, 1
     sw x22, 0(x21)
 
 _load_unlock_0:
-    lw x21, _lock_proc0
-    bnez x21, _next
+    lw x22, _lock_proc1
+    bnez x22, _next
+    j _load_unlock_0
+
+_cpu1 :
+    #lock _cpu0
+    la x21, _lock_proc1
+    sw x0, 0(x21)
+
+    la x28,0x10054
+    li x2,0x20000            # sp initialization
+
+    #unlock cpu0
+    li x22, 1
+    sw x22, 0(x21)
+
+_load_unlock_1:
+    lw x22, _lock_proc0
+    bnez x22, _next
     j _load_unlock_1
 
 _next :
@@ -103,4 +109,5 @@ _next :
     la x23, 0
     la x24, 0
     la x25, 0
+
     mret

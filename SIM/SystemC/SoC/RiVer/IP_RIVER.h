@@ -1,6 +1,7 @@
 #pragma once
 
 #include <systemc.h>
+//#include "../CORE/core.h"
 #include "../../CORE/core.h"
 #include "CACHES/icache.h"
 #include "CACHES/dcache.h"
