@@ -9,6 +9,7 @@ void csr::writing_csr() {
     }
     csr_rc[3].write(0x00000000);  // mstatus
     csr_rc[4].write(0x40100100);  // misa
+    csr_rc[13].write(0xFFFFFFFF);  // misa
 
     wait(3);
 
