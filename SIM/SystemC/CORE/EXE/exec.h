@@ -38,9 +38,9 @@ SC_MODULE(exec) {
     sc_in<bool>        CSR_WENABLE_RD;
     sc_in<sc_uint<12>> CSR_WADR_RD;
     sc_in<sc_uint<32>> CSR_RDATA_RD;
-    sc_in<bool>   CSRRC_I_RD;
+
     sc_in<bool> MULT_INST_RM;
-    sc_in<bool> MEM2WBK_EMPTY_SM;
+    sc_in<bool> BP_MEM2WBK_EMPTY_SM;
     // Exception coming from Decod :
 
     sc_in<bool>         EXCEPTION_RD;  // tells if an instruction have been made in DEC
@@ -94,7 +94,6 @@ SC_MODULE(exec) {
     sc_in<sc_uint<32>> MEM_RES_RM;
     sc_in<bool>        CSR_WENABLE_RM;
     sc_in<sc_uint<32>> CSR_RDATA_RM;
-    sc_in<sc_uint<32>> KERNEL_ADR_SC;
 
     // General Interface :
 
@@ -230,13 +229,12 @@ SC_MODULE(exec) {
                   << DIV_BUSY_SE;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM 
-                  << CSRRC_I_RD
                   << MEM_RES_RM << DEST_RE << EXE_RES_RE << RADR1_RD
                   << CSR_WENABLE_RE << BLOCK_BP_RD << DEST_RE << MEM_LOAD_RE 
                   << CSR_WENABLE_RM << CSR_RDATA_RM
                   << RADR2_RD << OP1_RD << OP2_RD << exception_se << MEM_DATA_RD
                   << MEM_STORE_RD << MULT_INST_RE << MULT_INST_RM 
-                  << MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
+                  << BP_MEM2WBK_EMPTY_SM << EXE2MEM_EMPTY_SE;
         SC_METHOD(exception);
         sensitive << WB_RD << MEM_LOAD_RD << MEM_STORE_RD << WB_RD 
                   << EXCEPTION_RD << load_adress_missaligned_se

@@ -28,7 +28,7 @@ SC_MODULE(decod) {
     sc_out<bool>        NEG_OP2_RD;                 // say if we take the opposite of the op1 to do a
                                                     // substraction for example
     sc_out<bool>        WB_RD;                      // say if we plan to wbk the value of rd or no
-    sc_out<sc_uint<6>>  EXE_DEST_RD;                // the destination register
+    sc_out<sc_uint<6>>  EXE_DEST_SD;                // the destination register
     sc_out<sc_uint<4>>  SELECT_TYPE_OPERATIONS_RD;  // taille fifo entrée : 110
     sc_out<bool>        SLT_RD;
     sc_out<bool>        SLTU_RD;
@@ -42,11 +42,9 @@ SC_MODULE(decod) {
 
     sc_inout<bool> CSR_WENABLE_RD;     // indicate if we do a csr operation,
                                        // if so need to WBK CSR in rd
-    sc_out<bool> CSRRC_I_RD;
     sc_out<sc_uint<12>> CSR_WADR_RD;   // CSR adress sent to EXE, will allow to wbk csr in MEM
     sc_out<sc_uint<32>> CSR_RDATA_RD;  // CSR read data to be wb in register
-    sc_in<sc_uint<32>> KERNEL_ADR_SC;
-    
+
     // Interface with DEC2IF :
 
     sc_in<bool>        DEC2IF_POP_SI;  // Ifecth say to decod if it wants a pop or no
@@ -97,13 +95,13 @@ SC_MODULE(decod) {
 
     // Bypasses
 
-    sc_in<sc_uint<6>>  DEST_RE;
-    sc_in<sc_uint<32>> EXE_RES_RE;
-    sc_in<bool>        MEM_LOAD_RE;
-    sc_in<bool>        EXE2MEM_EMPTY_SE;
-    sc_in<bool>        MEM2WBK_EMPTY_SM;
-    sc_in<sc_uint<6>>  DEST_RM;
-    sc_in<sc_uint<32>> MEM_RES_RM;
+    sc_in<sc_uint<6>>  BP_DEST_RE;
+    sc_in<sc_uint<32>> BP_EXE_RES_RE;
+    sc_in<bool>        BP_MEM_LOAD_RE;
+    sc_in<bool>        BP_EXE2MEM_EMPTY_SE;
+    sc_in<bool>        BP_MEM2WBK_EMPTY_SM;
+    sc_in<sc_uint<6>>  BP_DEST_RM;
+    sc_in<sc_uint<32>> BP_MEM_RES_RM;
 
     sc_in<bool>        CSR_WENABLE_RE;
     sc_in<sc_uint<32>> CSR_RDATA_RE;
@@ -407,7 +405,7 @@ SC_MODULE(decod) {
                     << DEC2EXE_EMPTY_SD 
                     << CSR_WENABLE_RD 
                     << CSR_WENABLE_RE 
-                    << EXE2MEM_EMPTY_SE
+                    << BP_EXE2MEM_EMPTY_SE
                     << csr_in_progress
                     << block_in_dec 
                     << IF2DEC_EMPTY_SI
@@ -468,13 +466,13 @@ SC_MODULE(decod) {
                   
     
         SC_METHOD(bypasses);
-        sensitive << RDATA1_SR << RDATA2_SR << DEST_RE << EXE_RES_RE
-                    << csrrc_i_sd
-                  << DEST_RM << MEM_RES_RM << RADR1_SD << EXE_DEST_RD
+        sensitive << RDATA1_SR << RDATA2_SR << BP_DEST_RE << BP_EXE_RES_RE
 
-                  << RADR2_SD << EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
+                  << BP_DEST_RM << BP_MEM_RES_RM << RADR1_SD << EXE_DEST_SD
 
-                  << DEC2EXE_EMPTY_SD << MEM_LOAD_RE << MEM2WBK_EMPTY_SM;
+                  << RADR2_SD << BP_EXE2MEM_EMPTY_SE << MULT_INST_RE << MULT_INST_RM
+
+                  << DEC2EXE_EMPTY_SD << BP_MEM_LOAD_RE << BP_MEM2WBK_EMPTY_SM;
         SC_METHOD(pred_reg_data);
         sensitive << PRED_ADR_RI << PRED_TAKEN_RI;
 

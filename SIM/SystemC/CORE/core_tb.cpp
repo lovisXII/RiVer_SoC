@@ -16,7 +16,7 @@ using namespace ELFIO;
 
 #ifdef ICACHE_ON
 
-#include "CACHES/icache.h"ios::out
+#include "CACHES/icache.h"
 
 // ICACHE I/O INTERFACE MAE STATES
 enum IC_FSM
@@ -636,24 +636,24 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 2000000))) {
+        else if (countdown == 0 && (pc_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
+            cerr << "inside if : " << endl ; 
             countdown = 50;
+            cout << "coutndown value : " << countdown << endl ;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
-            
-            // Stats Gestion riscof
-            test_stats << test_filename << " " << NB_CYCLES  << " " << "SCALAR" << endl;
-            test_stats.close();
-            
-            
             ofstream signature;
             signature.open(signature_name, ios::out | ios::trunc);
             cout << "signature_name :" << signature_name << endl ;
             cout << "begin_signature :" << begin_signature << endl ;
             cout << "end_signature :" << end_signature << endl ;
-           
+            
+            int j = 1;
+            for (int i = begin_signature; i < end_signature; i += 4){
+                j++;
+            }
             for (int i = begin_signature; i < end_signature; i += 4) {
                 signature << setfill('0') << setw(8) << hex << ram[i] << endl;
             }
