@@ -10,7 +10,7 @@ ls
 cd SIM/SystemC/CORE
 for file in $(ls ../../../SOFT/TESTS/I/); do 
     printf "Test ${file} non opt..." 
-    timeout 40s ./core_tb SOFT/TESTS/I/$file >/dev/null 2>&1
+    timeout 40s ./core_tb ../../../SOFT/TESTS/I/$file >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -19,7 +19,7 @@ for file in $(ls ../../../SOFT/TESTS/I/); do
         exit -1
     fi
     printf "Test ${file} opt..." 
-    timeout 40s ./core_tb SOFT/TESTS/I/$file -O >/dev/null 2>&1
+    timeout 40s ./core_tb ../../../SOFT/TESTS/I/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -30,7 +30,7 @@ for file in $(ls ../../../SOFT/TESTS/I/); do
 done
 for file in $(ls ../../../SOFT/TESTS/M/); do 
     printf "Test ${file} non opt..." 
-    timeout 40s ./core_tb SOFT/TESTS/M/$file >/dev/null 2>&1
+    timeout 40s ./core_tb ../../../SOFT/TESTS/M/$file >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
@@ -39,7 +39,7 @@ for file in $(ls ../../../SOFT/TESTS/M/); do
         exit -1
     fi
     printf "Test ${file} opt..." 
-    timeout 40s ./core_tb SOFT/TESTS/M/$file -O >/dev/null 2>&1
+    timeout 40s ./core_tb ../../../SOFT/TESTS/M/$file -O >/dev/null 2>&1
     if (($? == 0)) 
     then
         printf "${GREEN} passed\n${NOC}"
