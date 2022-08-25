@@ -56,6 +56,7 @@ void csr::writing_csr() {
         wait(1);
     }
 }
+
 void csr::transmit_to_timer() {
     TIMER_CONFIG_WB_SC.write(0);
     TIMER_DIVIDER_WB_SC.write(0);
@@ -83,6 +84,7 @@ void csr::reading_csr() {
         case 0x343: CSR_RDATA_SC.write(csr_rc[11]); break;
         case 0x344: CSR_RDATA_SC.write(csr_rc[12]); break;
         case 0x340: CSR_RDATA_SC.write(csr_rc[13]); break;
+        case 0x800: CSR_RDATA_SC.write(csr_rc[14]); break;
         case 0xC01: CSR_RDATA_SC.write(TIME_RT.read().range(31, 0)); break;   // time
         case 0xC81: CSR_RDATA_SC.write(TIME_RT.read().range(63, 32)); break;  // timeh
         default: CSR_RDATA_SC.write(0); break;
@@ -129,6 +131,7 @@ void csr::trace(sc_trace_file* tf) {
     sc_trace(tf, csr_rc[11], signal_get_name(csr_rc[11].name(), "mtval"));
     sc_trace(tf, csr_rc[12], signal_get_name(csr_rc[12].name(), "mip"));
     sc_trace(tf, csr_rc[13], signal_get_name(csr_rc[13].name(), "mscratch"));
+    sc_trace(tf, csr_rc[14], signal_get_name(csr_rc[14].name(), "kernel"));
 
     sc_trace(tf, CLK, GET_NAME(CLK));
     sc_trace(tf, RESET_N, GET_NAME(RESET_N));

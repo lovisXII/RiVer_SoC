@@ -770,7 +770,7 @@ SC_MODULE(core) {
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
         csr_inst.PROC_ID(PROC_ID);
-
+        
         timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
         timer_inst.DATA_SC(CSR_WDATA_SM);

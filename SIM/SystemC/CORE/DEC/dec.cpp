@@ -966,18 +966,6 @@ void decod::pc_inc() {
 
     DEC2IF_EMPTY_SD = dec2if_empty_sd;
 
-    // Adress missaligned exception :
-
-    if (EXCEPTION_SM.read() == 0) {}
-
-    // Instruction adress missaligned exception :
-
-    if ((pc_out & 0b11) != 0 || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read())) {
-        instruction_adress_missaligned_sd = 1;
-    } else {
-        instruction_adress_missaligned_sd = 0;
-    }
-
     // Exception & fifo gestion
 
     if (EXCEPTION_SM.read() == 1) {
@@ -1016,43 +1004,58 @@ void decod::pc_inc() {
 
         IF2DEC_POP_SD.write(1);
         IF2DEC_FLUSH_SD.write(0);
-
+        dec2if_push_sd = 1 ;
         // DEC2EXE Gestion
 
         dec2exe_push_sd.write(1);
 
     } else {
-        if (!add_offset_to_pc && !dec2if_full_sd) {
-            if (PRED_TAKEN_RI.read() && stall_sd && !(PRED_SUCCESS_RD.read() || PRED_FAILED_RD.read())) {
+        if (!add_offset_to_pc && !dec2if_full_sd) 
+        {
+            if (PRED_TAKEN_RI.read() && stall_sd && !(PRED_SUCCESS_RD.read() || PRED_FAILED_RD.read())) 
+            {
                 pc_out = PRED_ADR_RI.read() + 4;
-            } else if (PRED_TAKEN_RI.read() && !stall_sd) {
+            }
+            else if (PRED_TAKEN_RI.read() && !stall_sd) 
+            {
                 pc_out = PC_IF2DEC_RI.read() + 4;
-            } else
+            } 
+            else
                 pc_out = pc + 4;
 
             WRITE_PC_ENABLE_SD = 1;
             dec2if_push_sd     = 1;
 
-            if (PRED_TAKEN_RI.read() && !IF2DEC_EMPTY_SI) {
+            if (PRED_TAKEN_RI.read() && !IF2DEC_EMPTY_SI) 
+            {
                 pred_success_sd = false;
                 pred_failed_sd  = true;
-            } else {
+            } 
+            else 
+            {
                 pred_success_sd = false;
                 pred_failed_sd  = false;
             }
-        } else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd) {
+        } 
+        else if (add_offset_to_pc && !dec2if_full_sd && !stall_sd) 
+        {
             pc_out = PRED_TAKEN_RI.read() ? PRED_ADR_RI.read() + 4 : PC_IF2DEC_RI.read() + offset_branch_var;
             WRITE_PC_ENABLE_SD = 1;
             dec2if_push_sd     = 1;
 
-            if (PRED_TAKEN_RI.read()) {
+            if (PRED_TAKEN_RI.read()) 
+            {
                 pred_success_sd = true;
                 pred_failed_sd  = false;
-            } else {
+            } 
+            else 
+            {
                 pred_success_sd = false;
                 pred_failed_sd  = false;
             }
-        } else {
+        } 
+        else 
+        {
             WRITE_PC_ENABLE_SD = 0;
             dec2if_push_sd     = 0;
 
@@ -1063,6 +1066,15 @@ void decod::pc_inc() {
         res_pc_sd.write(pc_out);
         WRITE_PC_SD.write(pc_out);
         pc_branch_value_sd = pc_out;
+
+        // Instruction adress missaligned exception :
+
+        if (((pc_out & 0b11) != 0) || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read())) {
+            instruction_adress_missaligned_sd = 1;
+        } else {
+            instruction_adress_missaligned_sd = 0;
+        }
+
         if (pc_out > KERNEL_ADR_SC && CURRENT_MODE_SM.read() != 3) {
             instruction_access_fault_sd = 1;
         } else {
@@ -1071,23 +1083,34 @@ void decod::pc_inc() {
 
         // IF2DEC Gestion
         if (PRED_TAKEN_RI) {
-            if (jump_sd && !stall_sd) {
+            if (jump_sd && !stall_sd) 
+            {
                 IF2DEC_POP_SD.write(1);
                 IF2DEC_FLUSH_SD.write(0);
-            } else if (!jump_sd && !stall_sd) {
+            }
+            else if (!jump_sd && !stall_sd) 
+            {
                 IF2DEC_POP_SD.write(1);
                 IF2DEC_FLUSH_SD.write(1);
-            } else {
+            }
+            else 
+            {
                 IF2DEC_POP_SD.write(0);
                 IF2DEC_FLUSH_SD.write(0);
             }
-        } else if (jump_sd && !stall_sd) {
+        } 
+        else if (jump_sd && !stall_sd) 
+        {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(1);
-        } else if (!jump_sd && !stall_sd) {
+        } 
+        else if (!jump_sd && !stall_sd) 
+        {
             IF2DEC_POP_SD.write(1);
             IF2DEC_FLUSH_SD.write(0);
-        } else {
+        }
+        else 
+        {
             IF2DEC_POP_SD.write(0);
             IF2DEC_FLUSH_SD.write(0);
         }
@@ -1100,11 +1123,8 @@ void decod::pc_inc() {
             dec2exe_push_sd.write(1);
         }
     }
-} /*
- void decod::gestion_fifo()
- {
+} 
 
- }*/
 void decod::bypasses() {
     // DEST_RE is the same signal than DEST_RE
     // Same for all other bp_dest_rx

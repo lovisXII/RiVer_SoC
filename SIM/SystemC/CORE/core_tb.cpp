@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "../UTIL/colors.h"
+#include "UTIL/colors.h"
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
@@ -16,7 +16,7 @@ using namespace ELFIO;
 
 #ifdef ICACHE_ON
 
-#include "CACHES/icache.h"
+#include "CACHES/icache.h"ios::out
 
 // ICACHE I/O INTERFACE MAE STATES
 enum IC_FSM
@@ -639,7 +639,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 2000000))) {
+        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 30000))) {
             countdown = 50;
         }
         if (countdown == 1) {

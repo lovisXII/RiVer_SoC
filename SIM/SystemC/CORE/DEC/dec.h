@@ -464,6 +464,7 @@ SC_MODULE(decod) {
                   << MRET_SM << dec2if_full_sd 
                   << IF2DEC_EMPTY_SI << MCAUSE_WDATA_SM
                   << stall_sd 
+                
                   << PRED_TAKEN_RI << PRED_ADR_RI;
                   
     

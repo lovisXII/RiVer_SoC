@@ -3,7 +3,7 @@
 #include <iostream>
 #include "../../UTIL/debug_util.h"
 
-#define N_CSR        14
+#define N_CSR        15
 #define adress_mtvec 0x80000000
 #define main_adresse 0x10054
 
