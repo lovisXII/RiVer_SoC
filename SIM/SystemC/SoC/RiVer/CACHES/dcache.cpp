@@ -7,10 +7,6 @@ void dcache::adresse_parcer()
   address_index.write(DT_A_SM.range(10,4));
   address_offset.write(DT_A_SM.range(3,0));
 
-  sc_uint<32> DT_A_I = adr_sent_to_wrapper.read();
-  mp_address_tag.write(DT_A_I.range(31,11));
-  mp_address_index.write(DT_A_I.range(10,4));
-  mp_address_offset.write(DT_A_I.range(3,0));
 
   sc_uint<32> DT_A_BUS = ADR_I.read();
   bus_tag.write(DT_A_BUS.range(31,11));
@@ -196,16 +192,13 @@ void dcache::mae_output()
           dt = dt | (DATA_SM.read() & data_mask);
           w1_word[address_index.read()][address_offset.read()/4] = dt;
         }
-      }else if(LOAD_SM.read() && VALID_ADR_SM.read())
-      {
-        adr_sent_to_wrapper = A_O;
       }
       break;
     case DC_WAIT_MEM:
       if(ACK.read())
       {
         DTA_VALID_SC = false;
-        sc_uint<32> DT_A_MP = adr_sent_to_wrapper.read();
+        sc_uint<32> DT_A_MP = A_O.read();
         if(LRU_bit_check[DT_A_MP.range(10,4)])
         {
           w0_word[DT_A_MP.range(10,4)][burst_cpt++] = DT_I.read();
@@ -235,7 +228,7 @@ void dcache::mae_output()
       }
       else
       {
-        sc_uint<32> DT_A_MP = adr_sent_to_wrapper.read();
+        sc_uint<32> DT_A_MP = A_O.read();
         if(DT_A_MP.range(3,0) == (mp_last_addr_offset.read() + 4))
         {
           mp_last_addr_offset = DT_A_MP.range(3,0);
@@ -273,7 +266,6 @@ void dcache::trace(sc_trace_file* tf)
   sc_trace(tf, DT_O, GET_NAME(DT_O));
   sc_trace(tf, A_O, GET_NAME(A_O));
   sc_trace(tf, DT_I, GET_NAME(DT_I));
-  sc_trace(tf, adr_sent_to_wrapper, GET_NAME(adr_sent_to_wrapper));
   sc_trace(tf, ACK, GET_NAME(ACK));
 
   // signals

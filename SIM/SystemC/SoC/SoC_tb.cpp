@@ -32,8 +32,8 @@ int sc_main(int argc, char* argv[])
     elfio                        reader;  // creation of an elfio object
     if(argc < 2)
     {
-        std::cout << "You forget the text file ../TEST/"<<std::endl;
-        exit(1);
+        std::cout << "You may forget the text file ../TEST/"<<std::endl;
+        //exit(1);
     }
     std::string                  path(argv[1]);
         
@@ -219,49 +219,16 @@ int sc_main(int argc, char* argv[])
 
         if(signature_name == "")
         {
-            if (pc0_adr == bad_adr)
+            if (pc0_adr == bad_adr || pc0_adr == good_adr || pc0_adr == exception_occur)
             {
-                end_proc0_adr = bad_adr;
-                end_proc0 = true;
+                print_found(pc0_adr, 0);
+                exit(0);
             }
-            else if (pc0_adr == good_adr)
+            if (pc1_adr == bad_adr || pc1_adr == good_adr || pc1_adr == exception_occur)
             {
-                end_proc0_adr = good_adr;
-                end_proc0 = true;
+                print_found(pc1_adr, 1);
+                exit(0);
             }
-            else if (pc0_adr == exception_occur)
-            {
-                end_proc0_adr = good_adr;
-                end_proc0 = true;
-            }
-
-            if (pc1_adr == bad_adr)
-            {
-                end_proc1_adr = bad_adr;
-                end_proc1 = true;
-            }
-            else if (pc1_adr == good_adr)
-            {
-                end_proc1_adr = good_adr;
-                end_proc1 = true;
-            }
-            else if (pc1_adr == exception_occur)
-            {
-                end_proc1_adr = good_adr;
-                end_proc1 = true;
-            }
-
-            if(end_proc0 && end_proc1)
-            {
-                print_found(end_proc0_adr,0);
-                print_found(end_proc1_adr,1);
-                sc_start(3, SC_NS);
-                if(end_proc0_adr == end_proc1_adr && end_proc0_adr == good_adr)
-                    exit(0);
-                else
-                    exit(1);
-            }
-                
         }
         else if (countdown == 0 && (pc0_adr == rvtest_code_end || (signature_name != "" && cycles > 2000000))) {
             cerr << "inside if : " << endl ; 

@@ -6,18 +6,19 @@
 _bad :
     nop
     nop
-    j _bad
-    nop
 _good :
     nop
-    nop
-    j _good
     nop
 _exception_occur :
     nop
     nop
-    j _exception_occur
-    nop
+.space 32
+.global _lock_proc0
+.global _lock_proc1
+_lock_proc0:
+#when asserted proc0 is locked
+_lock_proc1:
+#when asserted proc1 is locked
 .section .kernel
 .global _exception
 .global _instruction_address_misagligned 
@@ -91,10 +92,3 @@ _env_call_wrong_mode :
 _isr_vector :
 # just a label to load the adresses of the isr function
 # @_isr_vector + 0 :_instruction_adress_missaligned
-.space 32
-.global _lock_proc0
-.global _lock_proc1
-_lock_proc0:
-#when asserted proc0 is locked
-_lock_proc1:
-#when asserted proc1 is locked

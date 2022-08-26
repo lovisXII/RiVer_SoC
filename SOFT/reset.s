@@ -9,19 +9,15 @@
 # * 
 
 _reset:
-    la x28,0x10054       #loading main adress
-    la x29,_exception    #loading exception handler adress
-    li x30, 0x90000000   # loading mscratch value
-    li x27, 0x80000000  # kernel start adr
-    
-    srli x29,x29,2       # removing least 2 significant bits to allow 
-    sll x29,x29,2
-    addi x29,x29,0       # direct mode for mtvec 
-    csrrw x0, 0x341,x28  # writting main adress in mepc
-    csrrw x0, 0x305,x29  # writting exception handler adress in mtvec
-    csrrw x0,mscratch,x30 
-    csrrw x0,0x800,x27  #writing kernel start adr
-    li x2,0x10000        # sp initialization
+    csrr x6,mhartid
+    bnez x6,_cpu1
+_cpu0 :
+    #lock _cpu0
+    la x21, _lock_proc0
+    sw x0, 0(x21)
+
+    la x28,0x10054           # loading main adress
+    li x2,0x10000            # sp initialization
 
     # loading isr adresses
     la x9, _isr_vector
@@ -50,6 +46,44 @@ _reset:
     sw x14, 36(x9)
     sw x15, 40(x9)
     sw x20, 96(x9) #_env_call_wrong mode set in custom use 24
+
+    #unlock cpu1
+    li x22, 1
+    sw x22, 0(x21)
+
+_load_unlock_0:
+    lw x22, _lock_proc1
+    bnez x22, _next
+    j _load_unlock_0
+
+_cpu1 :
+    #lock _cpu0
+    la x21, _lock_proc1
+    sw x0, 0(x21)
+
+    la x28,0x10054
+    li x2,0x20000            # sp initialization
+
+    #unlock cpu0
+    li x22, 1
+    sw x22, 0(x21)
+
+_load_unlock_1:
+    lw x22, _lock_proc0
+    bnez x22, _next
+    j _load_unlock_1
+
+_next :
+    la x29,_exception        # loading exception handler adress
+    li x30, 0x90000000       # loading mscratch value
+    li x27, 0x80000000  # kernel start adr
+    srli x29,x29,2           # removing least 2 significant bits to allow 
+    sll x29,x29,2    
+    addi x29,x29,0           # direct mode for mtvec 
+    csrrw x0, 0x341,x28      # writting main adress in mepc
+    csrrw x0, 0x305,x29      # writting exception handler adress in mtvec
+    csrrw x0,mscratch,x30    
+    csrrw x0,0x800,x27  #writing kernel start adr
 
     # reseting register value
 

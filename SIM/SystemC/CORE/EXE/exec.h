@@ -227,7 +227,7 @@ SC_MODULE(exec) {
                   << OP1_VALID_RD << OP2_VALID_RD 
                   << exception_se << blocked 
                   << r1_valid_se << r2_valid_se 
-                  << DIV_BUSY_SE;
+                  << DIV_BUSY_SE << EXCEPTION_SM;
         SC_METHOD(bypasses);
         sensitive << OP1_VALID_RD << OP2_VALID_RD << MEM_DEST_RM 
                   << CSRRC_I_RD
