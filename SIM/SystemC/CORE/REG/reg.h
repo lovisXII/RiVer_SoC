@@ -1,6 +1,6 @@
 #pragma once
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 SC_MODULE(reg) {
     // Reading Port :
 

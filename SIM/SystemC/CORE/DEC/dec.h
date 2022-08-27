@@ -1,6 +1,6 @@
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/fifo.h"
+#include "../../UTIL/fifo.h"
 #include "../config.h"
 
 
