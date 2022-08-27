@@ -1,8 +1,8 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/debug_util.h"
-#include "../UTIL/fifo.h"
+#include "../../UTIL/debug_util.h"
+#include "../../UTIL/fifo.h"
 #include "../config.h"
 /*
 Assuming the following stuff :

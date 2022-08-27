@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(timer) {
     // Csr interface

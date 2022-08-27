@@ -1,6 +1,6 @@
 #pragma once
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(alu) {
     sc_in<sc_uint<32>>  OP1_SE, OP2_SE;

@@ -320,6 +320,7 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> PC_RESET;
     sc_signal<sc_uint<32>> PC_VALUE;
+    sc_signal<sc_uint<32>> PROC_ID;
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
 
@@ -341,6 +342,7 @@ int sc_main(int argc, char* argv[]) {
 
     core_inst.DEBUG_PC_READ(PC_VALUE);
     core_inst.PC_INIT(PC_RESET);
+    core_inst.PROC_ID(PROC_ID);
     core_inst.trace(tf);
 
 #ifdef DCACHE_ON
@@ -399,6 +401,7 @@ int sc_main(int argc, char* argv[]) {
 
     RESET.write(false);  
     PC_RESET.write(reset_adr);
+    PROC_ID.write(0);
     sc_start(3, SC_NS);  
     RESET.write(true);   
     cerr << "done." << endl;

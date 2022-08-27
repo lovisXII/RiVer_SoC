@@ -203,14 +203,22 @@ void exec::fifo_unconcat() {
 void exec::manage_fifo() {
     bool stall = exe2mem_full_se.read() || DEC2EXE_EMPTY_SD.read() || blocked.read() 
                  || !r1_valid_se || !r2_valid_se || DIV_BUSY_SE.read();
-    if (stall) {
-        exe2mem_push_se.write(false);
-        DEC2EXE_POP_SE.write(false);
-    } else {
+    if(!EXCEPTION_SM.read())
+    {
+        if (stall) {
+            exe2mem_push_se.write(false);
+            DEC2EXE_POP_SE.write(false);
+        } else {
+            exe2mem_push_se.write(true);
+            DEC2EXE_POP_SE.write(true);
+        }
+        stall_se = stall;
+    }
+    else
+    {
         exe2mem_push_se.write(true);
         DEC2EXE_POP_SE.write(true);
     }
-    stall_se = stall;
 }
 
 void exec::bypasses() {
