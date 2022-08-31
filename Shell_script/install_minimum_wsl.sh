@@ -1,3 +1,4 @@
+# Setup for ubuntu 22.04
 echo "Please be in sudo"
 echo "This Script setup a ws/Ubuntu envirronment"
 apt update
