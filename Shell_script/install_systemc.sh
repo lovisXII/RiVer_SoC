@@ -6,6 +6,9 @@ echo "This script allow you to choose the path where you want to install SystemC
 echo "On other distribution it will be installed in /usr/local/systemc-2.3.3/"
 echo "So if you are running on scientific Linux please enter the path where you want systemC"
 
+rm systemc-2.3.3.gz
+rm systemc-2.3.3.gz.*
+
 if ( cat /etc/*-release | grep Ubuntu > /dev/null 2>&1) then
     if grep -q microsoft /proc/version; then
     echo "Ubuntu on Windows"
