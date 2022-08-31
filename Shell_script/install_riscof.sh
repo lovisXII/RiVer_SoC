@@ -43,7 +43,8 @@ then
     echo "#######################################"
     echo "#######################################"
     echo "Launching install_riscv to install riscv compiler" 
-    sudo ./install_riscv.sh
+    cd $TEMPORARY_PATH/../Shell_script
+    ./install_riscv.sh
 else
     echo "gnu toolchain is already installed and setup in the bashrc"
 fi
