@@ -19,9 +19,12 @@ For more than a decade, class from Master SESI used MIPS32 architecture. In this
 The implementation uses the standard instruction set from [RISCV fondation](https://riscv.org/technical/specifications/). We choosed to implement a **RV32IM** with **Zicsr** extension and a **user** and **machine** mode. On this git you will find :
 - A RISCV 5 stages scalar processor in SystemC
 - A RISCV 5 stages scalar processor in VHDL
-- A RISCV 2 ways super-scalar processor in SystemC
+- A RISCV 2 ways super-scalar processor in 
+SystemC
+- A Soc prototype in SystemcC using 2 scalar CORE
+- Drivers and hardware 
 
-All of our implementation aren't done yet, meaning if you're trying to use it, it could not work properly.
+All of our core are fully operationnal and have been tested using riscof framework and custom tests that you can find in the **SOFT/TESTS/**
 
 Our Kernel architecture supports :
 * direct and vectorize mode for mtvec
@@ -31,7 +34,8 @@ Our Kernel architecture supports :
 # I. How to compile ?
 ## A. What's needed 
 
-To compile the project you will need **Systemc version 2.3.3**, g++ and a riscv compiler.\
+To compile the project you will need **Systemc version 2.3.3**, g++ and a riscv compiler.
+You will find shell script in **Shell_script/** to help you to setup your envirroment. If you trust us enough you can skip this part and go read helper script. Otherwise follow these istruction
 
 ### SystemC
 ```bash
@@ -63,19 +67,47 @@ export PATH=$PATH:/opt/riscv/bin
 Follow the instructions here https://github.com/riscv-collab/riscv-gnu-toolchain to build a 32-bit riscv toolchain for freestanding code. 
 
 
+
 ### helper script
 
-If you trust us enough to run ou script in sudo, then we provide helper scripts (we provide no guarantee the installation will be clean, but it should work) : 
-* install_riscv.sh : it will install the riscv compiler needed, **need to be in sudo**,
-* install_systemc.sh : it will install Systemc.2.3.3, **need to be in sudo**
+If you trust us enough to run ou script in sudo, then we provide helper scripts (we provide no guarantee the installation will be clean, but it should work).
+
+Several case can occur :
+- if you only want to compile one of our SystemC core and you want to play with it, you will need to run :
+```
+./install_systemc.sh
+./install_riscv.sh
+```
+- if you want to use riscof framework, you will need to run :
+```
+./install_systemc.sh
+./install_riscv.sh
+./install_riscof.sh
+```
+**Please note that if you are running on ubuntu 22.04 you can have issue while installing riscof because of python version. indeed you need python3.6 overwhise it will not works.**
+To avoid this problem, we wrote **install_python_ub_22_04.sh**, so please run it then run riscof.
+- if you want to run the vhdl core using ghdl, you will need to run 
+```
+./install_riscv.sh
+./install_ghdl.sh
+```
 
 ### building the project
 
-Once everything is installed you will have to do a ```make``` in the directory ```/CORE/```. It will generate the executable core_tb.\
-This file takes as argument an assembly file or a c one, once you pass it the file it will executes it using our descritption of a RISCV core.\
-You will find some test programm in ``/CORE/tests``.
+Once everything is installed you will have to go into ``SIM/``.
+You will find :
+- ``CORE_VHDL/`` : it contains the vhdl description of a RV32IM 5 stages scalar pipelined processor with branch prediction.
+- ``ELFIO/`` : it contais a library we used in our SystemC implementation to parse an elf file.
+- ``SystemC/`` : it contains 2 cores and the Soc descriptio :
+    - ``CORE/`` : same implementation than the vhdl one but i systemC.
+    - ``CORE_SS2/`` : a 5 stages, 2 way super-scalar RV32I with user and machine mode.
+    - ``SOC/`` : the soc description
 
-For example you can run ``core_tb tests/pgcd.c``.
+ Once you are in the right directory, you juste have to do a ```make```. It will generate the executable core_tb.\
+This file takes as argument an assembly file or a c one, once you pass it the file it will executes it using our descritption of a RISCV core.\
+You will find some test programm in ``/SOFT/TESTS/``.
+
+For example you can run ``core_tb ../../../SOFT/TESTS/I/pgcd.c``.
 
 We also write a shell script ``run_all_tests.sh`` that take all the file inside tests/ and execute it and print a message saying if the execution was a success or not.
 
