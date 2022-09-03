@@ -192,6 +192,8 @@ int sc_main(int argc, char* argv[]) {
     ##############################################################
 */
 
+    bool rvtest_end_exist = false ;
+
     for (int i = 0; i < n_sec; i++) {
         section* sec = reader.sections[i];
         cout << "Section " << sec->get_name() << " at address 0x" << std::hex << sec->get_address() << endl;
@@ -210,6 +212,11 @@ int sc_main(int argc, char* argv[]) {
     ##############################################################
                     LOOKING FOR SECTIONS IN ELF FILE 
     ##############################################################
+*/
+/*
+    When running riscof, the end of the program is not the same in I and privilege mode.
+    Indeed I tests end at rvtest_code_end, while privilege end at rvtest_end.
+    To avoid issue we'll use a boolean to indicate if the label exist or not.
 */
         if (sec->get_type() == SHT_SYMTAB) {
             cout << "Reading symbols table..." << endl;
@@ -262,6 +269,7 @@ int sc_main(int argc, char* argv[]) {
                 }
                 if (name == "rvtest_end") {
                     rvtest_end = value;
+                    rvtest_end_exist = true;
                     cout << "Found rvtest_end at adr " << std::hex << rvtest_end << endl;
                 }
             }
@@ -613,7 +621,11 @@ int sc_main(int argc, char* argv[]) {
             cout << FYEL("Error ! ") << "Found exception_occur at adr 0x" << std::hex << pc_adr << endl;
             sc_start(3, SC_NS);
             exit(1);
-        } else if (countdown == 0 && ((pc_adr == (rvtest_end )) || (pc_adr == (rvtest_end + 4))|| (signature_name != "" && cycles > 20000))) {
+        } else if (countdown == 0 
+        && (
+            (((pc_adr == (rvtest_end )) || (pc_adr == (rvtest_end + 4))) && rvtest_end_exist)
+        || (((pc_adr == (rvtest_code_end)) || (pc_adr == (rvtest_code_end + 4))) && !rvtest_end_exist)
+        || (signature_name != "" && cycles > 20000))) {
             countdown = 80;
         }
         if (countdown == 1) {
