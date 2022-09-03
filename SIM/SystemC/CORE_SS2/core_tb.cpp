@@ -614,9 +614,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(1);
         } else if (countdown == 0 && ((pc_adr == (rvtest_end )) || (pc_adr == (rvtest_end + 4))|| (signature_name != "" && cycles > 20000))) {
-            cerr << sc_time_stamp() << "inside if : " << endl;
             countdown = 80;
-            cout << sc_time_stamp() << "coutndown value : " << countdown << endl;
         }
         if (countdown == 1) {
             cout << "Test ended at " << std::hex << pc_adr << endl;
