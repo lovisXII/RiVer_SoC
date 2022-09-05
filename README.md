@@ -48,7 +48,7 @@ sudo make install
 ```
 If you use another path for SystemC, you will need to set the SYSTEMC env variable before compilation.
 
-### riscv32 cross-compiler
+### Riscv32 cross-compiler
 *pre-compiled binaries on Ubuntu*
 ```bash
 wget https://github.com/stnolting/riscv-gcc-prebuilt/releases/download/rv32i-2.0.0/riscv32-unknown-elf.gcc-10.2.0.rv32i.ilp32.newlib.tar.gz
@@ -66,9 +66,9 @@ Follow the instructions here https://github.com/riscv-collab/riscv-gnu-toolchain
 
 
 
-### helper script
+### Helper script
 
-If you trust us enough to run ou script in sudo, then we provide helper scripts (we provide no guarantee the installation will be clean, but it should work).
+If you trust us enough to run our script in sudo, then we provide helper scripts (we provide no guarantee the installation will be clean, but it should work).
 
 Several case can occur :
 - if you only want to compile one of our SystemC core and you want to play with it, you will need to run :
@@ -82,7 +82,7 @@ Several case can occur :
 ./install_riscv.sh
 ./install_riscof.sh
 ```
-**Please note that if you are running on ubuntu 22.04 you can have issue while installing riscof because of python version. indeed you need python3.6 overwhise it will not works.**
+**Please note that if you are running on ubuntu 22.04 you can have issue while installing riscof because of python version. Indeed you need python3.6 overwhise it will not works.**
 To avoid this problem, we wrote **install_python_ub_22_04.sh**, so please run it then run riscof.
 - if you want to run the vhdl core using ghdl, you will need to run 
 ```
@@ -90,49 +90,48 @@ To avoid this problem, we wrote **install_python_ub_22_04.sh**, so please run it
 ./install_ghdl.sh
 ```
 
-### building the project
+### Building the project
 
 Once everything is installed you will have to go into ``SIM/``.
 You will find :
-- ``CORE_VHDL/`` : it contains the vhdl description of a RV32IM 5 stages scalar pipelined processor with branch prediction.
-- ``ELFIO/`` : it contais a library we used in our SystemC implementation to parse an elf file.
+- ``CORE_VHDL/`` : it contains the VHDL description of a RV32IM 5 stages scalar pipelined processor with branch prediction.
+- ``ELFIO/`` : it contains a library we used in our SystemC implementation to parse an elf file.
 - ``SystemC/`` : it contains 2 cores and the Soc descriptio :
-    - ``CORE/`` : same implementation than the vhdl one but i systemC.
+    - ``CORE/`` : same implementation than the vhdl one but in systemC.
     - ``CORE_SS2/`` : a 5 stages, 2 way super-scalar RV32I with user and machine mode.
-    - ``SOC/`` : the soc description
+    - ``SOC/`` : a soc description with 2 cores, caches and a bus prototype
 
  Once you are in the right directory, you juste have to do a ```make```. It will generate the executable core_tb.\
-This file takes as argument an assembly file or a c one, once you pass it the file it will executes it using our descritption of a RISCV core.\
-You will find some test programm in ``/SOFT/TESTS/``.
+This executable takes as argument an assembly file or a c one. Once you pass it as an argument, the programm will execute it using our descritption of a RISCV core.\
+You will find some test programms in ``/SOFT/TESTS/``.
 
 For example you can run ``core_tb ../../../SOFT/TESTS/I/pgcd.c``.
 
-We also write a shell script ``run_all_tests.sh`` that take all the file inside tests/ and execute it and print a message saying if the execution was a success or not.
+We also write a shell script ``run_all_tests.sh`` that take all the file inside tests/ and execute tehem and print a message saying if the execution was a success or not.
 
 ## B. Directory map :
 
-This project is design as follow :
-```
-RiVer_SoC/
-├── BENCHMARK_RESULT : result of the performance comparaison between the scalar and super-scalar implementation
-├── Documentation : some usefull documentation like riscv spec, our project report...etc
-├── IMPL
-│   ├── hw : IP source for FPGA implementation
-│   └── sw : software and drivers use for FPGA implementation
-├── riscof : framework riscof used to validate our model. It contains a lot of assembly tests
-├── scripts : scripts used to validate github push on main
-├── Shell_script : helper script for setup your environment
-├── SIM
-│   ├── CORE_VHDL : source code of our VHDL implementation
-│   ├── ELFIO : c++ parsor library that we used to parse an elf file in our SystemC implementation
-│   └── SystemC : contains all the source code of our cores
-│       ├── CORE : source code of the RV32IMZicsr with branch prediction mecanism
-│       ├── CORE_SS2 : source code of the RV32I super-scalar implementation
-│       └── sysc_miniriscv : source code of a RV32I simplified core 
-├── SOFT : contains all our software code such as reset and exception handler code
-    ├── riverOS : Rust OS prototype
-    └── TESTS : some .c and .s file that we wrote to validate our model
-```
+This project is design as follow :\
+``RiVer_SoC``\
+├── ``BENCHMARK_RESULT`` : result of the performance comparaison between the scalar and super-scalar implementation\
+├── ``Documentation`` : some usefull documentation like riscv spec, our project report...etc\
+├── ``IMPL``\
+│   ├── ``hw`` : IP source for FPGA implementation\
+│   └── ``sw`` : software and drivers use for FPGA implementation\
+├── ``riscof`` : framework riscof used to validate our model. It contains a lot of assembly tests\
+├── ``scripts`` : scripts used to validate github push on main\
+├── ``Shell_script`` : helper script for setup your environment\
+├── ``SIM``\
+│   ├── ``CORE_VHDL`` : source code of our VHDL implementation\
+│   ├── ``ELFIO`` : c++ parsor library that we used to parse an elf file in our SystemC implementation\
+│   └── ``SystemC`` : contains all the source code of our cores\
+│       ├── ``CORE`` : source code of the RV32IMZicsr with branch prediction mecanism\
+│       ├── ``CORE_SS2`` : source code of the RV32I super-scalar implementation\
+│       └── ``sysc_miniriscv`` : source code of a RV32I simplified core \
+├── ``SOFT`` : contains all our software code such as reset and exception handler code\
+    ├── ``riverOS`` : Rust OS prototype\
+    └── ``TESTS`` : some .c and .s file that we wrote to validate our model\
+
 
 # II. Internal Architecture
 
