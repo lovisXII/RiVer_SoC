@@ -1,7 +1,5 @@
 # RISC-V-project
 
-This README file isn't complete, everything here is subject to change. 
-
 # Introduction :
 
 This project started as a project of our 1st year Master and aimed to modernise the architecture studied at Sorbonne University.\
@@ -115,36 +113,29 @@ We also write a shell script ``run_all_tests.sh`` that take all the file inside 
 
 This project is design as follow :
 ```
-├── CORE : Contains all the directory needed and the test bench for the whole core
-│   ├── CACHES : Instruction cache and Data cache
-│   ├── DEC : Decod stage
-│   ├── EXE : execute stage
-│   ├── IFETCH : ifetch stage 
-│   ├── MEM : memory stage
-│   ├── REG : bank register
-│   ├── UTIL : useful stuff such as fifo
-│   ├── WBK : write back stage
-│   └── tests : all tests for our design (.c and .s)
-|
-├── Documentation : usefull documents and reports
-│   ├── Reports : reports of the whole project
-│   ├── Todo_kernel : a little file saying what we plan to do for the kernel
-│   └──Usefull_documentation : all the doc usefull
-| 
-├── ELFIO : c++ elfio library
-├── MIPS : an old descritpion of MIPS32 architecture in systemc
-├── Shell_script : script shell for the setup of the environment
-└── tests : all kind of test files
+RiVer_SoC/
+├── BENCHMARK_RESULT : result of the performance comparaison between the scalar and super-scalar implementation
+├── Documentation : some usefull documentation like riscv spec, our project report...etc
+├── IMPL
+│   ├── hw : IP source for FPGA implementation
+│   └── sw : software and drivers use for FPGA implementation
+├── riscof : framework riscof used to validate our model. It contains a lot of assembly tests
+├── scripts : scripts used to validate github push on main
+├── Shell_script : helper script for setup your environment
+├── SIM
+│   ├── CORE_VHDL : source code of our VHDL implementation
+│   ├── ELFIO : c++ parsor library that we used to parse an elf file in our SystemC implementation
+│   └── SystemC : contains all the source code of our cores
+│       ├── CORE : source code of the RV32IMZicsr with branch prediction mecanism
+│       ├── CORE_SS2 : source code of the RV32I super-scalar implementation
+│       └── sysc_miniriscv : source code of a RV32I simplified core 
+├── SOFT : contains all our software code such as reset and exception handler code
+    ├── riverOS : Rust OS prototype
+    └── TESTS : some .c and .s file that we wrote to validate our model
 ```
 
 # II. Internal Architecture
 
 If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Rapport_PSESI.pdf``.
 
-If you are completly new to processor architecture here's a quick tips to start reading our file, start in the following order :
-* ``CORE/EXEC`` : this stage is responsable of all logic operation done by the processor
-* ``CORE/MEM`` : this stage does the memory access like store and word operation
-* ``CORE/WBK`` : it stores result of an operation into REG
-* ``CORE/REG`` : this is the bank register which contains all the CPU's register which store data used for all operations
-* ``CORE/IFETCH`` : this stage is an interface with the cache, it loads instruction thanks to the PC (program counter) send by DEC
-* ``CORE/DEC`` : this is the most complex file, it contains almost all the processor logic, it decodes instructions, handles jumps, ...
+This report is currently in french but we will translate it in English.
