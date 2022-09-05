@@ -26,29 +26,6 @@ then
 fi
 
 
-################### GNU-TOOLCHAIN SETUP ################### 
-
-echo "Installing GNU Toolchain"
-
-# sudo apt-get install autoconf automake autotools-dev curl python3 libmpc-dev libmpfr-dev libgmp-dev gawk build-essential bison flex texinfo gperf libtool patchutils bc zlib1g-dev libexpat-dev
-if ! command -v riscv32-unknown-elf-gcc &> /dev/null 
-then 
-    echo "#######################################" 
-    echo "#######################################"
-    echo "#######################################"
-    echo "#######################################"
-    echo " PLEASE BE PATIENT THIS OPERATION CAN BE QUITE LONG"
-    echo "#######################################" 
-    echo "#######################################"
-    echo "#######################################"
-    echo "#######################################"
-    echo "Launching install_riscv to install riscv compiler" 
-    cd $TEMPORARY_PATH/../Shell_script
-    ./install_riscv.sh
-else
-    echo "gnu toolchain is already installed and setup in the bashrc"
-fi
-
 ################### SPIKE SETUP ################### 
 
 if ! command -v spike &> /dev/null
