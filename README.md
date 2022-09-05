@@ -94,7 +94,7 @@ To avoid this problem, we wrote **install_python_ub_22_04.sh**, so please run it
 
 Once everything is installed you will have to go into ``SIM/``.
 You will find :
-- ``CORE_VHDL/`` : it contains the VHDL description of a RV32IM 5 stages scalar pipelined processor with branch prediction.
+- ``CORE_VHDL/`` : it contains the VHDL description of a RV32IMZicsr 5 stages scalar pipelined processor with branch prediction.
 - ``ELFIO/`` : it contains a library we used in our SystemC implementation to parse an elf file.
 - ``SystemC/`` : it contains 2 cores and the Soc descriptio :
     - ``CORE/`` : same implementation than the vhdl one but in systemC.
@@ -133,7 +133,7 @@ This project is design as follow :\
     └── ``TESTS`` : some .c and .s file that we wrote to validate our model\
 
 
-# II. Internal Architecture
+# II. Micro architecture
 
 If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Rapport_PSESI.pdf``.
 
