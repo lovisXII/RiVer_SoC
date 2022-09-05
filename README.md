@@ -20,7 +20,7 @@ The implementation uses the standard instruction set from [RISCV fondation](http
 - A RISCV 2 ways super-scalar processor in 
 SystemC
 - A Soc prototype in SystemcC using 2 scalar CORE
-- Drivers and hardware 
+- FPGA implementation 
 
 All of our core are fully operationnal and have been tested using riscof framework and custom tests that you can find in the **SOFT/TESTS/**
 
