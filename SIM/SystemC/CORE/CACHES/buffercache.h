@@ -2,7 +2,7 @@
 #define BUFFER_CACHE
 
 #include <systemc.h>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 SC_MODULE(buffercache)
 {

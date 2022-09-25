@@ -257,6 +257,7 @@ SC_MODULE(core) {
     // Debug
     sc_in<sc_uint<32>>  PC_INIT;
     sc_out<sc_uint<32>> DEBUG_PC_READ;
+    sc_in<sc_uint<32>>  PROC_ID;
 
     // Pipeline Mode
 
@@ -768,7 +769,8 @@ SC_MODULE(core) {
 
         csr_inst.CLK(CLK);
         csr_inst.RESET_N(RESET);
-
+        csr_inst.PROC_ID(PROC_ID);
+        
         timer_inst.TIMER_CONFIG_WB_SC(TIMER_CONFIG_WB_SC);
         timer_inst.TIMER_DIVIDER_WB_SC(TIMER_DIVIDER_WB_SC);
         timer_inst.DATA_SC(CSR_WDATA_SM);

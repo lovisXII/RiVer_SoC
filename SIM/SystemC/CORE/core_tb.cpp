@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
-#include "UTIL/colors.h"
+#include "../UTIL/colors.h"
 #include "core.h"
 #include "elfio/elfio.hpp"
 #include "systemc.h"
@@ -320,6 +320,7 @@ int sc_main(int argc, char* argv[]) {
 
     sc_signal<sc_uint<32>> PC_RESET;
     sc_signal<sc_uint<32>> PC_VALUE;
+    sc_signal<sc_uint<32>> PROC_ID;
     sc_clock               CLK("clk", 1, SC_NS);
     sc_signal<bool>        RESET;
 
@@ -341,6 +342,7 @@ int sc_main(int argc, char* argv[]) {
 
     core_inst.DEBUG_PC_READ(PC_VALUE);
     core_inst.PC_INIT(PC_RESET);
+    core_inst.PROC_ID(PROC_ID);
     core_inst.trace(tf);
 
 #ifdef DCACHE_ON
@@ -399,7 +401,8 @@ int sc_main(int argc, char* argv[]) {
 
     RESET.write(false);  
     PC_RESET.write(reset_adr);
-    sc_start(3, SC_NS);  
+    PROC_ID.write(0);
+    sc_start(3, SC_NS);
     RESET.write(true);   
     cerr << "done." << endl;
 
@@ -636,7 +639,7 @@ int sc_main(int argc, char* argv[]) {
             sc_start(3, SC_NS);
             exit(2);
         }
-        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 30000))) {
+        else if (countdown == 0 && ((pc_adr == rvtest_code_end) || (pc_adr ==  rvtest_end) || (signature_name != "" && cycles > 2000000))) {
             countdown = 50;
         }
         if (countdown == 1) {

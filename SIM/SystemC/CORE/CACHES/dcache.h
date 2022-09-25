@@ -3,7 +3,7 @@
 
 #include <systemc.h>
 #include "buffercache.h"
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 
 //cache N-way associatif, write through et buffet
 // taille du cache 1024

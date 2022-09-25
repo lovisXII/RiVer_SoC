@@ -1,7 +1,7 @@
 #pragma once
 #include <systemc.h>
 #include <iostream>
-#include "../UTIL/debug_util.h"
+#include "../../UTIL/debug_util.h"
 /*
 REG_DATA : data at destination of REG, will be WBK in REG
 MEM_DATA : data get from a load access, if no load it's just the result from
