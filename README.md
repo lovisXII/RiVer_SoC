@@ -135,6 +135,5 @@ This project is design as follow :\
 
 # II. Micro architecture
 
-If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Rapport_PSESI.pdf``.
-
-This report is currently in french but we will translate it in English.
+If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Report_*.pdf``.
+There is 2 identical reports, one in English and one in French. 
