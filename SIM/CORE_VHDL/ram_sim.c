@@ -170,19 +170,19 @@ int main(int argc, char const* argv[]) {
     char temp_text[512];
     char point = '.' ;
     char *type_of_file = strrchr(input_file,point) ; 
-
+    char soft_path[512] = "../../SOFT/";
     // Generation of executable file
 
     if(strcmp(type_of_file,".c") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T %sapp.ld %s",soft_path,
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
     if(strcmp(type_of_file,".s") == 0){
         char temp[512] ;
-        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../SW/app.ld %s",
+        sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T %sapp.ld %s",soft_path,
                 input_file);
         system((char*)temp);
         strcpy(output,"a.out") ;
@@ -248,4 +248,3 @@ int main(int argc, char const* argv[]) {
     ghdl_main(argc - nargs, &argv[nargs]);
     return 0 ;
 }
-

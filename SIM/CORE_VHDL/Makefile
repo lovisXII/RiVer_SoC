@@ -1,7 +1,6 @@
 BUILD=build
 SIM_DIR=sim
 RISC=riscv32-unknown-elf-gcc
-TEST=test_add.s
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
 COMPONENTS=UTIL/fifo UTIL/util UTIL/csa core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec EXE/x0_multiplier EXE/divider MEM/mem MEM/x1_multiplier REG/reg WBK/wbk WBK/x2_multiplier CSR/csr 
@@ -10,15 +9,15 @@ MODS=$(TB) $(COMPONENTS)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
-SW_DIR=../SW
+SW_DIR=../../SOFT
+TEST=$(SW_DIR)/TESTS/I/test_add.s
 LD_SCRIPT= -T $(SW_DIR)/kernel.ld
 RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
-all: run		
+all: run warning
 
 run: core_tb kernel
-
-	cp ../SW/app.ld kernel sim/
+	cp $(SW_DIR)/app.ld kernel sim/
 	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd --wave=$(SIM_DIR)/$(TB).ghw
 
 core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
