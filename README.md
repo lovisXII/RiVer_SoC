@@ -64,7 +64,12 @@ export PATH=$PATH:/opt/riscv/bin
 
 Follow the instructions here https://github.com/riscv-collab/riscv-gnu-toolchain to build a 32-bit riscv toolchain for freestanding code. 
 
+### VHDL
 
+You will have to recompile ghdl-llvm, please run our script :
+```sh
+Shell_script/install_ghdl.sh
+```
 
 ### Helper script
 
@@ -132,8 +137,23 @@ This project is design as follow :\
     ├── ``riverOS`` : Rust OS prototype\
     └── ``TESTS`` : some .c and .s file that we wrote to validate our model\
 
+# II. FPGA
 
-# II. Micro architecture
+You can use our VHDL description for an FPGA implementation.\
+We did an implementation on a ``Xilinx Nexys A7``.
+**Please change the value PC_INIT in the core_tb.vhdl to proceed to an FPGA implementation**.\
+If you go inside this file you will find :
+```vhdl
+-- For ghdl use :
+PC_INIT <= std_logic_vector(to_signed(get_startpc(0), 32));
+-- For FPGA implementation use :
+--PC_INIT <= x"00000000";
+```
+You will have to comment the line for ghdl and uncomment the one for FPGA implementation.
+
+If you are looking for more information about the FPGA implementation please go into ``Documentation/Report`` and read the part on the FPGA implementation.
+
+# III. Micro architecture
 
 If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Report_*.pdf``.
 There is 2 identical reports, one in English and one in French. 
