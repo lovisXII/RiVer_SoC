@@ -219,10 +219,7 @@ reset_n <= '0', '1' after 6 ns;
 MCACHE_STALL_SM <= '0';
 
 IC_STALL_SI <= '0';
--- For ghdl use :
 PC_INIT <= std_logic_vector(to_signed(get_startpc(0), 32));
--- For FPGA implementation use :
---PC_INIT <= x"00000000";
 
 icache : process(ADR_SI, ADR_VALID_SI)
 variable adr_int : integer; 
