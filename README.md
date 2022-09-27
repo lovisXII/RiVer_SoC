@@ -141,16 +141,6 @@ This project is design as follow :\
 
 You can use our VHDL description for an FPGA implementation.\
 We did an implementation on a ``Xilinx Nexys A7``.
-**Please change the value PC_INIT in the core_tb.vhdl to proceed to an FPGA implementation**.\
-If you go inside this file you will find :
-```vhdl
--- For ghdl use :
-PC_INIT <= std_logic_vector(to_signed(get_startpc(0), 32));
--- For FPGA implementation use :
---PC_INIT <= x"00000000";
-```
-You will have to comment the line for ghdl and uncomment the one for FPGA implementation.
-
 If you are looking for more information about the FPGA implementation please go into ``Documentation/Report`` and read the part on the FPGA implementation.
 
 # III. Micro architecture
