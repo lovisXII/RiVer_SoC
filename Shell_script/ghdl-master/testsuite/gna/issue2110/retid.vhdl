@@ -1,1 +1,0 @@
-package function return g.b of
