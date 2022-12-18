@@ -10,6 +10,7 @@ libgdbm-dev libnss3-dev libedit-dev libc6-dev
 
 wget https://www.python.org/ftp/python/3.6.15/Python-3.6.15.tgz
 tar -xzf Python-3.6.15.tgz
+rm Python-3.6.15.tgz
 cd Python-3.6.15
 ./configure --enable-optimizations  -with-lto  --with-pydebug
 make altinstall
