@@ -147,3 +147,28 @@ If you are looking for more information about the FPGA implementation please go 
 
 If you want details about the Internal architecture of our implemntation please go inside ``Documentation/Reports/Report_*.pdf``.
 There is 2 identical reports, one in English and one in French. 
+
+# IV. Writing conventions
+
+If you wish to make changes to our implementation, please feel free to do so. But if you do, please respect the following conventions. For each signal in the HDL there are writing conventions:
+* Internal signals must be in **lower case**.
+* External (I/O) signals must be in **upper case**.
+* The name of a signal should be written like this:
+    ```
+    quick_description_[X][Y]
+    ```
+    Where:
+    * [X] is either :
+        * S: asynchronous signal (does not come from a sequential element) 
+        * R: synchronous signal, it comes from a sequential element such as flip-flop, registers, fifos...etc...
+    * [Y] is the stage from which the signal comes:
+        * I: ifetch
+        * D: decode
+        * E: exe
+        * M: memory
+        * W: write back
+        * R: register file
+        * X: interrupt signal from outside the kernel.
+
+For example ``MEM_RES_RM`` is the result that comes out of the mem2wbk fifo (M means it comes out of the mem stage and R means it is a synchronization signal).
+
