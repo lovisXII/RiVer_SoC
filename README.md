@@ -158,7 +158,7 @@ If you wish to make changes to our implementation, please feel free to do so. Bu
     quick_description_[X][Y]
     ```
     Where:
-    * [X] is either :
+    * \[X\] is either :
         * S: asynchronous signal (does not come from a sequential element) 
         * R: synchronous signal, it comes from a sequential element such as flip-flop, registers, fifos...etc...
     * [Y] is the stage from which the signal comes:
