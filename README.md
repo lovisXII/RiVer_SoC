@@ -18,7 +18,7 @@ The implementation uses the standard instruction set from [RISCV fondation](http
 - A RISCV 5 stages scalar processor in SystemC
 - A RISCV 5 stages scalar processor in VHDL
 - A RISCV 2 ways super-scalar processor in 
-SystemC
+SystemC (**moved to** https://github.com/lovisXII/RiVer_SS2)
 - A Soc prototype in SystemcC using 2 scalar CORE
 - FPGA implementation 
 
@@ -103,7 +103,7 @@ You will find :
 - ``ELFIO/`` : it contains a library we used in our SystemC implementation to parse an elf file.
 - ``SystemC/`` : it contains 2 cores and the Soc descriptio :
     - ``CORE/`` : same implementation than the vhdl one but in systemC.
-    - ``CORE_SS2/`` : a 5 stages, 2 way super-scalar RV32I with user and machine mode.
+    - ``CORE_SS2/`` : a 5 stages, 2 way super-scalar RV32I with user and machine mode (**moved to** https://github.com/lovisXII/RiVer_SS2).
     - ``SOC/`` : a soc description with 2 cores, caches and a bus prototype
 
  Once you are in the right directory, you juste have to do a ```make```. It will generate the executable core_tb.\
@@ -118,7 +118,6 @@ We also write a shell script ``run_all_tests.sh`` that take all the file inside 
 
 This project is design as follow :\
 ``RiVer_SoC``\
-├── ``BENCHMARK_RESULT`` : result of the performance comparaison between the scalar and super-scalar implementation\
 ├── ``Documentation`` : some usefull documentation like riscv spec, our project report...etc\
 ├── ``IMPL``\
 │   ├── ``hw`` : IP source for FPGA implementation\
@@ -130,8 +129,7 @@ This project is design as follow :\
 │   ├── ``CORE_VHDL`` : source code of our VHDL implementation\
 │   ├── ``ELFIO`` : c++ parsor library that we used to parse an elf file in our SystemC implementation\
 │   └── ``SystemC`` : contains all the source code of our cores\
-│       ├── ``CORE`` : source code of the RV32IMZicsr with branch prediction mecanism\
-│       ├── ``CORE_SS2`` : source code of the RV32I super-scalar implementation\
+│      ├── ``CORE`` : source code of the RV32IMZicsr with branch prediction mecanism\
 │       └── ``sysc_miniriscv`` : source code of a RV32I simplified core \
 ├── ``SOFT`` : contains all our software code such as reset and exception handler code\
     ├── ``riverOS`` : Rust OS prototype\
