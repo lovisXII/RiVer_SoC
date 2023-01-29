@@ -3,10 +3,10 @@
 
 void icache::parse_adr()
 {
-    sc_uint<32> DT_A_SI = ADR_SI.read();
-    address_tag.write(DT_A_SI.range(31,12));
-    address_index.write(DT_A_SI.range(11,4));
-    address_offset.write(DT_A_SI.range(3,0));
+    sc_uint<32> parse_adr = ADR_SI.read();
+    address_tag.write(parse_adr.range(31,12));
+    address_index.write(parse_adr.range(11,4));
+    address_offset.write(parse_adr.range(3,0));
 }
 
 void icache::miss_detection()
@@ -16,12 +16,12 @@ void icache::miss_detection()
     if(address_tag == tag[address_index.read()] && data_validate[address_index.read()])
     {   
         hit = true;       
-        IC_STALL_SI.write(false); 
-        IC_INST_SI.write(data[address_index.read()][(address_offset.read()/4)]);
+        STALL_SIC.write(false); 
+        INST_SIC.write(data[address_index.read()][(address_offset.read()/4)]);
     }
     else{
         hit = false;
-        IC_STALL_SI.write(true);
+        STALL_SIC.write(true);
     }
 
 }
@@ -56,7 +56,7 @@ void icache::transition()
                     if(!hit)
                     {
                         fsm_current_state = WAIT_MEM;
-                        A.write(ADR_SI.read() & 0xFFFFFFF0);
+                        A_SIC.write(ADR_SI.read() & 0xFFFFFFF0);
                         current_address_index = address_index;
                         current_address_tag = address_tag;
                         dta_valid = true;
@@ -65,11 +65,11 @@ void icache::transition()
                 }
                 break;
             case WAIT_MEM:
-                if(ACK.read())
+                if(ACK_SW.read())
                 {
                     fsm_current_state = UPDT;
 
-                    data[current_address_index.read()][cpt++] = DT.read();
+                    data[current_address_index.read()][cpt++] = DT_SW.read();
                     tag[current_address_index.read()] = current_address_tag.read();
                     data_validate[current_address_index.read()] = false;
                 }
@@ -77,14 +77,14 @@ void icache::transition()
                     dta_valid = true;
             break;
             case UPDT:
-                if(!ACK.read())
+                if(!ACK_SW.read())
                 {
                     fsm_current_state = IDLE;
                     data_validate[current_address_index.read()] = true;
                 }
                 else
                 {
-                    data[current_address_index.read()][cpt++] = DT.read();
+                    data[current_address_index.read()][cpt++] = DT_SW.read();
                 }
             break;
             default:
@@ -107,7 +107,7 @@ void icache::transition()
           break;
         }
 
-        DTA_VALID.write(dta_valid);
+        DTA_VALID_SIC.write(dta_valid);
         wait();
     }
 }
@@ -120,14 +120,14 @@ void icache::trace(sc_trace_file* tf)
     sc_trace(tf, ADR_SI, GET_NAME(ADR_SI)); 
     sc_trace(tf, ADR_VALID_SI, GET_NAME(ADR_VALID_SI)); 
 
-    sc_trace(tf, IC_INST_SI, GET_NAME(IC_INST_SI));
-    sc_trace(tf, IC_STALL_SI, GET_NAME(IC_STALL_SI));
+    sc_trace(tf, INST_SIC, GET_NAME(INST_SIC));
+    sc_trace(tf, STALL_SIC, GET_NAME(STALL_SIC));
 
-    sc_trace(tf, DT, GET_NAME(DT));
-    sc_trace(tf, A, GET_NAME(A));
-    sc_trace(tf, DTA_VALID, GET_NAME(DTA_VALID));
+    sc_trace(tf, DT_SW, GET_NAME(DT_SW));
+    sc_trace(tf, A_SIC, GET_NAME(A_SIC));
+    sc_trace(tf, DTA_VALID_SIC, GET_NAME(DTA_VALID_SIC));
 
-    sc_trace(tf, ACK, GET_NAME(ACK));
+    sc_trace(tf, ACK_SW, GET_NAME(ACK_SW));
 
     sc_trace(tf, hit, GET_NAME(hit));
 

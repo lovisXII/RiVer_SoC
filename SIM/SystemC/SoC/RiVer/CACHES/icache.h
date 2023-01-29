@@ -6,24 +6,25 @@
 
 SC_MODULE(icache)
 {
+    // interface global
     sc_in_clk CLK;
     sc_in<bool> RESET_N;
 
-    // interface processeur
-    sc_in<sc_uint<32> > ADR_SI ; 
-    sc_in<bool> ADR_VALID_SI ; 
+    // interface RiVer
+    sc_in<sc_uint<32> > ADR_SI; 
+    sc_in<bool> ADR_VALID_SI; 
 
-    sc_out<sc_bv<32> > IC_INST_SI ;
-    sc_out<bool> IC_STALL_SI ;
+    sc_out<sc_bv<32> > INST_SIC;
+    sc_out<bool> STALL_SIC;
 
-    //interface MP
-    sc_in<sc_uint<32>> DT;
-    sc_out<sc_uint<32>> A;
-    sc_out<bool> DTA_VALID;
 
-    sc_in<bool> ACK;
+    //interface wrapper
+    sc_in<sc_uint<32>> DT_SW;
+    sc_out<sc_uint<32>> A_SIC;
+    sc_out<bool> DTA_VALID_SIC;
 
-    sc_in<bool> STALL_I;
+    sc_in<bool> ACK_SW;
+    sc_in<bool> STALL_SW;
 
     //signals
     sc_signal<sc_bv<32>> data[256][4];
@@ -56,7 +57,7 @@ SC_MODULE(icache)
         sensitive   << address_tag 
                     << address_index 
                     << address_offset 
-                    << IC_STALL_SI;
+                    << STALL_SIC;
         for(int i=0; i < 256 ;i++){
             sensitive << data[i][0]
                         << data[i][1]

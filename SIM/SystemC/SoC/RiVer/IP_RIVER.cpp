@@ -23,5 +23,5 @@ void IP_RIVER::trace(sc_trace_file* tf)
     sc_trace(tf, CYC, GET_NAME(CYC));
 
 
-    sc_trace(tf, MEM_ADR_VALID, GET_NAME(MEM_ADR_VALID));
+    sc_trace(tf, VALID_ADR_SM, GET_NAME(VALID_ADR_SM));
 }
