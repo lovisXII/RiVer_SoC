@@ -307,8 +307,8 @@ int sc_main(int argc, char* argv[]) {
     sc_signal<sc_uint<32>> IF_ADR;
     sc_signal<bool>        IF_ADR_VALID;
 
-    sc_signal<sc_bv<32>> IC_INST;
-    sc_signal<bool>      IC_STALL;
+    sc_signal<sc_bv<32>> INST_SIC;
+    sc_signal<bool>      STALL_SIC;
 
 #ifdef ICACHE_ON
     //MP interface ICACHE
@@ -335,8 +335,8 @@ int sc_main(int argc, char* argv[]) {
 
     core_inst.ADR_SI(IF_ADR);
     core_inst.ADR_VALID_SI(IF_ADR_VALID);
-    core_inst.IC_INST_SI(IC_INST);
-    core_inst.IC_STALL_SI(IC_STALL);
+    core_inst.INST_SIC(INST_SIC);
+    core_inst.STALL_SIC(STALL_SIC);
     core_inst.CLK(CLK);
     core_inst.RESET(RESET);
 
@@ -383,8 +383,8 @@ int sc_main(int argc, char* argv[]) {
     //processor side
     icache_inst.ADR_SI(IF_ADR);
     icache_inst.ADR_VALID_SI(IF_ADR_VALID);
-    icache_inst.IC_INST_SI(IC_INST);
-    icache_inst.IC_STALL_SI(IC_STALL);
+    icache_inst.IC_INST_SI(INST_SIC);
+    icache_inst.IC_STALL_SI(STALL_SIC);
     //MP side
     icache_inst.DT(ICACHE_DT);
     icache_inst.A(ICACHE_A);
@@ -732,8 +732,8 @@ int sc_main(int argc, char* argv[]) {
 
 #ifndef ICACHE_ON
         if_result = ram[if_adr];
-        IC_INST.write(if_result);
-        IC_STALL.write(false);
+        INST_SIC.write(if_result);
+        STALL_SIC.write(false);
 #endif
 
         sc_start(500, SC_PS);
