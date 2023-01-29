@@ -16,8 +16,8 @@ enum  // PREDICTION STATE
 SC_MODULE(ifetch) {
     // Icache Interface :
 
-    sc_in<sc_bv<32>> IC_INST_SI;
-    sc_in<bool>      IC_STALL_SI;
+    sc_in<sc_bv<32>> INST_SIC;
+    sc_in<bool>      STALL_SIC;
 
     sc_out<sc_uint<32>> ADR_SI;  // @ which we search a data block from memory
     sc_out<bool>        ADR_VALID_SI;
@@ -136,7 +136,7 @@ SC_MODULE(ifetch) {
         fifo_inst.RESET_N(RESET);
 
         SC_METHOD(fetch_method);
-        sensitive << IC_INST_SI << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << IC_STALL_SI << RESET
+        sensitive << INST_SIC << DEC2IF_EMPTY_SI << IF2DEC_FULL_SI << PC_RD << IF2DEC_FLUSH_SD << STALL_SIC << RESET
                   << EXCEPTION_SM << MRET_SM << RETURN_ADRESS_SM << PRED_ADR_RI << PRED_TAKEN_RI << PRED_SUCCESS_RD
                   << PRED_FAILED_RD << PRED_ADR_TAKEN_SI << PRED_NEXT_ADR_SI;
         SC_METHOD(exception);

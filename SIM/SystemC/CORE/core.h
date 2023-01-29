@@ -251,8 +251,8 @@ SC_MODULE(core) {
     sc_out<sc_uint<32>> ADR_SI;
     sc_out<bool>        ADR_VALID_SI;
 
-    sc_in<sc_bv<32>> IC_INST_SI;
-    sc_in<bool>      IC_STALL_SI;
+    sc_in<sc_bv<32>> INST_SIC;
+    sc_in<bool>      STALL_SIC;
 
     // Debug
     sc_in<sc_uint<32>>  PC_INIT;
@@ -326,8 +326,8 @@ SC_MODULE(core) {
         ifetch_inst.ADR_SI(ADR_SI);
         ifetch_inst.ADR_VALID_SI(ADR_VALID_SI);
 
-        ifetch_inst.IC_INST_SI(IC_INST_SI);
-        ifetch_inst.IC_STALL_SI(IC_STALL_SI);
+        ifetch_inst.INST_SIC(INST_SIC);
+        ifetch_inst.STALL_SIC(STALL_SIC);
 
         ifetch_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
         ifetch_inst.INTERRUPTION_SE(INTERRUPTION_SE);

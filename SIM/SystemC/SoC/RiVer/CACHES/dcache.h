@@ -41,25 +41,25 @@ SC_MODULE(dcache)
   sc_in<bool> VALID_ADR_SM;
   sc_in<sc_uint<2>> MEM_SIZE_SM;
 
-  sc_out<sc_uint<32>> DATA_O;
-  sc_out<bool> STALL_SC;               // if stall donc miss else hit
-// interface MP
-  sc_out<bool> DTA_VALID_SC;
-  sc_out<bool> READ_SC, WRITE_SC;
-  sc_out<sc_uint<2>> SIZE_SC;
+  sc_out<sc_uint<32>> DATA_SDC;
+  sc_out<bool> STALL_SDC;               // if stall donc miss else hit
 
-  // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
-  // la MP ou du CACHE
-  sc_out<sc_uint<32>> DT_O;
-  sc_out<sc_uint<32>> A_O;
+// interface wrapper
+  sc_out<bool> DTA_VALID_SDC;
+  sc_out<bool> READ_SDC;
+  sc_out<bool> WRITE_SDC;
+  sc_out<sc_uint<2>> SIZE_SDC;
 
-  sc_in<sc_uint<32>> DT_I;
-  sc_in<bool> ACK;          // slave answer (slave dt valid)
+  sc_out<sc_uint<32>> DT_SDC;
+  sc_out<sc_uint<32>> A_SDC;
 
-  sc_in<sc_uint<32>> ADR_I;
+  sc_in<sc_uint<32>> DT_SW;
+  sc_in<bool> ACK_SW;          // slave answer (slave dt valid)
+
+  sc_in<sc_uint<32>> ADR_SW;
   sc_in<bool>        GRANT;
 
-  sc_in<bool> STALL_I;
+  sc_in<bool> STALL_SW;
 
 //signals
   //parse address from CPU
@@ -129,7 +129,7 @@ SC_MODULE(dcache)
   buffcache_inst("buffercache")
   {     
     SC_METHOD(adresse_parcer);
-    sensitive << DATA_ADR_SM << ADR_I;
+    sensitive << DATA_ADR_SM << ADR_SW;
 
     SC_METHOD(miss_detection);
     sensitive << address_tag
@@ -153,20 +153,20 @@ SC_MODULE(dcache)
     buffcache_inst.RESET_N(RESET_N);
     buffcache_inst.CLK(CLK);
     buffcache_inst.WRITE_OBUFF(write_buff);
-    buffcache_inst.ACK(ACK);
+    buffcache_inst.ACK(ACK_SW);
     buffcache_inst.DATA_C(DATA_SM);
     buffcache_inst.ADR_C(DATA_ADR_SM);
     buffcache_inst.STORE_C(STORE_SM);
     buffcache_inst.LOAD_C(LOAD_SM);
     buffcache_inst.SIZE_C(MEM_SIZE_SM);
-    buffcache_inst.ADR_I(ADR_I);
+    buffcache_inst.ADR_I(ADR_SW);
     buffcache_inst.FULL(full);
     buffcache_inst.EMPTY(empty);
-    buffcache_inst.DATA_MP(DT_O);
-    buffcache_inst.ADR_MP(A_O);
-    buffcache_inst.STORE_MP(WRITE_SC);
-    buffcache_inst.LOAD_MP(READ_SC);
-    buffcache_inst.SIZE_MP(SIZE_SC);
+    buffcache_inst.DATA_MP(DT_SDC);
+    buffcache_inst.ADR_MP(A_SDC);
+    buffcache_inst.STORE_MP(WRITE_SDC);
+    buffcache_inst.LOAD_MP(READ_SDC);
+    buffcache_inst.SIZE_MP(SIZE_SDC);
   }
 };
 

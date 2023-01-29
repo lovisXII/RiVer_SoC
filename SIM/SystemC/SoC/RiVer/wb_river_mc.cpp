@@ -72,14 +72,14 @@ void wb_river_mc::mae_output()
             STB_O = false;
             ACK_IC = false;
             ACK_DC = false;
-            STALL_O = false;
+            STALL_SW = false;
         break;
         case R_REQ:
             CYC_O = true;
             STB_O = false;
             ACK_IC = false;
             ACK_DC = false;
-            STALL_O = true;
+            STALL_SW = true;
         break;
         case R_DC_READ:
             CYC_O = true;
@@ -90,7 +90,7 @@ void wb_river_mc::mae_output()
             WE_O = false;
             ACK_IC = false;
             ACK_DC = ACK_I;
-            STALL_O = true;
+            STALL_SW = true;
             DT_RM = DAT_I;
         break;
         case R_DC_END_BURST:
@@ -98,7 +98,7 @@ void wb_river_mc::mae_output()
             STB_O = false;
             ACK_IC = false;
             ACK_DC = ACK_I;
-            STALL_O = true;
+            STALL_SW = true;
             DT_RM = DAT_I;
         break;
         case R_DC_WRITE:
@@ -111,7 +111,7 @@ void wb_river_mc::mae_output()
             WE_O = true;
             ACK_IC = false;
             ACK_DC = ACK_I;
-            STALL_O = true;
+            STALL_SW = true;
         break;
         case R_IC:
             CYC_O = true;
@@ -123,7 +123,7 @@ void wb_river_mc::mae_output()
             DT_IC = DAT_I;
             ACK_IC = ACK_I;
             ACK_DC = false;
-            STALL_O = true;
+            STALL_SW = true;
             WE_O = false;
         break;
         case R_IC_END_BURST:
@@ -132,7 +132,7 @@ void wb_river_mc::mae_output()
             DT_IC = DAT_I;
             ACK_IC = ACK_I;
             ACK_DC = false;
-            STALL_O = true;
+            STALL_SW = true;
         break;
     }
 }
@@ -159,7 +159,7 @@ void wb_river_mc::trace(sc_trace_file* tf)
     sc_trace(tf, A_DC, GET_NAME(A_DC));
     sc_trace(tf, DT_RM, GET_NAME(DT_RM));
     sc_trace(tf, ACK_DC, GET_NAME(ACK_DC));
-    sc_trace(tf, STALL_O, GET_NAME(STALL_O));
+    sc_trace(tf, STALL_SW, GET_NAME(STALL_SW));
     sc_trace(tf, A_IC, GET_NAME(A_IC));
     sc_trace(tf, GRANT_I, GET_NAME(GRANT_I));
     

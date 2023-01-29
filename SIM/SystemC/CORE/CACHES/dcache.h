@@ -48,8 +48,6 @@ SC_MODULE(dcache)
   sc_out<bool> READ_SC, WRITE_SC;
   sc_out<sc_uint<2>> SIZE_SC;
 
-  // DT & A n'ont pas de reference d'ou il vient car ils peuvent venir de 
-  // la MP ou du CACHE
   sc_out<sc_uint<32>> DT_SC;
   sc_out<sc_uint<32>> A_SC;
 
