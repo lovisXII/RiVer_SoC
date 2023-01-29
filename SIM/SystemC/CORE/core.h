@@ -237,7 +237,7 @@ SC_MODULE(core) {
     sc_signal<bool>        TIMER_INT_ST;
     sc_signal<bool>        ACK_SP;
 
-    // Mcache interface
+    // Dcache interface
     sc_out<sc_uint<2>>  MEM_SIZE_SM;
     sc_out<sc_uint<32>> MCACHE_ADR_SM;
 
