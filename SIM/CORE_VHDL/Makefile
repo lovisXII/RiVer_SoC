@@ -3,8 +3,8 @@ SIM_DIR=sim
 RISC=riscv32-unknown-elf-gcc
 GHDL?=/opt/ghdl/bin/ghdl
 GHDLFLAGS?=-v --workdir=$(BUILD)
-COMPONENTS=UTIL/fifo UTIL/util UTIL/csa core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec EXE/x0_multiplier EXE/divider MEM/mem MEM/x1_multiplier REG/reg WBK/wbk WBK/x2_multiplier CSR/csr 
-TB=core_tb
+COMPONENTS=UTIL/fifo UTIL/util UTIL/csa core IFETCH/ifetch DEC/dec EXE/shifter EXE/alu EXE/exec EXE/x0_multiplier EXE/divider MEM/mem MEM/x1_multiplier REG/reg WBK/wbk WBK/x2_multiplier CSR/csr CACHES/icache
+TB=core_cache_tb
 MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
@@ -16,14 +16,17 @@ RISC_FLAGS= -nostdlib $(LD_SCRIPT)
 
 all: run warning
 
-run: core_tb kernel
+run: $(TB) kernel
 	cp $(SW_DIR)/app.ld kernel sim/
 	./$(TB) $(TEST) --vcd=$(SIM_DIR)/$(TB).vcd --wave=$(SIM_DIR)/$(TB).ghw
+
+core_cache_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_cache_tb.o
+	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_cache_tb
 
 core_tb : warning $(OBJ) $(BUILD)/ram_sim.o $(BUILD)/core_tb.o 
 	${GHDL} -e ${GHDLFLAGS} -Wl,$(BUILD)/ram_sim.o core_tb
 
-$(BUILD)/ram_sim.o :
+$(BUILD)/ram_sim.o: ram_sim.c
 	gcc -c ram_sim.c -o $(BUILD)/ram_sim.o
 
 $(BUILD)/a.out: $(BUILD)/e~$(TB).o ram_sim.c 
@@ -33,6 +36,9 @@ $(BUILD)/e~$(TB).o: $(OBJ)
 	cd $(BUILD) && $(GHDL) --bind $(TB)
 
 $(BUILD)/core_tb.o: $(SOURCES)
+	$(GHDL) -a $(GHDLFLAGS) $^
+
+$(BUILD)/core_cache_tb.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
 kernel: $(SW_DIR)/exception.s $(SW_DIR)/reset.s

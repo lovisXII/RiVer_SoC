@@ -3,7 +3,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NOC='\033[0m'
-make core_tb
+make core_cache_tb
 for file in $(ls ../../SOFT/TESTS/I/); do 
     printf "Test ${file} non opt..." 
     timeout 30s make run TEST=../../SOFT/TESTS/I/$file >/dev/null 2>&1;
