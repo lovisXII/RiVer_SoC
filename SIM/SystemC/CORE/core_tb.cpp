@@ -151,7 +151,7 @@ int sc_main(int argc, char* argv[]) {
     }
 
     char temp_text[512];
-    if (path.substr(path.find_last_of(".") + 1) == "s") {  
+    if (path.substr(path.find_last_of(".") + 1) == "s" || path.substr(path.find_last_of(".") + 1) == "S") {  
         char temp[512];
 
         sprintf(temp,
@@ -164,7 +164,9 @@ int sc_main(int argc, char* argv[]) {
     }
     if (path.substr(path.find_last_of(".") + 1) == "c") { 
         char temp[512];
-        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../../../SOFT/app.ld %s %s", opt.c_str(), path.c_str());
+        sprintf(temp, "riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T ../../../SOFT/app.ld %s %s",
+         opt.c_str(),
+         path.c_str());
         system((char*)temp);
         path = "a.out";
     }
