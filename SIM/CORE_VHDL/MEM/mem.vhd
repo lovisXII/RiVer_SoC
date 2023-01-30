@@ -97,6 +97,7 @@ signal stall_sm, wb : std_logic;
 
 signal load_data : std_logic_vector(31 downto 0);
 signal load_byte, load_halfword, load_word : std_logic_vector(31 downto 0);
+signal lb_sign, lh_sign : std_logic; 
 
 signal data_sm, data_store_sm, data_byte_store_sm, data_half_store_sm : std_logic_vector(31 downto 0);
 
@@ -188,16 +189,28 @@ MCACHE_STORE_SM <= STORE_RE;
 MCACHE_ADR_VALID_SM <= (not(EXE2MEM_EMPTY_SE) or not(mem_fifo_mult_inst)) and (STORE_RE or LOAD_RE);
 
 -- sign extend and load size 
+lb_sign     <=  MCACHE_RESULT_SM(31)    when    byt_sel_sm = "1000" else
+                MCACHE_RESULT_SM(23)    when    byt_sel_sm = "0100" else
+                MCACHE_RESULT_SM(15)    when    byt_sel_sm = "0010" else
+                MCACHE_RESULT_SM(7)     when    byt_sel_sm = "0001" else
+                '0';
+
 load_byte(31 downto 8)  <=  x"000000" when SIGN_EXTEND_RE = '0' else 
-                            x"FFFFFF"; 
+                            (others => lb_sign); 
+
 load_byte(7 downto 0)   <=  MCACHE_RESULT_SM(31 downto 24)  when byt_sel_sm = "1000" else
                             MCACHE_RESULT_SM(23 downto 16)  when byt_sel_sm = "0100" else 
                             MCACHE_RESULT_SM(15 downto 8)   when byt_sel_sm = "0010" else
                             MCACHE_RESULT_SM(7 downto 0)    when byt_sel_sm = "0001" else
                             x"00"; 
 
+lh_sign     <=  MCACHE_RESULT_SM(31)    when    byt_sel_sm = "1100" else 
+                MCACHE_RESULT_SM(15)    when    byt_sel_sm = "0011" else 
+                '0';
+                                                         
 load_halfword(31 downto 16) <=  x"0000" when SIGN_EXTEND_RE = '0' else 
-                                x"FFFF"; 
+                                (others => lh_sign); 
+
 load_halfword(15 downto 0)  <=  MCACHE_RESULT_SM(15 downto 0)   when byt_sel_sm = "0011" else 
                                 MCACHE_RESULT_SM(31 downto 16)  when byt_sel_sm = "1100" else
                                 x"0000";
