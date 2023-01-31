@@ -180,7 +180,7 @@ int main(int argc, char const* argv[]) {
         system((char*)temp);
         strcpy(output,"a.out") ;
     }  
-    if(strcmp(type_of_file,".s") == 0){
+    if(strcmp(type_of_file,".s") == 0 || strcmp(type_of_file,".S") == 0){
         char temp[512] ;
         sprintf(temp,"riscv32-unknown-elf-gcc -nostdlib -march=rv32im -T %sapp.ld %s",soft_path,
                 input_file);
