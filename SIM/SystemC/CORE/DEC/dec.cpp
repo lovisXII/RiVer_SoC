@@ -3,8 +3,9 @@
 // stats
 int nb_jump_taken = 0;
 
-// ---------------------------------------------DECODING INSTRUCTION
-// :---------------------------------------------
+// ---------------------------------------------
+//              DECODING INSTRUCTION
+// ---------------------------------------------
 
 void decod::concat_dec2exe() {
     sc_bv<dec2exe_size> dec2exe_in_var;
@@ -16,9 +17,10 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[217]            = instruction_access_fault_sd;
         dec2exe_in_var[216]            = mret_i_sd;
         dec2exe_in_var[215]            = block_bp_sd;
+        // OR operation between all the exception cause in DEC
         dec2exe_in_var[214] = illegal_instruction_sd || instruction_adress_missaligned_sd || env_call_u_mode_sd ||
                               env_call_m_mode_sd || env_call_s_mode_sd || env_call_wrong_mode || mret_i_sd ||
-                              instruction_access_fault_sd || ebreak_i_sd;  // tells if there is an exception
+                              instruction_access_fault_sd || ebreak_i_sd;  
         dec2exe_in_var[213]            = env_call_wrong_mode.read();
         dec2exe_in_var[212]            = env_call_u_mode_sd.read();
         dec2exe_in_var[211]            = illegal_instruction_sd.read();
@@ -50,7 +52,9 @@ void decod::concat_dec2exe() {
         dec2exe_in_var.range(7, 2)   = adr_dest_sd.read();
         dec2exe_in_var[1]            = slt_i_sd.read() | slti_i_sd.read();
         dec2exe_in_var[0]            = sltu_i_sd.read() | sltiu_i_sd.read();
-    } else {
+    } 
+    // When an exception occur (EXCEPTION_SM = 1), we send a nop inside the fifo
+    else {
         dec2exe_in_var[252]            = 0;
         dec2exe_in_var.range(251, 220) = 0;
         dec2exe_in_var[219]            = 0;
@@ -58,7 +62,7 @@ void decod::concat_dec2exe() {
         dec2exe_in_var[217]            = 0;
         dec2exe_in_var[216]            = 0;
         dec2exe_in_var[215]            = 0;
-        dec2exe_in_var[214]            = 0;  // tells if there is an exception
+        dec2exe_in_var[214]            = 0; 
         dec2exe_in_var[213]            = 0;
         dec2exe_in_var[212]            = 0;
         dec2exe_in_var[211]            = 0;
@@ -171,7 +175,8 @@ void decod::unconcat_dec2if() {
     ADR_TO_BRANCH_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
     PC_RD.write((sc_bv_base)dec2if_out_var.range(31, 0));
 }
-//---------------------------------------------INSTRUCTION TYPE DETECTION
+//---------------------------------------------
+//          INSTRUCTION TYPE DETECTION
 //:---------------------------------------------
 
 void decod::decoding_instruction_type() {
@@ -187,7 +192,8 @@ void decod::decoding_instruction_type() {
     m_type_inst_sd      = (if_ir.range(6, 0) == 0b0110011 && if_ir.range(31, 25) == 0b0000001) ? 1 : 0;
 }
 
-//---------------------------------------------INSTRUCTION DETECTION
+//---------------------------------------------
+//          INSTRUCTION DETECTION
 //:---------------------------------------------
 
 void decod::decoding_instruction() {
@@ -369,7 +375,7 @@ void decod::decoding_instruction() {
     else
         sb_i_sd.write(0);
 
-    // System-type Instructions :
+    // Priviledge Instructions :
 
     if (if_ir.range(6, 0) == 0b1110011 && if_ir.range(14, 12) == 0b000 && if_ir.range(31, 20) == 0b000000000000)
         ecall_i_sd.write(1);
@@ -448,9 +454,10 @@ void decod::decoding_instruction() {
         remu_i_sd.write(0);
 }
 
-//---------------------------------------------REGISTRE & OPERAND DETECTION
+//---------------------------------------------
+//          REGISTRE & OPERAND DETECTION
 //:---------------------------------------------
-// this needs to be done in two steps :
+
 void decod::pre_reg_read_decoding() {
     sc_uint<32> if_ir = INSTR_RI.read();
     sc_uint<6>  radr1_var;
@@ -579,12 +586,17 @@ void decod::pre_reg_read_decoding() {
     adr_dest_sd.write(adr_dest_var);
 }
 
-//---------------------------------------------EXE & MEM SIGNAL DETECTION
-//:---------------------------------------------
+//---------------------------------------------
+//              EXE & MEM SIGNAL DETECTION
+//---------------------------------------------
+
+/**
+ * Generate the type of operation EXE needs to perform
+ * Generate a branch signal telling if we branch or not
+ * Generate the signals telling if a memory access need to be performed
+*/
 
 void decod::post_reg_read_decoding() {
-    // We are going to setup commands sent to EXE here, so each if will be
-    // execute for one type of command :
 
     // CMD : +
     bool        dec2exe_wb_var;
@@ -652,7 +664,7 @@ void decod::post_reg_read_decoding() {
         // sub
         exe_neg_op2_sd.write(sub_i_sd | slt_i_sd | slti_i_sd | sltu_i_sd | sltiu_i_sd);
 
-        // Command for exe
+        // EXE command
         if (and_i_sd || andi_i_sd || srl_i_sd || srli_i_sd || mul_i_sd || div_i_sd)
             exe_cmd_sd.write(1);
         else if (or_i_sd || ori_i_sd || sra_i_sd || srai_i_sd || mulh_i_sd || divu_i_sd)
@@ -796,7 +808,7 @@ void decod::post_reg_read_decoding() {
             not_jump_var                  = 0;
         } else {
             dec2exe_op1_var = READ_PC_SR.read();
-            dec2exe_op2_var = 0x0;  // on va envoyer l'adresse de retour
+            dec2exe_op2_var = 0x0;  
 
             if (if_ir.range(31, 31) == 1) {
                 offset_branch_var.range(31, 21) = 0b11111111111;
@@ -945,16 +957,20 @@ void decod::post_reg_read_decoding() {
     exe_op1_sd.write(dec2exe_op1_var);
     exe_op2_sd.write(dec2exe_op2_var);
     mem_data_sd.write(mem_data_var);
+
+    // This is how branch condition was handled in the past vesion :
     // inc_pc_sd.write(((inc_pc_var || IF2DEC_EMPTY_SI) && dec2if_push_sd.read()) && !EXCEPTION_SM);
     // add_offset_to_pc_sd.write((!stall_sd && !inc_pc_var && (b_type_inst_sd || j_type_inst_sd
     //                             || jalr_type_inst_sd) &&
     //                            dec2if_push_sd.read() && !illegal_inst && !IF2DEC_EMPTY_SI) &&
     //                           !EXCEPTION_SM);
+    
     jump_sd = !not_jump_var;
 }
 
-//---------------------------------------------PC GESTION
-//:---------------------------------------------
+//---------------------------------------------
+//                  PC GESTION
+//---------------------------------------------
 
 void decod::pc_inc() {
     sc_uint<32> pc                = READ_PC_SR.read();
@@ -1067,7 +1083,7 @@ void decod::pc_inc() {
         WRITE_PC_SD.write(pc_out);
         pc_branch_value_sd = pc_out;
 
-        // Instruction adress missaligned exception :
+        // Instruction address missaligned exception :
 
         if (((pc_out & 0b11) != 0) || (((RETURN_ADRESS_SM.read() & 0b11) != 0) && EXCEPTION_SM.read())) {
             instruction_adress_missaligned_sd = 1;
@@ -1245,8 +1261,9 @@ void decod::branch_taken_counter() {
     else if (jump_sd && !stall_sd)
         nb_jump_taken++;
 }
-//---------------------------------------------METHOD TO TRACE SIGNALS
-//:---------------------------------------------
+//---------------------------------------------
+//          METHOD TO TRACE SIGNALS
+//---------------------------------------------
 
 void decod::trace(sc_trace_file* tf) {
     dec2if.trace(tf);
@@ -1254,23 +1271,23 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, RDATA1_SR, GET_NAME(RDATA1_SR));
     sc_trace(tf, RDATA2_SR, GET_NAME(RDATA2_SR));
 
-    sc_trace(tf, READ_PC_SR, GET_NAME(READ_PC_SR));  // value of r32 which is pc coming from REG
+    sc_trace(tf, READ_PC_SR, GET_NAME(READ_PC_SR));  
 
-    sc_trace(tf, RADR1_SD, GET_NAME(RADR1_SD));  // adress of rs
-    sc_trace(tf, RADR2_SD, GET_NAME(RADR2_SD));  // adress of rt
+    sc_trace(tf, RADR1_SD, GET_NAME(RADR1_SD)); 
+    sc_trace(tf, RADR2_SD, GET_NAME(RADR2_SD));  
 
     sc_trace(tf, WRITE_PC_SD, GET_NAME(WRITE_PC_SD));
     sc_trace(tf, WRITE_PC_ENABLE_SD, GET_NAME(WRITE_PC_ENABLE_SD));
 
     // Interface with EXE :
 
-    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));            // value of op1
-    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));            // value of op2
-    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));    // value of the command sent to exe
-    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));    // say if we take the opposite of the op1 to do a
-                                                       // substraction for example
-    sc_trace(tf, WB_RD, GET_NAME(WB_RD));              // say if we plan to wbk the value of rd or no
-    sc_trace(tf, EXE_DEST_RD, GET_NAME(EXE_DEST_RD));  // the destination register
+    sc_trace(tf, OP1_RD, GET_NAME(OP1_RD));           
+    sc_trace(tf, OP2_RD, GET_NAME(OP2_RD));           
+    sc_trace(tf, EXE_CMD_RD, GET_NAME(EXE_CMD_RD));   
+    sc_trace(tf, NEG_OP2_RD, GET_NAME(NEG_OP2_RD));   
+                                                      
+    sc_trace(tf, WB_RD, GET_NAME(WB_RD));             
+    sc_trace(tf, EXE_DEST_RD, GET_NAME(EXE_DEST_RD)); 
     sc_trace(tf, SELECT_TYPE_OPERATIONS_RD, GET_NAME(SELECT_TYPE_OPERATIONS_RD));  // taille fifo entrée : 110
     sc_trace(tf, SLT_RD, GET_NAME(SLT_RD));
     sc_trace(tf, SLTU_RD, GET_NAME(SLTU_RD));
@@ -1282,10 +1299,10 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, MEM_SIGN_EXTEND_RD, GET_NAME(MEM_SIGN_EXTEND_RD));
     sc_trace(tf, MEM_SIZE_RD, GET_NAME(MEM_SIZE_RD));  // tells to mem if we do an acces in word, hw or byte
 
-    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));  // indicate if we do a csr operation,
-                                                             // if so need to WBK CSR in rd
-    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));        // CSR adress sent to EXE, will allow to wbk csr in MEM
-    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));      // CSR read data to be wb in register
+    sc_trace(tf, CSR_WENABLE_RD, GET_NAME(CSR_WENABLE_RD));  
+                                                             
+    sc_trace(tf, CSR_WADR_RD, GET_NAME(CSR_WADR_RD));        
+    sc_trace(tf, CSR_RDATA_RD, GET_NAME(CSR_RDATA_RD));      
 
     // Interface with DEC2IF :
 

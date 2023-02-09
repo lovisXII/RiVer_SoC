@@ -1,6 +1,10 @@
 #pragma once
 #include <systemc.h>
 #include "debug_util.h"
+
+/*
+ * This is a generic fifo using template.
+*/
 template <int T>
 SC_MODULE(fifo) {
     sc_in<sc_bv<T>> DIN_S;
@@ -11,7 +15,7 @@ SC_MODULE(fifo) {
     sc_out<bool>     FULL_S, EMPTY_S;
     sc_out<sc_bv<T>> DOUT_R;
 
-    sc_signal<bool> fifo_v;
+    sc_signal<bool> fifo_v; // tells if data inside the fifo is valid or not
 
     void function();
     void flags_update();
@@ -24,11 +28,18 @@ SC_MODULE(fifo) {
         reset_signal_is(RESET_N, false);
     }
 };
+
+/**
+ * full when :
+    * data inside is valid and no pop  
+ * empty when :
+    * data inside invalid
+*/
 template <int T>
 void fifo<T>::flags_update() {
     bool push = PUSH_S.read();
     bool pop  = POP_S.read();
-    if (fifo_v)  // if the data in the fifo is valide
+    if (fifo_v)  
     {
         if (pop) {
             FULL_S.write(0);
@@ -37,7 +48,7 @@ void fifo<T>::flags_update() {
             FULL_S.write(1);
             EMPTY_S.write(0);
         }
-    } else  // case where data inside the fifo is not valid
+    } else  
     {
         FULL_S.write(0);
         EMPTY_S.write(1);
@@ -45,23 +56,25 @@ void fifo<T>::flags_update() {
 }
 template <int T>
 void fifo<T>::function() {
+
+    // RESET :
+
     fifo_v.write(false);
     DOUT_R.write(0);
 
     wait(3);
 
-    // when fifo_v is valide, it means that we want the data and we can pop it
-    // when it's unvalaible it means we don't care about it and we can push
+    // END OF RESET
 
     while (1) {
         bool push = PUSH_S.read();
         bool pop  = POP_S.read();
-        if (fifo_v && !push && pop)  // when data is valid and pop is able we sent data
+        if (fifo_v && !push && pop)  
         {
             fifo_v.write(0);
         } else if (push && (pop || !fifo_v)) {
             DOUT_R.write(DIN_S.read());
-            fifo_v.write(1);  // stay valid
+            fifo_v.write(1);  
         }
         wait(1);
     }
