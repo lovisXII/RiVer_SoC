@@ -67,8 +67,6 @@ void ifetch::fetch_method() {
 
 void ifetch::exception()
 // No exception in IFECTH
-// Gestion of current mode, start in Machine mode
-// Then keep the same mode as the pipeline
 {
     EXCEPTION_RI.write(0);
 }
@@ -95,6 +93,11 @@ void ifetch::write_pred_reg() {
         }
     }
 }
+
+
+// ---------------------------------------------
+//            BRANCH PREDICTION GESTION
+// ---------------------------------------------
 void ifetch::read_pred_reg() {
     bool found = false;
     for (int i = 0; i < predictor_register_size; ++i) {
