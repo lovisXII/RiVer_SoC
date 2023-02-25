@@ -166,13 +166,13 @@ void decod::unconcat_dec2if() {
     sc_bv<dec2if_size> dec2if_out_var = dec2if_out_sd.read();
     PUSH_ADR_RAS_RD.write((bool)dec2if_out_var[133]);
     POP_ADR_RAS_RD.write((bool)dec2if_out_var[132]);
-    ADR_TO_RET_RD.write((sc_bv_base)dec2if_out_var.range(131, 100));
+    RETURN_ADR_RD.write((sc_bv_base)dec2if_out_var.range(131, 100));
     RET_INST_RD.write((bool)dec2if_out_var[99]);
     PRED_FAILED_RD.write((bool)dec2if_out_var[98]);
     PRED_SUCCESS_RD.write((bool)dec2if_out_var[97]);
-    BRANCH_INST_RD.write((bool)dec2if_out_var[96]);
+    INSTR_IS_BRANCH_RD.write((bool)dec2if_out_var[96]);
     BRANCH_INST_ADR_RD.write((sc_bv_base)dec2if_out_var.range(95, 64));
-    ADR_TO_BRANCH_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
+    TARGET_ADR_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
     PC_RD.write((sc_bv_base)dec2if_out_var.range(31, 0));
 }
 //---------------------------------------------
@@ -1308,14 +1308,14 @@ void decod::trace(sc_trace_file* tf) {
 
     sc_trace(tf, DEC2IF_POP_SI, GET_NAME(DEC2IF_POP_SI));  // Ifecth say to decod if it wants a pop or no
     sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
-    sc_trace(tf, BRANCH_INST_RD, GET_NAME(BRANCH_INST_RD));
+    sc_trace(tf, INSTR_IS_BRANCH_RD, GET_NAME(INSTR_IS_BRANCH_RD));
     sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
-    sc_trace(tf, ADR_TO_BRANCH_RD, GET_NAME(ADR_TO_BRANCH_RD));
+    sc_trace(tf, TARGET_ADR_RD, GET_NAME(TARGET_ADR_RD));
     sc_trace(tf, PC_RD, GET_NAME(PC_RD));
 
     sc_trace(tf, PUSH_ADR_RAS_RD, GET_NAME(PUSH_ADR_RAS_RD));
     sc_trace(tf, POP_ADR_RAS_RD, GET_NAME(POP_ADR_RAS_RD));
-    sc_trace(tf, ADR_TO_RET_RD, GET_NAME(ADR_TO_RET_RD));
+    sc_trace(tf, RETURN_ADR_RD, GET_NAME(RETURN_ADR_RD));
     sc_trace(tf, RET_INST_RD, GET_NAME(RET_INST_RD));
 
     // Interface with IF2DEC :

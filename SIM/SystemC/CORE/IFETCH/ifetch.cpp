@@ -72,7 +72,7 @@ void ifetch::exception()
 }
 void ifetch::write_pred_reg() {
     int index = 0;
-    if (BRANCH_INST_RD.read() && !IF2DEC_EMPTY_SI.read()) {
+    if (INSTR_IS_BRANCH_RD.read() && !IF2DEC_EMPTY_SI.read()) {
         bool found = false;
         for (int i = 0; i < predictor_register_size; ++i) {
             if (BRANCH_ADR_REG[i] == BRANCH_INST_ADR_RD.read()) {
@@ -83,7 +83,7 @@ void ifetch::write_pred_reg() {
         }
         if (!found) {
             BRANCH_ADR_REG[pred_write_pointer_si.read()]    = BRANCH_INST_ADR_RD.read();
-            PREDICTED_ADR_REG[pred_write_pointer_si.read()] = ADR_TO_BRANCH_RD.read();
+            PREDICTED_ADR_REG[pred_write_pointer_si.read()] = TARGET_ADR_RD.read();
             PRED_STATE_REG[pred_write_pointer_si.read()]    = weakly_taken;
             VALID_PRED_REG[pred_write_pointer_si.read()]    = true;
             sc_uint<size_of_pred_pointer> pointer           = pred_write_pointer_si.read();
@@ -171,7 +171,7 @@ void ifetch::ret_stack() {
                 // ret inst found on decod stage => pop @
                 for (int i = 0; i < ret_stack_size; i++)
                     if (ras_temp[i]) {
-                        RET_STACK_RI[i] = ADR_TO_RET_RD.read();
+                        RET_STACK_RI[i] = RETURN_ADR_RD.read();
                         adr_pushed      = true;
                     }
 
@@ -185,7 +185,7 @@ void ifetch::ret_stack() {
             if (found) {
                 // pc@ == ret inst => pop @ to ret
                 for (int i = 0; i < ret_stack_size - 1; i++) {
-                    if (ras_temp[i + 1]) { pred_ret_next_adr_si = adr_pushed ? ADR_TO_RET_RD.read() : RET_STACK_RI[i]; }
+                    if (ras_temp[i + 1]) { pred_ret_next_adr_si = adr_pushed ? RETURN_ADR_RD.read() : RET_STACK_RI[i]; }
                 }
                 ras_temp = ras_temp >> 1;
             }
@@ -225,9 +225,9 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, EXCEPTION_SM, GET_NAME(EXCEPTION_SM));
     sc_trace(tf, INTERRUPTION_SE, GET_NAME(INTERRUPTION_SE));
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
-    sc_trace(tf, BRANCH_INST_RD, GET_NAME(BRANCH_INST_RD));
+    sc_trace(tf, INSTR_IS_BRANCH_RD, GET_NAME(INSTR_IS_BRANCH_RD));
     sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
-    sc_trace(tf, ADR_TO_BRANCH_RD, GET_NAME(ADR_TO_BRANCH_RD));
+    sc_trace(tf, TARGET_ADR_RD, GET_NAME(TARGET_ADR_RD));
     sc_trace(tf, PRED_ADR_RI, GET_NAME(PRED_ADR_RI));
     sc_trace(tf, PRED_TAKEN_RI, GET_NAME(PRED_TAKEN_RI));
     sc_trace(tf, PRED_NEXT_ADR_SI, GET_NAME(PRED_NEXT_ADR_SI));
@@ -265,7 +265,7 @@ void ifetch::trace(sc_trace_file* tf) {
 
     sc_trace(tf, PUSH_ADR_RAS_RD, GET_NAME(PUSH_ADR_RAS_RD));
     sc_trace(tf, POP_ADR_RAS_RD, GET_NAME(POP_ADR_RAS_RD));
-    sc_trace(tf, ADR_TO_RET_RD, GET_NAME(ADR_TO_RET_RD));
+    sc_trace(tf, RETURN_ADR_RD, GET_NAME(RETURN_ADR_RD));
     sc_trace(tf, RET_INST_RD, GET_NAME(RET_INST_RD));
     sc_trace(tf, ret_stack_pointer_si, GET_NAME(ret_stack_pointer_si));
     sc_trace(tf, pred_branch_taken_si, GET_NAME(pred_branch_taken_si));
