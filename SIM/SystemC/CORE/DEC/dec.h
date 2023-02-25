@@ -56,7 +56,7 @@ SC_MODULE(decod) {
     sc_out<bool>        PRED_SUCCESS_RD;
     sc_out<bool>        INSTR_IS_BRANCH_RD;
     sc_out<sc_uint<32>> BRANCH_INST_ADR_RD;
-    sc_out<sc_uint<32>> TARGET_ADR_RD;
+    sc_out<sc_uint<32>> BRANCH_TARGET_ADR_RD;
     sc_out<sc_uint<32>> PC_RD;
 
     sc_out<sc_uint<32>> PRED_ADR_SD;

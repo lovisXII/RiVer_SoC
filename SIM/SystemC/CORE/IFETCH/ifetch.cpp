@@ -83,7 +83,7 @@ void ifetch::write_pred_reg() {
         }
         if (!found) {
             BRANCH_ADR_REG[pred_write_pointer_si.read()]    = BRANCH_INST_ADR_RD.read();
-            PREDICTED_ADR_REG[pred_write_pointer_si.read()] = TARGET_ADR_RD.read();
+            PREDICTED_ADR_REG[pred_write_pointer_si.read()] = BRANCH_TARGET_ADR_RD.read();
             PRED_STATE_REG[pred_write_pointer_si.read()]    = weakly_taken;
             VALID_PRED_REG[pred_write_pointer_si.read()]    = true;
             sc_uint<size_of_pred_pointer> pointer           = pred_write_pointer_si.read();
@@ -227,7 +227,7 @@ void ifetch::trace(sc_trace_file* tf) {
     sc_trace(tf, MRET_SM, GET_NAME(MRET_SM));
     sc_trace(tf, INSTR_IS_BRANCH_RD, GET_NAME(INSTR_IS_BRANCH_RD));
     sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
-    sc_trace(tf, TARGET_ADR_RD, GET_NAME(TARGET_ADR_RD));
+    sc_trace(tf, BRANCH_TARGET_ADR_RD, GET_NAME(BRANCH_TARGET_ADR_RD));
     sc_trace(tf, PRED_ADR_RI, GET_NAME(PRED_ADR_RI));
     sc_trace(tf, PRED_TAKEN_RI, GET_NAME(PRED_TAKEN_RI));
     sc_trace(tf, PRED_NEXT_ADR_SI, GET_NAME(PRED_NEXT_ADR_SI));

@@ -172,7 +172,7 @@ void decod::unconcat_dec2if() {
     PRED_SUCCESS_RD.write((bool)dec2if_out_var[97]);
     INSTR_IS_BRANCH_RD.write((bool)dec2if_out_var[96]);
     BRANCH_INST_ADR_RD.write((sc_bv_base)dec2if_out_var.range(95, 64));
-    TARGET_ADR_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
+    BRANCH_TARGET_ADR_RD.write((sc_bv_base)dec2if_out_var.range(63, 32));
     PC_RD.write((sc_bv_base)dec2if_out_var.range(31, 0));
 }
 //---------------------------------------------
@@ -1310,7 +1310,7 @@ void decod::trace(sc_trace_file* tf) {
     sc_trace(tf, DEC2IF_EMPTY_SD, GET_NAME(DEC2IF_EMPTY_SD));
     sc_trace(tf, INSTR_IS_BRANCH_RD, GET_NAME(INSTR_IS_BRANCH_RD));
     sc_trace(tf, BRANCH_INST_ADR_RD, GET_NAME(BRANCH_INST_ADR_RD));
-    sc_trace(tf, TARGET_ADR_RD, GET_NAME(TARGET_ADR_RD));
+    sc_trace(tf, BRANCH_TARGET_ADR_RD, GET_NAME(BRANCH_TARGET_ADR_RD));
     sc_trace(tf, PC_RD, GET_NAME(PC_RD));
 
     sc_trace(tf, PUSH_ADR_RAS_RD, GET_NAME(PUSH_ADR_RAS_RD));

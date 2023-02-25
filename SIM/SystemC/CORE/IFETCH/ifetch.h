@@ -32,7 +32,7 @@ SC_MODULE(ifetch) {
     sc_in<bool>        PRED_SUCCESS_RD;
     sc_in<bool>        INSTR_IS_BRANCH_RD;
     sc_in<sc_uint<32>> BRANCH_INST_ADR_RD;
-    sc_in<sc_uint<32>> TARGET_ADR_RD;
+    sc_in<sc_uint<32>> BRANCH_TARGET_ADR_RD;
 
     sc_in<sc_uint<32>> PRED_ADR_SD;
     sc_in<bool>        PRED_TAKEN_SD;
