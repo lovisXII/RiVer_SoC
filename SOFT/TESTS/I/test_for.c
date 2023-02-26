@@ -14,11 +14,11 @@ int main()
 {
     int a, i;
     a = 1;
-    for(i=1; i <= 1; ++i)
+    for(i=1; i <= 100; ++i)
     {
             a = i;
     }
-	if(a == 1)
+	if(a == 100)
     {
         _good() ;
     }

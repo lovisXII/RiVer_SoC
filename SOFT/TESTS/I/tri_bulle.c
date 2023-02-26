@@ -1,3 +1,5 @@
+#define TAB_LENGTH 10
+
 extern void _bad();
 extern void _good();
 
@@ -20,9 +22,10 @@ void* memcpy(void* dest, const void* source, unsigned int size)
 }
 
 int main() {
-    int tab[20] = {2,8,4,5,6,8,7,1,0,5,0,4,7,8,9,9,6,3,4,5};
-    
-    for(int i = 19; i >= 0; i--)
+    //int tab[tab_len] = {2,8,4,5,6,8,7,1,0,5,0,4,7,8,9,9,6,3,4,5};
+    int tab[TAB_LENGTH] = {2, 8, 4, 1, 3, 7, 6, 9, 5, 0};
+
+    for(int i = TAB_LENGTH - 1; i >= 0; i--)
     {
         for(int j = 0; j < i; j++)
         {
@@ -35,7 +38,7 @@ int main() {
         }
     }
     int tri = 1;
-    for(int i = 0; i < 19; i++)
+    for(int i = 0; i < TAB_LENGTH - 1; i++)
     {
         if(tab[i] > tab[i+1])
         {

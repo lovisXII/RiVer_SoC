@@ -1,8 +1,12 @@
 library ieee; 
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
+use ieee.math_real.all;
 
 entity icache is 
+    generic (
+        WAYS : integer := 256
+    );
     port(
         -- global interface
         clk, reset_n    :   in  std_logic;
@@ -19,21 +23,24 @@ entity icache is
         RAM_ADR_VALID   :   out std_logic;
         RAM_ACK         :   in  std_logic
     );
-
 end icache;
 
 architecture archi of icache is 
 
-type tag_tab is array (0 to 255) of std_logic_vector(19 downto 0);
+constant N_BITS_OFFSET : integer := 4;
+constant N_BITS_WAYS : integer := integer(ceil(log2(real(WAYS))));
+constant N_BITS_TAG : integer := 32 - N_BITS_WAYS - N_BITS_OFFSET;
+
+type tag_tab is array (0 to (WAYS - 1)) of std_logic_vector((N_BITS_TAG - 1) downto 0);
 signal tags : tag_tab;
 
-type data_t is array (0 to 255) of std_logic_vector(31 downto 0);
+type data_t is array (0 to (WAYS - 1)) of std_logic_vector(31 downto 0);
 signal data0, data1, data2, data3 : data_t; 
-signal data_valid           :   std_logic_vector(255 downto 0);
+signal data_valid :   std_logic_vector((WAYS - 1) downto 0);
 
-signal adr_tag      :   std_logic_vector(19 downto 0);
-signal adr_index    :   std_logic_vector(7 downto 0);
-signal adr_offset   :   std_logic_vector(3 downto 0);
+signal adr_tag      :   std_logic_vector((N_BITS_TAG - 1) downto 0);
+signal adr_index    :   std_logic_vector((N_BITS_WAYS - 1) downto 0);
+signal adr_offset   :   std_logic_vector((N_BITS_OFFSET - 1) downto 0);
 
 signal hit : std_logic := '0';
 
@@ -45,12 +52,12 @@ signal dbg_st : std_logic_vector(1 downto 0);
 
 begin 
 
-adr_tag     <=  ADR_SI(31 downto 12); 
-adr_index   <=  ADR_SI(11 downto 4);
-adr_offset  <=  ADR_SI(3 downto 0);
+adr_tag     <=  ADR_SI(31 downto (N_BITS_OFFSET + N_BITS_WAYS)); 
+adr_index   <=  ADR_SI((N_BITS_WAYS + N_BITS_OFFSET- 1) downto N_BITS_OFFSET);
+adr_offset  <=  ADR_SI((N_BITS_OFFSET - 1) downto 0);
 
 -- miss detection 
-hit <=  '1' when    adr_tag = tags(to_integer(unsigned(adr_index))) and data_valid(to_integer(unsigned(adr_index))) = '1' else 
+hit <=  '1' when adr_tag = tags(to_integer(unsigned(adr_index))) and data_valid(to_integer(unsigned(adr_index))) = '1' else 
         '0';
 
 IC_INST_SI  <=  data0(to_integer(unsigned(adr_index)))  when adr_offset(3 downto 2) = "00" and hit = '1' else 
@@ -72,9 +79,11 @@ begin
 end process; 
 
 fsm_output : process(clk, EP, hit, RAM_ACK, ADR_SI, ADR_VALID_SI, RAM_DATA)
-variable current_adr_tag    :   std_logic_vector(19 downto 0);
-variable current_adr_index  :   std_logic_vector(7 downto 0);
-variable current_adr_offset :   std_logic_vector(3 downto 0);
+
+variable current_adr_tag    :   std_logic_vector((N_BITS_TAG - 1) downto 0);
+variable current_adr_index  :   std_logic_vector((N_BITS_WAYS - 1) downto 0);
+variable current_adr_offset :   std_logic_vector((N_BITS_OFFSET - 1) downto 0);
+
 variable cpt : integer;
 
 begin 
@@ -83,11 +92,15 @@ begin
         when idle =>
             if ADR_VALID_SI = '1' and reset_n = '1' and hit = '0' then 
                 EF <= wait_mem;
+                
+                -- align address then send it to the RAM
                 RAM_ADR(31 downto 4)    <=  ADR_SI(31 downto 4);
                 RAM_ADR(3 downto 0)     <=  "0000";
-                RAM_ADR_VALID   <=  '1';
-                current_adr_tag         :=  ADR_SI(31 downto 12);
-                current_adr_index       :=  ADR_SI(11 downto 4);
+                RAM_ADR_VALID           <=  '1';
+                
+                current_adr_tag         :=  ADR_SI(31 downto (N_BITS_WAYS + N_BITS_OFFSET));
+                current_adr_index       :=  ADR_SI((N_BITS_WAYS + N_BITS_OFFSET - 1) downto N_BITS_OFFSET);
+                
                 cpt := 0;
             else
                 EF <= idle;

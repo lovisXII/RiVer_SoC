@@ -15,7 +15,7 @@ COMPONENTS = \
 	CSR/csr \
 	CACHES/icache CACHES/buffer_cache \
 	tb/tb_buff_cache
-TB=core_tb
+TB=core_cache_tb
 MODS=$(TB) $(COMPONENTS) 
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
