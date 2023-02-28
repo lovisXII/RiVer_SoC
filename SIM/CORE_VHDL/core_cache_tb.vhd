@@ -17,7 +17,7 @@ begin
 end read_mem; 
 attribute foreign of read_mem : function is "VHPIDIRECT read_mem";    
 
-function write_mem(adr : integer; data : integer; byte_select : integer; time : integer) return integer is 
+function write_mem(adr : integer; data : integer; byte_select : integer; dtime : integer) return integer is 
 begin 
     assert false severity failure;
 end write_mem; 
@@ -159,7 +159,9 @@ signal good_adr, bad_adr, exception_adr : std_logic_vector(31 downto 0);
 signal end_simu : std_logic := '0'; 
 signal result : integer := 0;  
 signal timeout : integer := 0; 
-signal time : integer := 0; 
+signal dtime : integer := 0; 
+
+constant CACHE_LATENCY : time := 80 ns;
 
 -- riscof
 signal riscof_en : integer := 0; 
@@ -259,7 +261,7 @@ end process;
 
 process(clk)
 begin 
-    time <= time + 5; 
+    dtime <= dtime + 5; 
 end process; 
 
 reset_n <= '0', '1' after 6 ns;
@@ -306,7 +308,7 @@ variable transf_cpt : integer;
 
 begin
     if RAM_ADR_VALID = '1' then
-        RAM_ACK <= '1' after 80 ns;
+        RAM_ACK <= '1' after CACHE_LATENCY;
         transf_cpt := 0;
     end if;
 
@@ -346,7 +348,7 @@ begin
     elsif falling_edge(clk) then 
         if MCACHE_ADR_VALID_SM = '1' then 
             if MCACHE_STORE_SM = '1' then  
-                read0 := write_mem(adr_int, data_int, byt_sel_i, time);
+                read0 := write_mem(adr_int, data_int, byt_sel_i, dtime);
             elsif MCACHE_LOAD_SM = '1' then 
                 MCACHE_RESULT_SM <= std_logic_vector(to_signed(read_mem(adr_int), 32));
             else 

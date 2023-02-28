@@ -35,6 +35,7 @@ type tag_tab is array (0 to (WAYS - 1)) of std_logic_vector((N_BITS_TAG - 1) dow
 signal tags : tag_tab;
 
 type data_t is array (0 to (WAYS - 1)) of std_logic_vector(31 downto 0);
+
 signal data0, data1, data2, data3 : data_t; 
 signal data_valid :   std_logic_vector((WAYS - 1) downto 0);
 
