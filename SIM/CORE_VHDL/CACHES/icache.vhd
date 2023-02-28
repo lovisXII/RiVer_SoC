@@ -5,7 +5,8 @@ use ieee.math_real.all;
 
 entity icache is 
     generic (
-        WAYS : integer := 256
+        WAYS : integer := 256;
+        WIDTH : integer := 8
     );
     port(
         -- global interface
@@ -27,27 +28,32 @@ end icache;
 
 architecture archi of icache is 
 
-constant N_BITS_OFFSET : integer := 4;
+-- address parameters 
+constant N_BITS_OFFSET : integer := integer(ceil(log2(real(WIDTH)))) + 2;
 constant N_BITS_WAYS : integer := integer(ceil(log2(real(WAYS))));
 constant N_BITS_TAG : integer := 32 - N_BITS_WAYS - N_BITS_OFFSET;
-
-type tag_tab is array (0 to (WAYS - 1)) of std_logic_vector((N_BITS_TAG - 1) downto 0);
-signal tags : tag_tab;
-
-type data_t is array (0 to (WAYS - 1)) of std_logic_vector(31 downto 0);
-
-signal data0, data1, data2, data3 : data_t; 
-signal data_valid :   std_logic_vector((WAYS - 1) downto 0);
 
 signal adr_tag      :   std_logic_vector((N_BITS_TAG - 1) downto 0);
 signal adr_index    :   std_logic_vector((N_BITS_WAYS - 1) downto 0);
 signal adr_offset   :   std_logic_vector((N_BITS_OFFSET - 1) downto 0);
 
+-- cache datatypes (tag array, ways, validity bit array)
+type tags_t is array (0 to (WAYS - 1)) of std_logic_vector((N_BITS_TAG - 1) downto 0);
+signal tags : tags_t;
+signal valid :   std_logic_vector((WAYS - 1) downto 0);
+
+type data_t is array (0 to (WIDTH - 1)) of std_logic_vector(31 downto 0);
+type ways_t is array (0 to (WAYS - 1)) of data_t;
+signal cache_ways : ways_t;
+
+
 signal hit : std_logic := '0';
 
+-- fsm
 type state is (idle, wait_mem, update);
 signal EP, EF : state; 
 
+-- debug
 signal dbg_cpt : std_logic_vector(3 downto 0);
 signal dbg_st : std_logic_vector(1 downto 0);
 
@@ -58,13 +64,10 @@ adr_index   <=  ADR_SI((N_BITS_WAYS + N_BITS_OFFSET- 1) downto N_BITS_OFFSET);
 adr_offset  <=  ADR_SI((N_BITS_OFFSET - 1) downto 0);
 
 -- miss detection 
-hit <=  '1' when adr_tag = tags(to_integer(unsigned(adr_index))) and data_valid(to_integer(unsigned(adr_index))) = '1' else 
+hit <=  '1' when adr_tag = tags(to_integer(unsigned(adr_index))) and valid(to_integer(unsigned(adr_index))) = '1' else 
         '0';
 
-IC_INST_SI  <=  data0(to_integer(unsigned(adr_index)))  when adr_offset(3 downto 2) = "00" and hit = '1' else 
-                data1(to_integer(unsigned(adr_index)))  when adr_offset(3 downto 2) = "01" and hit = '1' else
-                data2(to_integer(unsigned(adr_index)))  when adr_offset(3 downto 2) = "10" and hit = '1' else
-                data3(to_integer(unsigned(adr_index)))  when adr_offset(3 downto 2) = "11" and hit = '1' else
+IC_INST_SI  <=  cache_ways(to_integer(unsigned(adr_index)))(to_integer(unsigned(adr_offset((N_BITS_OFFSET - 1) downto 2)))) when hit = '1' else 
                 x"00000000";
 
 IC_STALL_SI <=  not(hit);
@@ -110,46 +113,30 @@ begin
             if RAM_ACK = '1' then 
                 EF <= update; 
 
-                if cpt = 0 then 
-                    data0(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA; 
-                elsif cpt = 1 then 
-                    data1(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                elsif cpt = 2 then 
-                    data2(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                elsif cpt = 3 then 
-                    data3(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                else 
-                    report "cpt 103 > 3" severity error; 
-                end if; 
-
-                tags(to_integer(unsigned(current_adr_index)))       <=  current_adr_tag; 
-                data_valid(to_integer(unsigned(current_adr_index))) <=  '0';  
+                cache_ways(to_integer(unsigned(current_adr_index)))(0)  <= RAM_DATA;
+                tags(to_integer(unsigned(current_adr_index)))           <= current_adr_tag; 
+                valid(to_integer(unsigned(current_adr_index)))          <= '0';  
             else
                 EF  <=  wait_mem; 
             end if;
         when update =>      
             if RAM_ACK = '0' then 
                 EF <= idle; 
-                data_valid(to_integer(unsigned(current_adr_index))) <=  '1';  
+                valid(to_integer(unsigned(current_adr_index))) <=  '1';  
             elsif rising_edge(clk) then -- temp solution because we send 1 word/cycle
                                         -- basically, we need to find a proper way to still increment cpt event if RAM_DATA didn't change
                                         -- (we can have to consecutive same words)
                 EF <= update;
-                if cpt = 0 then 
-                    data0(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA; 
-                elsif cpt = 1 then 
-                    data1(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                elsif cpt = 2 then 
-                    data2(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                elsif cpt = 3 then 
-                    data3(to_integer(unsigned(current_adr_index)))  <=  RAM_DATA;
-                else 
-                    report "cpt 125 > 3" severity error; 
-                end if; 
+                if cpt < WIDTH then
+                    cache_ways(to_integer(unsigned(current_adr_index)))(cpt) <= RAM_DATA;
+                else
+                    report "counter overflow" severity error;
+                end if;
+
                 cpt := cpt + 1;
             end if;  
     end case; 
-    dbg_cpt <= std_logic_vector(to_signed(cpt, 4));
+    --dbg_cpt <= std_logic_vector(to_signed(cpt, 32));
 end process; 
 
 dbg_st <= "00" when EP = idle else

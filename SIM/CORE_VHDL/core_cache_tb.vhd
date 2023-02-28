@@ -3,6 +3,7 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 library work;
+use work.util.all;
 use work.all;
 
 entity core_cache_tb is 
@@ -134,6 +135,10 @@ component core
 end component; 
 
 component icache
+    generic(
+        WAYS    : integer;
+        WIDTH   : integer
+    );
     port(
         -- global interface
         clk, reset_n    :   in  std_logic;
@@ -160,8 +165,6 @@ signal end_simu : std_logic := '0';
 signal result : integer := 0;  
 signal timeout : integer := 0; 
 signal dtime : integer := 0; 
-
-constant CACHE_LATENCY : time := 80 ns;
 
 -- riscof
 signal riscof_en : integer := 0; 
@@ -204,6 +207,9 @@ core0 : core
     );
 
 icache_inst: icache
+    generic map (
+        ICACHE_WAYS, ICACHE_WIDTH
+    )
     port map(
         -- global interface
         clk, reset_n,
@@ -308,7 +314,7 @@ variable transf_cpt : integer;
 
 begin
     if RAM_ADR_VALID = '1' then
-        RAM_ACK <= '1' after CACHE_LATENCY;
+        RAM_ACK <= '1' after RAM_LATENCY;
         transf_cpt := 0;
     end if;
 
@@ -320,7 +326,7 @@ begin
         RAM_DATA <= std_logic_vector(to_signed(inst_int, 32));
         transf_cpt := transf_cpt + 1;
 
-        if transf_cpt = 5 then
+        if transf_cpt = ICACHE_WIDTH + 1 then
             RAM_ACK <= '0';
         end if;
     end if;

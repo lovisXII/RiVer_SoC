@@ -16,7 +16,7 @@ COMPONENTS = \
 	CACHES/icache CACHES/buffer_cache \
 	tb/tb_buff_cache
 TB=core_cache_tb
-MODS=$(TB) $(COMPONENTS) 
+MODS=$(COMPONENTS) $(TB)
 SOURCES=$(addsuffix .vhd, $(MODS))
 OBJ=$(addsuffix .o, $(addprefix $(BUILD)/, $(notdir $(MODS))))
 CC=gcc
@@ -49,13 +49,7 @@ $(BUILD)/a.out: $(BUILD)/e~$(TB).o ram_sim.c
 $(BUILD)/e~$(TB).o: $(OBJ)
 	cd $(BUILD) && $(GHDL) --bind $(TB)
 
-$(BUILD)/core_tb.o: $(SOURCES)
-	$(GHDL) -a $(GHDLFLAGS) $^
-
-$(BUILD)/core_cache_tb.o: $(SOURCES)
-	$(GHDL) -a $(GHDLFLAGS) $^
-
-$(BUILD)/tb_buff_cache.o: $(SOURCES)
+$(BUILD)/%.o: $(SOURCES)
 	$(GHDL) -a $(GHDLFLAGS) $^
 
 kernel: $(SW_DIR)/exception.s $(SW_DIR)/reset.s
