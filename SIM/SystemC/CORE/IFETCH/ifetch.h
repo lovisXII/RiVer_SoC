@@ -30,9 +30,9 @@ SC_MODULE(ifetch) {
     sc_in<sc_uint<32>> PC_RD;  // PC coming to fetch an instruction
     sc_in<bool>        PRED_FAILED_RD;
     sc_in<bool>        PRED_SUCCESS_RD;
-    sc_in<bool>        BRANCH_INST_RD;
+    sc_in<bool>        INSTR_IS_BRANCH_RD;
     sc_in<sc_uint<32>> BRANCH_INST_ADR_RD;
-    sc_in<sc_uint<32>> ADR_TO_BRANCH_RD;
+    sc_in<sc_uint<32>> BRANCH_TARGET_ADR_RD;
 
     sc_in<sc_uint<32>> PRED_ADR_SD;
     sc_in<bool>        PRED_TAKEN_SD;
@@ -41,7 +41,7 @@ SC_MODULE(ifetch) {
     sc_in<bool> PUSH_ADR_RAS_RD;
     sc_in<bool> POP_ADR_RAS_RD;
 
-    sc_in<sc_uint<32>> ADR_TO_RET_RD;
+    sc_in<sc_uint<32>> RETURN_ADR_RD;
 
     sc_in<bool> RET_INST_RD;
 

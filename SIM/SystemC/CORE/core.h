@@ -30,9 +30,9 @@ SC_MODULE(core) {
     sc_signal<bool>        DEC2IF_EMPTY_SI;
     sc_signal<sc_uint<32>>   PC_RD;
 
-    sc_signal<bool>        BRANCH_INST_RD;
+    sc_signal<bool>        INSTR_IS_BRANCH_RD;
     sc_signal<sc_uint<32>> BRANCH_INST_ADR_RD;
-    sc_signal<sc_uint<32>> ADR_TO_BRANCH_RD;
+    sc_signal<sc_uint<32>> BRANCH_TARGET_ADR_RD;
     sc_signal<bool>        PRED_SUCCESS_RD;
     sc_signal<bool>        PRED_FAILED_RD;
 
@@ -42,7 +42,7 @@ SC_MODULE(core) {
     sc_signal<bool>        PUSH_ADR_RAS_RD;
     sc_signal<bool>        POP_ADR_RAS_RD;
 
-    sc_signal<sc_uint<32>> ADR_TO_RET_RD;
+    sc_signal<sc_uint<32>> RETURN_ADR_RD;
 
     sc_signal<bool>        RET_INST_RD;
     // IF2DEC :
@@ -303,13 +303,13 @@ SC_MODULE(core) {
         ifetch_inst.PC_RD(PC_RD);
         ifetch_inst.PRED_FAILED_RD(PRED_FAILED_RD);
         ifetch_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
-        ifetch_inst.BRANCH_INST_RD(BRANCH_INST_RD);
+        ifetch_inst.INSTR_IS_BRANCH_RD(INSTR_IS_BRANCH_RD);
         ifetch_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
-        ifetch_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
+        ifetch_inst.BRANCH_TARGET_ADR_RD(BRANCH_TARGET_ADR_RD);
 
         ifetch_inst.PUSH_ADR_RAS_RD(PUSH_ADR_RAS_RD);
         ifetch_inst.POP_ADR_RAS_RD(POP_ADR_RAS_RD);
-        ifetch_inst.ADR_TO_RET_RD(ADR_TO_RET_RD);
+        ifetch_inst.RETURN_ADR_RD(RETURN_ADR_RD);
         ifetch_inst.RET_INST_RD(RET_INST_RD);
 
         ifetch_inst.PRED_ADR_SD(PRED_ADR_SD);
@@ -346,9 +346,9 @@ SC_MODULE(core) {
         dec_inst.PC_RD(PC_RD);
         dec_inst.PRED_FAILED_RD(PRED_FAILED_RD);
         dec_inst.PRED_SUCCESS_RD(PRED_SUCCESS_RD);
-        dec_inst.BRANCH_INST_RD(BRANCH_INST_RD);
+        dec_inst.INSTR_IS_BRANCH_RD(INSTR_IS_BRANCH_RD);
         dec_inst.BRANCH_INST_ADR_RD(BRANCH_INST_ADR_RD);
-        dec_inst.ADR_TO_BRANCH_RD(ADR_TO_BRANCH_RD);
+        dec_inst.BRANCH_TARGET_ADR_RD(BRANCH_TARGET_ADR_RD);
 
         dec_inst.PC_DEC2EXE_RD(PC_DEC2EXE_RD);
         dec_inst.PC_IF2DEC_RI(PC_IF2DEC_RI);
@@ -404,7 +404,7 @@ SC_MODULE(core) {
 
         dec_inst.PUSH_ADR_RAS_RD(PUSH_ADR_RAS_RD);
         dec_inst.POP_ADR_RAS_RD(POP_ADR_RAS_RD); 
-        dec_inst.ADR_TO_RET_RD(ADR_TO_RET_RD);
+        dec_inst.RETURN_ADR_RD(RETURN_ADR_RD);
 
         dec_inst.RET_INST_RD(RET_INST_RD);
 

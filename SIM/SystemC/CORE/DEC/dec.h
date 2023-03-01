@@ -54,9 +54,9 @@ SC_MODULE(decod) {
 
     sc_out<bool>        PRED_FAILED_RD;
     sc_out<bool>        PRED_SUCCESS_RD;
-    sc_out<bool>        BRANCH_INST_RD;
+    sc_out<bool>        INSTR_IS_BRANCH_RD;
     sc_out<sc_uint<32>> BRANCH_INST_ADR_RD;
-    sc_out<sc_uint<32>> ADR_TO_BRANCH_RD;
+    sc_out<sc_uint<32>> BRANCH_TARGET_ADR_RD;
     sc_out<sc_uint<32>> PC_RD;
 
     sc_out<sc_uint<32>> PRED_ADR_SD;
@@ -64,7 +64,7 @@ SC_MODULE(decod) {
 
     sc_out<bool>        PUSH_ADR_RAS_RD;
     sc_out<bool>        POP_ADR_RAS_RD; 
-    sc_out<sc_uint<32>> ADR_TO_RET_RD;    
+    sc_out<sc_uint<32>> RETURN_ADR_RD;    
 
     sc_out<bool>        RET_INST_RD;
     // Interface with IF2DEC :
