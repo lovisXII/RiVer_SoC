@@ -13,7 +13,7 @@ entity buffer_cache is
         PUSH, POP : in std_logic;
         EMPTY, FULL : out std_logic;
 
-        -- fifo input data
+        -- fifo input data      TODO : remove LOAD and change all indexes
         DATA_C : in std_logic_vector(31 downto 0);
         ADR_C : in std_logic_vector(31 downto 0);
         STORE_C, LOAD_C : in std_logic; -- might be simplified to a single signal
