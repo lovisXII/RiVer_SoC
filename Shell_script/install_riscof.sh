@@ -7,14 +7,13 @@ export TEMPORARY_PATH=$PWD/../riscof
 cd $TEMPORARY_PATH
 ################### PYTHON SETUP ################### 
 
-echo "Please run in sudo"
 echo "Installing python"
 echo "If you are running on Ubuntu 22.04 you can have some issue installing riscof, if so please run install_python_ub_22_04.sh"
 
-add-apt-repository ppa:deadsnakes/ppa
-apt-get update
-apt-get install python3.6 -y
-apt install python3-pip
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt-get update
+sudo apt-get install python3.6 -y
+sudo apt install python3-pip
 pip3 install --upgrade pip
 
 ################### RISCOF SETUP ################### 
@@ -45,8 +44,8 @@ then
         cd riscv-isa-sim
         mkdir build
         cd build
-        ../configure --prefix=/opt/
-        make -j4
+        sudo ../configure --prefix=/opt/
+        sudo make -j4
         sudo make install #sudo is required depending on the path chosen in the previous setup
         echo "export PATH=/opt/bin:$PATH" >> ~/.bashrc
         source ~/.bashrc
