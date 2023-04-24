@@ -5,6 +5,8 @@
 #include "cpu.h"
 #include "elflib.h"
 #include "systemc.h"
+#include <unordered_map>
+
 /*
 --------------Main file handling simulation---------------
 Arguments :

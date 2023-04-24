@@ -1,7 +1,7 @@
 ## Variable that points to SystemC installation path
 
-INCDIR = -I$(SYSTEMC_INCLUDE_DIRS) -Iminiriscv/include/
-LIBDIR = -L$(SYSTEMC_LIBRARY_DIRS)
+INCDIR = -I/usr/local/systemc-2.3.3/include -Iminiriscv/include/
+LIBDIR = -L/usr/local/systemc-2.3.3/lib-linux64
 
 LIBS   =  -lsystemc $(EXTRA_LIBS)
 
